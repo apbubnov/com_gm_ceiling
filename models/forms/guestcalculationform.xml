@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fieldset>
+    <field name="id" type="text" readonly="true" class="readonly" default="0" description="JGLOBAL_FIELD_ID_DESC"/>
+    <field name="ordering"/>
+    <field name="state" default="1" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" class="inputbox" size="1">
+      <option value="1">JPUBLISHED</option>
+      <option value="0">JUNPUBLISHED</option>
+      <option value="2">JARCHIVED</option>
+      <option value="-2">JTRASHED</option>
+    </field>
+    <field name="checked_out" type="hidden" filter="unset"/>
+    <field name="public" type="hidden" filter="int" default="0"/>
+    <field name="checked_out_time" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
+    <field name="project_id" type="foreignkey" label="COM_GM_CEILING_FORM_LBL_CALCULATION_PROJECT_ID" description="COM_GM_CEILING_FORM_DESC_CALCULATION_PROJECT_ID" class="inputbox" input_type="list" table="#__gm_ceiling_projects" key_field="id" value_field="project_info" default="0"/>
+    <field name="components_sum" type="text" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_COMPONENTS_SUM" description="COM_GM_CEILING_FORM_DESC_CALCULATION_COMPONENTS_SUM" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_COMPONENTS_SUM"/>
+    <field name="mounting_sum" type="text" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_MOUNTING_SUM" description="COM_GM_CEILING_FORM_DESC_CALCULATION_MOUNTING_SUM" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_MOUNTING_SUM"/>
+    <field name="gm_mounting_sum" type="text" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_GM_MOUNTING_SUM" description="COM_GM_CEILING_FORM_DESC_CALCULATION_GM_MOUNTING_SUM" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_GM_MOUNTING_SUM"/>
+    <field name="dealer_mounting_sum" type="text" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_DEALER_MOUNTING_SUM" description="COM_GM_CEILING_FORM_DESC_CALCULATION_DEALER_MOUNTING_SUM" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_DEALER_MOUNTING_SUM"/>
+	<field name="transport" type="text" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_CALCULATION_TRANSPORT" description="COM_GM_CEILING_FORM_DESC_CALCULATION_TRANSPORT" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_TRANSPORT"/>
+    <field name="n1" type="foreignkey" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N1" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N1" class="inputbox" input_type="list" table="#__gm_ceiling_types" key_field="id" value_field="type_title" default=""/>
+    <field name="n2" type="foreignkey" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N2" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N2" class="inputbox" input_type="list" table="#__gm_ceiling_textures" key_field="id" value_field="texture_title" default=""/>
+    <field name="n3" type="foreignkey" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N3" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N3" class="inputbox" input_type="list" table="#__gm_ceiling_canvases" key_field="id" value_field="canvas_title" default=""/>
+    <field name="n4" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N4" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N4" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N4"/>
+    <field name="n5" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N5" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N5" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N5"/>
+    <field name="n6" type="checkbox" default="0" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N6" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N6" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N6"/>
+    <field name="n7" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N7" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N7" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N7"/>
+    <field name="n8" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N8" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N8" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N8"/>
+    <field name="n9" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N9" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N9" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N9"/>
+    <field name="n10" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N10" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N10" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N10"/>
+    <field name="n11" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N11" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N11" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N11"/>
+    <field name="n12" type="text" filter="raw" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N12" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N12" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N12"/>
+    <field name="n13_easycount" type="tel" filter="int" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N13_EASYCOUNT" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N13_EASYCOUNT" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N13_EASYCOUNT"/>
+    <field name="n13_advanced" type="checkbox" filter="raw" default="0" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N13_ADVANCED" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N13_ADVANCED" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N13_ADVANCED"/>
+    <field name="n13" type="text" filter="raw" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N13" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N13" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N13"/>
+    <field name="n14_easycount" type="tel" filter="int" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N14_EASYCOUNT" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N14_EASYCOUNT" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N14_EASYCOUNT"/>
+    <field name="n14_advanced" type="checkbox" filter="raw" default="0" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N14_ADVANCED" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N14_ADVANCED" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N14_ADVANCED"/>
+    <field name="n14" type="text" filter="raw" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N14" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N14" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N14"/>
+    <field name="n15" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N15" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N15" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N15"/>
+    <field name="n16" type="checkbox" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N16" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N16" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N16"/>
+    <field name="n17" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N17" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N17" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N17"/>
+    <field name="n18" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N18" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N18" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N18"/>
+    <field name="n19" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N19" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N19" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N19"/>
+    <field name="n20" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N20" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N20" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N20"/>
+    <field name="n21" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N21" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N21" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N21"/>
+    <field name="n22" type="checkbox" default="0" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N22" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N22" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N22"/>
+    <field name="n22_advanced" type="checkbox" default="0" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N22_ADVANCED" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N22_ADVANCED" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N22_ADVANCED"/>
+    <field name="n22_type" type="list" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N22_TYPE" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N22_TYPE" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N22_TYPE">
+      <option value="1">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_1</option>
+      <option value="2">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_2</option>
+      <option value="3">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_3</option>
+      <option value="4">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_4</option>
+      <option value="5">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_5</option>
+      <option value="6">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_6</option>
+      <option value="7">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_7</option>
+      <option value="8">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_8</option>
+      <option value="9">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_9</option>
+      <option value="10">COM_GM_CEILING_CALCULATIONS_N22_TYPE_OPTION_10</option>
+    </field>
+    <field name="n22_ring" type="list" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N22_RING" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N22_RING" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N22_RING">
+      <option value="1">COM_GM_CEILING_CALCULATIONS_N22_RING_OPTION_1</option>
+      <option value="2">COM_GM_CEILING_CALCULATIONS_N22_RING_OPTION_2</option>
+      <option value="3">COM_GM_CEILING_CALCULATIONS_N22_RING_OPTION_3</option>
+      <option value="4">COM_GM_CEILING_CALCULATIONS_N22_RING_OPTION_4</option>
+    </field>
+    <field name="n23" type="checkbox" default="0" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N23" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N23" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N23"/>
+    <field name="n23_advanced" type="checkbox" default="0" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N23_ADVANCED" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N23_ADVANCED" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N23_ADVANCED"/>
+    <field name="n23_type" type="list" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N23_TYPE" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N23_TYPE" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N23_TYPE">
+      <option value="1">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_1</option>
+      <option value="2">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_2</option>
+      <option value="3">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_3</option>
+      <option value="4">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_4</option>
+      <option value="5">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_5</option>
+      <option value="6">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_6</option>
+      <option value="7">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_7</option>
+      <option value="8">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_8</option>
+      <option value="9">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_9</option>
+      <option value="10">COM_GM_CEILING_CALCULATIONS_N23_TYPE_OPTION_10</option>
+    </field>
+    <field name="n23_ring" type="list" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N23_RING" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N23_RING" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N23_RING">
+      <option value="1">COM_GM_CEILING_CALCULATIONS_N23_RING_OPTION_1</option>
+      <option value="2">COM_GM_CEILING_CALCULATIONS_N23_RING_OPTION_2</option>
+      <option value="3">COM_GM_CEILING_CALCULATIONS_N23_RING_OPTION_3</option>
+      <option value="4">COM_GM_CEILING_CALCULATIONS_N23_RING_OPTION_4</option>
+    </field>
+    <field name="n24" type="tel" filter="float" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N24" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N24" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N24"/>
+	<field name="n25" type="tel" filter="int" label="COM_GM_CEILING_FORM_LBL_CALCULATION_N25" description="COM_GM_CEILING_FORM_DESC_CALCULATION_N25" hint="COM_GM_CEILING_FORM_LBL_CALCULATION_N25"/>
+    <field name="version_note" type="text" label="JGLOBAL_FIELD_VERSION_NOTE_LABEL" description="JGLOBAL_FIELD_VERSION_NOTE_DESC" class="inputbox" size="45" labelclass="control-label"/>
+    <field name="client_name" type="text" filter="string" label="COM_GM_CEILING_FORM_LBL_CLIENT_CLIENT_NAME" description="COM_GM_CEILING_FORM_DESC_CLIENT_CLIENT_NAME" hint="COM_GM_CEILING_FORM_LBL_CLIENT_CLIENT_NAME"/>
+    <field name="client_contacts" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_CLIENT_CLIENT_CONTACTS" description="COM_GM_CEILING_FORM_DESC_CLIENT_CLIENT_CONTACTS" hint="COM_GM_CEILING_FORM_LBL_CLIENT_CLIENT_CONTACTS"/>
+    <field name="project_info" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_INFO" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO"/>
+	<field name="project_calculation_date" type="calendar" class="inputbox" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_CALCULATION_DATE" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_CALCULATION_DATE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_CALCULATION_DATE"/>
+    <field name="project_calculation_daypart" type="list" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_CALCULATION_DAYPART" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_CALCULATION_DAYPART" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_CALCULATION_DAYPART">
+      <option value="1">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_1</option>
+      <option value="2">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_2</option>
+      <option value="3">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_3</option>
+      <option value="4">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_4</option>
+      <option value="5">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_5</option>
+      <option value="6">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_6</option>
+      <option value="7">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_7</option>
+      <option value="8">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_8</option>
+      <option value="9">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_9</option>
+      <option value="10">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_10</option>
+      <option value="11">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_11</option>
+      <option value="12">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_12</option>
+    </field>
+    <field name="who_calculate" type="list" default="0" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_WHO_CALCULATE" description="COM_GM_CEILING_FORM_DESC_PROJECT_WHO_CALCULATE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_WHO_CALCULATE">
+      <option value="0">Замерщик ГМ</option>
+      <option value="1">Замерщик дилера</option>
+    </field>
+  </fieldset>
+</form>

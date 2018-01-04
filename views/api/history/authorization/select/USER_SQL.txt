@@ -1,0 +1,6 @@
+03.01.2018 14:20:39
+
+
+SELECT MIN(`id`) as id
+FROM `#__users`
+WHERE `username` LIKE '89081303845' OR `email` LIKE '89081303845'

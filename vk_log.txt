@@ -1,0 +1,48 @@
+02.12.2017 23:54:47 | getDataVK | {"type":"confirmation","group_id":59714777}
+----------
+02.12.2017 23:55:54 | getDataVK | {"type":"confirmation","group_id":59714777}
+----------
+02.12.2017 23:57:04 | getDataVK | {"type":"confirmation","group_id":59714777}
+----------
+03.12.2017 00:06:58 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 00:07:04 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 00:08:04 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 00:11:04 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 00:14:56 | getDataVK | {"type":"wall_reply_new","object":{"id":160,"from_id":183131303,"date":1512249296,"text":"test","post_owner_id":-59714777,"post_id":159},"group_id":59714777}
+----------
+03.12.2017 00:21:04 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 00:22:24 | getDataVK | {"type":"wall_reply_new","object":{"id":161,"from_id":183131303,"date":1512249744,"text":"test","post_owner_id":-59714777,"post_id":159},"group_id":59714777}
+----------
+03.12.2017 00:37:58 | getDataVK | {"type":"wall_reply_new","object":{"id":162,"from_id":183131303,"date":1512250678,"text":"test","post_owner_id":-59714777,"post_id":159},"group_id":59714777}
+----------
+03.12.2017 00:41:24 | getDataVK | {"type":"wall_reply_new","object":{"id":163,"from_id":183131303,"date":1512250883,"text":"test","post_owner_id":-59714777,"post_id":159},"group_id":59714777}
+----------
+03.12.2017 00:51:04 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 01:51:04 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 02:51:04 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 03:51:06 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 04:51:06 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 05:51:06 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 06:51:09 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 07:51:10 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 08:51:11 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 09:51:12 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 10:51:13 | getDataVK | {"type":"wall_post_new","object":{"id":159,"from_id":-59714777,"owner_id":-59714777,"date":1512248818,"marked_as_ads":0,"post_type":"post","text":"test","can_edit":1,"created_by":183131303,"can_delete":1,"comments":{"count":0}},"group_id":59714777}
+----------
+03.12.2017 15:29:11 | getDataVK | {"type":"wall_reply_new","object":{"id":164,"from_id":183131303,"date":1512304150,"text":"ertertreter","post_owner_id":-59714777,"post_id":159},"group_id":59714777}
+----------

@@ -1,0 +1,50 @@
+#mounter_wraper {
+    text-align: center !important;
+    width: 100%;
+}
+
+#mounter_wraper td {
+    padding: 15px;
+}
+
+#calendar-container {
+    position: relative;
+    width: 100%;
+}
+
+@media screen and (min-width: 992px) {
+    #modal-window-choose-tar {
+        width: 40%;
+        margin-left: 30%;
+    }
+} 
+
+#modal-window-container-tar {
+    z-index: 30;
+}
+
+#modal-window-choose-tar {
+    padding: 1em;
+}
+
+#hours, #mounters, #save-choise-tar {
+    width: 200px;
+}
+
+#projects_brigade, #projects_gaugers {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #d3d3f9;
+}
+
+#projects_brigade td, #projects_gaugers td {
+    border-bottom: 1px solid #d3d3f9;
+}
+
+#projects_brigade th, #projects_gaugers th {
+    text-align: center;
+}
+
+.caption {
+    background-color: #d3d3f9;
+}

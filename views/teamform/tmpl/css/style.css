@@ -1,0 +1,60 @@
+#footer {
+    background-color: #414099;
+}
+
+.btn-primary {
+    background-color: #414099;
+    border-color: #414099;
+}
+
+#content-tar {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+
+#text-container, #button-container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+}
+
+.margin-tar {
+    margin-top: 0.5em;
+}
+
+.margin-button-tar {
+    margin-bottom: 0.5em;
+}
+
+.input-tar, #add-brigade, #add-mounter {
+    width: 200px;
+}
+
+#add-mounter-container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+}
+
+#add-mounter {
+    display: inline-block;
+    float: left;
+    width: 100%;
+}
+
+#label-container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    margin-top: 1em;
+}
+
+#wrong {
+    color: #ff3d3d;
+}
+
+.empty {
+    border: 1px solid #ff3d3d;
+}

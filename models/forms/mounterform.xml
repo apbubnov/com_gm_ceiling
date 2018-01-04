@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fieldset>
+    <field name="id" type="text" readonly="true" class="readonly" default="0" description="JGLOBAL_FIELD_ID_DESC"/>
+    <field name="ordering"/>
+    <field name="state" default="1" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" class="inputbox" size="1">
+      <option value="1">JPUBLISHED</option>
+      <option value="0">JUNPUBLISHED</option>
+      <option value="2">JARCHIVED</option>
+      <option value="-2">JTRASHED</option>
+    </field>
+    <field name="checked_out" type="hidden" filter="unset"/>
+    <field name="checked_out_time" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
+    <field name="team_title" type="text" filter="string" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_team_title" description="COM_GM_CEILING_FORM_DESC_MOUNTER_team_title" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_team_title"/>
+    <field name="mounter_contacts" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MOUNTER_CONTACTS" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MOUNTER_CONTACTS" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MOUNTER_CONTACTS"/>
+	<field name="dealer_id"
+		type="foreignkey"
+		label="COM_GM_CEILING_FORM_LBL_MOUNTER_DEALER_ID"
+		description="COM_GM_CEILING_FORM_DESC_MOUNTER_DEALER_ID"
+		class="inputbox"
+		input_type="list"
+		table="#__users"
+		key_field="id"
+		value_field="name"
+		default="0"/>
+    <field name="mounter_margin" default="60" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MOUNTER_MARGIN" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MOUNTER_MARGIN" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MOUNTER_MARGIN"/>
+    <field name="mp1" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP1" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP1" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP1"/>
+    <field name="mp2" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP2" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP2" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP2"/>
+    <field name="mp3" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP3" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP3" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP3"/>
+    <field name="mp4" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP4" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP4" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP4"/>
+    <field name="mp5" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP5" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP5" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP5"/>
+    <field name="mp6" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP6" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP6" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP6"/>
+    <field name="mp7" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP7" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP7" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP7"/>
+    <field name="mp8" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP8" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP8" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP8"/>
+    <field name="mp9" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP9" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP9" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP9"/>
+    <field name="mp10" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP10" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP10" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP10"/>
+    <field name="mp11" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP11" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP11" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP11"/>
+    <field name="mp12" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP12" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP12" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP12"/>
+    <field name="mp13" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP13" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP13" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP13"/>
+    <field name="mp14" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP14" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP14" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP14"/>
+    <field name="mp15" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP15" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP15" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP15"/>
+    <field name="mp16" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP16" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP16" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP16"/>
+    <field name="mp17" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MP17" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MP17" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MP17"/>
+    <field name="mt1" type="text" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT1" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT1" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT1"/>
+    <field name="mt2" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT2" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT2" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT2"/>
+    <field name="mt3" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT3" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT3" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT3"/>
+    <field name="mt4" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT4" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT4" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT4"/>
+    <field name="mt5" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT5" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT5" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT5"/>
+    <field name="mt6" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT6" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT6" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT6"/>
+    <field name="mt7" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT7" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT7" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT7"/>
+    <field name="mt8" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT8" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT8" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT8"/>
+    <field name="mt9" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT9" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT9" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT9"/>
+    <field name="mt10" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT10" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT10" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT10"/>
+    <field name="mt11" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT11" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT11" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT11"/>
+    <field name="mt12" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT12" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT12" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT12"/>
+    <field name="mt13" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT13" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT13" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT13"/>
+    <field name="mt14" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT14" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT14" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT14"/>
+    <field name="mt15" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT15" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT15" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT15"/>
+    <field name="mt16" type="text" filter="int" required="true" label="COM_GM_CEILING_FORM_LBL_MOUNTER_MT16" description="COM_GM_CEILING_FORM_DESC_MOUNTER_MT16" hint="COM_GM_CEILING_FORM_LBL_MOUNTER_MT16"/>
+    <field name="version_note" type="text" label="JGLOBAL_FIELD_VERSION_NOTE_LABEL" description="JGLOBAL_FIELD_VERSION_NOTE_DESC" class="inputbox" size="45" labelclass="control-label"/>
+  </fieldset>
+</form>

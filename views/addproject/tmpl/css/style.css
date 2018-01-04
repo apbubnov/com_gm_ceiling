@@ -1,0 +1,17 @@
+#projects_gaugers {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #d3d3f9;
+}
+
+#projects_gaugers td {
+    border-bottom: 1px solid #d3d3f9;
+}
+
+#projects_gaugers th {
+    text-align: center;
+}
+
+.caption {
+    background-color: #d3d3f9;
+}

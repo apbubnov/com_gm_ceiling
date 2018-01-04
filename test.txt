@@ -1,0 +1,3 @@
+git config git-ftp.user username
+git config git-ftp.url url with path to folder
+git config git-ftp.password pass

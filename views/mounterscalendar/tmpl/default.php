@@ -1,0 +1,336 @@
+<?php
+/**
+ * @version    CVS: 0.1.7
+ * @package    Com_Gm_ceiling
+ * @author     SpectralEye <Xander@spectraleye.ru>
+ * @copyright  2016 SpectralEye
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ */
+// No direct access
+defined('_JEXEC') or die;
+
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('formbehavior.chosen', 'select');
+
+$user       = JFactory::getUser();
+$userId     = $user->get('id');
+$dealerId   = $user->dealer_id;
+
+// календарь
+$month = date("n");
+$year = date("Y");
+$FlagCalendar = [5, $dealerId];
+$calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
+
+?>
+
+<?=parent::getButtonBack();?>
+
+<link rel="stylesheet" href="components/com_gm_ceiling/views/mounterscalendar/tmpl/CSS/style.css" type="text/css" />
+
+<div id="content-tar">
+    <h2 class="center tar-color-414099">Календарь работ</h2>
+    <div id="prev-button-container">
+        <button id="button-prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+    </div>
+    <div id="calendar-container">
+        <?php echo $calendar; ?>
+    </div>
+    <div id="next-button-container">
+        <button id="button-next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+    </div>
+    <div id="legenda-container" class="tar-color-414099">
+        <table id="legenda">
+            <tr>
+                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/ff3d3d.png" alt="Красный"></td>
+                <td class="left">Новый монтаж. Не просмотрен</td>
+                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/414099.png" alt="Синий"></td>
+                <td class="left">Монтаж в работе</td>
+            </tr>
+            <tr>
+                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/fff23d.png" alt="Желтый"></td>
+                <td class="left">Новый монтаж. Просмотрен</td>
+                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/461f08.png" alt="Коричневый"></td>
+                <td class="left">Монтаж недовыполнен</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/1ffe4e.png" alt="Зеленый"></td>
+                <td class="left">Монтаж выполнен</td>
+            </tr>
+        </table>
+    </div>
+    <div id="modal-window-with-table">
+        <button type="button" id="close-modal-window" onclick="CloseModalWindow();"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="window-with-table">
+            <table id="table-mounting"></table>
+        </div>
+    </div>
+</div>
+
+<script type='text/javascript'>
+
+    // листание календаря
+    month_old = 0;
+    year_old = 0;
+    jQuery("#button-next").click(function () {
+        month = <?php echo $month; ?>;
+        year = <?php echo $year; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 12) {
+            month = 1;
+            year++;
+        } else {
+            month++;
+        }
+        month_old = month;
+        year_old = year;
+        update_calendar(month, year);
+    });
+    jQuery("#button-prev").click(function () {
+        month = <?php echo $month; ?>;
+        year = <?php echo $year; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 1) {
+            month = 12;
+            year--;
+        } else {
+            month--;
+        }
+        month_old = month;
+        year_old = year;
+        update_calendar(month, year);
+    });
+    function update_calendar(month, year) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+            data: {
+                id: <?php echo $userId; ?>,
+                id_dealer: <?php echo $dealerId; ?>,
+                flag: 5,
+                month: month,
+                year: year,
+            },
+            success: function (msg) {
+                jQuery("#calendar-container").empty();
+                jQuery("#calendar-container").append(msg);
+                Today(day, NowMonth, NowYear);
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+                });
+            }
+        });
+    }
+
+    // функция подсвета сегоднешней даты
+    var Today = function (day, month, year) {
+        month++;
+        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"I").addClass("today");
+    }
+
+    // подсвет сегоднешней даты
+    window.today = new Date();
+    window.NowYear = today.getFullYear();
+    window.NowMonth = today.getMonth();
+    window.day = today.getDate();
+    Today(day, NowMonth, NowYear);
+
+    // функция чтобы другая функция выполнилась позже чем document ready
+    Function.prototype.process= function(state){
+        var process= function(){
+            var args= arguments;
+            var self= arguments.callee;
+            setTimeout(function(){
+                self.handler.apply(self, args);
+            }, 0 )
+        }
+        for(var i in state) process[i]= state[i];
+        process.handler= this;
+        return process;
+    }
+
+    // закрытие модального окна, при нажатии вне модального окна
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery("#window-with-table"); // тут указываем ID элемента
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#window-with-table").hide();
+            jQuery("#close-modal-window").hide();
+            jQuery("#modal-window-with-table").hide();
+        }
+    });
+
+    // открытие модального окна и узнаем какой день нажат
+    jQuery("#calendar-container").on("click", ".current-month", function () {
+        kind = "empty";        
+        var id = jQuery(this).attr("id");
+        WhatDay(id);
+        ListOfWork(kind, ChooseDay, ChooseMonth, ChooseYear);
+        jQuery("#window-with-table").show('slow');
+        jQuery("#close-modal-window").show();
+        jQuery("#modal-window-with-table").show();
+    });
+    jQuery("#calendar-container").on("click", ".day-not-read, .day-read, .day-in-work, .day-underfulfilled, .day-complite", function () {
+        kind = "no-empty";
+        id = jQuery(this).attr("id");
+        WhatDay(id);
+        ListOfWork(kind, ChooseDay, ChooseMonth, ChooseYear);
+        jQuery("#window-with-table").show('slow');
+        jQuery("#close-modal-window").show();
+        jQuery("#modal-window-with-table").show();
+    });
+
+    // функция узнать выбранный день, месяц, год
+    function WhatDay(id) {
+        var nov_reg1 = "D(.*)D";
+        ChooseDay = id.match(nov_reg1)[1];
+        var nov_reg2 = "M(.*)M";
+        ChooseMonth = id.match(nov_reg2)[1];
+        var nov_reg3 = "Y(.*)Y";
+        ChooseYear = id.match(nov_reg3)[1];
+    }
+
+    // функция вывода работ (таблицы) дня при нажатии на день
+    function ListOfWork(kind, day, month, year) {
+        td = day;
+        tm = month;
+        ty = year;
+        jQuery("#table-mounting").empty();
+        if (kind == "empty") {
+            TrOrders = '<tr id="caption-data"><td>'+day+'-'+month+'-'+year+'</td></tr><tr><td>В данный момент на этот день монтажей нет</td></tr>';        
+            jQuery("#table-mounting").append(TrOrders);
+        } else {
+            TrOrders = '<tr id="caption-data"><td colspan="6">'+day+'-'+month+'-'+year+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
+            jQuery("#table-mounting").append(TrOrders);
+            if (day.length == 1) {
+                day = 0+day;
+            }
+            if (month.length == 1) {
+                month = 0+month;
+            }
+            date = year+"-"+month+"-"+day;
+            jQuery.ajax( {
+                type: "POST",
+                url: "index.php?option=com_gm_ceiling&task=mounterscalendar.GetPerimeterSalary",
+                dataType: 'json',
+                data: {
+                    month : month,
+                    year : year,
+                    day : day,
+                    id : <?php echo $userId; ?>
+                },
+                success: function(msg) {
+                    msg.forEach(function(element) {
+                        if (date == element.project_mounting_date.substr(0, 10)) {
+                            project = element.id;
+                            adress = element.project_info;
+                            time = element.project_mounting_date.substr(11, 5);
+                            perimeter = element.n5;
+                            // комменты
+                            if (<?php echo $dealerId; ?> == 775) {
+                                if(element.gm_chief_note == null || element.gm_chief_note == undefined || element.gm_chief_note == "null") {
+                                    note = "";
+                                    } else {
+                                    note = element.gm_chief_note;
+                                    }
+                            } else {
+                                if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null") {
+                                note = "";
+                                } else {
+                                note = element.dealer_chief_note;
+                                }
+                            }
+                            // статусы
+                            status_proj = element.project_status;
+                            if (element.project_status == 5 ) {
+                                status = "В производстве";
+                            }
+                            if (element.project_status == 6 ) {
+                                status = "На раскрое";
+                            }
+                            if (element.project_status == 7 ) {
+                                status = "Укомплектован";
+                            }
+                            if (element.project_status == 8 ) {
+                                status = "Выдан";
+                            }
+                            if (element.project_status == 10 ) {
+                                status = "Ожидание монтажа";
+                            }
+                            if (element.project_status == 16 ) {
+                                status = "Монтаж";
+                            }
+                            if (element.project_status == 11 ) {
+                                status = "Монтаж выполнен";
+                            }
+                            if (element.project_status == 17 ) {
+                                status = "Монтаж недовыполнен";
+                            }
+                            if (element.read_by_mounter == 0) {
+								status += " <strong>/ Не прочитан</strong>";
+							}
+                            salary = element.mounting_sum;
+                            if (salary < 1500) {
+                                salary = 1500;
+                            }
+                            // рисовка таблицы
+                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', td, tm, ty, status_proj);"><td>'+time+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';                    
+                            jQuery("#table-mounting").append(TrOrders2);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function ReplaceToOrder(project, day, month, year, status_proj) {
+        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
+        month--;
+        jQuery.ajax( {
+            type: "POST",
+            url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
+            dataType: 'json',
+            data: {
+                id_calculation : project,
+            },
+            success: function(msg) {
+                
+            }
+        });
+    }
+
+    jQuery(document).ready(function () {
+        // кнопки на телефон маленькие
+        if (screen.width < 768) {
+            jQuery(".perimeter").empty();
+			jQuery("#button-prev").css({"width":"25px"});
+			jQuery("#button-next").css({"width":"25px"});
+		}
+        // --------------------------------
+
+
+
+
+    });
+
+</script>

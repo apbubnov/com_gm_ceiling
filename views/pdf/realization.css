@@ -1,0 +1,99 @@
+div {display: inline-block; float: left;}
+div, td, tr, table {font-family: Arial;}
+.top {width: auto; height: auto; margin-right: 5px;}
+.top .line {width: 100%; text-align: right; font-size: 8px;}
+.head {width: 100%; height: auto; margin-top: 5px; padding: 0;}
+.head .left {width: 77%; float: left; padding-top: 15px;}
+.head .left .line {width: 100%; line-height: 12px; font-size: 10px; position: relative;}
+.head .left .u { border-bottom: 1px solid black;}
+.head .left .line .line_left { width: 10%; text-align: right;}
+.head .left .line .line_right { width: 89%; float: right; border-bottom: 1px solid black;}
+.head .left .center {width: 100%; text-align: center;}
+.head .left .center .tn {width: auto; height: 24px; float: none; margin-top: 10px; margin-left: 130px;}
+.head .left .center .tn .name {float: none; width: 180px; font-size: 12px; height: 12px; line-height: 12px; vertical-align: bottom; margin-top: 18px; font-weight: bold;}
+.head .left .center .tn .table {width: 220px; border: 1px solid black; margin-top: -34px; margin-left: 185px; text-align: center; border-collapse: collapse;}
+.head .left .center .tn .table .tr_end {border: 2px solid black;}
+.head .left .center .tn .table tr td {border: 1px solid black; padding: 1px 5px; font-size: 11px; line-height: 14px;}
+.head .left .subline {width: 100%; line-height: 7px; font-size: 7px; text-align: center;}
+.head .right {width: 22%; float: right;}
+.head .right table {width: 100%; border-collapse: collapse;}
+.head .right table .line {width: 100%;}
+.head .right table .line td {padding: 2px; padding-right: 5px; font-size: 11px;}
+.head .right table .line .left {text-align: right; width: 70%; padding-top: 0;}
+.head .right table .line .right {text-align: center; width: 30%; vertical-align: bottom; font-weight: bold;}
+.head .right table .line .center {text-align: right; width: 35%;}
+.t1 {width: 100%; height: 10px; margin-top: -40px;}
+.t1 .trn {width: 200px; font-size: 11px; line-height: 11px; margin-left: 750px; float: none;}
+.t2 {margin-top: 5px; width: 100%; text-align: right; font-size: 10px; font-weight: lighter; font-style: italic;}
+.body {width: 100%;}
+.body table {border-collapse: collapse; font-size: 10px;}
+.border {border: 1px solid black;}
+.border2px {border: 2px solid black;}
+.startborder {border: 2px solid black; border-right: 1px solid black;}
+.middleborder {border: 2px solid black; border-left: 1px; border-right: 1px solid black;}
+.endborder {border: 2px solid black; border-left: 1px solid black;}
+.bordertop {border: 2px solid black; border-bottom: 1px solid black;}
+.bordermiddle {border: 2px solid black; border-top: 1px solid black; border-bottom: 1px solid black;}
+.borderbottom {border: 2px solid black; border-top: 1px solid black;}
+.textright {text-align: right;}
+.textleft {text-align: left;}
+.textcenter {text-align: center;}
+.paddingright3 {padding-right: 3px;}
+.paddingright5 {padding-right: 5px;}
+.t3 {width: 100%; margin-left: 150px; margin-top: 5px;}
+.t3 .lt {width: 100%;}
+.t3 .lt .input .itop {border-bottom: 1px solid black;}
+.t3 .lt .input .ibottom {font-size: 7px; line-height: 7px; text-align: center;}
+.t3 .lt .n1 {width: 250px;}
+.t3 .lt .i1 {width: 300px;}
+.t3 .lt .n2 {width: 70px;}
+.t3 .lt .i2 {width: 300px;}
+.t3 .lt .n3 {width: 200px; padding-left: 3px;}
+.t4 {width: 100%; margin-left: 150px;}
+.t4 .lt {width: 100%; height: 20px;}
+.t4 .lt .ltb1 {width: 300px; height: 12px;}
+.t4 .lt .ltb2 {width: 400px; height: 12px;}
+.t4 .lt .ltb3 {width: 200px; height: 24px; border: 2px solid black; float: right; margin-top: -9px;}
+.t4 .lt .ltbs .input .itop {border-bottom: 1px solid black;}
+.t4 .lt .ltbs .input .ibottom {font-size: 7px; line-height: 7px; text-align: center;}
+.t4 .lt .ltb1 .name {width: 70px;}
+.t4 .lt .ltb1 .input {width: 220px;}
+.t4 .lt .ltb2 .name {width: 120px;}
+.t4 .lt .ltb2 .input {width: 270px;}
+.t5 {width: 100%; margin-top: 5px;}
+.t5 .lt {width: 50%; padding: 0; margin-left: -1px; }
+.t5 .rt {width: 50%; padding: 0; margin-right: 0; float: right;}
+.t5 .lt {border-right: 1px solid black;}
+.t5 .lt .line {width: 99%;}
+.t5 .rt .line {width: 99%; float: right;}
+.t5 .lt .line .input .itop, .t5 .rt .line .input .itop {border-bottom: 1px solid black;}
+.t5 .lt .line .input .ibottom, .t5 .rt .line .input .ibottom {font-size: 7px; line-height: 7px; text-align: center;}
+.t5 .lt .line .n1 {width: 250px;}
+.t5 .lt .line .i1 {width: 90px;}
+.t5 .lt .line .n2 {width: 100px; padding-left: 3px;}
+.t5 .lt .line .i2 .itop {font-weight: bold;}
+.t5 .lt .line .n3 {width: 150px;}
+.t5 .lt .line .i3 {width: 120px;}
+.t5 .lt .line .i4 {width: 120px; margin-left: 16px;}
+.t5 .lt .line .i5 {width: 120px; float: right;}
+.t5 .lt .line .n6 {width: 190px; font-weight: bold;}
+.t5 .lt .line .i6 {width: 80px;}
+.t5 .lt .line .i7 {width: 120px; margin-left: 16px;}
+.t5 .lt .line .i8 {width: 120px; float: right;}
+.t5 .lt .line .n9 {width: 80px; margin-left: 100px;}
+.t5 .lt .line .n10 {width: 30px;}
+.t5 .lt .line .i9 {width: 120px;}
+.t5 .lt .line .n11 {width: 100px; margin-left: 5px;}
+.t5 .rt .line .n1 {width: 120px;}
+.t5 .rt .line .i1 {width: 120px;}
+.t5 .rt .line .n2 {width: 20px; margin-left: 5px;}
+.t5 .rt .line .i2 {width: 275px; float: right}
+.t5 .rt .line .n3 {width: 60px;}
+.t5 .rt .line .i3 {width: 470px; float: right}
+.t5 .rt .line .n4 {width: 150px;}
+.t5 .rt .line .i4 {width: 120px;}
+.t5 .rt .line .i5 {width: 120px; margin-left: 16px;}
+.t5 .rt .line .i6 {width: 120px; float: right;}
+.t5 .rt .line .n9 {width: 80px; margin-left: 100px;}
+.t5 .rt .line .n10 {width: 40px;}
+.t5 .rt .line .i9 {width: 120px;}

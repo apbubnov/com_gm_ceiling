@@ -1,0 +1,102 @@
+#footer {
+    background-color: #414099;
+}
+
+.btn-primary {
+    background-color: #414099;
+    border-color: #414099;
+}
+
+#content-tar {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+
+#btn-container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    text-align: right;
+}
+
+#add-brigade {
+    position: relative;
+    right: 0px !important;
+}
+
+#prev-button-container, #next-button-container {
+    display: inline-block;
+    float: left;
+    position: fixed;
+    top: 50%;
+    width: 50px;
+}
+
+#prev-button-container {
+    left: 25px;
+}
+
+#next-button-container {
+    right: 25px;
+}
+
+#calendars-container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+}
+
+.calendars-gaugers {
+    display: inline-block;
+    float: left;
+    width: calc(100% / 3);
+    padding: 25px;
+}
+
+.gaugers-name {
+    display: inline-block;
+    float: left;
+    width: 100%;
+}
+
+.calendar-table {
+    margin-bottom: 5px !important;
+}
+
+.calendar-table td {
+    padding: 5px !important;
+}
+
+#legenda-container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    padding-top: 2em;
+}
+
+#legenda img {
+    max-height:  25px;
+}
+
+#legenda td {
+    font-size: 14px;
+}
+
+#hours1, #hours2 {
+    width: 200px;
+}
+
+#hours {
+    margin-left: calc(50% - 115px);
+}
+
+#hours td {
+    padding: 10px;        
+}
+
+#wrong-window {
+    color: #ff3d3d;
+    margin-bottom: 1em;
+}

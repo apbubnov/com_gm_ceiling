@@ -1,0 +1,20 @@
+#modal-window-container-tar {
+    z-index: 30;
+}
+
+#hours, #mounters, #save-choise-tar {
+    width: 200px;
+}
+
+#projects_brigade {
+    width: 100%;
+    text-align: center;
+}
+
+#projects_brigade td {
+    border-bottom: 1px solid #d3d3f9;
+}
+
+.caption {
+    background-color: #d3d3f9;
+}

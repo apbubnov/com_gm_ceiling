@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fieldset>
+    <field name="id" type="text" readonly="true" class="readonly" default="0" description="JGLOBAL_FIELD_ID_DESC"/>
+    <field name="ordering"/>
+    <field name="state" default="1" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" class="inputbox" size="1">
+      <option value="1">JPUBLISHED</option>
+      <option value="0">JUNPUBLISHED</option>
+      <option value="2">JARCHIVED</option>
+      <option value="-2">JTRASHED</option>
+    </field>
+    <field name="checked_out" type="hidden" filter="unset"/>
+    <field name="checked_out_time" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
+    <field name="client_id" type="foreignkey" label="COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID" description="COM_GM_CEILING_FORM_DESC_PROJECT_CLIENT_ID" class="inputbox" input_type="list" table="#__gm_ceiling_clients" key_field="id" value_field="client_name" default="0"/>
+    <field name="project_info" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_INFO" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO"/>
+    <field name="project_status" type="int" default="0" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_STATUS" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_STATUS" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_STATUS" />
+    <field name="project_mounting_date" type="calendar" class="inputbox" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_MOUNTING_DATE" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_MOUNTING_DATE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_MOUNTING_DATE" format="%d.%m.%Y"/>
+    <field name="project_mounting_daypart" type="list" default="0" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_MOUNTING_DAYPART" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_MOUNTING_DAYPART" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_MOUNTING_DAYPART">
+      <option value="0">COM_GM_CEILING_PROJECTS_PROJECT_MOUNTING_DAYPART_OPTION_0</option>
+      <option value="1">COM_GM_CEILING_PROJECTS_PROJECT_MOUNTING_DAYPART_OPTION_1</option>
+      <option value="2">COM_GM_CEILING_PROJECTS_PROJECT_MOUNTING_DAYPART_OPTION_2</option>
+      <option value="3">COM_GM_CEILING_PROJECTS_PROJECT_MOUNTING_DAYPART_OPTION_3</option>
+    </field>
+	<field name="project_mounting_from" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
+	<field name="project_mounting_to" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
+    <field name="project_mounter" type="foreignkey" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_MOUNTER" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_MOUNTER" class="inputbox" input_type="list" table="#__gm_ceiling_groups" key_field="id" value_field="team_title" default="0"/>
+	<field name="owner" type="hidden" default="0" description="OWNER"/>
+    <field name="version_note" type="text" label="JGLOBAL_FIELD_VERSION_NOTE_LABEL" description="JGLOBAL_FIELD_VERSION_NOTE_DESC" class="inputbox" size="45" labelclass="control-label"/>
+	<field name="project_note" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_NOTE" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_NOTE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_NOTE"/>
+	<field name="gm_calculator_note" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_PROJECT_GM_CALCULATOR_NOTE" description="COM_GM_CEILING_FORM_DESC_PROJECT_GM_CALCULATOR_NOTE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_GM_CALCULATOR_NOTE"/>
+	<field name="dealer_calculator_note" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_PROJECT_DEALER_CALCULATOR_NOTE" description="COM_GM_CEILING_FORM_DESC_PROJECT_DEALER_CALCULATOR_NOTE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_DEALER_CALCULATOR_NOTE"/>
+	<field name="gm_manager_note" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_PROJECT_GM_MANAGER_NOTE" description="COM_GM_CEILING_FORM_DESC_PROJECT_GM_MANAGER_NOTE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_GM_MANAGER_NOTE"/>
+	<field name="gm_chief_note" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_PROJECT_GM_CHIEF_NOTE" description="COM_GM_CEILING_FORM_DESC_PROJECT_GM_CHIEF_NOTE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_GM_CHIEF_NOTE"/>
+	<field name="dealer_chief_note" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_PROJECT_DEALER_CHIEF_NOTE" description="COM_GM_CEILING_FORM_DESC_PROJECT_DEALER_CHIEF_NOTE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_DEALER_CHIEF_NOTE"/>
+	<field name="dealer_manager_note" type="textarea" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_PROJECT_DEALER_MANAGER_NOTE" description="COM_GM_CEILING_FORM_DESC_PROJECT_DEALER_MANAGER_NOTE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_DEALER_MANAGER_NOTE"/>
+	<field name="project_calculation_date" type="calendar" class="inputbox" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_CALCULATION_DATE" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_CALCULATION_DATE" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_CALCULATION_DATE" format="%d.%m.%Y"/>
+	<field name="who_calculate" type="hidden" default="1" />
+	<field name="who_mounting" type="hidden" default="1" />
+    <field name="project_calculation_daypart" type="list" label="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_CALCULATION_DAYPART" description="COM_GM_CEILING_FORM_DESC_PROJECT_PROJECT_CALCULATION_DAYPART" hint="COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_CALCULATION_DAYPART">
+      <option value="1">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_1</option>
+      <option value="2">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_2</option>
+      <option value="3">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_3</option>
+      <option value="4">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_4</option>
+      <option value="5">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_5</option>
+      <option value="6">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_6</option>
+      <option value="7">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_7</option>
+      <option value="8">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_8</option>
+      <option value="9">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_9</option>
+      <option value="10">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_10</option>
+      <option value="11">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_11</option>
+      <option value="12">COM_GM_CEILING_CALCULATIONS_PROJECT_CALCULATION_DAYPART_OPTION_12</option>
+    </field>
+	<field name="project_verdict" type="hidden" default="0" />
+	<field name="project_discount" type="hidden" default="0" />
+	<field name="created" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
+	<field name="closed" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
+	<field name="project_check" type="hidden" default="0" />
+	<field name="sum_check" type="hidden" default="0" />
+	<field name="cost_check" type="hidden" default="0" />
+	<field name="mounting_check" type="hidden" default="0" />
+	<field name="spend_check" type="hidden" default="0" />
+	<field name="gm_canvases_margin" type="hidden" default="0" />
+	<field name="gm_components_margin" type="hidden" default="0" />
+	<field name="gm_mounting_margin" type="hidden" default="0" />
+	<field name="dealer_canvases_margin" type="hidden" default="0" />
+	<field name="dealer_components_margin" type="hidden" default="0" />
+	<field name="dealer_mounting_margin" type="hidden" default="0" />
+	<field name="project_sum" type="hidden" default="0" />
+	<field name="new_project_sum" type="hidden" default="0" />
+	<field name="new_project_spend" type="hidden" default="0" />
+	<field name="new_project_mounting" type="hidden" default="0" />
+	<field name="new_extra_spend" type="hidden" default="0" />
+	<field name="salary_sum" type="hidden" default="0" />
+	<field name="extra_spend" type="hidden" default="" />
+  </fieldset>
+</form>

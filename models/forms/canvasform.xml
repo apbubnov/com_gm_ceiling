@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fieldset>
+    <field name="id" type="text" readonly="true" class="readonly" default="0" description="JGLOBAL_FIELD_ID_DESC"/>
+    <field name="ordering"/>
+    <field name="state" default="1" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" class="inputbox" size="1">
+      <option value="1">JPUBLISHED</option>
+      <option value="0">JUNPUBLISHED</option>
+      <option value="2">JARCHIVED</option>
+      <option value="-2">JTRASHED</option>
+    </field>
+    <field name="checked_out" type="hidden" filter="unset"/>
+    <field name="checked_out_time" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
+    <field name="canvas_title" type="text" label="COM_GM_CEILING_FORM_LBL_CANVAS_CANVAS_TITLE" description="COM_GM_CEILING_FORM_DESC_CANVAS_CANVAS_TITLE" hint="COM_GM_CEILING_FORM_LBL_CANVAS_CANVAS_TITLE"/>
+    <field name="canvas_price" label="COM_GM_CEILING_FORM_LBL_CANVAS_CANVAS_PRICE" description="COM_GM_CEILING_FORM_DESC_CANVAS_CANVAS_PRICE" hint="COM_GM_CEILING_FORM_LBL_CANVAS_CANVAS_PRICE"/>
+    <field name="canvas_texture" type="foreignkey" label="COM_GM_CEILING_FORM_LBL_CANVAS_CANVAS_TEXTURE" description="COM_GM_CEILING_FORM_DESC_CANVAS_CANVAS_TEXTURE" class="inputbox" input_type="list" table="#__gm_ceiling_textures" key_field="id" value_field="texture_title" default="0"/>
+    <field name="version_note" type="text" label="JGLOBAL_FIELD_VERSION_NOTE_LABEL" description="JGLOBAL_FIELD_VERSION_NOTE_DESC" class="inputbox" size="45" labelclass="control-label"/>
+  </fieldset>
+</form>

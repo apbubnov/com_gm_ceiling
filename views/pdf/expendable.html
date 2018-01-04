@@ -1,0 +1,53 @@
+<div class="all">
+    <div class="line top">Расходная накладная №@Номер@ от @Дата@</div>
+    <div class="sublinebold bold"></div>
+    <table class="a">
+        <tr>
+            <td class="start">Поставщик:</td>
+            <td class="end bold">@Организация@</td>
+        </tr>
+        <tr>
+            <td colspan="2"> </td>
+        </tr>
+        <tr>
+            <td>Покупатель:</td>
+            <td class="bold">@Покупатель@</td>
+        </tr>
+    </table>
+    <table class="b">
+        <tbody class="borderbold">
+        <tr>
+            <td class="border bold textcenter min">№</td>
+            <td class="border bold textcenter max">Товар</td>
+            <td colspan="2" class="border bold textcenter">Количество</td>
+            <td class="border bold textcenter">Цена</td>
+            <td class="border bold textcenter">Сумма</td>
+            <td class="border bold textcenter empty">Номер ГТД, Страна происхождения</td>
+        </tr>
+        @Товары@
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4" style="line-height: 30px;"> </td>
+            <td class="textright bold">Итого</td>
+            <td class="textright bold">@ИтогоСумма@</td>
+            <td> </td>
+        </tr>
+        </tfoot>
+    </table>
+    <div class="line">Всего нименований @Количество@, на сумму @СуммаЦифрами@</div>
+    <div class="line bold" style="margin-top: 5px;">@СуммаПрописью@</div>
+    <div class="sublinebold"></div>
+    <div class="line lb">
+        <div class="n">Отпустил</div>
+        <div class="i">
+            <div class="iTop"> </div>
+            <div class="iBottom"> </div>
+        </div>
+        <div class="n" style="margin-left: 40px;">Получил</div>
+        <div class="i">
+            <div class="iTop"> </div>
+            <div class="iBottom"> </div>
+        </div>
+    </div>
+</div>

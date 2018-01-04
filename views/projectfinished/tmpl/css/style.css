@@ -1,0 +1,112 @@
+#footer {
+    background-color: #414099;
+}
+
+.btn-primary {
+    background-color: #414099;
+    border-color: #414099;
+}
+
+#project_container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* 
+#project_container {
+    display: none;
+    float: left;
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+}
+
+#finished_mounting {
+    max-width: 100%;
+    position: absolute;
+    color: #ff0000;
+}
+
+
+
+#content-tar {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    padding-top: 1em;
+    text-align: center;
+}
+
+.passport-image {
+    max-height: 50px;
+}
+
+#mounters-container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+}
+
+#mounters {
+    width: 100%;
+    color: #414099;
+}
+
+#mounters td {
+    padding: 15px;
+    border-bottom: 1px solid #d3d3f9;
+}
+
+.select-mounters {
+    max-width: 200px;
+}
+
+#label-wrong-filter {
+    display: none;
+    float: left;
+    width: 100%;
+    color: #ff3d3d;
+    padding-bottom: 1em; 
+}
+
+#projects-container {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    padding-top: 1em;
+}
+
+#projects {
+    width: 100%;
+    text-align: center;
+    color: #414099;
+}
+
+#projects td {
+    padding: 10px;
+    border-bottom: 1px solid #d3d3f9;
+    text-align: center;
+}
+
+.caption {
+    background-color: #d3d3f9;
+    text-align: center;
+}
+
+#button-research {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    text-align: right;
+}
+
+.input-date {
+    border: 1px solid #414099;
+    border-radius: 5px;
+}
+
+#modal-window-choose-tar {
+    min-height: 300px;
+} */

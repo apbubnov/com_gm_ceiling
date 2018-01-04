@@ -1,0 +1,4 @@
+
+SELECT hoods.*
+FROM `#__gm_ceiling_hoods` AS hoods
+WHERE hoods.calculation_id  = '7'

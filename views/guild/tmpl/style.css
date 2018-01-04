@@ -1,0 +1,225 @@
+page, page cuts, page cuts * {
+    display: block;
+    position: relative;
+}
+
+cuts {
+    margin-top: 20px;
+    box-shadow: 0 0 1px 1px #414099;
+    display: none;
+}
+cuts line {
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    padding: 0 15px;
+}
+.row {
+    margin: 0 -15px !important;
+}
+
+cuts .gm {
+    background-color: #414099;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+cuts ceilings {
+    padding: 15px !important;
+}
+
+cuts line:not(.gm) {
+    box-shadow: 0 -1px 0 0 #4e4cb7;
+    line-height: 50px;
+}
+
+cuts ceiling {
+    padding: 10px;
+}
+
+cuts ceiling name {
+    background-color: #4e4cb7;
+    box-shadow: 0 0 1px 1px #4e4cb7;
+    color: #ffffff;
+    padding: 0 10px;
+}
+
+cuts ceiling .image {
+    width: 100%;
+    height: 15vw;
+    min-height: 150px;
+    max-height: 200px;
+    background: center no-repeat;
+    background-size: contain;
+    box-shadow: 0 0 1px 1px #4e4cb7, 3px 3px 3px 0 rgba(0,0,0,.2);
+}
+
+cuts ceiling .loupe {
+    position: absolute;
+    left: 15px;
+    top: 34px;
+    width: calc(100% - 30px);
+    height: 15vw;
+    min-height: 150px;
+    cursor: pointer;
+    display: none;
+}
+
+cuts ceiling .loupe i {
+    color: #ffffff;
+    position: absolute;
+    font-size: 30px;
+    left: calc(50% - 15px);
+    top: calc(50% - 15px);
+}
+
+cuts ceiling:hover .loupe {
+    display: inline-block;
+    background-color: rgba(0,0,0,.5);
+}
+
+.ModalCeiling {
+    transform: scale(0, 0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: top no-repeat;
+    background-position: auto 15px;;
+    background-size: auto calc(100% - 60px);
+    background-color: #E6E6FA;
+    overflow: hidden;
+    transition: .5s;
+}
+
+.ModalCeiling div {
+    display: inline-block;
+    float: left;
+}
+
+.ModalCeiling .ModalPage {
+    width: 70%;
+    height: 100vh;
+}
+
+.ModalCeiling .ModalPage .ModalName {
+    width: calc(100% - 55px);
+    margin: 5px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 37px;
+    height: 40px;
+    padding: 0 20px;
+    color: #ffffff;
+    background-color: rgba(78, 76, 183, 0.95);
+    box-shadow: 0 0 1px 1px rgba(78, 76, 183, .5);
+    text-shadow: 1px 2px 2px rgba(0,0,0,.5);
+}
+
+.ModalCeiling .ModalPage .ModalClose {
+    width: 40px;
+    margin: 5px;
+    margin-left: 0;
+    height: 40px;
+    line-height: 37px;
+    font-size: 20px;
+    color: #ffffff;
+    background-color: rgba(78, 76, 183, 0.95);
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 0 1px 1px rgba(78, 76, 183, .5);
+    text-shadow: 1px 2px 2px rgba(0,0,0,.5);
+}
+
+.ModalCeiling .ModalPage .ModalImage {
+    width: 100%;
+    height: calc(100vh - 50px);
+    background: center no-repeat;
+    background-size: contain;
+}
+
+.ModalCeiling .ModalLines {
+    width: 30%;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.ModalCeiling .ModalLine {
+    width: calc(100% - 10px);
+    margin: 5px;
+    height: auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 1px 1px rgba(78, 76, 183, .5);
+    padding: 5px;
+    text-align: justify;
+}
+
+.ModalCeiling .ModalLine .Line {
+    width: 100%;
+}
+
+.ModalCeiling .ModalLine .Lines * {
+    width: 100%;
+}
+
+.ModalCeiling .ModalLine .Lines .Line {
+    margin-top: 10px;
+}
+
+.ModalCeiling .ModalLine.Actions .Arrow {
+    width: 50px;
+    float: left;
+}
+
+.ModalCeiling .ModalLine.Actions .Submit {
+    width: calc(100% - 106px);
+    float: left;
+    margin-left: 3px;
+}
+
+.notransition {
+    transition: 0s !important;
+}
+
+.hidden {
+    overflow: hidden !important;
+}
+
+.mouseMove {
+    cursor: url("/files/cursors/move.cur"), move;
+}
+
+#KeyPress {
+    height: 0;
+    width: 0;
+    background-color: transparent;
+    border: none;
+}
+
+@media (max-width: 767px) {
+    cuts ceiling .loupe {
+        display: inline-block;
+        background-color: rgba(0,0,0,.5);
+    }
+
+    .ModalCeiling .ModalPage {
+        height: calc(100vh/2 + 50px);
+    }
+
+    .ModalCeiling .ModalPage,
+    .ModalCeiling .ModalLines {
+        width: 100%;
+    }
+
+    .ModalCeiling .ModalPage .ModalImage {
+        width: 100%;
+        height: calc(100vh/2);
+    }
+
+    .ModalCeiling .ModalLines {
+        width: 100%;
+        height: calc(100vh - 40px - 100vh/2);
+    }
+}

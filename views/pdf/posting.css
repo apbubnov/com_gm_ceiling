@@ -1,0 +1,24 @@
+div {display: inline-block; float: left;}
+div, td, tr, table {font-family: Arial; width: 100%; font-size: 12px; }
+
+div.title {padding: 0 10px; margin-bottom: 10px; border-bottom: 2px solid black; font-weight: bold;}
+
+table.head {border-collapse: collapse; margin-bottom: 10px;}
+table.head td.title {width: 12%; padding: 5px 0;}
+table.head td.name {font-weight: bold;}
+
+table.table {border-collapse: collapse; border: 2px solid black;}
+table.table tr td {padding: 2px 5px; font-size: 10px; width: auto; border: 1px solid black;}
+table.table tr.thead td {font-weight: normal;}
+
+table.table2 {border-collapse: collapse;}
+table.table2 tr td {padding: 2px 5px; font-size: 10px; width: auto;}
+table.table2 tr.thead td {font-weight: normal;}
+
+.line {width: 100%; margin-top: 15px;}
+.line .name {width: 9%; text-align: center;}
+.line .u {width: 40%; border-bottom: 1px solid black;}
+
+.left {text-align: left !important;}
+.right {text-align: right !important;}
+.center {text-align: center !important;}

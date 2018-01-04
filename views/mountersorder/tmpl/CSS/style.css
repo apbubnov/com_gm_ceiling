@@ -1,0 +1,151 @@
+div {
+    font-family: Cuprum;    
+}
+
+.tar-color-414099 {
+    color: #414099;
+}
+
+#footer {
+    background-color: #414099;
+}
+
+.nav-link {
+    color: #ffffff !important;
+}
+
+.active {
+    color: #414099 !important;
+}
+
+.fa-tar {
+    color: #ffffff;
+}
+
+#content-tar {
+    display: inline-block;
+    float: left;
+    width: 100%;
+}
+
+.overflow {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#ceiling {
+    display: inline-block;
+    float: left;
+    width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+    #ceiling {
+        display: inline-block;
+        float: left;
+        width: 70%;
+        margin-left: 15%; 
+    }
+}
+
+#image-ceiling {
+    width: 100%;
+}
+
+#table-all-orders, .table-order {
+    width: 100%;
+    text-align: center;
+}
+
+#table-all-orders td, .table-order td {
+    padding: 5px;
+    border-bottom: 1px solid #d3d3f9;
+}
+
+#table-all-orders tr:hover {
+    background-color: d3d3f9;
+}
+
+.content-tab {
+    padding: 25px;
+}
+
+.caption {
+    background-color: #d3d3f9;
+}
+
+.left {       
+    text-align: left;
+}
+
+#buttons-cantainer {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    padding-top: 1em; 
+    text-align: center;
+}
+
+#begin {
+    background-color: #414099;
+    border-color: #414099;
+    color: #ffffff;
+    margin: 5px;
+    z-index: 2;
+}
+
+#complited {
+    background-color: #37a922;
+    border-color: #37a922;
+    color: #ffffff;
+    margin: 5px;
+    z-index: 2;
+}
+
+#underfulfilled {
+    background-color: #461f08;
+    border-color: #461f08;
+    color: #ffffff;
+    margin: 5px;
+    z-index: 2;
+}
+
+#begin:hover {
+    background-color: #363681;
+    border-color: #363681;
+}
+
+#complited:hover {
+    background-color: #2d8b1b;
+    border-color: #2d8b1b;
+}
+
+#underfulfilled:hover {
+    background-color: #361806;
+    border-color: #361806;
+}
+
+#note {
+    min-width: 250px;
+    max-width: 300px;
+    height: 100px;
+    resize: none;
+    border-color: #414099; 
+}
+
+#modal-window-1-tar {
+    z-index: 51;
+}
+
+.modal {
+    z-index: 1;
+}
+
+#warning {
+    display: none;
+    color: #ff3d3d;
+}
+
+#modal-window-container-tar {
+    z-index: 50;
+}

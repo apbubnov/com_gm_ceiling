@@ -1,0 +1,661 @@
+UPDATE `#__gm_ceiling_components_goods` SET count = '9833.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9833.5', '22.5', '1', '2017-12-13 03:22:27', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 03:23:26
+UPDATE `#__gm_ceiling_components_goods` SET count = '9833' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9833', '22.5', '1', '2017-12-13 03:23:26', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 03:23:56
+UPDATE `#__gm_ceiling_components_goods` SET count = '9832.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9832.5', '22.5', '1', '2017-12-13 03:23:56', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 03:24:56
+UPDATE `#__gm_ceiling_components_goods` SET count = '9832' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9832', '22.5', '1', '2017-12-13 03:24:56', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 03:25:41
+UPDATE `#__gm_ceiling_components_goods` SET count = '9831.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9831.5', '22.5', '1', '2017-12-13 03:25:41', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 03:27:19
+UPDATE `#__gm_ceiling_components_goods` SET count = '9831' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9831', '22.5', '1', '2017-12-13 03:27:19', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 03:29:00
+UPDATE `#__gm_ceiling_components_goods` SET count = '9830.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9830.5', '22.5', '1', '2017-12-13 03:29:00', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 03:29:25
+UPDATE `#__gm_ceiling_components_goods` SET count = '9830' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9830', '22.5', '1', '2017-12-13 03:29:25', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 03:29:49
+UPDATE `#__gm_ceiling_components_goods` SET count = '9829.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9829.5', '22.5', '1', '2017-12-13 03:29:49', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 03:31:08
+UPDATE `#__gm_ceiling_components_goods` SET count = '9829' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9829', '22.5', '1', '2017-12-13 03:31:08', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 17:56:03
+UPDATE `#__gm_ceiling_components_goods` SET count = '9828.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9828.5', '22.5', '1', '2017-12-13 17:56:03', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 17:56:10
+UPDATE `#__gm_ceiling_components_goods` SET count = '9828' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9828', '22.5', '1', '2017-12-13 17:56:10', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 17:59:07
+UPDATE `#__gm_ceiling_components_goods` SET count = '9827.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9827.5', '22.5', '1', '2017-12-13 17:59:07', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:17:23
+UPDATE `#__gm_ceiling_components_goods` SET count = '9827' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9827', '22.5', '1', '2017-12-13 20:17:23', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:18:13
+UPDATE `#__gm_ceiling_components_goods` SET count = '9826.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9826.5', '22.5', '1', '2017-12-13 20:18:13', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:19:11
+UPDATE `#__gm_ceiling_components_goods` SET count = '9826' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9826', '22.5', '1', '2017-12-13 20:19:11', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:20:23
+UPDATE `#__gm_ceiling_components_goods` SET count = '9825.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9825.5', '22.5', '1', '2017-12-13 20:20:23', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:21:12
+UPDATE `#__gm_ceiling_components_goods` SET count = '9825' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9825', '22.5', '1', '2017-12-13 20:21:12', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:23:16
+UPDATE `#__gm_ceiling_components_goods` SET count = '9824.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9824.5', '22.5', '1', '2017-12-13 20:23:16', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:23:37
+UPDATE `#__gm_ceiling_components_goods` SET count = '9824' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9824', '22.5', '1', '2017-12-13 20:23:37', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:24:01
+UPDATE `#__gm_ceiling_components_goods` SET count = '9823.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9823.5', '22.5', '1', '2017-12-13 20:24:01', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:24:52
+UPDATE `#__gm_ceiling_components_goods` SET count = '9823' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9823', '22.5', '1', '2017-12-13 20:24:52', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:26:39
+UPDATE `#__gm_ceiling_components_goods` SET count = '9822.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9822.5', '22.5', '1', '2017-12-13 20:26:39', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:27:55
+UPDATE `#__gm_ceiling_components_goods` SET count = '9822' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9822', '22.5', '1', '2017-12-13 20:27:55', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:31:47
+UPDATE `#__gm_ceiling_components_goods` SET count = '9821.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9821.5', '22.5', '1', '2017-12-13 20:31:47', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:32:39
+UPDATE `#__gm_ceiling_components_goods` SET count = '9821' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9821', '22.5', '1', '2017-12-13 20:32:39', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:33:58
+UPDATE `#__gm_ceiling_components_goods` SET count = '9820.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9820.5', '22.5', '1', '2017-12-13 20:33:58', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:35:02
+UPDATE `#__gm_ceiling_components_goods` SET count = '9820' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9820', '22.5', '1', '2017-12-13 20:35:02', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:36:02
+UPDATE `#__gm_ceiling_components_goods` SET count = '9819.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9819.5', '22.5', '1', '2017-12-13 20:36:02', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:36:08
+UPDATE `#__gm_ceiling_components_goods` SET count = '9819' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9819', '22.5', '1', '2017-12-13 20:36:08', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:36:46
+UPDATE `#__gm_ceiling_components_goods` SET count = '9818.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9818.5', '22.5', '1', '2017-12-13 20:36:46', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:37:58
+UPDATE `#__gm_ceiling_components_goods` SET count = '9818' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9818', '22.5', '1', '2017-12-13 20:37:58', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 20:38:22
+UPDATE `#__gm_ceiling_components_goods` SET count = '9817.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9817.5', '22.5', '1', '2017-12-13 20:38:22', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:41:11
+UPDATE `#__gm_ceiling_components_goods` SET count = '9817' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9817', '22.5', '1', '2017-12-13 21:41:11', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:41:29
+UPDATE `#__gm_ceiling_components_goods` SET count = '9816.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9816.5', '22.5', '1', '2017-12-13 21:41:29', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:45:45
+UPDATE `#__gm_ceiling_components_goods` SET count = '9761.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9761.5', '2475', '1', '2017-12-13 21:45:45', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:54:25
+UPDATE `#__gm_ceiling_components_goods` SET count = '9706.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9706.5', '2475', '1', '2017-12-13 21:54:25', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:55:12
+UPDATE `#__gm_ceiling_components_goods` SET count = '9651.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9651.5', '2475', '1', '2017-12-13 21:55:12', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:55:12
+UPDATE `#__gm_ceiling_components_goods` SET count = '9596.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9596.5', '2475', '1', '2017-12-13 21:55:12', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:55:13
+UPDATE `#__gm_ceiling_components_goods` SET count = '9541.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9541.5', '2475', '1', '2017-12-13 21:55:13', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:55:14
+UPDATE `#__gm_ceiling_components_goods` SET count = '9486.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9486.5', '2475', '1', '2017-12-13 21:55:14', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:55:15
+UPDATE `#__gm_ceiling_components_goods` SET count = '9431.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9431.5', '2475', '1', '2017-12-13 21:55:15', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 21:55:15
+UPDATE `#__gm_ceiling_components_goods` SET count = '9376.5' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '1', '2', '202020', 'Б-1-2', '9376.5', '2475', '1', '2017-12-13 21:55:15', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 22:33:22
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '1320' WHERE id = '202';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '40' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '202', '23423423', '32423423', '1320', '11200', '1', '2017-12-13 22:33:22', NULL , '799', '5', '8', '2' ) , ( '2', '2', '', '', '40', '14000', '1', '2017-12-13 22:33:22', NULL , '799', '5', '8', '2' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '49999' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9375.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9997.5' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '1', '45645', 'КТ-ШТ', '49999', '0', '1', '2017-12-13 22:33:22', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9375.5', '45', '1', '2017-12-13 22:33:22', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9997.5', '37.5', '1', '2017-12-13 22:33:22', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 22:34:53
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '24.24' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '39.99' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '24.24', '1.4', '1', '2017-12-13 22:34:53', NULL , '799', '5', '8', '2' ) , ( '2', '2', '', '', '39.99', '1.4', '1', '2017-12-13 22:34:53', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '24.24', '1', '2', '2017-12-13 22:34:53' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '49998' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9374.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9995' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '1', '45645', 'КТ-ШТ', '49998', '0', '1', '2017-12-13 22:34:53', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9374.5', '45', '1', '2017-12-13 22:34:53', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9995', '37.5', '1', '2017-12-13 22:34:53', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 13.12.2017 22:59:21
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.99' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '499.99' WHERE id = '2';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.99', '1.4', '1', '2017-12-13 22:59:21', NULL , '799', '5', '8', '2' ) , ( '2', '2', '', '', '499.99', '1.4', '1', '2017-12-13 22:59:21', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.99', '1', '2', '2017-12-13 22:59:21' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '49997' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9373.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9992.5' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '1', '45645', 'КТ-ШТ', '49997', '0', '1', '2017-12-13 22:59:21', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9373.5', '45', '1', '2017-12-13 22:59:21', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9992.5', '37.5', '1', '2017-12-13 22:59:21', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:03:40
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.98' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.99' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.98', '1.4', '1', '2017-12-14 04:03:40', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.99', '1.4', '1', '2017-12-14 04:03:40', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.98', '1', '2', '2017-12-14 04:03:40' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '149993' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49996' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '99993' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '59372.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9372.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '59990' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9990' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '149993', '-0', '1', '2017-12-14 04:03:40', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49996', '0', '1', '2017-12-14 04:03:40', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '99993', '-0', '1', '2017-12-14 04:03:40', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '59372.5', '-421762.5', '1', '2017-12-14 04:03:40', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9372.5', '45', '1', '2017-12-14 04:03:40', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '59990', '-149850', '1', '2017-12-14 04:03:40', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9990', '37.5', '1', '2017-12-14 04:03:40', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:05:33
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.97' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.98' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.97', '1.4', '1', '2017-12-14 04:05:33', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.98', '1.4', '1', '2017-12-14 04:05:33', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.97', '1', '2', '2017-12-14 04:05:33' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '299981' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49995' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '149988' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '68744' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9371.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '69977.5' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9987.5' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '299981', '-0', '1', '2017-12-14 04:05:33', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49995', '0', '1', '2017-12-14 04:05:33', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '149988', '-0', '1', '2017-12-14 04:05:33', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '68744', '-421717.5', '1', '2017-12-14 04:05:33', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9371.5', '45', '1', '2017-12-14 04:05:33', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '69977.5', '-149812.5', '1', '2017-12-14 04:05:33', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9987.5', '37.5', '1', '2017-12-14 04:05:33', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:06:17
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.96' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.97' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.96', '1.4', '1', '2017-12-14 04:06:17', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.97', '1.4', '1', '2017-12-14 04:06:17', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.96', '1', '2', '2017-12-14 04:06:17' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '499963' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49994' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '199982' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '78114.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9370.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '79962.5' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9985' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '499963', '-0', '1', '2017-12-14 04:06:17', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49994', '0', '1', '2017-12-14 04:06:17', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '199982', '-0', '1', '2017-12-14 04:06:17', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '78114.5', '-421672.5', '1', '2017-12-14 04:06:17', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9370.5', '45', '1', '2017-12-14 04:06:17', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '79962.5', '-149775', '1', '2017-12-14 04:06:17', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9985', '37.5', '1', '2017-12-14 04:06:17', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:06:35
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.95' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.96' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.95', '1.4', '1', '2017-12-14 04:06:35', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.96', '1.4', '1', '2017-12-14 04:06:35', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.95', '1', '2', '2017-12-14 04:06:35' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '749938' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49993' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '249975' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '87484' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9369.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '89945' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9982.5' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '749938', '-0', '1', '2017-12-14 04:06:35', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49993', '0', '1', '2017-12-14 04:06:35', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '249975', '-0', '1', '2017-12-14 04:06:35', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '87484', '-421627.5', '1', '2017-12-14 04:06:35', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9369.5', '45', '1', '2017-12-14 04:06:35', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '89945', '-149737.5', '1', '2017-12-14 04:06:35', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9982.5', '37.5', '1', '2017-12-14 04:06:35', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:08:11
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.94' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.95' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.94', '1.4', '1', '2017-12-14 04:08:11', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.95', '1.4', '1', '2017-12-14 04:08:11', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.94', '1', '2', '2017-12-14 04:08:11' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '1049905' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49992' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '299967' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '96852.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9368.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '99925' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9980' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '1049905', '-0', '1', '2017-12-14 04:08:11', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49992', '0', '1', '2017-12-14 04:08:11', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '299967', '-0', '1', '2017-12-14 04:08:11', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '96852.5', '-421582.5', '1', '2017-12-14 04:08:11', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9368.5', '45', '1', '2017-12-14 04:08:11', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '99925', '-149700', '1', '2017-12-14 04:08:11', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9980', '37.5', '1', '2017-12-14 04:08:11', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:08:35
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.93' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.94' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.93', '1.4', '1', '2017-12-14 04:08:35', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.94', '1.4', '1', '2017-12-14 04:08:35', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.93', '1', '2', '2017-12-14 04:08:35' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '1399858' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49991' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '349958' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '106220' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9367.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '109902.5' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9977.5' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '1399858', '-0', '1', '2017-12-14 04:08:35', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49991', '0', '1', '2017-12-14 04:08:35', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '349958', '-0', '1', '2017-12-14 04:08:35', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '106220', '-421537.5', '1', '2017-12-14 04:08:35', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9367.5', '45', '1', '2017-12-14 04:08:35', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '109902.5', '-149662.5', '1', '2017-12-14 04:08:35', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9977.5', '37.5', '1', '2017-12-14 04:08:35', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:11:41
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.92' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.93' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.92', '1.4', '1', '2017-12-14 04:11:41', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.93', '1.4', '1', '2017-12-14 04:11:41', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.92', '1', '2', '2017-12-14 04:11:41' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '1799808' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49990' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '399948' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '115586.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9366.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '119877' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9975' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '1799808', '-0', '1', '2017-12-14 04:11:41', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49990', '0', '1', '2017-12-14 04:11:41', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '399948', '-0', '1', '2017-12-14 04:11:41', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '115586.5', '-421492.5', '1', '2017-12-14 04:11:41', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9366.5', '45', '1', '2017-12-14 04:11:41', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '119877', '-149625', '1', '2017-12-14 04:11:41', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9975', '37.5', '1', '2017-12-14 04:11:41', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:12:24
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.91' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.92' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.91', '1.4', '1', '2017-12-14 04:12:24', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.92', '1.4', '1', '2017-12-14 04:12:24', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.91', '1', '2', '2017-12-14 04:12:24' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '2249747' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49989' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '449937' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '124951.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9365.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '129849.5' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9972.5' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '2249747', '-0', '1', '2017-12-14 04:12:24', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49989', '0', '1', '2017-12-14 04:12:24', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '449937', '-0', '1', '2017-12-14 04:12:24', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '124951.5', '-421447.5', '1', '2017-12-14 04:12:24', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9365.5', '45', '1', '2017-12-14 04:12:24', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '129849.5', '-149587.5', '1', '2017-12-14 04:12:24', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9972.5', '37.5', '1', '2017-12-14 04:12:24', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:12:39
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.9' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.91' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.9', '1.4', '1', '2017-12-14 04:12:39', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.91', '1.4', '1', '2017-12-14 04:12:39', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.9', '1', '2', '2017-12-14 04:12:39' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '2749675' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49988' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '499925' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '134316.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9364.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '139820' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9970' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '2749675', '-0', '1', '2017-12-14 04:12:39', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49988', '0', '1', '2017-12-14 04:12:39', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '499925', '-0', '1', '2017-12-14 04:12:39', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '134316.5', '-421402.5', '1', '2017-12-14 04:12:39', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9364.5', '45', '1', '2017-12-14 04:12:39', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '139820', '-149550', '1', '2017-12-14 04:12:39', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9970', '37.5', '1', '2017-12-14 04:12:39', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:14:10
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.89' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.9' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.89', '1.4', '1', '2017-12-14 04:14:10', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.9', '1.4', '1', '2017-12-14 04:14:10', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.89', '1', '2', '2017-12-14 04:14:10' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '3299592' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49987' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '549912' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '143679.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9363.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '149787.5' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9967.5' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '3299592', '-0', '1', '2017-12-14 04:14:10', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49987', '0', '1', '2017-12-14 04:14:10', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '549912', '-0', '1', '2017-12-14 04:14:10', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '143679.5', '-421357.5', '1', '2017-12-14 04:14:10', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9363.5', '45', '1', '2017-12-14 04:14:10', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '149787.5', '-149512.5', '1', '2017-12-14 04:14:10', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9967.5', '37.5', '1', '2017-12-14 04:14:10', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:16:28
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.88' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.89' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.88', '1.4', '1', '2017-12-14 04:16:28', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.89', '1.4', '1', '2017-12-14 04:16:28', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.88', '1', '2', '2017-12-14 04:16:28' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '3899488' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49986' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '599898' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '153042.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9362.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '159753' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9965' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '3899488', '-0', '1', '2017-12-14 04:16:28', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49986', '0', '1', '2017-12-14 04:16:28', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '599898', '-0', '1', '2017-12-14 04:16:28', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '153042.5', '-421312.5', '1', '2017-12-14 04:16:28', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9362.5', '45', '1', '2017-12-14 04:16:28', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '159753', '-149475', '1', '2017-12-14 04:16:28', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9965', '37.5', '1', '2017-12-14 04:16:28', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:18:58
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.79' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.88' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.79', '12.6', '1', '2017-12-14 04:18:58', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.88', '1.4', '1', '2017-12-14 04:18:58', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.79', '1', '2', '2017-12-14 04:18:58' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '4549373' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49985' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '649883' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '162403.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9361.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '169715.5' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9962.5' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '4549373', '-0', '1', '2017-12-14 04:18:58', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49985', '0', '1', '2017-12-14 04:18:58', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '649883', '-0', '1', '2017-12-14 04:18:58', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '162403.5', '-421267.5', '1', '2017-12-14 04:18:58', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9361.5', '45', '1', '2017-12-14 04:18:58', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '169715.5', '-149437.5', '1', '2017-12-14 04:18:58', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9962.5', '37.5', '1', '2017-12-14 04:18:58', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:23:06
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.7' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.87' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.7', '12.6', '1', '2017-12-14 04:23:06', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.87', '1.4', '1', '2017-12-14 04:23:06', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.7', '1', '2', '2017-12-14 04:23:06' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '5249237' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49984' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '699867' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '171764.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9360.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '179676' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9960' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '5249237', '-0', '1', '2017-12-14 04:23:06', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49984', '0', '1', '2017-12-14 04:23:06', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '699867', '-0', '1', '2017-12-14 04:23:06', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '171764.5', '-421222.5', '1', '2017-12-14 04:23:06', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9360.5', '45', '1', '2017-12-14 04:23:06', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '179676', '-149400', '1', '2017-12-14 04:23:06', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9960', '37.5', '1', '2017-12-14 04:23:06', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:39:19
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.61' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.86' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.61', '12.6', '1', '2017-12-14 04:39:19', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.86', '1.4', '1', '2017-12-14 04:39:19', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.61', '1', '2', '2017-12-14 04:39:19' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '5999090' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49983' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '749850' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '181123.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9359.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '189633.5' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9957.5' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '5999090', '-0', '1', '2017-12-14 04:39:19', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49983', '0', '1', '2017-12-14 04:39:19', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '749850', '-0', '1', '2017-12-14 04:39:19', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '181123.5', '-421177.5', '1', '2017-12-14 04:39:19', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9359.5', '45', '1', '2017-12-14 04:39:19', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '189633.5', '-149362.5', '1', '2017-12-14 04:39:19', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9957.5', '37.5', '1', '2017-12-14 04:39:19', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 14.12.2017 04:45:20
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.52' WHERE id = '208';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '149.85' WHERE id = '265';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '1', '208', '23423433', '32423433', '149.52', '12.6', '1', '2017-12-14 04:45:20', NULL , '799', '5', '8', '2' ) , ( '2', '265', '23423433', '32423433', '149.85', '1.4', '1', '2017-12-14 04:45:20', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '149.52', '1', '2', '2017-12-14 04:45:20' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '6798922' WHERE id = '232';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49982' WHERE id = '4';
+UPDATE `#__gm_ceiling_components_goods` SET count = '799832' WHERE id = '1';
+UPDATE `#__gm_ceiling_components_goods` SET count = '190482.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9358.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '199589' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9955' WHERE id = '3';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '189', '649', '232', '45645', 'К-ТЕМП', '6798922', '-0', '1', '2017-12-14 04:45:20', NULL , '799', '5', '8', '2' ) , ( '189', '649', '4', '45645', 'КТ-ШТ', '49982', '0', '1', '2017-12-14 04:45:20', NULL , '799', '5', '8', '2' ) , ( '189', '649', '1', '45645', 'КТ-ШТ', '799832', '-0', '1', '2017-12-14 04:45:20', NULL , '799', '5', '8', '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '190482.5', '-421132.5', '1', '2017-12-14 04:45:20', NULL , '799', '5', '8', '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9358.5', '45', '1', '2017-12-14 04:45:20', NULL , '799', '5', '8', '2' ) , ( '30', '11', '15', '45645', 'К-ТЕМП', '199589', '-149325', '1', '2017-12-14 04:45:20', NULL , '799', '5', '8', '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9955', '37.5', '1', '2017-12-14 04:45:20', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 18.12.2017 05:04:33
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '143.99' WHERE id = '313';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '44.16' WHERE id = '146';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '135.79' WHERE id = '208';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '50', '313', '23423433', '32423433', '6.01', '841.4', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '146', '146', '', '', '95.84', '12938.4', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '1', '208', '23423433', '32423433', '1.44', '201.6', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '1', '1.44', '1', '2', '2017-12-18 05:04:33' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '447527.5' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9762.5' WHERE id = '3';
+UPDATE `#__gm_ceiling_components_goods` SET count = '480072.5' WHERE id = '5';
+UPDATE `#__gm_ceiling_components_goods` SET count = '9314.5' WHERE id = '2';
+UPDATE `#__gm_ceiling_components_goods` SET count = '48496' WHERE id = '9';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49998.4' WHERE id = '155';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49995' WHERE id = '6';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49856' WHERE id = '27';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49998' WHERE id = '229';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49999' WHERE id = '47';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49999' WHERE id = '36';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49998' WHERE id = '19';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49970' WHERE id = '7';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49994.5' WHERE id = '8';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49994' WHERE id = '235';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49998' WHERE id = '238';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49982' WHERE id = '12';
+UPDATE `#__gm_ceiling_components_goods` SET count = '48492' WHERE id = '13';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49808' WHERE id = '14';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49999' WHERE id = '32';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49995' WHERE id = '39';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49995' WHERE id = '16';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49995' WHERE id = '211';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49996' WHERE id = '236';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '30', '11', '15', '45645', 'К-ТЕМП', '447527.5', '-146437.5', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '30', '11', '3', '212121', 'Б-2-5', '9762.5', '1987.5', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '1', '1', '5', '45645', 'К-ТЕМП', '480072.5', '-419152.5', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '1', '1', '2', '202020', 'Б-1-2', '9314.5', '90', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '5', '5', '9', '45645', 'К-ТЕМП', '48496', '752', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '51', '375', '155', '45645', 'К-ТЕМП', '49998.4', '358.4', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '2', '2', '6', '45645', 'К-ТЕМП', '49995', '37.5', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '16', '40', '27', '45645', 'К-ТЕМП', '49856', '3600', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '11', '636', '229', '45645', 'К-ТЕМП', '49998', '30', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '21', '66', '47', '45645', 'К-ТЕМП', '49999', '5', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '20', '55', '36', '45645', 'К-ТЕМП', '49999', '119', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '24', '19', '19', '45645', 'К-ТЕМП', '49998', '30', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '3', '3', '7', '45645', 'К-ТЕМП', '49970', '180', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '4', '4', '8', '45645', 'К-ТЕМП', '49994.5', '93.5', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '14', '652', '235', '45645', 'К-ТЕМП', '49994', '1680', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '14', '655', '238', '45645', 'К-ТЕМП', '49998', '340', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '6', '8', '12', '45645', 'К-ТЕМП', '49982', '8.64', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '6', '9', '13', '45645', 'К-ТЕМП', '48492', '693.68', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '6', '10', '14', '45645', 'К-ТЕМП', '49808', '67.2', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '19', '51', '32', '45645', 'К-ТЕМП', '49999', '120', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '21', '58', '39', '45645', 'К-ТЕМП', '49995', '25', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '9', '16', '16', '45645', 'К-ТЕМП', '49995', '150', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '23', '556', '211', '45645', 'К-ТЕМП', '49995', '60', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) , ( '14', '653', '236', '45645', 'К-ТЕМП', '49996', '880', '1', '2017-12-18 05:04:33', '8', '802', '5', NULL , '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 21.12.2017 05:48:17
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '128.75' WHERE id = '664';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '382', '664', '121150', 'AYA-150', '-15.75', '1575', '1', '2017-12-21 05:48:17', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '382', '15.75', '1', '2', '2017-12-21 05:48:17' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '32.5' WHERE id = '246';
+UPDATE `#__gm_ceiling_components_goods` SET count = '135' WHERE id = '245';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '192', '661', '246', '121025', 'AYA-25', '-32.5', '150', '1', '2017-12-21 05:48:17', NULL , '799', '5', '8', '2' ) , ( '192', '661', '245', '121025', 'AYA-25', '-135', '-325', '1', '2017-12-21 05:48:17', NULL , '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_components_transfer` ( `option_id`, `count`, `in`, `out`, `date` ) VALUES ( '661', '135', '1', '2', '2017-12-21 05:48:17' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 21.12.2017 06:56:19
+UPDATE `#__gm_ceiling_components_goods` SET count = '32.5' WHERE id = '246';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '192', '661', '246', '121025', 'AYA-25', '-15', '150', '1', '2017-12-21 06:56:19', NULL , '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 21.12.2017 06:59:24
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '129.51' WHERE id = '20';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '136.17' WHERE id = '279';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '133' WHERE id = '289';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '20', '20', '', '', '-10.49', '1468.6', '1', '2017-12-21 06:59:24', '4', '799', '5', '8', '2' ) , ( '16', '279', '23423433', '32423433', '-13.83', '1936.2', '1', '2017-12-21 06:59:24', '4', '799', '5', '8', '2' ) , ( '26', '289', '23423433', '32423433', '-17', '2380', '1', '2017-12-21 06:59:24', '4', '799', '5', '8', '2' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '552442' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49553' WHERE id = '9';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49553' WHERE id = '13';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49995' WHERE id = '213';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49982.5' WHERE id = '110';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49995' WHERE id = '26';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '30', '11', '15', '45645', 'К-ТЕМП', '-30', '450', '1', '2017-12-21 06:59:24', '4', '799', '5', '8', '2' ) , ( '5', '5', '9', '45645', 'К-ТЕМП', '-447', '223.5', '1', '2017-12-21 06:59:24', '4', '799', '5', '8', '2' ) , ( '6', '9', '13', '45645', 'К-ТЕМП', '-447', '205.62', '1', '2017-12-21 06:59:24', '4', '799', '5', '8', '2' ) , ( '30', '559', '213', '45645', 'К-ТЕМП', '-5', '900', '1', '2017-12-21 06:59:24', '4', '799', '5', '8', '2' ) , ( '30', '236', '110', '45645', 'К-ТЕМП', '-17.5', '2100', '1', '2017-12-21 06:59:24', '4', '799', '5', '8', '2' ) , ( '15', '38', '26', '45645', 'К-ТЕМП', '-5', '390', '1', '2017-12-21 06:59:24', '4', '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 21.12.2017 07:05:31
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '119.02' WHERE id = '20';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '122.34' WHERE id = '279';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '116' WHERE id = '289';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '20', '20', '', '', '-10.49', '2937.2', '1', '2017-12-21 07:05:31', '4', '799', '5', '8', '2' ) , ( '16', '279', '23423433', '32423433', '-13.83', '3872.4', '1', '2017-12-21 07:05:31', '4', '799', '5', '8', '2' ) , ( '26', '289', '23423433', '32423433', '-17', '4760', '1', '2017-12-21 07:05:31', '4', '799', '5', '8', '2' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '552412' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49106' WHERE id = '9';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49106' WHERE id = '13';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49990' WHERE id = '213';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49965' WHERE id = '110';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49990' WHERE id = '26';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '30', '11', '15', '45645', 'К-ТЕМП', '-30', '900', '1', '2017-12-21 07:05:31', '4', '799', '5', '8', '2' ) , ( '5', '5', '9', '45645', 'К-ТЕМП', '-447', '447', '1', '2017-12-21 07:05:31', '4', '799', '5', '8', '2' ) , ( '6', '9', '13', '45645', 'К-ТЕМП', '-447', '411.24', '1', '2017-12-21 07:05:31', '4', '799', '5', '8', '2' ) , ( '30', '559', '213', '45645', 'К-ТЕМП', '-5', '1800', '1', '2017-12-21 07:05:31', '4', '799', '5', '8', '2' ) , ( '30', '236', '110', '45645', 'К-ТЕМП', '-17.5', '4200', '1', '2017-12-21 07:05:31', '4', '799', '5', '8', '2' ) , ( '15', '38', '26', '45645', 'К-ТЕМП', '-5', '780', '1', '2017-12-21 07:05:31', '4', '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 21.12.2017 08:01:56
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '108.53' WHERE id = '20';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '108.51' WHERE id = '279';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '99' WHERE id = '289';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '20', '20', '', '', '-10.49', '2937.2', '1', '2017-12-21 08:01:56', '4', '799', '5', '8', '2' ) , ( '16', '279', '23423433', '32423433', '-13.83', '3872.4', '1', '2017-12-21 08:01:56', '4', '799', '5', '8', '2' ) , ( '26', '289', '23423433', '32423433', '-17', '4760', '1', '2017-12-21 08:01:56', '4', '799', '5', '8', '2' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '552382' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '48659' WHERE id = '9';
+UPDATE `#__gm_ceiling_components_goods` SET count = '48659' WHERE id = '13';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49985' WHERE id = '213';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49947.5' WHERE id = '110';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49985' WHERE id = '26';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '30', '11', '15', '45645', 'К-ТЕМП', '-30', '900', '1', '2017-12-21 08:01:56', '4', '799', '5', '8', '2' ) , ( '5', '5', '9', '45645', 'К-ТЕМП', '-447', '447', '1', '2017-12-21 08:01:56', '4', '799', '5', '8', '2' ) , ( '6', '9', '13', '45645', 'К-ТЕМП', '-447', '411.24', '1', '2017-12-21 08:01:56', '4', '799', '5', '8', '2' ) , ( '30', '559', '213', '45645', 'К-ТЕМП', '-5', '1800', '1', '2017-12-21 08:01:56', '4', '799', '5', '8', '2' ) , ( '30', '236', '110', '45645', 'К-ТЕМП', '-17.5', '4200', '1', '2017-12-21 08:01:56', '4', '799', '5', '8', '2' ) , ( '15', '38', '26', '45645', 'К-ТЕМП', '-5', '780', '1', '2017-12-21 08:01:56', '4', '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 21.12.2017 08:06:43
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '98.04' WHERE id = '20';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '94.68' WHERE id = '279';
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '82' WHERE id = '289';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '20', '20', '', '', '-10.49', '2937.2', '1', '2017-12-21 08:06:43', '4', '799', '5', '8', '2' ) , ( '16', '279', '23423433', '32423433', '-13.83', '3872.4', '1', '2017-12-21 08:06:43', '4', '799', '5', '8', '2' ) , ( '26', '289', '23423433', '32423433', '-17', '4760', '1', '2017-12-21 08:06:43', '4', '799', '5', '8', '2' ) ;
+UPDATE `#__gm_ceiling_components_goods` SET count = '552352' WHERE id = '15';
+UPDATE `#__gm_ceiling_components_goods` SET count = '48212' WHERE id = '9';
+UPDATE `#__gm_ceiling_components_goods` SET count = '48212' WHERE id = '13';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49980' WHERE id = '213';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49930' WHERE id = '110';
+UPDATE `#__gm_ceiling_components_goods` SET count = '49980' WHERE id = '26';
+INSERT INTO `#__gm_ceiling_analytics_components` ( `component_id`, `option_id`, `good_id`, `barcode`, `article`, `count`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '30', '11', '15', '45645', 'К-ТЕМП', '-30', '900', '1', '2017-12-21 08:06:43', '4', '799', '5', '8', '2' ) , ( '5', '5', '9', '45645', 'К-ТЕМП', '-447', '447', '1', '2017-12-21 08:06:43', '4', '799', '5', '8', '2' ) , ( '6', '9', '13', '45645', 'К-ТЕМП', '-447', '411.24', '1', '2017-12-21 08:06:43', '4', '799', '5', '8', '2' ) , ( '30', '559', '213', '45645', 'К-ТЕМП', '-5', '1800', '1', '2017-12-21 08:06:43', '4', '799', '5', '8', '2' ) , ( '30', '236', '110', '45645', 'К-ТЕМП', '-17.5', '4200', '1', '2017-12-21 08:06:43', '4', '799', '5', '8', '2' ) , ( '15', '38', '26', '45645', 'К-ТЕМП', '-5', '780', '1', '2017-12-21 08:06:43', '4', '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 28.12.2017 08:04:32
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '127.75' WHERE id = '664';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '382', '664', '121150', 'AYA-150', '-1', '86.62', '1', '2017-12-28 08:04:32', '16', '799', '5', '8', '2' ) ;
+INSERT INTO `#__gm_ceiling_canvases_transfer` ( `canvas_id`, `quad`, `in`, `out`, `date` ) VALUES ( '382', '1', '1', '2', '2017-12-28 08:04:32' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 28.12.2017 08:07:02
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '22.25' WHERE id = '665';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '382', '665', '121150', 'AYA-150', '-127.75', '11065.71', '1', '2017-12-28 08:07:02', '16', '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
+------------------------------------------------------------------------------------------------------
+Транзакция: 28.12.2017 08:11:25
+UPDATE `#__gm_ceiling_canvases_all` SET quad = '21.25' WHERE id = '665';
+INSERT INTO `#__gm_ceiling_analytics_canvases` ( `canvas_id`, `roller_id`, `barcode`, `article`, `quad`, `price`, `stock`, `date_update`, `client_id`, `dealer_id`, `user_id`, `counterparty_id`, `status` ) VALUES ( '382', '665', '121150', 'AYA-150', '-1', '86.2', '1', '2017-12-28 08:11:25', '16', '799', '5', '8', '2' ) ;
+
+Ответ: Удачно!
