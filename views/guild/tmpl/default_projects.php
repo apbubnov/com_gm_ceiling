@@ -202,7 +202,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         $(".PRELOADER_GM").hide();
         $("cuts").show();
 
-        setInterval(TestList, 5000);
+        setIntervalNew();
+    }
+
+    function setIntervalNew() {
+        if (Data.Interval !== null) clearInterval(Data.Interval);
+        Data.Interval = setInterval(TestList, 5000);
     }
 
     function ModalShow(o) {
