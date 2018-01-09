@@ -305,6 +305,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalClose() {
+
         $("#KeyPress").blur();
         $(".ModalCeiling")
             .removeClass("notransition")
@@ -326,6 +327,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function NextCeiling() {
+
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
             index = Data.calculations.indexOf(parseInt(id)),
@@ -337,6 +339,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function PredCeiling() {
+
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
             index = Data.calculations.indexOf(parseInt(id)),
@@ -371,9 +374,27 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 });
 
                 if (data.status === "success") {
-                    NextCeiling();
                     delete Data.calculations[Data.calculations.indexOf(parseInt(id))];
-                    $("#" + id).remove();
+                    var calc = Data.calculations;
+                    Data.calculations = [];
+
+                    for(var i = 0; i < calc.length; i++)
+                        if (calc[i])
+                            Data.calculations.push(calc[i]);
+
+                    var block_3 = $("#" + id),
+                        block_2 = block_3.closest(".block_2"),
+                        block_1 = block_2.closest(".block_1");
+
+                    block_3.remove();
+
+                    if (block_2.find(".block_3").length < 1)
+                        block_2.remove();
+
+                    if(block_1.find(".block_2").length < 1)
+                        block_1.remove();
+
+                    NextCeiling();
                     TestList();
                 }
                 $(".PRELOADER_GM").hide();
@@ -394,9 +415,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function TestList(preloader = true) {
-        if (Data.Interval !== null)
-            clearInterval(Data.Interval);
-
         if (preloader)
             $(".PRELOADER_GM").show();
 
@@ -520,13 +538,20 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 console.log("------------------------");
                                 console.log(Data.calculations);
                                 console.log("------------------------");
+
+                                noty({
+                                    theme: 'relax',
+                                    layout: 'center',
+                                    timeout: 5000,
+                                    type: "success",
+                                    text: "Пришел новый заказ!\n" + b1.date + ((b1.quickly === "A")?" Срочно":"") + "<br>" + b2.canvases + "<br>" + b3.title + " - " + b3.quad
+                                });
                             }
                         });
                     });
                 });
 
                 $(".PRELOADER_GM").hide();
-                setIntervalNew();
             },
             dataType: "text",
             timeout: 15000,
