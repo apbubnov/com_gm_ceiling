@@ -532,7 +532,7 @@ $results = $db->loadObjectList();
                             value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
                     <input name='calculation_total3[<?php echo $calculation->id; ?>]'
                             value='<?php echo $project_total_1; ?>' type='hidden'>
-                            <input name='canvas[<?php echo $calculation->id; ?>]'
+                    <input name='canvas[<?php echo $calculation->id; ?>]'
                                 value='<?php echo $canvas; ?>' type='hidden'>
                     <?php echo $calculation->calculation_title; ?>
                 </td>
