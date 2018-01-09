@@ -405,9 +405,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function TestList(preloader = true) {
-        if (Data.Interval !== null)
-            clearInterval(Data.Interval);
-
         if (preloader)
             $(".PRELOADER_GM").show();
 
@@ -537,7 +534,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 });
 
                 $(".PRELOADER_GM").hide();
-                setIntervalNew();
             },
             dataType: "text",
             timeout: 15000,

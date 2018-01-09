@@ -186,6 +186,7 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function sendWork($data)
     {
+        print_r($data);
         return;
     }
 }
