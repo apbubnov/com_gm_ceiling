@@ -879,10 +879,11 @@ class Gm_ceilingModelCalculations extends JModelList {
             $query3->select('id_user, date_from, date_to')
                 ->from('#__gm_ceiling_day_off')
                 ->where("date_from between '$date1 00:00:00' and '$date2 23:59:59'");
+            
+throw new Exception($query3);
+                
             $db->setQuery($query3);
             $items3 = $db->loadObject();
-
-            throw new Exception($query3);
 
             // объединение с выходным днем
             $index = 0;
