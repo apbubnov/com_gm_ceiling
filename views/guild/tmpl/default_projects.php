@@ -392,6 +392,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function TestList() {
+        if (Data.Interval !== null)
+            clearInterval(Data.Interval);
+
         $(".PRELOADER_GM").show();
 
         jQuery.ajax({
