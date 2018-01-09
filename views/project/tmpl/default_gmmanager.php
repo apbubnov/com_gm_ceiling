@@ -578,7 +578,7 @@ $AllMounters = $model->FindAllMounters($where);
                         Array.from(Allbrigades).forEach(function(elem) {
                             select_brigade += '<option value="'+elem.id+'">'+elem.name+'</option>';
                         });
-                        jQuery("#mounters").append(select_brigade)
+                        jQuery("#mounters").append(select_brigade);
                         // вывод имен монтажников
                         var selectedBrigade = jQuery("#mounters").val();
                         jQuery("#mounters_names").empty();
