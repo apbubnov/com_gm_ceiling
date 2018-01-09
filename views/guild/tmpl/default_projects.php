@@ -66,6 +66,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     </cuts>
 </page>
 
+
 <form class="Modal ModalCeiling" action="javascript:CutOut();">
     <div class="ModalPage">
         <div class="ModalName">
