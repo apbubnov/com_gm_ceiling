@@ -519,51 +519,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     });
                 });
 
-                /*$.each(data, function (i, v) {
-                    var type = $("#"+i);
-
-                    if (type.length === 1 || true)
-                    {
-                        var elementPred = "", elementNext = "";
-                        $(".block_1").each(function () {
-                            var temp = $(this);
-                            console.log(temp.attr("id"));
-                            if (temp.attr("id") < v.id) elementPred = temp.attr("id");
-                            else elementNext = temp.attr("id");
-                        });
-                        console.log(elementPred + " - " + v.id + " - " + elementNext);
-                        if (elementPred === "")
-                        {
-                            console.log("before");
-                            var before = $("types #" + elementNext),
-                                element = before.clone();
-                            element.find("line.gm").text(v.name);
-                            element.find("type").empty();
-                            element.insertBefore(before);
-                        } else {
-                            console.log("after");
-                            var after = $("types #" + elementPred),
-                                element = after.clone();
-                            element.find("type").empty();
-                            element.insertAfter(after);
-                        }
-                    }
-
-                    console.log(type);
-
-                    $.each(v.I, function (j, g) {
-                        var ceilings = type.find("#p"+j);
-                        console.log(ceilings);
-                        $.each(g.I, function (l, r) {
-                            var ceiling = ceilings.find("#"+r.id);
-                            console.log(ceiling);
-
-                            console.log(r);
-                        })
-                    })
-                });*/
-
                 $(".PRELOADER_GM").hide();
+                setIntervalNew();
             },
             dataType: "text",
             timeout: 15000,
