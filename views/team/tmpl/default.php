@@ -26,19 +26,21 @@ $AllBrigade = $model->GetAllBrigade($user->dealer_id);
 $month = date("n");
 $year = date("Y");
 $date = $year."-".$month;
-$ProjectCurrentMonthAll = $model->GetProjects($id_brigade, $date);
-$ProjectCurrentMonth = [];
+$ProjectCurrentMonth = $model->GetProjects($id_brigade, $date);
+/* $ProjectCurrentMonth = [];
 foreach ($ProjectCurrentMonthAll as $value) {
 	if (isset($ProjectCurrentMonth[$value->id])) {
 		$ProjectCurrentMonth[$value->id]["mounting_sum"] += $value->mounting_sum;
 	} else {
 		$ProjectCurrentMonth[$value->id] = ["id" => $value->id, "mounting_sum" => $value->mounting_sum, "new_mount_sum" => $value->new_mount_sum];
 	}
-}
+} */
 
 ?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/team/tmpl/css/style.css" type="text/css" />
+
+<?=parent::getButtonBack();?>
 
 <h2 class="center">Бригада: <?php echo $brigade[0]->name; ?></h2>
 <h6 class="center">Телефон: <?php echo $brigade[0]->username; ?>; E-mail: <?php echo $brigade[0]->email; ?></h6>
@@ -117,13 +119,13 @@ foreach ($ProjectCurrentMonthAll as $value) {
 					$price1 = 0;
 					$price2 = 0; 
 					foreach ($ProjectCurrentMonth as $value) { 
-						$price1 +=  $value["mounting_sum"];
-						$price2 += $value["new_mount_sum"];
+						$price1 +=  $value->mounting_sum;
+						$price2 += $value->new_mount_sum;
 				?>
-					<tr onclick="location.replace('http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id=<?php echo $value["id"]; ?>');">
-						<td><?php echo $value["id"]; ?></td>
-						<td><?php echo $value["mounting_sum"]; ?></td>
-						<td><?php if ($value["new_mount_sum"] == null) { echo 0; } else { echo $value["new_mount_sum"]; } ?></td>
+					<tr onclick="location.replace('http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id=<?php echo $value->id; ?>');">
+						<td><?php echo $value->id; ?></td>
+						<td><?php echo $value->mounting_sum; ?></td>
+						<td><?php if ($value->new_mount_sum == null) { echo 0; } else { echo $value->new_mount_sum; } ?></td>
 					</tr>
 				<?php } ?>
 			<tr>
@@ -179,6 +181,9 @@ foreach ($ProjectCurrentMonthAll as $value) {
 		NowMonth = today.getMonth();
 		CountDay = getDaysInMonth(NowMonth, NowYear);
 		NowMonth++;
+		if (String(NowMonth).length == 1) {
+			NowMonth = "0"+NowMonth;
+		}
 		jQuery("#date1").val(NowYear+"-"+NowMonth+"-01");
 		jQuery("#date2").val(NowYear+"-"+NowMonth+"-"+CountDay);
 

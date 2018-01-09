@@ -762,3 +762,96 @@ ORDER BY p.quickly, p.ready_time, p.project_calculation_date, s.name, s.tex' at 
 ----------
 03.01.2018 14:33:17 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api2.php | sendDealerInfoToAndroid | Ошибка!
 ----------
+04.01.2018 20:30:40 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+04.01.2018 20:30:40 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+04.01.2018 21:06:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/teams.php | getData | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'and usergroup.group_id = '11'' at line 4
+----------
+04.01.2018 21:06:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+04.01.2018 21:06:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/teams.php | getData | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'and usergroup.group_id = '11'' at line 4
+----------
+04.01.2018 21:06:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+05.01.2018 06:16:36 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/guild.php | testCuts | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')
+ORDER BY p.quickly, p.ready_time, p.project_calculation_date, s.name, s.textur' at line 8
+----------
+05.01.2018 06:59:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+05.01.2018 06:59:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+05.01.2018 13:28:00 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/mountersorder.php | GetMp | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+05.01.2018 13:28:00 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+05.01.2018 16:00:20 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+05.01.2018 16:00:20 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+05.01.2018 23:04:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+05.01.2018 23:04:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+06.01.2018 15:28:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+06.01.2018 15:28:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+06.01.2018 18:17:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+06.01.2018 18:17:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+06.01.2018 23:57:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+06.01.2018 23:57:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+07.01.2018 13:19:36 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+07.01.2018 13:19:36 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+07.01.2018 14:32:12 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+07.01.2018 14:32:12 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+07.01.2018 21:01:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+07.01.2018 21:01:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+08.01.2018 13:02:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Класс представления не найден [class, file]: gm_ceilingViewcashbox, /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/views/cashbox/view.html.php
+----------
+08.01.2018 15:23:35 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | update_cut_data | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ': K(467.1, 0), J(0.2, 1.8), I(0.2, 169.3), H(299.2, 167.7), G(298.9, 248.7), F(5' at line 2
+----------
+08.01.2018 15:23:35 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | UpdateCutData | Ошибка!
+----------
+08.01.2018 18:48:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/mountersorder.php | GetMp | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+08.01.2018 18:48:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+08.01.2018 19:55:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+----------
+08.01.2018 19:55:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+08.01.2018 20:00:40 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/mountersorder.php | GetNPack1 | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+08.01.2018 20:00:40 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+08.01.2018 20:00:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/mountersorder.php | GetNPack1 | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+08.01.2018 20:00:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+08.01.2018 20:00:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/mountersorder.php | GetNPack1 | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+08.01.2018 20:00:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+08.01.2018 20:26:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+08.01.2018 20:26:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+08.01.2018 20:43:16 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+----------
+08.01.2018 20:43:16 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+08.01.2018 20:46:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/mountersorder.php | GetMp | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+08.01.2018 20:46:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------

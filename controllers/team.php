@@ -24,7 +24,7 @@ class Gm_ceilingControllerTeam extends JControllerLegacy {
 			$datetime2 = $_POST['datetime2'];
 			$id = $_POST['$id'];
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('Team');
-			$projects = $model->GetProjectsFilter($id, $datetime1, $datetime2);
+			$projects = $model->GetProjects($id, $datetime1, $datetime2);
 			die(json_encode($projects));
 		}
 		catch(Exception $e)

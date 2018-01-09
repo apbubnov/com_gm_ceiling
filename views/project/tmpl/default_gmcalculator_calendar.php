@@ -1279,7 +1279,7 @@ $results = $db->loadObjectList();
 
 <script type="text/javascript">
 
-var $ = jQuery;
+    var $ = jQuery;
 
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_del"); // тут указываем ID элемента
@@ -1290,7 +1290,6 @@ var $ = jQuery;
             jQuery("#modal_window_del").hide();
         }
     });
-
 
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
@@ -1313,7 +1312,6 @@ var $ = jQuery;
     function click_cancel(e) {
         jQuery("#modal_window_container, #modal_window_container *").hide();
     }
-
 
     // листание календаря
     month_old1 = 0;
@@ -1484,7 +1482,8 @@ var $ = jQuery;
     //------------------------------------------
 
     jQuery(document).ready(function () {
-         $("#modal_window_container #ok").click(function() { click_ok(this); });
+
+        $("#modal_window_container #ok").click(function() { click_ok(this); });
         show_comments();
         trans();
 
@@ -1586,6 +1585,7 @@ var $ = jQuery;
                 }
             });
         });
+        // ----------------------------------------
 
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
@@ -1877,35 +1877,6 @@ var $ = jQuery;
             calculate_total1();
             trans();
         });
-            /*
-                function UpdateData() {
-                    jQuery.ajax({
-                        type: 'POST',
-                        url: "/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar",
-                        data: jQuery(".project_activation").serialize(),
-                        success: function(data){
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "success",
-                                text: "Успешно"
-                            });
-                        },
-                        error: function(){
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: "Ошибка. Сервер не отвечает"
-                            });
-                        }
-                    });
-                }
-
-                jQuery("#refuse, #save").click(UpdateData);
-            */
 
         jQuery("#client_order").click(function () {
             jQuery("input[name='project_verdict']").val(1);
@@ -2166,11 +2137,11 @@ var $ = jQuery;
         var id  = jQuery("#project_id").val();
          var client_id = jQuery("#client_id").val();
         var testfilename = <?php echo $json2;?>;
-//        for (var i = 0; i < testfilename.length; i++) {
-//            var id = testfilename[i].id;
-//            var el = jQuery("#section_mount_" + id);
-//            if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-//        }
+        //        for (var i = 0; i < testfilename.length; i++) {
+        //            var id = testfilename[i].id;
+        //            var el = jQuery("#section_mount_" + id);
+        //            if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
+        //        }
         var filenames = [];
         console.log(filenames);
         var formData = new FormData();
@@ -2407,126 +2378,6 @@ var $ = jQuery;
     }
 
     var mountArray = {};
-    /*function selectTimeF(obj) {
-        obj = jQuery(obj);
-        var sel = obj.val();
-        var mountObj = jQuery('#selectMount').html('');
-        jQuery.each(mountArray[sel], function (key, val) {
-            var option = jQuery('<option>').html(val.mount).val(val.id);
-            mountObj.append(option);
-        });
-    }
-    function selectMountF(obj) {
-        obj = jQuery(obj);
-        var input = jQuery('input[name="project_mounter"]');
-        input.val(obj.val());
-    }
-    function listening() {
-        jQuery(".b-calendar__day").click(function () {
-            var this_td = jQuery(this),
-                date = this_td.data('date'),
-                project_mounter = jQuery("#selectMount").val();
-            // console.log(project_mounter);
-            //Задаем дату начала
-            //if(calendar_toggle == 0) {
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=get_calendar",
-                data: {
-                    date: date
-                    //project_mounter: project_mounter
-                },
-                success: function (data) {
-        //                        noty({
-        //                            layout: 'center',
-        //                            modal: true,
-        //                            text: data + '<br>Выберите время <strong>начала</strong> монтажа:<br>' + hours_list,
-        //                            buttons: [
-        //                                {
-        //                                    addClass: 'btn btn-danger', text: 'Отмена', onClick: function ($noty) {
-        //                                    $noty.close();
-        //                                }
-        //                                },
-        //                                {
-        //                                    addClass: 'btn btn-primary', text: 'ОК', onClick: function ($noty) {
-        //                                    jQuery(".b-calendar__day").removeClass("current_project");
-        //                                    jQuery("input[name='mounting_date']").val(date);
-        //                                    //jQuery("input[name='jform_project_mounting_from']").val(date + " " + jQuery('#hours_list').val());
-        //                                    //jQuery("input[name ='jform_project_mounting_to']").val(date + " " + jQuery('#hours_list').val());
-        //                                    calendar_toggle = 1;
-        //                                    this_td.addClass("current_project");
-        //                                    $noty.close();
-        //                                }
-        //                                }
-        //                            ]
-                    data = JSON.parse(data);
-                    var result = null;
-                    if (data.message == 0)
-                    {
-                        var selectTime = jQuery('<select class="form-control" >').attr({'id':'selectTime', 'onchange':'selectTimeF(this);'});
-                        var selectMount = jQuery('<select class="form-control">').attr({'id':'selectMount', 'onchange':'selectMountF(this);'});
-                        jQuery.each(data.info, function (key, val) {
-                            mountArray[key] = val;
-                            var option = jQuery('<option>').html(key).val(key);
-                            selectTime.append(option);
-                        });
-                        var select = jQuery('<div>').append(selectTime);
-                        var mount = jQuery('<div>').append(selectMount);
-
-                        result = select.html() + mount.html();
-                    }
-                    else if (data.message == 1) result = data.info;
-                    noty({
-                        layout: 'center',
-                        modal: true,
-                        text: '<br>Выберите время <strong>начала</strong> монтажа:<br>' + result,
-                        buttons: [
-                            {
-                                addClass: 'btn btn-danger', text: 'Отмена', onClick: function ($noty) {
-                                $noty.close();
-                            }
-                            },
-                            {
-                                addClass: 'btn btn-primary', text: 'ОК', onClick: function ($noty) {
-                                jQuery(".b-calendar__day").removeClass("current_project");
-                                jQuery("input[name='mounting_date']").val(date);
-                                jQuery("input[name='jform_project_mounting_from']").val(date + " " + jQuery('#selectTime').val());
-                                jQuery("input[name='project_mounter']").val(jQuery('#selectMount').val());
-                                //jQuery("input[name ='jform_project_mounting_to']").val(date + " " + jQuery('#hours_list').val());
-                                calendar_toggle = 1;
-                                this_td.addClass("current_project");
-                                $noty.close();
-                            }
-                            }
-                        ]
-                    });
-                    jQuery('#selectTime').change();
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка при попытке получить список занятых в этот день монтажников. Сервер не отвечает"
-                    });
-                }
-            });
-
-        })
-    };
-        //                    };
-        //            })
-        //
-        //            });
-        //        }
-
-    jQuery("#jform_project_mounting_daypart").val(jQuery('#hours_list').val());
-     //jQuery("#jform_project_mounter").change(function () {
-     //     update_calendar();
-    //  });*/
 
     jQuery("#spend-form input").on("keyup", function () {
         jQuery('#extra_spend_submit').fadeIn();
@@ -2554,37 +2405,6 @@ var $ = jQuery;
 		});
 
     }
-
-    /*var hours_list = "<select id='hours_list'>";
-        hours_list += "<option value='09:00:00'>09:00</option>";
-        hours_list += "<option value='10:00:00'>10:00</option>";
-        hours_list += "<option value='11:00:00'>11:00</option>";
-        hours_list += "<option value='12:00:00'>12:00</option>";
-        hours_list += "<option value='13:00:00'>13:00</option>";
-        hours_list += "<option value='14:00:00'>14:00</option>";
-        hours_list += "<option value='15:00:00'>15:00</option>";
-        hours_list += "<option value='16:00:00'>16:00</option>";
-        hours_list += "<option value='17:00:00'>17:00</option>";
-        hours_list += "<option value='18:00:00'>18:00</option>";
-        hours_list += "<option value='19:00:00'>19:00</option>";
-        hours_list += "<option value='20:00:00'>20:00</option>";
-        hours_list += "<option value='21:00:00'>21:00</option>";
-        hours_list += "</select>";*/
-
-    //var calendar_toggle = 0,
-        // month = <?php// echo date("n"); ?>,
-        // year = <?php// echo date("Y"); ?>;
-
-        //listening();
-
-        //        jQuery("#mounter_prev").click(function () {
-        //            jQuery("#jform_project_mounter option:selected").prop("selected", false).prev("option").prop("selected", true);
-        //            jQuery("#jform_project_mounter").change();
-        //        });
-        //        jQuery("#mounter_next").click(function () {
-        //            jQuery("#jform_project_mounter option:selected").prop("selected", false).next("option").prop("selected", true);
-        //            jQuery("#jform_project_mounter").change();
-    //        });
 
 </script>
 

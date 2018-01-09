@@ -93,23 +93,50 @@ class Gm_ceilingModelTeam extends JModelItem
         }
 	}
 
-	function GetProjects($id, $date) {
+	function GetProjects($id, $date, $date2 = null) {
 		try
 		{
-			$countdays = cal_days_in_month(CAL_GREGORIAN, substr($date, 5), substr($date, 0, 4));
-			$date1 = $date."-01";
-			$date2 = $date."-".$countdays;
-
+			if ($date2 == null) {
+				$countdays = cal_days_in_month(CAL_GREGORIAN, substr($date, 5), substr($date, 0, 4));
+				$date1 = $date."-01 00:00:00";
+				$date2 = $date."-".$countdays." 23:59:59";
+			} else {
+				$date1 = $date;
+			}
+			
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
+			$query2 = $db->getQuery(true);
+			$query3 = $db->getQuery(true);
 
-			$query->select('projects.id, calculations.mounting_sum, projects.new_mount_sum')
+			$query2->select('sum(calculations.mounting_sum)')
+				->from('#__gm_ceiling_calculations as calculations')
+				->where("projects.id = calculations.project_id");
+
+			$query->select("projects.id, ($query2) as mounting_sum, projects.new_mount_sum, transport, distance, distance_col")
 				->from('#__gm_ceiling_projects as projects')
-				->innerJoin('#__gm_ceiling_calculations as calculations ON projects.id = calculations.project_id')						
-				->where("project_mounter = '$id' and project_mounting_date between '$date1 00:00:00' and '$date2 23:59:59'");
+				->where("project_mounter = '$id' and project_mounting_date between '$date1' and '$date2'");
 			$db->setQuery($query);
-			
 			$items = $db->loadObjectList();
+
+			$user = JFactory::getUser();
+
+			$query3->select('transport as transport_mp, distance as distance_mp')
+				->from('#__gm_ceiling_mount')
+				->where("user_id = '$user->dealer_id'");
+			$db->setQuery($query3);
+			$items3 = $db->loadObject();
+
+			foreach ($items as $value) {
+                $calc_transport = 0;
+                if ($value->transport == 1) {
+                    $calc_transport = $items3->transport_mp * $value->distance_col;
+                } else if ($value->transport == 2) {
+                    $calc_transport = $items3->distance_mp * $value->distance_col * $value->distance;
+                }
+                $value->mounting_sum += $calc_transport;
+            }
+
 			return $items;
 		}
 		catch(Exception $e)
@@ -121,7 +148,7 @@ class Gm_ceilingModelTeam extends JModelItem
         }
 	}
 
-	function GetProjectsFilter($id, $datetime1, $datetime2) {
+	/* function GetProjectsFilter($id, $datetime1, $datetime2) {
 		try
 		{
 			$db = JFactory::getDbo();
@@ -134,11 +161,11 @@ class Gm_ceilingModelTeam extends JModelItem
 
 			$query->select("DISTINCT projects.id, ($query2) as mounting_sum, projects.new_mount_sum")
 				->from('#__gm_ceiling_projects as projects')
-				->innerJoin('#__gm_ceiling_calculations as calculations ON projects.id = calculations.project_id')						
+				//->innerJoin('#__gm_ceiling_calculations as calculations ON projects.id = calculations.project_id')						
 				->where("project_mounter = '$id' and project_mounting_date between '$datetime1' and '$datetime2'");
 			$db->setQuery($query);
-			
 			$items = $db->loadObjectList();
+
 			return $items;
 		}
 		catch(Exception $e)
@@ -148,7 +175,7 @@ class Gm_ceilingModelTeam extends JModelItem
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-	}
+	} */
 
 	function MoveBrigade($id_mounter, $id_brigade) {
 		try

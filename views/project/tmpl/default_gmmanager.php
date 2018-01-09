@@ -477,6 +477,8 @@ $AllMounters = $model->FindAllMounters($where);
     <? } ?>
     <form action="/sketch/cut_redactor/index.php" id="data_form" method="POST" style="display : none;">
         <input type="hidden" name="walls" id="input_walls">
+        <input type="hidden" name="calc_id" id="calc_id">
+        <input type="hidden" name="proj_id" id="proj_id">
     </form>
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -984,6 +986,8 @@ $AllMounters = $model->FindAllMounters($where);
                 },
                 success: function (data) {
                     jQuery("#input_walls").val(data);
+                    jQuery("#calc_id").val(id);
+                    jQuery("#proj_id").val(<?php echo $this->item->id; ?>);
                     jQuery("#data_form").submit();
 
                 },

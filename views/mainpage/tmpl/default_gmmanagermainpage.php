@@ -35,73 +35,94 @@ $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
 //--------------------------------------
 ?>
 
+<style>
+.columns-tar {
+	display: inline-block;
+	float: left;
+	width: 100%;
+	text-align: center;
+}
+
+@media screen and (min-width: 992px) {
+	.columns-tar{
+		width: calc(100% / 3 - 5px);
+	}
+}
+</style>
+
 <h2 class="center">Менеджер ГМ</h2>
 
 <div class="start_page">
-	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> В производстве </a>
-			<?php if ($answer1[0]->count != 0) { ?>
-				<div class="circl-digits"><?php echo $answer1[0]->count; ?></div>
-			<?php } ?>
+	<div class="columns-tar">
+		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
+			<div class="container-for-circl">
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> В производстве </a>
+				<?php if ($answer1[0]->count != 0) { ?>
+					<div class="circl-digits"><?php echo $answer1[0]->count; ?></div>
+				<?php } ?>
+			</div>
 		</div>
-	</div>
-    <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects', false); ?>"><i class="fa fa-cogs" aria-hidden="true"></i> Запущенные </a>
-			<?php if ($answer2[0]->count != 0) { ?>
-				<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
-			<?php } ?>
+		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
+			<div class="container-for-circl">
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects', false); ?>"><i class="fa fa-cogs" aria-hidden="true"></i> Запущенные </a>
+				<?php if ($answer2[0]->count != 0) { ?>
+					<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
+				<?php } ?>
+			</div>
 		</div>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=archive', false); ?>"><i class="fa fa-archive" aria-hidden="true"></i> Архив</a>
+		</p>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=clientorders', false); ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Клиентские заказы</a>
+		</p>
 	</div>
-	<p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=archive', false); ?>"><i class="fa fa-archive" aria-hidden="true"></i> Архив</a>
-    </p>
-	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=clientorders', false); ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Клиентские заказы</a>
-    </p>
-    <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=requestfrompromo', false); ?>"><i class="fa fa-bookmark" aria-hidden="true"></i></i> Заявки с сайта </a>
-			<?php if ($answer3[0]->count != 0) { ?>
-				<div class="circl-digits"><?php echo $answer3[0]->count; ?></div>
-			<?php } ?>
+	<div class="columns-tar">
+		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
+			<div class="container-for-circl">
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=requestfrompromo', false); ?>"><i class="fa fa-bookmark" aria-hidden="true"></i></i> Заявки с сайта </a>
+				<?php if ($answer3[0]->count != 0) { ?>
+					<div class="circl-digits"><?php echo $answer3[0]->count; ?></div>
+				<?php } ?>
+			</div>
 		</div>
-	</div>
-    <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=missed_calls', false); ?>"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Пропущенные</a>
-			<?php if ($answer5 != 0) { ?>
-				<div class="circl-digits"><?php echo $answer5; ?></div>
-			<?php } ?>
+		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
+			<div class="container-for-circl">
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=missed_calls', false); ?>"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Пропущенные</a>
+				<?php if ($answer5 != 0) { ?>
+					<div class="circl-digits"><?php echo $answer5; ?></div>
+				<?php } ?>
+			</div>
 		</div>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
+		</p>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=recoil', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Откатники</a>
+		</p>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=refused', false); ?>"><i class="fa fa-times" aria-hidden="true"></i> Отказы</a>
+		</p>
 	</div>
-	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
-	</p>
-    <p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=recoil', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Откатники</a>
-	</p>
-	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=refused', false); ?>"><i class="fa fa-times" aria-hidden="true"></i> Отказы</a>
-	</p>
-	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
-		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки </a>
-			<?php if ($answer4[0]->count != 0) { ?>
-				<div class="circl-digits"><?php echo $answer4[0]->count; ?></div>
-			<?php } ?>
+	<div class="columns-tar">
+		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
+			<div class="container-for-circl">
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки </a>
+				<?php if ($answer4[0]->count != 0) { ?>
+					<div class="circl-digits"><?php echo $answer4[0]->count; ?></div>
+				<?php } ?>
+			</div>
 		</div>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=reservecalculation&type=gmmanager&subtype=activatedprojects', false); ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Запись на замер</a>
+		</p>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-rub" aria-hidden="true"></i> Прайсы</a>
+		</p>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=colors', false); ?>"><i class="fa fa-eyedropper" aria-hidden="true"></i> Цвета полотен</a>
+		</p>
 	</div>
-	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=reservecalculation&type=gmmanager&subtype=activatedprojects', false); ?>"><i class="fa fa-pencil" aria-hidden="true"></i> Запись на замер</a>
-	</p>
-	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-rub" aria-hidden="true"></i> Прайсы</a>
-	</p>
-	<p class="center">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=colors', false); ?>"><i class="fa fa-eyedropper" aria-hidden="true"></i> Цвета полотен</a>
-	</p>
 </div>
 
 <?php

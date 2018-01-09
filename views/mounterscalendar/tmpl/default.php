@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+//JHtml::_('formbehavior.chosen', 'select');
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
@@ -215,36 +215,50 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
         td = day;
         tm = month;
         ty = year;
+        if (day.length == 1) {
+            day = 0+day;
+        }
+        if (month.length == 1) {
+            month = 0+month;
+        }
+        date = year+"-"+month+"-"+day;
         jQuery("#table-mounting").empty();
         if (kind == "empty") {
-            TrOrders = '<tr id="caption-data"><td>'+day+'-'+month+'-'+year+'</td></tr><tr><td>В данный момент на этот день монтажей нет</td></tr>';        
-            jQuery("#table-mounting").append(TrOrders);
+            TrOrders = '<tr id="caption-data"><td colspan=2>'+day+'-'+month+'-'+year+'</td></tr><tr><td colspan=2>В данный момент на этот день монтажей нет</td></tr>';  
+             jQuery.ajax({
+                type: 'POST',
+                url: "/index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
+                dataType: 'json',
+                data: {
+                    date: date,
+                    id: <?php echo $userId?>,
+                },
+                success: function(data) {
+                    console.log(data);
+                    if (data.length > 0) { 
+                        Array.from(data).forEach(function(element) {
+                            TrOrders += '<tr><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
+                        }); 
+                    }
+                    jQuery("#table-mounting").append(TrOrders);
+                }
+            });
         } else {
             TrOrders = '<tr id="caption-data"><td colspan="6">'+day+'-'+month+'-'+year+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
             jQuery("#table-mounting").append(TrOrders);
-            if (day.length == 1) {
-                day = 0+day;
-            }
-            if (month.length == 1) {
-                month = 0+month;
-            }
-            date = year+"-"+month+"-"+day;
-            jQuery.ajax( {
+             jQuery.ajax( {
                 type: "POST",
-                url: "index.php?option=com_gm_ceiling&task=mounterscalendar.GetPerimeterSalary",
+                url: "index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
                 dataType: 'json',
                 data: {
-                    month : month,
-                    year : year,
-                    day : day,
+                    date: date,
                     id : <?php echo $userId; ?>
                 },
                 success: function(msg) {
                     msg.forEach(function(element) {
-                        if (date == element.project_mounting_date.substr(0, 10)) {
+                        if (element.project_mounting_date.length < 6) {
                             project = element.id;
                             adress = element.project_info;
-                            time = element.project_mounting_date.substr(11, 5);
                             perimeter = element.n5;
                             // комменты
                             if (<?php echo $dealerId; ?> == 775) {
@@ -287,16 +301,18 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                                 status = "Монтаж недовыполнен";
                             }
                             if (element.read_by_mounter == 0) {
-								status += " <strong>/ Не прочитан</strong>";
-							}
+                                status += " <strong>/ Не прочитан</strong>";
+                            }
                             salary = element.mounting_sum;
                             if (salary < 1500) {
                                 salary = 1500;
                             }
                             // рисовка таблицы
-                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', td, tm, ty, status_proj);"><td>'+time+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';                    
-                            jQuery("#table-mounting").append(TrOrders2);
-                        }
+                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', td, tm, ty, status_proj);"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+                        } else {
+                            TrOrders2 += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
+                        }                  
+                        jQuery("#table-mounting").append(TrOrders2);
                     });
                 }
             });

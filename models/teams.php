@@ -136,7 +136,6 @@ class Gm_ceilingModelTeams extends JModelItem {
 
 		 	$query->select("DISTINCT projects.id, projects.project_mounting_date, projects.project_info, ($query2) as perimeter, ($query3) as salary, projects.$note as note, projects.read_by_mounter, projects.project_status")
 				->from('#__gm_ceiling_projects as projects')
-				//->innerJoin('#__gm_ceiling_calculations as calculations ON calculations.project_id = projects.id')
 				->where("projects.project_mounter = '$id' and projects.project_mounting_date between '$date 00:00:00' and '$date 23:59:59' and projects.project_status IN (5, 6, 7, 8, 10, 16, 11, 17)")
 				->order('projects.project_mounting_date');
 			$db->setQuery($query);
@@ -147,6 +146,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 				->where("id_user = '$id' and date_from between '$date 00:00:00' and '$date 23:59:59'");
 			$db->setQuery($query4);
 			$day_off = $db->loadObject();
+			
             $index = 0;
             //поиск индекса для вставки и замена даты на просто время
 			for($i=0;$i<count($items);$i++){

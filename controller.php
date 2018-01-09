@@ -2775,6 +2775,45 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public function UpdateCutData()
+    {
+        try {
+            $jinput = JFactory::getApplication()->input;
+            $data = $jinput->get('image', '0', 'string');
+            $arr_points = $jinput->get('koordinats_poloten', '', 'array');
+            $calc_id = $jinput->get('calc_id', '', 'INT');
+            
+            for ($i = 0; $i < count($arr_points); $i++)
+            {
+                $points_polonta = '';
+                for ($j = 0; $j < count($arr_points[$i]); $j++)
+                {
+                    $points_polonta .= implode($arr_points[$i][$j]).', ';
+                }
+                $points_polonta = substr($points_polonta, 0, -2);
+
+                $str .= "Полотно" . ($i + 1) . ": " . $points_polonta . "; ";
+            }
+
+            list($type, $data) = explode(';', $data);
+            list(, $data) = explode(',', $data);
+            $data = base64_decode($data);
+
+            $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $result = $calc_model->update_cut_data($calc_id, $str);
+
+            $filename = md5('cut_sketch' . $calc_id);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png", $data);
+            die(true);
+
+        } catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
 }
 
 ?>

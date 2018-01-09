@@ -381,7 +381,8 @@ foreach ($brigade_id as $value) {
 
 	// перенаправление на страницу заказа
 	function ReplaceToOrder(project) {
-        location.href="/index.php?option=com_gm_ceiling&view=projectform&type=chief&id="+project;
+		location.replace("/index.php?option=com_gm_ceiling&view=projectform&type=chief&id="+project);
+        //location.href="/index.php?option=com_gm_ceiling&view=projectform&type=chief&id="+project;
     }
 	// ------------------------------------------------
 
@@ -543,7 +544,7 @@ foreach ($brigade_id as $value) {
 					},
 					success: function(data) {
 						Array.from(data).forEach(function(element) {
-							table += '<tr class="clickabel"><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
+							table += '<tr><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
 						});
 						jQuery("#table-mounting").append(table);
 					}

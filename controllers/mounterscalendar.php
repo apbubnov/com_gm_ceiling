@@ -17,59 +17,76 @@ defined('_JEXEC') or die;
  */
 class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 
-	// 
+	// смена статуса на прочитанный, отправка письма НМС
 	public function ChangeStatus() {
-		$id = $_POST["id_calculation"];
+		try
+		{
+			$id = $_POST["id_calculation"];
 
-		$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
-		$model_request = $model->ChangeStatusOfRead($id);
+			$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
+			$model_request = $model->ChangeStatusOfRead($id);
 
-		// письмо
-		$emails = $model->AllNMSEmails();
-		$DataOrder = $model->DataOrder($id);		
-		$mailer = JFactory::getMailer();
-		$config = JFactory::getConfig();
-		$sender = array(
-			$config->get('mailfrom'),
-			$config->get('fromname')
-		);
+			// письмо
+			$emails = $model->AllNMSEmails();
+			$DataOrder = $model->DataOrder($id);		
+			$mailer = JFactory::getMailer();
+			$config = JFactory::getConfig();
+			$sender = array(
+				$config->get('mailfrom'),
+				$config->get('fromname')
+			);
 
-		$mailer->setSender($sender);
-		foreach ($emails as $value) {
-			$mailer->addRecipient($value->email);
+			$mailer->setSender($sender);
+			foreach ($emails as $value) {
+				$mailer->addRecipient($value->email);
+			}
+			$body = "Здравствуйте.\n";
+			$body .= "Проект №$id был прочитан Монтажной Бригадой.\n";
+			$body .= "\n";
+			$body .= "Адреc: ".$DataOrder[0]->project_info."\n";
+			$body .= "Дата и время: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
+			if (strlen($note) != 0) {
+				$body .= "Примечание монтажника: ".$note."\n";			
+			}
+			//$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
+			$mailer->setSubject('Новый статус монтажа');
+			$mailer->setBody($body);
+			$send = $mailer->Send();
+
+			echo json_encode($model_request);
+
+			exit;
 		}
-		$body = "Здравствуйте.\n";
-		$body .= "Проект №$id был прочитан Монтажной Бригадой.\n";
-		$body .= "\n";
-		$body .= "Адреc: ".$DataOrder[0]->project_info."\n";
-		$body .= "Дата и время: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
-		if (strlen($note) != 0) {
-			$body .= "Примечание монтажника: ".$note."\n";			
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+		    throw new Exception('Ошибка!', 500);
 		}
-		//$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
-		$mailer->setSubject('Новый статус монтажа');
-		$mailer->setBody($body);
-		$send = $mailer->Send();
-
-		echo json_encode($model_request);
-
-		exit;
 	}
 
 	// Переход на модель
-	public function GetPerimeterSalary() {
-		$month = $_POST["month"];
-		$year = $_POST["year"];
-		$day = $_POST["day"];
-		$id = $_POST["id"];
-		$date = $year."-".$month."-".$day;
-		
-		$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
-		$model_request = $model->GetAllMountingOfBrigade($id, $date, $date);
+	public function GetDataOfMounting() {
+		try
+		{
+			$date = $_POST["date"];
+			$id = $_POST["id"];
+			
+			$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
+			$model_request = $model->GetDayMountingOfBrigade($id, $date);
 
-		echo json_encode($model_request);
+			echo json_encode($model_request);
 
-		exit;
+			exit;
+		}
+		catch(Exception $e)
+		{
+			$date = date("d.m.Y H:i:s");
+			$files = "components/com_gm_ceiling/";
+			file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+			throw new Exception('Ошибка!', 500);
+		}
 	}
 
 
@@ -230,5 +247,6 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 			throw new Exception(500);
 		}
 	}
+
 }
 

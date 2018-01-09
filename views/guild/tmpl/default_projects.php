@@ -37,30 +37,30 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <cuts class="container">
         <types class="row">
             <? foreach ($calculations as $k => $calc): ?>
-                <div class="block_1" id="<?=$k;?>">
-                <line class="gm line"><?= $calc->name; ?></line>
-                <type class="type">
-                    <? foreach ($calc->I as $k => $type): ?>
-                        <div class="block_2" id="p<?=$k;?>">
-                        <line class="line"><?= $type->canvases; ?></line>
-                        <ceilings class="ceilings row">
-                            <? foreach ($type->I as $cut): ?>
-                                <ceiling class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3" id="<?= $cut->id; ?>">
-                                    <input name="data" value='<?= json_encode($cut); ?>' disabled hidden>
-                                    <div class="ceiling">
-                                        <name><?= $cut->title; ?></name>
-                                        <div class="image"
-                                             style="background-image: url('<?= $cut->cut_image; ?>')"></div>
-                                    </div>
-                                    <div class="loupe" onclick="ModalShow(this);">
-                                        <i class="fa fa-search-plus" aria-hidden="true"></i>
-                                    </div>
-                                </ceiling>
-                            <? endforeach; ?>
-                        </ceilings>
-                        </div>
-                    <? endforeach; ?>
-                </type>
+                <div class="block_1" id="<?= $k; ?>">
+                    <line class="gm line"><?= $calc->name; ?></line>
+                    <type class="type">
+                        <? foreach ($calc->I as $k => $type): ?>
+                            <div class="block_2" id="p<?= $k; ?>">
+                                <line class="line"><?= $type->canvases; ?></line>
+                                <ceilings class="ceilings row">
+                                    <? foreach ($type->I as $cut): ?>
+                                        <ceiling class="block_3 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
+                                                 id="<?= $cut->id; ?>">
+                                            <input name="data" value='<?= json_encode($cut); ?>' disabled hidden>
+                                            <div class="ceiling">
+                                                <name><?= $cut->title; ?></name>
+                                                <div class="image" style="background-image: url('<?= $cut->cut_image; ?>')"></div>
+                                            </div>
+                                            <div class="loupe" onclick="ModalShow(this);">
+                                                <i class="fa fa-search-plus" aria-hidden="true"></i>
+                                            </div>
+                                        </ceiling>
+                                    <? endforeach; ?>
+                                </ceilings>
+                            </div>
+                        <? endforeach; ?>
+                    </type>
                 </div>
             <? endforeach; ?>
     </cuts>
@@ -152,6 +152,27 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     $(document).ready(Init);
 
     function Init() {
+        Data.block1 = $('<div class="block_1">' +
+            '<line class="gm line"></line>' +
+            '<type class="type"></type>' +
+            '</div>');
+
+        Data.block2 = $('<div class="block_2">' +
+            '<line class="line"></line>' +
+            '<ceilings class="ceilings row"></ceilings>' +
+            '</div>');
+
+        Data.block3 = $('<ceiling class="block_3 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">' +
+            '<input name="data" disabled hidden>' +
+            '<div class="ceiling">' +
+            '<name></name>' +
+            '<div class="image"></div>' +
+            '</div>' +
+            '<div class="loupe" onclick="ModalShow(this);">' +
+            '<i class="fa fa-search-plus" aria-hidden="true"></i>' +
+            '</div>' +
+            '</ceiling>');
+
         $(".snowfall-flakes").remove();
         $(".ModalCeiling .ModalImage")
             .touchwipe({
@@ -372,19 +393,137 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             success: function (data) {
                 data = JSON.parse(data);
 
-                $.each(data, function (i, v) {
-                    var type = $("#"+i);
-                    if (type.length === 1)
-                    {
-                        var elementPred = "", elementNext = "";
-                        $.each($(".block_1"), function (q, temp) {
-                            temp = $(temp);
-                            if (temp.attr("id") <= v.id) {
-                                elementPred = elementNext; elementNext = temp.attr("id");
+                $.each(data, function (i1, b1) {
+                    var blocks1 = $(".block_1"),
+                        fblocks1 = blocks1.filter("#"+i1);
+
+                    console.log(fblocks1);
+                    if (fblocks1.length < 1) {
+                        var Pred = "", Next = "", Temp = null;
+                        blocks1.each(function () {
+                            if (i1 <= Next) return;
+
+                            Temp = $(this);
+                            console.log(Temp.attr('id'));
+
+                            Pred = Next;
+                            Next = Temp.attr('id');
+                        });
+
+                        if (Temp !== null && i1 > Temp.attr('id')) {
+                            Pred = Next;
+                            Next = "";
+                        }
+
+                        console.log(Pred + " < " + i1 + " < " + Next);
+
+                        Temp = (Next !== "") ? $("#" + Next) : Data.block1;
+                        var T = Temp.clone();
+
+                        T.attr("id", i1);
+                        T.find("line.gm").text(b1.name);
+                        T.find("type").empty();
+
+                        if (Next !== "") T.insertBefore(Temp);
+                        else $("types").append(T);
+                    }
+
+                    $.each(b1.I, function (i2, b2) {
+                        i2 = "p" + i2;
+                        var block1 = $("#"+i1),
+                            blocks2 = block1.find(".block_2"),
+                            fblocks2 = blocks2.filter("#"+i2);
+
+                        console.log(fblocks2);
+                        if (fblocks2.length < 1) {
+                            var Pred = "", Next = "", Temp = null;
+                            blocks2.each(function () {
+                                if (parseInt(i2.replace("p","")) <= parseInt(Next.replace("p",""))) return;
+
+                                Temp = $(this);
+                                console.log(Temp.attr('id'));
+
+                                Pred = Next;
+                                Next = Temp.attr('id');
+                            });
+
+                            if (Temp !== null && parseInt(i2.replace("p","")) > parseInt(Temp.attr('id').replace("p",""))) {
+                                Pred = Next;
+                                Next = "";
+                            }
+
+                            console.log(Pred + " < " + i2 + " < " + Next);
+
+                            Temp = (Next !== "") ? $("#" + Next) : Data.block2;
+                            var T = Temp.clone();
+
+                            T.attr("id", i2);
+                            T.find("line").text(b2.canvases);
+                            T.find("ceilings").empty();
+
+                            if (Next !== "") T.insertBefore(Temp);
+                            else block1.find("type").append(T);
+                        }
+
+                        $.each(b2.I, function (i3, b3) {
+                            i3 = parseInt(b3.id);
+
+                            var block2 = block1.find("#"+i2),
+                                blocks3 = block2.find(".block_3"),
+                                fblocks3 = blocks3.filter("#"+i3);
+
+                            console.log(fblocks3);
+                            if (fblocks3.length < 1) {
+                                var Pred = "", Next = "", Temp = null;
+                                blocks3.each(function () {
+                                    if (parseInt(i3) <= parseInt(Next)) return;
+
+                                    Temp = $(this);
+                                    console.log(Temp.attr('id'));
+
+                                    Pred = Next;
+                                    Next = Temp.attr('id');
+                                });
+
+                                if (Temp !== null && parseInt(i3) > parseInt(Temp.attr('id'))) {
+                                    Pred = Next;
+                                    Next = "";
+                                }
+
+                                console.log(Pred + " < " + i3 + " < " + Next);
+
+                                Temp = (Next !== "") ? block2.find("#" + Next) : Data.block3;
+                                var T = Data.block3.clone();
+
+                                T.attr("id", i3);
+                                T.find("input").val(JSON.stringify(b3));
+                                T.find("name").text(b3.title);
+                                T.find(".image").attr("style","background-image: url('" + b3.cut_image + "'");
+
+                                if (Next !== "") { T.insertBefore(Temp); var index = Data.calculations.indexOf(Next); Data.calculations.splice(index, 0, i3); }
+                                else { block2.find("ceilings").append(T); Data.calculations.push(i3); }
+                                console.log("------------------------");
+                                console.log(Data.calculations);
+                                console.log("------------------------");
                             }
                         });
+                    });
+                });
+
+                /*$.each(data, function (i, v) {
+                    var type = $("#"+i);
+
+                    if (type.length === 1 || true)
+                    {
+                        var elementPred = "", elementNext = "";
+                        $(".block_1").each(function () {
+                            var temp = $(this);
+                            console.log(temp.attr("id"));
+                            if (temp.attr("id") < v.id) elementPred = temp.attr("id");
+                            else elementNext = temp.attr("id");
+                        });
                         console.log(elementPred + " - " + v.id + " - " + elementNext);
-                        if (elementPred == "")
+                        if (elementPred === "")
                         {
                             console.log("before");
                             var before = $("types #" + elementNext),
@@ -400,7 +539,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             element.insertAfter(after);
                         }
                     }
+
                     console.log(type);
+
                     $.each(v.I, function (j, g) {
                         var ceilings = type.find("#p"+j);
                         console.log(ceilings);
@@ -411,7 +552,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             console.log(r);
                         })
                     })
-                });
+                });*/
 
                 $(".PRELOADER_GM").hide();
             },

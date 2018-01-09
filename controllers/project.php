@@ -170,10 +170,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$client_history_model = $this->getModel('Client_history', 'Gm_ceilingModel');
             $status = $jinput->get('status','0','INT');
             $gauger = null;
+            $date = $jinput->get('project_new_calc_date', '', 'STRING');
+            $time = $jinput->get('new_project_calculation_daypart', '0', 'STRING');
+            $date_time = $date." ".$time;
 			switch($status){
                 case 1 :
                     $gauger = $jinput->get('project_gauger', '', 'STRING');
 					$result = "записан на замер";
+					$answer = "записан на замер на ".$date_time ;
 					break;
 				case 2 :
 					$result = "переведен в статус отказа от замера";
@@ -219,11 +223,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if(!empty($porch)) $address .= ", подъезд: ".$porch;
 			if(!empty($floor)) $address .= ", этаж: ".$floor;
 			if(!empty($code)) $address .= ", код: ".$code;
-			$date = $jinput->get('project_new_calc_date', '', 'STRING');
-			$time = $jinput->get('new_project_calculation_daypart', '0', 'STRING');
+
 			$cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
 			$manager_comment = $jinput->get('gmmanager_note', '', 'STRING');
-			$date_time = $date." ".$time;
+
 
             $isDataDelete = $jinput->get('data_delete', '0', 'INT');
             if($isDataDelete) {
@@ -268,7 +271,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				{
 					//обновление созданного проекта
 					$model->update_project_after_call($project_id,$client_id,$date_time,$address,$manager_comment,$status,$api_phone_id,$user->id, $gauger);
-					$client_history_model->save($client_id,"Проект № ".$project_id." ".$result);
+					if(!empty($answer)) $client_history_model->save($client_id,"Проект № ".$project_id." ".$answer);
+					else $client_history_model->save($client_id,"Проект № ".$project_id." ".$result);
 					//добавление звонка
 					if($call_date!=""){
 						$callback_model = $this->getModel('callback', 'Gm_ceilingModel');
@@ -374,7 +378,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							$client_history_model->save($client_id,"Добавлен новый звонок. Примечание: $call_comment");
 						}
 					}
-					$client_history_model->save($client_id,"Проект № ".$project_id." ".$result);
+					if(!empty($answer)) $client_history_model->save($client_id,"Проект № ".$project_id." ".$answer);
+					else $client_history_model->save($client_id,"Проект № ".$project_id." ".$result);
 				}
 				elseif ($call_type == "promo")
 				{

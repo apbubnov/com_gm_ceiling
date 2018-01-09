@@ -32,7 +32,6 @@ $data_of_n_pack3 = $mounters_order_model->GetNPack3($mas);
 $data_of_n_pack4 = $mounters_order_model->GetNPack4($mas);
 $data_of_n_pack5 = $mounters_order_model->GetNPack5($mas);
 $data_of_n_pack6 = $mounters_order_model->GetNPack6($project);
-
 $data_of_n_pack7 = $mounters_order_model->GetNPack7($mas);
 
 $data_of_mp = $mounters_order_model->GetMp($dealerId);
@@ -666,15 +665,18 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId);
                 jQuery("#begin").attr("disabled", "disabled");
                 jQuery("#complited").attr("disabled", false);
                 jQuery("#underfulfilled").attr("disabled", "disabled");
+            } else if (status_mount == 10) {
+                jQuery("#begin").attr("disabled", false);
+                jQuery("#complited").attr("disabled", "disabled");
+                jQuery("#underfulfilled").attr("disabled", "disabled");
+            } else if (status_mount == 16) {
+                jQuery("#begin").attr("disabled", "disabled");
+                jQuery("#complited").attr("disabled", false);
+                jQuery("#underfulfilled").attr("disabled", false);
             } else {
-                if (start == "0000-00-00 00:00:00") {
-                    jQuery("#complited").attr("disabled", "disabled");
-                    jQuery("#underfulfilled").attr("disabled", "disabled");
-                } else {
-                    jQuery("#begin").attr("disabled", "disabled");
-                    jQuery("#complited").attr("disabled", false);
-                    jQuery("#underfulfilled").attr("disabled", false);
-                }
+                jQuery("#begin").attr("disabled", "disabled");
+                jQuery("#complited").attr("disabled", "disabled");
+                jQuery("#underfulfilled").attr("disabled", "disabled");
             }
         }
     });

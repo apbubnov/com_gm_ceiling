@@ -68,7 +68,7 @@ class Gm_ceilingModelGuild extends JModelList
             ->select("s.name as name, s.country as country, s.width as width, t.texture_title as texture, r.title as color");
 
         if (!empty($data) && $data->type == "get") $query->where("$data->name = '$data->value'");
-        else if (!empty($data) && $data->type == "test") $query->where("c.id NOT IN (" . implode(",", $data->data) . ")");
+        else if (!empty($data) && $data->type == "test" && count($data->data) > 0) $query->where("c.id NOT IN (" . implode(",", $data->data) . ")");
 
         $db->setQuery($query);
         $calculations = $db->loadObjectList();

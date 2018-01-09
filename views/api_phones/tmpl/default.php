@@ -38,6 +38,7 @@ $userId     = $user->get('id');
         <th>Реклама</th>
         <th>Номер</th>
         <th>Описание</th>
+        <th>Сайт</th>
 	</thead> 
 
     <?php foreach($this->item as $item){?>
@@ -53,6 +54,9 @@ $userId     = $user->get('id');
         </td>
         <td>
             <input value="<?php echo $item->description;?>" type="text" onkeyup="text_description_update(this, <?php echo $item->id;?>)">
+        </td>
+         <td>
+            <?php echo $item->site;?>
         </td>
     </tr>
     <?php }?>
