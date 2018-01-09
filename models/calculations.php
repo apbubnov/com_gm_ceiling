@@ -881,6 +881,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->where("date_from between '$date1 00:00:00' and '$date2 23:59:59'");
             
             throw new Exception($query3);
+
                 
             $db->setQuery($query3);
             $items3 = $db->loadObject();
