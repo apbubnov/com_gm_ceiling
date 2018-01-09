@@ -384,11 +384,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 if (data.status === "success") {
                     delete Data.calculations[Data.calculations.indexOf(parseInt(id))];
                     var calc = Data.calculations;
-                    Data.calculations.empty();
+                    Data.calculations = [];
 
                     for(var i = 0; i < calc.length; i++)
                         if (calc[i] !== null)
-                            Data.calculations.add(calc[i]);
+                            Data.calculations.push(calc[i]);
 
                     var block_3 = $("#" + id),
                         block_2 = block_3.closest(".block_2"),
@@ -546,6 +546,14 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 console.log("------------------------");
                                 console.log(Data.calculations);
                                 console.log("------------------------");
+
+                                noty({
+                                    theme: 'relax',
+                                    layout: 'center',
+                                    timeout: 2000,
+                                    type: "success",
+                                    text: "Пришел новый заказ!\n" + b1.date + ((b1.quickly === "A")?" Срочно":"") + "\n" + b2.canvases + "\n" + b3.title + " - " + b3.quad;
+                                });
                             }
                         });
                     });
