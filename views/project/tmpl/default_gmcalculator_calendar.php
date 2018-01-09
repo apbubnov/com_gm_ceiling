@@ -1615,6 +1615,7 @@ $results = $db->loadObjectList();
                     dealer: <?php echo $user->dealer_id; ?>,
                 },
                 success: function(data) {
+                    console.log(data);
                     window.DataOfProject = JSON.parse(data);
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
@@ -1623,7 +1624,6 @@ $results = $db->loadObjectList();
                     Allbrigades = <?php echo json_encode($Allbrigades); ?>;
                     jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
                     window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
-                    console.log(Allbrigades);
                     if (Allbrigades.length != 0) {
                         data = JSON.parse(data); // занятые
                         AllbrigadesID = [];
