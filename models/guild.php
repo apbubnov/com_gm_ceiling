@@ -61,15 +61,14 @@ class Gm_ceilingModelGuild extends JModelList
             ->join("Left", "`#__gm_ceiling_colors` as r ON r.id = s.color_id")
             ->join("Left", "`#__gm_ceiling_cuttings` as cut ON cut.id = c.id")
             ->where("p.project_status IN (5, 7)")
-            ->where("cut.ready = 0 OR cut.ready IS NULL")
+            ->where("(cut.ready = 0 OR cut.ready IS NULL)")
             ->order("p.quickly, p.ready_time, p.project_calculation_date, s.name, s.texture_id, s.width")
             ->select("p.quickly, p.ready_time, p.project_status, p.id as project")
             ->select("c.id as id, c.calculation_title as title, c.n3 as canvas_id, c.n4 as perimeter, c.n5 as quad, c.n9 as angles, c.calc_data, c.cut_data, c.offcut_square as square")
             ->select("s.name as name, s.country as country, s.width as width, t.texture_title as texture, r.title as color");
 
-        if (!empty($data) && $data->type == "get") $query->where("$data->name = '$data->value'");
+        if (!empty($data) && $data->type == "get") $query->where($data->name." = '".$data->value."'");
         else if (!empty($data) && $data->type == "test" && count($data->data) > 0) $query->where("c.id NOT IN (" . implode(",", $data->data) . ")");
-
         $db->setQuery($query);
         $calculations = $db->loadObjectList();
 
@@ -186,6 +185,16 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function sendWork($data)
     {
+        $calculation = $data->calculations->id;
+
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->update("`#__gm_ceiling_cuttings`")
+            ->set("ready = '1'")
+            ->where("id = '$calculation'");
+        $db->setQuery($query);
+        $db->execute();
+
         return;
     }
 }

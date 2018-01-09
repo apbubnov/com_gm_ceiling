@@ -315,7 +315,7 @@ if (count($AllGauger) == 0) {
 			jQuery("#modal-window-choose-tar").show("slow");
             jQuery("#close-tar").show();
             if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-				var dealer = 775;
+				var dealer = 1;
 			} else {
 				var dealer = <?php echo $user->dealer_id; ?>;
 			}

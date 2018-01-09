@@ -303,7 +303,7 @@ class Gm_ceilingModelMounters extends JModelList
 		  
 			$query->where('a.state = 1');
 			if($dealer_id == 0) {
-				$query->where('a.owner = 774');
+				$query->where('a.owner = 2');
 			} else {
 				$query->where('a.owner = '.$dealer_id);
 			}

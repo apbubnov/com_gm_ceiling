@@ -1,1 +1,17 @@
 log
+09.01.2018 14:57:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+----------
+09.01.2018 14:57:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+09.01.2018 14:59:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+----------
+09.01.2018 14:59:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+09.01.2018 15:00:56 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+----------
+09.01.2018 15:00:56 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+09.01.2018 15:16:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+09.01.2018 15:16:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------

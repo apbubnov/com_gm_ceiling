@@ -174,7 +174,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 
         //обновляем менеджера для клиента
         $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-        if($this->item->manager_id==775||empty($model_client->getClientById($this->item->id_client)->manager_id)){
+        if($this->item->manager_id==1||empty($model_client->getClientById($this->item->id_client)->manager_id)){
             $model_client->updateClientManager($this->item->id_client, $userId);
         }
         $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
@@ -485,7 +485,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                     <th>Менеджер</th>
                                     <td>
                                         <input name="Manager_name" id="manager_name" class="inputhidden"
-                                               value="<?php if (isset($this->item->read_by_manager)&&$this->item->read_by_manager!=775) {
+                                               value="<?php if (isset($this->item->read_by_manager)&&$this->item->read_by_manager!=1) {
                                                    echo JFactory::getUser($this->item->read_by_manager)->name;
                                                } ?>">
                                     </td>
@@ -659,7 +659,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     $calculation->calculation_title;
                     $total_square += $calculation->n4;
                     $total_perimeter += $calculation->n5;
-
+                    $canvas = $dealer_canvases_sum;
                     // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
                     //$sum_transport = 0;  $sum_transport_discount = 0;
                     //$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
@@ -692,6 +692,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                    value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
                             <input name='calculation_total3[<?php echo $calculation->id; ?>]'
                                    value='<?php echo $project_total_1; ?>' type='hidden'>
+                            <input name='canvas[<?php echo $calculation->id; ?>]'
+                                value='<?php echo $canvas; ?>' type='hidden'>
                             <?php echo $calculation->calculation_title; ?>
                         </td>
                     </tr>
@@ -816,18 +818,22 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <th id="project_total_discount">
                         <span class="sum">
                      <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                    if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0);  ?> руб.</th> <?}
+                    if($dealer_canvases_sum == 0 && $project_total_discount < 2500) $project_total_discount = 2500;
+                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) { $project_total_discount = 2500; echo round($project_total_discount, 0);  ?> руб.</th> <?}
                     elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
                         </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
                     <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
 
-                <?php } else { ?>
+                <?php }
+                else { ?>
                 <th>Итого</th>
                 <th id="project_total">
                 <span class="sum">
                     <?php
                     if ($this->item->new_project_sum == 0) {
-                        if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                        if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
+                        elseif($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                        
                         echo round($project_total, 2);
                     } else {
                         echo round($this->item->new_project_sum, 2);
@@ -835,8 +841,11 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 } ?>
             </span>
             <span class="dop" style="font-size: 9px;">
-                <? if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
-                     * минимальная сумма заказа 3500р.<?}?>
+            <? if ($project_total <= 2500 && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
+                     * минимальная сумма заказа 2500р.
+                <? elseif ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
+                     * минимальная сумма заказа 3500р.<?endif;?>
+                     
                       </span>
                 </th>
             </tr>
@@ -2707,24 +2716,38 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 data = JSON.parse(data);
                 var html = "",
                     transport_sum = parseFloat(data);
-                var calc_sum = 0, calc_total = 0;
+                var calc_sum = 0, calc_total = 0; canvas = 0;
                 jQuery.each(jQuery("[name='include_calculation[]']:checked"), function (i,e) {
                     calc_sum += parseFloat(jQuery("[name='calculation_total_discount["+jQuery(e).val()+"]']").val());
                     calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
+                    canvas += parseFloat(jQuery("[name='canvas["+jQuery(e).val()+"]']").val());
                 });
-
                 var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
                 var sum_total = Float(calc_total + transport_sum);
-                if(sum < 3500 )sum = 3500;
-                if(sum_total < 3500 )sum_total = 3500;
+                if(canvas == 0) sum = 2500;
+                else if(sum < 3500 ) sum = 3500;
+                if(canvas == 0) sum_total = 2500;
+                else if(sum_total < 3500 ) sum_total = 3500;
                 jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
                 //jQuery("#project_total").text(sum  + " руб.");
-                jQuery("#project_total span.sum").text(sum_total);
-                jQuery("#project_total span.dop").html((sum_total <= 3500)?" * минимальная сумма заказа 3500р.":"");
-                jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                jQuery("#project_total_discount span.dop").html((sum <= 3500)?" * минимальная сумма заказа 3500р.":"");
-                jQuery("#project_sum_transport").val(sum);
-                jQuery("#project_sum").val(sum);
+                if(canvas == 0) {
+                    jQuery("#project_total span.sum").text(sum_total);
+                    jQuery("#project_total span.dop").html((sum_total <= 2500)?" * минимальная сумма заказа 2500р.":"");
+                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
+                    jQuery("#project_total_discount span.dop").html((sum <= 2500)?" * минимальная сумма заказа 2500р.":"");
+                    jQuery("#project_sum_transport").val(sum);
+                    jQuery(" #project_sum").val(sum);
+                }
+                else {
+                    jQuery("#project_total span.sum").text(sum_total);
+                    jQuery("#project_total span.dop").html((sum_total <= 3500)?" * минимальная сумма заказа 3500р.":"");
+                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
+                    jQuery("#project_total_discount span.dop").html((sum <= 3500)?" * минимальная сумма заказа 3500р.":"");
+                    jQuery("#project_sum_transport").val(sum);
+                    jQuery(" #project_sum").val(sum);
+                }
+                
+
             },
             dataType: "json",
             timeout: 10000,
@@ -2740,7 +2763,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             }
         });
     }
-
     /**
         * @return {number}
         */
@@ -2751,33 +2773,55 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
     function calculate_total() {
         var project_total = 0,
             project_total_discount = 0,
-            pr_total2 = 0;
+            pr_total2 = 0,
+            canvas = 0;
+            
 
         jQuery("input[name^='include_calculation']:checked").each(function () {
             var parent = jQuery(this).closest(".include_calculation"),
                 calculation_total = parent.find("input[name^='calculation_total']").val(),
                 calculation_total_discount = parent.find("input[name^='calculation_total_discount']").val(),
-                project_total2 = parent.find("input[name^='calculation_total2']").val();
-
+                project_total2 = parent.find("input[name^='calculation_total2']").val(),
+                canv = parent.find("input[name^='canvas']").val();
 
             project_total += parseFloat(calculation_total);
             project_total_discount += parseFloat(calculation_total_discount);
             pr_total2 += parseFloat(project_total2);
+            canvas += parseFloat(canv);
         });
+        //var canvas = jQuery("#canvas").val();
+        
+        if(canvas == 0) {
+            if(project_total < 2500 && pr_total2 !== 0)  project_total = 2500;
+            if(project_total_discount < 2500 && pr_total2 !== 0)  project_total_discount = 2500;
 
-        if(project_total < 3500 && pr_total2 !== 0)  project_total = 3500;
-        if(project_total_discount < 3500 && pr_total2 !== 0)  project_total_discount = 3500;
+            jQuery("#project_total span.sum").text(project_total.toFixed(2));
+            if (project_total > 2500) { jQuery("#project_total span.dop").html(" "); }
+            if (project_total <= 2500 && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа 2500р."); }
+            if (project_total <= 2500 && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
+            jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
+            if (project_total_discount > 2500) { jQuery("#project_total_discount span.dop").html(" "); }
+            if (project_total_discount <= 2500 && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа 2500р."); }
+            if (project_total_discount <= 2500 && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
+            //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
+            jQuery("#project_sum").val(project_total_discount);
+        }
+        else {
+            if(project_total < 3500 && pr_total2 !== 0)  project_total = 3500;
+            if(project_total_discount < 3500 && pr_total2 !== 0)  project_total_discount = 3500;
 
-        jQuery("#project_total span.sum").text(project_total.toFixed(2));
-        if (project_total > 3500) { jQuery("#project_total span.dop").html(" "); }
-        if (project_total <= 3500 && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа 3500р."); }
-        if (project_total <= 3500 && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
-        jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
-        if (project_total_discount > 3500) { jQuery("#project_total_discount span.dop").html(" "); }
-        if (project_total_discount <= 3500 && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа 3500р."); }
-        if (project_total_discount <= 3500 && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
-        //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
-        jQuery("#project_sum").val(project_total_discount);
+            jQuery("#project_total span.sum").text(project_total.toFixed(2));
+            if (project_total > 3500) { jQuery("#project_total span.dop").html(" "); }
+            if (project_total <= 3500 && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа 3500р."); }
+            if (project_total <= 3500 && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
+            jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
+            if (project_total_discount > 3500) { jQuery("#project_total_discount span.dop").html(" "); }
+            if (project_total_discount <= 3500 && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа 3500р."); }
+            if (project_total_discount <= 3500 && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
+            //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
+            jQuery("#project_sum").val(project_total_discount);
+        }
+        
     }
 
     function square_total() {

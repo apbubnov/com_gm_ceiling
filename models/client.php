@@ -548,7 +548,7 @@ class Gm_ceilingModelClient extends JModelItem
 	        $query->update('`#__gm_ceiling_clients`')
 	            ->set('client_name = ' . $db->quote($fio))
 	            ->set('type_id =  1')
-	            ->set('manager_id =  775')
+	            ->set('manager_id =  1')
 	            ->where('id = ' .$client_id );
 	        $db->setQuery($query);
 	        $db->execute();

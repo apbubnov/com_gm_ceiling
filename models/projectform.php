@@ -422,7 +422,7 @@ class Gm_ceilingModelProjectForm extends JModelForm
 				if(isset($user->dealer_id)) {
 					$data['owner'] = $user->dealer_id;
 				} else {
-					$data['owner'] = 774;
+					$data['owner'] = 2;
 				}
 			}*/
 

@@ -273,12 +273,12 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
 			
 			//Получаем объект дилера
 			if(empty($data['owner'])) {
-				$dealer = JFactory::getUser(774);
+				$dealer = JFactory::getUser(2);
 			} else {
-				$dealer = JFactory::getUser(774);
+				$dealer = JFactory::getUser(2);
 			}
 			if(empty($data['owner']))
-				$data['owner'] = 774;
+				$data['owner'] = 2;
 			
 			
 			//Подготовка данных клиента

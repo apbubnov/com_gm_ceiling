@@ -30,8 +30,8 @@ $listDirn = $this->state->get('list.direction');
 $canCreate = (in_array(18, $groups) || in_array(19, $groups));
 $canEdit = (in_array(18, $groups) || in_array(19, $groups));
 $canDelete = (in_array(18, $groups) || in_array(19, $groups));
-//$canCheckin = $user->dealer_id == 775;
-//$canChange  = $user->dealer_id == 775;
+//$canCheckin = $user->dealer_id == 1;
+//$canChange  = $user->dealer_id == 1;
 ?>
 <?= parent::getPreloader(); ?>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=components&type=stock'); ?>" method="post"

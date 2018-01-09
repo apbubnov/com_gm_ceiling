@@ -116,7 +116,7 @@ $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
 		<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
 		<input type="hidden" name="jform[checked_out]" value="<?php echo $this->item->checked_out; ?>" />
 		<input type="hidden" name="jform[checked_out_time]" value="<?php echo $this->item->checked_out_time; ?>" />
-		<input type="hidden" name="jform[dealer_id]" value="774" />
+		<input type="hidden" name="jform[dealer_id]" value="2" />
 		<input type="hidden" name="jform[type]" value="guest" />
 		<input id="jform_project_id" type="hidden" name="jform[project_id]" value="<?php echo $this->item->project_id; ?>" />
 		<input id="jform_sketch_name" type="hidden" name="sketch_name" value="" />

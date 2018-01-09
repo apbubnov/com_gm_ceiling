@@ -17,11 +17,11 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 $listOrder  = $this->state->get('list.ordering');
 $listDirn   = $this->state->get('list.direction');
-$canCreate  = $user->dealer_id == 775;
-$canEdit    = $user->dealer_id == 775;
-$canCheckin = $user->dealer_id == 775;
-$canChange  = $user->dealer_id == 775;
-$canDelete  = $user->dealer_id == 775;
+$canCreate  = $user->dealer_id == 1;
+$canEdit    = $user->dealer_id == 1;
+$canCheckin = $user->dealer_id == 1;
+$canChange  = $user->dealer_id == 1;
+$canDelete  = $user->dealer_id == 1;
 $dealer = JFactory::getUser($user->dealer_id);
 ?>
 <?= parent::getPreloader(); ?>
