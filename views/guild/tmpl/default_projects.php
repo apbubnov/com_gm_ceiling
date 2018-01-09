@@ -209,7 +209,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         if (Data.Interval !== null)
             clearInterval(Data.Interval);
 
-        Data.Interval = setInterval(TestList, 5000);
+        Data.Interval = setInterval(TestList(false), 5000);
     }
 
     function ModalShow(o) {
@@ -391,11 +391,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         });
     }
 
-    function TestList() {
+    function TestList(preloader = true) {
         if (Data.Interval !== null)
             clearInterval(Data.Interval);
 
-        $(".PRELOADER_GM").show();
+        if (preloader)
+            $(".PRELOADER_GM").show();
 
         jQuery.ajax({
             type: 'POST',
