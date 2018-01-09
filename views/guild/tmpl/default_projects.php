@@ -231,7 +231,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             json = JSON.parse(Input.val());
 
         Modal.val(json.id);
-        alert(json.id);
         Modal.find(".ModalName b").text(json.title);
         Modal.find(".ProjectId span").text(json.project + ((json.quickly === "A") ? " - Срочно" : ""));
         Modal.find(".CloseProject span").text(json.ready_time);
@@ -366,7 +365,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             id = Modal.val(),
             serialize = Modal.serialize();
 
-        alert(id);
         jQuery.ajax({
             type: 'POST',
             url: "/index.php?option=com_gm_ceiling&task=guild.sendWork",
@@ -384,9 +382,19 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 });
 
                 if (data.status === "success") {
-                    NextCeiling();
                     delete Data.calculations[Data.calculations.indexOf(parseInt(id))];
-                    $("#" + id).remove();
+                    var block_3 = $("#" + id),
+                        block_2 = block_1.closest(".block_2"),
+                        block_1 = block_2.closest(".block_1");
+                    if(block_1.find(".block_2").length < 1)
+                        block_1.remove();
+                    else if (block_2.find(".block_3").length < 1)
+                        block_2.remove();
+                    else
+                        block_3.remove();
+
+
+                    NextCeiling();
                     TestList();
                 }
                 $(".PRELOADER_GM").hide();
