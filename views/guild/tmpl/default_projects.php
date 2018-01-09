@@ -209,7 +209,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         if (Data.Interval !== null)
             clearInterval(Data.Interval);
 
-        Data.Interval = setInterval(TestList(false), 5000);
+        Data.Interval = setInterval(function () {
+            TestList(false);
+        }, 5000);
     }
 
     function ModalShow(o) {
