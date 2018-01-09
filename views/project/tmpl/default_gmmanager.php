@@ -602,7 +602,7 @@ $AllMounters = $model->FindAllMounters($where);
                                     table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                                 }                            
                             }
-                        })
+                        });
                         table_projects += "</table>";
                         jQuery("#projects_brigade_container").append(table_projects);
                     }
