@@ -41,8 +41,7 @@ class Gm_ceilingModelCashbox extends JModelList
 				->select('p.new_material_sum')
 				->from('#__gm_ceiling_projects as p')
 				->innerJoin('#__users as u ON p.project_mounter = u.id')
-				->where('p.project_status=12')
-				->order('`p.closed` ASC');
+				->where('p.project_status=12');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			$encashment_model = $this->getModel('Encashment','Gm_ceiling');
