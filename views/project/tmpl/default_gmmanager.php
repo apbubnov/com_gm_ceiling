@@ -567,6 +567,7 @@ $AllMounters = $model->FindAllMounters($where);
                     url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyMounters",
                     data: {
                         date: date,
+                        dealer: <?php echo $user->dealer_id; ?>,
                     },
                     success: function(data) {
                         window.DataOfProject = JSON.parse(data);
