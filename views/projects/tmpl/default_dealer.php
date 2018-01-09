@@ -142,14 +142,14 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                   if($item->transport == 0 ) $sum_transport = 0;
             if($item->transport == 1 ) $sum_transport = $mount_transport->transport * $item->distance_col;
             if($item->transport == 2 ) $sum_transport = $mount_transport->distance * $item->distance * $item->distance_col;
-            $min = 100;
+            /*$min = 100;
             foreach($calculations as $d) {
                 if($d->discount < $min) $min = $d->discount;
             }
             if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
             if($sum_transport < $mount_transport->transport && $sum_transport != 0) {
                 $sum_transport = $mount_transport->transport;
-            }
+            }*/
 
             if($item->transport == 0 ) $sum_transport_1 = 0;
             if($item->transport == 1 ) $sum_transport_1 = double_margin($mount_transport->transport * $item->distance_col, $item->gm_mounting_margin, $item->dealer_mounting_margin);
@@ -163,14 +163,26 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             if ($mounting_sum != 0) $mounting_sum = $mounting_sum + $sum_transport;
             if(!empty($item->new_mount_sum)) $mounting_sum = $item->new_mount_sum;
             if(!empty($item->new_material_sum)) $material_sum = $item->new_material_sum;
-            if($project_total <= 3500 && $mounting_sum != 0 && $mounting_sum <= 1500 ) {$project_total = 3500; $mounting_sum = 1500;}
-            if($project_total >= 3500 &&  $mounting_sum != 0 && $mounting_sum <= 1500) { $mounting_sum = 1500; }
-            if($project_total <= 3500 &&  $mounting_sum != 0 && $mounting_sum >= 1500) { $project_total = 3500; }
 
-            if($project_total_discount <= 3500 && $mounting_sum != 0 && $mounting_sum <= 1500 ) {$project_total_discount = 3500; $mounting_sum = 1500;}
-            if($project_total_discount >= 3500 &&  $mounting_sum != 0 && $mounting_sum <= 1500) { $mounting_sum = 1500; }
-            if($project_total_discount <= 3500 &&  $mounting_sum != 0 && $mounting_sum >= 1500) { $project_total_discount = 3500; }
+            if($canvases_sum > 0) {
+                if($project_total <= 3500 && $mounting_sum != 0 && $mounting_sum <= 1500 ) {$project_total = 3500; $mounting_sum = 1500;}
+                if($project_total >= 3500 &&  $mounting_sum != 0 && $mounting_sum <= 1500) { $mounting_sum = 1500; }
+                if($project_total <= 3500 &&  $mounting_sum != 0 && $mounting_sum >= 1500) { $project_total = 3500; }
 
+                if($project_total_discount <= 3500 && $mounting_sum != 0 && $mounting_sum <= 1500 ) {$project_total_discount = 3500; $mounting_sum = 1500;}
+                if($project_total_discount >= 3500 &&  $mounting_sum != 0 && $mounting_sum <= 1500) { $mounting_sum = 1500; }
+                if($project_total_discount <= 3500 &&  $mounting_sum != 0 && $mounting_sum >= 1500) { $project_total_discount = 3500; }
+            }
+            else {
+                if($project_total <= 2500 && $mounting_sum != 0 && $mounting_sum <= 1500 ) {$project_total = 2500; $mounting_sum = 1500;}
+                if($project_total >= 2500 &&  $mounting_sum != 0 && $mounting_sum <= 1500) { $mounting_sum = 1500; }
+                if($project_total <= 2500 &&  $mounting_sum != 0 && $mounting_sum >= 1500) { $project_total = 2500; }
+
+                if($project_total_discount <= 2500 && $mounting_sum != 0 && $mounting_sum <= 1500 ) {$project_total_discount = 2500; $mounting_sum = 1500;}
+                if($project_total_discount >= 2500 &&  $mounting_sum != 0 && $mounting_sum <= 1500) { $mounting_sum = 1500; }
+                if($project_total_discount <= 2500 &&  $mounting_sum != 0 && $mounting_sum >= 1500) { $project_total_discount = 2500; }
+            }
+            
             /*if ($item->who_mounting == 0) {
                 $earn = $project_total_discount - ($canvases_sum + $components_sum + $mounting_sum) - $extra_spend_sum;
             } else {
