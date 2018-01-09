@@ -1623,7 +1623,6 @@ $results = $db->loadObjectList();
                     Allbrigades = <?php echo json_encode($Allbrigades); ?>;
                     jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
                     window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
-                    console.log(Allbrigades);
                     if (Allbrigades.length != 0) {
                         data = JSON.parse(data); // занятые
                         AllbrigadesID = [];
@@ -1674,10 +1673,11 @@ $results = $db->loadObjectList();
                         // вывод работ бригады
                         var table_projects = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
                         table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                        console.log(data);
                         Array.from(data).forEach(function(element) {
                             if (element.project_mounter == selectedBrigade) {
-                                if (element.project_mounting_day_off != null) {
-                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2"></td></tr>';//+element.project_mounting_date.substr(8, 2)+"."+element.project_mounting_date.substr(5, 2)+"."+element.project_mounting_date.substr(0, 4)+" "
+                                if (element.project_mounting_day_off != "") {
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';//+element.project_mounting_date.substr(8, 2)+"."+element.project_mounting_date.substr(5, 2)+"."+element.project_mounting_date.substr(0, 4)+" "
                                 } else {
                                     table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';//+element.project_mounting_date.substr(8, 2)+"."+element.project_mounting_date.substr(5, 2)+"."+element.project_mounting_date.substr(0, 4)+" "
                                 }
