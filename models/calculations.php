@@ -864,6 +864,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query2 = $db->getQuery(true);
+            $query3 = $db->getQuery(true);
 
             $query2->select("SUM(calculations.n5)")
                 ->from("#__gm_ceiling_calculations AS calculations")
@@ -874,6 +875,12 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and projects.dealer_id = '$dealer'")
                 ->order('projects.id');
             $db->setQuery($query);
+
+            $query3->select('date_from, date_to')
+                ->from('#__gm_ceiling_day_off')
+                ->where("id_user = $id and date_from between '$date1 00:00:00' and '$date2 23:59:59'");
+            $db->setQuery($query3);
+            $items3 = $db->loadObject();
 
             $items = $db->loadObjectList();
     		return $items;
