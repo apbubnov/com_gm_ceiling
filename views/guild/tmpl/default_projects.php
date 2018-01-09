@@ -215,9 +215,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalShow(o) {
-        if (Data.Interval !== null)
-            clearInterval(Data.Interval);
-
         if ($(window).width() >= 728) $("#KeyPress").focus();
 
         var type = typeof o;
@@ -308,7 +305,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalClose() {
-        setIntervalNew();
 
         $("#KeyPress").blur();
         $(".ModalCeiling")
@@ -331,8 +327,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function NextCeiling() {
-        if (Data.Interval !== null)
-            clearInterval(Data.Interval);
 
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
@@ -345,8 +339,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function PredCeiling() {
-        if (Data.Interval !== null)
-            clearInterval(Data.Interval);
 
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
@@ -552,7 +544,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                     layout: 'center',
                                     timeout: 5000,
                                     type: "success",
-                                    text: "Пришел новый заказ!\n" + b1.date + ((b1.quickly === "A")?" Срочно":"") + "\n" + b2.canvases + "\n" + b3.title + " - " + b3.quad
+                                    text: "Пришел новый заказ!\n" + b1.date + ((b1.quickly === "A")?" Срочно":"") + "<br>" + b2.canvases + "<br>" + b3.title + " - " + b3.quad
                                 });
                             }
                         });
