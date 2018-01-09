@@ -855,3 +855,4 @@ ORDER BY p.quickly, p.ready_time, p.project_calculation_date, s.name, s.textur' 
 ----------
 08.01.2018 20:46:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
 ----------
+frdtrdrfcrfdru

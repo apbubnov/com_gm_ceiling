@@ -125,6 +125,8 @@ echo parent::getPreloader();
 
 ?>
 
+<?=parent::getButtonBack();?>
+
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/projectform/tmpl/css/style.css" type="text/css" />
 
 <style>
