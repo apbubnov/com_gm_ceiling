@@ -882,6 +882,32 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db->setQuery($query3);
             $items3 = $db->loadObject();
 
+            // объединение с выходным днем
+            $index = 0;
+            //поиск индекса для вставки и замена даты на просто время
+            for ($i=0; $i < count($items); $i++) {
+                if (strtotime($items[$i]->project_mounting_date) >= strtotime($items3->date_from)) {
+                    $index = $i;
+                    break;
+                }
+            }
+            for ($i=0; $i < count($items); $i++) {
+                $items[$i]->project_mounting_day_off = "";
+            }
+
+            //создание нового массива
+            if (!empty($items3)) {
+                $day = array(
+                    'project_mounter'=>NULL,
+                    'project_mounting_date'=>$items3->date_from,
+                    'project_info'=>NULL,
+                    'n5'=>NULL,
+                    'project_mounting_day_off'=>$items3->date_to
+                );
+                $day = array((object)$day);
+                array_splice($items,$index,0,$day);
+            }
+
             $items = $db->loadObjectList();
     		return $items;
         }
