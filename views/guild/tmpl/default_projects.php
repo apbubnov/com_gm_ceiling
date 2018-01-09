@@ -206,7 +206,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function setIntervalNew() {
-        if (Data.Interval !== null) clearInterval(Data.Interval);
+        if (Data.Interval !== null)
+            clearInterval(Data.Interval);
+
         Data.Interval = setInterval(TestList, 5000);
     }
 
