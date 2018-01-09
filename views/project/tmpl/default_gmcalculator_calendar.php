@@ -1669,7 +1669,7 @@ $results = $db->loadObjectList();
                             if (selectedBrigade == elem.id_brigade) {
                                 jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
                             }
-                        })
+                        });
                         // вывод работ бригады
                         var table_projects = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
                         table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
