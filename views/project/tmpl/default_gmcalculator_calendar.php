@@ -1676,7 +1676,7 @@ $results = $db->loadObjectList();
                         console.log(data);
                         Array.from(data).forEach(function(element) {
                             if (element.project_mounter == selectedBrigade) {
-                                if (element.project_mounting_day_off == "") {
+                                if (element.project_mounting_day_off != "") {
                                     table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2"></td></tr>';//+element.project_mounting_date.substr(8, 2)+"."+element.project_mounting_date.substr(5, 2)+"."+element.project_mounting_date.substr(0, 4)+" "
                                 } else {
                                     table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';//+element.project_mounting_date.substr(8, 2)+"."+element.project_mounting_date.substr(5, 2)+"."+element.project_mounting_date.substr(0, 4)+" "
