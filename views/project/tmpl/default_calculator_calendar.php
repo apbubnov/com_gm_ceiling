@@ -1843,9 +1843,7 @@ var $ = jQuery;
                             BusyTimes.push(elem.project_mounting_date.substr(11));
                         }
                     });
-                    console.log(BusyTimes);
                     FreeTimes = AllTime.diff(BusyTimes);
-                    console.log(FreeTimes);
                     var select_hours;
                     FreeTimes.forEach(element => {
                         select_hours += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
