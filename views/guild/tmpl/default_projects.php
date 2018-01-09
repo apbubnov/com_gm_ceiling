@@ -201,6 +201,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
         $(".PRELOADER_GM").hide();
         $("cuts").show();
+
+        setInterval(TestList, 5000);
     }
 
     function ModalShow(o) {
