@@ -387,7 +387,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     Data.calculations = [];
 
                     for(var i = 0; i < calc.length; i++)
-                        if (calc[i] !== null)
+                        if (calc[i])
                             Data.calculations.push(calc[i]);
 
                     var block_3 = $("#" + id),
