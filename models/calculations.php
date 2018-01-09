@@ -883,7 +883,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 
             $db->setQuery($query3);
             $items3 = $db->loadObject();
-            throw new Exception('skgduhbs.kd');
+            
             // объединение с выходным днем
             $index = 0;
             //поиск индекса для вставки и замена даты на просто время
