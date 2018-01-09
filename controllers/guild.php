@@ -64,9 +64,7 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
                 die(json_encode((object) ["status" => "error", "message" => "Переданы неверные данные!"]));
             else {
                 $model = $this->getModel();
-                print_r($data);
                 $cut = ($model->getCuts((object) ["type" => "get", "name" => "c.id", "value" => $data->Data->id]));
-                print_r($cut);
 
                 foreach ($cut as $v) $cut = $v;
                 foreach ($cut->I as $v) $cut = $v;
