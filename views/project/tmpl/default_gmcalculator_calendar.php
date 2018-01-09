@@ -1615,7 +1615,6 @@ $results = $db->loadObjectList();
                     dealer: <?php echo $user->dealer_id; ?>,
                 },
                 success: function(data) {
-                    console.log(data);
                     window.DataOfProject = JSON.parse(data);
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
@@ -1674,6 +1673,7 @@ $results = $db->loadObjectList();
                         // вывод работ бригады
                         var table_projects = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
                         table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                        console.log(data);
                         Array.from(data).forEach(function(element) {
                             if (element.project_mounter == selectedBrigade) {
                                 if (element.project_mounting_day_off == "") {
