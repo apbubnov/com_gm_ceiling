@@ -1826,8 +1826,11 @@ var $ = jQuery;
                     table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
                     Array.from(data).forEach(function(element) {
                         if (element.project_mounter == selectedBrigade) {
-                            table_projects += '<tr><td>'+element.project_mounting_date.substr(8, 2)+"."+element.project_mounting_date.substr(5, 2)+"."+element.project_mounting_date.substr(0, 4)+" "+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
-                        }
+                            if (element.project_mounting_day_off != "") {
+                                table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                            } else {
+                                table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                            }                        }
                     });
                     table_projects += "</table>";
                     jQuery("#projects_brigade_container").empty();
