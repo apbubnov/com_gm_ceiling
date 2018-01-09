@@ -389,12 +389,15 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     console.log(block_1);
                     console.log(block_2);
                     console.log(block_3);
+
+                    block_3.remove();
+
+                    if (block_2.find(".block_3").length < 1)
+                        block_2.remove();
+
                     if(block_1.find(".block_2").length < 1)
                         block_1.remove();
-                    else if (block_2.find(".block_3").length < 1)
-                        block_2.remove();
-                    else
-                        block_3.remove();
+
 
 
                     NextCeiling();
