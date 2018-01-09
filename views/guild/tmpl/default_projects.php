@@ -215,6 +215,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalShow(o) {
+        if (Data.Interval !== null)
+            clearInterval(Data.Interval);
+
         if ($(window).width() >= 728) $("#KeyPress").focus();
 
         var type = typeof o;
@@ -305,6 +308,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalClose() {
+        setIntervalNew();
+
         $("#KeyPress").blur();
         $(".ModalCeiling")
             .removeClass("notransition")
@@ -326,6 +331,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function NextCeiling() {
+        if (Data.Interval !== null)
+            clearInterval(Data.Interval);
+
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
             index = Data.calculations.indexOf(parseInt(id)),
@@ -337,6 +345,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function PredCeiling() {
+        if (Data.Interval !== null)
+            clearInterval(Data.Interval);
+
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
             index = Data.calculations.indexOf(parseInt(id)),
