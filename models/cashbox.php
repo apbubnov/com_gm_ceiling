@@ -44,7 +44,7 @@ class Gm_ceilingModelCashbox extends JModelList
 				->where('p.project_status=12');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
-			$encashment_model = $this->getModel('Encashment','Gm_ceiling');
+			$encashment_model = Gm_ceilingHelpersGm_ceiling::getModel('Encashment');
 			$encashments = $encashment_model->getData();
 			for($i=0;$i<count($encashments);$i++){
 				for($j=0;$j<count($items);$j++){
