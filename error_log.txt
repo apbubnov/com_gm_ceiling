@@ -854,5 +854,12 @@ ORDER BY p.quickly, p.ready_time, p.project_calculation_date, s.name, s.textur' 
 08.01.2018 20:46:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/mountersorder.php | GetMp | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
 ----------
 08.01.2018 20:46:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+---------
+asdasdasdsad09.01.2018 11:31:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyMounters | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'and date_from between '2018-01-01 00:00:00' and '2018-01-31 23:59:59'' at line 3
 ----------
-frdtrdrfcrfdru
+09.01.2018 11:31:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+09.01.2018 11:39:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyMounters | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'and date_from between '2018-01-01 00:00:00' and '2018-01-31 23:59:59'' at line 3
+----------
+09.01.2018 11:39:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
