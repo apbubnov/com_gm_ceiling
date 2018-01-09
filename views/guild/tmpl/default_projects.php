@@ -550,7 +550,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 noty({
                                     theme: 'relax',
                                     layout: 'center',
-                                    timeout: 2000,
+                                    timeout: 5000,
                                     type: "success",
                                     text: "Пришел новый заказ!\n" + b1.date + ((b1.quickly === "A")?" Срочно":"") + "\n" + b2.canvases + "\n" + b3.title + " - " + b3.quad
                                 });
