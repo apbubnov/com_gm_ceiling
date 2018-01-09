@@ -186,6 +186,12 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function sendWork($data)
     {
+        $project = $data->calculations->project;
+        $calculation = $data->calculations->id;
+        $result = "1";
+
+        
+
         print_r($data);
         return;
     }
