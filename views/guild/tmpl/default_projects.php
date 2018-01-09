@@ -383,6 +383,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
                 if (data.status === "success") {
                     delete Data.calculations[Data.calculations.indexOf(parseInt(id))];
+                    console.log($("#" + id));
                     var block_3 = $("#" + id),
                         block_2 = block_1.closest(".block_2"),
                         block_1 = block_2.closest(".block_1");
