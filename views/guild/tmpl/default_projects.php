@@ -231,6 +231,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             json = JSON.parse(Input.val());
 
         Modal.val(json.id);
+        alert(json.id);
         Modal.find(".ModalName b").text(json.title);
         Modal.find(".ProjectId span").text(json.project + ((json.quickly === "A") ? " - Срочно" : ""));
         Modal.find(".CloseProject span").text(json.ready_time);
@@ -365,6 +366,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             id = Modal.val(),
             serialize = Modal.serialize();
 
+        alert(id);
         jQuery.ajax({
             type: 'POST',
             url: "/index.php?option=com_gm_ceiling&task=guild.sendWork",
