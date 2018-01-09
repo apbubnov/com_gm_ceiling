@@ -1624,7 +1624,6 @@ $results = $db->loadObjectList();
                     dealer: <?php echo $user->dealer_id; ?>,
                 },
                 success: function(data) {
-                    console.log(data);
                     window.DataOfProject = JSON.parse(data);
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
@@ -1685,10 +1684,10 @@ $results = $db->loadObjectList();
                         table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
                         Array.from(data).forEach(function(element) {
                             if (element.project_mounter == selectedBrigade) {
-                                if (element.project_mounting_day_off == "") {
-                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2"></td></tr>';//+element.project_mounting_date.substr(8, 2)+"."+element.project_mounting_date.substr(5, 2)+"."+element.project_mounting_date.substr(0, 4)+" "
+                                if (element.project_mounting_day_off != "") {
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
                                 } else {
-                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';//+element.project_mounting_date.substr(8, 2)+"."+element.project_mounting_date.substr(5, 2)+"."+element.project_mounting_date.substr(0, 4)+" "
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                                 }
                             }
                         });
