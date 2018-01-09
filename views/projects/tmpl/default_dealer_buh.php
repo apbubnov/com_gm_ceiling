@@ -171,14 +171,14 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             if($item->transport == 0 ) $sum_transport = 0;
             if($item->transport == 1 ) $sum_transport = $mount_transport->transport * $item->distance_col;
             if($item->transport == 2 ) $sum_transport = $mount_transport->distance * $item->distance * $item->distance_col;
-            $min = 100;
+            /*$min = 100;
             foreach($calculations as $d) {
                 if($d->discount < $min) $min = $d->discount;
             }
             if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
             if($sum_transport < $mount_transport->transport && $sum_transport != 0) {
                 $sum_transport = $mount_transport->transport;
-            }
+            }*/
 
             if($item->transport == 0 ) $sum_transport_1 = 0;
             if($item->transport == 1 ) $sum_transport_1 = double_margin($mount_transport->transport * $item->distance_col, $item->gm_mounting_margin, $item->dealer_mounting_margin);
