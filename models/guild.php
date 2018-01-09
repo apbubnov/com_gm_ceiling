@@ -186,15 +186,13 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function sendWork($data)
     {
-        $project = $data->calculations->project;
         $calculation = $data->calculations->id;
-        $result = "1";
 
         $db = $this->getDbo();
         $query = $db->getQuery(true);
-        $query->from("#_gm_ceiling_cuttings as c")
-            ->set("c.ready = '1'")
-            ->where("c.id = '$calculation'");
+        $query->update("`#__gm_ceiling_cuttings`")
+            ->set("ready = '1'")
+            ->where("id = '$calculation'");
         $db->setQuery($query);
         $db->execute();
 
