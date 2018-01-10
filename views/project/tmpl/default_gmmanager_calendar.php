@@ -260,7 +260,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id))? $this->item->api_phone_id: '0' ?>" type="hidden">
                     <input name = "recoil" id = "recoil" value = "" type = "hidden">
                     <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if(isset($_SESSION['time'])){ echo $_SESSION['time']; }?>"class="inputactive" type="hidden">
-                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; } else if (isset($this->item->project_calculator_date)) { echo $this->item->project_calculator_date;}?>" type="hidden">
+                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; } else if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;}?>" type="hidden">
                     <input name = "project_gauger" id = "jform_project_gauger" class ="inputactive" value="<?php if(isset($_SESSION['gauger'])){ echo $_SESSION['gauger']; } else {echo "0";}?>" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
@@ -1309,7 +1309,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             jQuery("#modal_window_del").hide();
         }
     });
-
 
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
