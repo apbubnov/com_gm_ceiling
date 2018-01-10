@@ -757,82 +757,81 @@
 				</div>
 			</div>
 		</div>
-</div>
-<div class="container">
-	<div class="row sm-margin-bottom">
-		<div class="col-sm-4">
-		</div>
-		<div class="col-sm-4">
-			<table>
-				<tr>
-					<td>
-						<h3>Укажите кол-во труб входящих в потолок</h3>
-					</td>
-					<td>
-						<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp"><img src="/images/obvod.png" width="380" height="250" align="center"/>
-							<br>На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
-							<img src="/images/obvod2.png" width="380" height="250" align="center"/></span></a>
-						</td>
-					</tr>
-				</table>
-				<div id="jform_n14_block" >
-					<div class="form-group">
-						<div class="advanced_col1">
-							<label>Кол-во,шт</label>
+		<!-- трубы -->
+		<div class="container">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4"></div>
+				<div class="col-sm-4">
+					<table>
+						<tr>
+							<td>
+								<h3>Укажите кол-во труб входящих в потолок</h3>
+							</td>
+							<td>
+								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+									<span class="airhelp"><img src="/images/obvod.png" width="380" height="250" align="center"/>
+										<br>На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
+										<img src="/images/obvod2.png" width="380" height="250" align="center"/>
+									</span>
+								</a>
+							</td>
+						</tr>
+					</table>
+					<div id="jform_n14_block" >
+						<div class="form-group">
+							<div class="advanced_col1">
+								<label>Кол-во,шт</label>
+							</div>
+							<div class="advanced_col2">
+								<label>Диаметр</label>
+							</div>
+							<div class="clr">
+								<label><i class="fa fa-trash" aria-hidden="true"></i></label>
+							</div>
 						</div>
-						<div class="advanced_col2">
-							<label>Диаметр</label>
-						</div>
-						<div class="advanced_col3 center">
-							<label><i class="fa fa-trash" aria-hidden="true"></i></label>
-						</div>
-						<div class="clr"></div>
-					</div>
-					<div id="jform_n14_block_html" class="hide_label">
-						<?php
-							$n14 = $this->item->n14; 
-							if(count($n14) > 0) { 
-								foreach($n14 as $truba)
-						    		if ($truba->n14_count > 0){ ?>
-										<div class="form-group">
-											<div class="advanced_col1">
-												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
+						<div id="jform_n14_block_html" class="hide_label">
+							<?php
+								$n14 = $this->item->n14; 
+								if(count($n14) > 0) { 
+									foreach($n14 as $truba)
+										if ($truba->n14_count > 0){ 
+							?>
+											<div class="form-group">
+												<div class="advanced_col1">
+													<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
+												</div>
+												<div class="advanced_col2">
+													<select class="form-control" name="n14_type[]" placeholder="Платформа">
+														<?foreach ($this->item->n14_all AS $truba_item):?>
+															<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
+														<?endforeach;?>
+													</select>
+												</div>
+												<div class="advanced_col3 center">
+													<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+												</div>
+												<div class="clr"></div>
 											</div>
-											<div class="advanced_col2">
-												<select class="form-control" name="n14_type[]" placeholder="Платформа">
-													<?foreach ($this->item->n14_all AS $truba_item):?>
-														<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
-													<?endforeach;?>
-												</select>
-											</div>
-											<div class="advanced_col3 center">
-												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-											</div>
-											<div class="clr"></div>
-										</div>
+										<?php } ?>
 									<?php } ?>
-								<?php } ?>
+						</div>
+						<button id="add_n14" class="btn btn-primary" type="button">Добавить</button>
 					</div>
-					<button id="add_n14" class="btn btn-primary" type="button">Добавить</button>
+				</div>
+			<div class="col-sm-4"></div>
+		</div>
+		<div id="extra_section">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4">
+					</div>
+					<div class="col-sm-4">
+						<h3>Прочий монтаж</h3>
+					</div>
+					<div class="col-sm-4">
+					</div>
 				</div>
 			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-	</div>
-
-<div id="extra_section" >
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-4">
-				<h3>Прочий монтаж</h3>
-			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-	</div>
 	<div class="container">
 		<?php if($type!='guest' && $user->dealer_type!=2) {?>
 		<div class="row sm-margin-bottom">
