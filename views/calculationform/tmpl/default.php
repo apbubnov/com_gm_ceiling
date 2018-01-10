@@ -757,6 +757,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- трубы -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -784,10 +785,9 @@
 							<div class="advanced_col2">
 								<label>Диаметр</label>
 							</div>
-							<div class="advanced_col3 center">
+							<div class="clr">
 								<label><i class="fa fa-trash" aria-hidden="true"></i></label>
 							</div>
-							<div class="clr"></div>
 						</div>
 						<div id="jform_n14_block_html" class="hide_label">
 							<?php
