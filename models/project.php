@@ -1196,6 +1196,7 @@ class Gm_ceilingModelProject extends JModelItem
             $db = $this->getDbo();
 			$query = $db->getQuery(true);
 			$query2 = $db->getQuery(true);
+			$query3 = $db->getQuery(true);
 			
             $query->update('#__gm_ceiling_projects')
 				->set("project_mounting_date = '$datatime'")
@@ -1204,11 +1205,19 @@ class Gm_ceilingModelProject extends JModelItem
 			$db->setQuery($query);
 			$db->execute();
 
+			// статус монтажа изменить на непросмотренный
+			$query3->update('#__gm_ceiling_projects')
+			->set("read_by_mounter = '0'")
+			->where("id = '$id'");
+			$db->setQuery($query3);
+			$db->execute();
+
 			$query2->select("project_mounter, project_mounting_date")
 				->from('#__gm_ceiling_projects')
 				->where("id = '$id'");
 			$db->setQuery($query2);
-            $items = $db->loadObjectList();
+			$items = $db->loadObjectList();
+			
     		return $items;
         }
         catch(Exception $e)
