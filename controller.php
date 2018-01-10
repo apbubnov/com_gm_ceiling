@@ -2782,6 +2782,7 @@ class Gm_ceilingController extends JControllerLegacy
             $data = $jinput->get('image', '0', 'string');
             $arr_points = $jinput->get('koordinats_poloten', '', 'array');
             $calc_id = $jinput->get('calc_id', '', 'INT');
+            $width = $jinput->get('width', '', 'INT');
             
             for ($i = 0; $i < count($arr_points); $i++)
             {
