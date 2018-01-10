@@ -742,6 +742,8 @@ $AllMounters = $model->FindAllMounters($where);
                             });
                             console.log(datetime);
                             update_calendar(datetime.substr(5, 2), datetime.substr(0, 4));
+                            datetime.substr(5, 2)++;
+                            console.log(datetime);
                             /* if () {
 
                             } else {
