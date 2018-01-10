@@ -979,7 +979,7 @@
                                 	<label><i class="fa fa-trash" aria-hidden="true"></i></label>
                             	</div>
                             	<div class="clr"></div>
-                       		</div>
+                       		 </div>
                         <div id="level_block_html" class="hide_label">
                             <?php $n29 = $this->item->n29;
                             $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
