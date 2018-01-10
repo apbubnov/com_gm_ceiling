@@ -2153,6 +2153,54 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 
         });
 
+        jQuery("#ok").click(function () {
+            var phones = [];
+            var s = window.location.href;
+            var classname = jQuery("input[name='new_client_contacts[]']");
+            Array.from(classname).forEach(function (element) {
+                phones.push(element.value);
+            });
+            jQuery("input[name='data_delete']").val(1);
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
+                data: {
+                    fio: jQuery("#jform_client_name").val(),
+                    address: jQuery("#jform_address").val(),
+                    house: jQuery("#jform_house").val(),
+                    bdq: jQuery("#jform_bdq").val(),
+                    apartment: jQuery("#jform_apartment").val(),
+                    porch: jQuery("#jform_porch").val(),
+                    floor: jQuery("#jform_floor").val(),
+                    code: jQuery("#jform_code").val(),
+                    date: jQuery("#jform_project_new_calc_date").val(),
+                    time: jQuery("#jform_new_project_calculation_daypart").val(),
+                    manager_comment: jQuery("#gmmanager_note").val(),
+                    client_name: jQuery("#jform_client_name").val(),
+                    phones: phones,
+                    comments: jQuery("#comments_id").val(),
+                    s: s,
+                    gauger: jQuery("#jform_project_gauger").val()
+                },
+                success: function (data) {
+                    jQuery("#form-client").submit();
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка cервер не отвечает"
+                    });
+                }
+            });
+
+        });
+
         function add_history(id_client, comment) {
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=addComment",
