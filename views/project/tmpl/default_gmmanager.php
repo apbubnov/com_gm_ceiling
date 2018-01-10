@@ -742,13 +742,19 @@ $AllMounters = $model->FindAllMounters($where);
                             });
                             console.log(datetime);
                             update_calendar(datetime.substr(5, 2), datetime.substr(0, 4));
-                            datetime.substr(5, 2)++;
-                            console.log(datetime);
-                            /* if () {
-
+                            if (datetime.substr(5, 1) == "0") {
+                                if (datetime.substr(6, 1) == "9") {
+                                    var month = 10;
+                                } else {
+                                    month = datetime.substr(6, 1);
+                                    month++;
+                                }
                             } else {
-
-                            } */ 
+                                month = datetime.substr(5, 2);
+                                    month++;
+                            }
+                            var year = datetime.substr(0, 4);
+                            year++;
                             update_calendar2(month, year);
                         }
                     },
