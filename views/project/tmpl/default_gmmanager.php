@@ -741,17 +741,21 @@ $AllMounters = $model->FindAllMounters($where);
                             text: "Данные изменены"
                             });
                             console.log(datetime.substr(5, 2));
-                            update_calendar(datetime.substr(5, 2), datetime.substr(0, 4));
+                            var month1 = datetime.substr(5, 2);
+                            if (datetime.substr(5, 1) == "0") {
+                                month1 = datetime.substr(6, 1);
+                            }
+                            update_calendar(month1, datetime.substr(0, 4));
                             if (datetime.substr(5, 1) == "0") {
                                 if (datetime.substr(6, 1) == "9") {
-                                    var month = 10;
+                                    var month2 = 10;
                                 } else {
-                                    month = datetime.substr(6, 1);
-                                    month++;
+                                    month2 = datetime.substr(6, 1);
+                                    month2++;
                                 }
                             } else {
-                                month = datetime.substr(5, 2);
-                                    month++;
+                                month2 = datetime.substr(5, 2);
+                                    month2++;
                             }
                             if (datetime.substr(5, 2) == 12) {
                                 var year = datetime.substr(0, 4);
@@ -759,7 +763,7 @@ $AllMounters = $model->FindAllMounters($where);
                             } else {
                                 year = datetime.substr(0, 4);
                             }
-                            update_calendar2(month, year);
+                            update_calendar2(month2, year);
                         }
                     },
                     timeout: 10000,

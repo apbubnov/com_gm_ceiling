@@ -4477,8 +4477,6 @@ class Gm_ceilingHelpersGm_ceiling
 
     // рисует календарь
     public static function DrawCalendarTar($id, $month, $year, $flag) {
-        throw new Exception($month);
-        
         // $id - айдишник бригады или менеджера или замерщика, $month - месяц, $year - год
         $ArMonths = ['', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
         $ArDays = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
