@@ -50,7 +50,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             else
             {
-                die(null);
+                die(json_encode(null));
             }
         }
         catch(Exception $e)
