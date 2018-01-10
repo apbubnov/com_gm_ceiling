@@ -59,7 +59,7 @@ $_SESSION['dop_num'] = $dop_num;
         table_body_elem.innerHTML = "";
         for (var i = 0; i < arr_calls.length; i++)
         {
-            if (arr_calls[i].date_time.indexOf(calendar_elem_value) + 1 && (user_id == arr_calls[i].manager_id || arr_calls[i].manager_id == 775))
+            if (arr_calls[i].date_time.indexOf(calendar_elem_value) + 1 && (user_id == arr_calls[i].manager_id || arr_calls[i].manager_id == 1))
             {
                 str = '';
                 str += '<tr data-href="index.php?option=com_gm_ceiling&view=clientcard&id='+(arr_calls[i].client_id-0)+'&call_id='+(arr_calls[i].id-0)+'">';

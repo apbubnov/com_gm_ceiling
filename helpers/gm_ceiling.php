@@ -453,7 +453,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         //Получаем объект дилера
         if (empty($data['dealer_id'])) {
-            $dealer = JFactory::getUser(774);
+            $dealer = JFactory::getUser(2);
         } else {
             $dealer = JFactory::getUser($data['dealer_id']);
         }
@@ -462,7 +462,7 @@ class Gm_ceilingHelpersGm_ceiling
         $dealer_marg = $dealer_info->getData();
         //throw new Exception("Error Processing Request", 1);
         //Получаем объект ГМ
-        $gm = JFactory::getUser(775);
+        $gm = JFactory::getUser(1);
 
         //Получаем объект договора, если он уже создан
         if ($data['project_id']) {
@@ -4527,7 +4527,7 @@ class Gm_ceilingHelpersGm_ceiling
                 // вывод свободных замерщиков
                 if ($flag[0] == 3) {
                     $model = self::getModel('calculations');
-                    if ($flag[1] == 775) {
+                    if ($flag[1] == 1) {
                         $AllGauger = $model->FindAllGauger($flag[1], 22);
                     } else {
                         $AllGauger = $model->FindAllGauger($flag[1], 21);

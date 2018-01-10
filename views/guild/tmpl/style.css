@@ -61,6 +61,7 @@ cuts ceiling .loupe {
     width: calc(100% - 30px);
     height: 15vw;
     min-height: 150px;
+    max-height: 200px;
     cursor: pointer;
     display: none;
 }

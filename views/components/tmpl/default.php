@@ -27,11 +27,11 @@ $dealer_info = $model->getDealerInfo($user->dealer_id);
 $listOrder = $this->state->get('list.ordering');
 $listDirn = $this->state->get('list.direction');
 
-$canCreate = $user->dealer_id == 775;
-$canEdit = $user->dealer_id == 775;
-$canDelete = $user->dealer_id == 775;
-//$canCheckin = $user->dealer_id == 775;
-//$canChange  = $user->dealer_id == 775;
+$canCreate = $user->dealer_id == 1;
+$canEdit = $user->dealer_id == 1;
+$canDelete = $user->dealer_id == 1;
+//$canCheckin = $user->dealer_id == 1;
+//$canChange  = $user->dealer_id == 1;
 ?>
 <?= parent::getPreloader(); ?>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=components'); ?>" method="post"

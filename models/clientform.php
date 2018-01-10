@@ -385,7 +385,7 @@ class Gm_ceilingModelClientForm extends JModelForm
 				if(isset($user->dealer_id)) {
 					$data['dealer_id'] = $user->dealer_id;
 				} else {
-					$data['dealer_id'] = 774;
+					$data['dealer_id'] = 2;
 				}
 			}
 			

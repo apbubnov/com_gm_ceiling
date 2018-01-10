@@ -37,7 +37,7 @@ class Gm_ceilingModelGaugers extends JModelItem {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			if ($dealerId == 775) {
+			if ($dealerId == 1) {
 				$type = 22;
 			} else {
 				$type = 21;

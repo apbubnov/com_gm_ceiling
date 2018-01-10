@@ -188,7 +188,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 		{
 			$user       = JFactory::getUser();
 			$userId     = $user->get('id');
-			if ($user->dealer_id == 775) {
+			if ($user->dealer_id == 1) {
 				$groupe = 17;
 			} else {
 				$groupe = 12;

@@ -174,7 +174,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 
         //обновляем менеджера для клиента
         $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-        if($this->item->manager_id==775||empty($model_client->getClientById($this->item->id_client)->manager_id)){
+        if($this->item->manager_id==1||empty($model_client->getClientById($this->item->id_client)->manager_id)){
             $model_client->updateClientManager($this->item->id_client, $userId);
         }
         $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
@@ -485,7 +485,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                     <th>Менеджер</th>
                                     <td>
                                         <input name="Manager_name" id="manager_name" class="inputhidden"
-                                               value="<?php if (isset($this->item->read_by_manager)&&$this->item->read_by_manager!=775) {
+                                               value="<?php if (isset($this->item->read_by_manager)&&$this->item->read_by_manager!=1) {
                                                    echo JFactory::getUser($this->item->read_by_manager)->name;
                                                } ?>">
                                     </td>

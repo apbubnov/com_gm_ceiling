@@ -178,14 +178,14 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			<input type="hidden" name="jform[dealer_id]" value="<?php echo $user->dealer_id; ?>" />
 			<?php }?>
 			<?php if($user->guest) { ?>
-			<input type="hidden" name="jform[dealer_id]" value="774" />
+			<input type="hidden" name="jform[dealer_id]" value="2" />
 
 			<?php } else { ?>
 			<input type="hidden" name="jform[dealer_id]" value= "<?php echo $user->dealer_id; ?> "/>
 			<?php } ?>
 			<?php } else { ?>
 			<?php if($user->guest) { ?>
-			<input type="hidden" name="jform[dealer_id]" value="774" />
+			<input type="hidden" name="jform[dealer_id]" value="2" />
 			<?php } else { ?>
 			<input type="hidden" name="jform[dealer_id]" value= "<?php echo $user->dealer_id; ?>" />
 			<?php } ?>

@@ -34,7 +34,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
 $sumcalculator = $model->getDataByStatus("GaugingsGraph", $userId, null);
 
 // менеджер
-if ($user->dealer_id == 775) {
+if ($user->dealer_id == 1) {
     $managers = $model->getDataByStatus("FindManagers", $userId, null);
     $managersid = "";
     foreach ($managers as $value) {
@@ -63,7 +63,7 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
 <h2><?php echo $user->name; ?></h2>
 
 <div class="start_page">
-    <?php if ($userId == 775 || $userId == 774): ?>
+    <?php if ($userId == 1 || $userId == 2): ?>
         <h3>Гильдия мастеров</h3>
     <?php elseif ($user->delaer_type == 1 || $user->dealer_type == 0): ?>
         <h3>Дилер</h3>
@@ -72,11 +72,11 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
         <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-warning" href="<?php
-                if ($userId == 775 || $userId == 774)
+                if ($userId == 1 || $userId == 2)
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false);
                 else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
                 ?>">
-                    <?php if ($userId == 775 || $userId == 774): ?>
+                    <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-clock-o" aria-hidden="true"></i> ГМ Менеджер</a>
                 <?php else: ?>
                     <i class="fa fa-clock-o" aria-hidden="true"></i> Менеджер</a>
@@ -89,11 +89,11 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
         <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-success" href="<?php
-                if ($userId == 775 || $userId == 774)
+                if ($userId == 1 || $userId == 2)
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false);
                 else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false);
                 ?>">
-                    <?php if ($userId == 775 || $userId == 774): ?>
+                    <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-calculator" aria-hidden="true"></i> ГМ Замерщик</a>
                 <?php else: ?>
                     <i class="fa fa-calculator" aria-hidden="true"></i> Замерщик</a>
@@ -106,11 +106,11 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
         <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-primary" href="<?php
-                if ($userId == 775 || $userId == 774)
+                if ($userId == 1 || $userId == 2)
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmchiefmainpage', false);
                 else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false);
                 ?>">
-                    <?php if ($userId == 775 || $userId == 774): ?>
+                    <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-user" aria-hidden="true"></i> ГМ Начальник МС</a>
                 <?php else: ?>
                     <i class="fa fa-user" aria-hidden="true"></i> Начальник МС</a>
@@ -130,7 +130,7 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=dealer&subtype', false); ?>"><i
                         class="fa fa-list-alt" aria-hidden="true"></i> Договоры</a>
         </p>
-        <?php if($userId = 774 || $userId = 775){?>
+        <?php if($userId = 2 || $userId = 1){?>
             <p class="center">
                 <a class="btn btn-large btn-primary"
                 href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analiticcommon', false); ?>"><i

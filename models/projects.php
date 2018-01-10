@@ -286,7 +286,7 @@ class Gm_ceilingModelProjects extends JModelList
 
             // замерщик (график замеров), НМС (замеры), дилер (замерщик)
             if ($status == "GaugingsGraph") {
-                if ($user->dealer_id == 775) {
+                if ($user->dealer_id == 1) {
                     $who = '1';
                 } else {
                     $who = "'1', '0'";
@@ -297,8 +297,8 @@ class Gm_ceilingModelProjects extends JModelList
             } else
             // НМС (монтажи)
             if ($status == "Mountings") {
-                if ($user->dealer_id == 775) {
-                    $dealer = 775;
+                if ($user->dealer_id == 1) {
+                    $dealer = 1;
                 } else {
                     $dealer = $user->dealer_id;
                 }
@@ -307,8 +307,8 @@ class Gm_ceilingModelProjects extends JModelList
                     ->where("project_status in ('5', '6', '7', '8', '10', '11', '16', '17') and dealer_id = '$dealer'");
             } else
             if ($status == "ComplitedMountings") {
-                if ($user->dealer_id == 775) {
-                    $dealer = 775;
+                if ($user->dealer_id == 1) {
+                    $dealer = 1;
                 } else {
                     $dealer = $user->dealer_id;
                 }
@@ -341,7 +341,7 @@ class Gm_ceilingModelProjects extends JModelList
             } else 
             // дилер (менеджер)
             if ($status == "FindManagers") {
-                if ($id = 775) {
+                if ($id = 1) {
                     $group = 16;
                 } else {
                     $group = 13;
@@ -353,11 +353,11 @@ class Gm_ceilingModelProjects extends JModelList
             } else 
             // менеджер (запущенные в производстве)
             if ($status == "RunInProduction") {
-                if ($id = 775) {
+                if ($id = 1) {
                     if ($data != "") {
-                        $data = $data.", 775";
+                        $data = $data.", 1";
                     } else {
-                        $data = $data."775";
+                        $data = $data."1";
                     }
                 }
                 $query->select('count(id) as count')

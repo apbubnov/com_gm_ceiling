@@ -397,8 +397,8 @@ class Gm_ceilingController extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id', '', 'INT');
             $client_id = $jinput->get('client_id', '', 'INT');
-            $this->updateDealerId('clients',$client_id,775);
-            $this->updateDealerId('projects',$client_id,775);
+            $this->updateDealerId('clients',$client_id,1);
+            $this->updateDealerId('projects',$client_id,1);
             $user =& JUser::getInstance($user_id);
             try{
                 if (!$user->delete()) {
@@ -729,12 +729,12 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
-            $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', 775);
-            $gm_components_margin = $info_model->getMargin('gm_components_margin', 775);
-            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', 775);
-            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', 775);
-            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', 775);
-            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', 775);
+            $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', 1);
+            $gm_components_margin = $info_model->getMargin('gm_components_margin', 1);
+            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', 1);
+            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', 1);
+            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', 1);
+            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', 1);
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
             $project_data['state'] = 1;
             $project_data['client_id'] = $client_id;
@@ -744,7 +744,7 @@ class Gm_ceilingController extends JControllerLegacy
             $project_data['project_calculation_date'] = $project_calculation_date;
             $project_data['project_mounting_date'] = "00.00.0000";
             $project_data['project_note'] = "";
-            $project_data['dealer_id'] = 775;
+            $project_data['dealer_id'] = 1;
             $project_data['who_calculate'] = 0;
             $project_data['created'] = date("Y.m.d");
             $project_data['project_discount'] = 0;
@@ -800,7 +800,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm');
                 $client_data['client_name'] = $name;
                 $client_data['type_id'] = 1;
-                $client_data['dealer_id'] = 775;//GM
+                $client_data['dealer_id'] = 1;//GM
                 $client_data['created'] = date("Y-m-d");
                 $client_id = $client_model->save($client_data);
                 //добавляем номер телефона
@@ -2782,6 +2782,7 @@ class Gm_ceilingController extends JControllerLegacy
             $data = $jinput->get('image', '0', 'string');
             $arr_points = $jinput->get('koordinats_poloten', '', 'array');
             $calc_id = $jinput->get('calc_id', '', 'INT');
+            $width = $jinput->get('width', '', 'INT');
             
             for ($i = 0; $i < count($arr_points); $i++)
             {
