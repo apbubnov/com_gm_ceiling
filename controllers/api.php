@@ -46,7 +46,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             {
 
                 die(json_encode($user));
-                
+
             }
             else
             {
@@ -221,7 +221,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         {
             try
             {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api2');
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
                 if(!empty($_POST['sync_data']))
                 {
                     $table_data = json_decode($_POST['sync_data']);
@@ -243,7 +243,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         {
             try
             {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api2');
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
                 if(!empty($_POST['sync_data']))
                 {
                     $table_data = json_decode($_POST['sync_data']);
@@ -265,7 +265,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         {
             try
             {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api2');
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
                 if(!empty($_POST['sync_data']))
                 {
                     $table_data = json_decode($_POST['sync_data']);
