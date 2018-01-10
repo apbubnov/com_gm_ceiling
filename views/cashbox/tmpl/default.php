@@ -60,7 +60,8 @@ $userId     = $user->get('id');
         </thead>
 
         <tbody id="table_body">
-            <?php foreach ($this->item as $item) {?>
+            <?php foreach ($this->item as $item) {
+                $encash = 0;?>
                 <tr>
                     <td>
                         <?php echo $item->closed;?>
@@ -90,14 +91,18 @@ $userId     = $user->get('id');
                     </td>
                     <td>
                         <?php
-                            $cashbox += $residue;
+                            $cashbox += $residue - $encash;
                             echo $cashbox;
                         ?>
                     </td>
                     <td>
                         <?php 
-                            if(isset($item->sum)) 
-                             echo $item->sum ;?>
+                            if(isset($item->sum)) {
+                                $encash = $item->sum;
+                                echo $item->sum;
+                                
+                            }
+                             ?>
                     </td>
 
                 </tr>
