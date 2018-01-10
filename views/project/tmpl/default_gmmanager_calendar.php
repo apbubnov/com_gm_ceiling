@@ -1620,8 +1620,23 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 
         //если сессия есть, то выдать дату, которая записана в сессии
         var datesession = jQuery("#jform_project_new_calc_date").val();
+        console.log(datesession);
         if (datesession != undefined) {
-            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+            if (datesession.substr(8, 2) == "0") {
+                    daytocalendar = datesession.substr(9, 1);
+                } else {
+                    daytocalendar = datesession.substr(8, 2);
+                }
+                if (datesession.substr(5, 1) == "0") {
+                    monthtocalendar = datesession.substr(6, 1);
+                } else {
+                    monthtocalendar = datesession.substr(5, 2);
+                }
+                console.log(datesession.substr(8, 2));
+                console.log(daytocalendar);
+                console.log(datesession.substr(5, 2));
+                console.log(monthtocalendar);
+            jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
         }
         //-----------------------------------------------------------
 
