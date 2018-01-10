@@ -740,7 +740,6 @@ $AllMounters = $model->FindAllMounters($where);
                             type: "success",
                             text: "Данные изменены"
                             });
-                            console.log(datetime.substr(5, 2));
                             var month1 = datetime.substr(5, 2);
                             if (datetime.substr(5, 1) == "0") {
                                 month1 = datetime.substr(6, 1);
