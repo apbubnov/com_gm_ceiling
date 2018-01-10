@@ -1596,8 +1596,7 @@ echo parent::getPreloader();
             var datesession = jQuery("#jform_project_mounting_date").val();
             console.log(datesession);
             if (datesession != undefined) {
-                if () {
-                    datesession.substr(5, 1) == "0";
+                if (datesession.substr(5, 1) == "0") {
                     monthtocalendar = datesession.substr(6, 1);
                 } else {
                     monthtocalendar = datesession.substr(5, 2);
