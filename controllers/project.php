@@ -233,9 +233,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $idCalc = $jinput->get('idCalcDelete','0', 'INT');
                 //print_r($idCalc); exit;
                 $model_calc = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-                $resultDel = $model_calc->delete($idCalc);
+				$resultDel = $model_calc->delete($idCalc);
+				print_r($_SESSION['url']); exit;
                 if($resultDel == 1) {
-                    $this->setMessage("Потолок удален");
+					$this->setMessage("Потолок удален");
+					
                     $this->setRedirect(JRoute::_($_SESSION['url'], false));
                 }
 
