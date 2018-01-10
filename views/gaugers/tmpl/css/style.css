@@ -52,6 +52,7 @@
     display: inline-block;
     float: left;
     padding: 25px;
+    
 }
 
 @media screen and (min-width: 768px) {
@@ -60,6 +61,7 @@
         float: left;
         width: calc(100% / 3);
         padding: 25px;
+
     }
 }
 
