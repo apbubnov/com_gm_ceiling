@@ -56,7 +56,6 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
             $date = date("Y-m-d H:i:s");
             $app = JFactory::getApplication();
             $data = $_POST;
-            print_r($data);
             unserialize($data);
             $data['Data'] = json_decode($data['Data']);
             $data = json_decode(json_encode($data));
