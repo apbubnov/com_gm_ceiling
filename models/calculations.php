@@ -1050,7 +1050,6 @@ class Gm_ceilingModelCalculations extends JModelList {
             ->where('id = ' . $item->n3);    
             $db->setQuery($query);
             $item_canvas = $db->loadObject();
-            throw new Exception($item_canvas, 1);
             
 
             $query = $db->getQuery(true);
@@ -1061,6 +1060,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db->setQuery($query);
             $new_n3  = $db->loadObject();
 
+            throw new Exception($new_n3->id);
             /* Старое */
             $cut_data = $db->escape($cut_data);
             $query = $db->getQuery(true);
