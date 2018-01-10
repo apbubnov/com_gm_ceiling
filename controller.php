@@ -2824,7 +2824,7 @@ class Gm_ceilingController extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $sum = $jinput->get('sum','','STRING');
             $manager_id = $jinput->get('id','','INT');
-            $encash_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $encash_model = Gm_ceilingHelpersGm_ceiling::getModel('encashment');
             $result  = $encash_model->save($sum,$manager_id);
             die(json_encode($result));
         }
