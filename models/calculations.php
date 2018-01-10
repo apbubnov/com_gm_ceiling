@@ -1053,7 +1053,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             $query = $db->getQuery(true);
             $query->select("id")
             ->from('#__gm_ceiling_canvases')
-            ->where('texture_id = '. $item->n3 . 'and name = '. $item_canvas->name . 'and country = ' .$item_canvas->country .'and width = '. $width. ' and color_id = '. $item_canvas->color_id);    
+            ->where('texture_id = '. $item->n3 . ' and name = '.  $db->quote($item_canvas->name) . ' and country = ' . $db->quote($item_canvas->country) .'and width = '.  $db->quote($width). ' and color_id = '. $item_canvas->color_id);    
             $db->setQuery($query);
             $new_n3  = $db->loadObject();
 
