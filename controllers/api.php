@@ -44,7 +44,9 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $verifyPass = JUserHelper::verifyPassword($Password, $user->password, $user->id);
             if ($verifyPass)
             {
+
                 die(json_encode($user));
+                
             }
             else
             {
