@@ -157,6 +157,6 @@ $userId     = $user->get('id');
                 });
             }
         });
-        }
-    }
+        })
+    });
 </script>
