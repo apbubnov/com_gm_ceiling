@@ -252,6 +252,7 @@ class Gm_ceilingModelGuild extends JModelList
             if($status == 5) $status = 6;
             else if ($status == 7) $status = 19;
 
+
             $query = $db->getQuery(true);
             $query->update("`#__gm_ceiling_projects`")
                 ->set("project_status = '$status'")
