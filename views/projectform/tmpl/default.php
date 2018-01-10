@@ -1594,8 +1594,9 @@ echo parent::getPreloader();
 
             //если сессия есть, то выдать дату, которая записана в сессии
             var datesession = jQuery("#jform_project_mounting_date").val();
+            console.log(datesession);
             if (datesession != undefined) {
-                if (datesession.substr(8, 2) == "0") {
+                if (datesession.substr(8, 1) == "0") {
                     daytocalendar = datesession.substr(9, 1);
                 } else {
                     daytocalendar = datesession.substr(8, 2);
@@ -1605,6 +1606,10 @@ echo parent::getPreloader();
                 } else {
                     monthtocalendar = datesession.substr(5, 2);
                 }
+                console.log(datesession.substr(8, 2));
+                console.log(daytocalendar);
+                console.log(datesession.substr(5, 2));
+                console.log(monthtocalendar);
                 jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
             }
             //-----------------------------------------------------------
