@@ -414,7 +414,7 @@ foreach ($brigade_id as $value) {
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый"></td>';	
 			legenda += '<td>Монтаж недовыполнен</td>';
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
-			legenda += '<td>Монтаж выполнен</td>
+			legenda += '<td>Монтаж выполнен</td>;
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
 			legenda += '<td>Монтаж выполнен</td></tr>';
 			jQuery("#legenda").append(legenda);
