@@ -63,11 +63,7 @@ $userId     = $user->get('id');
             <?php foreach ($this->item as $item) {?>
                 <tr>
                     <td>
-                        <?php
-                            if (isset($item->closed))
-                             echo $item->closed;
-                             else echo $item->date_time;
-                        ?>
+                        <?php echo $item->closed;?>
                     
                     </td>
                     <td>
