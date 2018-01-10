@@ -195,6 +195,8 @@ class Gm_ceilingModelGuild extends JModelList
         $db->setQuery($query);
         $db->execute();
 
+        print_r($data);
+
         return;
     }
 }
