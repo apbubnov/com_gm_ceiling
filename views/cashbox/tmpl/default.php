@@ -26,7 +26,7 @@ $userId     = $user->get('id');
 			<p><button type="button" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
 	    </div>
     </div>
-    <table class="table table-striped one-touch-view" id="callbacksList">
+    <table class="table table-striped one-touch-view" id="cashbox_table">
         <thead>
         <tr>
             <th>
@@ -60,14 +60,11 @@ $userId     = $user->get('id');
         </thead>
 
         <tbody id="table_body">
-            <?php foreach ($this->item as $item) {?>
+            <?php foreach ($this->item as $item) {
+               ?>
                 <tr>
                     <td>
-                        <?php
-                            if (isset($item->closed))
-                             echo $item->closed;
-                             else echo $item->date_time;
-                        ?>
+                        <?php echo $item->closed;?>
                     
                     </td>
                     <td>
@@ -88,20 +85,27 @@ $userId     = $user->get('id');
                     </td>
                     <td>
                         <?php
-                            $residue = $item->new_project_sum - $item->new_mount_sum -$item->new_material_sum;
-                            echo $residue;
+                            if(!isset($item->sum)){
+                                $residue = $item->new_project_sum - $item->new_mount_sum -$item->new_material_sum;
+                                echo $residue;
+                            }
                         ?>        
                     </td>
                     <td>
                         <?php
-                            $cashbox += $residue;
+                            $cashbox += $residue - $encash;
+                            $encash = 0;
                             echo $cashbox;
                         ?>
                     </td>
                     <td>
                         <?php 
-                            if(isset($item->sum)) 
-                             echo $item->sum ;?>
+                            if(isset($item->sum)) {
+                                $encash = $item->sum;
+                                echo $item->sum;
+                                
+                            }
+                             ?>
                     </td>
 
                 </tr>
@@ -142,10 +146,7 @@ $userId     = $user->get('id');
                 id: id
             },
             success: function (data) {
-                console.log(data);
-                jQuery("#close").hide(); 
-                jQuery("#modal_window_container").hide();
-                jQuery("#modal_window_sum").hide();
+                window.location = window.location;
             },
             dataType: "text",
             timeout: 10000,
