@@ -185,18 +185,44 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function sendWork($data)
     {
-        print_r($data);
-        $calculation = $data->calculations->id;
+        $data = data("Y.m.d H:i:s");
+        $employees = $data->employees;
+        $calculations = $data->calculations;
+        $calculation = $calculations->id;
 
         $db = $this->getDbo();
+
         $query = $db->getQuery(true);
         $query->update("`#__gm_ceiling_cuttings`")
             ->set("ready = '1'")
             ->where("id = '$calculation'");
         $db->setQuery($query);
-        $db->execute();
+        $result = $db->execute();
 
-        print_r($data);
+        if (empty($result))
+        {
+            throw new Exception("Перевести полотно в раскроенное не удалось! Попробуйте еще раз!");
+        }
+        $query = $db->getQuery(true);
+        $query->insert("`#__gm_ceiling_guild_salaries`")
+            ->columns("`user_id`, `salaries`, `work`, `note`, `accrual_date`");
+
+        $i = 0;
+        foreach ($employees as $key => $emp) {
+            $work = $calculations->works[$i];
+            if ($work->id != $key)
+                throw new Exception("Ошибка данных! Повторите позже!");
+
+            $sum = ceil(floatval($work->sum) / floatval(count($emp)) * 100.0) / 100.0;
+
+            foreach ($emp as $val)
+                $query->values("'$val', '$sum', '$work->id', '$work->name', '$data'");
+
+            $i++;
+        }
+
+        $db->setQuery($query);
+        $result = $db->execute();
 
         return;
     }
