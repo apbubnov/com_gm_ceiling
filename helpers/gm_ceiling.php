@@ -4762,7 +4762,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
                     if (!empty($AllDayOff)) {
                         foreach ($AllDayOff as $value) {
-                            $statusDayOff = "DayOff";
+                            $statusDayOff[substr($value->date_from, 8, 2)] = "DayOff";
                         }
                     }
                     // заполнение дней
@@ -4777,7 +4777,7 @@ class Gm_ceilingHelpersGm_ceiling
                     } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "green") {
                         $table .= '<td class="day-complite" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</br><div class="perimeter">P = '.($DayMounter[$j - $first_day_of_week + 1][1]).'м</div></td>';                        
                     } else {
-                        if ($statusDayOff == "DayOff") {
+                        if ($statusDayOff[$j - $first_day_of_week + 1] == "DayOff") {
                             $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
                         } else {
                             $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
