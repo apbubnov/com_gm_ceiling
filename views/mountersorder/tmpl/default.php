@@ -664,7 +664,7 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId);
             if (status_mount == 17 ) {
                 jQuery("#begin").attr("disabled", "disabled");
                 jQuery("#complited").attr("disabled", false);
-                jQuery("#underfulfilled").attr("disabled", "disabled");
+                jQuery("#underfulfilled").attr("disabled", false);
             } else if (status_mount == 10) {
                 jQuery("#begin").attr("disabled", false);
                 jQuery("#complited").attr("disabled", "disabled");
