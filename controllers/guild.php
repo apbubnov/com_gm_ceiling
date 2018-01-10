@@ -74,7 +74,7 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
                     die(json_encode((object) ["status" => "error", "message" => "Переданы неверные данные!"]));
 
                 try {
-                    $model->sendWork((object)["calculations" => $cut, "date" => $date]);
+                    $model->sendWork((object)["employees" => $data->employees, "calculations" => $cut, "date" => $date]);
                     die(json_encode((object) ["status" => "success", "message" => "Ваша работа успешно учтена!"]));
                 } catch (Exception $ex) {
                     die(json_encode((object) ["status" => "error", "message" => $ex->getMessage()]));

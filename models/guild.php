@@ -139,7 +139,6 @@ class Gm_ceilingModelGuild extends JModelList
                 }
             }
 
-
             $calc->quickly = (empty($calc->quickly) || $calc->quickly == 0)?"B":"A";
             $calc->ready_time = (empty($calc->ready_time))?date("d.m.Y H:i", strtotime(' +1 hour +'.(string)$minute.' minute')):date("d.m.Y H:i", strtotime($calc->ready_time));
             $name = ((empty($calc->ready_time))?date("Ymd", strtotime(' +1 hour +'.(string)$minute.' minute')):date("Ymd", strtotime($calc->ready_time)))
@@ -185,15 +184,82 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function sendWork($data)
     {
-        $calculation = $data->calculations->id;
-
+        $date = date("Y.m.d H:i:s");
+        $employees = $data->employees;
+        $calculations = $data->calculations;
+        $calculation = $calculations->id;
         $db = $this->getDbo();
+
         $query = $db->getQuery(true);
         $query->update("`#__gm_ceiling_cuttings`")
             ->set("ready = '1'")
             ->where("id = '$calculation'");
         $db->setQuery($query);
-        $db->execute();
+        $result = $db->execute();
+
+        if (empty($result))
+        {
+            throw new Exception("Перевести полотно в раскроенное не удалось! Попробуйте еще раз!");
+        }
+        $query = $db->getQuery(true);
+        $query->insert("`#__gm_ceiling_guild_salaries`")
+            ->columns("`user_id`, `salaries`, `work`, `note`, `accrual_date`");
+
+        $i = 0;
+        foreach ($employees as $key => $emp) {
+            $work = $calculations->works[$i];
+            if ($work->id != $key)
+                throw new Exception("Ошибка данных! Повторите позже!");
+
+            $sum = ceil(floatval($work->sum) / floatval(count($emp)) * 100.0) / 100.0;
+
+            foreach ($emp as $val)
+                $query->values("'$val', '$sum', '$work->id', '$work->name', '$date'");
+
+            $i++;
+        }
+
+        $db->setQuery($query);
+        $result = $db->execute();
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_calculations` as c")
+            ->select("COUNT(c.id) as COUNT")
+            ->where("c.project_id = '$calculations->project'")
+            ->group("c.id");
+        $db->setQuery($query);
+        $all = $db->loadObject();
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_calculations` as c")
+            ->join("LEFT", "`#__gm_ceiling_cuttings` as cut ON c.id = cut.id")
+            ->select("COUNT(c.id) as COUNT")
+            ->where("c.project_id = '$calculations->project' && cut.ready = '1'")
+            ->group("c.id");
+        $db->setQuery($query);
+        $ready = $db->loadObject();
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_projects` as p")
+            ->where("p.id = '$calculations->project'")
+            ->select("p.project_status as status");
+        $db->setQuery($query);
+        $status = intval($db->loadObject()->status);
+
+        print_r(intval($all)." - ".intval($ready));
+
+        if (intval($all) == intval($ready))
+        {
+            if($status == 5) $status = 6;
+            else if ($status == 7) $status = 19;
+
+            $query = $db->getQuery(true);
+            $query->update("`#__gm_ceiling_projects`")
+                ->set("project_status = '$status'")
+                ->where("id = '$calculations->project'");
+            $db->setQuery($query);
+            $db->execute();
+        }
 
         return;
     }
