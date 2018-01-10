@@ -54,9 +54,9 @@ class Gm_ceilingModelEncashment extends JModelList
 			$query->values("NOW(),'$sum', $manager_id");
 			$db->setQuery($query);
 			$db->execute();
-			$last_id = $db->insertid();
-			
-			return $last_id;
+			$cashbox_model = Gm_ceilingHelpersGm_ceiling::getModel('Cashbox');
+			$result = $cashbox_model->getData();
+			return $result;
 		}
 		catch(Exception $e)
         {
