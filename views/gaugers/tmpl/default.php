@@ -44,15 +44,6 @@ foreach ($gaugers_id as $value) {
 }
 //----------------------------------------------------------------------------------------------------------
 
-// получаем данные о монтажах за месяц монтажников диллера
-/*$masID = [];
-foreach ($gaugers_id as $value) {
-	array_push($masID, $value->id);
-}
-$AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($masID, "2017-11-01", "2017-11-30");
-var_dump($masID);*/
-//----------------------------------------------------------------------------------------------------------
-
 ?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/gaugers/tmpl/css/style.css" type="text/css" />
