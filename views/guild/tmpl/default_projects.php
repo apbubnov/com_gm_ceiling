@@ -264,7 +264,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             var size = 0;
             $.each(Data.employees, function (j, val) {
                 BlockSelect.append(BlockOption.text(val.name).val(val.id).clone());
-                console.log(Data.employees.lenght);
                 size++;
             });
             BlockSelect.attr({"name": "employees[" + v.id + "]", "size": (size < 5) ? size : 5});
@@ -430,14 +429,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     var blocks1 = $(".block_1"),
                         fblocks1 = blocks1.filter("#"+i1);
 
-                    console.log(fblocks1);
                     if (fblocks1.length < 1) {
                         var Pred = "", Next = "", Temp = null;
                         blocks1.each(function () {
                             if (i1 <= Next) return;
 
                             Temp = $(this);
-                            console.log(Temp.attr('id'));
 
                             Pred = Next;
                             Next = Temp.attr('id');
@@ -447,8 +444,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             Pred = Next;
                             Next = "";
                         }
-
-                        console.log(Pred + " < " + i1 + " < " + Next);
 
                         Temp = (Next !== "") ? $("#" + Next) : Data.block1;
                         var T = Temp.clone();
@@ -467,14 +462,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             blocks2 = block1.find(".block_2"),
                             fblocks2 = blocks2.filter("#"+i2);
 
-                        console.log(fblocks2);
                         if (fblocks2.length < 1) {
                             var Pred = "", Next = "", Temp = null;
                             blocks2.each(function () {
                                 if (parseInt(i2.replace("p","")) <= parseInt(Next.replace("p",""))) return;
 
                                 Temp = $(this);
-                                console.log(Temp.attr('id'));
 
                                 Pred = Next;
                                 Next = Temp.attr('id');
@@ -484,8 +477,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 Pred = Next;
                                 Next = "";
                             }
-
-                            console.log(Pred + " < " + i2 + " < " + Next);
 
                             Temp = (Next !== "") ? $("#" + Next) : Data.block2;
                             var T = Temp.clone();
@@ -505,14 +496,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 blocks3 = block2.find(".block_3"),
                                 fblocks3 = blocks3.filter("#"+i3);
 
-                            console.log(fblocks3);
                             if (fblocks3.length < 1) {
                                 var Pred = "", Next = "", Temp = null;
                                 blocks3.each(function () {
                                     if (parseInt(i3) <= parseInt(Next)) return;
 
                                     Temp = $(this);
-                                    console.log(Temp.attr('id'));
 
                                     Pred = Next;
                                     Next = Temp.attr('id');
@@ -522,8 +511,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                     Pred = Next;
                                     Next = "";
                                 }
-
-                                console.log(Pred + " < " + i3 + " < " + Next);
 
                                 Temp = (Next !== "") ? block2.find("#" + Next) : Data.block3;
                                 var T = Data.block3.clone();
@@ -535,9 +522,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
                                 if (Next !== "") { T.insertBefore(Temp); var index = Data.calculations.indexOf(Next); Data.calculations.splice(index, 0, i3); }
                                 else { block2.find("ceilings").append(T); Data.calculations.push(i3); }
-                                console.log("------------------------");
-                                console.log(Data.calculations);
-                                console.log("------------------------");
 
                                 noty({
                                     theme: 'relax',
