@@ -725,7 +725,6 @@ $AllMounters = $model->FindAllMounters($where);
                     success: function(data) {
                         if (data != undefined) {
                             data = JSON.parse(data);
-                            console.log(data);
                             var DateNew = data[0].project_mounting_date.substr(8, 2)+"."+data[0].project_mounting_date.substr(5, 2)+"."+data[0].project_mounting_date.substr(0, 4)+" "+data[0].project_mounting_date.substr(11, 5);
                             jQuery("#nowDateMounting").text(DateNew);
                             Allbrigades = <?php echo json_encode($Allbrigades); ?>;
@@ -740,7 +739,8 @@ $AllMounters = $model->FindAllMounters($where);
                             maxVisible: 5,
                             type: "success",
                             text: "Данные изменены"
-                            })
+                            });
+                            update_calendar(datetime.substr(5, 2), datetime.substr(1, 4));
                         }
                     },
                     timeout: 10000,
