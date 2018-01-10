@@ -996,7 +996,7 @@ class Gm_ceilingModelProject extends JModelItem
 			if ($flag == 1) {
 				// коммент о переносе даты
 				$date = substr($data->project_mounting_date, 8, 2)."-".substr($data->project_mounting_date, 5, 2)."-".substr($data->project_mounting_date, 0, 4)." ".substr($data->project_mounting_date, 11, 5);
-				$text = "Дата монтажа перенесена на $date";
+				$text = "У проекта №$data->id дата монтажа перенесена на $date";
 				$query->insert('#__gm_ceiling_client_history')
 				->columns('client_id, date_time, text')
 				->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
@@ -1030,13 +1030,21 @@ class Gm_ceilingModelProject extends JModelItem
 				$db->setQuery($query2);
 				$brigade = $db->loadObjectList();			
 
-				$text = "Монтажная бригада заменена на ".$brigade[0]->name;
+				$text = "У проекта №$data->id монтажная бригада заменена на ".$brigade[0]->name;
 				$query->insert('#__gm_ceiling_client_history')
 				->columns('client_id, date_time, text')
 				->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
 				$db->setQuery($query);
 				$db->execute();
 			}
+
+			// статус монтажа изменить на непросмотренный
+			$query4 = $db->getQuery(true);
+				$query4->update('#__gm_ceiling_projects')
+				->set("read_by_mounter = '0'")
+				->where("id = '$data->id'");
+				$db->setQuery($query4);
+				$db->execute();
 			
 		}
 		catch(Exception $e)
@@ -1192,6 +1200,7 @@ class Gm_ceilingModelProject extends JModelItem
             $query->update('#__gm_ceiling_projects')
 				->set("project_mounting_date = '$datatime'")
 				->set("project_mounter = '$mounter'")
+				->set("read_by_mounter = '0'")
 				->where("id = '$id'");
 			$db->setQuery($query);
 			$db->execute();
@@ -1200,7 +1209,8 @@ class Gm_ceilingModelProject extends JModelItem
 				->from('#__gm_ceiling_projects')
 				->where("id = '$id'");
 			$db->setQuery($query2);
-            $items = $db->loadObjectList();
+			$items = $db->loadObjectList();
+			
     		return $items;
         }
         catch(Exception $e)

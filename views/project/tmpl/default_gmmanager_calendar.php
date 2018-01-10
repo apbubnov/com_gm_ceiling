@@ -260,7 +260,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id))? $this->item->api_phone_id: '0' ?>" type="hidden">
                     <input name = "recoil" id = "recoil" value = "" type = "hidden">
                     <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if(isset($_SESSION['time'])){ echo $_SESSION['time']; }?>"class="inputactive" type="hidden">
-                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; }?>" type="hidden">
+                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; } else if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;}?>" type="hidden">
                     <input name = "project_gauger" id = "jform_project_gauger" class ="inputactive" value="<?php if(isset($_SESSION['gauger'])){ echo $_SESSION['gauger']; } else {echo "0";}?>" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
@@ -1310,7 +1310,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         }
     });
 
-
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
         jQuery('#modal_window_container').addClass("submit");
@@ -1621,7 +1620,17 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         //если сессия есть, то выдать дату, которая записана в сессии
         var datesession = jQuery("#jform_project_new_calc_date").val();
         if (datesession != undefined) {
-            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+            if (datesession.substr(8, 1) == "0") {
+                    daytocalendar = datesession.substr(9, 1);
+                } else {
+                    daytocalendar = datesession.substr(8, 2);
+                }
+                if (datesession.substr(5, 1) == "0") {
+                    monthtocalendar = datesession.substr(6, 1);
+                } else {
+                    monthtocalendar = datesession.substr(5, 2);
+                }
+            jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
         }
         //-----------------------------------------------------------
 
@@ -2098,6 +2107,54 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             });
             jQuery("input[name='isDiscountChange']").val(1);
             if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
+                data: {
+                    fio: jQuery("#jform_client_name").val(),
+                    address: jQuery("#jform_address").val(),
+                    house: jQuery("#jform_house").val(),
+                    bdq: jQuery("#jform_bdq").val(),
+                    apartment: jQuery("#jform_apartment").val(),
+                    porch: jQuery("#jform_porch").val(),
+                    floor: jQuery("#jform_floor").val(),
+                    code: jQuery("#jform_code").val(),
+                    date: jQuery("#jform_project_new_calc_date").val(),
+                    time: jQuery("#jform_new_project_calculation_daypart").val(),
+                    manager_comment: jQuery("#gmmanager_note").val(),
+                    client_name: jQuery("#jform_client_name").val(),
+                    phones: phones,
+                    comments: jQuery("#comments_id").val(),
+                    s: s,
+                    gauger: jQuery("#jform_project_gauger").val()
+                },
+                success: function (data) {
+                    jQuery("#form-client").submit();
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка cервер не отвечает"
+                    });
+                }
+            });
+
+        });
+
+        jQuery("#ok").click(function () {
+            var phones = [];
+            var s = window.location.href;
+            var classname = jQuery("input[name='new_client_contacts[]']");
+            Array.from(classname).forEach(function (element) {
+                phones.push(element.value);
+            });
+            jQuery("input[name='data_delete']").val(1);
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
