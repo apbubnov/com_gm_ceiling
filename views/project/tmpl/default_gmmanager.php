@@ -740,7 +740,14 @@ $AllMounters = $model->FindAllMounters($where);
                             type: "success",
                             text: "Данные изменены"
                             });
-                            update_calendar(datetime.substr(5, 2), datetime.substr(1, 4));
+                            console.log(datetime);
+                            update_calendar(datetime.substr(5, 2), datetime.substr(0, 4));
+                            if () {
+
+                            } else {
+
+                            }
+                            update_calendar2(month, year)
                         }
                     },
                     timeout: 10000,
