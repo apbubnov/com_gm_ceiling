@@ -2775,6 +2775,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    /* Обновление */
     public function UpdateCutData()
     {
         try {

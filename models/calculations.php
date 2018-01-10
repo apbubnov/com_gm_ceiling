@@ -1050,7 +1050,6 @@ class Gm_ceilingModelCalculations extends JModelList {
             ->where('id = ' . $item->n3);    
             $db->setQuery($query);
             $item_canvas = $db->loadObject();
-
             $query = $db->getQuery(true);
             $query->select("id")
             ->from('#__gm_ceiling_canvases')
@@ -1058,6 +1057,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db->setQuery($query);
             $new_n3  = $db->loadObject();
 
+            /* Старое */
             $cut_data = $db->escape($cut_data);
             $query = $db->getQuery(true);
             $query->update($db->quoteName('#__gm_ceiling_calculations'));
