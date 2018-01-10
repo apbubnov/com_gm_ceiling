@@ -107,7 +107,7 @@ class Gm_ceilingControllerReserveCalculation extends Gm_ceilingController
 			$project_data['dealer_id'] = $user->dealer_id;
 			$project_data['project_calculator'] = $data['project_calculator'];
 			$gauger_dealer_id = $project_model->WhatDealerGauger($project_data['project_calculator']);
-			if ($gauger_dealer_id[0]->dealer_id == 775) {
+			if ($gauger_dealer_id[0]->dealer_id == 1) {
 				$project_data['who_calculate'] = 1;
 			}
 			else  {

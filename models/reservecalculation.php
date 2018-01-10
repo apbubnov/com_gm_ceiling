@@ -24,7 +24,7 @@ class Gm_ceilingModelReservecalculation extends JModelList {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            if ($dealer_id == 775) {
+            if ($dealer_id == 1) {
                 $group = "22";
             } else {
                 $group = "21";

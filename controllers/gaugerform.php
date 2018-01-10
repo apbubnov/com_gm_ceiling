@@ -42,7 +42,7 @@ class Gm_ceilingControllerGaugerForm extends JControllerForm
 			//-----------------------------------
 			jimport('joomla.user.helper');
 
-			if ($dealerId == 775) {
+			if ($dealerId == 1) {
 				$groups = array(2, 22);
 			} else {
 				$groups = array(2, 21);
@@ -107,7 +107,7 @@ class Gm_ceilingControllerGaugerForm extends JControllerForm
 				}
 				
 				// редирект после сохранения
-				if ($dealerId == 775) {
+				if ($dealerId == 1) {
 					header('Location: /index.php?option=com_gm_ceiling&view=gaugers');
 				} else {
 					header('Location: /index.php?option=com_gm_ceiling&view=gaugers');				

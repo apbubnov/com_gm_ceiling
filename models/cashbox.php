@@ -39,14 +39,21 @@ class Gm_ceilingModelCashbox extends JModelList
 				->select('p.new_project_sum')
 				->select('p.new_mount_sum')
 				->select('p.new_material_sum')
-
 				->from('#__gm_ceiling_projects as p')
 				->innerJoin('#__users as u ON p.project_mounter = u.id')
 				->where('p.project_status=12');
 			$db->setQuery($query);
-			
-
 			$items = $db->loadObjectList();
+			$encashment_model = Gm_ceilingHelpersGm_ceiling::getModel('Encashment');
+			$encashments = $encashment_model->getData();
+			for($i=0;$i<count($encashments);$i++){
+				for($j=0;$j<count($items);$j++){
+					if(strtotime($encashments[$i]->date_time)>=strtotime($items[$j]->closed)){
+						array_splice( $items,$j,0,$encashments[$i]);
+						break;
+					}
+				}
+			}
 			return $items;
 		}
 		catch(Exception $e)

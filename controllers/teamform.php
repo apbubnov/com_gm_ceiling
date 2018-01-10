@@ -112,7 +112,7 @@ class Gm_ceilingControllerTeamForm extends JControllerForm
 				
 
 				// редирект после сохранения
-				if ($dealerId == 775) {
+				if ($dealerId == 1) {
 					header('Location: /index.php?option=com_gm_ceiling&view=teams&type=gmchief');
 				} else {
 					header('Location: /index.php?option=com_gm_ceiling&view=teams&type=chief');				

@@ -973,7 +973,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                     ->values(
                         $db->quote($data['send_email']) . ', '
                         . '1' . ', '
-                        . '775' . ', '
+                        . '1' . ', '
                         . $db->quote($date_created));
                 $db->setQuery($query);
                 $db->execute();
@@ -1091,10 +1091,10 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 if (isset($user->dealer_id)) {
                     $data['dealer_id'] = $user->dealer_id;
                 } else {
-                    $data['dealer_id'] = 774;
+                    $data['dealer_id'] = 2;
                 }
             }*/
-            if (empty($user->id)) $user->id = 774;
+            if (empty($user->id)) $user->id = 2;
 
             $n13 = json_decode($data['n13']);
             $n14 = json_decode($data['n14']);
@@ -1526,7 +1526,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
     //			if(isset($user->dealer_id)) {
     //				$data['dealer_id'] = $user->dealer_id;
     //			} else {
-    //				$data['dealer_id'] = 774;
+    //				$data['dealer_id'] = 2;
     //			}
     //		}
     //

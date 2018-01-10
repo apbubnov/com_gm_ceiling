@@ -44,7 +44,7 @@ foreach ($projects as $value) {
 		</tr>
 		<?php foreach ($projects as $value) {
 			if ($value->read_by_chief == 0) { 
-				if ($user->dealer_id == 775) { ?>
+				if ($user->dealer_id == 1) { ?>
 					<tr onclick="location.replace('http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id=<?php echo $value->id; ?>');">
 				<?php } else {?>
 					<tr onclick="location.replace('http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=projectform&type=chief&id=<?php echo $value->id; ?>');">
@@ -53,7 +53,7 @@ foreach ($projects as $value) {
 					<td><?php echo $value->project_mounting_end; ?></td>
 					<td><?php echo $value->name; ?></td>
 					<td><?php
-							if ($user->dealer_id == 775) {
+							if ($user->dealer_id == 1) {
 								echo $value->gm_mounter_note;
 							} else {
 								echo $value->mounter_note;
@@ -71,7 +71,7 @@ foreach ($projects as $value) {
 					<td><?php echo $value->project_mounting_end; ?></td>
 					<td><?php echo $value->name; ?></td>
 					<td><?php
-							if ($user->dealer_id == 775) {
+							if ($user->dealer_id == 1) {
 								echo $value->gm_mounter_note;
 							} else {
 								echo $value->mounter_note;

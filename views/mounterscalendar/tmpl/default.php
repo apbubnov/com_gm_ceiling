@@ -261,7 +261,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                             adress = element.project_info;
                             perimeter = element.n5;
                             // комменты
-                            if (<?php echo $dealerId; ?> == 775) {
+                            if (<?php echo $dealerId; ?> == 1) {
                                 if(element.gm_chief_note == null || element.gm_chief_note == undefined || element.gm_chief_note == "null") {
                                     note = "";
                                     } else {

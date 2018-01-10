@@ -567,6 +567,7 @@ $AllMounters = $model->FindAllMounters($where);
                     url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyMounters",
                     data: {
                         date: date,
+                        dealer: <?php echo $user->dealer_id; ?>,
                     },
                     success: function(data) {
                         window.DataOfProject = JSON.parse(data);
@@ -592,9 +593,14 @@ $AllMounters = $model->FindAllMounters($where);
                         jQuery("#projects_brigade_container").empty();
                         var table_projects = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
                         table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                        console.log(data);
                         Array.from(data).forEach(function(element) {
                             if (element.project_mounter == selectedBrigade) {
-                                table_projects += '<tr><td>'+element.project_mounting_date.substr(8, 2)+"."+element.project_mounting_date.substr(5, 2)+"."+element.project_mounting_date.substr(0, 4)+" "+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                                if (element.project_mounting_day_off != "") {
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                                } else {
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                                }                            
                             }
                         });
                         table_projects += "</table>";

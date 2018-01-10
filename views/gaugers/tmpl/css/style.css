@@ -31,7 +31,27 @@
     float: left;
     position: fixed;
     top: 50%;
-    width: 50px;
+    width: 25px;
+}
+
+#button-prev {
+    width: 25px !important;
+}
+
+#button-next {
+    width: 25px !important;
+}
+
+@media screen and (min-width: 768px) {
+    #prev-button-container, #next-button-container {
+        width: 50px;
+    }
+    #button-prev {
+        width: 50px !important;
+    }
+    #button-next {
+        width: 50px !important;
+    }
 }
 
 #prev-button-container {
@@ -51,8 +71,18 @@
 .calendars-gaugers {
     display: inline-block;
     float: left;
-    width: calc(100% / 3);
+    width: 100%;
     padding: 25px;
+}
+
+@media screen and (min-width: 768px) {
+    .calendars-gaugers {
+        display: inline-block;
+        float: left;
+        width: calc(100% / 3);
+        padding: 25px;
+
+    }
 }
 
 .gaugers-name {

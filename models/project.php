@@ -569,6 +569,10 @@ class Gm_ceilingModelProject extends JModelItem
 	{
 		try
 		{
+			if ($status == 3) {
+				$table->project_mounting_date = "0000-00-00 00:00:00";
+				$table->project_mounter = NULL;
+			}
 			$table = $this->getTable();
 			$table->load($data->id);
 			$table->project_verdict = $data->project_verdict;

@@ -875,13 +875,15 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and projects.dealer_id = '$dealer'")
                 ->order('projects.id');
             $db->setQuery($query);
+            $items = $db->loadObjectList();
 
-            $query3->select('date_from, date_to')
+            $query3->select('id_user, date_from, date_to')
                 ->from('#__gm_ceiling_day_off')
-                ->where("id_user = $id and date_from between '$date1 00:00:00' and '$date2 23:59:59'");
+                ->where("date_from between '$date1 00:00:00' and '$date2 23:59:59'");
+                
             $db->setQuery($query3);
             $items3 = $db->loadObject();
-
+            
             // объединение с выходным днем
             $index = 0;
             //поиск индекса для вставки и замена даты на просто время
@@ -898,7 +900,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             //создание нового массива
             if (!empty($items3)) {
                 $day = array(
-                    'project_mounter'=>NULL,
+                    'project_mounter'=>$items3->id_user,
                     'project_mounting_date'=>$items3->date_from,
                     'project_info'=>NULL,
                     'n5'=>NULL,
@@ -907,8 +909,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 $day = array((object)$day);
                 array_splice($items,$index,0,$day);
             }
-
-            $items = $db->loadObjectList();
+            
     		return $items;
         }
         catch(Exception $e)
@@ -1030,15 +1031,38 @@ class Gm_ceilingModelCalculations extends JModelList {
         }
     }
 
-    public function update_cut_data($id, $cut_data)
+    public function update_cut_data($id, $cut_data, $width)
     {
         try
         {
             $db = $this->getDbo();
+
+            $query = $db->getQuery(true);
+            $query->select("`n2`,`n3`")
+            ->from('#__gm_ceiling_calculations')
+            ->where('id = ' . $id);    
+            $db->setQuery($query);
+            $item = $db->loadObject();
+
+            $query = $db->getQuery(true);
+            $query->select("*")
+            ->from('#__gm_ceiling_canvases')
+            ->where('id = ' . $item->n3);    
+            $db->setQuery($query);
+            $item_canvas = $db->loadObject();
+            $query = $db->getQuery(true);
+            $query->select("id")
+            ->from('#__gm_ceiling_canvases')
+            ->where('texture_id = '. $item->n3 . 'and name = '. $item_canvas->name . 'and country = ' .$item_canvas->country .'and width = '. $width. ' and color_id = '. $item_canvas->color_id);    
+            $db->setQuery($query);
+            $new_n3  = $db->loadObject();
+
+            /* Старое */
             $cut_data = $db->escape($cut_data);
             $query = $db->getQuery(true);
             $query->update($db->quoteName('#__gm_ceiling_calculations'));
             $query->set("`cut_data` = '$cut_data'");
+            $query->set("`n3` = '$new_n3->id'");
             $query->where('id = ' . $id);
             $db->setQuery($query);
             $db->execute();

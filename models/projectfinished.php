@@ -140,7 +140,7 @@ class Gm_ceilingModelProjectfinished extends JModelItem {
 		try
 		{
 			$user       = JFactory::getUser();
-			if ($user->dealer_id == 775) {
+			if ($user->dealer_id == 1) {
 				$note = "gm_calculator_note";
 			} else {
 				$note = "dealer_calculator_note";

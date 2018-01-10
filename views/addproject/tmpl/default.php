@@ -19,13 +19,13 @@ $userId     = $user->get('id');
 // календарь
 $month = date("n");
 $year = date("Y");
-$FlagCalendar = [3, 775];
+$FlagCalendar = [3, 1];
 $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
 //----------------------------------------------------------------------------------
 
 // все замерщики
 $model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
-$AllGaugerGM = $model->FindAllGauger(775);
+$AllGaugerGM = $model->FindAllGauger(1);
 $AllGaugerDealer = $model->FindAllGauger($user->dealer_id);
 if (count($AllGaugerDealer) == 0) {
     array_push($AllGaugerDealer, ["id" => $userId, "name" => $user->name]);
@@ -120,7 +120,7 @@ if (count($AllGaugerDealer) == 0) {
 		</div>
 	</div>
 	<div class="control-group">
-		<?php if ($user->dealer_id != 775) { ?>
+		<?php if ($user->dealer_id != 1) { ?>
 			<div class="control-label">
 				<label id="jform_who_calculate-lbl" for="jform_who_calculate" class="required">Выберите замерщика<span class="star">&nbsp;*</span></label>
 			</div>
@@ -180,8 +180,8 @@ if (count($AllGaugerDealer) == 0) {
         month_old = month;
 		year_old = year;
 		if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-			console.log("dealer 775");
-			dealer = 775;
+			console.log("dealer 1");
+			dealer = 1;
 		}
 		if (jQuery("#jform_who_calculate2").attr("checked") == "checked") {
 			console.log("dealer 123");
@@ -205,8 +205,8 @@ if (count($AllGaugerDealer) == 0) {
         month_old = month;
         year_old = year;
         if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-			console.log("dealer 775");
-			update_calendar(month, year, 775);
+			console.log("dealer 1");
+			update_calendar(month, year, 1);
 		}
 		if (jQuery("#jform_who_calculate2").attr("checked") == "checked") {
 			console.log("dealer 123");
@@ -301,7 +301,7 @@ if (count($AllGaugerDealer) == 0) {
 			jQuery("#modal-window-choose-tar").show("slow");
             jQuery("#close-tar").show();
 			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-				var dealer = 775;
+				var dealer = 1;
 			} else {
 				var dealer = <?php echo $user->dealer_id; ?>;
 			}
@@ -398,7 +398,7 @@ if (count($AllGaugerDealer) == 0) {
 				}
 			}
 			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-				update_calendar(month, year, 775);
+				update_calendar(month, year, 1);
 			}
 			if (jQuery("#jform_who_calculate2").attr("checked") == "checked") {
 				update_calendar(month, year, <?php echo $user->dealer_id; ?>);

@@ -179,7 +179,6 @@ else $status = null;
     $(window).resize();
 
     function Init() {
-        $(".snowfall-flakes").remove();
         $(".Actions .Employees").width($(".Actions .Employees .ButtonButInp").outerWidth(true));
         $(".ModalCeiling .ModalImage")
             .mousedown(function (event) {
@@ -191,6 +190,7 @@ else $status = null;
                 {
                     var mouse = "move",
                         cursor = "move";
+
                     if (event.pageX - 50 >= Data.ImageMousePosition.X && Data.Cursor !== "right") {
                         mouse = "url(/files/cursors/right.cur), e-resize";
                         cursor = "right";
@@ -210,6 +210,7 @@ else $status = null;
                         cursor = "move";
                         console.log(mouse);
                     }
+
                     Data.Cursor = cursor;
                 } else element.css({"cursor":"default"});
             })

@@ -397,8 +397,8 @@ class Gm_ceilingController extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id', '', 'INT');
             $client_id = $jinput->get('client_id', '', 'INT');
-            $this->updateDealerId('clients',$client_id,775);
-            $this->updateDealerId('projects',$client_id,775);
+            $this->updateDealerId('clients',$client_id,1);
+            $this->updateDealerId('projects',$client_id,1);
             $user =& JUser::getInstance($user_id);
             try{
                 if (!$user->delete()) {
@@ -729,12 +729,12 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
-            $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', 775);
-            $gm_components_margin = $info_model->getMargin('gm_components_margin', 775);
-            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', 775);
-            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', 775);
-            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', 775);
-            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', 775);
+            $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', 1);
+            $gm_components_margin = $info_model->getMargin('gm_components_margin', 1);
+            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', 1);
+            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', 1);
+            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', 1);
+            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', 1);
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
             $project_data['state'] = 1;
             $project_data['client_id'] = $client_id;
@@ -744,7 +744,7 @@ class Gm_ceilingController extends JControllerLegacy
             $project_data['project_calculation_date'] = $project_calculation_date;
             $project_data['project_mounting_date'] = "00.00.0000";
             $project_data['project_note'] = "";
-            $project_data['dealer_id'] = 775;
+            $project_data['dealer_id'] = 1;
             $project_data['who_calculate'] = 0;
             $project_data['created'] = date("Y.m.d");
             $project_data['project_discount'] = 0;
@@ -800,7 +800,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm');
                 $client_data['client_name'] = $name;
                 $client_data['type_id'] = 1;
-                $client_data['dealer_id'] = 775;//GM
+                $client_data['dealer_id'] = 1;//GM
                 $client_data['created'] = date("Y-m-d");
                 $client_id = $client_model->save($client_data);
                 //добавляем номер телефона
@@ -2775,6 +2775,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    /* Обновление */
     public function UpdateCutData()
     {
         try {
@@ -2782,7 +2783,12 @@ class Gm_ceilingController extends JControllerLegacy
             $data = $jinput->get('image', '0', 'string');
             $arr_points = $jinput->get('koordinats_poloten', '', 'array');
             $calc_id = $jinput->get('calc_id', '', 'INT');
-            
+            $width = $jinput->get('width', '', 'INT');
+            $width = (string)$width/100;
+            if(empty(strpos($width,'.'))){
+                $width.='.0';
+            }
+
             for ($i = 0; $i < count($arr_points); $i++)
             {
                 $points_polonta = '';
@@ -2800,13 +2806,30 @@ class Gm_ceilingController extends JControllerLegacy
             $data = base64_decode($data);
 
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-            $result = $calc_model->update_cut_data($calc_id, $str);
+            $result = $calc_model->update_cut_data($calc_id, $str, $width);
 
             $filename = md5('cut_sketch' . $calc_id);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png", $data);
             die(true);
 
         } catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public  function saveEncashment(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $sum = $jinput->get('sum','','STRING');
+            $manager_id = $jinput->get('id','','INT');
+            $encash_model = Gm_ceilingHelpersGm_ceiling::getModel('encashment');
+            $result  = $encash_model->save($sum,$manager_id);
+            die(json_encode($result));
+        }
+        catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);

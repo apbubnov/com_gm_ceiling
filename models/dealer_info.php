@@ -97,7 +97,7 @@ class Gm_ceilingModelDealer_info extends JModelList
 			$app = JFactory::getApplication();
 			$user = JFactory::getUser();
 			
-			if(empty($user->dealer_id)) $dealerId = 775;
+			if(empty($user->dealer_id)) $dealerId = 1;
 			else $dealerId = $user->dealer_id;
 			// Create a new query object.
 			$db    = $this->getDbo();

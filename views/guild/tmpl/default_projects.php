@@ -66,6 +66,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     </cuts>
 </page>
 
+
 <form class="Modal ModalCeiling" action="javascript:CutOut();">
     <div class="ModalPage">
         <div class="ModalName">
@@ -215,6 +216,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalShow(o) {
+        if (Data.Interval !== null)
+            clearInterval(Data.Interval);
+
         if ($(window).width() >= 728) $("#KeyPress").focus();
 
         var type = typeof o;
@@ -305,6 +309,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalClose() {
+        setIntervalNew();
 
         $("#KeyPress").blur();
         $(".ModalCeiling")
@@ -327,6 +332,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function NextCeiling() {
+<<<<<<< HEAD
+        if (Data.Interval !== null)
+            clearInterval(Data.Interval);
+=======
+>>>>>>> 7046eb0ce338e5657e69f1299495ea11e52ba0b2
 
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
@@ -339,6 +349,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function PredCeiling() {
+<<<<<<< HEAD
+        if (Data.Interval !== null)
+            clearInterval(Data.Interval);
+=======
+>>>>>>> 7046eb0ce338e5657e69f1299495ea11e52ba0b2
 
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
@@ -379,7 +394,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     Data.calculations = [];
 
                     for(var i = 0; i < calc.length; i++)
+<<<<<<< HEAD
+                        if (calc[i] !== null)
+=======
                         if (calc[i])
+>>>>>>> 7046eb0ce338e5657e69f1299495ea11e52ba0b2
                             Data.calculations.push(calc[i]);
 
                     var block_3 = $("#" + id),
