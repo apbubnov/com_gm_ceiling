@@ -1050,19 +1050,23 @@ class Gm_ceilingModelCalculations extends JModelList {
             ->where('id = ' . $item->n3);    
             $db->setQuery($query);
             $item_canvas = $db->loadObject();
+            
 
             $query = $db->getQuery(true);
             $query->select("id")
             ->from('#__gm_ceiling_canvases')
-            ->where('texture_id = '. $item->n3 . 'and name = '. $item_canvas->name . 'and country = ' .$item_canvas->country .'and width = '. $width. ' and color_id = '. $item_canvas->color_id);    
+            ->where('texture_id = '. $item->n3 . ' and name = '.  $db->quote($item_canvas->name) . ' and country = ' . $db->quote($item_canvas->country) .'and width = '.  $db->quote($width));    
+            if(!empty($item_canvas->color_id))  $query->where('color_id = '. $item_canvas->color_id); 
             $db->setQuery($query);
             $new_n3  = $db->loadObject();
 
+            throw new Exception($new_n3->id);
+            /* Старое */
             $cut_data = $db->escape($cut_data);
             $query = $db->getQuery(true);
             $query->update($db->quoteName('#__gm_ceiling_calculations'));
             $query->set("`cut_data` = '$cut_data'");
-            $query->set("`n3` = '$new_n3->id'");
+            $query->set("`n3` = $new_n3->id");
             $query->where('id = ' . $id);
             $db->setQuery($query);
             $db->execute();
