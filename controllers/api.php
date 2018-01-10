@@ -35,18 +35,28 @@ class Gm_ceilingControllerApi extends JControllerLegacy
 
     public function Authorization_FromAndroid()
     {
-        $authorization = json_decode($POST['authorizations']);
-        $model = $this->getModel();
-        $user = JFactory::getUser($model->getUserId($authorization->username));
-        $Password = $authorization->password;
-        $verifyPass = JUserHelper::verifyPassword($Password, $user->password, $user->id);
-        if ($verifyPass)
+        try
         {
-            die(json_encode($user));
+            $authorization = json_decode($POST['authorizations']);
+            $model = $this->getModel();
+            $user = JFactory::getUser($model->getUserId($authorization->username));
+            $Password = $authorization->password;
+            $verifyPass = JUserHelper::verifyPassword($Password, $user->password, $user->id);
+            if ($verifyPass)
+            {
+                die(json_encode($user));
+            }
+            else
+            {
+                die(null);
+            }
         }
-        else
+        catch(Exception $e)
         {
-            die(null);
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
         }
     }
 
