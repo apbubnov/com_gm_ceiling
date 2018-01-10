@@ -209,30 +209,6 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			<input name="jform[transport]" value="<?php echo $this->item->transport; ?>" type="hidden">
 			<input id="jform_n1" class="n1" name="jform[n1]" value="28" type="hidden">
 			
-			<!--<?php //if($user->guest) {?>
-				<div style="width = 100%;">
-				<div id = "video" class ="video">
-					<div style="position:relative;height:0;padding-bottom:56.25%"><iframe src="https://www.youtube.com/embed/g8gNoNRAUkc" width="640" height="360" frameborder="0" style="position:absolute;width:100%;height:97%;left:0" allowfullscreen></iframe></div>
-				</div>
-					<div class="fields">
-						<label id="jform_user_FIO-lbl" for="user_FIO"  class="registration-fields-lbl">Фамилия Имя Отчество:</label>
-						<input id="user_FIO" class="registration-fields"  placeholder="ФИО"></input>
-						<label id="jform_user_email-lbl" for="user_email" class=" registration-fields-lbl">Адрес эл.почты:</label>
-						<input id="user_email" class="  registration-fields "  placeholder="Адрес эл.почты">
-						<label id="jform_user_phone-lbl" for="user_phone" class=" registration-fields-lbl">Номер телефона<br>(будет использоваться как логин):</label>
-						<input id="user_phone" class=" registration-fields "  placeholder="Номер телефона"></input>	
-						<label id="jform_user_phone-lbl" for="user_phone" class=" registration-fields-lbl">Придумайте пароль:</label>
-						<input id="user_password" class="registration-fields"  placeholder="Придумайте пароль"  type="password"></input>
-						<div>
-							<div class="right-btn">
-								<button class="btn btn-primary login-btn" onclick="location.href='<?php echo $login_link; ?>' " type="button"> Войти </button> 
-							</div>
-							<div class="left-btn">
-								<button id="registration" type="button" class="btn btn-primary registration-btn">Зарегистрироваться</button>
-							</div>
-						<div>								
-					</div>		
-				</div>-->
 			<?php /*} else{ */ if($user->dealer_type !=2 ){ /*$need_mount = 1;*/ $del_flag = 1;} ?>
 			<?php if(!$new || $type === "gmcalculator" || $type === "calculator"||$type === "gmmanager"  ) { ?>
 			<div class="form-group"> 
@@ -1938,9 +1914,6 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			<div class="col-sm-4"></div>
 		</div>
 
-	
-
-
 		</div>
 		<!--</div>	-->	
 		<div class="container">
@@ -1950,9 +1923,6 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			</div>
 			</div>
 		</div>
-
-
-
 
 		<input type="hidden" id="activate" name="activate" value="0"/>
 		<input type="hidden" name="option" value="com_gm_ceiling"/>
@@ -2000,19 +1970,6 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			<p><button type="button" id="re-call-enroll-tar" class="btn btn-primary">Записаться на замер</button></p>
 		</div>
 	</div>
-	<div id="modal-window-container3-tar">
-		<button type="button" id="close3-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal-window-registration-tar">
-			<img src="/images/registration.png" id="image-registration-tar" alt="Регистрация">
-			<p>Регистрация:</p>
-			<p><input type="text" id="name-registration-tar" placeholder="ФИО"></p>
-			<p><input type="text" id="phone-registration-tar" placeholder="Телефон"></p>
-			<p><input type="text" id="email-registration-tar" placeholder="e-mail"></p>
-			<p><input type="text" id="pas1-registration-tar" placeholder="Пароль"></p>
-			<p><input type="text" id="pas2-registration-tar" placeholder="Повторите пароль"></p>
-			<p><button type="button" id="btn-registration-tar" class="btn btn-primary">Зарегистрироваться</button></p>
-		</div>
-	</div>
 <!-- /////////////////////////////////////////////////////////////////// -->
 
 <a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"> Наверх</i></a>
@@ -2026,11 +1983,7 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 	$user_group = $user->groups;
 ?>
 
-
-
 <script>
-
-	/*var types = <?#=json_encode($this->item->types);?>;*/
 	
 	/* //////////////////////////////// Убрать банер, при тыке в другое место Таранцева //////////////////////////////// */
 
@@ -2048,13 +2001,6 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			jQuery("#close2-tar").hide();
 			jQuery("#modal-window-container2-tar").hide();
 			jQuery("#modal-window-enroll-tar").hide();
-		}
-		var div2 = jQuery("#modal-window-registration-tar"); // тут указываем ID элемента
-		if (!div2.is(e.target) // если клик был не по нашему блоку
-		    && div2.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery("#close3-tar").hide();
-			jQuery("#modal-window-container3-tar").hide();
-			jQuery("#modal-window-registration-tar").hide();
 		}
 	});
 	//-------------------------------------------------------------------------------------
@@ -2103,18 +2049,6 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			jQuery("#modal-window-call-tar").hide();
 			jQuery("#close-tar").hide();
 		});
-
-		/////////////////////////// всплывающая регистрация  ///////////////////////////////////////
-
-		jQuery("#phone-registration-tar").mask('+7(999)999-99-99');
-
-		jQuery(".btn-reg").click(function() {
-			jQuery("#modal-window-container3-tar").show();
-			jQuery("#modal-window-registration-tar").show("slow");
-			jQuery("#close3-tar").show();
-		});
-
-		/*//////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 		jQuery("#re-call-call-tar").click(function() {
 			var regexp = /^[А-Яа-я\s]+$/;
@@ -2230,69 +2164,12 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			jQuery("#time-tar").hide("slow");
 			jQuery("#re-call-enroll-tar").hide("slow");
 	    });
-////////////////////////////////////////
-	//	jQuery("#sketch_switch").prop("disabled",true);
+
         jQuery("#sketch_switch").click(function(){
             jQuery("#flag_auto").val(0);
             submit_form_sketch();
-        })
-		jQuery('#form-calculation').keydown(function(event){
-        	if(event.keyCode == 13) {
-        		event.preventDefault();
-				setTimeout(function(){
- 					 $('#registration').trigger('click');
-						}, 1)
-          		return true;
-      		}
-   		});
-
-		// Скидка от 0 до 100
-        /*jQuery("#new_discount").keydown(function (event) {
-            var char = event.keyCode; //alert(char);
-            if (char == 107 || char == 109 || char == 110 || char == 191 || char == 187 || char == 189) return false;
-            var num = Number(event.key);
-            var val = Number(jQuery(this).val());
-            var sum = val*10+num;
-            if (num >= 0 && num < 10)
-            {
-                if (sum <= 100 && sum >= 0) return true;
-                else return false;
-            }
-            else return true;
-        });*/
-
-		/* $(function() {
-			if($( "#jform_n4").val() != 0 && $( "#jform_n4").val() != 0 && $( "#jform_n9").val() != 0){
-			   $("#data-wrapper").show();
-		   }
-	   }); */
-	   
-		$(function() {
-			// находим видео YouTube
-			var $allVideos = jQuery("iframe[src^='http://www.youtube.com']"),
-            // Элемент с плавающей шириной
-            $fluidEl =jQuery(".video");
-			// Сохранение пропорций видео
-			$allVideos.each(function() {
-					jQuery(this)
-                        .data('aspectRatio', this.height / this.width)
-                        // удаление ширину и высоты из оригинального кода
-                        .removeAttr('height')
-                        .removeAttr('width');
         });
-			// когда окно браузера изменяет размеры
-			jQuery(window).resize(function() {
-					var newWidth = $fluidEl.width();
-					// изменение размеров видео с сохранением пропорций
-					$allVideos.each(function() {
-							var $el = $(this);
-							$el
-									.width(newWidth)
-									.height(newWidth * $el.data('aspectRatio'));
-					});
-			// фиксирование размеров и отображение видео
-			}).resize();
-		});
+	   
 		jQuery("#user_phone").mask("+7 (999) 999-99-99");
 		jQuery("#jform_client_contacts-top").mask("+7 (999) 999-99-99");
 		jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
@@ -2343,78 +2220,6 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			}
 		});
 		
-		jQuery('#registration').click(function(){
-
-			var userFIO = jQuery('#user_FIO').val();
-			var userEmail = jQuery('#user_email').val();
-			var userPhone = jQuery('#user_phone').val();
-			var userPass = jQuery('#user_password').val();
-			var login = userPhone.replace('+7','8');
-			login =login.replace(/\D/g, '');
-			jQuery.ajax({
-					type: 'POST',
-					url: "index.php?option=com_gm_ceiling&task=register_user&",
-					data: {	
-						FIO: userFIO,
-						email:userEmail,
-						phone:userPhone,
-						pass:userPass,
-						login:login
-					},
-					success: function(data){
-						data = JSON.parse(data);
-						if(data.error){
-							var n = noty({
-								theme: 'relax',
-								timeout: 2000,
-								layout: 'center',
-								maxVisible: 5,
-								type: "error",
-								text:data.error.msg
-							});
-						}
-						else{
-							jQuery.ajax({
-								type: 'POST',
-								url: "index.php?option=com_gm_ceiling&task=create_empty_project",
-								data: {
-									client_id:data
-								
-								},
-								success: function(data){
-									url = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id='+data;
-									location.href =url;
-								},
-								dataType: "text",
-								timeout: 10000,
-								error: function(data){
-									var n = noty({
-										theme: 'relax',
-										timeout: 2000,
-										layout: 'center',
-										maxVisible: 5,
-										type: "error",
-										text: "Ошибка при создании заказа. Сервер не отвечает"
-									});
-								}					
-							});
-						}
-						
-					},
-					dataType: "text",
-					timeout: 10000,
-					error: function(data){
-						var n = noty({
-							theme: 'relax',
-							timeout: 2000,
-							layout: 'center',
-							maxVisible: 5,
-							type: "error",
-							text: data.responseText
-						});
-					}				
-				});
-		});
         function change_flag_auto(){
             if(jQuery("#sketch_image_block").is(':visible')){
                 jQuery("#flag_auto").val(1);
@@ -2616,23 +2421,6 @@ if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php')
 			if (ecolaFlagLoad) jQuery("#add_ecola").trigger('click');
 			ecolaFlagLoad = true;
 		});
-/*
-        var level = [];
-        jQuery.getJSON("index.php?option=com_gm_ceiling&task=getListProfil",function(data){
-            jQuery.each(data,function(key,val){
-                //var image = (val.image)?"data:image/gif;base64," + val.image:"";
-                //console.log(image);
-                var value = "value=\"" + val.id + "\"";
-                //var style = "style=\"background-image: url('" + image + "'); width: 30px; heigth:30px;\"";
-                var option = "<option " + value + " >" + val.title  + "<img src=\"data:image/gif;base64," + val.image +"\"></option>";
-                level.push(option);
-                //var img = jQuery("<img>"); img.attr({"src":image, "class":"qqq"});
-                //jQuery("body").append(img);
-                //level.push( "<option value='" + val.id + "' style='background-image: url(/test1.gm-vrn.ru/templates/gantry/images/clip.png);'>" + val.title + /*val.image +*//* "<img src='data:image/gif;base64," + val.image + "'>" + "</option>" );*/
-               // style="background-image: url(imgselect/04.gif);"
-          /*  });
-            jQuery("#add_level").trigger('click');
-        });*/
 
 var level = [];
     
@@ -2883,16 +2671,6 @@ var level = [];
                 <?}?>
 			}
 		});
-		//		function calclualte_ecola(){
-		//			var e_count = jQuery("#ecola_count").val();
-		//		}
-		//
-		//		function array_sort(array){
-		//			var e_count = jQuery("#ecola_count").val();
-		//		}
-		jQuery('#order_button').click(function(){
-
-		});
 
 		jQuery( "#calculate_button" ).click(function(){
             if(jQuery("#flag_auto").val()==1){
@@ -3018,111 +2796,6 @@ var level = [];
 						}
 					}
 				});
-
-            jQuery("#btn-registration-tar").click(function(){
-                var name = jQuery("#name-registration-tar").val();
-                var phone = jQuery("#phone-registration-tar").val();
-                var email = jQuery("#email-registration-tar").val();
-                var pass = jQuery("#pas1-registration-tar").val();
-                var repass = jQuery("#pas2-registration-tar").val();
-                if(name&&phone&&email&&pass&&repass){
-                    if(pass == repass){
-                        jQuery.ajax({
-                            type: 'POST',
-                            url: "index.php?option=com_gm_ceiling&task=register_user",
-                            data: {
-                                FIO : name,
-                                phone : phone,
-                                email : email,
-                                pass : pass,
-                                pass2 : repass
-                            },
-                            success: function(data){	
-                                if(data.error){
-                                    var n = noty({
-                                        theme: 'relax',
-                                        timeout: 2000,
-                                        layout: 'center',
-                                        maxVisible: 5,
-                                        type: "error",
-                                        text:data.error.msg
-                                    });
-                                }
-                                else{
-                                    jQuery.ajax({
-                                        type: 'POST',
-                                        url: "index.php?option=com_gm_ceiling&task=create_empty_project",
-                                        data: {
-                                            client_id:data,
-                                            api_id : <?php echo $rek;?>
-                                        
-                                        },
-                                        success: function(data){
-                                            jQuery("#jform_project_id").val(data);
-                                            var temp_task = jQuery("#jform_task").val();
-                                            jQuery("#jform_task").val( "calculate" );
-                                            data = jQuery( "#form-calculation").serialize();
-                                            jQuery("#jform_task").val( temp_task );
-                                            additional = "&save=1&pdf=0&del_flag=1&need_mount="+jQuery(".need_mount").val();
-                                            jQuery.ajax({
-                                                type: 'POST',
-                                                url: "index.php?option=com_gm_ceiling&task=calculate&ajax=1&"+additional,
-                                                data: data,
-                                                success: function(data){
-                                                    url = '/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='+jQuery("#jform_project_id").val();
-                                                    location.href =url;
-                                                },
-                                                dataType: "json",
-                                                timeout: 10000,
-                                                error: function(data){
-                    
-                                                }
-                                            });
-                                        },
-                                        dataType: "text",
-                                        timeout: 10000,
-                                        error: function(data){
-                                            var n = noty({
-                                                theme: 'relax',
-                                                timeout: 2000,
-                                                layout: 'center',
-                                                maxVisible: 5,
-                                                type: "error",
-                                                text: "Ошибка при создании заказа. Сервер не отвечает"
-                                            });
-                                        }					
-                                    });
-                                }
-						    },
-                            dataType: "json",
-                            timeout: 10000,
-                            error: function(data){
-                            
-                            }
-					    });
-                    }
-                    else{
-                        var n = noty({
-								theme: 'relax',
-								timeout: 2000,
-								layout: 'center',
-								maxVisible: 5,
-								type: "error",
-								text: "Введеные пароли не совпадают!"
-							});
-                    }
-                }
-                else {
-                    var n = noty({
-								theme: 'relax',
-								timeout: 2000,
-								layout: 'center',
-								maxVisible: 5,
-								type: "error",
-								text: "Заполните все поля!"
-							});
-                }
-            })
 
 			jQuery( "#save_button" ).click(function(){
                 // if (jQuery("#new_discount").is(":invalid")) { jQuery("#new_discount").focus(); return; };
@@ -3525,56 +3198,6 @@ function getSelectIndex(selects,obj){
 	console.log(index);
 	return index;
 }
-
-function update_times(fieldName,fieldName2) {
-
-	var date = jQuery(fieldName).val();
-	if(isDate(date)) {
-		jQuery.getJSON( "/index.php?option=com_gm_ceiling&task=get_calculator_times&date=" + date, function( data ) {
-			var items = [];
-			jQuery.each( data, function( key, val ) {
-				items.push( "<option value='" + key + "'>" + val + "</option>" );
-			});
-
-			jQuery( fieldName2 ).html( items.join( "" ) );
-			jQuery( fieldName2 ).prop( "disabled", false );
-		});
-	} else {
-		jQuery( fieldName2 ).html( "<option value='0' selected=''>- Выберите время замера -</option>" );
-		jQuery( fieldName2 ).prop( "disabled", true );
-	}
-}
-
-function isDate(txtDate)
-{
-	var currVal = txtDate;
-	if(currVal == '')
-		return false;
-		//Declare Regex 
-		var rxDatePattern = /^(\d{1,2})(\/|.)(\d{1,2})(\/|.)(\d{4})$/;
-		var dtArray = currVal.match(rxDatePattern); // is format OK?
-		if (dtArray == null)
-			return false;
-
-		//Checks for mm/dd/yyyy format.
-		dtMonth = dtArray[3];
-		dtDay= dtArray[1];
-		dtYear = dtArray[5];
-
-		if (dtMonth < 1 || dtMonth > 12)
-			return false;
-		else if (dtDay < 1 || dtDay> 31)
-			return false;
-		else if ((dtMonth==4 || dtMonth==6 || dtMonth==9 || dtMonth==11) && dtDay ==31)
-			return false;
-		else if (dtMonth == 2)
-		{
-			var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
-			if (dtDay> 29 || (dtDay ==29 && !isleap))
-				return false;
-		}
-		return true;
-	}
 
 <?php
 	session_start();
