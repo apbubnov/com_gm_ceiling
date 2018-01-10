@@ -875,13 +875,15 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and projects.dealer_id = '$dealer'")
                 ->order('projects.id');
             $db->setQuery($query);
+            $items = $db->loadObjectList();
 
-            $query3->select('date_from, date_to')
+            $query3->select('id_user, date_from, date_to')
                 ->from('#__gm_ceiling_day_off')
-                ->where("id_user = $id and date_from between '$date1 00:00:00' and '$date2 23:59:59'");
+                ->where("date_from between '$date1 00:00:00' and '$date2 23:59:59'");
+                
             $db->setQuery($query3);
             $items3 = $db->loadObject();
-
+            
             // объединение с выходным днем
             $index = 0;
             //поиск индекса для вставки и замена даты на просто время
@@ -898,7 +900,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             //создание нового массива
             if (!empty($items3)) {
                 $day = array(
-                    'project_mounter'=>NULL,
+                    'project_mounter'=>$items3->id_user,
                     'project_mounting_date'=>$items3->date_from,
                     'project_info'=>NULL,
                     'n5'=>NULL,
@@ -907,8 +909,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 $day = array((object)$day);
                 array_splice($items,$index,0,$day);
             }
-
-            $items = $db->loadObjectList();
+            
     		return $items;
         }
         catch(Exception $e)
