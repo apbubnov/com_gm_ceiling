@@ -4765,7 +4765,7 @@ class Gm_ceilingHelpersGm_ceiling
                             $statusDayOff[substr($value->date_from, 8, 2)] = "DayOff";
                         }
                     }
-                    throw new Exception($AllDayOff);
+                    throw new Exception(count($AllDayOff));
                     
                     // заполнение дней
                     if ($DayMounter[$j - $first_day_of_week + 1][0] == "red") {
