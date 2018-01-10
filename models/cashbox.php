@@ -25,11 +25,6 @@ class Gm_ceilingModelCashbox extends JModelList
 	{
 		try
 		{
-			/*
-
-	SELECT a.project_id,c.client_name,a.date_time,a.comment,(SELECT s.title FROM `rgzbn_gm_ceiling_projects` AS p INNER JOIN `rgzbn_gm_ceiling_status` AS s ON p.project_status = s.id
-	WHERE p.id = a.project_id) AS st FROM `rgzbn_gm_ceiling_callback` AS a INNER JOIN `rgzbn_gm_ceiling_clients` AS c ON a.client_id = c.id */
-			// Create a new query object.
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
@@ -46,13 +41,30 @@ class Gm_ceilingModelCashbox extends JModelList
 			$items = $db->loadObjectList();
 			$encashment_model = Gm_ceilingHelpersGm_ceiling::getModel('Encashment');
 			$encashments = $encashment_model->getData();
-			for($i=0;$i<count($encashments);$i++){
-				for($j=0;$j<count($items);$j++){
-					if(strtotime($encashments[$i]->date_time)>=strtotime($items[$j]->closed)){
-						array_splice( $items,$j,0,$encashments[$i]);
-						break;
+			$new_encash = [];
+			foreach($encashments as $value){
+				$el = array(
+					'id'=>null,
+					'closed'=>$value->date_time,
+					'name'=>null,
+					'new_project_sum'=>null,
+					'new_mount_sum'=>null,
+					'new_material_sum'=>null,
+					'sum'=>$value->sum,
+				);
+				array_push($new_encash,(object)$el);
+			}
+
+			$items = array_merge($items,$new_encash);
+
+			for($i=0; $i<count($items); $i++){
+				for($j=$i+1; $j<count($items); $j++){
+					if(strtotime($items[$i]->closed)>strtotime($items[$j]->closed)){
+						$temp = $items[$j];
+						$items[$j] = $items[$i];
+						$items[$i] = $temp;
 					}
-				}
+			   }         
 			}
 			return $items;
 		}
