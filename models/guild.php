@@ -227,6 +227,7 @@ class Gm_ceilingModelGuild extends JModelList
             ->select("COUNT(c.id) as COUNT")
             ->where("c.project_id = '$calculations->project'")
             ->group("c.id");
+        throw new Exception((string)$query);
         $db->setQuery($query);
         $all = $db->loadObject();
 
@@ -246,7 +247,7 @@ class Gm_ceilingModelGuild extends JModelList
         $db->setQuery($query);
         $status = intval($db->loadObject()->status);
 
-        print_r(intval($all)." - ".intval($ready));
+        throw new Exception(json_decode($all)." - ".json_decode($ready));
 
         if (intval($all) == intval($ready))
         {
