@@ -740,6 +740,7 @@ $AllMounters = $model->FindAllMounters($where);
                             type: "success",
                             text: "Данные изменены"
                             });
+                            console.log(datetime.substr(5, 2));
                             update_calendar(datetime.substr(5, 2), datetime.substr(0, 4));
                             if (datetime.substr(5, 1) == "0") {
                                 if (datetime.substr(6, 1) == "9") {
@@ -758,7 +759,6 @@ $AllMounters = $model->FindAllMounters($where);
                             } else {
                                 year = datetime.substr(0, 4);
                             }
-                            console.log(month);
                             update_calendar2(month, year);
                         }
                     },
