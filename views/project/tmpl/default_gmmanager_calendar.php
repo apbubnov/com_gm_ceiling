@@ -1619,7 +1619,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 
         //если сессия есть, то выдать дату, которая записана в сессии
         var datesession = jQuery("#jform_project_new_calc_date").val();
-        console.log(datesession);
         if (datesession != undefined) {
             if (datesession.substr(8, 1) == "0") {
                     daytocalendar = datesession.substr(9, 1);
