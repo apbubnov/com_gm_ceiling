@@ -4758,6 +4758,7 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                     }
                     // выходные дни
+                    $statusDayOff = "";
                     $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
                     if (!empty($AllDayOff)) {
                         foreach ($AllDayOff as $value) {
