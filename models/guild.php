@@ -225,20 +225,17 @@ class Gm_ceilingModelGuild extends JModelList
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_calculations` as c")
             ->select("COUNT(c.id) as COUNT")
-            ->where("c.project_id = '$calculations->project'")
-            ->group("c.id");
-        throw new Exception((string)$query);
+            ->where("c.project_id = '$calculations->project'");
         $db->setQuery($query);
-        $all = $db->loadObject();
+        $all = $db->loadObject()->COUNT;
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_calculations` as c")
             ->join("LEFT", "`#__gm_ceiling_cuttings` as cut ON c.id = cut.id")
             ->select("COUNT(c.id) as COUNT")
-            ->where("c.project_id = '$calculations->project' && cut.ready = '1'")
-            ->group("c.id");
+            ->where("c.project_id = '$calculations->project' && cut.ready = '1'");
         $db->setQuery($query);
-        $ready = $db->loadObject();
+        $ready = $db->loadObject()->COUNT;
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_projects` as p")
@@ -246,8 +243,6 @@ class Gm_ceilingModelGuild extends JModelList
             ->select("p.project_status as status");
         $db->setQuery($query);
         $status = intval($db->loadObject()->status);
-
-        throw new Exception(json_decode($all)." - ".json_decode($ready));
 
         if (intval($all) == intval($ready))
         {
