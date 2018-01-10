@@ -47,10 +47,10 @@
         width: 50px;
     }
     #button-prev {
-        width: 50px;
+        width: 50px !important;
     }
     #button-next {
-        width: 50px;
+        width: 50px !important;
     }
 }
 
