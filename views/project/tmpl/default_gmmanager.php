@@ -888,8 +888,6 @@ $AllMounters = $model->FindAllMounters($where);
             update_calendar2(month2, year2);
         });
         function update_calendar(month, year) {
-            console.log(month);
-            console.log(year);
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
@@ -902,7 +900,6 @@ $AllMounters = $model->FindAllMounters($where);
                 },
                 success: function (msg) {
                     jQuery("#calendar1").empty();
-                    console.log(msg);
                     jQuery("#calendar1").append(msg);
                     Today(day, NowMonth, NowYear);
                     var datesession = "<?php echo $this->item->project_mounting_date; ?>"; 
