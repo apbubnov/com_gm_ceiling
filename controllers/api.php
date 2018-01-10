@@ -37,7 +37,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
     {
         try
         {
-            $authorization = json_decode($POST['authorizations']);
+            $authorization = json_decode($_POST['authorizations']);
             $model = $this->getModel();
             $user = JFactory::getUser($model->getUserId($authorization->username));
             $Password = $authorization->password;
