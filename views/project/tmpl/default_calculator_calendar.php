@@ -306,6 +306,12 @@ $results = $db->loadObjectList();
                             </td>
                         </tr>
                         <tr>
+                            <th>Дата рождения</th>
+                            <td><input name="new_birthday" id="jform_birthday" class="inputactive"
+                                        value="" placeholder="Дата рождения" type="text"></td>
+                            <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
+                        </tr>
+                        <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
                             <?php $phone = $model->getClientPhones($this->item->id_client); ?>
                             <td><?php foreach ($phone AS $contact) {
