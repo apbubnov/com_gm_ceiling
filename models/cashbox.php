@@ -46,13 +46,28 @@ class Gm_ceilingModelCashbox extends JModelList
 			$items = $db->loadObjectList();
 			$encashment_model = Gm_ceilingHelpersGm_ceiling::getModel('Encashment');
 			$encashments = $encashment_model->getData();
-			for($i=0;$i<count($encashments);$i++){
-				for($j=0;$j<count($items);$j++){
-					if(strtotime($encashments[$i]->date_time)>=strtotime($items[$j]->closed)){
-						array_splice( $items,$j,0,$encashments[$i]);
-						break;
+			$new_encash = [];
+			foreach($encashments as $value){
+				$el = array(
+					'id'=>null,
+					'closed'=>$value->date_time,
+					'name'=>null,
+					'new_project_sum'=>null,
+					'new_mount_sum'=>null,
+					'new_material_sum'=>null,
+					'sum'=>$value->sum,
+				);
+				array_push($new_encash,(object)$el);
+			}
+			$items = array_merge($items,$new_encash);
+			for($i=0; $i<count($items); $i++){
+				for($j=$i+1; $j<count($items); $j++){
+					if(strtotime($items[$i]->closed)>strtotime($items[$j]->closed)){
+						$temp = $items[$j];
+						$items[$j] = $items[$i];
+						$items[$i] = $temp;
 					}
-				}
+			   }         
 			}
 			return $items;
 		}

@@ -143,6 +143,9 @@ $userId     = $user->get('id');
             },
             success: function (data) {
                 console.log(data);
+                jQuery("#close").hide(); 
+                jQuery("#modal_window_container").hide();
+                jQuery("#modal_window_sum").hide();
             },
             dataType: "text",
             timeout: 10000,
