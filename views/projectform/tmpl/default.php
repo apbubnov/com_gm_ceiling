@@ -1605,7 +1605,7 @@ echo parent::getPreloader();
                 } else {
                     monthtocalendar = datesession.substr(5, 2);
                 }
-                исправление вывода даты                jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+                jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
             }
             //-----------------------------------------------------------
 
