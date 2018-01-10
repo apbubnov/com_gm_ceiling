@@ -192,19 +192,6 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
 					<div class="form-group">
-						<table>
-							<tr>
-								<td>
-									<label id="jform_n3-lbl" for="jform_n3">
-										Выберите ширину материала
-									</label>
-								</td>
-								<td>
-									<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">От ширины материала зависит бесшовный ли будет потолок и его цена, чем шире полотно тем дороже!
-									</span></a>
-								</td>
-							</tr>
-						</table>
 						<select id="jform_n3" name="jform[n3]" class="form-control inputbox " disabled=""><option value="" selected="">- Выберите ширину материала -</option></select>
 					</div>
 				</div>
@@ -244,8 +231,9 @@
 								</td>
 							</tr>
 						</table>
-						<select id="jform_proizv" name="jform[proizv]" class="form-control inputbox " disabled=""></select>
-						<option value="<?=($this->item->n3)?($this->item->n3):"";?>" selected=""><?=($this->item->n3)?($this->item->n3):"- Выберите производителя материала -";?></option></select>
+						<select id="jform_proizv" name="jform[proizv]" class="form-control inputbox " disabled="">
+							<option value="<?=($this->item->n3)?($this->item->n3):"";?>" selected=""><?=($this->item->n3)?($this->item->n3):"- Выберите производителя материала -";?></option>
+						</select>
 						<input id="jform_proizv_hidden" class="n3" name="jform[proizv_hidden]" value="" type="hidden">
 						<input id="jform_n3_hidden" class="n3" name="jform[n3]" value="<?php echo $this->item->n3;?>" type="hidden">
 					</div>
