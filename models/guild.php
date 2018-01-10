@@ -245,10 +245,13 @@ class Gm_ceilingModelGuild extends JModelList
             ->where("p.id = '$calculations->project'")
             ->select("p.project_status as status");
         $db->setQuery($query);
-        $status = $db->loadObject()->status;
+        $status = intval($db->loadObject()->status);
 
         if (intval($all) == intval($ready))
         {
+            if($status == 5) $status = 6;
+            else if ($status == 7) $status = 19;
+
             $query = $db->getQuery(true);
             $query->update("`#__gm_ceiling_projects`")
                 ->set("project_status = '$status'")
