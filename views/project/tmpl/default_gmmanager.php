@@ -753,8 +753,10 @@ $AllMounters = $model->FindAllMounters($where);
                                 month = datetime.substr(5, 2);
                                     month++;
                             }
-                            var year = datetime.substr(0, 4);
-                            year++;
+                            if (datetime.substr(5, 2) == 12) {
+                                var year = datetime.substr(0, 4);
+                                year++;
+                            }
                             update_calendar2(month, year);
                         }
                     },
