@@ -66,6 +66,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     </cuts>
 </page>
 
+
 <form class="Modal ModalCeiling" action="javascript:CutOut();">
     <div class="ModalPage">
         <div class="ModalName">
@@ -331,8 +332,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function NextCeiling() {
+<<<<<<< HEAD
         if (Data.Interval !== null)
             clearInterval(Data.Interval);
+=======
+>>>>>>> 7046eb0ce338e5657e69f1299495ea11e52ba0b2
 
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
@@ -345,8 +349,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function PredCeiling() {
+<<<<<<< HEAD
         if (Data.Interval !== null)
             clearInterval(Data.Interval);
+=======
+>>>>>>> 7046eb0ce338e5657e69f1299495ea11e52ba0b2
 
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
@@ -387,7 +394,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     Data.calculations = [];
 
                     for(var i = 0; i < calc.length; i++)
+<<<<<<< HEAD
                         if (calc[i] !== null)
+=======
+                        if (calc[i])
+>>>>>>> 7046eb0ce338e5657e69f1299495ea11e52ba0b2
                             Data.calculations.push(calc[i]);
 
                     var block_3 = $("#" + id),
@@ -546,6 +557,14 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 console.log("------------------------");
                                 console.log(Data.calculations);
                                 console.log("------------------------");
+
+                                noty({
+                                    theme: 'relax',
+                                    layout: 'center',
+                                    timeout: 5000,
+                                    type: "success",
+                                    text: "Пришел новый заказ!\n" + b1.date + ((b1.quickly === "A")?" Срочно":"") + "<br>" + b2.canvases + "<br>" + b3.title + " - " + b3.quad
+                                });
                             }
                         });
                     });

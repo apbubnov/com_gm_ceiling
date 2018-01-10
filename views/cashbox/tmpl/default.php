@@ -59,7 +59,11 @@ $_SESSION['dop_num'] = $dop_num;
             <?php foreach ($this->item as $item) {?>
                 <tr>
                     <td>
-                        <?php echo $item->closed;?>
+                        <?php
+                            if (isset($item->closed))
+                             echo $item->closed;
+                             else echo $item->date_time;
+                        ?>
                     
                     </td>
                     <td>
@@ -91,7 +95,9 @@ $_SESSION['dop_num'] = $dop_num;
                         ?>
                     </td>
                     <td>
-                        0       
+                        <?php 
+                            if(isset($item->sum)) 
+                             echo $item->sum ;?>
                     </td>
 
                 </tr>
