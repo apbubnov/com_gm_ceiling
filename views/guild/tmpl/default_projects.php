@@ -263,10 +263,10 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             BlockName.find("b").html(v.name + "<br/>" + v.count + " " + v.unit + " - " + v.sum + " р.");
             var size = 0;
             $.each(Data.employees, function (j, val) {
-                BlockSelect.append(BlockOption.text(val.name).val(val.id+"[]").clone());
+                BlockSelect.append(BlockOption.text(val.name).val(val.id).clone());
                 size++;
             });
-            BlockSelect.attr({"name": "employees[" + v.id + "]", "size": (size < 5) ? size : 5});
+            BlockSelect.attr({"name": "employees[" + v.id + "][]", "size": (size < 5) ? size : 5});
             BlockData.append(BlockSelect.clone());
             var Name = BlockName.clone();
             Works.append(Name);
