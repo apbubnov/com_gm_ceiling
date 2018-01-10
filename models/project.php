@@ -996,7 +996,7 @@ class Gm_ceilingModelProject extends JModelItem
 			if ($flag == 1) {
 				// коммент о переносе даты
 				$date = substr($data->project_mounting_date, 8, 2)."-".substr($data->project_mounting_date, 5, 2)."-".substr($data->project_mounting_date, 0, 4)." ".substr($data->project_mounting_date, 11, 5);
-				$text = "Дата монтажа перенесена на $date";
+				$text = "У проекта №$data->id дата монтажа перенесена на $date";
 				$query->insert('#__gm_ceiling_client_history')
 				->columns('client_id, date_time, text')
 				->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
@@ -1030,7 +1030,7 @@ class Gm_ceilingModelProject extends JModelItem
 				$db->setQuery($query2);
 				$brigade = $db->loadObjectList();			
 
-				$text = "Монтажная бригада заменена на ".$brigade[0]->name;
+				$text = "У проекта №$data->id монтажная бригада заменена на ".$brigade[0]->name;
 				$query->insert('#__gm_ceiling_client_history')
 				->columns('client_id, date_time, text')
 				->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
