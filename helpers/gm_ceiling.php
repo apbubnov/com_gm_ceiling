@@ -4765,6 +4765,8 @@ class Gm_ceilingHelpersGm_ceiling
                             $statusDayOff[substr($value->date_from, 8, 2)] = "DayOff";
                         }
                     }
+                    throw new Exception(implode("|", $statusDayOff));
+                    
                     // заполнение дней
                     if ($DayMounter[$j - $first_day_of_week + 1][0] == "red") {
                         $table .= '<td class="day-not-read" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</br><div class="perimeter">P = '.($DayMounter[$j - $first_day_of_week + 1][1]).'м</div></td>';
