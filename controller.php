@@ -2820,6 +2820,23 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public  function saveEncashment(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $sum = $jinput->get('sum','','STRING');
+            $manager_id = $jinput->get('id','','INT');
+            $encash_model = Gm_ceilingHelpersGm_ceiling::getModel('encashment');
+            $result  = $encash_model->save($sum,$manager_id);
+            die(json_encode($result));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
 }
 
 ?>
