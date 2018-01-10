@@ -2783,7 +2783,11 @@ class Gm_ceilingController extends JControllerLegacy
             $arr_points = $jinput->get('koordinats_poloten', '', 'array');
             $calc_id = $jinput->get('calc_id', '', 'INT');
             $width = $jinput->get('width', '', 'INT');
-            
+            $width = (string)$width/100;
+            if(empty(strpos($width,'.'))){
+                $width.='.0';
+            }
+
             for ($i = 0; $i < count($arr_points); $i++)
             {
                 $points_polonta = '';
@@ -2801,7 +2805,7 @@ class Gm_ceilingController extends JControllerLegacy
             $data = base64_decode($data);
 
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-            $result = $calc_model->update_cut_data($calc_id, $str);
+            $result = $calc_model->update_cut_data($calc_id, $str, $width);
 
             $filename = md5('cut_sketch' . $calc_id);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png", $data);
