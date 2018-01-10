@@ -452,6 +452,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				$model_projectshistory->save($project_id,$status);
 			}
 
+
 			if(!$isDiscountChange)
 			$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
 		}

@@ -11,18 +11,22 @@ defined('_JEXEC') or die;
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
-$user_group = $user->groups;
-$dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
-$dop_num = $dop_num_model->getData($userId)->dop_number;
-$_SESSION['user_group'] = $user_group;
-$_SESSION['dop_num'] = $dop_num;
 ?>
 
 <form>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
-    <table class="table table-striped one-touch-view" id="callbacksList">
+    <button type = "button" id = "add" class = "btn btn-primary">Инкассация</button>
+    <div id="modal_window_container" class = "modal_window_container">
+		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+		<div id="modal_window_sum" class = "modal_window">
+			<h6 style = "margin-top:10px">Введите сумму</h6>
+			<p><input type="text" id="sum" placeholder="Сумма" required></p>
+			<p><button type="button" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+	    </div>
+    </div>
+    <table class="table table-striped one-touch-view" id="cashbox_table">
         <thead>
         <tr>
             <th>
@@ -56,14 +60,11 @@ $_SESSION['dop_num'] = $dop_num;
         </thead>
 
         <tbody id="table_body">
-            <?php foreach ($this->item as $item) {?>
+            <?php foreach ($this->item as $item) {
+               ?>
                 <tr>
                     <td>
-                        <?php
-                            if (isset($item->closed))
-                             echo $item->closed;
-                             else echo $item->date_time;
-                        ?>
+                        <?php echo $item->closed;?>
                     
                     </td>
                     <td>
@@ -84,20 +85,27 @@ $_SESSION['dop_num'] = $dop_num;
                     </td>
                     <td>
                         <?php
-                            $residue = $item->new_project_sum - $item->new_mount_sum -$item->new_material_sum;
-                            echo $residue;
+                            if(!isset($item->sum)){
+                                $residue = $item->new_project_sum - $item->new_mount_sum -$item->new_material_sum;
+                                echo $residue;
+                            }
                         ?>        
                     </td>
                     <td>
                         <?php
-                            $cashbox += $residue;
+                            $cashbox += $residue - $encash;
+                            $encash = 0;
                             echo $cashbox;
                         ?>
                     </td>
                     <td>
                         <?php 
-                            if(isset($item->sum)) 
-                             echo $item->sum ;?>
+                            if(isset($item->sum)) {
+                                $encash = $item->sum;
+                                echo $item->sum;
+                                
+                            }
+                             ?>
                     </td>
 
                 </tr>
@@ -107,5 +115,52 @@ $_SESSION['dop_num'] = $dop_num;
 </form>
 
 <script>
-   
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery("#modal_window_sum"); // тут указываем ID элемента
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_sum").hide();
+        }
+    });
+    jQuery(document).ready(function (){
+        jQuery("#cancel").click(function(){
+            jQuery("#close").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_sum").hide();
+        });
+        jQuery("#add").click(function (){
+            jQuery("#modal_window_container").show();
+            jQuery("#modal_window_sum").show("slow");
+            jQuery("#close").show();
+        });
+        jQuery("#save").click(function(){
+            id = <?php echo $userId;?>;
+            jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=saveEncashment",
+            async: false,
+            data: {
+                sum: jQuery("#sum").val(),
+                id: id
+            },
+            success: function (data) {
+                window.location = window.location;
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка cервер не отвечает"
+                });
+            }
+        });
+        })
+    });
 </script>

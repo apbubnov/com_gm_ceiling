@@ -54,9 +54,7 @@ class Gm_ceilingModelEncashment extends JModelList
 			$query->values("NOW(),'$sum', $manager_id");
 			$db->setQuery($query);
 			$db->execute();
-			$last_id = $db->insertid();
-			
-			return $last_id;
+			return true;
 		}
 		catch(Exception $e)
         {

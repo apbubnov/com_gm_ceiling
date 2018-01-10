@@ -1031,15 +1031,42 @@ class Gm_ceilingModelCalculations extends JModelList {
         }
     }
 
-    public function update_cut_data($id, $cut_data)
+    public function update_cut_data($id, $cut_data, $width)
     {
         try
         {
             $db = $this->getDbo();
+
+            $query = $db->getQuery(true);
+            $query->select("`n2`,`n3`")
+            ->from('#__gm_ceiling_calculations')
+            ->where('id = ' . $id);    
+            $db->setQuery($query);
+            $item = $db->loadObject();
+
+            $query = $db->getQuery(true);
+            $query->select("*")
+            ->from('#__gm_ceiling_canvases')
+            ->where('id = ' . $item->n3);    
+            $db->setQuery($query);
+            $item_canvas = $db->loadObject();
+            
+
+            $query = $db->getQuery(true);
+            $query->select("id")
+            ->from('#__gm_ceiling_canvases')
+            ->where('texture_id = '. $item->n2 . ' and name = '.  $db->quote($item_canvas->name) .' and width = '.  $db->quote($width));    
+            if(!empty($item_canvas->color_id))  $query->where('color_id = '. $item_canvas->color_id); 
+            $db->setQuery($query);
+            $new_n3  = $db->loadObject();
+
+            //throw new Exception($new_n3->id);
+            /* Старое */
             $cut_data = $db->escape($cut_data);
             $query = $db->getQuery(true);
             $query->update($db->quoteName('#__gm_ceiling_calculations'));
             $query->set("`cut_data` = '$cut_data'");
+            $query->set("`n3` = $new_n3->id");
             $query->where('id = ' . $id);
             $db->setQuery($query);
             $db->execute();
