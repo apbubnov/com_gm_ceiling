@@ -725,7 +725,6 @@ $AllMounters = $model->FindAllMounters($where);
                     success: function(data) {
                         if (data != undefined) {
                             data = JSON.parse(data);
-                            console.log(data);
                             var DateNew = data[0].project_mounting_date.substr(8, 2)+"."+data[0].project_mounting_date.substr(5, 2)+"."+data[0].project_mounting_date.substr(0, 4)+" "+data[0].project_mounting_date.substr(11, 5);
                             jQuery("#nowDateMounting").text(DateNew);
                             Allbrigades = <?php echo json_encode($Allbrigades); ?>;
@@ -740,7 +739,27 @@ $AllMounters = $model->FindAllMounters($where);
                             maxVisible: 5,
                             type: "success",
                             text: "Данные изменены"
-                            })
+                            });
+                            update_calendar(datetime.substr(5, 2), datetime.substr(0, 4));
+                            if (datetime.substr(5, 1) == "0") {
+                                if (datetime.substr(6, 1) == "9") {
+                                    var month = 10;
+                                } else {
+                                    month = datetime.substr(6, 1);
+                                    month++;
+                                }
+                            } else {
+                                month = datetime.substr(5, 2);
+                                    month++;
+                            }
+                            if (datetime.substr(5, 2) == 12) {
+                                var year = datetime.substr(0, 4);
+                                year++;
+                            } else {
+                                year = datetime.substr(0, 4);
+                            }
+                            console.log(month);
+                            update_calendar2(month, year);
                         }
                     },
                     timeout: 10000,
