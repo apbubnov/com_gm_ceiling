@@ -139,7 +139,6 @@ class Gm_ceilingModelGuild extends JModelList
                 }
             }
 
-
             $calc->quickly = (empty($calc->quickly) || $calc->quickly == 0)?"B":"A";
             $calc->ready_time = (empty($calc->ready_time))?date("d.m.Y H:i", strtotime(' +1 hour +'.(string)$minute.' minute')):date("d.m.Y H:i", strtotime($calc->ready_time));
             $name = ((empty($calc->ready_time))?date("Ymd", strtotime(' +1 hour +'.(string)$minute.' minute')):date("Ymd", strtotime($calc->ready_time)))
@@ -247,11 +246,12 @@ class Gm_ceilingModelGuild extends JModelList
         $db->setQuery($query);
         $status = intval($db->loadObject()->status);
 
+        print_r(intval($all)." - ".intval($ready));
+
         if (intval($all) == intval($ready))
         {
             if($status == 5) $status = 6;
             else if ($status == 7) $status = 19;
-
 
             $query = $db->getQuery(true);
             $query->update("`#__gm_ceiling_projects`")
