@@ -1607,7 +1607,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             jQuery("#close-tar").hide();
             jQuery("#modal-window-container-tar").hide();
             jQuery("#modal-window-choose-tar").hide();
-        });
+        })
         //------------------------------------------
 
         // подсвет сегоднешней даты
