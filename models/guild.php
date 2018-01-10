@@ -185,11 +185,10 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function sendWork($data)
     {
-        $data = date("Y.m.d H:i:s");
+        $date = date("Y.m.d H:i:s");
         $employees = $data->employees;
         $calculations = $data->calculations;
         $calculation = $calculations->id;
-
         $db = $this->getDbo();
 
         $query = $db->getQuery(true);
@@ -216,13 +215,47 @@ class Gm_ceilingModelGuild extends JModelList
             $sum = ceil(floatval($work->sum) / floatval(count($emp)) * 100.0) / 100.0;
 
             foreach ($emp as $val)
-                $query->values("'$val', '$sum', '".$work->id."', '".$work->name."', '$data'");
+                $query->values("'$val', '$sum', '$work->id', '$work->name', '$date'");
 
             $i++;
         }
 
         $db->setQuery($query);
         $result = $db->execute();
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_calculations` as c")
+            ->select("COUNT(c.id) as COUNT")
+            ->where("c.project_id = '$calculations->project'")
+            ->group("c.id");
+        $db->setQuery($query);
+        $all = $db->loadObject();
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_calculations` as c")
+            ->join("LEFT", "`#__gm_ceiling_cuttings` as cut ON c.id = cut.id")
+            ->select("COUNT(c.id) as COUNT")
+            ->where("c.project_id = '$calculations->project' && cut.ready = '1'")
+            ->group("c.id");
+        $db->setQuery($query);
+        $ready = $db->loadObject();
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_projects` as p")
+            ->where("p.id = '$calculations->project'")
+            ->select("p.project_status as status");
+        $db->setQuery($query);
+        $status = $db->loadObject()->status;
+
+        if (intval($all) == intval($ready))
+        {
+            $query = $db->getQuery(true);
+            $query->update("`#__gm_ceiling_projects`")
+                ->set("project_status = '$status'")
+                ->where("id = '$calculations->project'");
+            $db->setQuery($query);
+            $db->execute();
+        }
 
         return;
     }
