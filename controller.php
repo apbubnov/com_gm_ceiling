@@ -2775,6 +2775,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    /* Обновление */
     public function UpdateCutData()
     {
         try {
@@ -2783,7 +2784,11 @@ class Gm_ceilingController extends JControllerLegacy
             $arr_points = $jinput->get('koordinats_poloten', '', 'array');
             $calc_id = $jinput->get('calc_id', '', 'INT');
             $width = $jinput->get('width', '', 'INT');
-            
+            $width = (string)$width/100;
+            if(empty(strpos($width,'.'))){
+                $width.='.0';
+            }
+
             for ($i = 0; $i < count($arr_points); $i++)
             {
                 $points_polonta = '';
@@ -2801,13 +2806,30 @@ class Gm_ceilingController extends JControllerLegacy
             $data = base64_decode($data);
 
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-            $result = $calc_model->update_cut_data($calc_id, $str);
+            $result = $calc_model->update_cut_data($calc_id, $str, $width);
 
             $filename = md5('cut_sketch' . $calc_id);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png", $data);
             die(true);
 
         } catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public  function saveEncashment(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $sum = $jinput->get('sum','','STRING');
+            $manager_id = $jinput->get('id','','INT');
+            $encash_model = Gm_ceilingHelpersGm_ceiling::getModel('encashment');
+            $result  = $encash_model->save($sum,$manager_id);
+            die(json_encode($result));
+        }
+        catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
