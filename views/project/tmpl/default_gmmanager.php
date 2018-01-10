@@ -742,12 +742,12 @@ $AllMounters = $model->FindAllMounters($where);
                             });
                             console.log(datetime);
                             update_calendar(datetime.substr(5, 2), datetime.substr(0, 4));
-                            if () {
+                            /* if () {
 
                             } else {
 
-                            }
-                            update_calendar2(month, year)
+                            } */ 
+                            update_calendar2(month, year);
                         }
                     },
                     timeout: 10000,
