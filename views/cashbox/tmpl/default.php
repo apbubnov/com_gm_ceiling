@@ -26,7 +26,7 @@ $userId     = $user->get('id');
 			<p><button type="button" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
 	    </div>
     </div>
-    <table class="table table-striped one-touch-view" id="callbacksList">
+    <table class="table table-striped one-touch-view" id="cashbox_table">
         <thead>
         <tr>
             <th>
@@ -85,8 +85,10 @@ $userId     = $user->get('id');
                     </td>
                     <td>
                         <?php
-                            $residue = $item->new_project_sum - $item->new_mount_sum -$item->new_material_sum;
-                            echo $residue;
+                            if(!isset($item->sum)){
+                                $residue = $item->new_project_sum - $item->new_mount_sum -$item->new_material_sum;
+                                echo $residue;
+                            }
                         ?>        
                     </td>
                     <td>
@@ -144,10 +146,7 @@ $userId     = $user->get('id');
                 id: id
             },
             success: function (data) {
-                console.log(data);
-                jQuery("#close").hide(); 
-                jQuery("#modal_window_container").hide();
-                jQuery("#modal_window_sum").hide();
+                window.location = window.location;
             },
             dataType: "text",
             timeout: 10000,
