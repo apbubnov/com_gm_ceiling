@@ -1037,6 +1037,14 @@ class Gm_ceilingModelProject extends JModelItem
 				$db->setQuery($query);
 				$db->execute();
 			}
+
+			// статус монтажа изменить на непросмотренный
+			$query4 = $db->getQuery(true);
+				$query4->update('#__gm_ceiling_projects')
+				->set("read_by_mounter = '0'")
+				->where("id = '$data->id'");
+				$db->setQuery($query4);
+				$db->execute();
 			
 		}
 		catch(Exception $e)
