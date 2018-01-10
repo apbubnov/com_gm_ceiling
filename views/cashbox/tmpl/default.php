@@ -60,14 +60,11 @@ $userId     = $user->get('id');
         </thead>
 
         <tbody id="table_body">
-            <?php foreach ($this->item as $item) {?>
+            <?php foreach ($this->item as $item) {
+               ?>
                 <tr>
                     <td>
-                        <?php
-                            if (isset($item->closed))
-                             echo $item->closed;
-                             else echo $item->date_time;
-                        ?>
+                        <?php echo $item->closed;?>
                     
                     </td>
                     <td>
@@ -94,14 +91,19 @@ $userId     = $user->get('id');
                     </td>
                     <td>
                         <?php
-                            $cashbox += $residue;
+                            $cashbox += $residue - $encash;
+                            $encash = 0;
                             echo $cashbox;
                         ?>
                     </td>
                     <td>
                         <?php 
-                            if(isset($item->sum)) 
-                             echo $item->sum ;?>
+                            if(isset($item->sum)) {
+                                $encash = $item->sum;
+                                echo $item->sum;
+                                
+                            }
+                             ?>
                     </td>
 
                 </tr>
