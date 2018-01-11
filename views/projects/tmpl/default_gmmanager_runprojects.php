@@ -201,6 +201,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     text = "<p><input name='check_mount' onclick='changeDone(this);' class='radio' id ='done' value='1'  type='radio' checked><label for = 'done'>Монтаж выполнен</label></p>";
 					text += "<p><input name='check_mount' onclick='changeDone(this);'  class='radio' id ='not_done' value='0'  type='radio'><label for = 'not_done'>Монтаж недовыполнен</label></p>";
                     text += "<div class='dop_info'></div>";
+                    
                     //text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div>";
 			
             /* new_value = jQuery("#input_check").val();
