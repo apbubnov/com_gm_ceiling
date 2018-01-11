@@ -76,7 +76,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=run&id='.(int) $item->id); ?>">
                     <td>
                     <!-- <//?php if ($item->project_status == 10 || $item->project_status == 11 ) { ?> -->
-                        <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
+                        <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button" onclick='changeDone(this);'>Выполнено</button>
                   <!--   <// } ?> -->
                     <?php if ($item->project_status == 12) { ?>
                          <i class='fa fa-check' aria-hidden='true'></i> Выполнено
