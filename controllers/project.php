@@ -1054,10 +1054,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('project_id', '0', 'INT');
-
+            $check = $jinput->get('check', '0', 'INT');
 			$new_value = $jinput->get('new_value', '0', 'FLOAT');
 			$mouting_sum = $jinput->get('mouting_sum', '0', 'FLOAT');
+            $mouting_sum_itog = $jinput->get('mouting_sum_itog', '0', 'FLOAT');
 			$material_sum = $jinput->get('material_sum', '0', 'FLOAT');
+			print_r("check - $check ||| new_value - $new_value ||| mouting_sum - $mouting_sum ||| mouting_sum_itog - $mouting_sum_itog ||| material_sum - $material_sum"); exit;
 			$map_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
             $sum = $new_value*0.1;
             $result = "Договор закрыт!";

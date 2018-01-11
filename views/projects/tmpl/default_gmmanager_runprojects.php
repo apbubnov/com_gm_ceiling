@@ -235,7 +235,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         material_sum = jQuery("#input_material").val();*/
                         var input_value = jQuery("#input_check").val();
                         var input_mounting = jQuery("#input_mounting").val();
+                        var input_mounting_itog = jQuery("#input_mounting_itog").val();
                         var input_material = jQuery("#input_material").val();
+                        var check = jQuery("input[name='check_mount']:checked").val();
                         //alert(input_value);
 						jQuery.ajax({
 							type: 'POST',
@@ -244,7 +246,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 								project_id : td.data("project_id"),
 								new_value : input_value,
                                 mouting_sum : input_mounting,
-                                material_sum : input_material
+                                mouting_sum_itog : input_mounting_itog,
+                                material_sum : input_material,
+                                check: check
 							},
 							success: function(data){
                                 button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
