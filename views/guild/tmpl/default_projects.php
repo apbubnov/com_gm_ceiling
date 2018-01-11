@@ -157,6 +157,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     $(document).ready(Init);
 
     function Init() {
+        alert(($("#5465464546454654654646"))?0:1);
+        alert(($("#12"))?0:1);
+
         Data.block1 = $('<div class="block_1">' +
             '<line class="gm line"></line>' +
             '<type class="type"></type>' +
@@ -577,7 +580,10 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         var Modal = $(".ModalCeiling"),
             ModalData = JSON.parse(Modal.find("#Data").val()),
             Block = $("#"+ModalData.id),
-            BlockImg = Block.find(".image");
+            BlockImg = Block.find(".image"),
+            ID1 = null,
+            ID2 = null,
+            ID3 = null;
 
         jQuery.ajax({
             type: 'POST',
@@ -587,7 +593,10 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             async: false,
             success: function (data) {
                 data = JSON.parse(data);
-                ModalData = data;
+                ModalData = data.data;
+                ID1 = data.id1;
+                ID2 = data.id2;
+                ID3 = data.id3;
             },
             dataType: "text",
             timeout: 15000,
