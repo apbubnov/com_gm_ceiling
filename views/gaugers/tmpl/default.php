@@ -484,7 +484,8 @@ foreach ($gaugers_id as $value) {
 						id: id_gauger,
 					},
 					success: function(data) {
-						data = JSON.parse(data);
+						//data = JSON.parse(data);
+						console.log(data);
 						Array.from(data).forEach(function(element) {
 							table += '<tr><td style="width: 25%;">'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td style="width: 75%;">Выходной</td></tr>';
 						});
@@ -503,7 +504,7 @@ foreach ($gaugers_id as $value) {
 						id: id_gauger,
 					},
 					success: function(data) {
-						//Вывод замеров у НМС у замерщиков 22
+						//Вывод замеров у НМС у замерщиков 23
 						data = JSON.parse(data); // замеры и выходные
 						Array.from(data).forEach(function(element) {
 							if (element.project_info == null) {
