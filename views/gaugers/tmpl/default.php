@@ -374,54 +374,13 @@ foreach ($gaugers_id as $value) {
 			kind = "no-empty";
 			WhatDay(ChoosenDay);
 			ListOfWork(kind, d, m, y);
-			/* 
-				jQuery.ajax({
-					type: 'POST',
-					url: "/index.php?option=com_gm_ceiling&task=teams.FindFreeDay",
-					dataType: 'json',
-					data: {
-						date: date,
-						id: idBrigade,
-					},
-					success: function(data) {
-						if (data.length == 0) {
-							jQuery("#add_free_day").text("Добавить выходной");
-							window.dataFree1 = 0;
-							window.dataFree2 = 0;
-						} else {
-							jQuery("#add_free_day").text("Изменить выходной");
-							window.dataFree1 = data[0].date_from;
-							window.dataFree2 = data[0].date_to;
-						}
-					},
-					error: function (data) {
-						var n = noty({
-							theme: 'relax',
-							layout: 'center',
-							maxVisible: 5,
-							type: "error",
-							text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
-						});
-					}
-				});
-			*/
-			jQuery("#modal-window-with-table").show();
-			jQuery("#window-with-table").show('slow');
-			jQuery("#close-modal-window").show();
-		});
-		jQuery("#calendars-container").on("click", ".current-month, .day-off", function() {
-			ChoosenDay = this.id;
-			kind = "empty";
-			ChoosenDay = jQuery(this).attr("id");
-			WhatDay(ChoosenDay);
-			ListOfWork(kind, d, m, y);
-			/* jQuery.ajax({
+			jQuery.ajax({
 				type: 'POST',
-				url: "/index.php?option=com_gm_ceiling&task=teams.FindFreeDay",
+				url: "/index.php?option=com_gm_ceiling&task=gaugers.FindFreeDay",
 				dataType: 'json',
 				data: {
 					date: date,
-					id: idBrigade,
+					id: id_gauger,
 				},
 				success: function(data) {
 					if (data.length == 0) {
@@ -443,12 +402,53 @@ foreach ($gaugers_id as $value) {
 						text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
 					});
 				}
-			}); */
+			});
+			jQuery("#modal-window-with-table").show();
+			jQuery("#window-with-table").show('slow');
+			jQuery("#close-modal-window").show();
+		});
+		jQuery("#calendars-container").on("click", ".current-month, .day-off", function() {
+			ChoosenDay = this.id;
+			kind = "empty";
+			ChoosenDay = jQuery(this).attr("id");
+			WhatDay(ChoosenDay);
+			ListOfWork(kind, d, m, y);
+			jQuery.ajax({
+				type: 'POST',
+				url: "/index.php?option=com_gm_ceiling&task=gaugers.FindFreeDay",
+				dataType: 'json',
+				data: {
+					date: date,
+					id: id_gauger,
+				},
+				success: function(data) {
+					if (data.length == 0) {
+						jQuery("#add_free_day").text("Добавить выходной");
+						window.dataFree1 = 0;
+						window.dataFree2 = 0;
+					} else {
+						jQuery("#add_free_day").text("Изменить выходной");
+						window.dataFree1 = data[0].date_from;
+						window.dataFree2 = data[0].date_to;
+					}
+				},
+				error: function (data) {
+					var n = noty({
+						theme: 'relax',
+						layout: 'center',
+						maxVisible: 5,
+						type: "error",
+						text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
+					});
+				}
+			});
 			jQuery("#window-with-table").show('slow');
 			jQuery("#close-modal-window").show();
 			jQuery("#modal-window-with-table").show();
 		});
 		// -----------------------------------------
+
+						//Вывод замеров у НМС у замерщиков 29
 
 		// функция узнать выбранный день, месяц, год
 		function WhatDay(id) {
@@ -485,8 +485,6 @@ foreach ($gaugers_id as $value) {
 						id: id_gauger,
 					},
 					success: function(data) {
-						//Вывод замеров у НМС у замерщиков 28
-						console.log(data);
 						Array.from(data).forEach(function(element) {
 							table += '<tr><td style="width: 25%;">'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td style="width: 75%;">Выходной</td></tr>';
 						});
