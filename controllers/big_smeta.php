@@ -58,8 +58,8 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
                 $transport_sum_1 = $res->transport * $distance_col;
                 }
                 elseif($data->transport == 2) {
-                    $transport_sum = $res->distance * $distance_col * $data->distance;
-                    $transport_sum_1 = $res->distance * $distance_col * $data->distance;
+                    $transport_sum = $res->distance * $distance_col * $data->distance + $res->transport;
+                    $transport_sum_1 = $res->distance * $distance_col * $data->distance + $res->transport;
                     if($transport_sum < $this->margin1($res->transport, $margin))
                       { 
                           $transport_sum = $this->margin1($res->transport, $margin);
