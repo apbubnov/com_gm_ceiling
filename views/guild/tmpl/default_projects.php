@@ -21,7 +21,6 @@ if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header(
 
 $calculations = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getCuts();
 $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
-
 ?>
 <link rel="stylesheet" href="http://<?= str_replace("/home/srv112238/", "", __DIR__); ?>/style.css" type="text/css">
 <script type="text/javascript" src="/files/library/touchwipe.js"></script>
@@ -70,6 +69,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <div class="ModalPage">
         <div class="ModalName">
             <b></b>
+        </div>
+        <div class="ModalUpdate" onclick="ModalUpdate();">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
         </div>
         <div class="ModalClose" onclick="ModalClose();">
             <i class="fa fa-times" aria-hidden="true"></i>
@@ -135,6 +137,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         <input type="text" name="Data" id="Data" readonly hidden>
     </div>
 </form>
+
+<iframe class="iframe">
+</iframe>
 
 <script>
     var $ = jQuery,
