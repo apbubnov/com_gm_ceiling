@@ -685,6 +685,7 @@ foreach ($brigade_id as $value) {
 		});
 		//------------------------------------------
 
+		// убрать красный текст ошибки
 		jQuery("#modal-window-1-tar").on("change", "#hours1, #hours2", function() {
 			jQuery("#wrong-window2").empty();
 		});
