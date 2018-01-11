@@ -525,7 +525,7 @@ foreach ($gaugers_id as $value) {
 										timegauging2++;
 									}
 									timegauging = element.project_calculation_date.substr(11, 5)+" - "+timegauging2+":00";
-									table += '<tr><td style="width: 50%;">'+timegauging+'</td><td style="width: 50%;">'+element.project_info+'</td></tr>';
+									table += '<tr><td style="width: 25%;">'+timegauging+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
 								}
 							}
 						});
