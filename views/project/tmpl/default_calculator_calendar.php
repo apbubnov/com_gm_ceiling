@@ -60,7 +60,7 @@ $mount_transport = $mountModel->getDataAll();
 
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-if($this->item->transport == 2 ) $sum_transport = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
+if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
 if($this->item->transport == 1 ) {
 $min = 100;
 foreach($calculations as $d) {
@@ -308,7 +308,7 @@ $results = $db->loadObjectList();
                         <tr>
                             <th>Дата рождения</th>
                             <td><input name="new_birthday" id="jform_birthday" class="inputactive"
-                                        value="" placeholder="Дата рождения" type="text"></td>
+                                        value="" placeholder="Дата рождения" type="date"></td>
                             <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
                         </tr>
                         <tr>
