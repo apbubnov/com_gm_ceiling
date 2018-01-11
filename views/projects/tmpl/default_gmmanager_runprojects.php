@@ -99,19 +99,22 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 
                                 if($item->transport == 0 ) $sum_transport = 0;
                                 if($item->transport == 1 ) $sum_transport = margin($mount_transport->transport * $item->distance_col, $item->gm_mounting_margin);
-                                if($item->transport == 2 ) $sum_transport = margin($mount_transport->distance * $item->distance * $item->distance_col, $item->gm_mounting_margin);
-                                $min = 100;
-                                foreach($calculations as $d) {
-                                    if($d->discount < $min) $min = $d->discount;
+                                if($item->transport == 2 ) $sum_transport = ($mount_transport->distance * $item->distance + $mount_transport->transport) * $item->distance_col;
+                                if($item->transport == 1) {
+                                     $min = 100;
+                                    foreach($calculations as $d) {
+                                        if($d->discount < $min) $min = $d->discount;
+                                    }
+                                    if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
+                                    if($sum_transport < margin($mount_transport->transport, $item->gm_mounting_margin) && $sum_transport != 0) {
+                                        $sum_transport = margin($mount_transport->transport, $item->gm_mounting_margin);
+                                    }
                                 }
-                                if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
-                                if($sum_transport < margin($mount_transport->transport, $item->gm_mounting_margin) && $sum_transport != 0) {
-                                    $sum_transport = margin($mount_transport->transport, $item->gm_mounting_margin);
-                                }
+                               
                             ?>
-                         <input id="project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
-                         <input id="mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
-                         <input id="material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
+                         <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
+                         <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
+                         <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->status; ?>
@@ -195,9 +198,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 			var type = "info",
 				value = td.data("value"),
 				//new_value = input.data("new_value");
-                new_value = jQuery(this).closest("tr").find("#project_sum").val();
-                mouting_sum = jQuery(this).closest("tr").find("#mounting_sum").val();
-                material_sum = jQuery(this).closest("tr").find("#material_sum").val();
+                new_value = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_project_sum").val();
+                mouting_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_mounting_sum").val();
+                material_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_material_sum").val();
 				var subject = "Отметка стоимости договора №" + td.data("project_id"),
                     text = "<p><input name='check_mount' onclick='changeDone(this,"+new_value+","+mouting_sum+","+material_sum+");' class='radio' id ='done' value='1'  type='radio' checked><label for = 'done'>Монтаж выполнен</label></p>";
 					text += "<p><input name='check_mount' onclick='changeDone(this,"+new_value+","+mouting_sum+","+material_sum+");'  class='radio' id ='not_done' value='0'  type='radio'><label for = 'not_done'>Монтаж недовыполнен</label></p>";

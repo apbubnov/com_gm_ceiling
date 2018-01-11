@@ -100,12 +100,38 @@ class Gm_ceilingModelGaugers extends JModelItem {
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
+			$query2 = $db->getQuery(true);
+			$query3 = $db->getQuery(true);
+			$query4 = $db->getQuery(true);
+
+			$query2->select("id_user")
+				->from("#__gm_ceiling_day_off")
+				->where("id_user = '$id' and date_from between '".substr($date1, 0, 10)." 00:00:00' and '".substr($date1, 0, 10)." 23:59:59'");
+				$db->setQuery($query2);
+			$items = $db->loadObject();
+
+			if ($items->id_user != null) {
+				$query3->update("#__gm_ceiling_day_off")
+					->set("date_from = '$date1'")
+					->set("date_to = '$date2'")
+					->where("id_user = '$id' and date_from between '".substr($date1, 0, 10)." 00:00:00' and '".substr($date1, 0, 10)." 23:59:59'");
+				$db->setQuery($query3);
+				$db->execute();
+			} else {
+				$query->insert('#__gm_ceiling_day_off')
+					->columns("id_user, date_from, date_to")
+					->values("'$id', '$date1', '$date2'");
+				$db->setQuery($query);
+				$db->execute();
+			}
+
+			$query4->select("id_user")
+				->from("#__gm_ceiling_day_off")
+				->where("id_user = '$id' and date_from = '$date1' and date_to = '$date2'");
+			$db->setQuery($query4);
+			$items2 = $db->loadObject();
 			
-			$query->insert('#__gm_ceiling_day_off')
-			->columns("id_user, date_from, date_to")
-			->values("'$id', '$date1', '$date2'");
-			$db->setQuery($query);
-			$db->execute();
+			return $items2;
 		}
 		catch(Exception $e)
         {
@@ -161,6 +187,29 @@ class Gm_ceilingModelGaugers extends JModelItem {
                 array_splice($items,$index,0,$day);
             }
 			
+			return $items;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	public function FindFreeDay($id, $date) {
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select("*")
+				->from("#__gm_ceiling_day_off")
+				->where("(id_user = '$id') and (date_from between '$date 00:00:00' and '$date 23:59:59')");
+			$db->setQuery($query);
+
+			$items = $db->loadObjectList();
 			return $items;
 		}
 		catch(Exception $e)
