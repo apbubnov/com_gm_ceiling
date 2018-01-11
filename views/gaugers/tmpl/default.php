@@ -402,9 +402,10 @@ foreach ($gaugers_id as $value) {
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
                     };
+					data = JSON.parse(data); // замеры и выходные
 					console.log(data);
                     /* AllGauger = <?php echo json_encode($AllGauger); ?>;
-                    data = JSON.parse(data); // замеры
+                    
                     AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                     var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
                     AllTime.forEach( elementTime => {
