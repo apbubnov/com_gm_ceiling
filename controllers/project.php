@@ -302,7 +302,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$email  = "$client_id@$client_id";
 					}
 					//зарегать как user
-					Gm_ceilingHelpersGm_ceiling::registerUser($name,preg_replace('/[\(\)\-\s]/', '', array_shift($phones)),$email);
+					$userID = Gm_ceilingHelpersGm_ceiling::registerUser($name,preg_replace('/[\(\)\-\s]/', '', array_shift($phones)),$email);
+
+					$client_model->updateClient($client_id,null,$userID);
+
 					$client_history_model->save($client_id,"Клиент переведен в дилеры.");				
 					$model->update_project_after_call($project_id,$client_id,$date_time,$address,$manager_comment,20,$api_phone_id,$user->id, $gauger);
 					$status = 20;
@@ -418,6 +421,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $username = preg_replace('/[\(\)\-\s]/', '', array_shift($phones));
                     if($client_model->checkIsDealer($username)==0){
                         Gm_ceilingHelpersGm_ceiling::registerUser($name,$username,$email);
+                        $client_model->updateClient($client_id,null,$userID);
                     }
 
 					$rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
