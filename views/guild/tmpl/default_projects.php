@@ -21,7 +21,6 @@ if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header(
 
 $calculations = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getCuts();
 $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
-
 ?>
 <link rel="stylesheet" href="http://<?= str_replace("/home/srv112238/", "", __DIR__); ?>/style.css" type="text/css">
 <script type="text/javascript" src="/files/library/touchwipe.js"></script>
@@ -47,7 +46,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                     <? foreach ($type->I as $cut): ?>
                                         <ceiling class="block_3 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
                                                  id="<?= $cut->id; ?>">
-                                            <input name="data" value='<?= json_encode($cut); ?>' disabled hidden>
+                                            <input name="data" id="Data" value='<?= json_encode($cut); ?>' disabled hidden>
                                             <div class="ceiling">
                                                 <name><?= $cut->title; ?></name>
                                                 <div class="image" style="background-image: url('<?= $cut->cut_image; ?>')"></div>
@@ -70,6 +69,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <div class="ModalPage">
         <div class="ModalName">
             <b></b>
+        </div>
+        <div class="ModalUpdate" onclick="ModalUpdate();">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
         </div>
         <div class="ModalClose" onclick="ModalClose();">
             <i class="fa fa-times" aria-hidden="true"></i>
@@ -136,6 +138,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     </div>
 </form>
 
+<iframe class="redactor">
+</iframe>
+
 <script>
     var $ = jQuery,
         Data = {
@@ -163,7 +168,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             '</div>');
 
         Data.block3 = $('<ceiling class="block_3 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">' +
-            '<input name="data" disabled hidden>' +
+            '<input name="data" id="Data" disabled hidden>' +
             '<div class="ceiling">' +
             '<name></name>' +
             '<div class="image"></div>' +
@@ -198,6 +203,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         $(".ModalCeiling, .ModalCeiling *").click(function () {
             if ($(window).width() >= 728) $("#KeyPress").focus();
         });
+
+        window.addEventListener("message", function(e) {
+            if (e.data === 'update') ModalUpdateData();
+            $(".redactor").hide();
+        }, false);
 
         $(".PRELOADER_GM").hide();
         $("cuts").show();
@@ -285,7 +295,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         Data.ceilingPosition.X = ((o.offset().left - $(window).scrollLeft()) * 2 + o.width() - $(window).width()) / 2;
         Data.ceilingPosition.Y = ((o.offset().top - $(window).scrollTop()) * 2 + o.height() - $(window).height()) / 2;
 
-        Img.css({"background-image": "url('" + json.cut_image + "')"});
+        Img.css({"background-image": "url('" + json.cut_image + json.cut_image_dop + "')"});
 
         if (type === "number") {
 
@@ -550,5 +560,56 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 $(".PRELOADER_GM").hide();
             }
         });
+    }
+
+    function ModalUpdate() {
+        var Modal = $(".Modal"),
+            dataModal = JSON.parse(Modal.find("#Data").val()),
+            redactor = $(".redactor");
+
+        redactor.attr({"src":"http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=guild&type=redactor&id=" + dataModal.id});
+        redactor.show();
+    }
+
+    function ModalUpdateData() {
+        $(".PRELOADER_GM").show();
+
+        var Modal = $(".ModalCeiling"),
+            ModalData = JSON.parse(Modal.find("#Data").val()),
+            Block = $("#"+ModalData.id),
+            BlockImg = Block.find(".image");
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getCut",
+            data: {id: ModalData.id},
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+                ModalData = data;
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+
+        ModalData.cut_image_dop = "?date=" + (new Date()).toISOString();
+
+        BlockImg.attr("style","background-image: url(" + ModalData.cut_image + ModalData.cut_image_dop + ");");
+
+        Block.find("#Data").val(JSON.stringify(ModalData));
+
+        ModalShow(parseInt(ModalData.id));
+
+        $(".PRELOADER_GM").hide();
     }
 </script>
