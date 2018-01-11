@@ -470,7 +470,7 @@ foreach ($brigade_id as $value) {
 			jQuery("#close-modal-window").show();
 			jQuery("#modal-window-with-table").show();
 		});
-		jQuery("#calendars-container").on("click", ".current-month", function() {
+		jQuery("#calendars-container").on("click", ".current-month, .day-off", function() {
 			ChoosenDay = this.id;
 			kind = "empty";
 			ChoosenDay = jQuery(this).attr("id");
