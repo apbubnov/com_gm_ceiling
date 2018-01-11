@@ -84,8 +84,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->id; 
-                            $calculations = $model->getProjectItems($item->id);
-                            print_r(count($calculations));
+                            $calculations = $model->new_getProjectItems($item->id);
+                            print_r("///".count($calculations)."///");
                             $mounting_sum = 0; $material_sum = 0;
                             foreach ($calculations as $calculation) {
                                 $calculation->dealer_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
