@@ -127,7 +127,7 @@ class Gm_ceilingModelGaugers extends JModelItem {
 				->from('#__users as users')
 				->where("id = $id_gauger");
 			
-			$query->select("projects.project_calculation_date, projects.project_info, ($query2) as project_calculator")
+			$query->select("projects.id, projects.project_calculation_date, projects.project_info, ($query2) as project_calculator, projects.project_status")
 				->from('#__gm_ceiling_projects as projects')
 				->where("projects.project_calculator = $id_gauger and projects.project_calculation_date between '$date 00:00:00' and '$date 23:59:59'")
 				->order('projects.project_calculation_date');
