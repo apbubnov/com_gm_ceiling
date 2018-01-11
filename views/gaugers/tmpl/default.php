@@ -491,7 +491,7 @@ foreach ($gaugers_id as $value) {
 					}
 				}); */
 			} else {
-				table += '<tr id="caption-data"><td colspan="6">'+date_to_modal_window+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Замерщик</td></tr>';
+				table += '<tr id="caption-data"><td colspan="6">'+date_to_modal_window+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td></tr>';
 				jQuery.ajax({
 					type: 'POST',
 					url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugersWorkDayOff",
@@ -508,7 +508,19 @@ foreach ($gaugers_id as $value) {
 						console.log(data);
 						Array.from(data).forEach(function(element) {
 							if (element.project_status != 3) {
-								table += '<tr><td>'+element.project_calculation_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.project_calculator+'</td></tr>';
+								timegauging2 = element.project_calculation_date.substr(11, 2);
+								if (element.project_calculation_date.substr(11, 1) == "0") {
+									timegauging2 = element.project_calculation_date.substr(12, 1);
+									if (timegauging2 == 9) {
+										timegauging2 = "10";
+									} else {
+										timegauging2++;
+									}
+								} else {
+									timegauging2++;
+								}
+								timegauging = element.project_calculation_date.substr(11, 5)+" - "+timegauging2+":00";
+								table += '<tr><td>'+timegauging+'</td><td>'+element.project_info+'</td></tr>';
 							}
 						});
 						jQuery("#table-gauging").empty();
