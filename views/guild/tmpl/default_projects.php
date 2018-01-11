@@ -474,6 +474,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
                         if (fblocks2.length < 1) {
                             var Pred = "", Next = "", Temp = null;
+
                             blocks2.each(function () {
                                 if (parseInt(i2.replace("p","")) <= parseInt(Next.replace("p",""))) return;
 
@@ -483,7 +484,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 Next = Temp.attr('id');
                             });
 
-                            if (Temp !== null && parseInt(i2.replace("p","")) > parseInt(Temp.attr('id').replace("p",""))) {
+                            if (Temp !== null && parseInt(i2.replace("p","")) > parseInt(Next.replace("p",""))) {
                                 Pred = Next;
                                 Next = "";
                             }
@@ -635,8 +636,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
                         if (fblocks2.length < 1) {
                             var Pred = "", Next = "", Temp = null;
+
                             blocks2.each(function () {
-                                console.log(parseInt(i2.replace("p","")) + "-" + parseInt(Next.replace("p","")));
                                 if (parseInt(i2.replace("p","")) <= parseInt(Next.replace("p",""))) return;
 
                                 Temp = $(this);
@@ -645,7 +646,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 Next = Temp.attr('id');
                             });
 
-                            if (Temp !== null && parseInt(i2.replace("p","")) > parseInt(Temp.attr('id').replace("p",""))) {
+                            if (Temp !== null && parseInt(i2.replace("p","")) > parseInt(Next.replace("p",""))) {
                                 Pred = Next;
                                 Next = "";
                             }
@@ -657,6 +658,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             T.find("line").text(b2.canvases);
                             T.find("ceilings").empty();
 
+                            console.log(i2 + " - " + Next);
                             if (Next !== "") T.insertBefore(Temp);
                             else block1.find("type").append(T);
                         }
