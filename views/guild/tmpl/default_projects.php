@@ -295,7 +295,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         Data.ceilingPosition.X = ((o.offset().left - $(window).scrollLeft()) * 2 + o.width() - $(window).width()) / 2;
         Data.ceilingPosition.Y = ((o.offset().top - $(window).scrollTop()) * 2 + o.height() - $(window).height()) / 2;
 
-        Img.css({"background-image": "url('" + json.cut_image + json.cut_image_dop "')"});
+        Img.css({"background-image": "url('" + json.cut_image + json.cut_image_dop + "')"});
 
         if (type === "number") {
 
@@ -572,12 +572,37 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalUpdateData() {
-        alert("Update");
+        $(".PRELOADER_GM").show();
+
         var Modal = $(".ModalCeiling"),
             ModalData = JSON.parse(Modal.find("#Data").val()),
             ModalImg = Modal.find(".ModalImage"),
             Block = $("#"+ModalData.id),
             BlockImg = Block.find(".image");
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getCut",
+            data: {id: ModalData.id},
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+
+                ModalData = data;
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
 
         ModalData.cut_image_dop = "?date=" + (new Date()).toISOString();
 
@@ -587,5 +612,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         ModalData = JSON.stringify(ModalData);
         Block.find("#Data").val(ModalData);
         Modal.find("#Data").val(ModalData);
+
+        $(".PRELOADER_GM").hide();
     }
 </script>

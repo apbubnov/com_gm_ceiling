@@ -185,7 +185,6 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function sendWork($data)
     {
-        $date = date("Y.m.d H:i:s");
         $employees = $data->employees;
         $calculations = $data->calculations;
         $calculation = $calculations->id;
@@ -215,7 +214,7 @@ class Gm_ceilingModelGuild extends JModelList
             $sum = ceil(floatval($work->sum) / floatval(count($emp)) * 100.0) / 100.0;
 
             foreach ($emp as $val)
-                $query->values("'$val', '$sum', '$work->id', '$work->name', '$date'");
+                $query->values("'$val', '$sum', '$work->id', '$work->name', '$data->date'");
 
             $i++;
         }
