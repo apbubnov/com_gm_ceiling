@@ -588,6 +588,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             async: false,
             success: function (data) {
                 data = JSON.parse(data);
+                console.log(data);
 
                 ModalData = data;
             },
@@ -610,6 +611,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         ModalImg.attr("style","background-image: url(" + ModalData.cut_image + ModalData.cut_image_dop + ");");
 
         ModalData = JSON.stringify(ModalData);
+
+        console.log(ModalData);
         Block.find("#Data").val(ModalData);
         Modal.find("#Data").val(ModalData);
 
