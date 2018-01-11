@@ -92,12 +92,12 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 $calculation->dealer_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
                                 $mounting_sum += $calculation->dealer_gm_mounting_sum;
                                 $material_sum += $calculation->dealer_components_sum + $calculation->dealer_canvases_sum;
-                                print_r("-----------------------");
+                                print_r("-----------1------------");
                                 print_r( $calculation->dealer_gm_mounting_sum."+");
                                 }
-                        print_r("-----------------------");
+                        print_r("-----------2------------");
                         print_r($mounting_sum + $sum_transport."sum_m");
-                        print_r("-----------------------");
+                        print_r("------------3-----------");
                                 print_r($material_sum."sum_mater");
                                 $sum_transport = 0;  $sum_transport_discount = 0;
                                 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
