@@ -157,8 +157,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     $(document).ready(Init);
 
     function Init() {
-        alert(($("#5465464546454654654646"))?0:1);
-        alert(($("#12"))?0:1);
+        alert($("#5465464546454654654646").length);
+        alert($("#20180112B0120").length);
 
         Data.block1 = $('<div class="block_1">' +
             '<line class="gm line"></line>' +
