@@ -329,7 +329,10 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             element.closest(".modal-text").find(".dop_info_block").html(text);
 
         $("#input_mounting_1").keyup(function(){
-            alert("ok");
+            var one = $("#input_mounting").val();
+            var two = $("#input_mounting_1").val();
+
+            alert(one + " - " + two);
         });
     }
 
