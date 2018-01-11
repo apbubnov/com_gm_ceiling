@@ -201,13 +201,14 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 				var subject = "Отметка стоимости договора №" + td.data("project_id"),
                     text = "<p><input name='check_mount' onclick='changeDone(this,"+new_value+","+mouting_sum+","+material_sum+");' class='radio' id ='done' value='1'  type='radio' checked><label for = 'done'>Монтаж выполнен</label></p>";
 					text += "<p><input name='check_mount' onclick='changeDone(this,"+new_value+","+mouting_sum+","+material_sum+");'  class='radio' id ='not_done' value='0'  type='radio'><label for = 'not_done'>Монтаж недовыполнен</label></p>";
-                    text += "<div class='dop_info' style='font-size:15px;'><div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
+                    text += "<div class='dop_info_block' style='font-size:15px;'><div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
                     text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
                     text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
                     text += "</div>";
                     
                     //text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div>";
 			
+
             /* new_value = jQuery("#input_check").val();
              var input_value = jQuery("#input_check").val();
              var input_mounting = jQuery("#input_mounting").val();
@@ -314,7 +315,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
                 text += "<div class='center'>Укажите стоимость монтажных работ!!!</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
             }
-            element.closest(".modal-text").find(".dop_info").html(text);
+            element.closest(".modal-text").find(".dop_info_block").html(text);
             }
 
     function deleteItem() {
