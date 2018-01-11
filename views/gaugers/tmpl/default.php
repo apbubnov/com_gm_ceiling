@@ -44,8 +44,9 @@ foreach ($gaugers_id as $value) {
 }
 //----------------------------------------------------------------------------------------------------------
 
-
 ?>
+
+<?=parent::getButtonBack();?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/gaugers/tmpl/css/style.css" type="text/css" />
 
