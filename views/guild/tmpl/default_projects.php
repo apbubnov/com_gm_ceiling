@@ -46,7 +46,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                     <? foreach ($type->I as $cut): ?>
                                         <ceiling class="block_3 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
                                                  id="<?= $cut->id; ?>">
-                                            <input name="data" value='<?= json_encode($cut); ?>' disabled hidden>
+                                            <input name="data" id="Data" value='<?= json_encode($cut); ?>' disabled hidden>
                                             <div class="ceiling">
                                                 <name><?= $cut->title; ?></name>
                                                 <div class="image" style="background-image: url('<?= $cut->cut_image; ?>')"></div>
@@ -168,7 +168,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             '</div>');
 
         Data.block3 = $('<ceiling class="block_3 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">' +
-            '<input name="data" disabled hidden>' +
+            '<input name="data" id="Data" disabled hidden>' +
             '<div class="ceiling">' +
             '<name></name>' +
             '<div class="image"></div>' +
@@ -295,7 +295,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         Data.ceilingPosition.X = ((o.offset().left - $(window).scrollLeft()) * 2 + o.width() - $(window).width()) / 2;
         Data.ceilingPosition.Y = ((o.offset().top - $(window).scrollTop()) * 2 + o.height() - $(window).height()) / 2;
 
-        Img.css({"background-image": "url('" + json.cut_image + "')"});
+        Img.css({"background-image": "url('" + json.cut_image + json.cut_image_dop "')"});
 
         if (type === "number") {
 
@@ -579,12 +579,13 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             Block = $("#"+ModalData.id),
             BlockImg = Block.find(".image");
 
-        ModalData.cut_image_dop = (new Date()).toISOString();
-
-        Block.find('[type="data"]').val(ModalData);
-        Modal.find("#Data").val(ModalData);
+        ModalData.cut_image_dop = "?date=" + (new Date()).toISOString();
 
         BlockImg.attr("style","background-image: url(" + ModalData.cut_image + ModalData.cut_image_dop + ");");
         ModalImg.attr("style","background-image: url(" + ModalData.cut_image + ModalData.cut_image_dop + ");");
+
+        ModalData = JSON.stringify(ModalData);
+        Block.find("#Data").val(ModalData);
+        Modal.find("#Data").val(ModalData);
     }
 </script>
