@@ -315,7 +315,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
                 text += "<div class='center'>Укажите стоимость монтажных работ!!!</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
             }
-            element.siblings(".dop_info").html(text);
+            element.closest(".modal-text").find(".dop_info").html(text);
             }
 
     function deleteItem() {
