@@ -302,15 +302,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     function changeDone(element) {
         var text = "";
         element = $(element);
-        var td = jQuery( element ),
-				tr = td.closest("tr");
 
-            var input = jQuery( element ),
-				input = input.closest("input"),
-				project_sum = input.find(".project_sum");
-			var button = jQuery( element );	
-			var type = "info",
-				value = td.data("value"),
         new_value = jQuery(element).closest("tr").find("#project_sum").val();
         mouting_sum = jQuery(element).closest("tr").find("#mounting_sum").val();
         material_sum = jQuery(element).closest("tr").find("#material_sum").val();
