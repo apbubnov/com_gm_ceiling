@@ -331,8 +331,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         $("#input_mounting_1").keyup(function(){
             var one = $("#input_mounting").val();
             var two = $("#input_mounting_1").val();
-
-            alert(one + " - " + two);
+            var result = one - two;
+            alert(one + " - " + two + " = " + result);
         });
     }
 
