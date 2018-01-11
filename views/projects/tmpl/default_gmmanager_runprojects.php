@@ -319,7 +319,10 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             if ($("#not_done").is(":checked")) {
                 text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
                 text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
-                text += "<div class='center'>Укажите стоимость монтажных работ!!!</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
+                text += "<div class='center'>Укажите стоимость монтажных работ!!!</div>" +
+                    "<div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
+                text += "<div class='center'><div class='leftBlock' style='width: 50%;'><span >Начальная сумма</span><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>" +
+                    "<div class='rightBlock' style='width: 50%;'><span >Недоделанная работа</span><input id='input_mounting_1' class='noty_input' value='" + mouting_sum + "'/></div></div>";
             }
             element.closest(".modal-text").find(".dop_info_block").html(text);
             }
