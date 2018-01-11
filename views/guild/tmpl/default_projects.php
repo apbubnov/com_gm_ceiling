@@ -576,6 +576,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         var Modal = $(".ModalCeiling"),
             Img = Modal.find(".ModalImage");
         var ImgStyle = Img.attr("style");
-        Img.removeAttr('style').attr("style", ImgStyle);
+        ImgStyle = ImgStyle.substring(0, ImgStyle.length - 3) + "?date=" + (new Date()).toISOString() + "\");";
+        Img.attr("style", ImgStyle);
+        console.log(ImgStyle);
     }
 </script>
