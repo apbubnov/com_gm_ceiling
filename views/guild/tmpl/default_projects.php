@@ -556,4 +556,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             }
         });
     }
+
+    function loadRedactor() {
+        var Modal = $(".Modal"),
+            dataModal = JSON.parse(Modal.find("#Data").val());
+
+        console.log(dataModal);
+    }
 </script>
