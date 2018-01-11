@@ -485,16 +485,14 @@ foreach ($gaugers_id as $value) {
 						id: id_gauger,
 					},
 					success: function(data) {
-						//Вывод замеров у НМС у замерщиков 27
+						//Вывод замеров у НМС у замерщиков 28
 						console.log(data);
 						Array.from(data).forEach(function(element) {
-							console.log(element.project_calculation_date);
 							table += '<tr><td style="width: 25%;">'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td style="width: 75%;">Выходной</td></tr>';
 						});
+						jQuery("#table-gauging").append(table);
 					}
 				});
-				console.log(table);
-				jQuery("#table-gauging").append(table);
 			} else {
 				table += '<tr id="caption-data"><td colspan="6">'+date_to_modal_window+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td></tr>';
 				jQuery.ajax({
