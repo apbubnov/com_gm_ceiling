@@ -138,7 +138,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     </div>
 </form>
 
-<iframe class="iframe">
+<iframe class="redactor">
 </iframe>
 
 <script>
@@ -557,10 +557,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         });
     }
 
-    function loadRedactor() {
+    function ModalUpdate() {
         var Modal = $(".Modal"),
-            dataModal = JSON.parse(Modal.find("#Data").val());
+            dataModal = JSON.parse(Modal.find("#Data").val()),
+            redactor = $(".redactor");
 
-        console.log(dataModal);
+        redactor.attr({"src":"http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=guild&type=redactor&id=" + dataModal.id + "&proj_id=" + dataModal.project});
+        redactor.show();
     }
 </script>
