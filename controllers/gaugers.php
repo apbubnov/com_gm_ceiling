@@ -25,7 +25,15 @@ class Gm_ceilingControllerGaugers extends JControllerForm
 			$date2 = $_POST['datetime2'];
 			$id = $_POST['id_gauger'];
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
-			$model->SaveDayOff($id, $date1, $date2);
+			$request = $model->SaveDayOff($id, $date1, $date2);
+
+			if ($request->id_user != null) {
+				$answer = "ok";
+			} else {
+				$answer = "no";
+			}
+					
+			die(json_encode($answer));
 		}
 		catch(Exception $e)
         {

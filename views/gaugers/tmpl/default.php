@@ -565,7 +565,7 @@ foreach ($gaugers_id as $value) {
 		});
 		// -----------------------------------------
 
-		//Вывод замеров у НМС у замерщиков 35
+		//Вывод замеров у НМС у замерщиков 36
 
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
@@ -583,19 +583,23 @@ foreach ($gaugers_id as $value) {
 						id_gauger: id_gauger
 					},
 					success: function(data) {
-						if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
-							jQuery("#"+ChoosenDay).attr("class", "day-off");
-						}
-						jQuery("#close-tar").hide();
-						jQuery("#modal-window-container-tar").hide();
-						jQuery("#modal-window-choose-tar").hide();
-						var n = noty({
+						if (data == "no") {
+							jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
+						} else {
+							if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
+								jQuery("#"+ChoosenDay).attr("class", "day-off");
+							}
+							jQuery("#close-tar").hide();
+							jQuery("#modal-window-container-tar").hide();
+							jQuery("#modal-window-choose-tar").hide();
+							var n = noty({
 								theme: 'relax',
 								layout: 'center',
 								maxVisible: 5,
 								type: "success",
 								text: "Выходной день (время) сохранено успешно."
 							});
+						}
 					},
 					error: function (data) {
 						var n = noty({
