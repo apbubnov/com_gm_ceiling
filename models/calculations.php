@@ -510,7 +510,7 @@ class Gm_ceilingModelCalculations extends JModelList {
         $query = $db->getQuery(true);
         $query
             ->select('*')
-            ->from($db->quoteName('`#__gm_ceiling_calculations`'))
+            ->from('#__gm_ceiling_calculations')
             ->where('project_id = '.$project_id);
         $db->setQuery($query);
         $results = $db->loadObjectList();
