@@ -95,7 +95,7 @@ class Gm_ceilingModelGaugers extends JModelItem {
         }
 	}
 
-	function SaveDayOffM($id, $date1, $date2) {
+	function SaveDayOff($id, $date1, $date2) {
 		try
 		{
 			$db = JFactory::getDbo();
@@ -106,6 +106,35 @@ class Gm_ceilingModelGaugers extends JModelItem {
 			->values("'$id', '$date1', '$date2'");
 			$db->setQuery($query);
 			$db->execute();
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	function GetGaugersWorkDayOff($id_gauger, $date) {
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query2 = $db->getQuery(true);
+
+			$query2->select("users.name")
+				->from('#__users as users')
+				->where("id = $id_gauger");
+			
+			$query->select("projects.id, projects.project_calculation_date, projects.project_info, ($query2) as project_calculator, projects.project_status")
+				->from('#__gm_ceiling_projects as projects')
+				->where("projects.project_calculator = $id_gauger and projects.project_calculation_date between '$date 00:00:00' and '$date 23:59:59'")
+				->order('projects.project_calculation_date');
+			$db->setQuery($query);			
+			
+			$items = $db->loadObjectList();
+			return $items;
 		}
 		catch(Exception $e)
         {
