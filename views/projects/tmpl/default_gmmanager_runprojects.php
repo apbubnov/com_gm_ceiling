@@ -182,7 +182,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 ?>
 
 <script type="text/javascript">
-
+    var $ = jQuery;
     jQuery(document).ready(function () {
         jQuery(".btn-done").click(function(){
 			var td = jQuery( this ),
