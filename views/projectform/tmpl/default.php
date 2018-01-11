@@ -61,7 +61,7 @@ $mount_transport = $mountModel->getDataAll();
 
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-if($this->item->transport == 2 ) $sum_transport = double_margin($mount_transport->distance * $this->item->distance * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
 $min = 100;
 foreach($calculations as $d) {
     if($d->discount < $min) $min = $d->discount;
