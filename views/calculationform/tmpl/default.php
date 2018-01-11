@@ -2982,6 +2982,7 @@ function getSelectIndex(selects,obj){
 
 
 	echo 'function change_select_manufacturer() {var lnk=document.getElementById(\'jform_proizv\').options;'
+		.'console.log(lnk);'
 		.'for (var i=0;i<lnk.length;i++) {'
 		.'if (lnk[i].value=="'.$manufacturer.'") {lnk[i].selected=true;} } '
 		.'jQuery("#sketch_switch").prop("disabled",false);'
