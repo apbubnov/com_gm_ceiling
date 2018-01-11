@@ -199,7 +199,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 material_sum = jQuery(this).closest("tr").find("#material_sum").val();
 				var subject = "Отметка стоимости договора №" + td.data("project_id"),
                     text = "<p><input name='check_mount'  class='radio' id ='done' value='1'  type='radio' checked><label for = 'done'>Монтаж выполнен</label></p>",
-					text += "<p><input name='check_mount'  class='radio' id ='not_done' value='0'  type='radio'><label for = 'done'>Монтаж недовыполнен</label></p>",
+					text += "<p><input name='check_mount'  class='radio' id ='not_done' value='0'  type='radio'><label for = 'not_done'>Монтаж недовыполнен</label></p>",
                     text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
                     text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
                    text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
