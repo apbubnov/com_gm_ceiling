@@ -84,7 +84,7 @@ class Gm_ceilingHelpersGm_ceiling
         return explode(',', $db->loadResult());
     }
 
-    public static function registerUser($FIO, $phone, $email)
+    public static function registerUser($FIO, $phone, $email, $client_id)
     {
 
         jimport('joomla.user.helper');
@@ -111,6 +111,7 @@ class Gm_ceilingHelpersGm_ceiling
         $userID = $user->id;
         $user =& JUser::getInstance((int)$userID);
         $post['dealer_id'] = $userID;
+        $post['associated_client'] = $client_id;
         if (!$user->bind($post)) return false;
         if (!$user->save()) return false;
         JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
