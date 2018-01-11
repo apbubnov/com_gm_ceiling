@@ -44,7 +44,7 @@ class Gm_ceilingControllerGaugers extends JControllerForm
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
 			$request = $model->GetGaugersWorkDayOff($id, $date);
 
-			die($request);
+			die(json_encode($request));
 		}
 		catch(Exception $e)
         {
