@@ -396,10 +396,10 @@ foreach ($gaugers_id as $value) {
                 url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugersWorkDayOff",
                 data: {
                     date: date,
-					id: <?php echo $userId; ?>,
+					id: id_gauger,
                 },
                 success: function(data) {
-					//Вывод замеров у НМС у замерщиков 4
+					//Вывод замеров у НМС у замерщиков 6
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
                     };

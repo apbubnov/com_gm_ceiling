@@ -132,6 +132,9 @@ class Gm_ceilingModelGaugers extends JModelItem {
 				->where("project_calculator = $id_gauger and project_calculation_date between '$date 00:00:00' and '$date 23:59:59'")
 				->order('project_calculation_date');
 			$db->setQuery($query);
+
+			throw new Exception($query);
+			
 			
 			$items = $db->loadObjectList();
 			return $items;
