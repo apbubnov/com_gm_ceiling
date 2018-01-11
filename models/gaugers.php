@@ -123,18 +123,15 @@ class Gm_ceilingModelGaugers extends JModelItem {
 			$query = $db->getQuery(true);
 			$query2 = $db->getQuery(true);
 
-			$query2->select("name")
+			$query2->select("users.name")
 				->from('#__users as users')
 				->where("id = $id_gauger");
 			
-			$query->select("project_calculation_date, project_info, ($query2) as project_calculator")
+			$query->select("projects.id, projects.project_calculation_date, projects.project_info, ($query2) as project_calculator, projects.project_status")
 				->from('#__gm_ceiling_projects as projects')
-				->where("project_calculator = $id_gauger and project_calculation_date between '$date 00:00:00' and '$date 23:59:59'")
-				->order('project_calculation_date');
-			$db->setQuery($query);
-
-			throw new Exception($query);
-			
+				->where("projects.project_calculator = $id_gauger and projects.project_calculation_date between '$date 00:00:00' and '$date 23:59:59'")
+				->order('projects.project_calculation_date');
+			$db->setQuery($query);			
 			
 			$items = $db->loadObjectList();
 			return $items;

@@ -399,7 +399,7 @@ foreach ($gaugers_id as $value) {
 					id: id_gauger,
                 },
                 success: function(data) {
-					//Вывод замеров у НМС у замерщиков 6
+					//Вывод замеров у НМС у замерщиков 10
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
                     };
