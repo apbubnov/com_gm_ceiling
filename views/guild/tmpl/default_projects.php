@@ -562,7 +562,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             dataModal = JSON.parse(Modal.find("#Data").val()),
             redactor = $(".redactor");
 
-        redactor.attr({"src":"http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=guild&type=redactor&id=" + dataModal.id + "&proj_id=" + dataModal.project});
+        redactor.attr({"src":"http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=guild&type=redactor&id=" + dataModal.id});
         redactor.show();
     }
 </script>

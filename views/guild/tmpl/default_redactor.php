@@ -16,27 +16,27 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $app = JFactory::getApplication();
 $id = $app->input->get('id', null, 'int');
-$proj_id = $app->input->get('proj_id', null, 'int');
 $page = $app->input->get('page', null, 'string');
 
 $user = JFactory::getUser();
 $model = $this->getModel();
-$cutModel = $this->getModel("calculation");
-$original_sketch = (empty($id))?null:$cutModel->getData($id);
+$cutModel = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
+$data = (empty($id))?null:$cutModel->getData($id);
 ?>
 
-<?if(!(empty($id) || empty($proj_id) || empty($original_sketch))):?>
+<?if(!(empty($id) || empty($original_sketch))):?>
 <form action="/sketch/cut_redactor/index.php" id="data_form" method="POST" style="display : none;">
-    <input type="hidden" name="walls" id="input_walls" value="<?=$original_sketch;?>">
-    <input type="hidden" name="calc_id" id="calc_id" value="<?=$id;?>">
-    <input type="hidden" name="proj_id" id="proj_id" value="<?=$proj_id;?>">
+    <input type="hidden" name="walls" id="input_walls" value="<?=$data->original_sketch;?>">
+    <input type="hidden" name="calc_id" id="calc_id" value="<?=$data->id;?>">
+    <input type="hidden" name="proj_id" id="proj_id" value="<?=$data->project_id;?>">
     <input type="hidden" name="page" id="page" value="guild">
 </form>
 
 <script type="text/javascript">
     var $ = jQuery;
     $(document).ready(function () {
-       $("#data_form").submit();
+        console.log($("#data_form").serialize());
+        $("#data_form").submit();
     });
 </script>
 <?else:?>
