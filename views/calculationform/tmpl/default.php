@@ -2942,7 +2942,7 @@ function getSelectIndex(selects,obj){
 	echo "console.log('$sess');";
 	if (isset($_SESSION['jform_n4'],$_SESSION['jform_n5'],$_SESSION['jform_n9'],$_SESSION['data'],
 		$_SESSION['cut'],$_SESSION['texture'],$_SESSION['color'],$_SESSION['manufacturer'],
-		$_SESSION['width'],$_SESSION['offcut'],$_SESSION['calc_title'],$_SESSION['original']))
+		$_SESSION['width'],$_SESSION['offcut'],$_SESSION['calc_title']))
 	{
 		$n4 = $_SESSION['jform_n4'];
 		$n5 = $_SESSION['jform_n5'];
@@ -2982,7 +2982,6 @@ function getSelectIndex(selects,obj){
 
 
 	echo 'function change_select_manufacturer() {var lnk=document.getElementById(\'jform_proizv\').options;'
-		.'console.log(lnk);'
 		.'for (var i=0;i<lnk.length;i++) {'
 		.'if (lnk[i].value=="'.$manufacturer.'") {lnk[i].selected=true;} } '
 		.'jQuery("#sketch_switch").prop("disabled",false);'
