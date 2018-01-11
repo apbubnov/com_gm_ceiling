@@ -511,8 +511,8 @@ foreach ($gaugers_id as $value) {
 								table += '<tr><td>'+element.project_calculation_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.project_calculator+'</td></tr>';
 							}
 						});
-						jQuery("#projects_gaugers").empty();
-						jQuery("#projects_gaugers").append(table);
+						jQuery("#table-gauging").empty();
+						jQuery("#table-gauging").append(table);
 					}
 				});
 			}
