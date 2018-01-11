@@ -490,124 +490,49 @@ foreach ($gaugers_id as $value) {
 					}
 				}); */
 			} else {
-				table += '<tr id="caption-data"><td colspan="6">'+d+'.'+m+'.'+y+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
-				//<tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Замерщик</td></tr>
+				table += '<tr id="caption-data"><td colspan="6">'+date_to_modal_window+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Замерщик</td></tr>';
 				jQuery.ajax({
 					type: 'POST',
-					url: "/index.php?option=com_gm_ceiling&task=teams.GetMounting",
-					dataType: 'json',
+					url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugersWorkDayOff",
 					data: {
 						date: date,
-						id: idBrigade,
+						id: id_gauger,
 					},
 					success: function(data) {
-						Array.from(data).forEach(function(element) {
-							if (element.project_mounting_date.length < 6) {
-								if (element.project_status == 5) {
-									status = "В производстве";
-								} else if (element.project_status == 6 ) {
-									status = "На раскрое";
-								} else if (element.project_status == 7 ) {
-									status = "Укомплектован";
-								} else if (element.project_status == 8 ) {
-									status = "Выдан";
-								} else if (element.project_status == 10 ) {
-									status = "Ожидание монтажа";
-								} else if (element.project_status == 16 ) {
-									status = "Монтаж";
-								} else if (element.project_status == 11 ) {
-									status = "Монтаж выполнен";
-								} else if (element.project_status == 17 ) {
-									status = "Монтаж недовыполнен";
+						//Вывод замеров у НМС у замерщиков 11
+						Array.prototype.diff = function(a) {
+							return this.filter(function(i) {return a.indexOf(i) < 0;});
+						};
+						data = JSON.parse(data); // замеры и выходные
+						console.log(data);
+						/* 
+						var table = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
+						AllTime.forEach( elementTime => {
+							var t = elementTime.substr(0, 2);
+							t++;
+							Array.from(AllGauger).forEach(function(elementGauger) {
+								table += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+								table += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+								var emptytd = 0;
+								Array.from(data).forEach(function(elementProject) {
+									if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+										table += '<td>'+elementProject.project_info+'</td>';
+										emptytd = 1;
+									}
+								});
+								if (emptytd == 0) {
+									table += '<td></td>';
 								}
-								if (element.read_by_mounter == 0) {
-									status += " / Не прочитан";
-								}
-								if (element.note == null) {
-									note = "";
-								} else {
-									note = element.note;
-								}
-								perimeter = +element.perimeter;
-								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
-							} else {
-								table += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
-							}
-						});
-						jQuery("#table-mounting").append(table);
+								table += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
+							});
+						}); */
+						jQuery("#projects_gaugers").empty();
+						jQuery("#projects_gaugers").append(table);
 					}
 				});
 			}
 		}
 		// -----------------------------------------
-
-
-		// открытие модального окна с календаря и получение даты и вывода свободных замерщиков
-		jQuery("#calendars-container").on("click", ".current-month,  day-off", function() {
-/*             window.idDay = jQuery(this).attr("id");
-            reg1 = "D(.*)D";
-            reg2 = "M(.*)M";
-            reg3 = "Y(.*)Y";
-			reg4 = "I(.*)I";
-			if (idDay.match(reg1)[1].length == 1) {
-                d = "0"+idDay.match(reg1)[1];
-            } else {
-                d = idDay.match(reg1)[1];
-            }
-            if (idDay.match(reg2)[1].length == 1) {
-                m = "0"+idDay.match(reg2)[1];
-            } else {
-                m = idDay.match(reg2)[1];
-            }
-            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
-			window.id_gauger = idDay.match(reg4)[1]; 
-            jQuery("#modal-window-with-table").show();
-			jQuery("#window-with-table").show("slow");
-            jQuery("#close-modal-window").show();
-*/
-			jQuery.ajax({
-                type: 'POST',
-                url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugersWorkDayOff",
-                data: {
-                    date: date,
-					id: id_gauger,
-                },
-                success: function(data) {
-					//Вывод замеров у НМС у замерщиков 10
-                    Array.prototype.diff = function(a) {
-                        return this.filter(function(i) {return a.indexOf(i) < 0;});
-                    };
-					data = JSON.parse(data); // замеры и выходные
-					console.log(data);
-                    /* 
-                    var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
-                    AllTime.forEach( elementTime => {
-                        var t = elementTime.substr(0, 2);
-                        t++;
-                        Array.from(AllGauger).forEach(function(elementGauger) {
-                            TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                            TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-                            var emptytd = 0;
-                            Array.from(data).forEach(function(elementProject) {
-                                if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                    TableForSelect += '<td>'+elementProject.project_info+'</td>';
-                                    emptytd = 1;
-                                }
-                            });
-                            if (emptytd == 0) {
-                                TableForSelect += '<td></td>';
-                            }
-                            TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
-                        });
-                    });
-                    jQuery("#projects_gaugers").empty();
-                    jQuery("#projects_gaugers").append(TableForSelect);
-                    jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>"); */
-                }
-            });
-			jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
-        });
-        //--------------------------------------------
 
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
