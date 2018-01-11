@@ -608,7 +608,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
         Block.find("#Data").val(JSON.stringify(ModalData));
 
-        ModalShow(ModalData.id);
+        ModalShow(parseInt(ModalData.id));
 
         $(".PRELOADER_GM").hide();
     }
