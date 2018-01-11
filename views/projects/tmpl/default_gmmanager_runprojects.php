@@ -198,8 +198,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 			var type = "info",
 				value = td.data("value"),
 				//new_value = input.data("new_value");
-                new_value = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_project_sum").val();
-                mouting_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_mounting_sum").val();
+                new_value = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_project_sum").val(),
+                mouting_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_mounting_sum").val(),
                 material_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_material_sum").val();
 				var subject = "Отметка стоимости договора №" + td.data("project_id"),
                     text = "<p><input name='check_mount' onclick='changeDone(this,"+new_value+","+mouting_sum+","+material_sum+");' class='radio' id ='done' value='1'  type='radio' checked><label for = 'done'>Монтаж выполнен</label></p>";
