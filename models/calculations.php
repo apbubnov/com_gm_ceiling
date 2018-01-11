@@ -504,6 +504,7 @@ class Gm_ceilingModelCalculations extends JModelList {
         }
     }
 
+   // public function
     //KM_CHANGED START
 
     public function getProjectItems($project_id)
