@@ -472,6 +472,7 @@ foreach ($gaugers_id as $value) {
 			window.date = y+"-"+m+"-"+d;
 			date_to_modal_window = d+"."+m+"."+y;
 			window.id_gauger = ChoosenDay.match("I(.*)I")[1];
+			jQuery("#table-gauging").empty();
 			var table = "";
 			if (kind == "empty") {
 				table = '<tr id="caption-data"><td colspan=2>'+date_to_modal_window+'</td></tr><tr><td colspan=2>В данный момент на этот день замеров нет</td></tr>';        
@@ -484,8 +485,7 @@ foreach ($gaugers_id as $value) {
 						id: id_gauger,
 					},
 					success: function(data) {
-						//Вывод замеров у НМС у замерщиков 26
-						//data = JSON.parse(data);
+						//Вывод замеров у НМС у замерщиков 27
 						console.log(data);
 						Array.from(data).forEach(function(element) {
 							console.log(element.project_calculation_date);
@@ -493,7 +493,7 @@ foreach ($gaugers_id as $value) {
 						});
 					}
 				});
-				jQuery("#table-gauging").empty();
+				console.log(table);
 				jQuery("#table-gauging").append(table);
 			} else {
 				table += '<tr id="caption-data"><td colspan="6">'+date_to_modal_window+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td></tr>';
@@ -527,7 +527,6 @@ foreach ($gaugers_id as $value) {
 								}
 							}
 						});
-						jQuery("#table-gauging").empty();
 						jQuery("#table-gauging").append(table);
 					}
 				});
