@@ -636,6 +636,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                         if (fblocks2.length < 1) {
                             var Pred = "", Next = "", Temp = null;
                             blocks2.each(function () {
+                                console.log(parseInt(i2.replace("p","")) + "-" + parseInt(Next.replace("p","")));
                                 if (parseInt(i2.replace("p","")) <= parseInt(Next.replace("p",""))) return;
 
                                 Temp = $(this);
