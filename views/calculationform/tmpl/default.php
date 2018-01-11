@@ -979,533 +979,532 @@
                                 	<label><i class="fa fa-trash" aria-hidden="true"></i></label>
                             	</div>
                             	<div class="clr"></div>
-                       		 </div>
-                        <div id="level_block_html" class="hide_label">
-                            <?php $n29 = $this->item->n29;
-                            $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-                             if(count($n29) > 0) { ?>
-                                <?php foreach($n29 as $level) {?>
+                       		</div>
+                        	<div id="level_block_html" class="hide_label">
+                            	<?php $n29 = $this->item->n29;
+                           			$component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+                             		if(count($n29) > 0) { 
+                                		foreach($n29 as $level) {?>
+                                    		<div class="form-group">
+                                        		<div class="advanced_col1">
+                                            		<input name="n29_count[]"  value="<?=/*$tmp[$item]*/ $level->n29_count; ?>" class="form-control" placeholder="м." type="tel">
+                                        		</div>
+                                        		<div class="advanced_col2">
+                                            		<select name="n29_type[]" id="n29" class="form-control n29_control" placeholder="Тип">
+														<?foreach ($this->item->types[11]->id AS $type1):
+														if($this->item->n2 == 29 && ($type1->id == 12 || $type1->id == 15)) {?>
+                                                    		<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
+                                               			<? } else if($this->item->n2 != 29) { ?>
+															<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
+											    		<?}; endforeach; ?>
+                                            		</select>
+                                        		</div>
+												<div class="advanced_col3 center">
+													<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+												</div>
+                                        		<div class="clr"></div>
+                                    		</div>
+                               			<?php } ?>
+                            		<?php } ?>
+                        	</div>
+                        	<button id="add_level" class="btn btn-primary" type="button">Добавить </button>
 
-
-                                    <div class="form-group">
-                                        <div class="advanced_col1">
-                                            <input name="n29_count[]"  value="<?=/*$tmp[$item]*/ $level->n29_count; ?>" class="form-control" placeholder="м." type="tel">
-                                        </div>
-                                        <div class="advanced_col2">
-                                            <select name="n29_type[]" id="n29" class="form-control n29_control" placeholder="Тип">
-
-                                                <?foreach ($this->item->types[11]->id AS $type1):?>
-												<?if($this->item->n2 == 29 && ($type1->id == 12 || $type1->id == 15)) {?>
-                                                    <option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
-                                               <? } else if($this->item->n2 != 29) { ?>
-											   <option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
-											    <?}; endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="advanced_col3 center">
-                                            <button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                        </div>
-                                        <div class="clr"></div>
-                                    </div>
-                                <?php } ?>
-                            <?php } ?>
-                        </div>
-                        <button id="add_level" class="btn btn-primary" type="button">Добавить </button>
-
-                    </div>
-                </div>
-            </div>
-		<? }?>
-		<div class="row sm-margin-bottom">
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-4">
-				<div class="form-group">
-					<table>
-					<tr>
-						<td>
-							<h3>Пожарная сигнализация</h3>
-						</td>
-						<td>
-							<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-								
-								Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них</span></a>
-							</td>
-						</tr>
-					</table>
-					<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel">
-				</div>
-			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-		<?php if($type!='guest'&&$user->dealer_type!=2) {?>
-		<div class="row sm-margin-bottom" id="razdelitel">
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-4">
-				<div class="form-group">
-                    <table>
-                        <tr>
-                            <td>
-                                <label id="jform_n20-lbl" for="jform_n20" class="">Разделитель</label>
-                            </td>
-                            <td>
-                                <a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-								На 1м разделителя используется:  <br> Брус 40*50  + 3 * Саморез ГКД 4,2 * 102 +  3 * Дюбель полим. 6 * 51 + 20 * Саморез ГДК 3,5 * 51 +  Вставка в разд 303 гриб + Багет разделительный аллюм (2.5 м.) </span></a>
-                            </td>
-                        </tr>
-                    </table>
-
-					<input name="jform[n20]" id="jform_n20" data-next="#jform_n21" value="<?php echo $this->item->n20; ?>" class="form-control" placeholder="м." type="tel">
-				</div>
-			</div>
-			<div class="col-sm-4">
-			</div>					
-		</div>
-		<div class="row sm-margin-bottom">
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-4">
-				<div class="form-group">
-                    <table>
-                        <tr>
-                            <td>
-                                <label id="jform_n24-lbl" for="jform_n24" class="">Сложность доступа</label>
-                            </td>
-                            <td>
-                                <a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-								Наценка на монтажные работы за труднодоступные места. Считается по метрам.  </span></a>
-                            </td>
-                        </tr>
-                    </table>
-
-					<input name="jform[n24]" id="jform_n24" data-next="#jform_n10" value="<?php echo $this->item->n24; ?>" class="form-control" placeholder="м." type="tel">
-				</div>
-			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-		<div class="row sm-margin-bottom">
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-4">
-				<div class="form-group">
-                    <table>
-                        <tr>
-                            <td>
-                                <label id="jform_n11-lbl" for="jform_n11" class="">Внутренний вырез (на месте)</label>
-                            </td>
-                            <td>
-                                <a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-								На 1м внутреннего выреза используется:  <br> Брус 40*50  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм) + 3 * Кронштейн 15 * 12,5 см. + + 22 * Саморез 3,5 * 41 +  16 * Дюбель полим. 6 * 51 + Гарпун </span></a>
-                            </td>
-                        </tr>
-                    </table>
-					<input name="jform[n11]" id="jform_n11" value="<?php echo $this->item->n11; ?>" class="form-control" placeholder="м." type="tel">
-				</div>
-			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-		<div class="row sm-margin-bottom">
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-4">
-				<div class="form-group">
-                    <table>
-                        <tr>
-                            <td>
-                                <label id="jform_n31-lbl" for="jform_n31" class="">Внутренний вырез (в цеху)</label>
-                            </td>
-                            <td>
-                                <a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-								На 1м внутреннего выреза используется:  <br>  Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  + 10 * Саморез 3,5 * 51 +  10 * Дюбель полим. 6 * 51 + Вставка</span></a>
-                            </td>
-                        </tr>
-                    </table>
-					<input name="jform[n31]" id="jform_n31" value="<?php echo $this->item->n31; ?>" class="form-control" placeholder="м." type="tel">
-				</div>
-			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-            <div class="row sm-margin-bottom">
-                <div class="col-sm-4">
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <table>
-                            <tr>
-                                <td>
-                                    <label id="jform_n32-lbl" for="jform_n32" class="">Слив воды</label>
-                                </td>
-                                <td>
-                                    <a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-								В работу входит слив воды. Укажите колиество комнат.</span></a>
-                                </td>
-                            </tr>
-                        </table>
-                        <input name="jform[n32]" id="jform_n32" value="<?php echo $this->item->n32; ?>" class="form-control" placeholder="Кол-во комнат, шт." type="tel">
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                </div>
-            </div>
-		<div class="row sm-margin-bottom">
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-4">
-				<div class="form-group">
-                    <table>
-                        <tr>
-                            <td>
-                                <label id="jform_dop_krepezh-lbl" for="jform_dop_krepezh" class="">Дополнительный крепеж</label>
-                            </td>
-                            <td>
-                                <a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-								На 1м дополнительного крепежа используется:  <br> 10 * Саморез 3,5 * 51  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  </span></a>
-                            </td>
-                        </tr>
-                    </table>
-
-					<input name="jform[dop_krepezh]" id="jform_dop_krepezh" data-next="#jform_n18" value="<?php echo $this->item->dop_krepezh; ?>" class="form-control" placeholder="м." type="tel">
-				</div>
-			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-		<div class="row sm-margin-bottom">
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-4">
-				<div class="form-group">
-                    <table>
-                        <tr>
-                            <td>
-                                <label id="jform_n18-lbl" for="jform_n18" class="">Усиление стен</label>
-                            </td>
-                            <td>
-                                <a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-								На 1м усиления стен используется:  <br> Брус 40*50 + 3 * Саморез 3,5 * 51  + 3 * Дюбель полим. 6 * 51 + 3 * Кронштейн 15 * 12,5 см.</span></a>
-                            </td>
-                        </tr>
-                    </table>
-					<input name="jform[n18]" id="jform_n18" data-next="#jform_n11" value="<?php echo $this->item->n18; ?>" class="form-control" placeholder="м." type="tel">
-				</div>
-			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-        <?php }?>
-	</div>
-	<div class="container">
-		<div class="row sm-margin-bottom">
-			<div class="col-sm-4">
-			</div>
-			<div class="col-sm-4">
-			<div id="jform_n22_block" > 
-				<h3>Вентиляция</h3>
-				<div class="form-group">
-						<div class="advanced_col1">
-							<label>Кол-во,шт</label>
-						</div>
-						<div class="advanced_col2">
-							<label>Тип</label>
-						</div>
-						<div class="advanced_col3">
-							<label>Размер</label>
-						</div>
-						<div class="advanced_col4 center">
-							<label><i class="fa fa-trash" aria-hidden="true"></i></label>
-						</div>
-						<div class="clr"></div>
-					</div>
-				<div id="jform_n22_block_html" class="hide_label"  >
-				<?php $n22 = $this->item->n22; ?>
-						<?php if(count($n22) > 0) { ?>
-						<?php foreach($n22 as $ventilation) if ($ventilation->n22_count > 0) { ?>
-					<div class="form-group">
-						<div class="advanced_col1">
-							<input name="n22_count[]" class="form-control" value="<?php echo $ventilation->n22_count; ?>" placeholder="м." type="tel">
-						</div>
-
-						<div class="advanced_col2">
-							<select id="n22" class="form-control" name="n22_type[]" for="jform_n22_type">
-							 <?foreach ($this->item->types[4]->id AS $ring):?>
-                                     <option value="<?=$ring->id;?>" <?=($ring->id == $ventilation->n22_type)?'selected':'';?>><?=$ring->title;?></option>
-                              <?endforeach;?>
-							</select>
-						</div>
-						<div class="advanced_col3">
-							<select id="n22_1" class="form-control" name="n22_diam[]" for="jform_n22_diam">
-							 <?foreach ($this->item->types[4]->id[$ventilation->n22_type]->options[0]->components_option AS $n22_item):?>
-                                  <option value="<?=$n22_item->id;?>" <?=($n22_item->id == $ventilation->n22_size)?'selected':'';?>><?=$n22_item->title;?></option>
-                             <?endforeach;?>
-							</select>
-						</div>
-						<div class="advanced_col4 center">
-							<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-						</div>
-						<div class="clr"></div>
-					</div>
-						<?php }?>
-						<?php }?>
-					</div>
-					<button id="add_n22" class="btn btn-primary" type="button">Добавить</button>
-				
-			</div>
-		</div>
-	</div>
-	<div class="container">
-		<?php if($type!='guest' && $user->dealer_type!=2) {?>
-	<div class="row sm-margin-bottom">
-		<div class="col-sm-4">
-		</div>
-		<div class="col-sm-4">
-			<table>
-				<tr>
-					<td>
-						<h3>Диффузор</h3>
-					</td>
-					<td>
-						<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-							<br>Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br>
-							</span></a>
-						</td>
-					</tr>
-				</table>
-				<div id="jform_n23_block" >
-					<div class="form-group">
-						<div class="advanced_col1">
-							<label>Кол-во,шт</label>
-						</div>
-						<div class="advanced_col2">
-							<label>Размер</label>
-						</div>
-						<div class="advanced_col3 center">
-							<label><i class="fa fa-trash" aria-hidden="true"></i></label>
-						</div>
-						<div class="clr"></div>
-					</div>
-					<div id="jform_n23_block_html" class="hide_label">
-						<?php $n23 = $this->item->n23; ?>
-						<?php if(count($n23) > 0) { ?>
-						<?php foreach($n23 as $diffuzor) if ($diffuzor->n23_count > 0) { ?>
-						<div class="form-group">
-							<div class="advanced_col1">
-								<input name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
+                    	</div>
+                	</div>
+            	</div>
+			<?php } ?>
+				<!-- пожарная сигнализация -->
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<table>
+								<tr>
+									<td>
+										<h3>Пожарная сигнализация</h3>
+									</td>
+									<td>
+										<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+											
+											Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них</span></a>
+										</td>
+									</tr>
+								</table>
+								<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel">
 							</div>
-							<div class="advanced_col2">
-								<select class="form-control" name="n23_size[]" for="jform_n22_type" placeholder="Размер">
-								<?foreach ($this->item->n23_all AS $diffuzor_item):?>
-                                     <option value="<?=$diffuzor_item->id;?>" <?=($diffuzor_item->id == $diffuzor->n23_size)?'selected':'';?>><?=$diffuzor_item->title;?></option>
-                                 <?endforeach;?>
-								</select>
-							</div>
-							<div class="advanced_col3 center">
-								<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-							</div>
-							<div class="clr"></div>
 						</div>
-						<?php } ?>
-						<?php } ?>
+						<div class="col-sm-4"></div>
 					</div>
-					<button id="add_n23" class="btn btn-primary" type="button">Добавить</button>
 				</div>
-			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-		<?}?>
-	</div>
-	
-			<?php if($type!='guest'&&$user->dealer_type!=2) {?>
-		
+			<?php if($type!='guest' && $user->dealer_type!=2) {?>
+				<!-- разделитель -->
+				<div class = "container">
+					<div class="row sm-margin-bottom" id="razdelitel">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td>
+											<label id="jform_n20-lbl" for="jform_n20" class="">Разделитель</label>
+										</td>
+										<td>
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+
+											На 1м разделителя используется:  <br> Брус 40*50  + 3 * Саморез ГКД 4,2 * 102 +  3 * Дюбель полим. 6 * 51 + 20 * Саморез ГДК 3,5 * 51 +  Вставка в разд 303 гриб + Багет разделительный аллюм (2.5 м.) </span></a>
+										</td>
+									</tr>
+								</table>
+								<input name="jform[n20]" id="jform_n20" data-next="#jform_n21" value="<?php echo $this->item->n20; ?>" class="form-control" placeholder="м." type="tel">
+							</div>
+						</div>
+						<div class="col-sm-4"></div>					
+					</div>
+				</div>
+				<!-- сложность доступа -->
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td>
+											<label id="jform_n24-lbl" for="jform_n24" class="">Сложность доступа</label>
+										</td>
+										<td>
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+
+											Наценка на монтажные работы за труднодоступные места. Считается по метрам.  </span></a>
+										</td>
+									</tr>
+								</table>
+
+								<input name="jform[n24]" id="jform_n24" data-next="#jform_n10" value="<?php echo $this->item->n24; ?>" class="form-control" placeholder="м." type="tel">
+							</div>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+				<!-- внутренний вырез на месте -->
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td>
+											<label id="jform_n11-lbl" for="jform_n11" class="">Внутренний вырез (на месте)</label>
+										</td>
+										<td>
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+
+											На 1м внутреннего выреза используется:  <br> Брус 40*50  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм) + 3 * Кронштейн 15 * 12,5 см. + + 22 * Саморез 3,5 * 41 +  16 * Дюбель полим. 6 * 51 + Гарпун </span></a>
+										</td>
+									</tr>
+								</table>
+								<input name="jform[n11]" id="jform_n11" value="<?php echo $this->item->n11; ?>" class="form-control" placeholder="м." type="tel">
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</div>
+				<!-- Внутренний вырез в цеху -->
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td>
+											<label id="jform_n31-lbl" for="jform_n31" class="">Внутренний вырез (в цеху)</label>
+										</td>
+										<td>
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+
+											На 1м внутреннего выреза используется:  <br>  Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  + 10 * Саморез 3,5 * 51 +  10 * Дюбель полим. 6 * 51 + Вставка</span></a>
+										</td>
+									</tr>
+								</table>
+								<input name="jform[n31]" id="jform_n31" value="<?php echo $this->item->n31; ?>" class="form-control" placeholder="м." type="tel">
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</div>
+				<!-- слив воды -->
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td>
+											<label id="jform_n32-lbl" for="jform_n32" class="">Слив воды</label>
+										</td>
+										<td>
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+
+										В работу входит слив воды. Укажите колиество комнат.</span></a>
+										</td>
+									</tr>
+								</table>
+								<input name="jform[n32]" id="jform_n32" value="<?php echo $this->item->n32; ?>" class="form-control" placeholder="Кол-во комнат, шт." type="tel">
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</div>
+				<!-- доп крепеж -->
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td>
+											<label id="jform_dop_krepezh-lbl" for="jform_dop_krepezh" class="">Дополнительный крепеж</label>
+										</td>
+										<td>
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+
+											На 1м дополнительного крепежа используется:  <br> 10 * Саморез 3,5 * 51  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  </span></a>
+										</td>
+									</tr>
+								</table>
+
+								<input name="jform[dop_krepezh]" id="jform_dop_krepezh" data-next="#jform_n18" value="<?php echo $this->item->dop_krepezh; ?>" class="form-control" placeholder="м." type="tel">
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</div>
+				<!-- Усилиние стен -->
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<table>
+									<tr>
+										<td>
+											<label id="jform_n18-lbl" for="jform_n18" class="">Усиление стен</label>
+										</td>
+										<td>
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+
+											На 1м усиления стен используется:  <br> Брус 40*50 + 3 * Саморез 3,5 * 51  + 3 * Дюбель полим. 6 * 51 + 3 * Кронштейн 15 * 12,5 см.</span></a>
+										</td>
+									</tr>
+								</table>
+								<input name="jform[n18]" id="jform_n18" data-next="#jform_n11" value="<?php echo $this->item->n18; ?>" class="form-control" placeholder="м." type="tel">
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</div>
+        	<?php }?>
 			<div class="container">
-				<div class="row sm-margin-bottom ">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<h3>Другие комплектующие</h3>
-					</div>
-					<div class="col-sm-4">
-					</div>
-				</div>
-				
 				<div class="row sm-margin-bottom">
+					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<div class="advanced_col_half">
-							<label>Название</label>
-							<div id="extra_components_title_container">
-								<?php foreach($extra_components_array as $item) { ?>
-								<div class='form-group'><input name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
-								<?php } ?>
+						<div id="jform_n22_block"> 
+							<h3>Вентиляция</h3>
+							<div class="form-group">
+								<div class="advanced_col1">
+									<label>Кол-во,шт</label>
+								</div>
+								<div class="advanced_col2">
+									<label>Тип</label>
+								</div>
+								<div class="advanced_col3">
+									<label>Размер</label>
+								</div>
+								<div class="advanced_col4 center">
+									<label><i class="fa fa-trash" aria-hidden="true"></i></label>
+								</div>
+								<div class="clr"></div>
 							</div>
-						</div>
-						<div class="advanced_col_half">
-							<label>Стоимость</label>
-							<div id="extra_components_value_container">
-								<?php foreach($extra_components_array as $item) { ?>
-								<div class='form-group'><input name='extra_components_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
-								<?php } ?>
+							<div id="jform_n22_block_html" class="hide_label">
+								<?php $n22 = $this->item->n22;
+									if(count($n22) > 0) {
+										foreach($n22 as $ventilation) if ($ventilation->n22_count > 0) { ?>
+											<div class="form-group">
+												<div class="advanced_col1">
+													<input name="n22_count[]" class="form-control" value="<?php echo $ventilation->n22_count; ?>" placeholder="м." type="tel">
+												</div>
+												<div class="advanced_col2">
+													<select id="n22" class="form-control" name="n22_type[]" for="jform_n22_type">
+													<?foreach ($this->item->types[4]->id AS $ring):?>
+															<option value="<?=$ring->id;?>" <?=($ring->id == $ventilation->n22_type)?'selected':'';?>><?=$ring->title;?></option>
+													<?endforeach;?>
+													</select>
+												</div>
+												<div class="advanced_col3">
+													<select id="n22_1" class="form-control" name="n22_diam[]" for="jform_n22_diam">
+													<?foreach ($this->item->types[4]->id[$ventilation->n22_type]->options[0]->components_option AS $n22_item):?>
+														<option value="<?=$n22_item->id;?>" <?=($n22_item->id == $ventilation->n22_size)?'selected':'';?>><?=$n22_item->title;?></option>
+													<?endforeach;?>
+													</select>
+												</div>
+												<div class="advanced_col4 center">
+													<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+												</div>
+												<div class="clr"></div>
+											</div>
+										<?php }?>
+									<?php }?>
 							</div>
+							<button id="add_n22" class="btn btn-primary" type="button">Добавить</button>
 						</div>
 					</div>
-					<div class="col-sm-4">
-					</div>
 				</div>
-				<div class="row sm-margin-bottom">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							<button id="extra_components_button" class="btn btn-primary" type="button">Добавить</button>
-						</div>
-					</div>
-					<div class="col-sm-4">
-					</div>
-				</div>
-				<div class="row sm-margin-bottom">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<h3>Другие работы по монтажу</h3>
-					</div>
-					<div class="col-sm-4">
-					</div>
-				</div>
-				<div class="row sm-margin-bottom">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<div class="advanced_col_half">
-							<label>Название</label>
-							<div id="extra_mounting_title_container">
-								<?php foreach($extra_mounting_array as $item) { ?>
-								<div class='form-group'><input name='extra_mounting_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
-								<?php } ?>
-							</div>
-						</div>
-						<div class="advanced_col_half">
-							<label>Стоимость</label>
-							<div id="extra_mounting_value_container">
-								<?php foreach($extra_mounting_array as $item) { ?>
-								<div class='form-group'><input name='extra_mounting_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
-								<?php } ?>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-4">
-					</div>
-				</div>
-				<div class="row sm-margin-bottom">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							<button id="extra_mounting_button" class="btn btn-primary" type="button">Добавить</button>
-						</div>
-					</div>
-					<div class="col-sm-4">
-					</div>
-				</div>
-				
 			</div>
-		</div>
-
-
-            <div class="container">
-                <div class="row sm-margin-bottom">
-                    <div class="col-md-4 pull-center">
-                        <h3>Новый процент скидки</h3>
-                        <input name= "jform[discount]" id="new_discount" class="form-control" placeholder="Введите %" type="number" max="100" min="0" type="number" value="<? echo $this->item->discount; ?>" >
-                    </div>
-                </div>
-			</div>
+			<?php if($type!='guest' && $user->dealer_type!=2) {?>
+				<div class="container">
+					<div class="row sm-margin-bottom">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4">
+						<table>
+							<tr>
+								<td>
+									<h3>Диффузор</h3>
+								</td>
+								<td>
+									<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+										<br>Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br>
+										</span></a>
+								</td>
+							</tr>
+						</table>
+						<div id="jform_n23_block" >
+							<div class="form-group">
+								<div class="advanced_col1">
+									<label>Кол-во,шт</label>
+								</div>
+								<div class="advanced_col2">
+									<label>Размер</label>
+								</div>
+								<div class="advanced_col3 center">
+									<label><i class="fa fa-trash" aria-hidden="true"></i></label>
+								</div>
+								<div class="clr"></div>
+							</div>
+							<div id="jform_n23_block_html" class="hide_label">
+								<?php $n23 = $this->item->n23;
+									if(count($n23) > 0) {
+										foreach($n23 as $diffuzor) if ($diffuzor->n23_count > 0) { ?>
+											<div class="form-group">
+												<div class="advanced_col1">
+													<input name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
+												</div>
+												<div class="advanced_col2">
+													<select class="form-control" name="n23_size[]" for="jform_n22_type" placeholder="Размер">
+													<?foreach ($this->item->n23_all AS $diffuzor_item):?>
+														<option value="<?=$diffuzor_item->id;?>" <?=($diffuzor_item->id == $diffuzor->n23_size)?'selected':'';?>><?=$diffuzor_item->title;?></option>
+													<?endforeach;?>
+													</select>
+												</div>
+												<div class="advanced_col3 center">
+													<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+												</div>
+												<div class="clr"></div>
+											</div>
+										<?php } ?>
+									<?php } ?>
+							</div>
+							<button id="add_n23" class="btn btn-primary" type="button">Добавить</button>
+						</div>
+					</div>
+					<div class="col-sm-4"></div>
+				</div>
+				<div class="container">
+					<div class="row sm-margin-bottom ">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<h3>Другие комплектующие</h3>
+						</div>
+						<div class="col-sm-4">
+					</div>
+				</div>
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="advanced_col_half">
+								<label>Название</label>
+								<div id="extra_components_title_container">
+									<?php foreach($extra_components_array as $item) { ?>
+									<div class='form-group'><input name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
+									<?php } ?>
+								</div>
+							</div>
+							<div class="advanced_col_half">
+								<label>Стоимость</label>
+								<div id="extra_components_value_container">
+									<?php foreach($extra_components_array as $item) { ?>
+									<div class='form-group'><input name='extra_components_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
+									<?php } ?>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<button id="extra_components_button" class="btn btn-primary" type="button">Добавить</button>
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</div>
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h3>Другие работы по монтажу</h3>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</div>
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<div class="advanced_col_half">
+								<label>Название</label>
+								<div id="extra_mounting_title_container">
+									<?php foreach($extra_mounting_array as $item) { ?>
+									<div class='form-group'><input name='extra_mounting_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
+									<?php } ?>
+								</div>
+							</div>
+							<div class="advanced_col_half">
+								<label>Стоимость</label>
+								<div id="extra_mounting_value_container">
+									<?php foreach($extra_mounting_array as $item) { ?>
+									<div class='form-group'><input name='extra_mounting_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
+									<?php } ?>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<button id="extra_mounting_button" class="btn btn-primary" type="button">Добавить</button>
+							</div>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row sm-margin-bottom">
+						<div class="col-md-4 pull-center">
+							<h3>Новый процент скидки</h3>
+							<input name= "jform[discount]" id="new_discount" class="form-control" placeholder="Введите %" type="number" max="100" min="0" type="number" value="<? echo $this->item->discount; ?>" >
+						</div>
+					</div>
+				</div>
 			<?php }?>
-
-            <!-- Рассчитать -->
-			<div class="container">
-                <div class="row sm-margin-bottom ">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<h3>Монтаж</h3>
-					</div>
-					<div class="col-sm-4">
-					</div>
+		</div>									
+        <!-- Рассчитать -->
+		<div class="container">
+			<div class="row sm-margin-bottom ">
+				<div class="col-sm-4">
 				</div>
-                <div class="row sm-margin-bottom">
-                    <div class="col-sm-4">
-                    </div>
-                    <div class="col-sm-4" id = "need_mount">
-                        <input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
-                        <label for="with_mount">Нужен</label>
-                        <br>
-                        <input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
-                        <label for="without">Не нужен</label>
-                    </div>
-                    <div class="col-sm-4">
-                    </div>
-                </div>
-            </div>
-
-			<div class="container">
-                <div class="row sm-margin-bottom ">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<h3>Высота помещения</h3>
-					</div>
-					<div class="col-sm-4">
-					</div>
+				<div class="col-sm-4">
+					<h3>Монтаж</h3>
 				</div>
-                <div class="row sm-margin-bottom">
-                    <div class="col-sm-4">
-                    </div>
-                    <div class="col-sm-4" id = "height">
-					<? if ($this->item->height == 0) { ?>
-                        <input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
-                        <label for="max_height">больше 3х метров</label>
-                        <br>
-                        <input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
-                        <label for="min_height">меньше 3х метров</label>
-						<?} else { ?>
-						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
-                        <label for="max_height">больше 3х метров</label>
-                        <br>
-                        <input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
-                        <label for="min_height">меньше 3х метров</label>
-						<? } ?>
-                    </div>
-                    <div class="col-sm-4">
-                    </div>
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="row sm-margin-bottom">
-                    <div class="col-md-4 pull-center">
-                        <button id="calculate_button" class="btn btn-primary btn-big" type="button">
-						<span class="loading" style="display: none;">
-							Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-						</span>
-                            <span class="static">Рассчитать</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div id="result_block">
+				<div class="col-sm-4">
+				</div>
+			</div>
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4" id = "need_mount">
+					<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
+					<label for="with_mount">Нужен</label>
+					<br>
+					<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
+					<label for="without">Не нужен</label>
+				</div>
+				<div class="col-sm-4">
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row sm-margin-bottom ">
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4">
+					<h3>Высота помещения</h3>
+				</div>
+				<div class="col-sm-4">
+				</div>
+			</div>
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4" id = "height">
+				<? if ($this->item->height == 0) { ?>
+					<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
+					<label for="max_height">больше 3х метров</label>
+					<br>
+					<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
+					<label for="min_height">меньше 3х метров</label>
+					<?} else { ?>
+					<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
+					<label for="max_height">больше 3х метров</label>
+					<br>
+					<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
+					<label for="min_height">меньше 3х метров</label>
+					<? } ?>
+				</div>
+				<div class="col-sm-4">
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row sm-margin-bottom">
+				<div class="col-md-4 pull-center">
+					<button id="calculate_button" class="btn btn-primary btn-big" type="button">
+					<span class="loading" style="display: none;">
+						Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+					</span>
+						<span class="static">Рассчитать</span>
+					</button>
+				</div>
+			</div>
+		</div>
+        <div id="result_block">
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4">
@@ -1532,48 +1531,49 @@
                     <? } ?>
 					
 				</div>
-		
-				<div class="container">
-					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-							
+			</div>			
+			<div class="container">
+				<div class="row sm-margin-bottom">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4">
+						<h4 center> Получить смету на почту </h4>
+					</div>
+					<div class="col-sm-4"></div>
+				</div>
+			</div>
+			<div class="container">
+				<div class="row sm-margin-bottom">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<input value="" id="send_email" name="jform[send_email]" class="form-control" placeholder="Введите ваш Email" type="email">
 						</div>
-						<div class="col-sm-4">
-							<h4 center> Получить смету на почту </h4>
-						</div>
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4">
-
-						</div>
-						<div class="col-sm-4">
-							<div class="form-group">
-								<input value="" id="send_email" name="jform[send_email]" class="form-control" placeholder="Введите ваш Email" type="email">
-							</div>
-
-						</div>
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4">
-						
-							<button class="btn btn-transparent" type="button" id="send_to_email">Получить подробную смету</button>
-						</div>
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4">
-							<div id="send_email_success" style="display: none; font-size: 26px;">
-								Смета отправлена
-							</div>
-						</div>
-						<div class="col-sm-4">
-						</div>
+					</div>
+					<div class="col-sm-4">
 					</div>
 				</div>
 			</div>
+			<div class="container">
+				<div class="row sm-margin-bottom">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4">
+						<button class="btn btn-transparent" type="button" id="send_to_email">Получить подробную смету</button>
+					</div>
+					<div class="col-sm-4"></div>
+				</div>
+			</div>
+			<div class="container">
+				<div class="row sm-margin-bottom">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4">
+						<div id="send_email_success" style="display: none; font-size: 26px;">
+							Смета отправлена
+						</div>
+					</div>
+					<div class="col-sm-4"></div>
+				</div>
+			</div>
 		</div>
-		
 		<?php if($this->type === "gmcalculator") { ?>
 			<?php if($this->item->project_id) { ?>
 				<div class="col-sm-4"></div>
