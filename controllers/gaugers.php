@@ -55,4 +55,24 @@ class Gm_ceilingControllerGaugers extends JControllerForm
         }
 	}
 
+	public function FindFreeDay() {
+		try
+		{
+			$date = $_POST["date"];
+			$id = $_POST["id"];
+
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
+			$request = $model->FindFreeDay($id, $date);
+					
+			die(json_encode($request));
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 }

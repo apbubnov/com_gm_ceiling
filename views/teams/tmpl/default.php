@@ -652,6 +652,9 @@ foreach ($brigade_id as $value) {
 						if (data == "no") {
 							jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
 						} else {
+							if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
+								jQuery("#"+ChoosenDay).attr("class", "day-off");
+							}
 							jQuery("#modal-window-container-tar").hide();
 							jQuery("#close-tar").hide();
 							jQuery("#modal-window-1-tar").hide();
@@ -682,6 +685,7 @@ foreach ($brigade_id as $value) {
 		});
 		//------------------------------------------
 
+		// убрать красный текст ошибки
 		jQuery("#modal-window-1-tar").on("change", "#hours1, #hours2", function() {
 			jQuery("#wrong-window2").empty();
 		});

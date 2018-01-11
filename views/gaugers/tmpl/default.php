@@ -84,7 +84,7 @@ foreach ($gaugers_id as $value) {
 			</div>
         </div>
 	</div>
-	<!-- <div id="modal-window-container-tar">
+	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-choose-tar">
 			<p id="date-modal"></p>
@@ -136,7 +136,7 @@ foreach ($gaugers_id as $value) {
 			<div id="wrong-window"></div>
 			<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
 		</div>
-	</div> -->
+	</div>
 </div>
 
 <script>
@@ -354,6 +354,13 @@ foreach ($gaugers_id as $value) {
 			jQuery("#modal-window-with-table").hide();
 			jQuery("#window-with-table").hide();
 		}
+		var div2 = jQuery("#modal-window-choose-tar"); // тут указываем ID элемента
+        if (!div2.is(e.target) // если клик был не по нашему блоку
+            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#modal-window-choose-tar").hide();
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+        }
     });
     //--------------------------------------------------
 
@@ -374,54 +381,13 @@ foreach ($gaugers_id as $value) {
 			kind = "no-empty";
 			WhatDay(ChoosenDay);
 			ListOfWork(kind, d, m, y);
-			/* 
-				jQuery.ajax({
-					type: 'POST',
-					url: "/index.php?option=com_gm_ceiling&task=teams.FindFreeDay",
-					dataType: 'json',
-					data: {
-						date: date,
-						id: idBrigade,
-					},
-					success: function(data) {
-						if (data.length == 0) {
-							jQuery("#add_free_day").text("Добавить выходной");
-							window.dataFree1 = 0;
-							window.dataFree2 = 0;
-						} else {
-							jQuery("#add_free_day").text("Изменить выходной");
-							window.dataFree1 = data[0].date_from;
-							window.dataFree2 = data[0].date_to;
-						}
-					},
-					error: function (data) {
-						var n = noty({
-							theme: 'relax',
-							layout: 'center',
-							maxVisible: 5,
-							type: "error",
-							text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
-						});
-					}
-				});
-			*/
-			jQuery("#modal-window-with-table").show();
-			jQuery("#window-with-table").show('slow');
-			jQuery("#close-modal-window").show();
-		});
-		jQuery("#calendars-container").on("click", ".current-month, .day-off", function() {
-			ChoosenDay = this.id;
-			kind = "empty";
-			ChoosenDay = jQuery(this).attr("id");
-			WhatDay(ChoosenDay);
-			ListOfWork(kind, d, m, y);
-			/* jQuery.ajax({
+			jQuery.ajax({
 				type: 'POST',
-				url: "/index.php?option=com_gm_ceiling&task=teams.FindFreeDay",
+				url: "/index.php?option=com_gm_ceiling&task=gaugers.FindFreeDay",
 				dataType: 'json',
 				data: {
 					date: date,
-					id: idBrigade,
+					id: id_gauger,
 				},
 				success: function(data) {
 					if (data.length == 0) {
@@ -443,7 +409,46 @@ foreach ($gaugers_id as $value) {
 						text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
 					});
 				}
-			}); */
+			});
+			jQuery("#modal-window-with-table").show();
+			jQuery("#window-with-table").show('slow');
+			jQuery("#close-modal-window").show();
+		});
+		jQuery("#calendars-container").on("click", ".current-month, .day-off", function() {
+			ChoosenDay = this.id;
+			kind = "empty";
+			ChoosenDay = jQuery(this).attr("id");
+			WhatDay(ChoosenDay);
+			ListOfWork(kind, d, m, y);
+			jQuery.ajax({
+				type: 'POST',
+				url: "/index.php?option=com_gm_ceiling&task=gaugers.FindFreeDay",
+				dataType: 'json',
+				data: {
+					date: date,
+					id: id_gauger,
+				},
+				success: function(data) {
+					if (data.length == 0) {
+						jQuery("#add_free_day").text("Добавить выходной");
+						window.dataFree1 = 0;
+						window.dataFree2 = 0;
+					} else {
+						jQuery("#add_free_day").text("Изменить выходной");
+						window.dataFree1 = data[0].date_from;
+						window.dataFree2 = data[0].date_to;
+					}
+				},
+				error: function (data) {
+					var n = noty({
+						theme: 'relax',
+						layout: 'center',
+						maxVisible: 5,
+						type: "error",
+						text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
+					});
+				}
+			});
 			jQuery("#window-with-table").show('slow');
 			jQuery("#close-modal-window").show();
 			jQuery("#modal-window-with-table").show();
@@ -485,8 +490,6 @@ foreach ($gaugers_id as $value) {
 						id: id_gauger,
 					},
 					success: function(data) {
-						//Вывод замеров у НМС у замерщиков 28
-						console.log(data);
 						Array.from(data).forEach(function(element) {
 							table += '<tr><td style="width: 25%;">'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td style="width: 75%;">Выходной</td></tr>';
 						});
@@ -506,7 +509,7 @@ foreach ($gaugers_id as $value) {
 						data = JSON.parse(data); // замеры и выходные
 						Array.from(data).forEach(function(element) {
 							if (element.project_info == null) {
-								table += '<tr><td>'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td>Выходной</td></tr>';
+								table += '<tr><td style="width: 25%;">'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td style="width: 75%;">Выходной</td></tr>';
 							}  else {
 								if (element.project_status != 3) {
 									timegauging2 = element.project_calculation_date.substr(11, 2);
@@ -521,7 +524,7 @@ foreach ($gaugers_id as $value) {
 										timegauging2++;
 									}
 									timegauging = element.project_calculation_date.substr(11, 5)+" - "+timegauging2+":00";
-									table += '<tr><td>'+timegauging+'</td><td>'+element.project_info+'</td></tr>';
+									table += '<tr><td style="width: 50%;">'+timegauging+'</td><td style="width: 50%;">'+element.project_info+'</td></tr>';
 								}
 							}
 						});
@@ -531,6 +534,38 @@ foreach ($gaugers_id as $value) {
 			}
 		}
 		// -----------------------------------------
+
+		// нажатие на "добавить выходной"
+		jQuery("#add_free_day").click (function () {
+			jQuery("#window-with-table").hide();
+			jQuery("#close-modal-window").hide();
+			jQuery("#modal-window-with-table").hide();
+			jQuery("#date-modal").html("<strong>Выбранный день: "+date_to_modal_window+"</strong>");
+			if (dataFree1 != 0 && dataFree2 != 0) {
+                setTimeout(function() {
+                    var hours1 = document.getElementById('hours1').options;
+					var hours2 = document.getElementById('hours2').options;
+					for (var i = 0; i < hours1.length; i++) {
+						if (hours1[i].value == dataFree1.substr(11)) {
+							document.getElementById('hours1').disabled = false;
+							hours1[i].selected = true;
+						}
+					}
+					for (var i = 0; i < hours2.length; i++) {
+						if (hours2[i].value == dataFree2.substr(11)) {
+							document.getElementById('hours2').disabled = false;
+							hours2[i].selected = true;
+						}
+					}
+                }, 200);
+			}
+			jQuery("#modal-window-container-tar").show();
+			jQuery("#close-tar").show();
+			jQuery("#modal-window-choose-tar").show();
+		});
+		// -----------------------------------------
+
+		//Вывод замеров у НМС у замерщиков 35
 
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
@@ -548,7 +583,9 @@ foreach ($gaugers_id as $value) {
 						id_gauger: id_gauger
 					},
 					success: function(data) {
-						jQuery("#"+idDay).attr("class", "day-off");
+						if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
+							jQuery("#"+ChoosenDay).attr("class", "day-off");
+						}
 						jQuery("#close-tar").hide();
 						jQuery("#modal-window-container-tar").hide();
 						jQuery("#modal-window-choose-tar").hide();
@@ -576,7 +613,11 @@ foreach ($gaugers_id as $value) {
         });
         //------------------------------------------
 
-	});
+		// убрать красный текст ошибки
+		jQuery("#modal-window-1-tar").on("change", "#hours1, #hours2", function() {
+			jQuery("#wrong-window2").empty();
+		});
 
+	});
 
 </script>
