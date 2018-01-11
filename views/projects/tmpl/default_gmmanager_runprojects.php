@@ -300,7 +300,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         new_value = jQuery(this).closest("tr").find("#project_sum").val();
         mouting_sum = jQuery(this).closest("tr").find("#mounting_sum").val();
         material_sum = jQuery(this).closest("tr").find("#material_sum").val();
-        var text = "",
+        var text = "";
         element = $(element);
             if ($("#done").is(":checked")) {
                 alert("allooo");
