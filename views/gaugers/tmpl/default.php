@@ -354,6 +354,13 @@ foreach ($gaugers_id as $value) {
 			jQuery("#modal-window-with-table").hide();
 			jQuery("#window-with-table").hide();
 		}
+		var div2 = jQuery("#modal-window-choose-tar"); // тут указываем ID элемента
+        if (!div2.is(e.target) // если клик был не по нашему блоку
+            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#modal-window-choose-tar").hide();
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+        }
     });
     //--------------------------------------------------
 
@@ -554,7 +561,7 @@ foreach ($gaugers_id as $value) {
 			}
 			jQuery("#modal-window-container-tar").show();
 			jQuery("#close-tar").show();
-			jQuery("#modal-window-1-tar").show();
+			jQuery("#modal-window-choose-tar").show();
 		});
 		// -----------------------------------------
 
