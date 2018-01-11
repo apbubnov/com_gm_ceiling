@@ -76,7 +76,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=run&id='.(int) $item->id); ?>">
                     <td>
                     <!-- <//?php if ($item->project_status == 10 || $item->project_status == 11 ) { ?> -->
-                        <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button" onclick='changeDone(this);'>Выполнено</button>
+                        <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
                   <!--   <// } ?> -->
                     <?php if ($item->project_status == 12) { ?>
                          <i class='fa fa-check' aria-hidden='true'></i> Выполнено
@@ -202,7 +202,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     text = "<p><input name='check_mount' onclick='changeDone(this);' class='radio' id ='done' value='1'  type='radio' checked><label for = 'done'>Монтаж выполнен</label></p>";
 					text += "<p><input name='check_mount' onclick='changeDone(this);'  class='radio' id ='not_done' value='0'  type='radio'><label for = 'not_done'>Монтаж недовыполнен</label></p>";
                     text += "<div class='dop_info'></div>";
-
+                    changeDone(this);
                     //text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div>";
 			
             /* new_value = jQuery("#input_check").val();
