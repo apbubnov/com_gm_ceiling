@@ -99,15 +99,18 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 
                                 if($item->transport == 0 ) $sum_transport = 0;
                                 if($item->transport == 1 ) $sum_transport = margin($mount_transport->transport * $item->distance_col, $item->gm_mounting_margin);
-                                if($item->transport == 2 ) $sum_transport = margin($mount_transport->distance * $item->distance * $item->distance_col, $item->gm_mounting_margin);
-                                $min = 100;
-                                foreach($calculations as $d) {
-                                    if($d->discount < $min) $min = $d->discount;
+                                if($item->transport == 2 ) $sum_transport = ($mount_transport->distance * $item->distance + $mount_transport->transport) * $item->distance_col;
+                                if($item->transport == 1) {
+                                     $min = 100;
+                                    foreach($calculations as $d) {
+                                        if($d->discount < $min) $min = $d->discount;
+                                    }
+                                    if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
+                                    if($sum_transport < margin($mount_transport->transport, $item->gm_mounting_margin) && $sum_transport != 0) {
+                                        $sum_transport = margin($mount_transport->transport, $item->gm_mounting_margin);
+                                    }
                                 }
-                                if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
-                                if($sum_transport < margin($mount_transport->transport, $item->gm_mounting_margin) && $sum_transport != 0) {
-                                    $sum_transport = margin($mount_transport->transport, $item->gm_mounting_margin);
-                                }
+                               
                             ?>
                          <input id="project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
                          <input id="mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
