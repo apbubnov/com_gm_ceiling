@@ -500,27 +500,31 @@ foreach ($gaugers_id as $value) {
 						id: id_gauger,
 					},
 					success: function(data) {
-						//Вывод замеров у НМС у замерщиков 17
+						//Вывод замеров у НМС у замерщиков 19
 						Array.prototype.diff = function(a) {
 							return this.filter(function(i) {return a.indexOf(i) < 0;});
 						};
 						data = JSON.parse(data); // замеры и выходные
 						console.log(data);
 						Array.from(data).forEach(function(element) {
-							if (element.project_status != 3) {
-								timegauging2 = element.project_calculation_date.substr(11, 2);
-								if (element.project_calculation_date.substr(11, 1) == "0") {
-									timegauging2 = element.project_calculation_date.substr(12, 1);
-									if (timegauging2 == 9) {
-										timegauging2 = "10";
+							if (element.project_info == null) {
+								table += '<tr><td>'+element.project_calculation_date.substr(11, 2)+" - "+element.project_calculation_day_off.substr(11, 2)+'</td><td>Выходной</td></tr>';
+							}  else {
+								if (element.project_status != 3) {
+									timegauging2 = element.project_calculation_date.substr(11, 2);
+									if (element.project_calculation_date.substr(11, 1) == "0") {
+										timegauging2 = element.project_calculation_date.substr(12, 1);
+										if (timegauging2 == 9) {
+											timegauging2 = "10";
+										} else {
+											timegauging2++;
+										}
 									} else {
 										timegauging2++;
 									}
-								} else {
-									timegauging2++;
+									timegauging = element.project_calculation_date.substr(11, 5)+" - "+timegauging2+":00";
+									table += '<tr><td>'+timegauging+'</td><td>'+element.project_info+'</td></tr>';
 								}
-								timegauging = element.project_calculation_date.substr(11, 5)+" - "+timegauging2+":00";
-								table += '<tr><td>'+timegauging+'</td><td>'+element.project_info+'</td></tr>';
 							}
 						});
 						jQuery("#table-gauging").empty();
