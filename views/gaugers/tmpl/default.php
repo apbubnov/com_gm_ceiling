@@ -78,7 +78,6 @@ foreach ($gaugers_id as $value) {
 	<div id="modal-window-with-table">
 		<button type="button" id="close-modal-window"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="window-with-table">
-			<p id="date-modal"></p>
             <table id="table-gauging"></table>
 			<div id="free_day_container">
 			<button type="button" id="add_free_day" class="btn btn-primary"></button>
@@ -375,35 +374,37 @@ foreach ($gaugers_id as $value) {
 			kind = "no-empty";
 			WhatDay(ChoosenDay);
 			ListOfWork(kind, d, m, y);
-			/* jQuery.ajax({
-				type: 'POST',
-				url: "/index.php?option=com_gm_ceiling&task=teams.FindFreeDay",
-				dataType: 'json',
-				data: {
-					date: date,
-					id: idBrigade,
-				},
-				success: function(data) {
-					if (data.length == 0) {
-						jQuery("#add_free_day").text("Добавить выходной");
-						window.dataFree1 = 0;
-						window.dataFree2 = 0;
-					} else {
-						jQuery("#add_free_day").text("Изменить выходной");
-						window.dataFree1 = data[0].date_from;
-						window.dataFree2 = data[0].date_to;
+			/* 
+				jQuery.ajax({
+					type: 'POST',
+					url: "/index.php?option=com_gm_ceiling&task=teams.FindFreeDay",
+					dataType: 'json',
+					data: {
+						date: date,
+						id: idBrigade,
+					},
+					success: function(data) {
+						if (data.length == 0) {
+							jQuery("#add_free_day").text("Добавить выходной");
+							window.dataFree1 = 0;
+							window.dataFree2 = 0;
+						} else {
+							jQuery("#add_free_day").text("Изменить выходной");
+							window.dataFree1 = data[0].date_from;
+							window.dataFree2 = data[0].date_to;
+						}
+					},
+					error: function (data) {
+						var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "error",
+							text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
+						});
 					}
-				},
-				error: function (data) {
-					var n = noty({
-						theme: 'relax',
-						layout: 'center',
-						maxVisible: 5,
-						type: "error",
-						text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
-					});
-				}
-			}); */
+				});
+			*/
 			jQuery("#modal-window-with-table").show();
 			jQuery("#window-with-table").show('slow');
 			jQuery("#close-modal-window").show();
@@ -499,33 +500,34 @@ foreach ($gaugers_id as $value) {
 						id: id_gauger,
 					},
 					success: function(data) {
-						//Вывод замеров у НМС у замерщиков 12
+						//Вывод замеров у НМС у замерщиков 13
 						Array.prototype.diff = function(a) {
 							return this.filter(function(i) {return a.indexOf(i) < 0;});
 						};
 						data = JSON.parse(data); // замеры и выходные
 						console.log(data);
 						/* 
-						var table = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
-						AllTime.forEach( elementTime => {
-							var t = elementTime.substr(0, 2);
-							t++;
-							Array.from(AllGauger).forEach(function(elementGauger) {
-								table += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-								table += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-								var emptytd = 0;
-								Array.from(data).forEach(function(elementProject) {
-									if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-										table += '<td>'+elementProject.project_info+'</td>';
-										emptytd = 1;
+							var table = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
+							AllTime.forEach( elementTime => {
+								var t = elementTime.substr(0, 2);
+								t++;
+								Array.from(AllGauger).forEach(function(elementGauger) {
+									table += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+									table += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+									var emptytd = 0;
+									Array.from(data).forEach(function(elementProject) {
+										if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+											table += '<td>'+elementProject.project_info+'</td>';
+											emptytd = 1;
+										}
+									});
+									if (emptytd == 0) {
+										table += '<td></td>';
 									}
+									table += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
 								});
-								if (emptytd == 0) {
-									table += '<td></td>';
-								}
-								table += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
-							});
-						}); */
+							}); 
+						*/
 						jQuery("#projects_gaugers").empty();
 						jQuery("#projects_gaugers").append(table);
 					}
