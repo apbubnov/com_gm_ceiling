@@ -208,6 +208,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     
                     //text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div>";
 			
+            
             /* new_value = jQuery("#input_check").val();
              var input_value = jQuery("#input_check").val();
              var input_mounting = jQuery("#input_mounting").val();
