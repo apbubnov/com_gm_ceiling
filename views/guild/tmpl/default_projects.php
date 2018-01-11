@@ -563,6 +563,15 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         });
     }
 
+    /**
+     * Метод для запуска редактора
+     *
+     * @constructor
+     * @author  {CEH4TOP}
+     * @this    {ModalUpdate}
+     * @type    {function}
+     * @return  {null}
+     */
     function ModalUpdate() {
         var Modal = $(".Modal"),
             dataModal = JSON.parse(Modal.find("#Data").val()),
