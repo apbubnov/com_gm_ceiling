@@ -75,6 +75,16 @@ foreach ($gaugers_id as $value) {
 	<div id="next-button-container">
 		<button id="button-next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
 	</div>
+	<div id="modal-window-with-table">
+		<button type="button" id="close-modal-window"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="window-with-table">
+			<p id="date-modal"></p>
+            <table id="table-gauging"></table>
+			<div id="free_day_container">
+			<button type="button" id="add_free_day" class="btn btn-primary"></button>
+			</div>
+        </div>
+	</div>
 	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-choose-tar">
@@ -359,7 +369,7 @@ foreach ($gaugers_id as $value) {
 		<?php } ?>
         //------------------------------------------
 
-		// открытие модального окна с календаря и получение даты и вывода свободных монтажников
+		// открытие модального окна с календаря и получение даты и вывода свободных замерщиков
 		jQuery("#calendars-container").on("click", ".current-month, .not-full-day, day-off", function() {
             window.idDay = jQuery(this).attr("id");
             reg1 = "D(.*)D";
@@ -383,17 +393,19 @@ foreach ($gaugers_id as $value) {
             jQuery("#close-tar").show();
 			jQuery.ajax({
                 type: 'POST',
-                url: "/index.php?option=com_gm_ceiling&task=gaugers.GetBusyGauger",
+                url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugersWorkDayOff",
                 data: {
                     date: date,
-                    dealer: <?php echo $user->dealer_id; ?>,
+					id: <?php echo $userId; ?>,
                 },
                 success: function(data) {
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
                     };
-                    AllGauger = <?php echo json_encode($AllGauger); ?>;
-                    data = JSON.parse(data); // замеры
+					data = JSON.parse(data); // замеры и выходные
+					console.log(data);
+                    /* AllGauger = <?php echo json_encode($AllGauger); ?>;
+                    
                     AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                     var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
                     AllTime.forEach( elementTime => {
@@ -417,7 +429,7 @@ foreach ($gaugers_id as $value) {
                     });
                     jQuery("#projects_gaugers").empty();
                     jQuery("#projects_gaugers").append(TableForSelect);
-                    jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
+                    jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>"); */
                 }
             });
 			jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);

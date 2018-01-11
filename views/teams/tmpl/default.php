@@ -592,7 +592,7 @@ foreach ($brigade_id as $value) {
 								perimeter = +element.perimeter;
 								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
 							} else {
-								table += '<tr class="clickabel"><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
+								table += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
 							}
 						});
 						jQuery("#table-mounting").append(table);
