@@ -154,13 +154,20 @@ class Gm_ceilingModelClient extends JModelItem
         }
 	}
 
-	public function updateClient($id,$data){
+	public function updateClient($id,$data = null,$dealer_id = null){
 		try
 		{
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->update("`#__gm_ceiling_clients`");
-			$query->set("client_name = '$data'");
+			if (!empty($data))
+			{
+				$query->set("`client_name` = '$data'");
+			}
+			if (!empty($dealer_id))
+			{
+				$query->set("`dealer_id` = $dealer_id");
+			}
 			$query->where("id = $id");
 			$db->setQuery($query);
 			$db->execute();

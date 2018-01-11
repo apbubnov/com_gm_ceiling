@@ -109,7 +109,12 @@ class Gm_ceilingHelpersGm_ceiling
         }
 
         $userID = $user->id;
+        $user =& JUser::getInstance((int)$userID);
+        $post['dealer_id'] = $userID;
+        if (!$user->bind($post)) return false;
+        if (!$user->save()) return false;
         JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
+        return $userID;
         //header('location: /index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage');
     }
 
