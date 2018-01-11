@@ -11,6 +11,9 @@ defined('_JEXEC') or die;
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
+
+$users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+$result_users = $users_model->getDealers();
 ?>
 <form>
     <a class="btn btn-large btn-primary"
@@ -28,7 +31,21 @@ $userId     = $user->get('id');
         </tr>
         </thead>
         <tbody>
-
+        	<?php
+        		foreach ($result_users as $key => $value)
+        		{
+        	?>
+        		<tr>
+		            <td>
+		               <?php echo $value->name; ?>
+		            </td>
+		            <td>
+		               <?php echo $value->registerDate; ?>
+		            </td>
+		        </tr>
+        	<?php
+        		}
+        	?>
         </tbody>
     </table>
 </form>

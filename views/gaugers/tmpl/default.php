@@ -369,9 +369,182 @@ foreach ($gaugers_id as $value) {
 		<?php } ?>
         //------------------------------------------
 
+		// нажатие на день, чтобы посмотреть проекты на день
+		jQuery("#calendars-container").on("click", ".not-full-day, .full-day", function() {
+			ChoosenDay = this.id;
+			kind = "no-empty";
+			WhatDay(ChoosenDay);
+			ListOfWork(kind, d, m, y);
+			/* jQuery.ajax({
+				type: 'POST',
+				url: "/index.php?option=com_gm_ceiling&task=teams.FindFreeDay",
+				dataType: 'json',
+				data: {
+					date: date,
+					id: idBrigade,
+				},
+				success: function(data) {
+					if (data.length == 0) {
+						jQuery("#add_free_day").text("Добавить выходной");
+						window.dataFree1 = 0;
+						window.dataFree2 = 0;
+					} else {
+						jQuery("#add_free_day").text("Изменить выходной");
+						window.dataFree1 = data[0].date_from;
+						window.dataFree2 = data[0].date_to;
+					}
+				},
+				error: function (data) {
+					var n = noty({
+						theme: 'relax',
+						layout: 'center',
+						maxVisible: 5,
+						type: "error",
+						text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
+					});
+				}
+			}); */
+			jQuery("#modal-window-with-table").show();
+			jQuery("#window-with-table").show('slow');
+			jQuery("#close-modal-window").show();
+		});
+		/* jQuery("#calendars-container").on("click", ".current-month, .day-off", function() {
+			ChoosenDay = this.id;
+			kind = "empty";
+			ChoosenDay = jQuery(this).attr("id");
+			WhatDay(ChoosenDay);
+			ListOfWork(kind, d, m, y);
+			jQuery.ajax({
+				type: 'POST',
+				url: "/index.php?option=com_gm_ceiling&task=teams.FindFreeDay",
+				dataType: 'json',
+				data: {
+					date: date,
+					id: idBrigade,
+				},
+				success: function(data) {
+					if (data.length == 0) {
+						jQuery("#add_free_day").text("Добавить выходной");
+						window.dataFree1 = 0;
+						window.dataFree2 = 0;
+					} else {
+						jQuery("#add_free_day").text("Изменить выходной");
+						window.dataFree1 = data[0].date_from;
+						window.dataFree2 = data[0].date_to;
+					}
+				},
+				error: function (data) {
+					var n = noty({
+						theme: 'relax',
+						layout: 'center',
+						maxVisible: 5,
+						type: "error",
+						text: "Ошибка при попытке загрузки инфомации. Сервер не отвечает"
+					});
+				}
+			});
+			jQuery("#window-with-table").show('slow');
+			jQuery("#close-modal-window").show();
+			jQuery("#modal-window-with-table").show();
+		}); */
+		// -----------------------------------------
+
+		// функция узнать выбранный день, месяц, год
+		function WhatDay(id) {
+			var nov_reg1 = "D(.*)D";
+			d = id.match(nov_reg1)[1];
+			var nov_reg2 = "M(.*)M";
+			m = id.match(nov_reg2)[1];
+			var nov_reg3 = "Y(.*)Y";
+			y = id.match(nov_reg3)[1];
+			if (d.length == 1) {
+                d = "0"+d;
+            }
+            if (m.length == 1) {
+                m = "0"+m;
+            }
+		}
+		// ----------------------------------------
+
+		// функция вывода работ (таблицы) дня при нажатии на день
+		function ListOfWork(kind, d, m, y) {
+			window.date = y+"-"+m+"-"+d;
+			date_to_modal_window = d+"."+m+"."+y;
+			window.id_gauger = ChoosenDay.match("I(.*)I")[1];
+			var table = "";
+			if (kind == "empty") {
+				/* table = '<tr id="caption-data"><td colspan=2>'+d+'.'+m+'.'+y+'</td></tr><tr><td colspan=2>В данный момент на этот день монтажей нет</td></tr>';        
+				jQuery.ajax({
+					type: 'POST',
+					url: "/index.php?option=com_gm_ceiling&task=teams.GetMounting",
+					dataType: 'json',
+					data: {
+						date: date,
+						id: idBrigade,
+					},
+					success: function(data) {
+						Array.from(data).forEach(function(element) {
+							table += '<tr><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
+						});
+						jQuery("#table-mounting").append(table);
+					}
+				}); */
+			} else {
+				table += '<tr id="caption-data"><td colspan="6">'+d+'.'+m+'.'+y+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
+				//<tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Замерщик</td></tr>
+				jQuery.ajax({
+					type: 'POST',
+					url: "/index.php?option=com_gm_ceiling&task=teams.GetMounting",
+					dataType: 'json',
+					data: {
+						date: date,
+						id: idBrigade,
+					},
+					success: function(data) {
+						Array.from(data).forEach(function(element) {
+							if (element.project_mounting_date.length < 6) {
+								if (element.project_status == 5) {
+									status = "В производстве";
+								} else if (element.project_status == 6 ) {
+									status = "На раскрое";
+								} else if (element.project_status == 7 ) {
+									status = "Укомплектован";
+								} else if (element.project_status == 8 ) {
+									status = "Выдан";
+								} else if (element.project_status == 10 ) {
+									status = "Ожидание монтажа";
+								} else if (element.project_status == 16 ) {
+									status = "Монтаж";
+								} else if (element.project_status == 11 ) {
+									status = "Монтаж выполнен";
+								} else if (element.project_status == 17 ) {
+									status = "Монтаж недовыполнен";
+								}
+								if (element.read_by_mounter == 0) {
+									status += " / Не прочитан";
+								}
+								if (element.note == null) {
+									note = "";
+								} else {
+									note = element.note;
+								}
+								perimeter = +element.perimeter;
+								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+							} else {
+								table += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
+							}
+						});
+						jQuery("#table-mounting").append(table);
+					}
+				});
+			}
+		}
+		// -----------------------------------------
+
+
 		// открытие модального окна с календаря и получение даты и вывода свободных замерщиков
-		jQuery("#calendars-container").on("click", ".current-month, .not-full-day, .full-day, day-off", function() {
-            window.idDay = jQuery(this).attr("id");
+		jQuery("#calendars-container").on("click", ".current-month,  day-off", function() {
+/*             window.idDay = jQuery(this).attr("id");
             reg1 = "D(.*)D";
             reg2 = "M(.*)M";
             reg3 = "Y(.*)Y";
@@ -387,10 +560,11 @@ foreach ($gaugers_id as $value) {
                 m = idDay.match(reg2)[1];
             }
             window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
-			window.id_gauger = idDay.match(reg4)[1];
+			window.id_gauger = idDay.match(reg4)[1]; 
             jQuery("#modal-window-with-table").show();
 			jQuery("#window-with-table").show("slow");
             jQuery("#close-modal-window").show();
+*/
 			jQuery.ajax({
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugersWorkDayOff",
@@ -405,9 +579,7 @@ foreach ($gaugers_id as $value) {
                     };
 					data = JSON.parse(data); // замеры и выходные
 					console.log(data);
-                    /* AllGauger = <?php echo json_encode($AllGauger); ?>;
-                    
-                    AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                    /* 
                     var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
                     AllTime.forEach( elementTime => {
                         var t = elementTime.substr(0, 2);
