@@ -565,7 +565,7 @@ foreach ($gaugers_id as $value) {
 		});
 		// -----------------------------------------
 
-		//Вывод замеров у НМС у замерщиков 31
+		//Вывод замеров у НМС у замерщиков 32
 
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
@@ -583,7 +583,9 @@ foreach ($gaugers_id as $value) {
 						id_gauger: id_gauger
 					},
 					success: function(data) {
-						jQuery("#"+idDay).attr("class", "day-off");
+						if (jQuery("#"+idDay).attr("class") == "current-month") {
+							jQuery("#"+idDay).attr("class", "day-off");
+						}
 						jQuery("#close-tar").hide();
 						jQuery("#modal-window-container-tar").hide();
 						jQuery("#modal-window-choose-tar").hide();
