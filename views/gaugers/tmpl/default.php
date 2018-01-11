@@ -85,7 +85,7 @@ foreach ($gaugers_id as $value) {
 			</div>
         </div>
 	</div>
-	<div id="modal-window-container-tar">
+	<!-- <div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-choose-tar">
 			<p id="date-modal"></p>
@@ -137,7 +137,7 @@ foreach ($gaugers_id as $value) {
 			<div id="wrong-window"></div>
 			<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
 		</div>
-	</div>
+	</div> -->
 </div>
 
 <script>
@@ -499,7 +499,7 @@ foreach ($gaugers_id as $value) {
 						id: id_gauger,
 					},
 					success: function(data) {
-						//Вывод замеров у НМС у замерщиков 11
+						//Вывод замеров у НМС у замерщиков 12
 						Array.prototype.diff = function(a) {
 							return this.filter(function(i) {return a.indexOf(i) < 0;});
 						};
