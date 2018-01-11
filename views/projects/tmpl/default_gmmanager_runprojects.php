@@ -300,9 +300,12 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     });
 
 
-    function changeDone(element,new_value,mouting_sum,material_sum) {
+    function changeDone(element, new_value, mouting_sum, material_sum) {
         var text = "";
         element = $(element);
+        new_value = $(new_value);
+        mouting_sum = $(mouting_sum);
+        material_sum = $(material_sum);
             if ($("#done").is(":checked")) {
                 alert("allooo");
                 text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
