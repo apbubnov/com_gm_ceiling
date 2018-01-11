@@ -327,11 +327,13 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 text += "<div class='center'>Итоговая сумма недоделанного монтажа</div><div class='center'><input id='input_mounting_itog' class='noty_input' style='margin-top: 5px;' value=''/></div></br>";
             }
             element.closest(".modal-text").find(".dop_info_block").html(text);
+
+        $("#input_mounting_1").keyup(function(){
+            alert("ok");
+        });
     }
 
-    $("#input_mounting_1").keyup(function(){
-        alert("ok");
-    });
+
 
     function deleteItem() {
         if (!confirm("<?php echo JText::_('COM_GM_CEILING_DELETE_MESSAGE'); ?>")) {
