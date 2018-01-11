@@ -37,8 +37,8 @@
 	$calc_id = $jinput->get('id','','INT');
 	$calc_id = empty($calc_id)?0:$calc_id;
 	$del_flag = 1;
-	$jinput = JFactory::getApplication()->input;
 	$rek = $jinput->getInt('rek', 8);
+	$user_group = $user->groups;
 ?>
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
 	<input name="url" id="url" value="" type="hidden">
@@ -148,6 +148,7 @@
 			</div>
 			<div class="col-sm-4"></div>
 		</div>
+		<!-- Фактура -->
 		<div class="container">
 			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
@@ -178,6 +179,7 @@
 				</div>
 			<div class="col-sm-4"></div>
 		</div>
+		<!-- Ширина -->
 		<div class="container" style ="display:none;">
 			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
@@ -189,6 +191,7 @@
 			</div>
 			<div class="col-sm-4"></div>
 		</div>
+		<!-- Цвет -->
 		<div class="container">
 			<div class="col-sm-4"></div>
 			<div class="col-sm-4">
@@ -204,6 +207,7 @@
 			<div class="col-sm-4">
 			</div>
 		</div>
+		<!-- Производитель -->
 		<div class="container">
 			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
@@ -232,6 +236,7 @@
 			</div>
 			<div class="col-sm-4"></div>
 		</div>
+		<!-- размеры -->
 		<div class="container">
 			<div class="col-sm-4">
 			</div>
@@ -243,6 +248,7 @@
 			<div class="col-sm-4">
 			</div>
 		</div>
+		<!-- начертить -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -269,6 +275,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- S,P,углы -->
 		<div class="container">
 			<div id="data-wrapper">
 				<div class="row sm-margin-bottom">
@@ -315,6 +322,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- Багет -->
 		<div class="container" id="block_n28">
 			<div class="row">
 				<div class="col-sm-4" style="padding-left: 0px;">
@@ -352,6 +360,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- вставка -->
 		<div class="container" id="block_n6">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -439,6 +448,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- освещение -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -459,6 +469,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- Люстры -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -484,6 +495,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- Светильники -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -558,6 +570,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- Экола -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -626,6 +639,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- Шторный карниз -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -1574,8 +1588,8 @@
 				</div>
 			</div>
 		</div>
-		<?php if($this->type === "gmcalculator") { ?>
-			<?php if($this->item->project_id) { ?>
+		<?php if($this->type === "gmcalculator") { 
+				if($this->item->project_id) { ?>
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Сохранить</a></button>
@@ -1590,16 +1604,11 @@
 			<?php } else { ?>
 				<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
 			<?php } ?>
-			</div>
-			<div class="col-sm-4">
-			</div>
-		</div>
-		</div>
 		<div class="container">
 			<div class="row sm-margin-bottom">
 			
 			
-		<?php } elseif($this->type === "calculator") { ?>
+				<?php } elseif($this->type === "calculator") { ?>
 		<?php if($this->item->project_id) { ?>
 		<div class="col-sm-4">
 			</div>
@@ -1717,19 +1726,13 @@
 			</select>
 			<p><button type="button" id="re-call-enroll-tar" class="btn btn-primary">Записаться на замер</button></p>
 		</div>
-	</div>
-<!-- /////////////////////////////////////////////////////////////////// -->
+		</div>
+		<!-- /////////////////////////////////////////////////////////////////// -->
 
-<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"> Наверх</i></a>
+		<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"> Наверх</i></a>
 	</form>
 
 </div>
-
-<?php
-	$jinput = JFactory::getApplication()->input;
-	$rek = $jinput->getInt('rek', 8);
-	$user_group = $user->groups;
-?>
 
 <script>
 	function submit_form_sketch()
@@ -1987,10 +1990,9 @@
 		});
 		
         function change_flag_auto(){
-            if(jQuery("#sketch_image_block").is(':visible')){
-                jQuery("#flag_auto").val(1);
-            }
+			jQuery("#flag_auto").val(1);
         }
+		console.log( jQuery("#flag_auto").val());
 		jQuery( "#color_switch" ).click(function(){
 			if(jQuery( "#jform_n2").val() != 0 ) { 
                 change_flag_auto();
@@ -2929,7 +2931,7 @@ function getSelectIndex(selects,obj){
 	echo "console.log('$sess');";
 	if (isset($_SESSION['jform_n4'],$_SESSION['jform_n5'],$_SESSION['jform_n9'],$_SESSION['data'],
 		$_SESSION['cut'],$_SESSION['texture'],$_SESSION['color'],$_SESSION['manufacturer'],
-		$_SESSION['width'],$_SESSION['offcut'],$_SESSION['calc_title'],$_SESSION['original']))
+		$_SESSION['width'],$_SESSION['offcut'],$_SESSION['calc_title']))
 	{
 		$n4 = $_SESSION['jform_n4'];
 		$n5 = $_SESSION['jform_n5'];
@@ -2967,7 +2969,6 @@ function getSelectIndex(selects,obj){
 		.'for (var i=0;i<lnk.length;i++) {'
 		.'if (lnk[i].value=="'.$texture.'") {lnk[i].selected=true; jQuery( "#jform_n2" ).change();} }  } ';
 
-
 	echo 'function change_select_manufacturer() {var lnk=document.getElementById(\'jform_proizv\').options;'
 		.'for (var i=0;i<lnk.length;i++) {'
 		.'if (lnk[i].value=="'.$manufacturer.'") {lnk[i].selected=true;} } '
@@ -2979,14 +2980,13 @@ function getSelectIndex(selects,obj){
         .'jQuery("#flag_auto").val(0);'
 		.'jQuery.getJSON( "index.php?option=com_gm_ceiling&task=getCanvasesList&jform_n2=" + jQuery("#jform_n2" ).val()+"&jform_proizv="+jQuery("#jform_proizv").val(), function( data ) {jQuery("#width").val(data);});change_select_n3();}';
 
-        $str = 'function change_select_n3() {';
-            
-                        if(!empty($width)){
-                        $str.='jQuery("#jform_n3_hidden").val("'.$width.'");';
-                    }
-                        $str.='jQuery("#jform_n3").html("<option value ='.$width.' selected>'.$width.'</option>")} ';
-					echo $str;
-    
+    $str = 'function change_select_n3() {';
+    if(!empty($width)){
+        $str.='jQuery("#jform_n3_hidden").val("'.$width.'");';
+    }
+    $str.='jQuery("#jform_n3").html("<option value ='.$width.' selected>'.$width.'</option>")} ';
+	echo $str;
+
     if(isset($_SESSION['need_calc'])){
         echo  'console.log("isset");';
         if($_SESSION['need_calc']==1){
@@ -2996,7 +2996,7 @@ function getSelectIndex(selects,obj){
         }
     }
    
-		?>
+?>
 	});
 	 function calc_click(){
          if(jQuery("#jform_n2").val()!=""&&jQuery("#jform_proizv").val()!=""){
