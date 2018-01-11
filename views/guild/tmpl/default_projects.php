@@ -635,7 +635,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             fblocks2 = blocks2.filter("#"+i2);
 
                         if (fblocks2.length < 1) {
-                            console.log("true");
                             var Pred = "", Next = "", Temp = null;
 
                             blocks2.each(function () {
@@ -659,16 +658,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             T.find("line").text(b2.canvases);
                             T.find("ceilings").empty();
 
-                            console.log(i2 + " - " + Next);
-                            if (Next !== "") {
-                                T.insertBefore(Temp);
-                            console.log("one");
-                            console.log(T);
-                            console.log(Temp);
-                            }
-                            else { block1.find("type").append(T); console.log("two"); }
-                        } else
-                            console.log("false");
+                            if (Next !== "") { T.insertBefore(Temp); }
+                            else { block1.find("type").append(T); }
+                        }
 
                         $.each(b2.I, function (i3, b3) {
                             i3 = parseInt(b3.id);
@@ -696,6 +688,10 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 Temp = (Next !== "") ? block2.find("#" + Next) : Data.block3;
                                 var T = $("#" + i3);
 
+                                var block_3 = $("#" + id),
+                                    block_2 = block_3.closest(".block_2"),
+                                    block_1 = block_2.closest(".block_1");
+
                                 T.attr("id", i3);
                                 T.find("input").val(JSON.stringify(b3));
                                 T.find("name").text(b3.title);
@@ -704,6 +700,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 delete Data.calculations[Data.calculations.indexOf(parseInt(i3))];
                                 if (Next !== "") { T.insertBefore(Temp); var index = Data.calculations.indexOf(parseInt(Next)); Data.calculations.splice(index, 0, parseInt(i3)); }
                                 else { block2.find("ceilings").append(T); Data.calculations.push(parseInt(i3)); }
+
+                                if (block_2.find(".block_3").length < 1)
+                                    block_2.remove();
+
+                                if(block_1.find(".block_2").length < 1)
+                                    block_1.remove();
                             }
                         });
                     });
