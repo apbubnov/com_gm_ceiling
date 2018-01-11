@@ -66,7 +66,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     </cuts>
 </page>
 
-
 <form class="Modal ModalCeiling" action="javascript:CutOut();">
     <div class="ModalPage">
         <div class="ModalName">
@@ -216,9 +215,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalShow(o) {
-        if (Data.Interval !== null)
-            clearInterval(Data.Interval);
-
         if ($(window).width() >= 728) $("#KeyPress").focus();
 
         var type = typeof o;
@@ -268,10 +264,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             var size = 0;
             $.each(Data.employees, function (j, val) {
                 BlockSelect.append(BlockOption.text(val.name).val(val.id).clone());
-                console.log(Data.employees.lenght);
                 size++;
             });
-            BlockSelect.attr({"name": "employees[" + v.id + "]", "size": (size < 5) ? size : 5});
+            BlockSelect.attr({"name": "employees[" + v.id + "][]", "size": (size < 5) ? size : 5});
             BlockData.append(BlockSelect.clone());
             var Name = BlockName.clone();
             Works.append(Name);
@@ -309,7 +304,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function ModalClose() {
-        setIntervalNew();
 
         $("#KeyPress").blur();
         $(".ModalCeiling")
@@ -332,11 +326,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function NextCeiling() {
-<<<<<<< HEAD
-        if (Data.Interval !== null)
-            clearInterval(Data.Interval);
-=======
->>>>>>> 7046eb0ce338e5657e69f1299495ea11e52ba0b2
 
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
@@ -349,11 +338,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function PredCeiling() {
-<<<<<<< HEAD
-        if (Data.Interval !== null)
-            clearInterval(Data.Interval);
-=======
->>>>>>> 7046eb0ce338e5657e69f1299495ea11e52ba0b2
 
         var Modal = $(".ModalCeiling"),
             id = Modal.val(),
@@ -394,11 +378,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     Data.calculations = [];
 
                     for(var i = 0; i < calc.length; i++)
-<<<<<<< HEAD
-                        if (calc[i] !== null)
-=======
                         if (calc[i])
->>>>>>> 7046eb0ce338e5657e69f1299495ea11e52ba0b2
                             Data.calculations.push(calc[i]);
 
                     var block_3 = $("#" + id),
@@ -449,14 +429,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     var blocks1 = $(".block_1"),
                         fblocks1 = blocks1.filter("#"+i1);
 
-                    console.log(fblocks1);
                     if (fblocks1.length < 1) {
                         var Pred = "", Next = "", Temp = null;
                         blocks1.each(function () {
                             if (i1 <= Next) return;
 
                             Temp = $(this);
-                            console.log(Temp.attr('id'));
 
                             Pred = Next;
                             Next = Temp.attr('id');
@@ -466,8 +444,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             Pred = Next;
                             Next = "";
                         }
-
-                        console.log(Pred + " < " + i1 + " < " + Next);
 
                         Temp = (Next !== "") ? $("#" + Next) : Data.block1;
                         var T = Temp.clone();
@@ -486,14 +462,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             blocks2 = block1.find(".block_2"),
                             fblocks2 = blocks2.filter("#"+i2);
 
-                        console.log(fblocks2);
                         if (fblocks2.length < 1) {
                             var Pred = "", Next = "", Temp = null;
                             blocks2.each(function () {
                                 if (parseInt(i2.replace("p","")) <= parseInt(Next.replace("p",""))) return;
 
                                 Temp = $(this);
-                                console.log(Temp.attr('id'));
 
                                 Pred = Next;
                                 Next = Temp.attr('id');
@@ -503,8 +477,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 Pred = Next;
                                 Next = "";
                             }
-
-                            console.log(Pred + " < " + i2 + " < " + Next);
 
                             Temp = (Next !== "") ? $("#" + Next) : Data.block2;
                             var T = Temp.clone();
@@ -524,14 +496,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 blocks3 = block2.find(".block_3"),
                                 fblocks3 = blocks3.filter("#"+i3);
 
-                            console.log(fblocks3);
                             if (fblocks3.length < 1) {
                                 var Pred = "", Next = "", Temp = null;
                                 blocks3.each(function () {
                                     if (parseInt(i3) <= parseInt(Next)) return;
 
                                     Temp = $(this);
-                                    console.log(Temp.attr('id'));
 
                                     Pred = Next;
                                     Next = Temp.attr('id');
@@ -541,8 +511,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                     Pred = Next;
                                     Next = "";
                                 }
-
-                                console.log(Pred + " < " + i3 + " < " + Next);
 
                                 Temp = (Next !== "") ? block2.find("#" + Next) : Data.block3;
                                 var T = Data.block3.clone();
@@ -554,9 +522,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
                                 if (Next !== "") { T.insertBefore(Temp); var index = Data.calculations.indexOf(Next); Data.calculations.splice(index, 0, i3); }
                                 else { block2.find("ceilings").append(T); Data.calculations.push(i3); }
-                                console.log("------------------------");
-                                console.log(Data.calculations);
-                                console.log("------------------------");
 
                                 noty({
                                     theme: 'relax',
@@ -587,168 +552,3 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         });
     }
 </script>
-<? if (false): ?>
-    <h1>Проекты</h1>
-    <div class="Actions">
-
-        <a class="btn btn-large btn-primary" id="Create"
-           href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=guild&type=project&subtype=create', false, 2); ?>"
-           style="margin-left: 10px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Создать раскрой</a>
-    </div>
-    <div class="Projects">
-        <table class="Elements">
-            <thead class="ElementsHead">
-            <tr class="ElementsHeadTr">
-                <td class="Id">№</td>
-                <td class="Name">Наименование</td>
-                <td class="Client">Клиент</td>
-                <td class="Dealer">Дилер</td>
-                <td class="Status">Статус</td>
-                <td class="Date">Дата создания</td>
-            </tr>
-            </thead>
-            <tbody>
-            <? foreach ($projects as $p): ?>
-                <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=guild&type=project&id=' . (int)$p->id); ?>">
-                    <td class="Id"><?= intval($p->id); ?></td>
-                    <td class="Name"><?= $p->name; ?></td>
-                    <td class="Client"><?= $p->client; ?></td>
-                    <td class="Dealer"><?= $p->dealer; ?></td>
-                    <td class="Status"><?= $p->status_title; ?></td>
-                    <td class="Date"><?= date("d.m.Y", strtotime($p->created)); ?></td>
-                </tr>
-            <? endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-
-    <script>
-        var $ = jQuery,
-            SCROLL = {};
-
-        $(document).ready(Init);
-        $(document).scroll(Scroll);
-        $(window).resize(Resize);
-
-        function Init() {
-            $('.Projects .Elements tbody tr').click(function () {
-                document.location.href = $(this).data('href');
-            });
-
-            ScrollInit();
-            Resize();
-        }
-
-        function Resize() {
-            ResizeHead();
-        }
-
-        function ScrollInit() {
-            SCROLL.EHead = $(".Projects .Elements .ElementsHead");
-            SCROLL.EHeadTr = SCROLL.EHead.find(".ElementsHeadTr");
-            SCROLL.EHeadTrClone = SCROLL.EHeadTr.clone();
-
-            SCROLL.EHeadTrClone.removeClass("ElementsHeadTr").addClass("CloneElementsHeadTr");
-            SCROLL.EHead.append(SCROLL.EHeadTrClone);
-
-            $(".Projects").scroll(ResizeHead);
-        }
-
-        function ResizeHead() {
-            SCROLL.EHeadTrClone.css("left", (SCROLL.EHeadTr.offset().left));
-
-            for (var i = 0; i < SCROLL.EHeadTr.children().length; i++)
-                $(SCROLL.EHeadTrClone.children()[i]).width($(SCROLL.EHeadTr.children()[i]).width() - ((i === 0) ? 1 : 0));
-        }
-
-        function Scroll() {
-            var scrollTop = $(window).scrollTop(),
-                offset = SCROLL.EHeadTr.offset(),
-                has = SCROLL.EHeadTrClone.hasClass("Show");
-            if (scrollTop >= offset.top) {
-                if (!has) SCROLL.EHeadTrClone.addClass("Show");
-            }
-            else {
-                if (has) SCROLL.EHeadTrClone.removeClass("Show");
-            }
-        }
-    </script>
-
-    <? if (false): ?>
-        <style>
-            .Projects {
-                margin-top: 20px;
-            }
-
-            .table {
-                margin-top: 20px;
-            }
-
-            body {
-                background-color: #E6E6FA;
-            }
-
-            .Projects .table thead tr, .Projects .table tfoot tr {
-                background-color: #36357f;
-                color: #ffffff;
-            }
-
-            .Projects .table tbody tr {
-                background-color: #f2f2f2;
-                color: #000000;
-                cursor: pointer;
-            }
-
-            .Projects .table tbody tr:hover {
-                background-color: #dedede;
-            }
-
-            .Projects .table tr th {
-                box-shadow: inset .5px .5px 0 0 rgba(255, 255, 255, .5);
-            }
-
-            .Projects .table tr td {
-                box-shadow: inset .5px .5px 0 0 rgba(147, 147, 147, 0.5);
-            }
-        </style>
-
-        <div class="List Projects">
-            <h1>Проекты на сборку</h1>
-            <table class="table table-striped" id="ProjectsTable">
-                <thead id="ProjectsHead">
-                <tr>
-                    <th class="center">Наименование</th>
-                    <th class="center">Клиент</th>
-                    <th class="center">Дилер</th>
-                    <th class="center">Статус</th>
-                    <th class="center">Дата создания</th>
-                </tr>
-                </thead>
-                <tbody id="ProjectsBody">
-                <? foreach ($projects as $p): ?>
-                    <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=stock&type=realization&subtype=project&id=' . (int)$p->id); ?>">
-                        <td class="center"><?= $p->name; ?></td>
-                        <td class="center"><?= $p->client; ?></td>
-                        <td class="center"><?= $p->dealer; ?></td>
-                        <td class="center"><?= $p->status_title; ?></td>
-                        <td class="center"><?= date("d.m.Y", strtotime($p->created)); ?></td>
-                    </tr>
-                <? endforeach; ?>
-                </tbody>
-                <tfoot id="ProjectsFoot">
-                <tr>
-                    <th colspan="5"></th>
-                </tr>
-                </tfoot>
-            </table>
-        </div>
-
-        <script>
-            jQuery(document).ready(function () {
-                jQuery('.table tbody tr').click(function () {
-                    document.location.href = jQuery(this).data('href');
-                });
-            })
-        </script>
-    <? endif; ?>
-<? endif; ?>
