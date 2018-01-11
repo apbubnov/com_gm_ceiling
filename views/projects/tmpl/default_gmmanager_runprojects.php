@@ -324,7 +324,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 text += "<div class='center'><div class='leftBlock' style='width: 41%; float: left;'><span >Начальная сумма</span><input id='input_mounting' style='width: 100%; margin-top: 5px;' value='" + mouting_sum + "'/></div>" +
                     "<div class=\"centerBlock\" style=\"width: 5%;float: left;\"><br><span> - </span></div>"+
                     "<div class='rightBlock' style='width: 54%;float: left;'><span >Недоделанная работа</span><input id='input_mounting_1' style='width: 100%;  margin-top: 5px;' value='0'/></div></div>";
-                text += "<div class='center'>Итоговая сумма недоделанного монтажа</div><div class='center'><input id='input_mounting_itog' class='noty_input' style='margin-top: 5px;' value=''/></div></br>";
+                text += "<div class='center'>Итоговая сумма недоделанного монтажа</div><div class='center'><input id='input_mounting_itog' class='noty_input' style='margin-top: 5px;' value='\" + material_sum + \"'/></div></br>";
             }
             element.closest(".modal-text").find(".dop_info_block").html(text);
 
