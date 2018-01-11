@@ -4692,6 +4692,14 @@ class Gm_ceilingHelpersGm_ceiling
                                 }
                             }
                         }
+                        // выходные дни
+                        $statusDayOff = "";
+                        $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
+                        if (!empty($AllDayOff)) {
+                            foreach ($AllDayOff as $value) {
+                                $statusDayOff[substr($value->date_from, 8, 2)] = "DayOff";
+                            }
+                        } 
                         if ($DayMounters[$j - $first_day_of_week + 1] == "red") {
                             $table .= '<td class="day-not-read" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
                         } else if ($DayMounters[$j - $first_day_of_week + 1] == "yellow") {
@@ -4703,7 +4711,11 @@ class Gm_ceilingHelpersGm_ceiling
                         } else if ($DayMounters[$j - $first_day_of_week + 1] == "green") {
                             $table .= '<td class="day-complite" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
                         } else {
-                            $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
+                            if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
+                                $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                            } else {
+                                $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
+                            }
                         }
                     }
                 }
@@ -4757,6 +4769,15 @@ class Gm_ceilingHelpersGm_ceiling
                             }
                         }
                     }
+                    // выходные дни
+                    $statusDayOff = "";
+                    $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
+                    if (!empty($AllDayOff)) {
+                        foreach ($AllDayOff as $value) {
+                            $statusDayOff[substr($value->date_from, 8, 2)] = "DayOff";
+                        }
+                    }                    
+                    // заполнение дней
                     if ($DayMounter[$j - $first_day_of_week + 1][0] == "red") {
                         $table .= '<td class="day-not-read" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</br><div class="perimeter">P = '.($DayMounter[$j - $first_day_of_week + 1][1]).'м</div></td>';
                     } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "yellow") {
@@ -4768,7 +4789,11 @@ class Gm_ceilingHelpersGm_ceiling
                     } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "green") {
                         $table .= '<td class="day-complite" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</br><div class="perimeter">P = '.($DayMounter[$j - $first_day_of_week + 1][1]).'м</div></td>';                        
                     } else {
-                        $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
+                        if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
+                            $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                        } else {
+                            $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                        }
                     }
                 }
             }
