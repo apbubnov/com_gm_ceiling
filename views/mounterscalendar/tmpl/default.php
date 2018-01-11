@@ -56,8 +56,8 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                 <td class="left">Монтаж недовыполнен</td>
             </tr>
             <tr>
-                <td></td>
-                <td></td>
+                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/9e9e9e.png" alt="Серый"></td>
+                <td class="left">Выходные часы</td>
                 <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/1ffe4e.png" alt="Зеленый"></td>
                 <td class="left">Монтаж выполнен</td>
             </tr>

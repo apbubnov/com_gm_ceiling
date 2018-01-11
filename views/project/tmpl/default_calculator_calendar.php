@@ -308,7 +308,7 @@ $results = $db->loadObjectList();
                         <tr>
                             <th>Дата рождения</th>
                             <td><input name="new_birthday" id="jform_birthday" class="inputactive"
-                                        value="" placeholder="Дата рождения" type="text"></td>
+                                        value="" placeholder="Дата рождения" type="date"></td>
                             <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
                         </tr>
                         <tr>
