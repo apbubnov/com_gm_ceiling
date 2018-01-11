@@ -2984,7 +2984,7 @@ function getSelectIndex(selects,obj){
 	echo 'function change_select_manufacturer() {var lnk=document.getElementById(\'jform_proizv\').options;'
 		.'console.log(lnk);'
 		.'for (var i=0;i<lnk.length;i++) {'
-		.'if (lnk[i].value=="'.$manufacturer.'") {lnk[i].selected=true;} } '
+		.'if (lnk[i].value=="'.$manufacturer.'") { console.log('.$manufacturer.');lnk[i].selected=true;} } '
 		.'jQuery("#sketch_switch").prop("disabled",false);'
 		.'jQuery("#jform_proizv").prop("disabled",false);'
 		.'jQuery("#jform_color").val("'.$color.'");'
