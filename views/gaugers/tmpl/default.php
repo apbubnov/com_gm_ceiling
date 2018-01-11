@@ -474,22 +474,25 @@ foreach ($gaugers_id as $value) {
 			window.id_gauger = ChoosenDay.match("I(.*)I")[1];
 			var table = "";
 			if (kind == "empty") {
-				/* table = '<tr id="caption-data"><td colspan=2>'+d+'.'+m+'.'+y+'</td></tr><tr><td colspan=2>В данный момент на этот день монтажей нет</td></tr>';        
+				table = '<tr id="caption-data"><td colspan=2>'+date_to_modal_window+'</td></tr><tr><td colspan=2>В данный момент на этот день замеров нет</td></tr>';        
 				jQuery.ajax({
 					type: 'POST',
-					url: "/index.php?option=com_gm_ceiling&task=teams.GetMounting",
+					url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugersWorkDayOff",
 					dataType: 'json',
 					data: {
 						date: date,
-						id: idBrigade,
+						id: id_gauger,
 					},
 					success: function(data) {
+						data = JSON.parse(data);
 						Array.from(data).forEach(function(element) {
-							table += '<tr><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
+							table += '<tr><td style="width: 25%;">'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td style="width: 75%;">Выходной</td></tr>';
 						});
-						jQuery("#table-mounting").append(table);
+						
 					}
-				}); */
+				});
+				jQuery("#table-gauging").empty();
+				jQuery("#table-gauging").append(table);
 			} else {
 				table += '<tr id="caption-data"><td colspan="6">'+date_to_modal_window+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td></tr>';
 				jQuery.ajax({
@@ -505,10 +508,9 @@ foreach ($gaugers_id as $value) {
 							return this.filter(function(i) {return a.indexOf(i) < 0;});
 						};
 						data = JSON.parse(data); // замеры и выходные
-						console.log(data);
 						Array.from(data).forEach(function(element) {
 							if (element.project_info == null) {
-								table += '<tr><td>'+element.project_calculation_date.substr(11, 2)+" - "+element.project_calculation_day_off.substr(11, 2)+'</td><td>Выходной</td></tr>';
+								table += '<tr><td>'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td>Выходной</td></tr>';
 							}  else {
 								if (element.project_status != 3) {
 									timegauging2 = element.project_calculation_date.substr(11, 2);
