@@ -688,7 +688,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 Temp = (Next !== "") ? block2.find("#" + Next) : Data.block3;
                                 var T = $("#" + i3);
 
-                                var block_3 = $("#" + id),
+                                var block_3 = T,
                                     block_2 = block_3.closest(".block_2"),
                                     block_1 = block_2.closest(".block_1");
 
