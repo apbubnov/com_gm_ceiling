@@ -574,10 +574,17 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     function ModalUpdateData() {
         alert("Update");
         var Modal = $(".ModalCeiling"),
-            Img = Modal.find(".ModalImage");
-        var ImgStyle = Img.attr("style");
-        ImgStyle = ImgStyle.substring(0, ImgStyle.length - 3) + "?date=" + (new Date()).toISOString() + "\");";
-        Img.attr("style", ImgStyle);
-        console.log(ImgStyle);
+            ModalData = JSON.parse(Modal.find("#Data").val()),
+            ModalImg = Modal.find(".ModalImage"),
+            Block = $("#"+ModalData.id),
+            BlockImg = Block.find(".image");
+
+        ModalData.cut_image_dop = (new Date()).toISOString();
+
+        Block.find('[type="data"]').val(ModalData);
+        Modal.find("#Data").val(ModalData);
+
+        BlockImg.attr("style","background-image: url(" + ModalData.cut_image + ModalData.cut_image_dop + ");");
+        ModalImg.attr("style","background-image: url(" + ModalData.cut_image + ModalData.cut_image_dop + ");");
     }
 </script>

@@ -85,6 +85,7 @@ class Gm_ceilingModelGuild extends JModelList
             $calc->canvas_name = $calc->name . " " .$calc->country . " " .$calc->width . " " .$calc->texture . ((empty($calc->color))?"":" ".$calc->color);
             $calc->cut_pdf = '/costsheets/' . md5($calc->id . 'cutpdf' . -2) . '.pdf';
             $calc->cut_image = "/cut_images/".md5("cut_sketch" . $calc->id).".png";
+            $calc->cut_image_dop = "";
             $calc->quad = floatval($calc->quad);
             $calc->perimeter = floatval($calc->perimeter);
             $calc->square = floatval($calc->square);
