@@ -330,7 +330,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     }
 
     $("#input_mounting_1").keyup(function(){
-        $("#input_mounting_1").css("background-color", "pink");
+        alert("ok");
     });
 
     function deleteItem() {
