@@ -448,8 +448,6 @@ foreach ($gaugers_id as $value) {
 		});
 		// -----------------------------------------
 
-						//Вывод замеров у НМС у замерщиков 30
-
 		// функция узнать выбранный день, месяц, год
 		function WhatDay(id) {
 			var nov_reg1 = "D(.*)D";
@@ -529,6 +527,38 @@ foreach ($gaugers_id as $value) {
 			}
 		}
 		// -----------------------------------------
+
+		// нажатие на "добавить выходной"
+		jQuery("#add_free_day").click (function () {
+			jQuery("#window-with-table").hide();
+			jQuery("#close-modal-window").hide();
+			jQuery("#modal-window-with-table").hide();
+			jQuery("#date-modal").html("<strong>Выбранный день: "+date_to_modal_window+"</strong>");
+			if (dataFree1 != 0 && dataFree2 != 0) {
+                setTimeout(function() {
+                    var hours1 = document.getElementById('hours1').options;
+					var hours2 = document.getElementById('hours2').options;
+					for (var i = 0; i < hours1.length; i++) {
+						if (hours1[i].value == dataFree1.substr(11)) {
+							document.getElementById('hours1').disabled = false;
+							hours1[i].selected = true;
+						}
+					}
+					for (var i = 0; i < hours2.length; i++) {
+						if (hours2[i].value == dataFree2.substr(11)) {
+							document.getElementById('hours2').disabled = false;
+							hours2[i].selected = true;
+						}
+					}
+                }, 200);
+			}
+			jQuery("#modal-window-container-tar").show();
+			jQuery("#close-tar").show();
+			jQuery("#modal-window-1-tar").show();
+		});
+		// -----------------------------------------
+
+		//Вывод замеров у НМС у замерщиков 30
 
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
