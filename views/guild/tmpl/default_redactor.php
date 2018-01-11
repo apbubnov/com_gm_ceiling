@@ -6,7 +6,7 @@
  * @copyright  2016 Mikhail
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-echo parent::getPreloader();
+echo parent::getPreloaderNotJS();
 // No direct access
 defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
@@ -43,7 +43,7 @@ $data = (empty($id))?null:$cutModel->getData($id);
 <?elseif ($page == "cut"):?>
 <script type="text/javascript">
     var $ = jQuery();
-    if (<?=$ready;?> === '0')
+    if (<?=$ready;?> === 0)
         top.postMessage('close', '*');
     else
         top.postMessage('update', '*');

@@ -573,5 +573,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
     function ModalUpdateData() {
         alert("Update");
+        var Modal = $(".ModalCeiling"),
+            Img = Modal.find(".ModalImage");
+        var ImgStyle = Img.attr("style");
+        Img.removeAttr('style').attr("style", ImgStyle);
     }
 </script>
