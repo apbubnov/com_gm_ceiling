@@ -321,9 +321,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
                 text += "<div class='center'>Укажите стоимость монтажных работ!!!</div>" +
                     "<div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
-                text += "<div class='center'><div class='leftBlock' style='width: 41%; float: left;'><span >Начальная сумма</span><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>" +
+                text += "<div class='center'><div class='leftBlock' style='width: 41%; float: left;'><span >Начальная сумма</span><input id='input_mounting' style='width: 41%;' value='" + mouting_sum + "'/></div>" +
                     "<div class=\"centerBlock\" style=\"width: 2%;float: left;\"><br><span> - </span></div>"+
-                    "<div class='rightBlock' style='width: 54%;float: left;'><span >Недоделанная работа</span><input id='input_mounting_1' class='noty_input' value='" + mouting_sum + "'/></div></div>";
+                    "<div class='rightBlock' style='width: 54%;float: left;'><span >Недоделанная работа</span><input id='input_mounting_1' style='width: 41%;' value='" + mouting_sum + "'/></div></div>";
             }
             element.closest(".modal-text").find(".dop_info_block").html(text);
             }
