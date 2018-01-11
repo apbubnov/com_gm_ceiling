@@ -204,6 +204,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             if ($(window).width() >= 728) $("#KeyPress").focus();
         });
 
+        window.addEventListener("message", function(e) {
+            if (e.data === 'update') ModalUpdateData();
+            $(".redactor").hide();
+        }, false);
+
         $(".PRELOADER_GM").hide();
         $("cuts").show();
 
@@ -564,5 +569,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
         redactor.attr({"src":"http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=guild&type=redactor&id=" + dataModal.id});
         redactor.show();
+    }
+
+    function ModalUpdateData() {
+        alert("Update");
     }
 </script>
