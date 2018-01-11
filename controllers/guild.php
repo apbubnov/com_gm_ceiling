@@ -59,7 +59,14 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
             $model = $this->getModel();
             $cut = ($model->getCuts((object) ["type" => "get", "name" => "c.id", "value" => $id]));
 
-            $cut = $cut[0]->I[0]->I[0];
+            $temp = null;
+
+            foreach ($cut as $item)
+                foreach ($item->I as $item2)
+                    foreach ($item2->I as $item3)
+                        $temp = $item3;
+
+            $cut = $temp;
 
             die(json_encode($cut));
         } catch (Exception $e) {
