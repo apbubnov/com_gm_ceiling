@@ -533,6 +533,7 @@ foreach ($brigade_id as $value) {
 			date = y+"-"+m+"-"+d;
 			date_to_modal_window = d+"."+m+"."+y;
 			idBrigade = ChoosenDay.match("I(.*)I")[1];
+			jQuery("#table-mounting").empty();
 			var table = "";
 			if (kind == "empty") {
 				table = '<tr id="caption-data"><td colspan=2>'+d+'.'+m+'.'+y+'</td></tr><tr><td colspan=2>В данный момент на этот день монтажей нет</td></tr>';        
@@ -548,11 +549,9 @@ foreach ($brigade_id as $value) {
 						Array.from(data).forEach(function(element) {
 							table += '<tr><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
 						});
-						
+						jQuery("#table-mounting").append(table);
 					}
 				});
-				jQuery("#table-mounting").empty();
-				jQuery("#table-mounting").append(table);
 			} else {
 				table += '<tr id="caption-data"><td colspan="6">'+d+'.'+m+'.'+y+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
 				jQuery.ajax({
@@ -597,7 +596,6 @@ foreach ($brigade_id as $value) {
 								table += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
 							}
 						});
-						jQuery("#table-mounting").empty();
 						jQuery("#table-mounting").append(table);
 					}
 				});
