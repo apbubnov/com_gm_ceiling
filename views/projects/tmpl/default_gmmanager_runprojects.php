@@ -206,21 +206,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
              var input_value = jQuery("#input_check").val();
              var input_mounting = jQuery("#input_mounting").val();
              var input_material = jQuery("#input_material").val();*/
-
-             jQuery("#done, #not_done").change(function () {
-                if ($("#done").is(":checked")) {
-                    alert("allooo");
-                    text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
-                    text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
-                    text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
-                    }
-                if ($("#not_done").is(":checked")) {
-                    alert("ne allooo");
-                    text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
-                    text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
-                    text += "<div class='center'>Укажите стоимость монтажных работ!!!</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
-                }
-            });
 			modal({
 				type: 'primary',
 				title: subject,
@@ -302,7 +287,23 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 					buttons: '.modal-buttons',
 					closebtn: '.modal-close-btn'
 				}
+
 			});	
+            
+            jQuery("#done, #not_done").change(function () {
+            if ($("#done").is(":checked")) {
+                alert("allooo");
+                text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
+                text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
+                text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
+                }
+            if ($("#not_done").is(":checked")) {
+                alert("ne allooo");
+                text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
+                text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
+                text += "<div class='center'>Укажите стоимость монтажных работ!!!</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
+            }
+            });
 
 		});
     });
