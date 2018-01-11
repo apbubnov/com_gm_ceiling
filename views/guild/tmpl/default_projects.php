@@ -576,7 +576,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
         var Modal = $(".ModalCeiling"),
             ModalData = JSON.parse(Modal.find("#Data").val()),
-            ModalImg = Modal.find(".ModalImage"),
             Block = $("#"+ModalData.id),
             BlockImg = Block.find(".image");
 
@@ -588,8 +587,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             async: false,
             success: function (data) {
                 data = JSON.parse(data);
-                console.log(data);
-
                 ModalData = data;
             },
             dataType: "text",
@@ -608,13 +605,10 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         ModalData.cut_image_dop = "?date=" + (new Date()).toISOString();
 
         BlockImg.attr("style","background-image: url(" + ModalData.cut_image + ModalData.cut_image_dop + ");");
-        ModalImg.attr("style","background-image: url(" + ModalData.cut_image + ModalData.cut_image_dop + ");");
 
-        ModalData = JSON.stringify(ModalData);
+        Block.find("#Data").val(JSON.stringify(ModalData));
 
-        console.log(ModalData);
-        Block.find("#Data").val(ModalData);
-        Modal.find("#Data").val(ModalData);
+        ModalShow(ModalData.id);
 
         $(".PRELOADER_GM").hide();
     }
