@@ -524,7 +524,7 @@ foreach ($gaugers_id as $value) {
 										timegauging2++;
 									}
 									timegauging = element.project_calculation_date.substr(11, 5)+" - "+timegauging2+":00";
-									table += '<tr><td>'+timegauging+'</td><td>'+element.project_info+'</td></tr>';
+									table += '<tr><td style="width: 50%;">'+timegauging+'</td><td style="width: 50%;">'+element.project_info+'</td></tr>';
 								}
 							}
 						});
@@ -565,7 +565,7 @@ foreach ($gaugers_id as $value) {
 		});
 		// -----------------------------------------
 
-		//Вывод замеров у НМС у замерщиков 33
+		//Вывод замеров у НМС у замерщиков 34
 
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
