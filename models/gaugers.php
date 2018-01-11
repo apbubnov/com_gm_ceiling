@@ -132,7 +132,7 @@ class Gm_ceilingModelGaugers extends JModelItem {
 			
 			$query2->select("id_user, date_from, date_to")
 				->from('#__gm_ceiling_day_off')
-				->where("id_user = '$id' and date_from between '$date 00:00:00' and '$date 23:59:59'");
+				->where("id_user = '$id_gauger' and date_from between '$date 00:00:00' and '$date 23:59:59'");
 			$db->setQuery($query2);
 			$items2 = $db->loadObject();
 
@@ -148,7 +148,6 @@ class Gm_ceilingModelGaugers extends JModelItem {
             for ($i=0; $i < count($items); $i++) {
                 $items[$i]->project_calculation_day_off = "";
             }
-
             //создание нового массива
             if (!empty($items2)) {
                 $day = array(
