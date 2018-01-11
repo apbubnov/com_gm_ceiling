@@ -297,6 +297,15 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     });
 
     function changeDone(element) {
+        var td = jQuery( this ),
+				tr = td.closest("tr");
+
+            var input = jQuery( this ),
+				input = input.closest("input"),
+				project_sum = input.find(".project_sum");
+			var button = jQuery( this );	
+			var type = "info",
+				value = td.data("value"),
         new_value = jQuery(this).closest("tr").find("#project_sum").val();
         mouting_sum = jQuery(this).closest("tr").find("#mounting_sum").val();
         material_sum = jQuery(this).closest("tr").find("#material_sum").val();
