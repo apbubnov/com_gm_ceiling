@@ -509,7 +509,7 @@ foreach ($gaugers_id as $value) {
 						data = JSON.parse(data); // замеры и выходные
 						Array.from(data).forEach(function(element) {
 							if (element.project_info == null) {
-								table += '<tr><td>'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td>Выходной</td></tr>';
+								table += '<tr><td style="width: 25%;">'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td style="width: 75%;">Выходной</td></tr>';
 							}  else {
 								if (element.project_status != 3) {
 									timegauging2 = element.project_calculation_date.substr(11, 2);
@@ -565,7 +565,7 @@ foreach ($gaugers_id as $value) {
 		});
 		// -----------------------------------------
 
-		//Вывод замеров у НМС у замерщиков 34
+		//Вывод замеров у НМС у замерщиков 35
 
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
