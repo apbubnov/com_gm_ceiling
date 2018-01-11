@@ -1242,18 +1242,22 @@ class Gm_ceilingModelProject extends JModelItem
         }
 	}
 
-	public function done($project_id, $new_value, $mouting_sum, $material_sum)
+	public function done($project_id, $new_value, $mouting_sum, $material_sum, $check, $mouting_sum_itog)
 	{
 		try
 		{
 			$table = $this->getTable();
 			if($project_id > 0) {
 				$table->load($project_id);
-				$table->project_status = 12;
+				if($check == 1) $table->project_status = 12;
 				$table->new_project_sum = $new_value;
 	            $table->new_mount_sum = $mouting_sum;
 	            $table->new_material_sum = $material_sum;
 				$table->closed = date("Y-m-d");
+                $table->new_project_mounting = $mouting_sum_itog;
+                $table->new_material_sum = $material_sum;
+				// сюда нужно сделать запись в БД новх полей, подобрать для них переменные и проверку на check,
+                // чтобы оставить статус если чек =0
 			}
 			$return = $table->store();
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');

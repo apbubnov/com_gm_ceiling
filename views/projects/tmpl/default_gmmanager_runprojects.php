@@ -83,7 +83,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     <? } ?>
                     </td>
                     <td class="center one-touch">
-                        <?php echo $item->id; 
+                        <?php echo $item->id;
+
                             $calculations = $model->new_getProjectItems($item->id);
                             $mounting_sum = 0; $material_sum = 0;
                             foreach ($calculations as $calculation) {
@@ -186,6 +187,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 ?>
 
 <script type="text/javascript">
+    // сделать обработку данных, если монтаж был недовыполнен, а сейчас выполнен.
     var $ = jQuery;
     jQuery(document).ready(function () {
         jQuery(".btn-done").click(function(){
