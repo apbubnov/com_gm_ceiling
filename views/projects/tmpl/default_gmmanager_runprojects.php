@@ -328,14 +328,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             }
             element.closest(".modal-text").find(".dop_info_block").html(text);
 
-        $("#input_mounting_1").keyup(function(){
-            var one = $("#input_mounting").val();
-            var two = $("#input_mounting_1").val();
-            var result = one - two;
-            $("#input_mounting_itog").val(result);
-           // alert(one + " - " + two + " = " + result);
-        });
-        $("#input_mounting").keyup(function(){
+        $("#input_mounting_1, #input_mounting").keyup(function(){
             var one = $("#input_mounting").val();
             var two = $("#input_mounting_1").val();
             var result = one - two;
