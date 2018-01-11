@@ -635,6 +635,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             fblocks2 = blocks2.filter("#"+i2);
 
                         if (fblocks2.length < 1) {
+                            console.log("true");
                             var Pred = "", Next = "", Temp = null;
 
                             blocks2.each(function () {
@@ -661,7 +662,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             console.log(i2 + " - " + Next);
                             if (Next !== "") T.insertBefore(Temp);
                             else block1.find("type").append(T);
-                        }
+                        } else
+                            console.log("false");
 
                         $.each(b2.I, function (i3, b3) {
                             i3 = parseInt(b3.id);
