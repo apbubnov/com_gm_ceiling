@@ -76,7 +76,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=run&id='.(int) $item->id); ?>">
                     <td>
                     <!-- <//?php if ($item->project_status == 10 || $item->project_status == 11 ) { ?> -->
-                        <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
+                        <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button" onclick='changeDone(this);'>Выполнено</button>
                   <!--   <// } ?> -->
                     <?php if ($item->project_status == 12) { ?>
                          <i class='fa fa-check' aria-hidden='true'></i> Выполнено
@@ -297,6 +297,15 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     });
 
     function changeDone(element) {
+        var td = jQuery( this ),
+				tr = td.closest("tr");
+
+            var input = jQuery( this ),
+				input = input.closest("input"),
+				project_sum = input.find(".project_sum");
+			var button = jQuery( this );	
+			var type = "info",
+				value = td.data("value"),
         new_value = jQuery(this).closest("tr").find("#project_sum").val();
         mouting_sum = jQuery(this).closest("tr").find("#mounting_sum").val();
         material_sum = jQuery(this).closest("tr").find("#material_sum").val();
@@ -315,7 +324,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
                 text += "<div class='center'>Укажите стоимость монтажных работ!!!</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
             }
-            element.siblings(".dop_info").html(text);
+            element.closest(".modal-text").find(".dop_info").html(text);
             }
 
     function deleteItem() {
