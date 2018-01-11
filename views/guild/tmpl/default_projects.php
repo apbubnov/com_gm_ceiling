@@ -660,8 +660,13 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             T.find("ceilings").empty();
 
                             console.log(i2 + " - " + Next);
-                            if (Next !== "") T.insertBefore(Temp);
-                            else block1.find("type").append(T);
+                            if (Next !== "") {
+                                T.insertBefore(Temp);
+                            console.log("one");
+                            console.log(T);
+                            console.log(Temp);
+                            }
+                            else { block1.find("type").append(T); console.log("two"); }
                         } else
                             console.log("false");
 
