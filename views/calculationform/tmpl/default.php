@@ -148,6 +148,7 @@
 			</div>
 			<div class="col-sm-4"></div>
 		</div>
+		<!-- Фактура -->
 		<div class="container">
 			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
@@ -178,6 +179,7 @@
 				</div>
 			<div class="col-sm-4"></div>
 		</div>
+		<!-- Ширина -->
 		<div class="container" style ="display:none;">
 			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
@@ -189,6 +191,7 @@
 			</div>
 			<div class="col-sm-4"></div>
 		</div>
+		<!-- Цвет -->
 		<div class="container">
 			<div class="col-sm-4"></div>
 			<div class="col-sm-4">
@@ -204,6 +207,7 @@
 			<div class="col-sm-4">
 			</div>
 		</div>
+		<!-- Производитель -->
 		<div class="container">
 			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
@@ -232,6 +236,7 @@
 			</div>
 			<div class="col-sm-4"></div>
 		</div>
+		<!-- размеры -->
 		<div class="container">
 			<div class="col-sm-4">
 			</div>
@@ -243,6 +248,7 @@
 			<div class="col-sm-4">
 			</div>
 		</div>
+		<!-- начертить -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -269,6 +275,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- S,P,углы -->
 		<div class="container">
 			<div id="data-wrapper">
 				<div class="row sm-margin-bottom">
@@ -315,6 +322,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- Багет -->
 		<div class="container" id="block_n28">
 			<div class="row">
 				<div class="col-sm-4" style="padding-left: 0px;">
@@ -352,6 +360,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- вставка -->
 		<div class="container" id="block_n6">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -439,6 +448,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- освещение -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -459,6 +469,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- Люстры -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -484,6 +495,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- Светильники -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -558,6 +570,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- Экола -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -626,6 +639,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- Шторный карниз -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -1987,10 +2001,9 @@
 		});
 		
         function change_flag_auto(){
-            if(jQuery("#sketch_image_block").is(':visible')){
-                jQuery("#flag_auto").val(1);
-            }
+			jQuery("#flag_auto").val(1);
         }
+		console.log( jQuery("#flag_auto").val());
 		jQuery( "#color_switch" ).click(function(){
 			if(jQuery( "#jform_n2").val() != 0 ) { 
                 change_flag_auto();
