@@ -84,7 +84,7 @@ foreach ($gaugers_id as $value) {
 			</div>
         </div>
 	</div>
-	<!-- <div id="modal-window-container-tar">
+	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-choose-tar">
 			<p id="date-modal"></p>
@@ -136,7 +136,7 @@ foreach ($gaugers_id as $value) {
 			<div id="wrong-window"></div>
 			<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
 		</div>
-	</div> -->
+	</div>
 </div>
 
 <script>
@@ -558,7 +558,7 @@ foreach ($gaugers_id as $value) {
 		});
 		// -----------------------------------------
 
-		//Вывод замеров у НМС у замерщиков 30
+		//Вывод замеров у НМС у замерщиков 31
 
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
@@ -605,6 +605,5 @@ foreach ($gaugers_id as $value) {
         //------------------------------------------
 
 	});
-
 
 </script>
