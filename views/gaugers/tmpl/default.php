@@ -506,28 +506,11 @@ foreach ($gaugers_id as $value) {
 						};
 						data = JSON.parse(data); // замеры и выходные
 						console.log(data);
-						/* 
-							var table = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
-							AllTime.forEach( elementTime => {
-								var t = elementTime.substr(0, 2);
-								t++;
-								Array.from(AllGauger).forEach(function(elementGauger) {
-									table += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-									table += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-									var emptytd = 0;
-									Array.from(data).forEach(function(elementProject) {
-										if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-											table += '<td>'+elementProject.project_info+'</td>';
-											emptytd = 1;
-										}
-									});
-									if (emptytd == 0) {
-										table += '<td></td>';
-									}
-									table += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
-								});
-							}); 
-						*/
+						Array.from(data).forEach(function(element) {
+							if (element.project_status != 3) {
+								table += '<tr><td>'+element.project_calculation_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.project_calculator+'</td></tr>';
+							}
+						});
 						jQuery("#projects_gaugers").empty();
 						jQuery("#projects_gaugers").append(table);
 					}
