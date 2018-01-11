@@ -332,13 +332,15 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             var one = $("#input_mounting").val();
             var two = $("#input_mounting_1").val();
             var result = one - two;
-            alert(one + " - " + two + " = " + result);
+            $("#input_mounting_itog").val(result);
+           // alert(one + " - " + two + " = " + result);
         });
         $("#input_mounting").keyup(function(){
             var one = $("#input_mounting").val();
             var two = $("#input_mounting_1").val();
             var result = one - two;
-            alert(one + " - " + two + " = " + result);
+            $("#input_mounting_itog").val(result);
+           // alert(one + " - " + two + " = " + result);
         });
     }
 
