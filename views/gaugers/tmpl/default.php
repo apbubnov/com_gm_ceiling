@@ -348,12 +348,12 @@ foreach ($gaugers_id as $value) {
 
 	//скрыть модальное окно
     jQuery(document).mouseup(function (e) {
-		var div = jQuery("#modal-window-choose-tar");
+		var div = jQuery("#window-with-table");
 		if (!div.is(e.target)
 		    && div.has(e.target).length === 0) {
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
-			jQuery("#modal-window-choose-tar").hide();
+			jQuery("#close-modal-window").hide();
+			jQuery("#modal-window-with-table").hide();
+			jQuery("#window-with-table").hide();
 		}
     });
     //--------------------------------------------------
@@ -370,7 +370,7 @@ foreach ($gaugers_id as $value) {
         //------------------------------------------
 
 		// открытие модального окна с календаря и получение даты и вывода свободных замерщиков
-		jQuery("#calendars-container").on("click", ".current-month, .not-full-day, day-off", function() {
+		jQuery("#calendars-container").on("click", ".current-month, .not-full-day, .full-day, day-off", function() {
             window.idDay = jQuery(this).attr("id");
             reg1 = "D(.*)D";
             reg2 = "M(.*)M";
@@ -388,9 +388,9 @@ foreach ($gaugers_id as $value) {
             }
             window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
 			window.id_gauger = idDay.match(reg4)[1];
-            jQuery("#modal-window-container-tar").show();
-			jQuery("#modal-window-choose-tar").show("slow");
-            jQuery("#close-tar").show();
+            jQuery("#modal-window-with-table").show();
+			jQuery("#window-with-table").show("slow");
+            jQuery("#close-modal-window").show();
 			jQuery.ajax({
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugersWorkDayOff",
@@ -399,6 +399,7 @@ foreach ($gaugers_id as $value) {
 					id: <?php echo $userId; ?>,
                 },
                 success: function(data) {
+					//Вывод замеров у НМС у замерщиков 2
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
                     };
