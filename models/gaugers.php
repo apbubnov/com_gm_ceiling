@@ -123,17 +123,44 @@ class Gm_ceilingModelGaugers extends JModelItem {
 			$query = $db->getQuery(true);
 			$query2 = $db->getQuery(true);
 
-			$query2->select("users.name")
-				->from('#__users as users')
-				->where("id = $id_gauger");
-			
-			$query->select("projects.id, projects.project_calculation_date, projects.project_info, ($query2) as project_calculator, projects.project_status")
+			$query->select("projects.id, projects.project_calculation_date, projects.project_info, projects.project_status")
 				->from('#__gm_ceiling_projects as projects')
 				->where("projects.project_calculator = $id_gauger and projects.project_calculation_date between '$date 00:00:00' and '$date 23:59:59'")
 				->order('projects.project_calculation_date');
-			$db->setQuery($query);			
-			
+			$db->setQuery($query);
 			$items = $db->loadObjectList();
+			
+			$query2->select("id_user, date_from, date_to")
+				->from('#__gm_ceiling_day_off')
+				->where("id_user = '$id_gauger' and date_from between '$date 00:00:00' and '$date 23:59:59'");
+			$db->setQuery($query2);
+			$items2 = $db->loadObject();
+
+			// объединение с выходным днем
+            $index = 0;
+            //поиск индекса для вставки и замена даты на просто время
+            for ($i=0; $i < count($items); $i++) {
+                if (strtotime($items[$i]->project_calculation_date) >= strtotime($items2->date_from)) {
+                    $index = $i;
+                    break;
+                }
+            }
+            for ($i=0; $i < count($items); $i++) {
+                $items[$i]->project_calculation_day_off = "";
+            }
+            //создание нового массива
+            if (!empty($items2)) {
+                $day = array(
+                    'id'=>$items2->id_user,
+                    'project_calculation_date'=>$items2->date_from,
+                    'project_info'=>NULL,
+                    'project_status'=>NULL,
+                    'project_calculation_day_off'=>$items2->date_to
+                );
+                $day = array((object)$day);
+                array_splice($items,$index,0,$day);
+            }
+			
 			return $items;
 		}
 		catch(Exception $e)
