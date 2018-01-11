@@ -59,19 +59,6 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
             $model = $this->getModel();
             $cut = ($model->getCuts((object) ["type" => "get", "name" => "c.id", "value" => $id]));
 
-            $temp = null;
-            $id1 = null;
-            $id2 = null;
-            $id3 = null;
-
-            foreach ($cut as $id1 => $item)
-                foreach ($item->I as $id2 => $item2)
-                    foreach ($item2->I as $id3 => $item3)
-                        $temp = $item3;
-
-
-            $cut = (object)["data" => $temp, "id1" => $id1, "id2" => $id2, "id3" => $id3];
-
             die(json_encode($cut));
         } catch (Exception $e) {
             $date = date("d.m.Y H:i:s");

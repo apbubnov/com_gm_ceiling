@@ -157,9 +157,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     $(document).ready(Init);
 
     function Init() {
-        alert($("#5465464546454654654646").length);
-        alert($("#20180112B0120").length);
-
         Data.block1 = $('<div class="block_1">' +
             '<line class="gm line"></line>' +
             '<type class="type"></type>' +
@@ -574,17 +571,22 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         redactor.show();
     }
 
+    /**
+     * Метод для обновления данных из БД, после редактора
+     *
+     * @constructor
+     * @author  {CEH4TOP}
+     * @this    {ModalUpdateData}
+     * @type    {function}
+     * @return  {null}
+     */
     function ModalUpdateData() {
         $(".PRELOADER_GM").show();
 
         var Modal = $(".ModalCeiling"),
-            ModalData = JSON.parse(Modal.find("#Data").val()),
-            Block = $("#"+ModalData.id),
-            BlockImg = Block.find(".image"),
-            ID1 = null,
-            ID2 = null,
-            ID3 = null;
+            ModalData = JSON.parse(Modal.find("#Data").val());
 
+        /* Загрузка новых данных */
         jQuery.ajax({
             type: 'POST',
             url: "/index.php?option=com_gm_ceiling&task=guild.getCut",
@@ -593,10 +595,109 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             async: false,
             success: function (data) {
                 data = JSON.parse(data);
-                ModalData = data.data;
-                ID1 = data.id1;
-                ID2 = data.id2;
-                ID3 = data.id3;
+
+                $.each(data, function (i1, b1) {
+                    var blocks1 = $(".block_1"),
+                        fblocks1 = blocks1.filter("#"+i1);
+
+                    if (fblocks1.length < 1) {
+                        var Pred = "", Next = "", Temp = null;
+                        blocks1.each(function () {
+                            if (i1 <= Next) return;
+
+                            Temp = $(this);
+
+                            Pred = Next;
+                            Next = Temp.attr('id');
+                        });
+
+                        if (Temp !== null && i1 > Temp.attr('id')) {
+                            Pred = Next;
+                            Next = "";
+                        }
+
+                        Temp = (Next !== "") ? $("#" + Next) : Data.block1;
+                        var T = Temp.clone();
+
+                        T.attr("id", i1);
+                        T.find("line.gm").text(b1.name);
+                        T.find("type").empty();
+
+                        if (Next !== "") T.insertBefore(Temp);
+                        else $("types").append(T);
+                    }
+
+                    $.each(b1.I, function (i2, b2) {
+                        i2 = "p" + i2;
+                        var block1 = $("#"+i1),
+                            blocks2 = block1.find(".block_2"),
+                            fblocks2 = blocks2.filter("#"+i2);
+
+                        if (fblocks2.length < 1) {
+                            var Pred = "", Next = "", Temp = null;
+                            blocks2.each(function () {
+                                if (parseInt(i2.replace("p","")) <= parseInt(Next.replace("p",""))) return;
+
+                                Temp = $(this);
+
+                                Pred = Next;
+                                Next = Temp.attr('id');
+                            });
+
+                            if (Temp !== null && parseInt(i2.replace("p","")) > parseInt(Temp.attr('id').replace("p",""))) {
+                                Pred = Next;
+                                Next = "";
+                            }
+
+                            Temp = (Next !== "") ? $("#" + Next) : Data.block2;
+                            var T = Temp.clone();
+
+                            T.attr("id", i2);
+                            T.find("line").text(b2.canvases);
+                            T.find("ceilings").empty();
+
+                            if (Next !== "") T.insertBefore(Temp);
+                            else block1.find("type").append(T);
+                        }
+
+                        $.each(b2.I, function (i3, b3) {
+                            i3 = parseInt(b3.id);
+
+                            var block2 = block1.find("#"+i2),
+                                blocks3 = block2.find(".block_3"),
+                                fblocks3 = blocks3.filter("#"+i3);
+
+                            if (fblocks3.length < 1) {
+                                var Pred = "", Next = "", Temp = null;
+                                blocks3.each(function () {
+                                    if (parseInt(i3) <= parseInt(Next)) return;
+
+                                    Temp = $(this);
+
+                                    Pred = Next;
+                                    Next = Temp.attr('id');
+                                });
+
+                                if (Temp !== null && parseInt(i3) > parseInt(Temp.attr('id'))) {
+                                    Pred = Next;
+                                    Next = "";
+                                }
+
+                                Temp = (Next !== "") ? block2.find("#" + Next) : Data.block3;
+                                var T = $("#" + i3);
+
+                                T.attr("id", i3);
+                                T.find("input").val(JSON.stringify(b3));
+                                T.find("name").text(b3.title);
+                                T.find(".image").attr("style","background-image: url('" + b3.cut_image + b3.cut_image_dop + "'");
+
+                                delete Data.calculations[Data.calculations.indexOf(parseInt(i3))];
+                                if (Next !== "") { T.insertBefore(Temp); var index = Data.calculations.indexOf(parseInt(Next)); Data.calculations.splice(index, 0, parseInt(i3)); }
+                                else { block2.find("ceilings").append(T); Data.calculations.push(parseInt(i3)); }
+                            }
+                        });
+                    });
+                });
             },
             dataType: "text",
             timeout: 15000,
@@ -610,12 +711,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 });
             }
         });
-
-        ModalData.cut_image_dop = "?date=" + (new Date()).toISOString();
-
-        BlockImg.attr("style","background-image: url(" + ModalData.cut_image + ModalData.cut_image_dop + ");");
-
-        Block.find("#Data").val(JSON.stringify(ModalData));
 
         ModalShow(parseInt(ModalData.id));
 
