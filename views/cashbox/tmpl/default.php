@@ -26,7 +26,7 @@ $userId     = $user->get('id');
 			<p><button type="button" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
 	    </div>
     </div>
-    <table class="table_cashbox" id="cashbox_table">
+    <table class="table table-striped table_cashbox" id="cashbox_table">
         <thead id = "cashbox_head">
         <tr>
             <th>
@@ -70,8 +70,7 @@ $userId     = $user->get('id');
                ?>
                 <tr>
                     <td>
-                        <?php echo $item->closed;?>
-                    
+                        <?php echo date_format(date_create($item->closed),"d.m.Y H:i:s");?>
                     </td>
                     <td>
                         <?php echo $item->id;?>        
