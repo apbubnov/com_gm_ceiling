@@ -111,12 +111,25 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                         $sum_transport = margin($mount_transport->transport, $item->gm_mounting_margin);
                                     }
                                 }
-                               
+                                $temp = 0;
+                                if($item->check_mount_done == 0) { 
+                                    $temp = ($item->new_mount_sum)? $item->new_mount_sum: ($mounting_sum + $sum_transport);
+                                    $temp = $temp - $item->new_project_mounting;
+                                    ?>
+                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo round(($item->project_sum - $item->new_project_sum), 2); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo round($temp, 2); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo round(($material_sum - $item->new_material_sum),2); ?>"  hidden>
+                                
+                                <?}
+                                if($item->check_mount_done == 1) { ?>
+                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
+                                <?}
+                                
                             ?>
 
-                         <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
-                         <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
-                         <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
+                         
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->status; ?>
@@ -253,7 +266,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 check: check
 							},
 							success: function(data){
-                                button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
+                                if(check == 1) button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
 								var n = noty({
 									theme: 'relax',
 									layout: 'center',

@@ -1255,7 +1255,9 @@ class Gm_ceilingModelProject extends JModelItem
 	            $table->new_material_sum = $material_sum;
 				$table->closed = date("Y-m-d");
                 $table->new_project_mounting = $mouting_sum_itog;
-                $table->new_material_sum = $material_sum;
+				$table->new_material_sum = $material_sum;
+				$table->check_mount_done = $check;
+				
 				// сюда нужно сделать запись в БД новх полей, подобрать для них переменные и проверку на check,
                 // чтобы оставить статус если чек =0
 			}

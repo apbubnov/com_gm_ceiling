@@ -103,6 +103,9 @@ $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
 		<p>
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=refused', false); ?>"><i class="fa fa-times" aria-hidden="true"></i> Отказы</a>
 		</p>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fa fa-usd" aria-hidden="true"></i> Касса</a>
+		</p>
 	</div>
 	<div class="columns-tar">
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
