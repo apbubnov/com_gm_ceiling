@@ -1104,10 +1104,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $n26 = json_decode($data['n26']);
             $n29 = json_decode($data['n29']);
 
-            //print_r($data);
-
-
-            //print_r($data); exit;
             $db = $this->getDbo();
             $calculationId = $data['id'];
             $date_created = date("Y-m-d H:i:s");
