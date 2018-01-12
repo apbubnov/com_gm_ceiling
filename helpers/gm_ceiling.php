@@ -2504,6 +2504,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
 
             }
+            
             //throw new Exception($ajax_return['id']);
             //throw new Exception($pdf);
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
