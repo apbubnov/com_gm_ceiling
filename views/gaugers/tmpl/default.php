@@ -136,6 +136,7 @@ foreach ($gaugers_id as $value) {
 			</p>
 			<div id="wrong-window"></div>
 			<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+			<p id="delete_container"><button type="button" id="delete_day_off" class="btn btn-danger">Удалить</button></p>
 		</div>
 	</div>
 </div>
@@ -395,10 +396,12 @@ foreach ($gaugers_id as $value) {
 						jQuery("#add_free_day").text("Добавить выходной");
 						window.dataFree1 = 0;
 						window.dataFree2 = 0;
+						jQuery("#delete_container").hide();
 					} else {
 						jQuery("#add_free_day").text("Изменить выходной");
 						window.dataFree1 = data[0].date_from;
 						window.dataFree2 = data[0].date_to;
+						jQuery("#delete_container").show();
 					}
 				},
 				error: function (data) {
@@ -434,10 +437,12 @@ foreach ($gaugers_id as $value) {
 						jQuery("#add_free_day").text("Добавить выходной");
 						window.dataFree1 = 0;
 						window.dataFree2 = 0;
+						jQuery("#delete_container").hide();
 					} else {
 						jQuery("#add_free_day").text("Изменить выходной");
 						window.dataFree1 = data[0].date_from;
 						window.dataFree2 = data[0].date_to;
+						jQuery("#delete_container").show();
 					}
 				},
 				error: function (data) {
