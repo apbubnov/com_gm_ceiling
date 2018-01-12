@@ -336,7 +336,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 		});
     });
 
-
     function changeDone(element, new_value, mouting_sum, material_sum) {
         var text = "";
         element = $(element);
