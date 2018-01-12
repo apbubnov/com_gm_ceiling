@@ -181,7 +181,6 @@ $results = $db->loadObjectList();
 
 <?php if ($this->item) : ?>
 <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-<?php $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client'); ?>
 <?php $calculations = $model->getProjectItems($this->item->id);?>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
@@ -306,7 +305,8 @@ $results = $db->loadObjectList();
                                 </div>
                             </td>
                         </tr>
-                        <? $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
+                        <?  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+                            $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
                         <tr>
                             <th>Дата рождения</th>
                             <td><input name="new_birthday" id="jform_birthday" class="inputactive"
