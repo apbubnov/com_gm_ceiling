@@ -240,7 +240,6 @@ class Gm_ceilingModelTeams extends JModelItem {
 				$db->execute();
 
 				// письмо
-				$DataOrder = $model->DataOrder($id);
 				$mailer = JFactory::getMailer();
 				$config = JFactory::getConfig();
 				$sender = array(
@@ -263,7 +262,6 @@ class Gm_ceilingModelTeams extends JModelItem {
 				$db->execute();
 
 				// письмо
-				$DataOrder = $model->DataOrder($id);
 				$mailer = JFactory::getMailer();
 				$config = JFactory::getConfig();
 				$sender = array(
@@ -340,7 +338,6 @@ class Gm_ceilingModelTeams extends JModelItem {
 			$db->execute();
 
 			// письмо
-			$DataOrder = $model->DataOrder($id);
 			$mailer = JFactory::getMailer();
 			$config = JFactory::getConfig();
 			$sender = array(
