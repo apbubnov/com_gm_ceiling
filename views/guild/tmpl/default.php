@@ -31,7 +31,7 @@ if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header(
 <div class="start_page">
     <h3>Цех</h3>
     <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=guild&type=chief', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Кабинет</a>
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=guild&type=schedule', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Расписание</a>
     </p>
     <p class="center">
         <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=guild&type=projects', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Раскрои</a>

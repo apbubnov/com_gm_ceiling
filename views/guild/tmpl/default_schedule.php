@@ -21,9 +21,17 @@ $groups = $user->get('groups');
 
 $chief = (in_array(23, $groups));
 $employee = (in_array(18, $groups));
-echo ($chief)?"Руководитель":"";
-echo ($employee)?"Работник цеха":"";
 
 //$app = JFactory::getApplication();
-$employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getSchedule();
+// $schedule = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getSchedule();
+print_r($user);
 ?>
+
+<?if ($chief):?>
+<h1>Начальник цеха: <?=$user->username;?></h1>
+<?elseif($employee):?>
+<h1>Работник цеха: <?=$user->username;?></h1>
+<?else:?>
+<h1>К сожалению данный кабинет вам не доступен!</h1>
+Что бы получить доступ, обратитесь к IT отделу.
+<?endif;?>
