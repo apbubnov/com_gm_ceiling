@@ -750,10 +750,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							$project_sum += margin($calc->canvases_sum,  $dealer_canvases_margin);
 							$project_sum += margin($calc->mounting_sum, $dealer_mounting_margin);
 						}
-						
-print_r($calculation."|||");
 					if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
-					} exit;
+					} 
 					if($smeta == 0) Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
 
 					// Clear the profile id from the session.
