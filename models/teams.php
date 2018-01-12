@@ -247,7 +247,6 @@ class Gm_ceilingModelTeams extends JModelItem {
 					$config->get('fromname')
 				);
 				$mailer->setSender($sender);
-				throw new Exception($items5->email);
 				$mailer->addRecipient($items5->email);
 				$body = "Здравствуйте, у Вас появились выходные часы ".substr($date1, 0, 10)." числа с ".substr($date1, 11, 5)." до ".substr($date2, 11, 5)." \n";
 				$body .= "\n";
@@ -270,7 +269,6 @@ class Gm_ceilingModelTeams extends JModelItem {
 					$config->get('fromname')
 				);
 				$mailer->setSender($sender);
-				throw new Exception($items5->email);
 				$mailer->addRecipient($items5->email);
 				$body = "Здравствуйте, изменилось время выходных часов ".substr($date1, 0, 10)." числа: с ".substr($date1, 11, 5)." до ".substr($date2, 11, 5)." \n";
 				$body .= "\n";
