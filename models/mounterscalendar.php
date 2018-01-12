@@ -181,7 +181,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			->from('#__users as users')
 			->where("users.id = projects.project_mounter");
 
-			$query->select('projects.project_info, projects.project_mounting_date, ($query2) as project_mounter')
+			$query->select("projects.project_info, projects.project_mounting_date, ($query2) as project_mounter")
 			->from('#__gm_ceiling_projects as projects')
 			->where("id = $id");
 			$db->setQuery($query);
