@@ -454,6 +454,7 @@ foreach ($brigade_id as $value) {
 						jQuery("#add_free_day").text("Изменить выходной");
 						window.dataFree1 = data[0].date_from;
 						window.dataFree2 = data[0].date_to;
+						jQuery("#modal-window-1-tar").append('<p><button type="button" id="delete_day_off" class="btn btn-danger">Удалить</button></p>');
 					}
 				},
 				error: function (data) {
@@ -493,6 +494,7 @@ foreach ($brigade_id as $value) {
 						jQuery("#add_free_day").text("Изменить выходной");
 						window.dataFree1 = data[0].date_from;
 						window.dataFree2 = data[0].date_to;
+						jQuery("#modal-window-1-tar").append('<p><button type="button" id="delete_day_off" class="btn btn-danger">Удалить</button></p>');
 					}
 				},
 				error: function (data) {
