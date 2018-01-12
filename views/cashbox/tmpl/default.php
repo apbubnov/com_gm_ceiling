@@ -91,7 +91,7 @@ $userId     = $user->get('id');
                     </td>
                     <td>
                         <?php
-                            if($item->done!=1){
+                            if($item->done!=1&&$item->project_status != 12){
                                 $not_issued =  $item->new_mount_sum - $item->new_project_mounting;
                                 
                             }

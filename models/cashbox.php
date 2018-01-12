@@ -33,6 +33,7 @@ class Gm_ceilingModelCashbox extends JModelList
 				->select('u.name')
 				->select('p.new_project_sum')
 				->select('p.new_mount_sum')
+				->select('p.project_status')
 				->select('p.new_material_sum')
 				->select('p.new_project_mounting')
 				->select('p.check_mount_done as `done`')
@@ -53,6 +54,7 @@ class Gm_ceilingModelCashbox extends JModelList
 					'name'=>null,
 					'status'=>null,
 					'done'=>null,
+					'project_status' =>null,
 					'new_project_sum'=>null,
 					'new_project_mounting'=>null,
 					'new_mount_sum'=>null,
