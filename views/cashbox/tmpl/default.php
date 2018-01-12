@@ -139,9 +139,27 @@ $userId     = $user->get('id');
                 </tr>
             <?php }?>
             <tr>
-                <td colspan = "11">
-                    Итого в кассе <?php echo $cashbox;?> из них выдать монтажникам <?php echo $all_not_issued ?>. 
-                    Касса без учета денег монтажников <?php echo $cashbox-$all_not_issued;?>
+                <td style = "text-align:right" colspan = "10">
+                    <b>Итого в кассе:</b>
+                </td>
+                <td>
+                    <b><?php echo $cashbox;?></b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan = "10">
+                    <b>Недовыдано</b>
+                </td>
+                <td>
+                    <b><?php echo $all_not_issued ?></b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan = "10">
+                   <b>Остаток</b>
+                </td>
+                <td>
+                    <b><?php echo $cashbox-$all_not_issued;?></b>
                 </td>
             </tr>
         </tbody>
