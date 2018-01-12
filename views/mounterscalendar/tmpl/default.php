@@ -331,7 +331,6 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                     id_calculation : project,
                 },
                 success: function(msg) {
-                    
                 }
             });
         }
