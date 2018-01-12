@@ -637,7 +637,7 @@ foreach ($gaugers_id as $value) {
 				dataType: 'json',
 				data: {
 					date: date,
-					id: idBrigade,
+					id: id_gauger,
 				},
 				success: function(data) {
 					if (data == "no") {
