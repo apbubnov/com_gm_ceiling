@@ -21,75 +21,6 @@ jimport('joomla.event.dispatcher');
  */
 class Gm_ceilingModelMounterscalendar extends JModelItem {
 
-/*function getData($userId) {
-		try
-		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-
-			$query->select('projects.id') // id заказа
-				->select('projects.project_status') // статус заказа
-				->select('projects.read_by_mounter') // статус заказа прочитан или нет
-				->select('projects.project_info') // улица
-				->select('projects.project_mounting_date') // дата и время монтажа
-				->select('calculations.n5') // периметры
-				->select('projects.gm_chief_note') // примечание монтажнику от ГМ НМС
-				->select('projects.dealer_chief_note') // примечание монтажнику от дилера НМС
-				->select('calculations.id as calculation_id')// id калькуляции (потолках)
-				->from('#__gm_ceiling_projects as projects')
-				->innerJoin('#__gm_ceiling_calculations as calculations ON calculations.project_id = projects.id')
-				->where('projects.project_mounter = '.$userId)
-	            ->orderby('id');
-	        
-			$db->setQuery($query);
-			
-			$items = $db->loadObjectList();
-			return $items;
-		}
-		catch(Exception $e)
-        {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
-        }
-	}
-	function GetNforSalary6($masid) {
-		try
-		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-
-			$whereAll = "";
-			foreach ($masid as $value) {
-				if ($whereAll == "") {
-					$whereAll .= "id = ".$value;
-				} else {
-					$whereAll .= " or id = ".$value;				
-				}
-			}
-
-			$query
-				->select('transport')
-				->select('distance')
-				->select('distance_col') // транспорт
-				->from('#__gm_ceiling_projects')
-				->where("$whereAll");
-			$db->setQuery($query);
-
-			$items = $db->loadObjectList();
-			return $items;
-		}
-		catch(Exception $e)
-		{
-			$date = date("d.m.Y H:i:s");
-			$files = "components/com_gm_ceiling/";
-			file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-			throw new Exception('Ошибка!', 500);
-		}
-	}
-*/
-
 	function ChangeStatusOfRead($id) {
 		try
 		{
@@ -244,9 +175,14 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
+			$query2 = $db->getQuery(true);
 
-			$query->select('project_info, project_mounting_date')
-			->from('#__gm_ceiling_projects')
+			$query2->select("users.name")
+			->from('#__users as users')
+			->where("users.id = projects.project_mounter");
+
+			$query->select("projects.project_info, projects.project_mounting_date, ($query2) as project_mounter")
+			->from('#__gm_ceiling_projects as projects')
 			->where("id = $id");
 			$db->setQuery($query);
 
