@@ -202,7 +202,11 @@ if (empty($list['direction']))
 			}
 			$query->order('`id` DESC');
 			$query->group('`id`');
-			return $query;
+
+			$db->setQuery($query);
+			$db->execute();
+			$items = $db->loadObjectList();
+			return $items;
 		}
 		catch(Exception $e)
         {
