@@ -159,6 +159,60 @@ if (empty($list['direction']))
         }
 	}
 
+	public function getDealersClientsListQuery($dealer_id)
+	{
+		try
+		{
+			// Create a new query object.
+			$db    = $this->getDbo();
+			$query = $db->getQuery(true);
+
+			// Select the required fields from the table.
+			$query
+				->select(
+					$this->getState(
+						'list.select', ' a.*'
+					)
+				);
+			$query->select('b.phone as client_contacts');		
+			$query->from('`#__gm_ceiling_clients` AS a');
+			$query->leftJoin('`#__gm_ceiling_clients_contacts` as b ON a.id = b.client_id ');
+			$user = JFactory::getUser();
+			$groups = $user->get('groups');
+			
+			$query->where('a.dealer_id = '.$dealer_id);
+			
+			//Если менеджер дилера, то показывать только его клиентов
+			if(in_array("13",$groups)){
+				$query->where('a.manager_id = '.$user->id);
+			}
+			$search = $this->getState('filter.search');
+
+			if (!empty($search))
+			{
+				if (stripos($search, 'id:') === 0)
+				{
+					$query->where('a.id = ' . (int) substr($search, 3));
+				}
+				else
+				{
+					$search = $db->Quote('%' . $db->escape($search, true) . '%');
+					$query->where('( a.client_name LIKE ' . $search . ')');
+				}
+			}
+			$query->order('`id` DESC');
+			$query->group('`id`');
+			return $query;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 	/**
 	 * Method to get an array of data items
 	 *
