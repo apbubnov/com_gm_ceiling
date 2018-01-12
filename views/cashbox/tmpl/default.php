@@ -26,7 +26,7 @@ $userId     = $user->get('id');
 			<p><button type="button" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
 	    </div>
     </div>
-    <table class="table table_cashbox" id="cashbox_table">
+    <table class="table table-striped table_cashbox" id="cashbox_table">
         <thead id = "cashbox_head">
         <tr>
             <th>
