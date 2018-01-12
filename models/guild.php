@@ -85,6 +85,7 @@ class Gm_ceilingModelGuild extends JModelList
             $calc->canvas_name = $calc->name . " " .$calc->country . " " .$calc->width . " " .$calc->texture . ((empty($calc->color))?"":" ".$calc->color);
             $calc->cut_pdf = '/costsheets/' . md5($calc->id . 'cutpdf' . -2) . '.pdf';
             $calc->cut_image = "/cut_images/".md5("cut_sketch" . $calc->id).".png";
+            $calc->cut_image_dop = "?date=".((string) date("dmYHis"));
             $calc->quad = floatval($calc->quad);
             $calc->perimeter = floatval($calc->perimeter);
             $calc->square = floatval($calc->square);
@@ -184,7 +185,6 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function sendWork($data)
     {
-        $date = date("Y.m.d H:i:s");
         $employees = $data->employees;
         $calculations = $data->calculations;
         $calculation = $calculations->id;
@@ -214,7 +214,7 @@ class Gm_ceilingModelGuild extends JModelList
             $sum = ceil(floatval($work->sum) / floatval(count($emp)) * 100.0) / 100.0;
 
             foreach ($emp as $val)
-                $query->values("'$val', '$sum', '$work->id', '$work->name', '$date'");
+                $query->values("'$val', '$sum', '$work->id', '$work->name', '$data->date'");
 
             $i++;
         }
@@ -225,19 +225,17 @@ class Gm_ceilingModelGuild extends JModelList
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_calculations` as c")
             ->select("COUNT(c.id) as COUNT")
-            ->where("c.project_id = '$calculations->project'")
-            ->group("c.id");
+            ->where("c.project_id = '$calculations->project'");
         $db->setQuery($query);
-        $all = $db->loadObject();
+        $all = $db->loadObject()->COUNT;
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_calculations` as c")
             ->join("LEFT", "`#__gm_ceiling_cuttings` as cut ON c.id = cut.id")
             ->select("COUNT(c.id) as COUNT")
-            ->where("c.project_id = '$calculations->project' && cut.ready = '1'")
-            ->group("c.id");
+            ->where("c.project_id = '$calculations->project' && cut.ready = '1'");
         $db->setQuery($query);
-        $ready = $db->loadObject();
+        $ready = $db->loadObject()->COUNT;
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_projects` as p")
@@ -245,8 +243,6 @@ class Gm_ceilingModelGuild extends JModelList
             ->select("p.project_status as status");
         $db->setQuery($query);
         $status = intval($db->loadObject()->status);
-
-        print_r(intval($all)." - ".intval($ready));
 
         if (intval($all) == intval($ready))
         {

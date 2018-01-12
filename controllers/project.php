@@ -1054,10 +1054,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('project_id', '0', 'INT');
-
+            $check = $jinput->get('check', '0', 'INT'); // 1 - монтаж выполнен, 0 - недовыполнен
 			$new_value = $jinput->get('new_value', '0', 'FLOAT');
 			$mouting_sum = $jinput->get('mouting_sum', '0', 'FLOAT');
+            $mouting_sum_itog = $jinput->get('mouting_sum_itog', '0', 'FLOAT'); // сумма, которую получат монтажники сначала без выполненной работы
 			$material_sum = $jinput->get('material_sum', '0', 'FLOAT');
+			//print_r("check - $check ||| new_value - $new_value ||| mouting_sum - $mouting_sum ||| mouting_sum_itog - $mouting_sum_itog ||| material_sum - $material_sum"); exit;
 			$map_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
             $sum = $new_value*0.1;
             $result = "Договор закрыт!";
@@ -1070,13 +1072,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $result = "Заказ от откатника: ".$recoil->recoil_name.";Телефон: ".$recoil->phone;
                
             }
+            // если проект был недовыолнен, а сейчас выполнен, то плюсовать сумму ранее записанную в переменнные  new
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$table = $model->getTable();
 			$table->load($project_id);
 			$data = $table;
 			$data->new_project_sum = $new_value;
 			// Attempt to save the data.
-            $return = $model->done($project_id, $new_value, $mouting_sum, $material_sum );
+            $return = $model->done($project_id, $new_value, $mouting_sum, $material_sum, $check, $mouting_sum_itog );
 			//Gm_ceilingHelpersGm_ceiling::notify($data, 2);
 			Gm_ceilingHelpersGm_ceiling::notify($data, 3);
 			// Check for errors.

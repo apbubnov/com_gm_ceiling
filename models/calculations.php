@@ -504,6 +504,18 @@ class Gm_ceilingModelCalculations extends JModelList {
         }
     }
 
+    public function new_getProjectItems($project_id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select('*')
+            ->from('#__gm_ceiling_calculations')
+            ->where('project_id = '.$project_id);
+        $db->setQuery($query);
+        $results = $db->loadObjectList();
+        return $results;
+    }
     //KM_CHANGED START
 
     public function getProjectItems($project_id)

@@ -50,6 +50,24 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
         }
     }
 
+    public function getCut()
+    {
+        try {
+            $app = JFactory::getApplication();
+            $id = $app->input->get('id', null, 'int');
+
+            $model = $this->getModel();
+            $cut = ($model->getCuts((object) ["type" => "get", "name" => "c.id", "value" => $id]));
+
+            die(json_encode($cut));
+        } catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function sendWork()
     {
         try {
