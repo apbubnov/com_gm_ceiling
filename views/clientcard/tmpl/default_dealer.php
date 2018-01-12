@@ -18,7 +18,8 @@
     $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
     $client = $client_model->getClientById($this->item->id);
     $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-    $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id);
+    $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
+    
     if(!empty($client->manager_id)){
         $manager_name = JFactory::getUser($client->manager_id)->name;
     }

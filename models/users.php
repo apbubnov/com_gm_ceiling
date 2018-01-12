@@ -35,9 +35,9 @@ class Gm_ceilingModelUsers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('`id`,`name`,`registerDate`');
+			$query->select('`id`,`name`,`registerDate`,`associated_client`');
 			$query->from('`rgzbn_users` LEFT JOIN `rgzbn_user_usergroup_map` ON `rgzbn_users`.`id`=`rgzbn_user_usergroup_map`.`user_id`');
-			$query->where('`rgzbn_user_usergroup_map`.`group_id`=14');
+			$query->where('`rgzbn_user_usergroup_map`.`group_id`=14 AND NOT ISNULL(`associated_client`)');
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
 			return $item;
