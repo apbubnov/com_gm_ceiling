@@ -369,7 +369,7 @@ class Gm_ceilingModelApi extends JModelList
                 foreach ($value1 as $key2 => $value2)
                 {
                     $time_from_db = strtotime($value2->change_time);
-                    if ($time_from_db < $change_time)
+                    if ($time_from_db <= $change_time)
                     {
                         unset($result[$key1][$key2]);
                     }
