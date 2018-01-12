@@ -38,7 +38,7 @@ class Gm_ceilingModelCashbox extends JModelList
 				->select('s.title as status')
 				->from('#__gm_ceiling_projects as p')
 				->innerJoin('#__users as u ON p.project_mounter = u.id')
-				->innderJoin('#__gm_ceiling_status as s on p.project_status = s.id')
+				->innderJoin('#__gm_ceiling_status as s on p.project_status = s.id');
 				//->where('p.project_status in (12,17)');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
