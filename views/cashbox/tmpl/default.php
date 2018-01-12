@@ -147,7 +147,7 @@ $userId     = $user->get('id');
                 </td>
             </tr>
             <tr>
-                <td colspan = "10">
+                <td style = "text-align:right" colspan = "10">
                     <b>Недовыдано</b>
                 </td>
                 <td>
@@ -155,7 +155,7 @@ $userId     = $user->get('id');
                 </td>
             </tr>
             <tr>
-                <td colspan = "10">
+                <td style = "text-align:right" colspan = "10">
                    <b>Остаток</b>
                 </td>
                 <td>
