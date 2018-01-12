@@ -2452,7 +2452,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
                 if ($new_client != 1) {
-                    print_r($data['color']); exit; 
+                    
                     $ajax_return['id'] = $calculation_model->save($data, $del_flag);
                 }
 
