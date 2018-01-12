@@ -198,6 +198,30 @@ class Gm_ceilingModelGaugers extends JModelItem {
         }
 	}
 
+	function GetAllDayOff($id, $date1, $date2) {
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select('date_from, date_to')
+				->from('#__gm_ceiling_day_off')
+				->where("id_user = '$id' and date_from between '$date1 00:00:00' and '$date2 23:59:59'")
+				->order('date_from');
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+
+			return $items;
+		}
+		catch(Exception $e)
+		{
+			$date = date("d.m.Y H:i:s");
+			$files = "components/com_gm_ceiling/";
+			file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+			throw new Exception('Ошибка!', 500);
+		}
+	}
+
 	public function FindFreeDay($id, $date) {
 		try
 		{

@@ -35,7 +35,7 @@ $result_users = $users_model->getDealers();
         		foreach ($result_users as $key => $value)
         		{
         	?>
-                <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->id); ?>">
+                <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
 		            <td>
 		               <?php echo $value->name; ?>
 		            </td>
