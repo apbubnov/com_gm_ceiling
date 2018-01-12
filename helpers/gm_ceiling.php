@@ -532,7 +532,7 @@ class Gm_ceilingHelpersGm_ceiling
         $items_vstavka_bel = $components_model->getFilteredItems($filter);
 
 
-print_r($data['color']); exit; 
+
 
         if ($data['color'] > 0) {
             $color_model1 = Gm_ceilingHelpersGm_ceiling::getModel('colors');
@@ -2452,6 +2452,7 @@ print_r($data['color']); exit;
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
                 if ($new_client != 1) {
+                    print_r($data['color']); exit; 
                     $ajax_return['id'] = $calculation_model->save($data, $del_flag);
                 }
 
