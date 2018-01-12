@@ -98,8 +98,33 @@
         <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
         <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
     </div>
-
 </div>
+
+<div class="row">
+    <div class="col-sm-12" id = "cliens_of_dealer">
+        <p class="caption-tar">Клиенты дилера</p>
+        <div id="cliens_of_dealer_2">
+            <table id="cliens_of_dealer_table" class="table table-striped one-touch-view" cellspacing="0">
+            
+                <?php foreach($history as $item): ?>
+
+                <tr>
+                    <td>
+                        <?php 
+                            $date = new DateTime($item->date_time);
+                            echo $date->Format('d.m.Y H:i');
+                        ?>
+                    </td>
+                    <td><?php echo $item->text;?></td>
+                </tr>
+
+                <?php endforeach;?>
+          
+            </table>
+        </div>
+    </div>
+</div>
+
 <div id="orders-container-tar">
     <p class="caption-tar">Заказы</p>
     <table id="table-orders-tar" class="table table-striped one-touch-view">
@@ -267,7 +292,6 @@
             }					
         });
     });
-
 
     jQuery(document).ready(function ()
     {
