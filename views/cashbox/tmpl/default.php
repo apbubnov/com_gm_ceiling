@@ -33,16 +33,22 @@ $userId     = $user->get('id');
               Дата
             </th>
             <th>
-               № договора
+               № дог-ра
+            </th>
+            <th>
+                Статус
             </th>
             <th>
                Бригада
             </th>
             <th>
-                Сумма
+                Сумма дог-ра
             </th>
             <th>
                 З\п монт-м
+            </th>
+            <th>
+                Не выдано монт-м
             </th>
             <th>
                 Расходные мат-лы
@@ -71,6 +77,9 @@ $userId     = $user->get('id');
                         <?php echo $item->id;?>        
                     </td>
                     <td>
+                        <?php echo $item->status ?>
+                    </td>
+                    <td>
                         <?php echo $item->name;?>
                     
                     </td>
@@ -79,6 +88,13 @@ $userId     = $user->get('id');
                     </td>
                     <td>
                         <?php echo $item->new_mount_sum;?>        
+                    </td>
+                    <td>
+                        <?php
+                            $not_issued =  $item->new_mount_sum - $item->new_project_mounting;
+                            $all_not_issued +=$not_issued;
+                            echo $not_issued;
+                        ?>
                     </td>
                     <td>
                         <?php echo $item->new_material_sum;?>        
@@ -102,14 +118,18 @@ $userId     = $user->get('id');
                         <?php 
                             if(isset($item->sum)) {
                                 $encash = $item->sum;
-                                echo $item->sum;
-                                
+                                echo $item->sum; 
                             }
                              ?>
                     </td>
-
                 </tr>
             <?php }?>
+            <tr>
+                <td colspan = "11">
+                    Итого в кассе <?php echo $cashbox;?> из них выдать монтажникам <?php echo $all_not_issued ?>. 
+                    Касса без учета денег монтажников <?php echo $cashbox-$all_not_issued;?>
+                </td>
+            </tr>
         </tbody>
     </table>
 </form>
