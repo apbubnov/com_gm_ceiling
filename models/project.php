@@ -1842,4 +1842,17 @@ class Gm_ceilingModelProject extends JModelItem
         }
 	}
 
+	public function new_getProjectItems($project_id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select('*')
+            ->from('#__gm_ceiling_projects')
+            ->where('id = '.$project_id);
+        $db->setQuery($query);
+        $results = $db->loadObject();
+        return $results;
+    }
+
 }
