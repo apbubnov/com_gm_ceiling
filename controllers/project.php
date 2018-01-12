@@ -752,8 +752,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 						
 
+					if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
 					}
-
 					if($smeta == 0) Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
 
 					// Clear the profile id from the session.

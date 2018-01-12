@@ -248,7 +248,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 				);
 				$mailer->setSender($sender);
 				$mailer->addRecipient($items5->email);
-				$body = "Здравствуйте, у Вас появились выходные часы ".substr($date1, 0, 10)." числа с ".substr($date1, 11, 5)." до ".substr($date2, 11, 5)." \n";
+				$body = "Здравствуйте, изменилось время выходных часов ".substr($date1, 0, 10)." числа: с ".substr($date1, 11, 5)." до ".substr($date2, 11, 5)." \n";
 				$body .= "\n";
 				$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
 				$mailer->setSubject('Выходные часы');
@@ -270,7 +270,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 				);
 				$mailer->setSender($sender);
 				$mailer->addRecipient($items5->email);
-				$body = "Здравствуйте, изменилось время выходных часов ".substr($date1, 0, 10)." числа: с ".substr($date1, 11, 5)." до ".substr($date2, 11, 5)." \n";
+				$body = "Здравствуйте, у Вас появились выходные часы ".substr($date1, 0, 10)." числа с ".substr($date1, 11, 5)." до ".substr($date2, 11, 5)." \n";
 				$body .= "\n";
 				$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
 				$mailer->setSubject('Выходные часы');
@@ -346,7 +346,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 			);
 			$mailer->setSender($sender);
 			$mailer->addRecipient($items3->email);
-			$body = "Здравствуйте, выходные часы ".substr($date1, 0, 10)." числа были удалены \n";
+			$body = "Здравствуйте, выходные часы $date числа были удалены \n";
 			$body .= "\n";
 			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
 			$mailer->setSubject('Выходные часы');
