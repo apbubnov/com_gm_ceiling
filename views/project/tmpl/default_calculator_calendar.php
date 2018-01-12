@@ -181,7 +181,6 @@ $results = $db->loadObjectList();
 
 <?php if ($this->item) : ?>
 <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-<?php $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client'); ?>
 <?php $calculations = $model->getProjectItems($this->item->id);?>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
@@ -306,7 +305,8 @@ $results = $db->loadObjectList();
                                 </div>
                             </td>
                         </tr>
-                        <? $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
+                        <?  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+                            $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
                         <tr>
                             <th>Дата рождения</th>
                             <td><input name="new_birthday" id="jform_birthday" class="inputactive"
@@ -964,6 +964,7 @@ $results = $db->loadObjectList();
 
                 </td>
             </tr>
+            <? }?>
             <!-- общий наряд на монтаж--> 
              <tr>
                 <td><b>Общий наряд на монтаж <b></td>
@@ -979,7 +980,14 @@ $results = $db->loadObjectList();
                 </td>
                 <td></td>
             </tr>
-            <? }?>
+            <tr>
+                <td>
+                    <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+                </td>
+                <td></td><td></td>
+            </tr>
+
+            
           
         </table>
 
@@ -2021,6 +2029,12 @@ var $ = jQuery;
             calculate_total();
             calculate_total1();
             trans();
+        });
+
+        jQuery("input[name^='smeta']").click(function () {
+            if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
+                jQuery("input[name='smeta']").val(1);
+            else jQuery("input[name='smeta']").val(0);
         });
 
         jQuery("#client_order").click(function () {
