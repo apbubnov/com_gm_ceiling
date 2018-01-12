@@ -18,7 +18,8 @@
     $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
     $client = $client_model->getClientById($this->item->id);
     $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-    $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id);
+    $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
+    
     if(!empty($client->manager_id)){
         $manager_name = JFactory::getUser($client->manager_id)->name;
     }
@@ -109,7 +110,7 @@
         <div id="cliens_of_dealer_2">
             <table id="cliens_of_dealer_table" class="table table-striped one-touch-view" cellspacing="0">
                 <tbody>
-                <?php foreach ($clients_items->items as $i => $item) : ?>
+                <?php foreach ($clients_items as $i => $item) : ?>
                     <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
                         <td class="one-touch">
                             <?php
