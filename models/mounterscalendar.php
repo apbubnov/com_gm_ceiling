@@ -183,7 +183,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 
 			$query->select("projects.project_info, projects.project_mounting_date, projects.project_mounter, ($query2) as project_mounter_name")
 			->from('#__gm_ceiling_projects as projects')
-			->where("id = $id");
+			->where("projects.id = $id");
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
@@ -210,7 +210,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 			->where("map.id_brigade = $id");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
-			
+
 			return $items;
 		}
 		catch(Exception $e)
