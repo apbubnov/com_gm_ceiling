@@ -277,7 +277,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 									type: "success",
 									text: data
 								});
-							location.reload();
+                                setInterval(function() { location.reload();}, 2000);
   
 							},
 							dataType: "text",
