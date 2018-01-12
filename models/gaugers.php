@@ -224,7 +224,9 @@ class Gm_ceilingModelGaugers extends JModelItem {
                 );
                 $day = array((object)$day);
                 array_splice($items,$index,0,$day);
-            }
+			}
+			
+			var_dump($items);
 			
 			return $items;
 		}
