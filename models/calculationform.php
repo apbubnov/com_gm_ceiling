@@ -1267,6 +1267,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
             } else {
                 //print_r($data); exit;
+                print_r($data['color']); exit; 
                 $query = $db->getQuery(true);
                 $query->update('`#__gm_ceiling_calculations` AS calc')
                     ->set('calc.checked_out_time = ' . $db->quote($date_created))
