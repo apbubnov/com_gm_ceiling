@@ -67,7 +67,7 @@ class Gm_ceilingModelGuild extends JModelList
             ->select("c.id as id, c.calculation_title as title, c.n3 as canvas_id, c.n4 as perimeter, c.n5 as quad, c.n9 as angles, c.calc_data, c.cut_data, c.offcut_square as square")
             ->select("s.name as name, s.country as country, s.width as width, t.texture_title as texture, r.title as color");
 
-        if (!empty($data) && $data->type == "get") $query->where($data->name." = '".$data->value."'");
+        if (!empty($data) && $data->type == "get") $query->where($data->name . " = '" . $data->value . "'");
         else if (!empty($data) && $data->type == "test" && count($data->data) > 0) $query->where("c.id NOT IN (" . implode(",", $data->data) . ")");
         $db->setQuery($query);
         $calculations = $db->loadObjectList();
@@ -82,14 +82,14 @@ class Gm_ceilingModelGuild extends JModelList
 
         $calculationsTemp = [];
         foreach ($calculations as $calc) {
-            $calc->canvas_name = $calc->name . " " .$calc->country . " " .$calc->width . " " .$calc->texture . ((empty($calc->color))?"":" ".$calc->color);
+            $calc->canvas_name = $calc->name . " " . $calc->country . " " . $calc->width . " " . $calc->texture . ((empty($calc->color)) ? "" : " " . $calc->color);
             $calc->cut_pdf = '/costsheets/' . md5($calc->id . 'cutpdf' . -2) . '.pdf';
-            $calc->cut_image = "/cut_images/".md5("cut_sketch" . $calc->id).".png";
-            $calc->cut_image_dop = "?date=".((string) date("dmYHis"));
+            $calc->cut_image = "/cut_images/" . md5("cut_sketch" . $calc->id) . ".png";
+            $calc->cut_image_dop = "?date=" . ((string)date("dmYHis"));
             $calc->quad = floatval($calc->quad);
             $calc->perimeter = floatval($calc->perimeter);
             $calc->square = floatval($calc->square);
-            $calc->percent = round((($calc->quad + $calc->square)*$calc->square)/100.0, 2);
+            $calc->percent = round((($calc->quad + $calc->square) * $calc->square) / 100.0, 2);
             $calc->angles = intval($calc->angles);
             $splitCalcData = preg_split("/;/", $calc->calc_data);
             $split = preg_split("/Полотно\d{1,5}:/", $calc->cut_data);
@@ -97,7 +97,7 @@ class Gm_ceilingModelGuild extends JModelList
             preg_match_all("/Полотно\d{1,5}:/", $calc->cut_data, $preg);
             $cut_data = [];
             foreach ($split as $key => $value)
-                $cut_data[] = (object) ["title" => $preg[0][$key - 1], "data" => $value];
+                $cut_data[] = (object)["title" => $preg[0][$key - 1], "data" => $value];
             $calc->cut_data = $cut_data;
             $calc->calc_data = implode("; ", $splitCalcData);
 
@@ -107,12 +107,11 @@ class Gm_ceilingModelGuild extends JModelList
             $calc->works = [];
             $calc->sumWork = 0.0;
             foreach ($works as $work) {
-                $workTemp = (object) [];
+                $workTemp = (object)[];
                 $workTemp->name = $work->name;
                 $workTemp->unit = $work->unit;
                 $flag = false;
-                switch (intval($work->id))
-                {
+                switch (intval($work->id)) {
                     case 1:
                         $workTemp->count = floatval($calc->quad);
                         $workTemp->sum = (floatval($calc->quad) - floatval($work->free)) * $work->price;
@@ -133,30 +132,27 @@ class Gm_ceilingModelGuild extends JModelList
 
                 $workTemp->id = $work->id;
 
-                if (!$flag)
-                {
+                if (!$flag) {
                     $calc->works[] = $workTemp;
                     $calc->sumWork += $workTemp->sum;
                 }
             }
 
-            $calc->quickly = (empty($calc->quickly) || $calc->quickly == 0)?"B":"A";
-            $calc->ready_time = (empty($calc->ready_time))?date("d.m.Y H:i", strtotime(' +1 hour +'.(string)$minute.' minute')):date("d.m.Y H:i", strtotime($calc->ready_time));
-            $name = ((empty($calc->ready_time))?date("Ymd", strtotime(' +1 hour +'.(string)$minute.' minute')):date("Ymd", strtotime($calc->ready_time)))
-                .$calc->quickly
-                .((empty($calc->ready_time))?date("Hi", strtotime(' +1 hour +'.(string)$minute.' minute')):date("Hi", strtotime($calc->ready_time)));
+            $calc->quickly = (empty($calc->quickly) || $calc->quickly == 0) ? "B" : "A";
+            $calc->ready_time = (empty($calc->ready_time)) ? date("d.m.Y H:i", strtotime(' +1 hour +' . (string)$minute . ' minute')) : date("d.m.Y H:i", strtotime($calc->ready_time));
+            $name = ((empty($calc->ready_time)) ? date("Ymd", strtotime(' +1 hour +' . (string)$minute . ' minute')) : date("Ymd", strtotime($calc->ready_time)))
+                . $calc->quickly
+                . ((empty($calc->ready_time)) ? date("Hi", strtotime(' +1 hour +' . (string)$minute . ' minute')) : date("Hi", strtotime($calc->ready_time)));
 
-            if (empty($calculationsTemp[$name]))
-            {
+            if (empty($calculationsTemp[$name])) {
                 $calculationsTemp[$name] = (object)[];
                 $calculationsTemp[$name]->date = $calc->ready_time;
                 $calculationsTemp[$name]->quickly = $calc->quickly;
                 $calculationsTemp[$name]->id = $name;
-                $calculationsTemp[$name]->name = ((string)$calc->ready_time).(($calc->quickly == "A") ? " - Срочно" : "");
+                $calculationsTemp[$name]->name = ((string)$calc->ready_time) . (($calc->quickly == "A") ? " - Срочно" : "");
                 $calculationsTemp[$name]->I = [];
             }
-            if (empty($calculationsTemp[$name]->I[$calc->canvas_id]))
-            {
+            if (empty($calculationsTemp[$name]->I[$calc->canvas_id])) {
                 $calculationsTemp[$name]->I[$calc->canvas_id] = (object)[];
                 $calculationsTemp[$name]->I[$calc->canvas_id]->canvases = $calc->canvas_name;
                 $calculationsTemp[$name]->I[$calc->canvas_id]->I = [];
@@ -180,7 +176,7 @@ class Gm_ceilingModelGuild extends JModelList
             ->where("map.group_id = '18'");
         if (!empty($id)) $query->where("user.id = '$id'");
         $db->setQuery($query);
-        return (empty($id))?$db->loadObjectList():$db->loadObject();
+        return (empty($id)) ? $db->loadObjectList() : $db->loadObject();
     }
 
     public function sendWork($data)
@@ -197,8 +193,7 @@ class Gm_ceilingModelGuild extends JModelList
         $db->setQuery($query);
         $result = $db->execute();
 
-        if (empty($result))
-        {
+        if (empty($result)) {
             throw new Exception("Перевести полотно в раскроенное не удалось! Попробуйте еще раз!");
         }
         $query = $db->getQuery(true);
@@ -244,9 +239,8 @@ class Gm_ceilingModelGuild extends JModelList
         $db->setQuery($query);
         $status = intval($db->loadObject()->status);
 
-        if (intval($all) == intval($ready))
-        {
-            if($status == 5) $status = 6;
+        if (intval($all) == intval($ready)) {
+            if ($status == 5) $status = 6;
             else if ($status == 7) $status = 19;
 
             $query = $db->getQuery(true);
@@ -258,5 +252,66 @@ class Gm_ceilingModelGuild extends JModelList
         }
 
         return;
+    }
+
+    public function getSchedule($month = 0)
+    {
+        $month -= 1;
+
+        $DATA = (object)[
+            "Month" => ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+            "Month2" => ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'],
+            "Day" => ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'],
+            "DayFull" => ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+        ];
+
+        $Calendar = '
+                <div class="Calendar Month" id="m%s">
+                <input id="mData" type="text" value="%s" hidden disabled>
+                <div class="DaysOfTheWeek">%s</div>
+                <div class="Days">%s</div>
+                </div>
+                ';
+
+        $DayOfTheWeek = '<div class="DayOfTheWeek" id="w%s">%s</div>';
+        $Day = '<div class="Day %s" id="d%s" dotw="%s">%s</div>';
+
+        $HTML = "";
+
+        for ($IndexM = 0; $IndexM < 3; $IndexM++) {
+            $m = $month + $IndexM;
+
+            $year = date("Y");
+            $month = date("m");
+
+            $DATE = (object)[
+                "Year" => date("Y", mktime(0, 0, 0, $month - $m, 1, $year)),
+                "MonthNumber" => date("m", mktime(0, 0, 0, $month - $m, 1, $year))
+            ];
+
+            $DATE->MonthName = $DATA->Month[$DATE->MonthNumber - 1];
+            $DATE->MonthName2 = $DATA->Month2[$DATE->MonthNumber - 1];
+            $DATE->CalDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $DATE->MonthNumber, $DATE->Year);
+            $DATE->TopName = $DATE->MonthName . " " . $DATE->Year . " г.";
+
+            $DATE->FirstDay = date("w", mktime(0, 0, 0, $DATE->MonthNumber, 1, $DATE->Year));
+            if ($DATE->FirstDay == 0) $DATE->FirstDay = 7;
+
+            $DaysOfTheWeek = "";
+            foreach ($DATA->Day as $TKey => $TDay)
+                $DaysOfTheWeek .= sprintf($DayOfTheWeek, $TKey, $TDay);
+
+            $Days = "";
+            for ($i = 1; $i < $DATE->CalDaysInMonth + $DATE->FirstDay; $i++)
+            {
+                $TDayOfTheWeek = date("w", mktime(0, 0, 0, $DATE->MonthNumber, $i - $DATE->FirstDay, $DATE->Year));
+
+                $Days .= ($i < $DATE->FirstDay || $DATE->FirstDay + $DATE->CalDaysInMonth < $i)
+                    ? sprintf($Day, "EmptyDay", 0, $TDayOfTheWeek, "")
+                    : sprintf($Day, "IssetDay", $i, $TDayOfTheWeek, $DATA->Day[$TDayOfTheWeek]);
+
+
+            }
+        }
     }
 }
