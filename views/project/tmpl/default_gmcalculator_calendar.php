@@ -877,6 +877,12 @@ $results = $db->loadObjectList();
                     </td>
                     <td></td>
                 </tr>
+                <tr>
+                    <td>
+                        <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+                    </td>
+                    <td></td><td></td>
+                </tr>
             <? }?>
         </table>
 
@@ -1638,7 +1644,7 @@ $results = $db->loadObjectList();
                 }
             });
         });
-        
+
         // ----------------------------------------
 
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
@@ -1933,6 +1939,12 @@ $results = $db->loadObjectList();
             calculate_total();
             calculate_total1();
             trans();
+        });
+
+        jQuery("input[name^='smeta']").click(function () {
+            if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
+                jQuery("input[name='smeta']").val(1);
+            else jQuery("input[name='smeta']").val(0);
         });
 
         jQuery("#client_order").click(function () {
