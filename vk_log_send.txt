@@ -1,4 +1,0 @@
-03.12.2017 00:41:24 | getDataVK | https://api.vk.com/method/wall.createComment?owner_id=-59714777&post_id=159&reply_to_comment=163&message=Hello%2C+%D0%94%D0%B5%D0%BD%D0%B8%D1%81%21&access_token=e5d273d8e9e7235d637c61ec5b1155d058421282e3cc6ea604feb981ece228174a5223fb9ec97776d5613&v=5.0
-----------
-03.12.2017 15:29:11 | getDataVK | https://api.vk.com/method/wall.createComment?owner_id=-59714777&post_id=159&reply_to_comment=164&message=Hello%2C+%D0%94%D0%B5%D0%BD%D0%B8%D1%81%21&access_token=0cee537debdb35deba3f8011f86d71d467dc132ee76a10a2b91f39c7f8cf2ef1f64169e546eb77a60b666&v=5.0
-----------

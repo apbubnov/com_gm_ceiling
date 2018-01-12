@@ -83,8 +83,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     <? } ?>
                     </td>
                     <td class="center one-touch">
-                        <?php echo $item->id; 
-                            $calculations = $model->getProjectItems($item->id);
+                        <?php echo $item->id;
+
+                            $calculations = $model->new_getProjectItems($item->id);
                             $mounting_sum = 0; $material_sum = 0;
                             foreach ($calculations as $calculation) {
                                 $calculation->dealer_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
@@ -112,6 +113,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 }
                                
                             ?>
+
                          <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
                          <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
                          <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
@@ -185,6 +187,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 ?>
 
 <script type="text/javascript">
+    // сделать обработку данных, если монтаж был недовыполнен, а сейчас выполнен.
     var $ = jQuery;
     jQuery(document).ready(function () {
         jQuery(".btn-done").click(function(){
@@ -198,19 +201,21 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 			var type = "info",
 				value = td.data("value"),
 				//new_value = input.data("new_value");
-                new_value = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_project_sum").val();
-                mouting_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_mounting_sum").val();
+                new_value = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_project_sum").val(),
+                mouting_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_mounting_sum").val(),
                 material_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_material_sum").val();
 				var subject = "Отметка стоимости договора №" + td.data("project_id"),
                     text = "<p><input name='check_mount' onclick='changeDone(this,"+new_value+","+mouting_sum+","+material_sum+");' class='radio' id ='done' value='1'  type='radio' checked><label for = 'done'>Монтаж выполнен</label></p>";
 					text += "<p><input name='check_mount' onclick='changeDone(this,"+new_value+","+mouting_sum+","+material_sum+");'  class='radio' id ='not_done' value='0'  type='radio'><label for = 'not_done'>Монтаж недовыполнен</label></p>";
-                    text += "<div class='dop_info_block' style='font-size:15px;'><div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
-                    text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
-                    text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
+                    text += "<div class='dop_info_block' style='font-size:15px;'><div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' style='margin-top: 5px;' value='" + new_value + "'/></div></br>";
+                    text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' style='margin-top: 5px;' value='" + material_sum + "'/></div></br>";
+                    text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' style='margin-top: 5px;' value='" + mouting_sum + "'/></div>";
                     text += "</div>";
                     
                     //text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div>";
 			
+
+
 
             /* new_value = jQuery("#input_check").val();
              var input_value = jQuery("#input_check").val();
@@ -232,7 +237,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         material_sum = jQuery("#input_material").val();*/
                         var input_value = jQuery("#input_check").val();
                         var input_mounting = jQuery("#input_mounting").val();
+                        var input_mounting_itog = jQuery("#input_mounting_itog").val();
                         var input_material = jQuery("#input_material").val();
+                        var check = jQuery("input[name='check_mount']:checked").val();
                         //alert(input_value);
 						jQuery.ajax({
 							type: 'POST',
@@ -241,7 +248,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 								project_id : td.data("project_id"),
 								new_value : input_value,
                                 mouting_sum : input_mounting,
-                                material_sum : input_material
+                                mouting_sum_itog : input_mounting_itog,
+                                material_sum : input_material,
+                                check: check
 							},
 							success: function(data){
                                 button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
@@ -308,18 +317,33 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         var text = "";
         element = $(element);
             if ($("#done").is(":checked")) {
-                text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
-                text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
-                text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
+                text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' style='margin-top: 5px;' value='" + new_value + "'/></div></br>";
+                text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' style='margin-top: 5px;' value='" + material_sum + "'/></div></br>";
+                text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' style='margin-top: 5px;'  value='" + mouting_sum + "'/></div>";
                 
                 }
             if ($("#not_done").is(":checked")) {
-                text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' value='" + new_value + "'/></div></br>";
-                text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' value='" + material_sum + "'/></div></br>";
-                text += "<div class='center'>Укажите стоимость монтажных работ!!!</div><div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
+                text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' style='margin-top: 5px;' value='" + new_value + "'/></div></br>";
+                text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' style='margin-top: 5px;' value='" + material_sum + "'/></div></br>";
+                text += "<div class='center'>Укажите стоимость монтажных работ!!!</div><br>";
+                   // "<div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
+                text += "<div class='center'><div class='leftBlock' style='width: 41%; float: left;'><span >Начальная сумма</span><input id='input_mounting' style='width: 100%; margin-top: 5px;' value='" + mouting_sum + "'/></div>" +
+                    "<div class=\"centerBlock\" style=\"width: 5%;float: left;\"><br><span> - </span></div>"+
+                    "<div class='rightBlock' style='width: 54%;float: left;'><span >Недоделанная работа</span><input id='input_mounting_1' style='width: 100%;  margin-top: 5px;' value='0'/></div></div>";
+                text += "<div class='center'>Итоговая сумма недоделанного монтажа</div><div class='center'><input id='input_mounting_itog' class='noty_input' style='margin-top: 5px;' value='" + mouting_sum + "'/></div></br>";
             }
             element.closest(".modal-text").find(".dop_info_block").html(text);
-            }
+
+        $("#input_mounting_1, #input_mounting").keyup(function(){
+            var one = $("#input_mounting").val();
+            var two = $("#input_mounting_1").val();
+            var result = one - two;
+            $("#input_mounting_itog").val(result);
+           // alert(one + " - " + two + " = " + result);
+        });
+    }
+
+
 
     function deleteItem() {
         if (!confirm("<?php echo JText::_('COM_GM_CEILING_DELETE_MESSAGE'); ?>")) {

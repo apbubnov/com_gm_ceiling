@@ -21,7 +21,6 @@ if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header(
 
 $calculations = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getCuts();
 $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
-
 ?>
 <link rel="stylesheet" href="http://<?= str_replace("/home/srv112238/", "", __DIR__); ?>/style.css" type="text/css">
 <script type="text/javascript" src="/files/library/touchwipe.js"></script>
@@ -47,7 +46,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                     <? foreach ($type->I as $cut): ?>
                                         <ceiling class="block_3 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3"
                                                  id="<?= $cut->id; ?>">
-                                            <input name="data" value='<?= json_encode($cut); ?>' disabled hidden>
+                                            <input name="data" id="Data" value='<?= json_encode($cut); ?>' disabled hidden>
                                             <div class="ceiling">
                                                 <name><?= $cut->title; ?></name>
                                                 <div class="image" style="background-image: url('<?= $cut->cut_image; ?>')"></div>
@@ -70,6 +69,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <div class="ModalPage">
         <div class="ModalName">
             <b></b>
+        </div>
+        <div class="ModalUpdate" onclick="ModalUpdate();">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
         </div>
         <div class="ModalClose" onclick="ModalClose();">
             <i class="fa fa-times" aria-hidden="true"></i>
@@ -136,6 +138,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     </div>
 </form>
 
+<iframe class="redactor">
+</iframe>
+
 <script>
     var $ = jQuery,
         Data = {
@@ -163,7 +168,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             '</div>');
 
         Data.block3 = $('<ceiling class="block_3 col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">' +
-            '<input name="data" disabled hidden>' +
+            '<input name="data" id="Data" disabled hidden>' +
             '<div class="ceiling">' +
             '<name></name>' +
             '<div class="image"></div>' +
@@ -198,6 +203,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         $(".ModalCeiling, .ModalCeiling *").click(function () {
             if ($(window).width() >= 728) $("#KeyPress").focus();
         });
+
+        window.addEventListener("message", function(e) {
+            if (e.data === 'update') ModalUpdateData();
+            $(".redactor").hide();
+        }, false);
 
         $(".PRELOADER_GM").hide();
         $("cuts").show();
@@ -285,7 +295,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         Data.ceilingPosition.X = ((o.offset().left - $(window).scrollLeft()) * 2 + o.width() - $(window).width()) / 2;
         Data.ceilingPosition.Y = ((o.offset().top - $(window).scrollTop()) * 2 + o.height() - $(window).height()) / 2;
 
-        Img.css({"background-image": "url('" + json.cut_image + "')"});
+        Img.css({"background-image": "url('" + json.cut_image + json.cut_image_dop + "')"});
 
         if (type === "number") {
 
@@ -464,6 +474,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
                         if (fblocks2.length < 1) {
                             var Pred = "", Next = "", Temp = null;
+
                             blocks2.each(function () {
                                 if (parseInt(i2.replace("p","")) <= parseInt(Next.replace("p",""))) return;
 
@@ -473,7 +484,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                                 Next = Temp.attr('id');
                             });
 
-                            if (Temp !== null && parseInt(i2.replace("p","")) > parseInt(Temp.attr('id').replace("p",""))) {
+                            if (Temp !== null && parseInt(i2.replace("p","")) > parseInt(Next.replace("p",""))) {
                                 Pred = Next;
                                 Next = "";
                             }
@@ -550,5 +561,180 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 $(".PRELOADER_GM").hide();
             }
         });
+    }
+
+    /**
+     * Метод для запуска редактора
+     *
+     * @constructor
+     * @author  {CEH4TOP}
+     * @this    {ModalUpdate}
+     * @type    {function}
+     * @return  {null}
+     */
+    function ModalUpdate() {
+        var Modal = $(".Modal"),
+            dataModal = JSON.parse(Modal.find("#Data").val()),
+            redactor = $(".redactor");
+
+        redactor.attr({"src":"http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=guild&type=redactor&id=" + dataModal.id});
+        redactor.show();
+    }
+
+    /**
+     * Метод для обновления данных из БД, после редактора
+     *
+     * @constructor
+     * @author  {CEH4TOP}
+     * @this    {ModalUpdateData}
+     * @type    {function}
+     * @return  {null}
+     */
+    function ModalUpdateData() {
+        $(".PRELOADER_GM").show();
+
+        var Modal = $(".ModalCeiling"),
+            ModalData = JSON.parse(Modal.find("#Data").val());
+
+        /* Загрузка новых данных */
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getCut",
+            data: {id: ModalData.id},
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+
+                $.each(data, function (i1, b1) {
+                    var blocks1 = $(".block_1"),
+                        fblocks1 = blocks1.filter("#"+i1);
+
+                    if (fblocks1.length < 1) {
+                        var Pred = "", Next = "", Temp = null;
+                        blocks1.each(function () {
+                            if (i1 <= Next) return;
+
+                            Temp = $(this);
+
+                            Pred = Next;
+                            Next = Temp.attr('id');
+                        });
+
+                        if (Temp !== null && i1 > Temp.attr('id')) {
+                            Pred = Next;
+                            Next = "";
+                        }
+
+                        Temp = (Next !== "") ? $("#" + Next) : Data.block1;
+                        var T = Temp.clone();
+
+                        T.attr("id", i1);
+                        T.find("line.gm").text(b1.name);
+                        T.find("type").empty();
+
+                        if (Next !== "") T.insertBefore(Temp);
+                        else $("types").append(T);
+                    }
+
+                    $.each(b1.I, function (i2, b2) {
+                        i2 = "p" + i2;
+                        var block1 = $("#"+i1),
+                            blocks2 = block1.find(".block_2"),
+                            fblocks2 = blocks2.filter("#"+i2);
+
+                        if (fblocks2.length < 1) {
+                            var Pred = "", Next = "", Temp = null;
+
+                            blocks2.each(function () {
+                                if (parseInt(i2.replace("p","")) <= parseInt(Next.replace("p",""))) return;
+
+                                Temp = $(this);
+
+                                Pred = Next;
+                                Next = Temp.attr('id');
+                            });
+
+                            if (Temp !== null && parseInt(i2.replace("p","")) > parseInt(Next.replace("p",""))) {
+                                Pred = Next;
+                                Next = "";
+                            }
+
+                            Temp = (Next !== "") ? $("#" + Next) : Data.block2;
+                            var T = Temp.clone();
+
+                            T.attr("id", i2);
+                            T.find("line").text(b2.canvases);
+                            T.find("ceilings").empty();
+
+                            if (Next !== "") { T.insertBefore(Temp); }
+                            else { block1.find("type").append(T); }
+                        }
+
+                        $.each(b2.I, function (i3, b3) {
+                            i3 = parseInt(b3.id);
+
+                            var block2 = block1.find("#"+i2),
+                                blocks3 = block2.find(".block_3"),
+                                fblocks3 = blocks3.filter("#"+i3);
+
+                            if (fblocks3.length < 1) {
+                                var Pred = "", Next = "", Temp = null;
+                                blocks3.each(function () {
+                                    if (parseInt(i3) <= parseInt(Next)) return;
+
+                                    Temp = $(this);
+
+                                    Pred = Next;
+                                    Next = Temp.attr('id');
+                                });
+
+                                if (Temp !== null && parseInt(i3) > parseInt(Temp.attr('id'))) {
+                                    Pred = Next;
+                                    Next = "";
+                                }
+
+                                Temp = (Next !== "") ? block2.find("#" + Next) : Data.block3;
+                                var T = $("#" + i3);
+
+                                var block_3 = T,
+                                    block_2 = block_3.closest(".block_2"),
+                                    block_1 = block_2.closest(".block_1");
+
+                                T.attr("id", i3);
+                                T.find("input").val(JSON.stringify(b3));
+                                T.find("name").text(b3.title);
+                                T.find(".image").attr("style","background-image: url('" + b3.cut_image + b3.cut_image_dop + "'");
+
+                                delete Data.calculations[Data.calculations.indexOf(parseInt(i3))];
+                                if (Next !== "") { T.insertBefore(Temp); var index = Data.calculations.indexOf(parseInt(Next)); Data.calculations.splice(index, 0, parseInt(i3)); }
+                                else { block2.find("ceilings").append(T); Data.calculations.push(parseInt(i3)); }
+
+                                if (block_2.find(".block_3").length < 1)
+                                    block_2.remove();
+
+                                if(block_1.find(".block_2").length < 1)
+                                    block_1.remove();
+                            }
+                        });
+                    });
+                });
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+
+        ModalShow(parseInt(ModalData.id));
+
+        $(".PRELOADER_GM").hide();
     }
 </script>

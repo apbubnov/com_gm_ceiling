@@ -44,8 +44,9 @@ foreach ($gaugers_id as $value) {
 }
 //----------------------------------------------------------------------------------------------------------
 
-
 ?>
+
+<?=parent::getButtonBack();?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/gaugers/tmpl/css/style.css" type="text/css" />
 
@@ -507,6 +508,7 @@ foreach ($gaugers_id as $value) {
 					},
 					success: function(data) {
 						data = JSON.parse(data); // замеры и выходные
+						console.log(data);
 						Array.from(data).forEach(function(element) {
 							if (element.project_info == null) {
 								table += '<tr><td style="width: 25%;">'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td style="width: 75%;">Выходной</td></tr>';
@@ -524,7 +526,7 @@ foreach ($gaugers_id as $value) {
 										timegauging2++;
 									}
 									timegauging = element.project_calculation_date.substr(11, 5)+" - "+timegauging2+":00";
-									table += '<tr><td style="width: 50%;">'+timegauging+'</td><td style="width: 50%;">'+element.project_info+'</td></tr>';
+									table += '<tr><td style="width: 25%;">'+timegauging+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
 								}
 							}
 						});
