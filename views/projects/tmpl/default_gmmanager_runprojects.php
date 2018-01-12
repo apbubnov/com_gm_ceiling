@@ -115,10 +115,12 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 if($item->check_mount_done == 0) { 
                                     $temp = ($item->new_mount_sum)? $item->new_mount_sum: ($mounting_sum + $sum_transport);
                                     $temp = $temp - $item->new_project_mounting;
+                                    $temp_project_sum = $item->project_sum - $item->new_project_sum;
+                                    $temp_material_sum = ($material_sum - $item->new_material_sum);
                                     ?>
-                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo round(($item->project_sum - $item->new_project_sum), 2); ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo round($temp, 2); ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo round(($material_sum - $item->new_material_sum),2); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($temp_project_sum <= 0)?0:round(($temp_project_sum), 2); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($temp <= 0)?0:round($temp, 2); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($temp_material_sum <= 0)?0:round($temp_material_sum,2); ?>"  hidden>
                                 
                                 <?}
                                 if($item->check_mount_done == 1) { ?>
