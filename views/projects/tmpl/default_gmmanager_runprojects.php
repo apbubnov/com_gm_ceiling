@@ -112,11 +112,24 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                     }
                                 }
                                
+                                if($item->check_mount_done == 1) { ?>
+                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
+                                <?}
+                                $temp = 0;
+                                if($item->check_mount_done == 0) { 
+                                    $temp = ($item->new_mount_sum)? $item->new_mount_sum: ($mounting_sum + $sum_transport);
+                                    $temp = $temp - $item->new_project_mounting;
+                                    ?>
+                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo $item->project_sum - $item->new_project_sum; ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo $temp; ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo $material_sum - $item->new_material_sum; ?>"  hidden>
+                                
+                                <?}
                             ?>
 
-                         <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
-                         <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
-                         <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
+                         
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->status; ?>
