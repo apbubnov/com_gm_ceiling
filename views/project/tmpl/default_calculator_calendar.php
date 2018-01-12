@@ -982,8 +982,9 @@ $results = $db->loadObjectList();
             </tr>
             <tr>
                 <td>
-                    <input name='smeta' value='' type='checkbox' checked="checked"> Отменить смету по расходным материалам
+                    <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                 </td>
+                <td></td><td></td>
             </tr>
 
             
@@ -2028,6 +2029,12 @@ var $ = jQuery;
             calculate_total();
             calculate_total1();
             trans();
+        });
+
+        jQuery("input[name^='smeta']").click(function () {
+            if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
+                jQuery("input[name='smeta']").val(1);
+            else jQuery("input[name='smeta']").val(0);
         });
 
         jQuery("#client_order").click(function () {

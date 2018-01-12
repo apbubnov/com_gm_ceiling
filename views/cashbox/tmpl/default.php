@@ -26,8 +26,8 @@ $userId     = $user->get('id');
 			<p><button type="button" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
 	    </div>
     </div>
-    <table class="table table-striped one-touch-view" id="cashbox_table">
-        <thead>
+    <table class="table table-striped table_cashbox" id="cashbox_table">
+        <thead id = "cashbox_head">
         <tr>
             <th>
               Дата
@@ -65,7 +65,7 @@ $userId     = $user->get('id');
         </tr>
         </thead>
 
-        <tbody id="table_body">
+        <tbody id="cashbox_body">
             <?php foreach ($this->item as $item) {
                ?>
                 <tr>

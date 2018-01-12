@@ -521,6 +521,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$isDiscountChange = $jinput->get('isDiscountChange', '0', 'INT');
 			$isDataDelete = $jinput->get('data_delete', '0', 'INT');
 
+			$smeta = $jinput->get('smeta', '0', 'INT');
+			//print_r($smeta); exit;
+
 			// перимерт и зп бригаде
 			$model_for_mail = Gm_ceilingHelpersGm_ceiling::getModel('calculations');		
 			$project_info_for_mail = $model_for_mail->InfoForMail($project_id);
@@ -737,13 +740,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db,$calculation, $save, $ajax, $pdf, $print_components,$del_flag);
 						$dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
 						$gm_canvases_margin = $dealer_info_model->getMargin('gm_canvases_margin',$user->dealer_id);
-						$gm_components_margin = $dealer_info_model->getMargin('gm_components_margin',$user->dealer_id);
+						if($smeta == 0) $gm_components_margin = $dealer_info_model->getMargin('gm_components_margin',$user->dealer_id);
 						$gm_mounting_margin = $dealer_info_model->getMargin('gm_mounting_margin',$user->dealer_id);
 						$dealer_canvases_margin = $dealer_info_model->getMargin('dealer_canvases_margin',$user->dealer_id);
-						$dealer_components_margin = $dealer_info_model->getMargin('dealer_components_margin',$user->dealer_id);
+						if($smeta == 0) $dealer_components_margin = $dealer_info_model->getMargin('dealer_components_margin',$user->dealer_id);
 						$dealer_mounting_margin = $dealer_info_model->getMargin('dealer_mounting_margin',$user->dealer_id);
 						foreach($calculations as $calc) {
-							$project_sum += margin($calc->components_sum, $dealer_components_margin);
+							if($smeta == 0) $project_sum += margin($calc->components_sum, $dealer_components_margin);
 							$project_sum += margin($calc->canvases_sum,  $dealer_canvases_margin);
 							$project_sum += margin($calc->mounting_sum, $dealer_mounting_margin);
 						}
@@ -751,8 +754,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 					}
 
-
-					Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
+					if($smeta == 0) Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
 
 					// Clear the profile id from the session.
 					$app->setUserState('com_gm_ceiling.edit.project.id', null);
