@@ -178,7 +178,8 @@ class Gm_ceilingModelTeams extends JModelItem {
                     $index = $i;
                     break;
                 }
-            }
+			}
+			($index == 0) ? $index = count($items) : 0;
             for($i=0;$i<count($items);$i++){
                 $items[$i]->project_mounting_date = substr($items[$i]->project_mounting_date,11,5);
 			}
