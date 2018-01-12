@@ -982,8 +982,9 @@ $results = $db->loadObjectList();
             </tr>
             <tr>
                 <td>
-                    <input name='smeta' value='' type='checkbox' checked="checked"> Отменить смету по расходным материалам
+                    <input name='smeta' value='' type='checkbox'> Отменить смету по расходным материалам
                 </td>
+                <td></td><td></td>
             </tr>
 
             

@@ -521,6 +521,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$isDiscountChange = $jinput->get('isDiscountChange', '0', 'INT');
 			$isDataDelete = $jinput->get('data_delete', '0', 'INT');
 
+			$smeta = $jinput->get('smeta', '0', 'INT');
+			print_r($smeta); exit;
+
 			// перимерт и зп бригаде
 			$model_for_mail = Gm_ceilingHelpersGm_ceiling::getModel('calculations');		
 			$project_info_for_mail = $model_for_mail->InfoForMail($project_id);
