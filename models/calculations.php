@@ -516,6 +516,19 @@ class Gm_ceilingModelCalculations extends JModelList {
         $results = $db->loadObjectList();
         return $results;
     }
+
+    public function updateComponents_sum($id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__gm_ceiling_calculations'));
+        $query->set("`components_sum` = 0")
+            ->where('id = '.$id);
+        $db->setQuery($query);
+        $db->execute();
+        return true;
+    }
+
     //KM_CHANGED START
 
     public function getProjectItems($project_id)
