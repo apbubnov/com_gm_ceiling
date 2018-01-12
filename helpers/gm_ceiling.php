@@ -532,7 +532,7 @@ class Gm_ceilingHelpersGm_ceiling
         $items_vstavka_bel = $components_model->getFilteredItems($filter);
 
 
-print_r($data['color']); exit; 
+//print_r($data['color']); exit; 
 
         if ($data['color'] > 0) {
             $color_model1 = Gm_ceilingHelpersGm_ceiling::getModel('colors');
