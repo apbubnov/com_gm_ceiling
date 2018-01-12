@@ -302,9 +302,13 @@ $AllMounters = $model->FindAllMounters($where);
                     <tr>
                         <th>Общая себестоимость расходников</th>
                         <td>
-
+                            <?php $path = "/costsheets/" . md5($this->item->id . "-8") . ".pdf"; ?>
+                            <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <?php echo $total_components_sum - $baget2 + $itog - $brus2 + $itog2 - $price_provod + $price_provod1; ?>
                             руб.
+                            <?php } else { ?>
+                                0
+                            <?php } ?>
                         </td>
                         <td>
                             <?php $path = "/costsheets/" . md5($this->item->id . "-8") . ".pdf"; ?>
