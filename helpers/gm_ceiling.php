@@ -4607,7 +4607,12 @@ class Gm_ceilingHelpersGm_ceiling
                         $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
                         if (!empty($AllDayOff)) {
                             foreach ($AllDayOff as $value) {
-                                $statusDayOff[substr($value->date_from, 8, 2)] = "DayOff";
+                                if (substr($value->date_from, 8, 1) == "0") {
+                                    $perem1 = substr($value->date_from, 9, 1);
+                                } else {
+                                    $perem1 = substr($value->date_from, 8, 2);
+                                }
+                                $statusDayOff[$perem1] = "DayOff";
                             }
                         }
                         if (count($Dates[$j - $first_day_of_week + 1]) == 0) {
@@ -4715,7 +4720,12 @@ class Gm_ceilingHelpersGm_ceiling
                         $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
                         if (!empty($AllDayOff)) {
                             foreach ($AllDayOff as $value) {
-                                $statusDayOff[substr($value->date_from, 8, 2)] = "DayOff";
+                                if (substr($value->date_from, 8, 1) == "0") {
+                                    $perem1 = substr($value->date_from, 9, 1);
+                                } else {
+                                    $perem1 = substr($value->date_from, 8, 2);
+                                }
+                                $statusDayOff[$perem1] = "DayOff";
                             }
                         } 
                         if ($DayMounters[$j - $first_day_of_week + 1] == "red") {

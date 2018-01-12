@@ -370,7 +370,6 @@ class Gm_ceilingModelTeams extends JModelItem {
         }
 	}
 
-
 	public function getAllItems() {
 		try
 		{
