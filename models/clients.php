@@ -159,7 +159,7 @@ if (empty($list['direction']))
         }
 	}
 
-	public function getDealersClientsListQuery($dealer_id)
+	public function getDealersClientsListQuery($dealer_id, $id)
 	{
 		try
 		{
@@ -180,7 +180,7 @@ if (empty($list['direction']))
 			$user = JFactory::getUser();
 			$groups = $user->get('groups');
 			
-			$query->where('a.dealer_id = '.$dealer_id);
+			$query->where("a.dealer_id = $dealer_id AND a.id != $id");
 			
 			//Если менеджер дилера, то показывать только его клиентов
 			if(in_array("13",$groups)){
