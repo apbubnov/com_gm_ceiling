@@ -1079,7 +1079,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$table->load($project_id);
 			$data = $table;
 			$data->new_project_sum = $new_value;
-
 			$check_done = $model->new_getProjectItems($project_id);
 			if($check_done->check_mount_done == 0 && $check == 1) {
 				$new_value = $check_done->new_project_sum + $new_value;
