@@ -533,6 +533,7 @@ class Gm_ceilingHelpersGm_ceiling
 
 
 print_r($data['color']); exit; 
+
         if ($data['color'] > 0) {
             $color_model1 = Gm_ceilingHelpersGm_ceiling::getModel('colors');
             $color1 = $color_model1->getColorTitle($data['color']);
