@@ -86,7 +86,7 @@ $userId     = $user->get('id');
                     <td>
                         <?php echo $item->status ?>
                     </td>
-                    <td>
+                    <td width = 15%>
                         <?php echo $item->name;?>
                     
                     </td>
