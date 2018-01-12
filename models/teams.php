@@ -346,7 +346,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 			);
 			$mailer->setSender($sender);
 			$mailer->addRecipient($items3->email);
-			$body = "Здравствуйте, выходные часы ".substr($date1, 0, 10)." числа были удалены \n";
+			$body = "Здравствуйте, выходные часы $date числа были удалены \n";
 			$body .= "\n";
 			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
 			$mailer->setSubject('Выходные часы');
