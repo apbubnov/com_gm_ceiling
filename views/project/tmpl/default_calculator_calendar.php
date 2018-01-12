@@ -2033,8 +2033,8 @@ var $ = jQuery;
 
         jQuery("input[name^='smeta']").click(function () {
             if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
-                jQuery("input[name='project_verdict']").val(1);
-            else jQuery("input[name='project_verdict']").val(0);
+                jQuery("input[name='smeta']").val(1);
+            else jQuery("input[name='smeta']").val(0);
         });
 
         jQuery("#client_order").click(function () {
