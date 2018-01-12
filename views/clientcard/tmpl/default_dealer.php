@@ -100,6 +100,7 @@
     </div>
 </div>
 
+<br>
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
         <p class="caption-tar">Клиенты дилера</p>
