@@ -111,12 +111,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                         $sum_transport = margin($mount_transport->transport, $item->gm_mounting_margin);
                                     }
                                 }
-                               
-                                if($item->check_mount_done == 1) { ?>
-                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
-                                <?}
                                 $temp = 0;
                                 if($item->check_mount_done == 0) { 
                                     $temp = ($item->new_mount_sum)? $item->new_mount_sum: ($mounting_sum + $sum_transport);
@@ -127,6 +121,12 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                     <input id="<?= $item->id; ?>_material_sum" value="<?php echo $material_sum - $item->new_material_sum; ?>"  hidden>
                                 
                                 <?}
+                                if($item->check_mount_done == 1) { ?>
+                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
+                                <?}
+                                
                             ?>
 
                          
