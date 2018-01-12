@@ -1118,7 +1118,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 foreach ($data as  $key => $value) if ($value === "") $data[$key] = "NULL";
                 if($data['n2'] == 0) $data['n2'] = "NULL";
                 if($data['n3'] == 0) $data['n3'] = "NULL";
-                print_r($data['color']); exit; 
+               
                 $query = $db->getQuery(true);
                 $columns = array('ordering', 'state', 'checked_out', 'checked_out_time', 'created_by', 'modified_by',  'calculation_title', 'project_id', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7', 'n8', 'n9', 'n10', 'n11', 'n12', 'n16', 'n17', 'n18', 'n19', 'n20', 'n21', 'n24', 'n25', 'n27','n28','n30','n31', 'n32','height','components_sum', 'canvases_sum', 'mounting_sum', /*'transport', */'dop_krepezh', 'extra_components', 'extra_mounting', 'color', 'details',/* 'calc_image',*/ 'original_sketch', 'calc_data',/* 'cut_image', */'cut_data', 'offcut_square',/*'distance', 'distance_col',*/'discount');
                 $query
@@ -1268,7 +1268,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
 
             } else {
                 //print_r($data); exit;
-                
+                print_r($data['color']); exit; 
                 $query = $db->getQuery(true);
                 $query->update('`#__gm_ceiling_calculations` AS calc')
                     ->set('calc.checked_out_time = ' . $db->quote($date_created))
