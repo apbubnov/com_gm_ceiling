@@ -606,6 +606,28 @@ class Gm_ceilingModelClient extends JModelItem
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
+	}
+	
+	public function getClientBirthday($id)
+    {
+    	try
+    	{
+	        $db = $this->getDbo();
+	        $query = $db->getQuery(true);
+	        $query ->select('birthday')
+	            ->from('#__gm_ceiling_clients')
+	            ->where('id = '. $id);
+	        $db->setQuery($query);
+	        $data = $db->loadObject();
+	        return $data;
+	    }
+	    catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
 	
 }
