@@ -49,6 +49,7 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 				$body .= "$value->name, ";
 			}
 			$body .= substr($body, 0, -2);
+			
 			$body .= "\n";
 			$body .= "Адреc: ".$DataOrder[0]->project_info."\n";
 			$body .= "Дата и время: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
