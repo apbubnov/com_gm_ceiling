@@ -111,7 +111,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                         $sum_transport = margin($mount_transport->transport, $item->gm_mounting_margin);
                                     }
                                 }
-                                
+
                                 $temp = 0;
                                 if($item->check_mount_done == 0) { 
                                     $temp = ($item->new_mount_sum)? $item->new_mount_sum: ($mounting_sum + $sum_transport);
@@ -277,7 +277,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 									type: "success",
 									text: data
 								});
-							  
+                                setInterval(function() { location.reload();}, 1500);
+  
 							},
 							dataType: "text",
 							timeout: 10000,
