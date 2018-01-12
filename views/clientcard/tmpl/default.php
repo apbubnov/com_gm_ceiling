@@ -90,24 +90,6 @@
           
             </table>
         </div>
-        <!--<div class="col-md-12" id="add-call-text-container-tar">
-            <label for="call">Добавить звонок:</label>
-            <br>
-            <div>
-                <input name = "call_date" id = "call_date" type = "datetime-local" class="input-datetime-local-tar" placeholder = "Дата звонка">
-                <input name = "call_comment" id = "call_comment" class="input-text-tar" type="text" placeholder = "Введите примечание">
-                <button class = "btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-md-5">
-                    <input name = "call_date" id = "call_date" type = "datetime-local" class="input-datetime-local-tar" placeholder = "Дата звонка">
-                </div>
-                <div  class="col-xs-12 col-md-7">
-                    <input name = "call_comment" id = "call_comment" class="input-text-tar" type="text" placeholder = "Введите примечание">
-                    <button class = "btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
-                </div>
-            </div>
-        </div>-->
     </div>
 
     <div class="col-xs-12" id="add-note-container-tar">
@@ -286,76 +268,7 @@
         });
     });
 
-/*
-    jQuery("#add_call").click(function ()
-    {
-        var date = jQuery("#call_date").val();
-        var comment = jQuery("#call_comment").val();
-        var reg_date = /^(\d{4})(\/|.)(\d{1,2})(\/|.)(\d{1,2})(T)(\d{1,2})(\/|.)(\d{1,2})$/;
-        var reg_comment = /[\\\<\>\/\'\"\#]/;
-        var manager_id = <?php echo $userId; ?>;
-        var project_id = <?php echo $this->item->id; ?>;
-        var id_client = <?php echo $this->item->id_client;?>;
 
-        if (!reg_date.test(date))
-        {
-            alert('Неверный формат даты-времени!');
-            return;
-        }
-        if (reg_comment.test(comment) || comment === "")
-        {
-            alert('Неверный формат примечания!');
-            return;
-        }
-
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=addCall",
-            data: {
-                date: date,
-                comment: comment,
-                id_client: id_client,
-                project_id: project_id,
-                manager_id: manager_id
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                if (data === "call_find")
-                {
-                    var n = noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Звонок на указанное время существует!"
-                    });
-                }
-                else
-                {
-                    var n = noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Звонок добавлен"
-                    });
-                    jQuery("#call_date").val("");
-                    jQuery("#call_comment").val("");
-                }
-            },
-            error: function (data) {
-                console.log(data);
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка отправки"
-                });
-            }
-        });
-    });
-*/
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
