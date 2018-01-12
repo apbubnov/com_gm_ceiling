@@ -44,13 +44,13 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 			$body = "Здравствуйте.\n";
 			$body .= "Проект №$id был прочитан Монтажной Бригадой.\n";
 			$body .= "\n";
-			$body .= "Монтажная Бригада: ".$DataOrder[0]->project_mounter_name." ";
+			$body .= "Монтажная Бригада: ".$DataOrder[0]->project_mounter_name." (";
 			foreach ($NamesMounters as $value) {
-				$body .= "$value->name, ";
+				$names .= "$value->name, ";
 			}
-			$body .= substr($body, 0, -2);
+			$body .= substr($names, 0, -2);
 			
-			$body .= "\n";
+			$body .= ")\n";
 			$body .= "Адреc: ".$DataOrder[0]->project_info."\n";
 			$body .= "Дата и время: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
 			if (strlen($note) != 0) {
