@@ -964,6 +964,7 @@ $results = $db->loadObjectList();
 
                 </td>
             </tr>
+            <? }?>
             <!-- общий наряд на монтаж--> 
              <tr>
                 <td><b>Общий наряд на монтаж <b></td>
@@ -979,7 +980,13 @@ $results = $db->loadObjectList();
                 </td>
                 <td></td>
             </tr>
-            <? }?>
+            <tr>
+                <td>
+                    <input name='smeta' value='' type='checkbox' checked="checked"> Отменить смету по расходным материалам
+                </td>
+            </tr>
+
+            
           
         </table>
 
