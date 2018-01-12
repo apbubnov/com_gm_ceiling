@@ -136,6 +136,7 @@ foreach ($gaugers_id as $value) {
 			</p>
 			<div id="wrong-window"></div>
 			<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+			<p id="delete_container"><button type="button" id="delete_day_off" class="btn btn-danger">Удалить</button></p>
 		</div>
 	</div>
 </div>
@@ -395,10 +396,12 @@ foreach ($gaugers_id as $value) {
 						jQuery("#add_free_day").text("Добавить выходной");
 						window.dataFree1 = 0;
 						window.dataFree2 = 0;
+						jQuery("#delete_container").hide();
 					} else {
 						jQuery("#add_free_day").text("Изменить выходной");
 						window.dataFree1 = data[0].date_from;
 						window.dataFree2 = data[0].date_to;
+						jQuery("#delete_container").show();
 					}
 				},
 				error: function (data) {
@@ -434,10 +437,12 @@ foreach ($gaugers_id as $value) {
 						jQuery("#add_free_day").text("Добавить выходной");
 						window.dataFree1 = 0;
 						window.dataFree2 = 0;
+						jQuery("#delete_container").hide();
 					} else {
 						jQuery("#add_free_day").text("Изменить выходной");
 						window.dataFree1 = data[0].date_from;
 						window.dataFree2 = data[0].date_to;
+						jQuery("#delete_container").show();
 					}
 				},
 				error: function (data) {
@@ -623,6 +628,50 @@ foreach ($gaugers_id as $value) {
 		jQuery("#modal-window-1-tar").on("change", "#hours1, #hours2", function() {
 			jQuery("#wrong-window2").empty();
 		});
+
+		// удалить выходной день
+		jQuery("#delete_day_off").click( function() {
+			jQuery.ajax({
+				type: 'POST',
+				url: "/index.php?option=com_gm_ceiling&task=gaugers.DeleteFreeDay",
+				dataType: 'json',
+				data: {
+					date: date,
+					id: idBrigade,
+				},
+				success: function(data) {
+					if (data == "no") {
+						jQuery("#wrong-window2").text("Не удалось удалить время. Повторите попытку позже.");
+					} else {
+						if (jQuery("#"+ChoosenDay).attr("class") == "day-off") {
+							jQuery("#"+ChoosenDay).attr("class", "current-month");
+						}
+						jQuery("#modal-window-container-tar").hide();
+						jQuery("#close-tar").hide();
+						jQuery("#modal-window-1-tar").hide();
+						var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "success",
+							text: "Выходной день (время) удалено успешно."
+						});
+					}
+				},
+				dataType: "text",
+				timeout: 10000,
+				error: function (data) {
+					var n = noty({
+						theme: 'relax',
+						layout: 'center',
+						maxVisible: 5,
+						type: "error",
+						text: "Ошибка при попытке удалить выходные часы. Сервер не отвечает"
+					});
+				}
+			});
+		});
+		// -----------------------------------------
 
 	});
 
