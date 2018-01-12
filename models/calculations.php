@@ -919,6 +919,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                     break;
                 }
             }
+            ($index == 0) ? $index = count($items) : 0;
             for ($i=0; $i < count($items); $i++) {
                 $items[$i]->project_mounting_day_off = "";
             }
