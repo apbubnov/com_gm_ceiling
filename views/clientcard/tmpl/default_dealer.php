@@ -17,6 +17,8 @@
     $call_id = $jinput->get('call_id', 0, 'INT');
     $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
     $client = $client_model->getClientById($this->item->id);
+    $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+    $clients_items = $clients_model->getListQuery();
     if(!empty($client->manager_id)){
         $manager_name = JFactory::getUser($client->manager_id)->name;
     }
@@ -106,21 +108,30 @@
         <p class="caption-tar">Клиенты дилера</p>
         <div id="cliens_of_dealer_2">
             <table id="cliens_of_dealer_table" class="table table-striped one-touch-view" cellspacing="0">
-            
-                <?php foreach($history as $item): ?>
-
-                <tr>
-                    <td>
-                        <?php 
-                            $date = new DateTime($item->date_time);
-                            echo $date->Format('d.m.Y H:i');
-                        ?>
-                    </td>
-                    <td><?php echo $item->text;?></td>
-                </tr>
-
-                <?php endforeach;?>
-          
+                <tbody>
+                <?php foreach ($clients_items as $i => $item) : ?>
+                    <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
+                        <td class="one-touch">
+                            <?php
+                                if($item->created == "0000-00-00") {
+                                    echo "-";
+                                } else {
+                                    $jdate = new JDate($item->created);
+                                    $created = $jdate->format("d.m.Y");
+                                    echo $created;
+                                }
+                            ?>
+                            
+                        </td>
+                        <td class="one-touch">
+                            <?php echo $item->client_name; ?>
+                        </td>
+                        <td class="one-touch">
+                            <?php echo $item->client_contacts; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
             </table>
         </div>
     </div>

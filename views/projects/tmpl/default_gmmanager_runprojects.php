@@ -111,14 +111,17 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                         $sum_transport = margin($mount_transport->transport, $item->gm_mounting_margin);
                                     }
                                 }
+
                                 $temp = 0;
                                 if($item->check_mount_done == 0) { 
                                     $temp = ($item->new_mount_sum)? $item->new_mount_sum: ($mounting_sum + $sum_transport);
                                     $temp = $temp - $item->new_project_mounting;
+                                    $temp_project_sum = $item->project_sum - $item->new_project_sum;
+                                    $temp_material_sum = ($material_sum - $item->new_material_sum);
                                     ?>
-                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo $item->project_sum - $item->new_project_sum; ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo $temp; ?>"  hidden>
-                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo $material_sum - $item->new_material_sum; ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($temp_project_sum <= 0)?0:round(($temp_project_sum), 2); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($temp <= 0)?0:round($temp, 2); ?>"  hidden>
+                                    <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($temp_material_sum <= 0)?0:round($temp_material_sum,2); ?>"  hidden>
                                 
                                 <?}
                                 if($item->check_mount_done == 1) { ?>
@@ -274,7 +277,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 									type: "success",
 									text: data
 								});
-							  
+                                setInterval(function() { location.reload();}, 1500);
+  
 							},
 							dataType: "text",
 							timeout: 10000,

@@ -308,7 +308,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                                 salary = 1500;
                             }
                             // рисовка таблицы
-                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', td, tm, ty, status_proj);"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
                         } else {
                             TrOrders2 += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
                         }                  
@@ -319,20 +319,21 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
         }
     }
 
-    function ReplaceToOrder(project, day, month, year, status_proj) {
+    function ReplaceToOrder(project, month, ReadOrNot) {
         location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
         month--;
-        jQuery.ajax( {
-            type: "POST",
-            url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
-            dataType: 'json',
-            data: {
-                id_calculation : project,
-            },
-            success: function(msg) {
-                
-            }
-        });
+        if (ReadOrNot == 0) {
+            jQuery.ajax( {
+                type: "POST",
+                url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
+                dataType: 'json',
+                data: {
+                    id_calculation : project,
+                },
+                success: function(msg) {
+                }
+            });
+        }
     }
 
     jQuery(document).ready(function () {
