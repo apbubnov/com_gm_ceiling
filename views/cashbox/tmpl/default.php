@@ -70,7 +70,7 @@ $userId     = $user->get('id');
                ?>
                 <tr>
                     <td>
-                        <?php echo date_format(date_crete($item->closed),"d.m.Y H:i:s");?>
+                        <?php echo date_format(date_create($item->closed),"d.m.Y H:i:s");?>
                     </td>
                     <td>
                         <?php echo $item->id;?>        
