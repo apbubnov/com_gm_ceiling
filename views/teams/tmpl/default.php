@@ -696,7 +696,7 @@ foreach ($brigade_id as $value) {
 		});
 
 		// удалить выходной день
-		jQuery("#delete_day_off").click(
+		jQuery("#delete_day_off").click( function() {
 			jQuery.ajax({
 				type: 'POST',
 				url: "/index.php?option=com_gm_ceiling&task=teams.DeleteFreeDay",
@@ -732,11 +732,11 @@ foreach ($brigade_id as $value) {
 						layout: 'center',
 						maxVisible: 5,
 						type: "error",
-						text: "Ошибка при попытке сохранить выходные часы. Сервер не отвечает"
+						text: "Ошибка при попытке удалить выходные часы. Сервер не отвечает"
 					});
 				}
 			});
-		);
+		});
 		// -----------------------------------------
 		
 	});
