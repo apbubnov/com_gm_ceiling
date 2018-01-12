@@ -122,7 +122,6 @@ class Gm_ceilingModelTeams extends JModelItem {
 				->order('date_from');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
-			var_dump($items);
 
 			return $items;
 		}
