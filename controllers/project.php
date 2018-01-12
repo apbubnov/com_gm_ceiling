@@ -1061,8 +1061,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$material_sum = $jinput->get('material_sum', '0', 'FLOAT');
 			//print_r("check - $check ||| new_value - $new_value ||| mouting_sum - $mouting_sum ||| mouting_sum_itog - $mouting_sum_itog ||| material_sum - $material_sum"); exit;
 			$map_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
-            $sum = $new_value*0.1;
-            $result = "Договор закрыт!";
+			$sum = $new_value*0.1;
+			if($check == 1) $result = "Договор закрыт!";
+			if($check == 0) $result = "Договор пока не закрыт из-за недовыполненного монтажа!";
             //throw new Exception("1");
 			if($map_model->exist($project_id)==1){
                 $map_model->updateSum($project_id,$sum);
@@ -1090,6 +1091,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			//Gm_ceilingHelpersGm_ceiling::notify($data, 2);
 			Gm_ceilingHelpersGm_ceiling::notify($data, 3);
 			// Check for errors.
+			
 
 			if ($return === false)
 			{
@@ -1097,6 +1099,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 //$result = 'Save failed:'. $model->getError();
 				//echo JText::sprintf('Save failed: %s', $model->getError());
 			}
+			 
 
 			die($result);
 		}
