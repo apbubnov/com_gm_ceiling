@@ -261,6 +261,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var input_mounting_itog = jQuery("#input_mounting_itog").val();
                         var input_material = jQuery("#input_material").val();
                         var check = jQuery("input[name='check_mount']:checked").val();
+                        alert(check);
                         //alert(input_value);
 						jQuery.ajax({
 							type: 'POST',
