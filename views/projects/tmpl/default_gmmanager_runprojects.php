@@ -228,15 +228,15 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         if (!div.is(e.target) // если клик был не по нашему блоку
             && div.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery("#close").hide();
-            jQuery("#modal_window_container_<?= $item->id; ?>").hide();
+            jQuery(".modal_window_container").hide();
             jQuery("#modal_window_del").hide();
         }
     });
 
 
     function submit_form(e) {
-        jQuery("modal_window_container, modal_window_container *").show();
-        jQuery('modal_window_container').addClass("submit");
+        jQuery(".modal_window_container, .modal_window_container *").show();
+        jQuery('.modal_window_container').addClass("submit");
     }
 
     function click_ok(id) {
