@@ -294,7 +294,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     }
 
     function click_cancel(e) {
-        jQuery("#modal_window_container, #modal_window_container *").hide();
+        jQuery("modal_window_container, modal_window_container *").hide();
     }
 
     jQuery(document).ready(function () {
