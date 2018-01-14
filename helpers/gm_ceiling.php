@@ -4782,6 +4782,78 @@ class Gm_ceilingHelpersGm_ceiling
         return $table;
     }
 
+    /*
+     * Функция создания html календаря
+     *
+     * @function    {LiteCalendar}
+     * @param   number  $month  - От даты сейчас
+     * @result  string  html
+     */
 
+    public function LiteCalendar($month = 0)
+    {
+        $month -= 1;
+
+        $DATA = (object)[
+            "Month" => ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+            "Month2" => ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'],
+            "Day" => ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'],
+            "DayFull" => ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+        ];
+
+        $Calendar = '
+                <div class="Calendar Month" id="m%s">
+                <input id="mData" type="text" value="%s" hidden disabled>
+                <div class="DaysOfTheWeek">%s</div>
+                <div class="Days">%s</div>
+                </div>
+                ';
+
+        $DayOfTheWeek = '<div class="DayOfTheWeek" id="w%s">%s</div>';
+        $Day = '<div class="Day %s" id="d%s" dotw="%s">%s</div>';
+
+        $HTML = "";
+
+        $Calendars = [];
+        for ($IndexM = 0; $IndexM < 3; $IndexM++) {
+            $m = $month + $IndexM;
+
+            $year = date("Y");
+            $month = date("m");
+
+            $DATE = (object)[
+                "Year" => date("Y", mktime(0, 0, 0, $month - $m, 1, $year)),
+                "MonthNumber" => date("m", mktime(0, 0, 0, $month - $m, 1, $year))
+            ];
+
+            $DATE->MonthName = $DATA->Month[$DATE->MonthNumber - 1];
+            $DATE->MonthName2 = $DATA->Month2[$DATE->MonthNumber - 1];
+            $DATE->CalDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $DATE->MonthNumber, $DATE->Year);
+            $DATE->TopName = $DATE->MonthName . " " . $DATE->Year . " г.";
+
+            $DATE->FirstDay = date("w", mktime(0, 0, 0, $DATE->MonthNumber, 1, $DATE->Year));
+            if ($DATE->FirstDay == 0) $DATE->FirstDay = 7;
+
+            $DaysOfTheWeek = "";
+            foreach ($DATA->Day as $TKey => $TDay)
+                $DaysOfTheWeek .= sprintf($DayOfTheWeek, $TKey, $TDay);
+
+            $Days = "";
+            $SumDays = $DATE->CalDaysInMonth + $DATE->FirstDay;
+            $CountDays = ceil($SumDays / 7.0) * 7.0;
+            for ($i = 1; $i < $CountDays; $i++)
+            {
+                $TDayOfTheWeek = date("w", mktime(0, 0, 0, $DATE->MonthNumber, $i - $DATE->FirstDay, $DATE->Year));
+
+                $Days .= ($i < $DATE->FirstDay || $SumDays < $i)
+                    ? sprintf($Day, "EmptyDay", 0, $TDayOfTheWeek, "")
+                    : sprintf($Day, "IssetDay", $i, $TDayOfTheWeek, $DATA->Day[$TDayOfTheWeek]);
+            }
+
+            $Calendars[] = sprintf($Calendar, $DATE->MonthNumber, json_encode($DATE), $DaysOfTheWeek, $Days);
+        }
+
+        return $Calendars;
+    }
 
 }

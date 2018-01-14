@@ -24,10 +24,17 @@ $employee = (in_array(18, $groups));
 
 //$app = JFactory::getApplication();
 $schedule = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getSchedule();
+$calendars = Gm_ceilingHelpersGm_ceiling::LiteCalendar(0);
 ?>
 
 <?if ($chief || true):?>
-<h1>Начальник цеха: <?=$user->name;?></h1>
+    <h1>Начальник цеха: <?=$user->name;?></h1>
+
+    <?=$calendars[0];?>
+    <br>
+    <?=$calendars[1];?>
+    <br>
+    <?=$calendars[2];?>
 <?elseif($employee):?>
 <h1>Работник цеха: <?=$user->name;?></h1>
 <?else:?>
