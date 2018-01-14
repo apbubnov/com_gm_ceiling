@@ -1,0 +1,87 @@
+.Calendar div
+{
+    display: inline-block;
+}
+
+.Calendar
+{
+    width: calc(35px * 7);
+    height: calc(35px * 8);
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.75);
+    padding: 0 !important;
+    float: left;
+    overflow: visible;
+    margin: 4px 4px 0 0;
+}
+
+.Calendar .Name
+{
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    background-color: rgba(78, 76, 183, 1);
+    color: rgba(255, 255, 255, 1);
+    font-size: 16px;
+    text-align: center;
+    float: left;
+}
+
+.Calendar .DaysOfTheWeek
+{
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    background-color: rgb(218, 218, 218);
+    font-size: 14px;
+    text-align: center;
+    float: left;
+}
+
+.Calendar .Days
+{
+    width: 100%;
+    height: calc(35px * 6);
+    font-size: 14px;
+    float: left;
+}
+
+.Calendar .DaysOfTheWeek .DayOfTheWeek,
+.Calendar .Days .Day
+{
+    width: calc(100% / 7);
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    float: left;
+    box-shadow: inset 0 0 0 .2px rgba(255, 255, 255, 1);
+}
+
+.Calendar .Days .Day
+{
+    box-shadow: inset 0 0 0 .2px rgba(78, 76, 183, .5);
+    transition: .3s;
+}
+
+.Calendar .Days .Day.Now
+{
+    box-shadow: inset 0 0 0 1px rgba(78, 76, 183, 1), 0 0 0 1px rgba(78, 76, 183, 1);
+}
+
+.Calendar .Days .Day.IssetDay
+{
+    cursor: pointer;
+}
+.Calendar .Days .Day.IssetDay:hover
+{
+    z-index: 5;
+    position: relative;
+    box-shadow: inset 0 0 0 1px rgb(183, 58, 0), 0 0 0 1px rgb(183, 58, 0);
+}
+
+.Calendar .Days .Day.EmptyDay
+{
+    background-color: rgb(207, 207, 207);
+    color: rgb(58, 58, 58);
+    cursor: default;
+}

@@ -24,19 +24,20 @@ $employee = (in_array(18, $groups));
 
 //$app = JFactory::getApplication();
 $schedule = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getSchedule();
-$CalendarData = Gm_ceilingHelpersGm_ceiling::LiteCalendar(0);
-$calendars = $CalendarData->calendars;
-print_r($calendars);
+$calendars = [];
+$calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(-1);
+$calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(0);
+$calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
 ?>
 
 <?if ($chief || true):?>
     <h1>Начальник цеха: <?=$user->name;?></h1>
-<link type="text/css" rel="stylesheet" href="<?=$CalendarData->style;?>">
-    <?=$calendars[0];?>
-    <br>
-    <?=$calendars[1];?>
-    <br>
-    <?=$calendars[2];?>
+<link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/calendar.css">
+    <div class="">
+        <?=$calendars[0];?>
+        <?=$calendars[1];?>
+        <?=$calendars[2];?>
+    </div>
 <?elseif($employee):?>
 <h1>Работник цеха: <?=$user->name;?></h1>
 <?else:?>
