@@ -1059,7 +1059,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$mouting_sum = $jinput->get('mouting_sum', '0', 'FLOAT');
             $mouting_sum_itog = $jinput->get('mouting_sum_itog', '0', 'FLOAT'); // сумма, которую получат монтажники сначала без выполненной работы
 			$material_sum = $jinput->get('material_sum', '0', 'FLOAT');
-			//print_r("check - $check ||| new_value - $new_value ||| mouting_sum - $mouting_sum ||| mouting_sum_itog - $mouting_sum_itog ||| material_sum - $material_sum"); exit;
+			print_r("project_id - $project_id ||| check - $check ||| new_value - $new_value ||| mouting_sum - $mouting_sum ||| mouting_sum_itog - $mouting_sum_itog ||| material_sum - $material_sum"); exit;
 			$map_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
 			$sum = $new_value*0.1;
 			if($check == 1) $result = "Договор закрыт!";
