@@ -85,7 +85,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 <h6 style="margin-top:10px">Ваша прибыль отрицательна!</h6>
                                 <h6 style="margin-top:10px">Вы уверены, что все данные введены верно?</h6>
                                 <p>
-                                    <button type="button" id="ok" onclick="click_ok(this);" class="btn btn-primary">Да</button>
+                                    <button type="button" id="ok" onclick="click_ok(<?= $item->id;?>);" class="btn btn-primary">Да</button>
                                     <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
                                 </p>
                             </div>
