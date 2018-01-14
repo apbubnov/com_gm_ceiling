@@ -4792,7 +4792,7 @@ class Gm_ceilingHelpersGm_ceiling
 
     public function LiteCalendar($month = 0)
     {
-        $month -= 1;
+        $m = $month - 1;
 
         $DATA = (object)[
             "Month" => ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
@@ -4804,6 +4804,7 @@ class Gm_ceilingHelpersGm_ceiling
         $Calendar = '
                 <div class="Calendar Month" id="m%s">
                 <input id="mData" type="text" value="%s" hidden disabled>
+                <div class="Name">%s</div>
                 <div class="DaysOfTheWeek">%s</div>
                 <div class="Days">%s</div>
                 </div>
@@ -4815,15 +4816,15 @@ class Gm_ceilingHelpersGm_ceiling
         $HTML = "";
 
         $Calendars = [];
-        for ($IndexM = 0; $IndexM < 3; $IndexM++) {
-            $m = $month + $IndexM;
+        for ($IndexM = 2; $IndexM >= 0; $IndexM--) {
+            $m2 = $m + $IndexM;
 
             $year = date("Y");
             $month = date("m");
 
             $DATE = (object)[
-                "Year" => date("Y", mktime(0, 0, 0, $month - $m, 1, $year)),
-                "MonthNumber" => date("m", mktime(0, 0, 0, $month - $m, 1, $year))
+                "Year" => date("Y", mktime(0, 0, 0, $month - $m2, 1, $year)),
+                "MonthNumber" => date("m", mktime(0, 0, 0, $month - $m2, 1, $year))
             ];
 
             $DATE->MonthName = $DATA->Month[$DATE->MonthNumber - 1];
@@ -4836,24 +4837,25 @@ class Gm_ceilingHelpersGm_ceiling
 
             $DaysOfTheWeek = "";
             foreach ($DATA->Day as $TKey => $TDay)
-                $DaysOfTheWeek .= sprintf($DayOfTheWeek, $TKey, $TDay);
+                $DaysOfTheWeek .= sprintf($DayOfTheWeek, $TKey + 1, $TDay);
 
             $Days = "";
             $SumDays = $DATE->CalDaysInMonth + $DATE->FirstDay;
-            $CountDays = ceil($SumDays / 7.0) * 7.0;
-            for ($i = 1; $i < $CountDays; $i++)
+            for ($i = 1; $i < 42; $i++)
             {
                 $TDayOfTheWeek = date("w", mktime(0, 0, 0, $DATE->MonthNumber, $i - $DATE->FirstDay, $DATE->Year));
+                $dotw = "w" . ($TDayOfTheWeek + 1);
+                $day = $i + 1 - $DATE->FirstDay;
 
-                $Days .= ($i < $DATE->FirstDay || $SumDays < $i)
-                    ? sprintf($Day, "EmptyDay", 0, $TDayOfTheWeek, "")
-                    : sprintf($Day, "IssetDay", $i, $TDayOfTheWeek, $DATA->Day[$TDayOfTheWeek]);
+                $Days .= ($i < $DATE->FirstDay || $SumDays <= $i)
+                    ? sprintf($Day, "EmptyDay", 0, $dotw, "")
+                    : sprintf($Day, "IssetDay", $day, $dotw, $day);
             }
 
-            $Calendars[] = sprintf($Calendar, $DATE->MonthNumber, json_encode($DATE), $DaysOfTheWeek, $Days);
+            $Calendars[] = sprintf($Calendar, $DATE->MonthNumber, json_encode($DATE), $DATE->MonthName, $DaysOfTheWeek, $Days);
         }
 
-        return $Calendars;
+        return (object)["calendars" => $Calendars, "style" => "/components/com_gm_ceiling/views/guild/styles/calendar.css"];
     }
 
 }
