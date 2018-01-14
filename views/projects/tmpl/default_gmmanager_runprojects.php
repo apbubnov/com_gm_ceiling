@@ -238,6 +238,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     }
 
     function click_ok(e) {
+        var td = jQuery( this );
         var input_value = jQuery("#input_check").val();
         var input_mounting = jQuery("#input_mounting").val();
         var input_mounting_itog = jQuery("#input_mounting_itog").val();
