@@ -350,7 +350,55 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var check = jQuery("input[name='check_mount']:checked").val();
                         if (check == undefined) { check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
                         else if (check == 1){ check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
-                        else check = 0;
+                        else { check = 0;
+                            var input_value = jQuery("#input_check").val();
+                            var input_mounting = jQuery("#input_mounting").val();
+                            var input_mounting_itog = jQuery("#input_mounting_itog").val();
+                            var input_material = jQuery("#input_material").val();
+                            var check = jQuery("input[name='check_mount']:checked").val();
+                            if (check == undefined) { check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
+                            else if (check == 1){ check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
+                            else check = 0;
+
+                            //alert(input_value);
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: "index.php?option=com_gm_ceiling&task=project.done",
+                                data: {
+                                    project_id : td.data("project_id"),
+                                    new_value : input_value,
+                                    mouting_sum : input_mounting,
+                                    mouting_sum_itog : input_mounting_itog,
+                                    material_sum : input_material,
+                                    check: check
+                                },
+                                success: function(data){
+                                    if(check == 1) button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
+                                    var n = noty({
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "success",
+                                        text: data
+                                    });
+                                    setInterval(function() { location.reload();}, 1500);
+
+                                },
+                                dataType: "text",
+                                timeout: 10000,
+                                error: function(data){
+                                    console.log(data);
+                                    var n = noty({
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "error",
+                                        text: "Ошибка при попытке сохранить отметку. Сервер не отвечает"
+                                    });
+                                }
+                            });
+                            return 1;
+                        }
 
 
                         /*new_value = jQuery("#input_check").val();
