@@ -190,14 +190,14 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     <?php echo JHtml::_('form.token'); ?>
 </form>
 
-<div id="modal_window_container" class="modal_window_container" style="z-index: 100;">
+<div id="modal_window_container" class="modal_window_container" style="z-index: 10000;">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
     </button>
     <div id="modal_window_del" class="modal_window">
         <h6 style="margin-top:10px">Ваша прибыль отрицательна!</h6>
         <h6 style="margin-top:10px">Вы уверены, что все данные введены верно?</h6>
         <p>
-            <button type="button" id="ok" class="btn btn-primary">Да</button>
+            <button type="button" id="ok" onclick="click_ok();" class="btn btn-primary">Да</button>
             <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
         </p>
     </div>
