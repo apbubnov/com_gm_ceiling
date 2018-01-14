@@ -78,6 +78,18 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     <!-- <//?php if ($item->project_status == 10 || $item->project_status == 11 ) { ?> -->
                         <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
                   <!--   <// } ?> -->
+                        <div id="modal_window_container" class="modal_window_container" style="z-index: 10000;">
+                            <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+                            </button>
+                            <div id="modal_window_del" class="modal_window">
+                                <h6 style="margin-top:10px">Ваша прибыль отрицательна!</h6>
+                                <h6 style="margin-top:10px">Вы уверены, что все данные введены верно?</h6>
+                                <p>
+                                    <button type="button" id="ok" onclick="click_ok(this);" class="btn btn-primary">Да</button>
+                                    <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
+                                </p>
+                            </div>
+                        </div>
                     <?php if ($item->project_status == 12) { ?>
                          <i class='fa fa-check' aria-hidden='true'></i> Выполнено
                     <? } ?>
@@ -191,18 +203,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     <?php echo JHtml::_('form.token'); ?>
 </form>
 
-<div id="modal_window_container" class="modal_window_container" style="z-index: 10000;">
-    <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
-    </button>
-    <div id="modal_window_del" class="modal_window">
-        <h6 style="margin-top:10px">Ваша прибыль отрицательна!</h6>
-        <h6 style="margin-top:10px">Вы уверены, что все данные введены верно?</h6>
-        <p>
-            <button type="button" id="ok" onclick="click_ok(this);" class="btn btn-primary">Да</button>
-            <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
-        </p>
-    </div>
-</div>
+
 
 
 
