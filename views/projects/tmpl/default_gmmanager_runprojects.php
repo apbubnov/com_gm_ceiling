@@ -190,6 +190,20 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     <?php echo JHtml::_('form.token'); ?>
 </form>
 
+<div id="modal_window_container" class="modal_window_container">
+    <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+    </button>
+    <div id="modal_window_del" class="modal_window">
+        <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
+        <p>
+            <button type="button" id="ok" class="btn btn-primary">Да</button>
+            <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
+        </p>
+    </div>
+</div>
+
+
+
 <script src="https://api.yandex.mightycall.ru/api/v2/sdk/mightycall.webphone.sdk.js"></script>
 <script src="/components/com_gm_ceiling/phone.js"></script>
 
@@ -204,8 +218,41 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 ?>
 
 <script type="text/javascript">
-    // сделать обработку данных, если монтаж был недовыполнен, а сейчас выполнен.
     var $ = jQuery;
+
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery("#modal_window_del"); // тут указываем ID элемента
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_del").hide();
+        }
+    });
+
+
+    function submit_form(e) {
+        jQuery("#modal_window_container, #modal_window_container *").show();
+        jQuery('#modal_window_container').addClass("submit");
+    }
+
+    function click_ok(e) {
+        var modal = $(e).closest("#modal_window_container");
+        if (modal.hasClass("submit"))
+        {
+            var select_tab = $(".tab-pane.active").find("#idCalcDeleteSelect").val();
+
+            $("#idCalcDelete").val(select_tab);
+            modal.removeClass("submit");
+            jQuery("input[name='data_delete']").val(1);
+            document.getElementById("form-client").submit();
+        }
+    }
+
+    function click_cancel(e) {
+        jQuery("#modal_window_container, #modal_window_container *").hide();
+    }
+
     jQuery(document).ready(function () {
         jQuery(".btn-done").click(function(){
 			var td = jQuery( this ),
@@ -251,6 +298,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 					text: 'Выполнено', //Button Text
 					val: 0, //Button Value
 					eKey: true, //Enter Keypress
+                    addId: '#idCalcDelete',
 					addClass: 'btn-danger', //Button Classes (btn-large | btn-small | btn-green | btn-light-green | btn-purple | btn-orange | btn-pink | btn-turquoise | btn-blue | btn-light-blue | btn-light-red | btn-red | btn-yellow | btn-white | btn-black | btn-rounded | btn-circle | btn-square | btn-disabled)
 					onClick: function(dialog) {
                         /*new_value = jQuery("#input_check").val();
@@ -263,6 +311,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var check = jQuery("input[name='check_mount']:checked").val();
                         if (check == undefined) check = 1;
                         else check = 0;
+
                         //alert(input_value);
 						jQuery.ajax({
 							type: 'POST',
