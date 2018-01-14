@@ -194,7 +194,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
     </button>
     <div id="modal_window_del" class="modal_window">
-        <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
+        <h6 style="margin-top:10px">Ваша прибыль отрицательна!</h6>
+        <h6 style="margin-top:10px">Вы уверены, что все данные введены верно?</h6>
         <p>
             <button type="button" id="ok" class="btn btn-primary">Да</button>
             <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
@@ -311,7 +312,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var input_material = jQuery("#input_material").val();
                         var check = jQuery("input[name='check_mount']:checked").val();
                         if (check == undefined) { check = 1; click_ok();}
-                        else if (check == 1) check = 1;
+                        else if (check == 1){ check = 1; click_ok();}
                         else check = 0;
 
                         //alert(input_value);
