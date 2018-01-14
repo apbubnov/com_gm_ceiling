@@ -83,6 +83,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     <? } ?>
                     </td>
                     <td class="center one-touch">
+                        <input id="<?= $item->id; ?>_id" value="<?php echo $item->id; ?>"  hidden>
                         <?php echo $item->id;
 
                             $calculations = $model->new_getProjectItems($item->id);
@@ -239,6 +240,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 
     function click_ok(e) {
         var td = jQuery( this );
+        var project_id =  td.data("project_id");
         var input_value = jQuery("#input_check").val();
         var input_mounting = jQuery("#input_mounting").val();
         var input_mounting_itog = jQuery("#input_mounting_itog").val();
@@ -253,7 +255,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=project.done",
             data: {
-                project_id : td.data("project_id"),
+                //project_id : td.data("project_id"),
+                project_id : project_id,
                 new_value : input_value,
                 mouting_sum : input_mounting,
                 mouting_sum_itog : input_mounting_itog,
