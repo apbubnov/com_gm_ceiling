@@ -190,7 +190,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     <?php echo JHtml::_('form.token'); ?>
 </form>
 
-<div id="modal_window_container" class="modal_window_container">
+<div id="modal_window_container" class="modal_window_container" style="z-index: 100;">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
     </button>
     <div id="modal_window_del" class="modal_window">
