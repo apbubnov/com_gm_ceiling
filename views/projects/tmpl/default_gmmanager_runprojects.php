@@ -78,7 +78,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     <!-- <//?php if ($item->project_status == 10 || $item->project_status == 11 ) { ?> -->
                         <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
                   <!--   <// } ?> -->
-                        <div id="modal_window_container_<?= $item->id; ?>" class="modal_window_container" style="z-index: 10000; background-color: rgba(0,0,0,0.05);">
+                        <div id="modal_window_container_<?= $item->id; ?>" class="modal_window_container" style="z-index: 10000; background-color: rgba(0,0,0,0.5);">
                             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
                             </button>
                             <div id="modal_window_del" class="modal_window">
