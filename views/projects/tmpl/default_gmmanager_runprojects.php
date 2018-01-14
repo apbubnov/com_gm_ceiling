@@ -129,13 +129,14 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                     <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
                                     <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
                                 <?}
-                                
+
                             ?>
 
                          
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->status; ?>
+                        <input id="<?= $item->id; ?>_status" value="<?php echo $item->status; ?>"  hidden>
                     </td>
                     <td class="center one-touch">
                         <?php if($item->project_mounting_date == "0000-00-00 00:00:00") { ?>
@@ -217,12 +218,15 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 			var type = "info",
 				value = td.data("value"),
 				//new_value = input.data("new_value");
+                status = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_status").val(),
                 new_value = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_project_sum").val(),
                 mouting_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_mounting_sum").val(),
                 material_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_material_sum").val();
-				var subject = "Отметка стоимости договора №" + td.data("project_id"),
-                    text = "<p><input name='check_mount' onclick='changeDone(this,"+new_value+","+mouting_sum+","+material_sum+");' class='radio' id ='done' value='1'  type='radio' checked><label for = 'done'>Монтаж выполнен</label></p>";
-					text += "<p><input name='check_mount' onclick='changeDone(this,"+new_value+","+mouting_sum+","+material_sum+");'  class='radio' id ='not_done' value='0'  type='radio'><label for = 'not_done'>Монтаж недовыполнен</label></p>";
+				var subject = "Отметка стоимости договора №" + td.data("project_id");
+				if (status == 17) {
+                    text = "<p><input name='check_mount' onclick='changeDone(this," + new_value + "," + mouting_sum + "," + material_sum + ");' class='radio' id ='done' value='1'  type='radio' checked><label for = 'done'>Монтаж выполнен</label></p>";
+                    text += "<p><input name='check_mount' onclick='changeDone(this," + new_value + "," + mouting_sum + "," + material_sum + ");'  class='radio' id ='not_done' value='0'  type='radio'><label for = 'not_done'>Монтаж недовыполнен</label></p>";
+                }
                     text += "<div class='dop_info_block' style='font-size:15px;'><div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' style='margin-top: 5px;' value='" + new_value + "'/></div></br>";
                     text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' style='margin-top: 5px;' value='" + material_sum + "'/></div></br>";
                     text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' style='margin-top: 5px;' value='" + mouting_sum + "'/></div>";
