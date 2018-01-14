@@ -228,15 +228,15 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         if (!div.is(e.target) // если клик был не по нашему блоку
             && div.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
+            jQuery("modal_window_container").hide();
             jQuery("#modal_window_del").hide();
         }
     });
 
 
     function submit_form(e) {
-        jQuery("#modal_window_container, #modal_window_container *").show();
-        jQuery('#modal_window_container').addClass("submit");
+        jQuery("modal_window_container, modal_window_container *").show();
+        jQuery('modal_window_container').addClass("submit");
     }
 
     function click_ok(id) {
@@ -248,8 +248,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         var input_mounting_itog = jQuery("#input_mounting_itog").val();
         var input_material = jQuery("#input_material").val();
         var check = jQuery("input[name='check_mount']:checked").val();
-        if (check == undefined) { check = 1; $("#modal_window_container #ok").click(function() { click_ok(this); });}
-        else if (check == 1){ check = 1; $("#modal_window_container #ok").click(function() { click_ok(this); });}
+        if (check == undefined) { check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
+        else if (check == 1){ check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
         else check = 0;
 
         //alert(input_value);
