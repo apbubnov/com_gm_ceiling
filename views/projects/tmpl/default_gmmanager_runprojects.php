@@ -78,7 +78,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     <!-- <//?php if ($item->project_status == 10 || $item->project_status == 11 ) { ?> -->
                         <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
                   <!--   <// } ?> -->
-                        <div id="modal_window_container" class="modal_window_container" style="z-index: 10000; background-color: rgba(0,0,0,0.05);">
+                        <div id="modal_window_container_<?= $item->id; ?>" class="modal_window_container" style="z-index: 10000; background-color: rgba(0,0,0,0.05);">
                             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
                             </button>
                             <div id="modal_window_del" class="modal_window">
@@ -346,7 +346,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     addId: '#idCalcDelete',
 					addClass: 'btn-danger', //Button Classes (btn-large | btn-small | btn-green | btn-light-green | btn-purple | btn-orange | btn-pink | btn-turquoise | btn-blue | btn-light-blue | btn-light-red | btn-red | btn-yellow | btn-white | btn-black | btn-rounded | btn-circle | btn-square | btn-disabled)
 					onClick: function(dialog) {
-                        jQuery("#modal_window_container, #modal_window_container *").show();
+                        jQuery("#modal_window_container_ + td.data(\"project_id\"), #modal_window_container + td.data(\"project_id\") *").show();
                         /*new_value = jQuery("#input_check").val();
                         mouting_sum = jQuery("#input_mounting").val();
                         material_sum = jQuery("#input_material").val();*/
