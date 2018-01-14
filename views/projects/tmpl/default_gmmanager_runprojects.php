@@ -238,8 +238,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         jQuery('#modal_window_container').addClass("submit");
     }
 
-    function click_ok(e) {
-        var td = jQuery( this );
+    function click_ok(td) {
+        td = jQuery( this );
         var project_id =  td.data("project_id");
         var input_value = jQuery("#input_check").val();
         var input_mounting = jQuery("#input_mounting").val();
