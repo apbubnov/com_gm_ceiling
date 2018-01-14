@@ -86,7 +86,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 <h6 style="margin-top:10px">Вы уверены, что все данные введены верно?</h6>
                                 <p>
                                     <button type="button" id="ok" onclick="click_ok(<?= $item->id; ?>);" class="btn btn-primary">Да</button>
-                                    <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
+                                    <button type="button" id="cancel" onclick="click_cancel(<?= $item->id; ?>);" class="btn btn-primary">Отмена</button>
                                 </p>
                             </div>
                         </div>
@@ -294,7 +294,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     }
 
     function click_cancel(e) {
-        jQuery("modal_window_container, modal_window_container *").hide();
+        jQuery("#modal_window_container_"+e+", #modal_window_container_"+e+" *").hide();
     }
 
     jQuery(document).ready(function () {
