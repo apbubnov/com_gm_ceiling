@@ -347,7 +347,12 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 					addClass: 'btn-danger', //Button Classes (btn-large | btn-small | btn-green | btn-light-green | btn-purple | btn-orange | btn-pink | btn-turquoise | btn-blue | btn-light-blue | btn-light-red | btn-red | btn-yellow | btn-white | btn-black | btn-rounded | btn-circle | btn-square | btn-disabled)
 					onClick: function(dialog) {
 					    //alert(td.data("project_id"));
-                        jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();
+                        var check = jQuery("input[name='check_mount']:checked").val();
+                        if (check == undefined) { check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
+                        else if (check == 1){ check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
+                        else check = 0;
+
+
                         /*new_value = jQuery("#input_check").val();
                         mouting_sum = jQuery("#input_mounting").val();
                         material_sum = jQuery("#input_material").val();*/
