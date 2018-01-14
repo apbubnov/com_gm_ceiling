@@ -339,17 +339,17 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         var text = "";
         element = $(element);
             if ($("#done").is(":checked")) {
-                text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' style='margin-top: 5px;' value='" + new_value + "'/></div></br>";
-                text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' style='margin-top: 5px;' value='" + material_sum + "'/></div></br>";
-                text += "<div class='center'>Укажите новую стоимость монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' style='margin-top: 5px;'  value='" + mouting_sum + "'/></div>";
+                text += "<div class='center'>Укажите остальную сумму договора</div><div class='center'><input id='input_check' class='noty_input' style='margin-top: 5px;' value='" + new_value + "'/></div></br>";
+                text += "<div class='center'>Укажите остальную сумму расходных материалов</div><div class='center'><input id='input_material' class='noty_input' style='margin-top: 5px;' value='" + material_sum + "'/></div></br>";
+                text += "<div class='center'>Укажите остальную сумму монтажных работ</div><div class='center'><input id='input_mounting' class='noty_input' style='margin-top: 5px;'  value='" + mouting_sum + "'/></div>";
                 
                 }
             if ($("#not_done").is(":checked")) {
-                text += "<div class='center'>Укажите новую стоимость договора</div><div class='center'><input id='input_check' class='noty_input' style='margin-top: 5px;' value='" + new_value + "'/></div></br>";
-                text += "<div class='center'>Укажите новую стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' style='margin-top: 5px;' value='" + material_sum + "'/></div></br>";
-                text += "<div class='center'>Укажите стоимость монтажных работ!!!</div><br>";
+                text += "<div class='center'>Укажите стоимость договора</div><div class='center'><input id='input_check' class='noty_input' style='margin-top: 5px;' value='" + new_value + "'/></div></br>";
+                text += "<div class='center'>Укажите стоимость расходных материалов</div><div class='center'><input id='input_material' class='noty_input' style='margin-top: 5px;' value='" + material_sum + "'/></div></br>";
+                text += "<div class='center'>Укажите стоимость монтажных работ</div><br>";
                    // "<div class='center'><input id='input_mounting' class='noty_input' value='" + mouting_sum + "'/></div>";
-                text += "<div class='center'><div class='leftBlock' style='width: 41%; float: left;'><span >Начальная сумма</span><input id='input_mounting' style='width: 100%; margin-top: 5px;' value='" + mouting_sum + "'/></div>" +
+                text += "<div class='center'><div class='leftBlock' style='width: 41%; float: left;'><span >Исходная сумма</span><input id='input_mounting' style='width: 100%; margin-top: 5px;' value='" + mouting_sum + "'/></div>" +
                     "<div class=\"centerBlock\" style=\"width: 5%;float: left;\"><br><span> - </span></div>"+
                     "<div class='rightBlock' style='width: 54%;float: left;'><span >Недоделанная работа</span><input id='input_mounting_1' style='width: 100%;  margin-top: 5px;' value='0'/></div></div>";
                 text += "<div class='center'>Итоговая сумма недоделанного монтажа</div><div class='center'><input id='input_mounting_itog' class='noty_input' style='margin-top: 5px;' value='" + mouting_sum + "'/></div></br>";
