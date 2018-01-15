@@ -37,9 +37,7 @@ $type = $jinput->getString('type', NULL);
 		<h2>Добавить нового клиента</h2>
 	<?php endif; ?>
 
-	<form id="form-client"
-		  action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=client.save&type='.$type); ?>"
-		  method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+	<form id="form-client" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 		
 	<input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
 
