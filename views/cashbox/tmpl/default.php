@@ -19,7 +19,7 @@ $year = date("Y");
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <button type = "button" id = "add" class = "btn btn-primary">Инкассация</button>
-    <div style="display:block;position: absolute; right:0px">
+    <div style="display:block; right:0px">
         <button type= "button" class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
         <select id = "month">
             <option value = "1">Январь</option>
