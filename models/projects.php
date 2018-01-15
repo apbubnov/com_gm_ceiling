@@ -130,7 +130,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->join('LEFT', '`#__gm_ceiling_status` AS status ON status.id = a.project_status');
 
             $query->select('dealer.name AS dealer_name')
-                ->join('LEFT', '`#__users` dealer ON dealer.id = a.dealer_id');
+                ->join('LEFT', '`#__users` dealer ON dealer.id = client.id');
 
             $query->select('client.client_name AS client_name')
                 ->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id');
@@ -291,10 +291,12 @@ class Gm_ceilingModelProjects extends JModelList
                 } else {
                     $who = "'1', '0'";
                 }
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
-                    ->where("project_status = '1' and who_calculate in ($who) and dealer_id = '$user->dealer_id'");
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                    ->where("projects.project_status = '1' and projects.who_calculate in ($who) and clients.dealer_id = '$user->dealer_id'");
             } else
+
             // НМС (монтажи)
             if ($status == "Mountings") {
                 if ($user->dealer_id == 1) {
@@ -302,9 +304,10 @@ class Gm_ceilingModelProjects extends JModelList
                 } else {
                     $dealer = $user->dealer_id;
                 }
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
-                    ->where("project_status in ('5', '6', '7', '8', '10', '11', '16', '17') and dealer_id = '$dealer'");
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                    ->where("projects.project_status in ('5', '6', '7', '8', '10', '11', '16', '17') and clients.dealer_id = '$dealer'");
             } else
             if ($status == "ComplitedMountings") {
                 if ($user->dealer_id == 1) {
@@ -312,9 +315,10 @@ class Gm_ceilingModelProjects extends JModelList
                 } else {
                     $dealer = $user->dealer_id;
                 }
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
-                    ->where("project_status = '11' and dealer_id = '$dealer' and read_by_chief = '0'");
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                    ->where("projects.project_status = '11' and clients.dealer_id = '$dealer' and projects.read_by_chief = '0'");
             } else
             // менеджер (в производстве) 
             if ($status == "InProduction") {

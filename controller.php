@@ -744,7 +744,6 @@ class Gm_ceilingController extends JControllerLegacy
             $project_data['project_calculation_date'] = $project_calculation_date;
             $project_data['project_mounting_date'] = "00.00.0000";
             $project_data['project_note'] = "";
-            $project_data['dealer_id'] = 1;
             $project_data['who_calculate'] = 0;
             $project_data['created'] = date("Y.m.d");
             $project_data['project_discount'] = 0;
@@ -1940,7 +1939,6 @@ class Gm_ceilingController extends JControllerLegacy
 
             $project_data['project_mounting_date'] = "00.00.0000";
             $project_data['project_note'] = "";
-            $project_data['dealer_id'] = $user->dealer_id;
             $project_data['who_calculate'] = 0;
             $project_data['created'] = date("Y.m.d");
             $project_data['project_discount'] = 0;
