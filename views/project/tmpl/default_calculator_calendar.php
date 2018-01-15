@@ -2054,7 +2054,9 @@ var $ = jQuery;
                 jQuery(".project_activation").hide();
                 jQuery("#refuse").hide();
                 jQuery("#project_activation").show();
+                jQuery("#project_activation").focus();
                 $tmp_accept = 1;
+                $tmp_refuse = 0;
             } else {
                 jQuery(".project_activation").hide();
                 jQuery("#mounter_wraper").hide();
@@ -2063,6 +2065,7 @@ var $ = jQuery;
                 jQuery(".buttons_wrapper").hide();
                 jQuery("#project_activation").hide();
                 $tmp_accept = 0;
+                $tmp_refuse = 0;
             }
             
         });
@@ -2077,10 +2080,12 @@ var $ = jQuery;
                 jQuery(".buttons_wrapper").hide();
                 jQuery("#mounting_date_control").hide();
                 $tmp_refuse = 1;
+                $tmp_accept = 0;
             } else {
                 jQuery(".project_activation").hide();
                 jQuery("#refuse").hide();
                 $tmp_refuse = 0;
+                $tmp_accept = 0;
             }
             //jQuery(".project_activation").toggle();
             //jQuery("#refuse").toggle();

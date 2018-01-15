@@ -269,7 +269,6 @@ $year = date("Y");
             month_old = month;
             year_old = year;
             update_month_year(month,year);
-            console.log(month,year);
         });
         jQuery("#month").change(function() {
             var month = this.value;
@@ -283,7 +282,7 @@ $year = date("Y");
                     year: year
                 },
                 success: function (data) {
-                   console.log(data);
+                   fill_table(JSON.parse(data));
                 },
                 dataType: "text",
                 timeout: 10000,
@@ -310,5 +309,16 @@ $year = date("Y");
             }
         });
         jQuery("#year").text(year); 
+    }
+    function fill_table(data){
+        jQuery('#cashbox_table tbody').empty();
+        for(var i=0;i<data.length;i++) {
+            jQuery("#cashbox_table").append('<tr></tr>');
+            for(var j=0;j<Object.keys(data[i]).length;j++){
+
+                jQuery('#cashbox_table > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+                
+            }
+        }
     }
 </script>
