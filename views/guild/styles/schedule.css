@@ -5,10 +5,9 @@
 .Calendars
 {
     width: 100%;
-    height: 310px;
 }
 
-.Calendars .Name
+.Calendars .CalName
 {
     width: 100%;
     height: 30px;
@@ -16,15 +15,17 @@
     float: left;
     background-color: #4e4cb7;
     color: #FFFFFF;
-    font-size: 14px;
+    font-size: 18px;
+    padding: 0 15px;
 }
 
 .Calendars .Block
 {
     width: 100%;
-    height: 280px;
     float: left;
     text-align: center;
+    box-shadow: inset 0 0 1px 1px #4e4cb7;
+    padding: 10px 0;
 }
 
 .Calendars .Block .CalBlock

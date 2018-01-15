@@ -33,7 +33,7 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
 <?if ($chief || true):?>
     <h1>Начальник цеха: <?=$user->name;?></h1>
     <div class="Calendars">
-        <div class="Name">Календарь работ</div>
+        <div class="CalName">Календарь работ</div>
         <div class="Block">
             <div class="Left">
                 <div
