@@ -23,7 +23,7 @@
     if ($dealer->associated_client != $this->item->id)
     {
         header("location:/index.php?option=com_gm_ceiling&view=clientcard&id=$this->item->id");
-        exit();
+        exit;
     }
     
     
