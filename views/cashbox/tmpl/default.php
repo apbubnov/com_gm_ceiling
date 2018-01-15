@@ -316,7 +316,7 @@ $year = date("Y");
             jQuery("#cashbox_table").append('<tr></tr>');
             for(var j=0;j<Object.keys(data[i]).length;j++){
 
-                jQuery(table_name+' > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+                jQuery('#cashbox_table > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
                 
             }
         }
