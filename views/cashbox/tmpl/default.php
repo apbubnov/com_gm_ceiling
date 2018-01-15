@@ -116,16 +116,8 @@ $year = date("Y");
                     </td>
                     <td>
                         <?php
-                            if($item->done!=1&&$item->project_status != 12){
-                                $not_issued =  $item->new_mount_sum - $item->new_project_mounting;
-                                
-                            }
-                            else
-                            {
-                                $not_issued = 0;
-                            }
-                            $all_not_issued +=$not_issued;
-                            echo $not_issued;
+                            $all_not_issued+= $item->not_issued;
+                            echo $item->not_issued;
                         ?>
                     </td>
                     <td>
@@ -133,17 +125,14 @@ $year = date("Y");
                     </td>
                     <td>
                         <?php
-                            if(!isset($item->sum)){
-                                $residue = $item->new_project_sum - $item->new_mount_sum -$item->new_material_sum;
-                                echo $residue;
-                            }
+                            
+                                echo $item->residue;
+                           
                         ?>        
                     </td>
                     <td>
                         <?php
-                            $cashbox += $residue - $encash;
-                            $encash = 0;
-                            echo $cashbox;
+                            echo $item->cashbox;
                         ?>
                     </td>
                     <td>
@@ -161,7 +150,7 @@ $year = date("Y");
                     <b>Итого в кассе:</b>
                 </td>
                 <td>
-                    <b><?php echo $cashbox;?></b>
+                    <b><?php echo $item->cashbox;?></b>
                 </td>
             </tr>
             <tr>
@@ -177,7 +166,7 @@ $year = date("Y");
                    <b>Остаток</b>
                 </td>
                 <td>
-                    <b><?php echo $cashbox-$all_not_issued;?></b>
+                    <b><?php echo $item->cashbox-$all_not_issued;?></b>
                 </td>
             </tr>
         </tbody>
@@ -250,8 +239,7 @@ $year = date("Y");
             }
             month_old = month;
             year_old = year;
-            update_month_year(month,year);  
-            console.log(month,year);          
+            update_month_year(month,year);           
         });
         jQuery("#prev").click(function () {
             month = <?php echo $month; ?>;
@@ -311,6 +299,7 @@ $year = date("Y");
         jQuery("#year").text(year); 
     }
     function fill_table(data){
+        console.log(data);
         jQuery('#cashbox_table tbody').empty();
         for(var i=0;i<data.length;i++) {
             jQuery("#cashbox_table").append('<tr></tr>');
