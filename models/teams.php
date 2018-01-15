@@ -28,7 +28,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 			$query->select('users.id, users.name')
 				->from('#__users as users')
 				->innerJoin('#__user_usergroup_map as usergroup ON usergroup.user_id = users.id')
-				->where("dealer_id = $dealerId and usergroup.group_id = '11'");
+				->where("users.dealer_id = $dealerId and usergroup.group_id = '11'");
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
