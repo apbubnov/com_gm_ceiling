@@ -2052,6 +2052,7 @@ var $ = jQuery;
                 jQuery(".buttons_wrapper").show();
                 jQuery(".project_activation").hide();
                 jQuery("#refuse").hide();
+                jQuery("#mounting_date_control").show();
                 $tmp_accept = 1;
             } else {
                 jQuery("#mounter_wraper").hide();
@@ -2061,7 +2062,7 @@ var $ = jQuery;
                 $tmp_accept = 0;
             }
             
-           // jQuery("#mounting_date_control").show();
+           // 
         });
         
         jQuery("#refuse_project").click(function () {
@@ -2073,6 +2074,7 @@ var $ = jQuery;
                 jQuery("#title").hide();
                 jQuery(".calendar_wrapper").hide();
                 jQuery(".buttons_wrapper").hide();
+                jQuery("#mounting_date_control").hide();
                 $tmp_refuse = 1;
             } else {
                 jQuery(".project_activation").hide();
@@ -2081,7 +2083,7 @@ var $ = jQuery;
             }
             //jQuery(".project_activation").toggle();
             //jQuery("#refuse").toggle();
-           // jQuery("#mounting_date_control").hide();
+           // 
         });
 
         jQuery("#choose_mounter").click(function () {
