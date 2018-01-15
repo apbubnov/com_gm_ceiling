@@ -47,12 +47,12 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             elseif($POST['transport'] == 2 ) $distance_col = $POST['jform']['distance_col'];
             else $distance_col = 0;
             $data->distance_col = $distance_col ;
-
+            print_r("allooooo"); exit;
             $model_project = $this->getModel('Project', 'Gm_ceilingModel');
             $res = $model_project->transport($data);
             $dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
             $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
-            print_r("allooooo"); exit;
+           
             if($res) {
                 if($data->transport == 1) { $transport_sum = $this->margin1($res->transport * $distance_col, $margin);
                 $transport_sum_1 = $res->transport * $distance_col;
