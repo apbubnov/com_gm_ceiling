@@ -274,7 +274,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     type: "success",
                     text: data
                 });
-                setInterval(function() { location.reload();}, 1500);
+
 
             },
             dataType: "text",
@@ -346,16 +346,19 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     addId: '#idCalcDelete',
 					addClass: 'btn-danger', //Button Classes (btn-large | btn-small | btn-green | btn-light-green | btn-purple | btn-orange | btn-pink | btn-turquoise | btn-blue | btn-light-blue | btn-light-red | btn-red | btn-yellow | btn-white | btn-black | btn-rounded | btn-circle | btn-square | btn-disabled)
 					onClick: function(dialog) {
-					    //alert(td.data("project_id"));
+                        var input_value = jQuery("#input_check").val();
+                        var input_mounting = jQuery("#input_mounting").val();
+                        var input_mounting_itog = jQuery("#input_mounting_itog").val();
+                        var input_material = jQuery("#input_material").val();
                         var check = jQuery("input[name='check_mount']:checked").val();
+
+                        //Просчет прибыли
+
+
                         if (check == undefined) { check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
                         else if (check == 1){ check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
                         else { check = 0;
-                            var input_value = jQuery("#input_check").val();
-                            var input_mounting = jQuery("#input_mounting").val();
-                            var input_mounting_itog = jQuery("#input_mounting_itog").val();
-                            var input_material = jQuery("#input_material").val();
-                            var check = jQuery("input[name='check_mount']:checked").val();
+
                             if (check == undefined) { check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
                             else if (check == 1){ check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
                             else check = 0;
