@@ -132,7 +132,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->select('dealer.name AS dealer_name')
                 ->join('LEFT', '`#__users` as dealer ON dealer.id = client.dealer_id');
 
-            $query->select('client.client_name AS client_name')
+            $query->select('client.client_name AS client_name, dealer_id')
                 ->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id');
 
             $query->select(' client_contact.phone AS client_contacts')
