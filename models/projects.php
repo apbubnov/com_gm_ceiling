@@ -111,7 +111,6 @@ class Gm_ceilingModelProjects extends JModelList
     {
         try
         {
-            throw new Exception("Error Processing Request", 1);
             // Create a new query object.
             $db = $this->getDbo();
             $query = $db->getQuery(true);
