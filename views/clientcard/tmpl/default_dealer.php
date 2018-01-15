@@ -189,10 +189,10 @@
     <div id="modal-window-1-tar">
         <p><strong>Создание нового клиента</strong></p>
         <p>ФИО:</p>
-        <input type="text" id="fio_client">
+        <p><input type="text" id="fio_client"></p>
         <p>Номер телефона:</p>
-        <input type="text" id="phone_client">
-        <button type="button" id="save_client">ОК</button>
+        <p><input type="text" id="phone_client"></p>
+        <p><button type="button" id="save_client" class="btn btn-primary">ОК</button></p>
     </div>
 </div>
 
@@ -227,6 +227,7 @@
             jQuery("#modal-window-1-tar").hide();
         }
     });
+
     jQuery("#new_client").click(function(){
         jQuery("#close4-tar").show();
 		jQuery("#modal-window-container").show();
