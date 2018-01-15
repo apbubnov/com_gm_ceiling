@@ -19,23 +19,24 @@ $year = date("Y");
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <button type = "button" id = "add" class = "btn btn-primary">Инкассация</button>
-    <br>
-    <button type= "button" class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-    <select id = "month" class="inputactive">
-        <option value = "1">Январь</option>
-        <option value = "2">Февраль</option>
-        <option value = "3">Март</option>
-        <option value = "4">Апрель</option>
-        <option value = "5">Май</option>
-        <option value = "6">Июнь</option>
-        <option value = "7">Июль</option>
-        <option value = "8">Август</option>
-        <option value = "9">Сентябрь</option>
-        <option value = "10">Октябрь</option>
-        <option value = "11">Ноябрь</option>
-        <option value = "12">Декабрь</option>
-    </select><label id = "year"><?php echo $year?></label>
-    <button  type= "button"\ class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+    <div style="display:block;position: absolute; right:0px">
+        <button type= "button" class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+        <select id = "month">
+            <option value = "1">Январь</option>
+            <option value = "2">Февраль</option>
+            <option value = "3">Март</option>
+            <option value = "4">Апрель</option>
+            <option value = "5">Май</option>
+            <option value = "6">Июнь</option>
+            <option value = "7">Июль</option>
+            <option value = "8">Август</option>
+            <option value = "9">Сентябрь</option>
+            <option value = "10">Октябрь</option>
+            <option value = "11">Ноябрь</option>
+            <option value = "12">Декабрь</option>
+        </select><label id = "year"><?php echo $year?></label>
+        <button  type= "button"\ class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+    </div>
     <div id="modal_window_container" class = "modal_window_container">
 		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal_window_sum" class = "modal_window">
