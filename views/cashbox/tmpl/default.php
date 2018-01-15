@@ -247,7 +247,8 @@ $year = date("Y");
             }
             month_old = month;
             year_old = year;
-            update_month_year(month,year);            
+            update_month_year(month,year);  
+            console.log(month,year);          
         });
         jQuery("#prev").click(function () {
             month = <?php echo $month; ?>;
@@ -265,6 +266,7 @@ $year = date("Y");
             month_old = month;
             year_old = year;
             update_month_year(month,year);
+            console.log(month,year);
         });
         
     });
