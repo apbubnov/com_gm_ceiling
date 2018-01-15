@@ -1499,7 +1499,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
                                     var timesession = jQuery("#jform_new_project_calculation_daypart").val();
                                     var gaugersession = jQuery("#jform_project_gauger").val();
-                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == gaugersession) {
+                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
                                         TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                                     } else {
                                         TableForSelect += '<tr><td></td>';
