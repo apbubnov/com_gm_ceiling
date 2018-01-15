@@ -33,7 +33,7 @@ $year = date("Y");
         <option value = 9>Октябрь</option>
         <option value = 10>Ноябрь</option>
         <option value = 11>Декабрь</option>
-    </select> <label class = "inputactive"><?php echo $year?></label>
+    </select><label class = "inputactive" id = "year"><?php echo $year?></label>
     <button class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
     <div id="modal_window_container" class = "modal_window_container">
 		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -247,7 +247,8 @@ $year = date("Y");
             }
             month_old = month;
             year_old = year;
-            update_month_year(month,year);            
+            update_month_year(month,year);  
+            console.log(month,year);          
         });
         jQuery("#prev").click(function () {
             month = <?php echo $month; ?>;
@@ -265,6 +266,7 @@ $year = date("Y");
             month_old = month;
             year_old = year;
             update_month_year(month,year);
+            console.log(month,year);
         });
         
     });
