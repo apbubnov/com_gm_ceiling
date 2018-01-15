@@ -417,14 +417,6 @@ class Gm_ceilingModelProjectForm extends JModelForm
 			}
 			
 			$groups = $user->get('groups');
-			
-			/*if(empty($data['owner'])) {
-				if(isset($user->dealer_id)) {
-					$data['owner'] = $user->dealer_id;
-				} else {
-					$data['owner'] = 2;
-				}
-			}*/
 
 			$table = $this->getTable();
 			if ($table->save($data) === true)
