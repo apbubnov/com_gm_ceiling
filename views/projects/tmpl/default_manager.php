@@ -65,7 +65,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		<tbody>
 			<?php foreach ($this->items as $i => $item) : ?>
 				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-				<?php $dealer = JFactory::getUser($item->owner); ?>
 				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
 					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 				<?php endif; ?>
