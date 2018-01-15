@@ -109,10 +109,7 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
     public function getCalendar()
     {
         $app = JFactory::getApplication();
-        $month = $app->input->get('month', null, 'int');
-        die(json_encode((empty($month))
-            ?(object) ["status" => "error"]
-            :(object) ["status" => "success", "calendar" => Gm_ceilingHelpersGm_ceiling::LiteCalendar($month)]
-        ));
+        $month = $app->input->get('month', 0, 'int');
+        die(json_encode((object) ["status" => "success", "calendar" => Gm_ceilingHelpersGm_ceiling::LiteCalendar($month)]));
     }
 }

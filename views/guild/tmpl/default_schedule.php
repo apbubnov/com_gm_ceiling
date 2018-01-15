@@ -73,14 +73,10 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
         element = $(element);
 
         var val = parseInt(element.val()),
-            calendars = $(".Calendars .block .CalBlock"),
+            calendars = $(".Calendars .Block .CalBlock"),
             calendarFirst = calendars.find(".Calendar:first-child"),
             calendarLast = calendars.find(".Calendar:last-child"),
             diff = (parseInt(((val < 0)?calendarFirst:calendarLast).attr("diff"))) + val;
-
-        console.log(val);
-        console.log(calendarFirst);
-        console.log(calendarLast);
 
         jQuery.ajax({
             type: 'POST',
