@@ -124,7 +124,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('a.project_info AS address')
 
                 ->select('client.dealer_id')
-                ->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id');
+                ->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id')
 
                 ->from('`#__gm_ceiling_projects` AS a')
                 ->where('a.state = 1')
@@ -135,7 +135,7 @@ class Gm_ceilingModelProjects extends JModelList
 
             $query->select('client.client_name AS client_name')//, client.dealer_id, client.id
                 //->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id');
-
+;
             $query->select('dealer.name AS dealer_name')
                 ->join('LEFT', '`#__users` as dealer ON dealer.id = client.dealer_id');
 
