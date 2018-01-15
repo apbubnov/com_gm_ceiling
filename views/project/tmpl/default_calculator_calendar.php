@@ -2061,6 +2061,7 @@ var $ = jQuery;
                 jQuery("#title").hide();
                 jQuery(".calendar_wrapper").hide();
                 jQuery(".buttons_wrapper").hide();
+                jQuery("#project_activation").hide();
                 $tmp_accept = 0;
             }
             
