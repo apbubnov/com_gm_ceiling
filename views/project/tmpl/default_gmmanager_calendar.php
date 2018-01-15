@@ -1575,13 +1575,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 }
             });
             //если сессия есть, то выдать время, которое записано в сессии
-            console.log(datesession);
-            console.log(date);
             if (date == datesession.substr(0, 10)) {
                 var timesession = jQuery("#jform_new_project_calculation_daypart").val();
                 var gaugersession = jQuery("#jform_project_gauger").val();
-                console.log(timesession);
-                console.log(gaugersession);
                 setTimeout(function() { 
                     var times = jQuery("input[name='choose_time_gauger']");
                     if (timesession != undefined) {
