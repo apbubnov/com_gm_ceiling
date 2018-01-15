@@ -2648,6 +2648,24 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+    public function getCashboxByMonth(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $month = $jinput->get('month','','STRING');
+            $year = $jinput->get('year','','INT');
+            $date1 = date("$year-$month-01");
+            $date2 = date("$year-$month-t");
+            $cashbox_model = Gm_ceilingHelpersGm_ceiling::getModel('Cashbox');
+            $result  = $cashbox_model->getData($date1,$date2);
+            die(json_encode($result));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 
 }
 
