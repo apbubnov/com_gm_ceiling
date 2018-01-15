@@ -97,7 +97,8 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
 <link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/schedule.css">
 
 <script type="text/javascript">
-    var $ = jQuery;
+    var $ = jQuery,
+        Data = {};
 
     $(document).ready(Init);
 
@@ -108,6 +109,11 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
         var calendars = $(".Calendars"),
             button = calendars.find(".button");
         button.attr("onclick", "ButtomCalendarClick(this);");
+
+        Data.Modal = $(".ModalCalendar");
+        Data.ModalDay = Data.Modal.find(".ModalDay");
+
+        Data.ModalDay.find(".ButtomAdd").attr("onclick", "showAddForm(this);");
 
         InitCalendarFunction();
     }
@@ -183,9 +189,20 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
         ModalDay.show();
     }
 
+    function showAddForm(button) {
+        button = $(button);
+        var form = button.siblings(".AddEmployeeForm");
+
+        button.hide();
+        form.css("display","inline-block");
+    }
+
     function hideModalCalendar() {
-        $(".ModalCalendar").hide();
-        $(".ModalCalendar>div:not(.Dark)").hide();
+        Data.Modal.hide();
+
+        Data.ModalDay.hide();
+        Data.ModalDay.find(".ButtomAdd").css("display","inline-block");
+        Data.ModalDay.find(".AddEmployeeForm").hide();
     }
 
 </script>
