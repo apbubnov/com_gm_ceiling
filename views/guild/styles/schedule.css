@@ -120,11 +120,12 @@ h1
 {
     position: absolute;
     top: 15px;
-    left: calc(50vw - 225px);
-    width: 450px;
+    left: calc(50vw - 150px);
+    width: 300px;
     display: none;
     background-color: #FFFFFF;
     box-shadow: inset 0 0 0 1px #4e4cb7;
+    overflow-y: auto;
 }
 
 .ModalCalendar .ModalDay .Title
@@ -142,19 +143,97 @@ h1
 .ModalCalendar .ModalDay .Add
 {
     width: 100%;
-    padding: 15px;
+    padding: 7px;
     display: inline-block;
 }
 
 .ModalCalendar .ModalDay .Add .ButtomAdd
 {
     width: 100%;
-    height: 20px;
+    height: 30px;
+    line-height: 30px;
     background-color: #4e4cb7;
     color: #FFFFFF;
     font-size: 16px;
     text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
 }
+
+.ModalCalendar .ModalDay .Add .AddEmployeeForm
+{
+    width: 100%;
+    background-color: #4e4cb7;
+    color: #FFFFFF;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.ModalCalendar .ModalDay .Add .AddEmployeeForm .Line
+{
+    background-color: transparent;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    float: left;
+}
+
+.ModalCalendar .ModalDay .Add .AddEmployeeForm .Line .Name
+{
+    width: 30%;
+    height: 40px;
+    text-align: left;
+    padding: 0 10px;
+    float: left;
+}
+
+.ModalCalendar .ModalDay .Add .AddEmployeeForm .Line select
+{
+    background-color: #FFFFFF;
+    color: #000000;
+    border-radius: 3px;
+    border: none;
+    padding: 0 10px;
+    width: 65%;
+    vertical-align: middle;
+}
+
+.ModalCalendar .ModalDay .Add .AddEmployeeForm .Line .Time select
+{
+    width: 30%;
+}
+
+.ModalCalendar .ModalDay .Add .AddEmployeeForm .Line .Time select:first-child
+{
+    margin-right: 10px;
+}
+
+.ModalCalendar .ModalDay .Add .AddEmployeeForm .Line:last-child
+{
+    margin-top: 10px;
+}
+
+.ModalCalendar .ModalDay .Add .AddEmployeeForm .Line button
+{
+    width: calc(69% - 10px);
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    background-color: #FFFFFF;
+    color: #000000;
+    float: left;
+    margin: 0 1% 0 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.ModalCalendar .ModalDay .Add .AddEmployeeForm .Line button:last-child
+{
+    width: calc(28% - 10px);
+    margin: 0 0 0 1%;
+}
+
 
 @media (max-width: 1200px) {
     .Calendars .Calendar {
