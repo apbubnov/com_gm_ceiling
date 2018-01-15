@@ -104,8 +104,9 @@
 </div>
 
 <br>
-
-<button type="button" id="new_client" class="btn btn-primary">Создать клиента</button>
+<div style="width: 100%; text-align: center;">
+    <button type="button" id="new_client" class="btn btn-primary">Создать клиента</button>
+</div>
 
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
