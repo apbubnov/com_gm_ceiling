@@ -345,7 +345,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
              var input_value = jQuery("#input_check").val();
              var input_mounting = jQuery("#input_mounting").val();
              var input_material = jQuery("#input_material").val();*/
-            alert(new_project_sum);
 			modal({
 				type: 'primary',
 				title: subject,
@@ -364,6 +363,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var input_material = jQuery("#input_material").val();
                         var check = jQuery("input[name='check_mount']:checked").val();
                         //Просчет прибыли
+                        new_project_sum = (new_project_sum === "")?0:new_project_sum;
                         var profit = parseFloat(new_project_sum) + parseFloat(input_value) - parseFloat(cost_price); 
                         alert(new_project_sum + " ------- " + profit);
                         if (profit < 0 && (check == undefined || check == 1)) 
