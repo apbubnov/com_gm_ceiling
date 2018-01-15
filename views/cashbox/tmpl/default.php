@@ -274,6 +274,7 @@ $year = date("Y");
     function update_month_year(month,year){
         jQuery("#month option").each(function()
         {
+            console.log(jQuery(this));
             if(jQuery(this).val()==month){
                 jQuery(this).attr("selected",true);
             }
