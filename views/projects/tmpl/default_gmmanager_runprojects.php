@@ -277,7 +277,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 check: check
             },
             success: function(data){
-                if(check == 1) button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
+                button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
                 var n = noty({
                     theme: 'relax',
                     layout: 'center',
