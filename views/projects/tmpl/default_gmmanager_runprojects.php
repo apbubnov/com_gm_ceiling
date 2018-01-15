@@ -249,6 +249,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     }
 
     function click_ok(id) {
+
+        
         var project_id = id;
         //td = jQuery( this );
         //var project_id =  td.data("project_id");
@@ -257,8 +259,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         var input_mounting_itog = jQuery("#input_mounting_itog").val();
         var input_material = jQuery("#input_material").val();
         var check = jQuery("input[name='check_mount']:checked").val();
-        if (check == undefined) { check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
-        else if (check == 1){ check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
+        if (check == undefined) { check = 1; }
+        else if (check == 1){ check = 1;}
         else check = 0;
 
         //alert(input_value);
@@ -363,13 +365,16 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var input_material = jQuery("#input_material").val();
                         var check = jQuery("input[name='check_mount']:checked").val();
                         //Просчет прибыли
+                        new_project_sum = (new_project_sum === "")?0:new_project_sum;
+                        input_value = (input_value === "")?0:input_value;
+                        cost_price = (cost_price === "")?0:cost_price;
                         var profit = parseFloat(new_project_sum) + parseFloat(input_value) - parseFloat(cost_price); 
-                        alert(profit);
+                        //alert(new_project_sum + " ------- " + profit);
                         if (profit < 0 && (check == undefined || check == 1)) 
                         {
-                            check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();
-                            //if (check == undefined) { check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
-                        //else if (check == 1){ check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
+                            //check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();
+                            if (check == undefined) { check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
+                        else if (check == 1){ check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
                         }
                         else { 
                             
