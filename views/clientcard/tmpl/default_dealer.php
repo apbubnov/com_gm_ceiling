@@ -19,6 +19,13 @@
     $client = $client_model->getClientById($this->item->id);
     $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
     $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
+    $dealer = JFactory::getUser($client->dealer_id);
+    if ($dealer->associated_client != $this->item->id)
+    {
+        JRoute::_('/index.php?option=com_gm_ceiling&view=clientcard&id='.$this->item->id, false);
+        exit();
+    }
+    
     
     if(!empty($client->manager_id)){
         $manager_name = JFactory::getUser($client->manager_id)->name;
