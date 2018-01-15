@@ -1469,27 +1469,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     };
                     AllGauger = <?php echo json_encode($AllGauger); ?>;
                     data = JSON.parse(data); // замеры
+                    console.log(data);
                     AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                     var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
-                    /* AllTime.forEach( elementTime => {
-                        var t = elementTime.substr(0, 2);
-                        t++;
-                        Array.from(AllGauger).forEach(function(elementGauger) {
-                            TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                            TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-                            var emptytd = 0;
-                            Array.from(data).forEach(function(elementProject) {
-                                if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                    TableForSelect += '<td>'+elementProject.project_info+'</td>';
-                                    emptytd = 1;
-                                }
-                            });
-                            if (emptytd == 0) {
-                                TableForSelect += '<td></td>';
-                            }
-                            TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
-                        });
-                    }); */
                     AllTime.forEach( elementTime => {
                         var t = elementTime.substr(0, 2);
                         t++;
