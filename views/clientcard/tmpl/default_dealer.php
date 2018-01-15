@@ -187,12 +187,14 @@
 <div id="modal-window-container">
     <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal-window-1-tar">
-        <p><strong>Создание нового клиента</strong></p>
-        <p>ФИО:</p>
-        <p><input type="text" id="fio_client"></p>
-        <p>Номер телефона:</p>
-        <p><input type="text" id="phone_client"></p>
-        <p><button type="button" id="save_client" class="btn btn-primary">ОК</button></p>
+        <form method="post" enctype="multipart/form-data">
+            <p><strong>Создание нового клиента</strong></p>
+            <p>ФИО:</p>
+            <p><input type="text" id="fio_client" name="jform[client_name]"></p>
+            <p>Номер телефона:</p>
+            <p><input type="text" id="phone_client" name="jform[client_contacts]"></p>
+            <p><button type="submit" id="save_client" class="btn btn-primary">ОК</button></p>
+        </form>
     </div>
 </div>
 
