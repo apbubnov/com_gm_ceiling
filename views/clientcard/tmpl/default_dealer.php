@@ -107,6 +107,7 @@
 <div style="width: 100%; text-align: center;">
     <button type="button" id="new_client" class="btn btn-primary">Создать клиента</button>
 </div>
+<br>
 
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
@@ -188,9 +189,10 @@
     <div id="modal-window-1-tar">
         <p><strong>Создание нового клиента</strong></p>
         <p>ФИО:</p>
-        <input type="text" id="">
+        <input type="text" id="fio_client">
         <p>Номер телефона:</p>
-        <input type="text" id="">
+        <input type="text" id="phone_client">
+        <button type="button" id="save_client">ОК</button>
     </div>
 </div>
 
@@ -217,7 +219,21 @@
             jQuery("#modal-window-container3-tar").hide();
             jQuery("#modal-window-registration-tar").hide();
         }
+        var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+        if (!div3.is(e.target) // если клик был не по нашему блоку
+            && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close4-tar").hide();
+            jQuery("#modal-window-container").hide();
+            jQuery("#modal-window-1-tar").hide();
+        }
     });
+    jQuery("#new_client").click(function(){
+        jQuery("#close4-tar").show();
+		jQuery("#modal-window-container").show();
+		jQuery("#modal-window-1-tar").show("slow");
+    });
+
+
     jQuery("#cancel").click(function(){
         jQuery("#close-tar").hide();
 		jQuery("#modal-window-container-tar").hide();
