@@ -20,7 +20,7 @@ $year = date("Y");
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <button type = "button" id = "add" class = "btn btn-primary">Инкассация</button>
     <br>
-    <button class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+    <button type= "button" class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
     <select id = "mounth" class="inputactive">
         <option value = "0">Январь</option>
         <option value = "1">Февраль</option>
@@ -35,7 +35,7 @@ $year = date("Y");
         <option value = "10">Ноябрь</option>
         <option value = "11">Декабрь</option>
     </select><label id = "year"><?php echo $year?></label>
-    <button class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+    <button  type= "button" class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
     <div id="modal_window_container" class = "modal_window_container">
 		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal_window_sum" class = "modal_window">
