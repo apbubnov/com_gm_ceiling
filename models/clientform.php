@@ -380,7 +380,7 @@ class Gm_ceilingModelClientForm extends JModelForm
 			}
 			
 			$groups = $user->get('groups');
-			
+			throw new Exception($data['dealer_id']);
 			if(empty($data['dealer_id'])) {
 				if(isset($user->dealer_id)) {
 					$data['dealer_id'] = $user->dealer_id;
