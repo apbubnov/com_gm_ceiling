@@ -581,7 +581,7 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    public function updateDealerId($client_id,$dealer_id,$project_id=null)
+    /*public function updateDealerId($client_id,$dealer_id,$project_id=null)
     {
         try
         {
@@ -607,7 +607,7 @@ class Gm_ceilingModelProjects extends JModelList
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }
+    }*/
     /**
      * Overrides the default function to check Date fields format, identified by
      * "_dateformat" suffix, and erases the field if it's not correct.
@@ -676,7 +676,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query = $db->getQuery(true);
 
             $query->from('`#__gm_ceiling_projects` AS project')
-                ->select('project.id as id, project.project_info as name, project.dealer_id as dealer_id, project.client_id as client_id, project.created as created');
+                ->select('project.id as id, project.project_info as name, client.dealer_id as dealer_id, project.client_id as client_id, project.created as created');
             if ($type == "Stock") $query->where('project.project_status IN (5, 6, 19)');
             else if ($type == "Guild") $query->where('project.project_status IN (5, 7)');
             $query->join("LEFT","`#__gm_ceiling_status` as s ON s.id = project.project_status")
