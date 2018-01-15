@@ -1197,7 +1197,7 @@ $results = $db->loadObjectList();
                         <input id ="jform_project_mounting_to" name="jform_project_mounting_to" value="" type='hidden'>
                         <input  id ="project_sum" name="project_sum" value="<?php// echo $project_total_discount ?>" type="hidden">
                 </div>-->
-    <div class="project_activation" style="display: none;">
+    <div class="project_activation" style="display: none;" id="project_activation">
         <?php if ($user->dealer_type != 2) { ?>
         <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">
             Примечание к договору
@@ -1953,22 +1953,59 @@ $results = $db->loadObjectList();
             //jQuery("#project_sum").val(<?php //echo $project_total_discount?>);
         });
 
+        $tmp_accept = 0; $tmp_refuse = 0;
         jQuery("#accept_project").click(function () {
             jQuery("input[name='project_verdict']").val(1);
-            jQuery(".project_activation").toggle();
-            jQuery("#mounter_wraper").toggle();
-            jQuery("#title").toggle();
-            jQuery(".calendar_wrapper").toggle();
-            jQuery(".buttons_wrapper").toggle();
-            jQuery("#mounting_date_control").show();
+            
+            if($tmp_accept == 0) {
+                
+                jQuery("#mounter_wraper").show();
+                jQuery("#title").show();
+                jQuery(".calendar_wrapper").show();
+                jQuery(".buttons_wrapper").show();
+                jQuery(".project_activation").hide();
+                jQuery("#refuse").hide();
+                jQuery("#project_activation").show();
+                $tmp_accept = 1;
+                $tmp_refuse = 0;
+            } else {
+                jQuery(".project_activation").hide();
+                jQuery("#mounter_wraper").hide();
+                jQuery("#title").hide();
+                jQuery(".calendar_wrapper").hide();
+                jQuery(".buttons_wrapper").hide();
+                jQuery("#project_activation").hide();
+                $tmp_accept = 0;
+                $tmp_refuse = 0;
+            }
+            
+            setTimeout(() => {
+                window.location = "#project_activation";
+            }, 100); 
         });
-
         jQuery("#refuse_project").click(function () {
             jQuery("input[name='project_verdict']").val(0);
-            jQuery(".project_activation").toggle();
-            jQuery("#refuse").toggle();
-            jQuery("#mounting_date_control").hide();
+            if($tmp_refuse == 0) {
+                jQuery(".project_activation").show();
+                jQuery("#refuse").show();
+                jQuery("#mounter_wraper").hide();
+                jQuery("#title").hide();
+                jQuery(".calendar_wrapper").hide();
+                jQuery(".buttons_wrapper").hide();
+                jQuery("#mounting_date_control").hide();
+                $tmp_refuse = 1;
+                $tmp_accept = 0;
+            } else {
+                jQuery(".project_activation").hide();
+                jQuery("#refuse").hide();
+                $tmp_refuse = 0;
+                $tmp_accept = 0;
+            }
+            //jQuery(".project_activation").toggle();
+            //jQuery("#refuse").toggle();
+           // 
         });
+
         jQuery("#accept_changes").click(function () {
             jQuery("input[name='data_change']").val(1);
         });
