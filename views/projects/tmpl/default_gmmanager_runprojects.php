@@ -99,21 +99,26 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         <?php echo $item->id;
 
                             $calculations = $model->new_getProjectItems($item->id);
-                            $mounting_sum = 0; $material_sum = 0;
+                            $mounting_sum = 0; $material_sum = 0; $cost_price = 0;
                             foreach ($calculations as $calculation) {
                                 $calculation->dealer_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
                                 $calculation->dealer_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
                                 $calculation->dealer_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
                                 $mounting_sum += $calculation->dealer_gm_mounting_sum;
                                 $material_sum += $calculation->dealer_components_sum + $calculation->dealer_canvases_sum;
+                                $cost_price += $mounting_sum + $material_sum;
                                 }
-                                $sum_transport = 0;  $sum_transport_discount = 0;
+                                $sum_transport = 0;  $sum_transport_discount = 0; $sum_transport_cost = 0;
                                 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
                                 $mount_transport = $mountModel->getDataAll();
 
-                                if($item->transport == 0 ) $sum_transport = 0;
-                                if($item->transport == 1 ) $sum_transport = margin($mount_transport->transport * $item->distance_col, $item->gm_mounting_margin);
-                                if($item->transport == 2 ) $sum_transport = ($mount_transport->distance * $item->distance + $mount_transport->transport) * $item->distance_col;
+                                if($item->transport == 0 ) { $sum_transport = 0; $sum_transport_cost = 0;} 
+                                if($item->transport == 1 ) { 
+                                    $sum_transport = margin($mount_transport->transport * $item->distance_col, $item->gm_mounting_margin); 
+                                    $sum_transport_cost = $mount_transport->transport * $item->distance_col; } 
+                                if($item->transport == 2 ) { 
+                                    $sum_transport = ($mount_transport->distance * $item->distance + $mount_transport->transport) * $item->distance_col;
+                                    $sum_transport_cost = $sum_transport; }
                                 if($item->transport == 1) {
                                      $min = 100;
                                     foreach($calculations as $d) {
@@ -124,7 +129,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                         $sum_transport = margin($mount_transport->transport, $item->gm_mounting_margin);
                                     }
                                 }
-
+                                $cost_price = $cost_price + $sum_transport_cost;
+                                
                                 $temp = 0;
                                 if($item->check_mount_done == 0) { 
                                     $temp = ($item->new_mount_sum)? $item->new_mount_sum: ($mounting_sum + $sum_transport);
@@ -136,7 +142,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                     <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($temp <= 0)?0:round($temp, 2); ?>"  hidden>
                                     <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($temp_material_sum <= 0)?0:round($temp_material_sum,2); ?>"  hidden>
                                 
-                                <?}
+                                <? }
                                 if($item->check_mount_done == 1) { ?>
                                     <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
                                     <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
@@ -144,8 +150,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 <?}
 
                             ?>
-
-                         
+                            <input id="<?= $item->id; ?>_cost_price" value="<?php echo $cost_price; ?>"  hidden>
+                            <input id="<?= $item->id; ?>_new_project_sum" value="<?php echo $item->new_project_sum; ?>"  hidden>
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->status; ?>
@@ -309,6 +315,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 			var type = "info",
 				value = td.data("value"),
 				//new_value = input.data("new_value");
+                cost_price = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_cost_price").val(),
+                new_project_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_new_project_sum").val(),
                 status = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_status").val(),
                 new_value = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_project_sum").val(),
                 mouting_sum = jQuery(this).closest("tr").find("#"+td.data("project_id")+"_mounting_sum").val(),
@@ -351,13 +359,18 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var input_mounting_itog = jQuery("#input_mounting_itog").val();
                         var input_material = jQuery("#input_material").val();
                         var check = jQuery("input[name='check_mount']:checked").val();
-
                         //Просчет прибыли
-
-
-                        if (check == undefined) { check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
-                        else if (check == 1){ check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
-                        else { check = 0;
+                        var profit = parseFloat(new_project_sum) + parseFloat(input_value) - parseFloat(cost_price); 
+                        alert(profit);
+                        if (profit < 0 && (check == undefined || check == 1)) 
+                        {
+                            check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();
+                            //if (check == undefined) { check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
+                        //else if (check == 1){ check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
+                        }
+                        else { 
+                            
+                            //check = 0;
 
                             if (check == undefined) { check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
                             else if (check == 1){ check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
@@ -384,7 +397,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                         type: "success",
                                         text: data
                                     });
-                                    setInterval(function() { location.reload();}, 1500);
+                                    if(check == 0) setInterval(function() { location.reload();}, 1500);
 
                                 },
                                 dataType: "text",
@@ -408,7 +421,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         mouting_sum = jQuery("#input_mounting").val();
                         material_sum = jQuery("#input_material").val();*/
 
-					}
+					
+                    }
+                        
 				},
                 {addClass: 'btn', text: 'Отмена', onClick: function($noty) {
 							$noty.close();

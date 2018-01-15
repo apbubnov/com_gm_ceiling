@@ -898,7 +898,8 @@ class Gm_ceilingModelCalculations extends JModelList {
 
             $query->select("projects.project_mounter, projects.project_mounting_date, projects.project_info, ($query2) as n5")
                 ->from('#__gm_ceiling_projects as projects')
-                ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and projects.dealer_id = '$dealer'")
+                ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and clients.dealer_id = '$dealer'")
                 ->order('projects.id');
             $db->setQuery($query);
             $items = $db->loadObjectList();
@@ -978,9 +979,10 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            $query->select('project_info, project_calculation_date, project_calculator')
-                ->from('`#__gm_ceiling_projects`')
-                ->where("project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and dealer_id = '$dealer'");
+            $query->select('projects.project_info, projects.project_calculation_date, projects.project_calculator')
+                ->from('#__gm_ceiling_projects as projects')
+                ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                ->where("projects.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and clients.dealer_id = '$dealer'");
             $db->setQuery($query);
 
             $items = $db->loadObjectList();

@@ -1532,12 +1532,13 @@ class Gm_ceilingModelProject extends JModelItem
 			
 			$query = $db->getQuery(true);
 			$query
-				->select('a.dealer_id')
+				->select('a.client_id, c.dealer_id')
 				->from('#__gm_ceiling_projects AS a')
+				->join("LEFT","`#__gm_ceiling_clients` as c on c.id = a.client_id")
 				->where('a.id = ' . $data->id);
 			$db->setQuery($query);
 			$results = $db->loadObject();
-
+			if(empty($results->dealer_id)) $results->dealer_id = 1;
 			$query = $db->getQuery(true);
 			$query
 				->select('m.*')

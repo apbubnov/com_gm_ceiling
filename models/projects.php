@@ -130,9 +130,9 @@ class Gm_ceilingModelProjects extends JModelList
                 ->join('LEFT', '`#__gm_ceiling_status` AS status ON status.id = a.project_status');
 
             $query->select('dealer.name AS dealer_name')
-                ->join('LEFT', '`#__users` dealer ON dealer.id = a.dealer_id');
+                ->join('LEFT', '`#__users` as dealer ON dealer.id = client.dealer_id');
 
-            $query->select('client.client_name AS client_name')
+            $query->select('client.client_name AS client_name, dealer_id')
                 ->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id');
 
             $query->select(' client_contact.phone AS client_contacts')
@@ -171,13 +171,13 @@ class Gm_ceilingModelProjects extends JModelList
 
             if ($type == "managerprojects") {
                 $query->where('a.project_status = 3');
-                $query->where('a.dealer_id = ' . $user->dealer_id);
+                $query->where('client.dealer_id = ' . $user->dealer_id);
             } elseif ($type == "chiefprojects") {
                 $query->where('a.project_status = 5');
-                $query->where('a.dealer_id = ' . $user->dealer_id);
+                $query->where('client.dealer_id = ' . $user->dealer_id);
             } elseif ($type == "calculatorprojects") {
                 $query->where('a.project_status = 1');
-                $query->where('a.dealer_id = ' . $user->dealer_id);
+                $query->where('client.dealer_id = ' . $user->dealer_id);
             } elseif ($type == "gmmanager" && $subtype == "runprojects") {
                 $query->where('a.project_status in (10,11, 16, 17)');
             } elseif ($type == "gmmanager" && $subtype == "archive") {
@@ -188,7 +188,7 @@ class Gm_ceilingModelProjects extends JModelList
                 $query->where('a.project_status = 5 or a.project_status = 4');
                 $query->where('a.project_verdict  = 1');
             }  elseif ($type == "manager") {
-                $query->where('a.dealer_id = ' . $user->dealer_id);
+                $query->where('client.dealer_id = ' . $user->dealer_id);
                 if ($subtype == "refused") {
                     $query->where('a.project_verdict = 0');
                 } else {
@@ -214,7 +214,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('a.project_verdict = 0');
                 }
             } elseif ($type == "calculator") {
-                $query->where('a.dealer_id = ' . $user->dealer_id);
+                $query->where('client.dealer_id = ' . $user->dealer_id);
                 if ($subtype == "calendar") {
                     $query->where('a.project_status = 1');
                     $query->order('a.project_calculation_date');
@@ -226,9 +226,9 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('a.project_verdict = 0');
                 }
             } elseif ($type == "dealer") {
-                $query->where('( a.dealer_id = ' . $user->id . ' OR a.dealer_id = ' . $user->dealer_id . ')');
+                $query->where('( client.dealer_id = ' . $user->id . ' OR client.dealer_id = ' . $user->dealer_id . ')');
             } else {
-                $query->where('a.dealer_id = -1');
+                $query->where('client.dealer_id = -1');
             }
 
             /*
@@ -291,10 +291,12 @@ class Gm_ceilingModelProjects extends JModelList
                 } else {
                     $who = "'1', '0'";
                 }
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
-                    ->where("project_status = '1' and who_calculate in ($who) and dealer_id = '$user->dealer_id'");
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                    ->where("projects.project_status = '1' and projects.who_calculate in ($who) and clients.dealer_id = '$user->dealer_id'");
             } else
+
             // НМС (монтажи)
             if ($status == "Mountings") {
                 if ($user->dealer_id == 1) {
@@ -302,9 +304,10 @@ class Gm_ceilingModelProjects extends JModelList
                 } else {
                     $dealer = $user->dealer_id;
                 }
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
-                    ->where("project_status in ('5', '6', '7', '8', '10', '11', '16', '17') and dealer_id = '$dealer'");
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                    ->where("projects.project_status in ('5', '6', '7', '8', '10', '11', '16', '17') and clients.dealer_id = '$dealer'");
             } else
             if ($status == "ComplitedMountings") {
                 if ($user->dealer_id == 1) {
@@ -312,9 +315,10 @@ class Gm_ceilingModelProjects extends JModelList
                 } else {
                     $dealer = $user->dealer_id;
                 }
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
-                    ->where("project_status = '11' and dealer_id = '$dealer' and read_by_chief = '0'");
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                    ->where("projects.project_status = '11' and clients.dealer_id = '$dealer' and projects.read_by_chief = '0'");
             } else
             // менеджер (в производстве) 
             if ($status == "InProduction") {
@@ -577,7 +581,7 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    public function updateDealerId($client_id,$dealer_id,$project_id=null)
+    /*public function updateDealerId($client_id,$dealer_id,$project_id=null)
     {
         try
         {
@@ -603,7 +607,7 @@ class Gm_ceilingModelProjects extends JModelList
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }
+    }*/
     /**
      * Overrides the default function to check Date fields format, identified by
      * "_dateformat" suffix, and erases the field if it's not correct.
@@ -672,7 +676,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query = $db->getQuery(true);
 
             $query->from('`#__gm_ceiling_projects` AS project')
-                ->select('project.id as id, project.project_info as name, project.dealer_id as dealer_id, project.client_id as client_id, project.created as created');
+                ->select('project.id as id, project.project_info as name, client.dealer_id as dealer_id, project.client_id as client_id, project.created as created');
             if ($type == "Stock") $query->where('project.project_status IN (5, 6, 19)');
             else if ($type == "Guild") $query->where('project.project_status IN (5, 7)');
             $query->join("LEFT","`#__gm_ceiling_status` as s ON s.id = project.project_status")
