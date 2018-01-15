@@ -163,22 +163,25 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
                     
                    
                 }
-            $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
-            $html .= '<table border="0" cellspacing="0" width="100%">
-			<tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
-            //написать модель, которая будет возвращать данные о калькуляции
-            foreach ($calculation as $calc) {
-                $html .= '<tr>';
-                $html .= '<td>' . $calc->calculation_title . '</td>';
-                $html .= '<td class="center">' . $calc->n4 . '</td>';
-                $html .= '<td class="center">' . $calc->n5 . '</td>';
-                $html .= '<td class="center">' . $calc->mounting_sum . '</td>';
-                $html .= '</tr>';
-                $sum_1 += $calc->mounting_sum;
-            }
-            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum_1 . '</th></tr>';
-            $html .= '</tbody></table><p>&nbsp;</p><br>';
+            if(!empty($calculation)) {
+                $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
+                $html .= '<table border="0" cellspacing="0" width="100%">
+                <tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
+                //написать модель, которая будет возвращать данные о калькуляции
+                foreach ($calculation as $calc) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $calc->calculation_title . '</td>';
+                    $html .= '<td class="center">' . $calc->n4 . '</td>';
+                    $html .= '<td class="center">' . $calc->n5 . '</td>';
+                    $html .= '<td class="center">' . $calc->mounting_sum . '</td>';
+                    $html .= '</tr>';
+                    $sum_1 += $calc->mounting_sum;
+                }
+                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum_1 . '</th></tr>';
+                $html .= '</tbody></table><p>&nbsp;</p><br>';
 
+            }
+          
             $html .= '<h2>Транспортные расходы: </h2>';
             $html .= '<table border="0" cellspacing="0" width="100%">
 			<tbody><tr><th>Вид транспорта</th><th class="center">Кол-во км<sup>2</sup>.</th><th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th></tr>';
