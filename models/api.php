@@ -170,41 +170,41 @@ class Gm_ceilingModelApi extends JModelList
             $change_time = $db->escape($data->change_time, false);
             $dealer_id = $db->escape($data->dealer_id, false);
 
-            //проекты
+            //клиенты
             $query = $db->getQuery(true);
             $query->select("*");
-            $query->from("`rgzbn_gm_ceiling_projects`");
+            $query->from("`rgzbn_gm_ceiling_clients`");
             $query->where("`dealer_id` = $dealer_id");
             $db->setQuery($query);
-            $list_projects = $db->loadObjectList();
+            $list_clients = $db->loadObjectList();
 
-            if (count($list_projects) > 0)
+            if (count($list_clients) > 0)
             {
-                //клиенты
+                //проекты
                 $where = "";
-                foreach ($list_projects as $key => $value)
+                foreach ($list_clients as $key => $value)
                 {
-                    $id = $value->client_id;
-                    if ($key == count($list_projects) - 1)
+                    $id = $value->id;
+                    if ($key == count($list_clients) - 1)
                     {
-                        $where .= "`id`=$id OR `dealer_id` = $dealer_id";
+                        $where .= "`client_id`=$id";
                     }
                     else
                     {
-                        $where .= "`id`=$id OR ";
+                        $where .= "`client_id`=$id OR ";
                     }
                 }
                 
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`rgzbn_gm_ceiling_clients`");
+                $query->from("`rgzbn_gm_ceiling_projects`");
                 $query->where($where);
                 $db->setQuery($query);
-                $list_clients = $db->loadObjectList();
+                $list_projects = $db->loadObjectList();
             }
             else
             {
-                $list_clients = array();
+                $list_projects = array();
             }
 
             if (count($list_clients) > 0)
