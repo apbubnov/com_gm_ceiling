@@ -16,7 +16,7 @@
     padding: 0 !important;
     float: left;
     overflow: visible;
-    margin: 4px 4px 0 0;
+    margin: 0;
 }
 
 .Calendar .Name
@@ -64,7 +64,6 @@
 .Calendar .Days .Day
 {
     box-shadow: inset 0 0 0 .2px rgba(78, 76, 183, .5);
-    transition: .3s;
 }
 
 .Calendar .Days .Day.Now

@@ -30,30 +30,30 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(0);
 $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
 ?>
 
-<?if ($chief || true):?>
-    <h1>Начальник цеха: <?=$user->name;?></h1>
+<? if ($chief || true): ?>
+    <h1>Начальник цеха: <?= $user->name; ?></h1>
     <div class="Calendars">
         <div class="CalName">Календарь работ</div>
         <div class="Block">
-            <div class="Left">
-                <div
-            </div>
+            <button class="Left">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+            </button>
             <div class="CalBlock">
-                <?=$calendars[0];?>
-                <?=$calendars[1];?>
-                <?=$calendars[2];?>
+                <?= $calendars[0]; ?>
+                <?= $calendars[1]; ?>
+                <?= $calendars[2]; ?>
             </div>
-            <div class="Right">
-
-            </div>
+            <button class="Right">
+                <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+            </button>
         </div>
     </div>
-<?elseif($employee):?>
-<h1>Работник цеха: <?=$user->name;?></h1>
-<?else:?>
-<h1>К сожалению данный кабинет вам не доступен!</h1>
-Что бы получить доступ, обратитесь к IT отделу.
-<?endif;?>
+<? elseif ($employee): ?>
+    <h1>Работник цеха: <?= $user->name; ?></h1>
+<? else: ?>
+    <h1>К сожалению данный кабинет вам не доступен!</h1>
+    Что бы получить доступ, обратитесь к IT отделу.
+<? endif; ?>
 
 <link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/calendar.css">
 <link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/schedule.css">
