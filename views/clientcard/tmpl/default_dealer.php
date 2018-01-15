@@ -11,7 +11,8 @@
     $historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
     $history = $historyModel->getDataByClientId($this->item->id);
     $projects = $clientcardModel->getProjects($this->item->id);
-    $jinput = JFactory::getApplication()->input;
+    $app = JFactory::getApplication();
+    $jinput = $app->input;
     $phoneto = $jinput->get('phoneto', '', 'STRING');
     $phonefrom = $jinput->get('phonefrom', '', 'STRING');
     $call_id = $jinput->get('call_id', 0, 'INT');
@@ -22,7 +23,7 @@
     $dealer = JFactory::getUser($client->dealer_id);
     if ($dealer->associated_client != $this->item->id)
     {
-        throw new Exception("HTTP/1.0 404 Not Found", 404);
+        $app->redirect("/index.php?option=com_gm_ceiling&view=clientcard&id=$this->item->id");
     }
     
     
