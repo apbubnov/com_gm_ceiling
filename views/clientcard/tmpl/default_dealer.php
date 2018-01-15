@@ -189,9 +189,10 @@
     <div id="modal-window-1-tar">
         <p><strong>Создание нового клиента</strong></p>
         <p>ФИО:</p>
-        <input type="text" id="">
+        <input type="text" id="fio_client">
         <p>Номер телефона:</p>
-        <input type="text" id="">
+        <input type="text" id="phone_client">
+        <button type="button" id="save_client">ОК</button>
     </div>
 </div>
 
