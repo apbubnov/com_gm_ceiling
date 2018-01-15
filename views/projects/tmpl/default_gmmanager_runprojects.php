@@ -361,6 +361,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var check = jQuery("input[name='check_mount']:checked").val();
                         //Просчет прибыли
                         var profit = new_project_sum + input_value - cost_price; 
+                        alert(profit);
                         if (profit < 0 && (check == undefined || check == 1)) 
                         {
                             check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();
