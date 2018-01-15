@@ -105,4 +105,11 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    public function getCalendar()
+    {
+        $app = JFactory::getApplication();
+        $month = $app->input->get('month', 0, 'int');
+        die(json_encode((object) ["status" => "success", "calendar" => Gm_ceilingHelpersGm_ceiling::LiteCalendar($month)]));
+    }
 }
