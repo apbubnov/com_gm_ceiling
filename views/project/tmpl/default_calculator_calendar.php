@@ -2049,9 +2049,9 @@ var $ = jQuery;
             jQuery("#title").toggle();
             jQuery(".calendar_wrapper").toggle();
             jQuery(".buttons_wrapper").toggle();
+            jQuery("#mounting_date_control").show();
             jQuery(".project_activation").toggle();
             jQuery("#refuse").toggle();
-            jQuery("#mounting_date_control").show();
         });
 
         jQuery("#refuse_project").click(function () {
@@ -2059,11 +2059,11 @@ var $ = jQuery;
             jQuery(".project_activation").toggle();
             jQuery("#refuse").toggle();
             jQuery(".project_activation").toggle();
+            jQuery("#mounting_date_control").hide();
             jQuery("#mounter_wraper").toggle();
             jQuery("#title").toggle();
             jQuery(".calendar_wrapper").toggle();
             jQuery(".buttons_wrapper").toggle();
-            jQuery("#mounting_date_control").hide();
         });
 
         jQuery("#choose_mounter").click(function () {
