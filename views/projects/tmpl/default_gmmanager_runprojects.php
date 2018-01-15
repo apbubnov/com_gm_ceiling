@@ -142,7 +142,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                     <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($temp <= 0)?0:round($temp, 2); ?>"  hidden>
                                     <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($temp_material_sum <= 0)?0:round($temp_material_sum,2); ?>"  hidden>
                                 
-                                <?}
+                                <? }
                                 if($item->check_mount_done == 1) { ?>
                                     <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
                                     <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
@@ -396,7 +396,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                         type: "success",
                                         text: data
                                     });
-                                    setInterval(function() { location.reload();}, 1500);
+                                    if(check == 0) setInterval(function() { location.reload();}, 1500);
 
                                 },
                                 dataType: "text",
