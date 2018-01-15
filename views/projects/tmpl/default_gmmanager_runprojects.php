@@ -375,8 +375,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                             
                             //check = 0;
 
-                            if (check == undefined) { check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
-                            else if (check == 1){ check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
+                            if (check == undefined) { check = 1;}
+                            else if (check == 1){ check = 1;}
                             else check = 0;
 
                             //alert(input_value);
