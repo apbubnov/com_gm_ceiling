@@ -80,8 +80,9 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             }*/
             $model = $this->getModel();
             if(!empty($POST['include_calculation'])) {
+                print_r("allooooo"); exit;
                 $calculation = $model->calculation($POST['include_calculation']);
-
+                
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
                 $html = ' <h1>Номер договора: ' . $POST['project_id'] . '</h1><br>';
                 $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
