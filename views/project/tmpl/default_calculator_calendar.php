@@ -2044,8 +2044,9 @@ var $ = jQuery;
         $tmp_accept = 0; $tmp_refuse = 0;
         jQuery("#accept_project").click(function () {
             jQuery("input[name='project_verdict']").val(1);
-            jQuery(".project_activation").toggle();
+            
             if($tmp_accept == 0) {
+                
                 jQuery("#mounter_wraper").show();
                 jQuery("#title").show();
                 jQuery(".calendar_wrapper").show();
@@ -2055,6 +2056,7 @@ var $ = jQuery;
                 jQuery("#mounting_date_control").show();
                 $tmp_accept = 1;
             } else {
+                jQuery(".project_activation").hide();
                 jQuery("#mounter_wraper").hide();
                 jQuery("#title").hide();
                 jQuery(".calendar_wrapper").hide();
@@ -2062,9 +2064,7 @@ var $ = jQuery;
                 $tmp_accept = 0;
             }
             
-           // 
         });
-        
         jQuery("#refuse_project").click(function () {
             jQuery("input[name='project_verdict']").val(0);
             if($tmp_refuse == 0) {
