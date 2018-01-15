@@ -11,7 +11,7 @@
     $historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
     $history = $historyModel->getDataByClientId($this->item->id);
     $projects = $clientcardModel->getProjects($this->item->id);
-    $app = &JFactory::getApplication();
+    $app = JFactory::getApplication();
     $jinput = $app->input;
     $phoneto = $jinput->get('phoneto', '', 'STRING');
     $phonefrom = $jinput->get('phonefrom', '', 'STRING');
@@ -23,7 +23,7 @@
     $dealer = JFactory::getUser($client->dealer_id);
     if ($dealer->associated_client != $this->item->id)
     {
-        $app->redirect("/index.php?option=com_gm_ceiling&view=clientcard&id=$this->item->id");
+        throw new Exception("this is not dealer", 403);
     }
     
     
