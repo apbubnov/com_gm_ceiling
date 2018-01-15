@@ -2001,6 +2001,9 @@ $results = $db->loadObjectList();
                 $tmp_refuse = 0;
                 $tmp_accept = 0;
             }
+            setTimeout(() => {
+                window.location = "#refuse";
+            }, 100); 
             //jQuery(".project_activation").toggle();
             //jQuery("#refuse").toggle();
            // 
