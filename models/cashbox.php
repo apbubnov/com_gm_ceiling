@@ -31,8 +31,10 @@ class Gm_ceilingModelCashbox extends JModelList
 				$date1 = date('Y-m-01');
 				$date2 = date('Y-m-t'); 
 			}
-			$query->select('p.id')
+			$query
 				->select('p.closed')
+				->select('p.id')
+				->select('s.title as status')
 				->select('u.name')
 				->select('p.new_project_sum')
 				->select('p.new_mount_sum')
@@ -40,7 +42,7 @@ class Gm_ceilingModelCashbox extends JModelList
 				->select('p.new_material_sum')
 				->select('p.new_project_mounting')
 				->select('p.check_mount_done as `done`')
-				->select('s.title as status')
+				
 				->from('#__gm_ceiling_projects as p')
 				->innerJoin('#__users as u ON p.project_mounter = u.id')
 				->innerJoin('#__gm_ceiling_status as s on p.project_status = s.id')
