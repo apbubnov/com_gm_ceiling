@@ -122,6 +122,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('DATE_FORMAT(a.project_mounting_date, \'%d.%m.%Y %H:%i\') AS mounting_date')
                 ->select('CONCAT(DATE_FORMAT(a.project_mounting_start, \'%H:%i\'),\'-\',DATE_FORMAT(a.project_mounting_end, \'%H:%i\')) AS mounting_time')
                 ->select('a.project_info AS address')
+                ->select('client.dealer_id')
                 ->from('`#__gm_ceiling_projects` AS a')
                 ->where('a.state = 1')
                 ->group('id');
