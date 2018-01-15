@@ -193,6 +193,7 @@
             <p><input type="text" id="fio_client" name="jform[client_name]"></p>
             <p>Номер телефона:</p>
             <p><input type="text" id="jform_client_contacts" name="jform[client_contacts]"></p>
+            <input type="hidden" id="jform_dealer_id" name="jform[dealer_id]" value="<?php echo $client->dealer_id; ?>">
             <p><button type="submit" id="save_client" class="btn btn-primary">ОК</button></p>
         </form>
     </div>
