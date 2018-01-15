@@ -148,6 +148,7 @@ foreach ($brigade_id as $value) {
 			</p>
 			<div id="wrong-window2"></div>
 			<p><button type="button" id="save_choise_tar" class="btn btn-primary">Сохранить</button></p>
+			<p id="delete_container"><button type="button" id="delete_day_off" class="btn btn-danger">Удалить</button></p>
 		</div>
 	</div>
 </div>
@@ -414,6 +415,8 @@ foreach ($brigade_id as $value) {
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый"></td>';	
 			legenda += '<td>Монтаж недовыполнен</td>';
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
+			legenda += '<td>Монтаж выполнен</td>';
+			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
 			legenda += '<td>Монтаж выполнен</td></tr>';
 			jQuery("#legenda").append(legenda);
 		}
@@ -448,10 +451,12 @@ foreach ($brigade_id as $value) {
 						jQuery("#add_free_day").text("Добавить выходной");
 						window.dataFree1 = 0;
 						window.dataFree2 = 0;
+						jQuery("#delete_container").hide();
 					} else {
 						jQuery("#add_free_day").text("Изменить выходной");
 						window.dataFree1 = data[0].date_from;
 						window.dataFree2 = data[0].date_to;
+						jQuery("#delete_container").show();
 					}
 				},
 				error: function (data) {
@@ -468,7 +473,7 @@ foreach ($brigade_id as $value) {
 			jQuery("#close-modal-window").show();
 			jQuery("#modal-window-with-table").show();
 		});
-		jQuery("#calendars-container").on("click", ".current-month", function() {
+		jQuery("#calendars-container").on("click", ".current-month, .day-off", function() {
 			ChoosenDay = this.id;
 			kind = "empty";
 			ChoosenDay = jQuery(this).attr("id");
@@ -487,10 +492,12 @@ foreach ($brigade_id as $value) {
 						jQuery("#add_free_day").text("Добавить выходной");
 						window.dataFree1 = 0;
 						window.dataFree2 = 0;
+						jQuery("#delete_container").hide();
 					} else {
 						jQuery("#add_free_day").text("Изменить выходной");
 						window.dataFree1 = data[0].date_from;
 						window.dataFree2 = data[0].date_to;
+						jQuery("#delete_container").show();
 					}
 				},
 				error: function (data) {
@@ -531,6 +538,7 @@ foreach ($brigade_id as $value) {
 			date = y+"-"+m+"-"+d;
 			date_to_modal_window = d+"."+m+"."+y;
 			idBrigade = ChoosenDay.match("I(.*)I")[1];
+			jQuery("#table-mounting").empty();
 			var table = "";
 			if (kind == "empty") {
 				table = '<tr id="caption-data"><td colspan=2>'+d+'.'+m+'.'+y+'</td></tr><tr><td colspan=2>В данный момент на этот день монтажей нет</td></tr>';        
@@ -590,7 +598,7 @@ foreach ($brigade_id as $value) {
 								perimeter = +element.perimeter;
 								table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')"><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+perimeter.toFixed(2)+'</td><td>'+element.salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
 							} else {
-								table += '<tr class="clickabel"><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
+								table += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
 							}
 						});
 						jQuery("#table-mounting").append(table);
@@ -649,6 +657,9 @@ foreach ($brigade_id as $value) {
 						if (data == "no") {
 							jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
 						} else {
+							if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
+								jQuery("#"+ChoosenDay).attr("class", "day-off");
+							}
 							jQuery("#modal-window-container-tar").hide();
 							jQuery("#close-tar").hide();
 							jQuery("#modal-window-1-tar").hide();
@@ -679,9 +690,54 @@ foreach ($brigade_id as $value) {
 		});
 		//------------------------------------------
 
+		// убрать красный текст ошибки
 		jQuery("#modal-window-1-tar").on("change", "#hours1, #hours2", function() {
 			jQuery("#wrong-window2").empty();
 		});
+
+		// удалить выходной день
+		jQuery("#delete_day_off").click( function() {
+			jQuery.ajax({
+				type: 'POST',
+				url: "/index.php?option=com_gm_ceiling&task=teams.DeleteFreeDay",
+				dataType: 'json',
+				data: {
+					date: date,
+					id: idBrigade,
+				},
+				success: function(data) {
+					if (data == "no") {
+						jQuery("#wrong-window2").text("Не удалось удалить время. Повторите попытку позже.");
+					} else {
+						if (jQuery("#"+ChoosenDay).attr("class") == "day-off") {
+							jQuery("#"+ChoosenDay).attr("class", "current-month");
+						}
+						jQuery("#modal-window-container-tar").hide();
+						jQuery("#close-tar").hide();
+						jQuery("#modal-window-1-tar").hide();
+						var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "success",
+							text: "Выходной день (время) удалено успешно."
+						});
+					}
+				},
+				dataType: "text",
+				timeout: 10000,
+				error: function (data) {
+					var n = noty({
+						theme: 'relax',
+						layout: 'center',
+						maxVisible: 5,
+						type: "error",
+						text: "Ошибка при попытке удалить выходные часы. Сервер не отвечает"
+					});
+				}
+			});
+		});
+		// -----------------------------------------
 		
 	});
 

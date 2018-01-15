@@ -1037,6 +1037,14 @@ class Gm_ceilingModelProject extends JModelItem
 				$db->setQuery($query);
 				$db->execute();
 			}
+
+			// статус монтажа изменить на непросмотренный
+			$query4 = $db->getQuery(true);
+				$query4->update('#__gm_ceiling_projects')
+				->set("read_by_mounter = '0'")
+				->where("id = '$data->id'");
+				$db->setQuery($query4);
+				$db->execute();
 			
 		}
 		catch(Exception $e)
@@ -1192,6 +1200,7 @@ class Gm_ceilingModelProject extends JModelItem
             $query->update('#__gm_ceiling_projects')
 				->set("project_mounting_date = '$datatime'")
 				->set("project_mounter = '$mounter'")
+				->set("read_by_mounter = '0'")
 				->where("id = '$id'");
 			$db->setQuery($query);
 			$db->execute();
@@ -1200,7 +1209,8 @@ class Gm_ceilingModelProject extends JModelItem
 				->from('#__gm_ceiling_projects')
 				->where("id = '$id'");
 			$db->setQuery($query2);
-            $items = $db->loadObjectList();
+			$items = $db->loadObjectList();
+			
     		return $items;
         }
         catch(Exception $e)
@@ -1232,18 +1242,24 @@ class Gm_ceilingModelProject extends JModelItem
         }
 	}
 
-	public function done($project_id, $new_value, $mouting_sum, $material_sum)
+	public function done($project_id, $new_value, $mouting_sum, $material_sum, $check, $mouting_sum_itog)
 	{
 		try
 		{
 			$table = $this->getTable();
 			if($project_id > 0) {
 				$table->load($project_id);
-				$table->project_status = 12;
+				if($check == 1) $table->project_status = 12;
 				$table->new_project_sum = $new_value;
 	            $table->new_mount_sum = $mouting_sum;
 	            $table->new_material_sum = $material_sum;
 				$table->closed = date("Y-m-d");
+                $table->new_project_mounting = $mouting_sum_itog;
+				$table->new_material_sum = $material_sum;
+				$table->check_mount_done = $check;
+				
+				// сюда нужно сделать запись в БД новх полей, подобрать для них переменные и проверку на check,
+                // чтобы оставить статус если чек =0
 			}
 			$return = $table->store();
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
@@ -1825,5 +1841,18 @@ class Gm_ceilingModelProject extends JModelItem
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	public function new_getProjectItems($project_id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select('*')
+            ->from('#__gm_ceiling_projects')
+            ->where('id = '.$project_id);
+        $db->setQuery($query);
+        $results = $db->loadObject();
+        return $results;
+    }
 
 }

@@ -331,7 +331,7 @@ class Gm_ceilingModelProjects extends JModelList
             if ($status == "Zvonki") {
                 $query->select('count(id) as count')
                     ->from('#__gm_ceiling_callback')
-                    ->where("date_time between '$data 00:00:00' and '$data 23:59:59' and manager_id = '$id'");
+                    ->where("date_time <= '$data 23:59:59' and manager_id = '$id'");
             } else 
             // менеджер (запущенные) 
             if ($status == "Zapushennie") {

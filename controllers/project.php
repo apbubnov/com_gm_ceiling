@@ -302,7 +302,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$email  = "$client_id@$client_id";
 					}
 					//зарегать как user
-					Gm_ceilingHelpersGm_ceiling::registerUser($name,preg_replace('/[\(\)\-\s]/', '', array_shift($phones)),$email);
+					$userID = Gm_ceilingHelpersGm_ceiling::registerUser($name,preg_replace('/[\(\)\-\s]/', '', array_shift($phones)),$email,$client_id);
+
+					$client_model->updateClient($client_id,null,$userID);
+
 					$client_history_model->save($client_id,"Клиент переведен в дилеры.");				
 					$model->update_project_after_call($project_id,$client_id,$date_time,$address,$manager_comment,20,$api_phone_id,$user->id, $gauger);
 					$status = 20;
@@ -417,7 +420,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $client_history_model->save($client_id,"Клиент переведен в дилеры.");
                     $username = preg_replace('/[\(\)\-\s]/', '', array_shift($phones));
                     if($client_model->checkIsDealer($username)==0){
-                        Gm_ceilingHelpersGm_ceiling::registerUser($name,$username,$email);
+                        $userID = Gm_ceilingHelpersGm_ceiling::registerUser($name,$username,$email,$client_id);
+                        $client_model->updateClient($client_id,null,$userID);
                     }
 
 					$rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
@@ -516,6 +520,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$isDataChange = $jinput->get('data_change', '0', 'INT');
 			$isDiscountChange = $jinput->get('isDiscountChange', '0', 'INT');
 			$isDataDelete = $jinput->get('data_delete', '0', 'INT');
+
+			$smeta = $jinput->get('smeta', '0', 'INT');
+			//print_r($smeta); exit;
 
 			// перимерт и зп бригаде
 			$model_for_mail = Gm_ceilingHelpersGm_ceiling::getModel('calculations');		
@@ -721,7 +728,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$components_data = array();
 					$project_sum = 0;
 					foreach($include_calculation as $calculation){
-						
+						if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
 						$calculations = $calculationsModel->getProjectItems($calculation);
 						$from_db = 1;
 						$save = 0;
@@ -733,22 +740,19 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db,$calculation, $save, $ajax, $pdf, $print_components,$del_flag);
 						$dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
 						$gm_canvases_margin = $dealer_info_model->getMargin('gm_canvases_margin',$user->dealer_id);
-						$gm_components_margin = $dealer_info_model->getMargin('gm_components_margin',$user->dealer_id);
+						if($smeta == 0) $gm_components_margin = $dealer_info_model->getMargin('gm_components_margin',$user->dealer_id);
 						$gm_mounting_margin = $dealer_info_model->getMargin('gm_mounting_margin',$user->dealer_id);
 						$dealer_canvases_margin = $dealer_info_model->getMargin('dealer_canvases_margin',$user->dealer_id);
-						$dealer_components_margin = $dealer_info_model->getMargin('dealer_components_margin',$user->dealer_id);
+						if($smeta == 0) $dealer_components_margin = $dealer_info_model->getMargin('dealer_components_margin',$user->dealer_id);
 						$dealer_mounting_margin = $dealer_info_model->getMargin('dealer_mounting_margin',$user->dealer_id);
 						foreach($calculations as $calc) {
-							$project_sum += margin($calc->components_sum, $dealer_components_margin);
+							if($smeta == 0) $project_sum += margin($calc->components_sum, $dealer_components_margin);
 							$project_sum += margin($calc->canvases_sum,  $dealer_canvases_margin);
 							$project_sum += margin($calc->mounting_sum, $dealer_mounting_margin);
 						}
-						
-
-					}
-
-
-					Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
+					if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
+					} 
+					if($smeta == 0) Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
 
 					// Clear the profile id from the session.
 					$app->setUserState('com_gm_ceiling.edit.project.id', null);
@@ -1050,13 +1054,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('project_id', '0', 'INT');
-
+            $check = $jinput->get('check', '0', 'INT'); // 1 - монтаж выполнен, 0 - недовыполнен
 			$new_value = $jinput->get('new_value', '0', 'FLOAT');
 			$mouting_sum = $jinput->get('mouting_sum', '0', 'FLOAT');
+            $mouting_sum_itog = $jinput->get('mouting_sum_itog', '0', 'FLOAT'); // сумма, которую получат монтажники сначала без выполненной работы
 			$material_sum = $jinput->get('material_sum', '0', 'FLOAT');
+			print_r("project_id - $project_id ||| check - $check ||| new_value - $new_value ||| mouting_sum - $mouting_sum ||| mouting_sum_itog - $mouting_sum_itog ||| material_sum - $material_sum"); exit;
 			$map_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
-            $sum = $new_value*0.1;
-            $result = "Договор закрыт!";
+			$sum = $new_value*0.1;
+			if($check == 1) $result = "Договор закрыт!";
+			if($check == 0) $result = "Договор пока не закрыт из-за недовыполненного монтажа!";
             //throw new Exception("1");
 			if($map_model->exist($project_id)==1){
                 $map_model->updateSum($project_id,$sum);
@@ -1066,16 +1073,25 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $result = "Заказ от откатника: ".$recoil->recoil_name.";Телефон: ".$recoil->phone;
                
             }
+            // если проект был недовыолнен, а сейчас выполнен, то плюсовать сумму ранее записанную в переменнные  new
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$table = $model->getTable();
 			$table->load($project_id);
 			$data = $table;
 			$data->new_project_sum = $new_value;
+			$check_done = $model->new_getProjectItems($project_id);
+			if($check_done->check_mount_done == 0 && $check == 1) {
+				$new_value = $check_done->new_project_sum + $new_value;
+				//$mouting_sum_itog = $mouting_sum + $check_done->new_project_mounting;
+				$mouting_sum = $mouting_sum + $check_done->new_project_mounting;
+				$material_sum = $material_sum + $check_done->new_material_sum;
+			}
 			// Attempt to save the data.
-            $return = $model->done($project_id, $new_value, $mouting_sum, $material_sum );
+            $return = $model->done($project_id, $new_value, $mouting_sum, $material_sum, $check, $mouting_sum_itog );
 			//Gm_ceilingHelpersGm_ceiling::notify($data, 2);
 			Gm_ceilingHelpersGm_ceiling::notify($data, 3);
 			// Check for errors.
+			
 
 			if ($return === false)
 			{
@@ -1083,6 +1099,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 //$result = 'Save failed:'. $model->getError();
 				//echo JText::sprintf('Save failed: %s', $model->getError());
 			}
+			 
 
 			die($result);
 		}

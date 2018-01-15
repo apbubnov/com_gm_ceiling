@@ -25,7 +25,80 @@ class Gm_ceilingControllerGaugers extends JControllerForm
 			$date2 = $_POST['datetime2'];
 			$id = $_POST['id_gauger'];
 			$model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
-			$model->SaveDayOffM($id, $date1, $date2);
+			$request = $model->SaveDayOff($id, $date1, $date2);
+
+			if ($request->id_user != null) {
+				$answer = "ok";
+			} else {
+				$answer = "no";
+			}
+					
+			die(json_encode($answer));
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	public function DeleteFreeDay() {
+		try
+		{
+			$date = $_POST["date"];
+			$id = $_POST["id"];
+
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
+			$request = $model->DeleteFreeDay($id, $date);
+				
+			if (empty($request)) {
+				$answer = "ok";
+			} else {
+				$answer = "no";
+			}
+					
+			die(json_encode($answer));
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	public function GetGaugersWorkDayOff() {
+		try
+		{
+			$date = $_POST['date'];
+			$id = $_POST['id'];
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
+			$request = $model->GetGaugersWorkDayOff($id, $date);
+
+			die(json_encode($request));
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	public function FindFreeDay() {
+		try
+		{
+			$date = $_POST["date"];
+			$id = $_POST["id"];
+
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
+			$request = $model->FindFreeDay($id, $date);
+					
+			die(json_encode($request));
 		}
 		catch(Exception $e)
         {

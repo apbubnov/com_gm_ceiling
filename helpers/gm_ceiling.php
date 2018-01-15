@@ -84,7 +84,7 @@ class Gm_ceilingHelpersGm_ceiling
         return explode(',', $db->loadResult());
     }
 
-    public static function registerUser($FIO, $phone, $email)
+    public static function registerUser($FIO, $phone, $email, $client_id)
     {
 
         jimport('joomla.user.helper');
@@ -109,7 +109,13 @@ class Gm_ceilingHelpersGm_ceiling
         }
 
         $userID = $user->id;
+        $user =& JUser::getInstance((int)$userID);
+        $post['dealer_id'] = $userID;
+        $post['associated_client'] = $client_id;
+        if (!$user->bind($post)) return false;
+        if (!$user->save()) return false;
         JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
+        return $userID;
         //header('location: /index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage');
     }
 
@@ -529,7 +535,6 @@ class Gm_ceilingHelpersGm_ceiling
 
         $filter = "a.title  LIKE('%303 белая%') AND component.title LIKE('%Вставка%') ";
         $items_vstavka_bel = $components_model->getFilteredItems($filter);
-
 
         if ($data['color'] > 0) {
             $color_model1 = Gm_ceilingHelpersGm_ceiling::getModel('colors');
@@ -2486,14 +2491,34 @@ class Gm_ceilingHelpersGm_ceiling
 
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
-                $calc_id = $calculation_model->save($data, 1);
-                $filename = md5("calculation_sketch" . $calc_id);
+              
+                if ($new_client != 1) {
+                    
+                    $ajax_return['id'] = $calculation_model->save($data, $del_flag);
+                }
+
+                $filename = md5("calculation_sketch" . $ajax_return['id']);
+                $cut_filename = md5("cut_sketch" . $ajax_return['id']);
+              
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
                     rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".png");
 
                 }
 
             }
+          
+            
+            //throw new Exception($ajax_return['id']);
+            //throw new Exception($pdf);
+            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $phone = $project_model->getClientPhones($project->id_client);
+            $mount = $project_model->getMount($project->id);
+            if(!empty($mount->id)) $mount_name = $project_model->getMounterBrigade($mount->id);
+
+            //Пошла печать PDF
+            if ($pdf == 1) {
+                $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+              
 
         }
         //throw new Exception($ajax_return['id']);
@@ -4591,8 +4616,27 @@ class Gm_ceilingHelpersGm_ceiling
                                 }
                             }
                         }
+                        // выходные дни
+                        $statusDayOff = "";
+                        $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
+                        if (!empty($AllDayOff)) {
+                            foreach ($AllDayOff as $value) {
+                                if (substr($value->date_from, 8, 1) == "0") {
+                                    $perem1 = substr($value->date_from, 9, 1);
+                                } else {
+                                    $perem1 = substr($value->date_from, 8, 2);
+                                }
+                                $statusDayOff[$perem1] = "DayOff";
+                            }
+                        }
                         if (count($Dates[$j - $first_day_of_week + 1]) == 0) {
-                            $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                          
+                            if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
+                                $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                            } else {
+                                $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
+                            }
+                          
                         } else if (count($Dates[$j - $first_day_of_week + 1]) == 12) {
                             $table .= '<td class="full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                         } else {
@@ -4687,6 +4731,19 @@ class Gm_ceilingHelpersGm_ceiling
                                 }
                             }
                         }
+                        // выходные дни
+                        $statusDayOff = "";
+                        $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
+                        if (!empty($AllDayOff)) {
+                            foreach ($AllDayOff as $value) {
+                                if (substr($value->date_from, 8, 1) == "0") {
+                                    $perem1 = substr($value->date_from, 9, 1);
+                                } else {
+                                    $perem1 = substr($value->date_from, 8, 2);
+                                }
+                                $statusDayOff[$perem1] = "DayOff";
+                            }
+                        } 
                         if ($DayMounters[$j - $first_day_of_week + 1] == "red") {
                             $table .= '<td class="day-not-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                         } else if ($DayMounters[$j - $first_day_of_week + 1] == "yellow") {
@@ -4698,7 +4755,13 @@ class Gm_ceilingHelpersGm_ceiling
                         } else if ($DayMounters[$j - $first_day_of_week + 1] == "green") {
                             $table .= '<td class="day-complite" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                         } else {
-                            $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                          
+                            if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
+                                $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                            } else {
+                                $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
+                            }
+                          
                         }
                     }
                 }
@@ -4752,6 +4815,15 @@ class Gm_ceilingHelpersGm_ceiling
                             }
                         }
                     }
+                    // выходные дни
+                    $statusDayOff = "";
+                    $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
+                    if (!empty($AllDayOff)) {
+                        foreach ($AllDayOff as $value) {
+                            $statusDayOff[substr($value->date_from, 8, 2)] = "DayOff";
+                        }
+                    }                    
+                    // заполнение дней
                     if ($DayMounter[$j - $first_day_of_week + 1][0] == "red") {
                         $table .= '<td class="day-not-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                     } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "yellow") {
@@ -4763,7 +4835,13 @@ class Gm_ceilingHelpersGm_ceiling
                     } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "green") {
                         $table .= '<td class="day-complite" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                     } else {
-                        $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                      
+                        if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
+                            $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                        } else {
+                            $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                        }
+                      
                     }
                 }
             }
