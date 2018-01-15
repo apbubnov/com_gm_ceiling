@@ -274,7 +274,7 @@ $year = date("Y");
         jQuery("#month option").each(function()
         {
             if(this.val()==month){
-                this.attr("selected",true);
+                jQuery(this).attr("selected",true);
             }
         });
         jQuery("#year").val(year);
