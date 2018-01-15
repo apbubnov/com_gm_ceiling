@@ -2054,6 +2054,7 @@ var $ = jQuery;
                 jQuery(".project_activation").hide();
                 jQuery("#refuse").hide();
                 jQuery("#project_activation").show();
+                jQuery("#project_activation").focus();
                 $tmp_accept = 1;
                 $tmp_refuse = 0;
             } else {
