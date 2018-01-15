@@ -101,7 +101,7 @@ class Gm_ceilingControllerClientForm extends JControllerForm
 			$data = $model->validate($form, $data);
 			
 			$data['created'] = date("Y-m-d");
-
+			throw new Exception($data['dealer_id']);
 			// Check for errors.
 			if ($data === false)
 			{
