@@ -141,7 +141,10 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
         var Modal = $(".ModalCalendar"),
             ModalDay = Modal.find(".ModalDay");
 
+        ModalDay.
+
         Modal.show();
+        ModalDay.show();
     }
 
     function hideModalCalendar() {
