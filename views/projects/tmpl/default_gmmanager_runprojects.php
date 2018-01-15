@@ -69,7 +69,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             <tbody>
             <?php foreach ($this->items as $i => $item) : ?>
                 <?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-                <?php// $dealer = JFactory::getUser($item->dealer_id); ?>
+                <?php $dealer = JFactory::getUser($item->dealer_id); ?>
                 <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
                     <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
                 <?php endif; ?>
@@ -191,7 +191,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         <?php echo $item->client_name; ?>
                     </td>
                     <td class="center one-touch">
-                        <?php// echo $dealer->name; ?>
+                        <?php echo $dealer->name; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
