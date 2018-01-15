@@ -130,7 +130,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query->select('status.title AS status, status.id AS status_id')
                 ->join('LEFT', '`#__gm_ceiling_status` AS `status` ON status.id = a.project_status');
 
-            $query->select('client.client_name AS client_name')//, client.dealer_id, client.id
+            $query->select('client.client_name AS client_name, `client`.dealer_id as dealer_id')
                 ->join('LEFT', '`#__gm_ceiling_clients` AS `client` ON client.id = a.client_id');
 
             $query->select('dealer.name AS dealer_name')
@@ -172,13 +172,13 @@ class Gm_ceilingModelProjects extends JModelList
 
             if ($type == "managerprojects") {
                 $query->where('a.project_status = 3');
-                $query->where('client.dealer_id = ' . $user->dealer_id);
+                $query->where('dealer_id = ' . $user->dealer_id);
             } elseif ($type == "chiefprojects") {
                 $query->where('a.project_status = 5');
-                $query->where('client.dealer_id = ' . $user->dealer_id);
+                $query->where('dealer_id = ' . $user->dealer_id);
             } elseif ($type == "calculatorprojects") {
                 $query->where('a.project_status = 1');
-                $query->where('client.dealer_id = ' . $user->dealer_id);
+                $query->where('dealer_id = ' . $user->dealer_id);
             } elseif ($type == "gmmanager" && $subtype == "runprojects") {
                 $query->where('a.project_status in (10,11, 16, 17)');
             } elseif ($type == "gmmanager" && $subtype == "archive") {
@@ -189,7 +189,7 @@ class Gm_ceilingModelProjects extends JModelList
                 $query->where('a.project_status = 5 or a.project_status = 4');
                 $query->where('a.project_verdict  = 1');
             }  elseif ($type == "manager") {
-                $query->where('client.dealer_id = ' . $user->dealer_id);
+                $query->where('dealer_id = ' . $user->dealer_id);
                 if ($subtype == "refused") {
                     $query->where('a.project_verdict = 0');
                 } else {
@@ -215,7 +215,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('a.project_verdict = 0');
                 }
             } elseif ($type == "calculator") {
-                $query->where('client.dealer_id = ' . $user->dealer_id);
+                $query->where('dealer_id = ' . $user->dealer_id);
                 if ($subtype == "calendar") {
                     $query->where('a.project_status = 1');
                     $query->order('a.project_calculation_date');
@@ -227,23 +227,10 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('a.project_verdict = 0');
                 }
             } elseif ($type == "dealer") {
-                $query->where('( client.dealer_id = ' . $user->id . ' OR client.dealer_id = ' . $user->dealer_id . ')');
+                $query->where('( dealer_id = ' . $user->id . ' OR dealer_id = ' . $user->dealer_id . ')');
             } else {
-                $query->where('client.dealer_id = -1');
+                $query->where('dealer_id = -1');
             }
-
-            /*
-            // Filter by search in title
-            $search = $this->getState('filter.search');
-            if (!empty($search))
-            {
-                if (stripos($search, 'id:') === 0)$query->where('a.id = ' . (int) substr($search, 3));
-                else {
-                    $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                    $query->where('( a.project_info LIKE ' . $search . '  OR a.id LIKE ' . $search . '  OR #__gm_ceiling_clients_2460720.client_name LIKE ' . $search . '  OR #__gm_ceiling_groups_2483036.name LIKE ' . $search . ' )');
-                }
-            }
-            */
 
             $client_id = $this->getState('filter.client_id');
             if ($client_id) $query->where('a.client_id = ' . $client_id);
