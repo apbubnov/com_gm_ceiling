@@ -250,7 +250,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 
     function click_ok(id) {
 
-        
+        var button = jQuery("[data-project_id='" + id + "']");	
+        //console.log(button);
         var project_id = id;
         //td = jQuery( this );
         //var project_id =  td.data("project_id");
@@ -285,7 +286,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     type: "success",
                     text: data
                 });
-
+                $("#modal-window").hide();
 
             },
             dataType: "text",
