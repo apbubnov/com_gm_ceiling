@@ -253,9 +253,4 @@ class Gm_ceilingModelGuild extends JModelList
 
         return;
     }
-
-    public function getSchedule($month = 0)
-    {
-
-    }
 }

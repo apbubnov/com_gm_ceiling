@@ -35,7 +35,7 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
     <div class="Calendars">
         <div class="CalName">Календарь работ</div>
         <div class="Block">
-            <button class="Left">
+            <button type="button" class="Left" value="-1">
                 <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
             </button>
             <div class="CalBlock">
@@ -43,7 +43,7 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
                 <?= $calendars[1]; ?>
                 <?= $calendars[2]; ?>
             </div>
-            <button class="Right">
+            <button type="button" class="Right" value="1">
                 <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
             </button>
         </div>
@@ -57,3 +57,57 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
 
 <link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/calendar.css">
 <link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/schedule.css">
+
+<script type="text/javascript">
+    var $ = jQuery;
+
+    $(document).ready(Init);
+
+    function Init() {
+        var calendars = $(".Calendars"),
+            button = calendars.find("button");
+        button.click(ButtomCalendarClick(this));
+    }
+
+    function ButtomCalendarClick(element) {
+        element = $(element);
+        var val = parseInt(element.val()),
+            calendars = $(".Calendars .block .CalBlock");
+            calendar = (val < 0)?calendars.find(".Calendar:first-child"):calendars.find(".Calendar:last-child"),
+            calendar2 = (val > 0)?calendars.find(".Calendar:first-child"):calendars.find(".Calendar:last-child"),
+            diff = parseInt(calendar.attr("diff")) + val;
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getCalendar",
+            data: {month: diff},
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+
+                if (data.status === "success")
+                {
+                    var newCalendar = $(data.calendar);
+                    if (val < 0)
+                        calendars.prepend(newCalendar);
+                    else
+                        calendars.append(newCalendar);
+                    calendar2.remove();
+                }
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+    }
+
+</script>
