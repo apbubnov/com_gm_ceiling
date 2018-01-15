@@ -22,7 +22,8 @@
     $dealer = JFactory::getUser($client->dealer_id);
     if ($dealer->associated_client != $this->item->id)
     {
-        header("Location:/index.php?option=com_gm_ceiling&view=clientcard&id=$this->item->id");
+        //header("Location:/index.php?option=com_gm_ceiling&view=clientcard&id=$this->item->id");
+        header("HTTP/1.0 404 Not Found");
         exit;
     }
     
