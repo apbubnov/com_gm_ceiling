@@ -208,30 +208,31 @@ $year = date("Y");
         jQuery("#save").click(function(){
             id = <?php echo $userId;?>;
             jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=saveEncashment",
-            async: false,
-            data: {
-                sum: jQuery("#sum").val(),
-                id: id
-            },
-            success: function (data) {
-                window.location = window.location;
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function () {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка cервер не отвечает"
-                });
-            }
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=saveEncashment",
+                async: false,
+                data: {
+                    sum: jQuery("#sum").val(),
+                    id: id
+                },
+                success: function (data) {
+                    window.location = window.location;
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка cервер не отвечает"
+                    });
+                }
+            });
         });
-        });
+        
         month_old = 0;
         year_old = 0;
         jQuery("#next").click(function () {
@@ -269,6 +270,35 @@ $year = date("Y");
             year_old = year;
             update_month_year(month,year);
             console.log(month,year);
+        });
+        jQuery("#month").change(function() {
+            var month = this.value;
+            var year = jQuery("#year").text();
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=getCashboxByMonth",
+                async: false,
+                data: {
+                    month: month,
+                    year: year
+                },
+                success: function (data) {
+                   console.log(data);
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка cервер не отвечает"
+                    });
+                }
+            });
+
         });
         
     });
