@@ -2045,6 +2045,7 @@ var $ = jQuery;
         jQuery("#accept_project").click(function () {
             jQuery("input[name='project_verdict']").val(1);
             jQuery(".project_activation").toggle();
+            jQuery("#refuse").toggle();
             jQuery("#mounter_wraper").toggle();
             jQuery("#title").toggle();
             jQuery(".calendar_wrapper").toggle();
@@ -2055,6 +2056,10 @@ var $ = jQuery;
         jQuery("#refuse_project").click(function () {
             jQuery("input[name='project_verdict']").val(0);
             jQuery(".project_activation").toggle();
+            jQuery("#mounter_wraper").toggle();
+            jQuery("#title").toggle();
+            jQuery(".calendar_wrapper").toggle();
+            jQuery(".buttons_wrapper").toggle();
             jQuery("#refuse").toggle();
             jQuery("#mounting_date_control").hide();
         });
