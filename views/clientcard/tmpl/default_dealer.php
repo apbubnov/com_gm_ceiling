@@ -192,7 +192,7 @@
             <p>ФИО:</p>
             <p><input type="text" id="fio_client" name="jform[client_name]"></p>
             <p>Номер телефона:</p>
-            <p><input type="text" id="phone_client" name="jform[client_contacts]"></p>
+            <p><input type="text" id="jform_client_contacts" name="jform[client_contacts]"></p>
             <p><button type="submit" id="save_client" class="btn btn-primary">ОК</button></p>
         </form>
     </div>
@@ -342,6 +342,7 @@
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
+        jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
     });
 
     jQuery("#back_btn").click(function (){
