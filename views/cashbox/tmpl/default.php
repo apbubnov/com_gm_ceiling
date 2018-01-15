@@ -26,8 +26,8 @@ $userId     = $user->get('id');
 			<p><button type="button" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
 	    </div>
     </div>
-    <table class="table table-striped one-touch-view" id="cashbox_table">
-        <thead>
+    <table class="table table-striped table_cashbox" id="cashbox_table">
+        <thead id = "cashbox_head">
         <tr>
             <th>
               Дата
@@ -65,13 +65,20 @@ $userId     = $user->get('id');
         </tr>
         </thead>
 
-        <tbody id="table_body">
+        <tbody id="cashbox_body">
             <?php foreach ($this->item as $item) {
                ?>
                 <tr>
                     <td>
-                        <?php echo $item->closed;?>
-                    
+                        
+                        <?php
+                            if(isset($item->id)){
+                                echo date_format(date_create($item->closed),"d.m.Y");
+                            }
+                            else{
+                                echo date_format(date_create($item->closed),"d.m.Y H:i:s");
+                            }
+                        ?>
                     </td>
                     <td>
                         <?php echo $item->id;?>        
@@ -79,7 +86,7 @@ $userId     = $user->get('id');
                     <td>
                         <?php echo $item->status ?>
                     </td>
-                    <td>
+                    <td width = 15%>
                         <?php echo $item->name;?>
                     
                     </td>
@@ -132,9 +139,27 @@ $userId     = $user->get('id');
                 </tr>
             <?php }?>
             <tr>
-                <td colspan = "11">
-                    Итого в кассе <?php echo $cashbox;?> из них выдать монтажникам <?php echo $all_not_issued ?>. 
-                    Касса без учета денег монтажников <?php echo $cashbox-$all_not_issued;?>
+                <td style = "text-align:right" colspan = "10">
+                    <b>Итого в кассе:</b>
+                </td>
+                <td>
+                    <b><?php echo $cashbox;?></b>
+                </td>
+            </tr>
+            <tr>
+                <td style = "text-align:right" colspan = "10">
+                    <b>Недовыдано</b>
+                </td>
+                <td>
+                    <b><?php echo $all_not_issued ?></b>
+                </td>
+            </tr>
+            <tr>
+                <td style = "text-align:right" colspan = "10">
+                   <b>Остаток</b>
+                </td>
+                <td>
+                    <b><?php echo $cashbox-$all_not_issued;?></b>
                 </td>
             </tr>
         </tbody>

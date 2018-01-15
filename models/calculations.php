@@ -516,6 +516,20 @@ class Gm_ceilingModelCalculations extends JModelList {
         $results = $db->loadObjectList();
         return $results;
     }
+
+    public function updateComponents_sum($id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__gm_ceiling_calculations'));
+        $query->set("`components_sum` = 0")
+            ->where('id = '.$id);
+        //print_r((string)$query); exit;
+        $db->setQuery($query);
+        $db->execute();
+        return true;
+    }
+
     //KM_CHANGED START
 
     public function getProjectItems($project_id)
@@ -905,6 +919,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                     break;
                 }
             }
+            ($index == 0) ? $index = count($items) : 0;
             for ($i=0; $i < count($items); $i++) {
                 $items[$i]->project_mounting_day_off = "";
             }
@@ -963,9 +978,10 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            $query->select('project_info, project_calculation_date, project_calculator')
-                ->from('`#__gm_ceiling_projects`')
-                ->where("project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and dealer_id = '$dealer'");
+            $query->select('projects.project_info, projects.project_calculation_date, projects.project_calculator')
+                ->from('#__gm_ceiling_projects as projects')
+                ->inner("#__users as users ON projects.client_id = users.id")
+                ->where("projects.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and users.dealer_id = '$dealer'");
             $db->setQuery($query);
 
             $items = $db->loadObjectList();

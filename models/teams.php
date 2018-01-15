@@ -178,10 +178,12 @@ class Gm_ceilingModelTeams extends JModelItem {
                     $index = $i;
                     break;
                 }
-            }
+			}
+			($index == 0) ? $index = count($items) : 0;
             for($i=0;$i<count($items);$i++){
                 $items[$i]->project_mounting_date = substr($items[$i]->project_mounting_date,11,5);
 			}
+			// привет
 			
 			//создание нового массива
 			if (!empty($day_off)) {
@@ -217,6 +219,13 @@ class Gm_ceilingModelTeams extends JModelItem {
 			$query2 = $db->getQuery(true);
 			$query3 = $db->getQuery(true);
 			$query4 = $db->getQuery(true);
+			$query5 = $db->getQuery(true);
+
+			$query5->select("email")
+				->from("#__users")
+				->where("id = '$id'");
+			$db->setQuery($query5);
+			$items5 = $db->loadObject();
 
 			$query2->select("id_user")
 				->from("#__gm_ceiling_day_off")
@@ -231,12 +240,44 @@ class Gm_ceilingModelTeams extends JModelItem {
 					->where("id_user = '$id' and date_from between '".substr($date1, 0, 10)." 00:00:00' and '".substr($date1, 0, 10)." 23:59:59'");
 				$db->setQuery($query3);
 				$db->execute();
+
+				// письмо
+				$mailer = JFactory::getMailer();
+				$config = JFactory::getConfig();
+				$sender = array(
+					$config->get('mailfrom'),
+					$config->get('fromname')
+				);
+				$mailer->setSender($sender);
+				$mailer->addRecipient($items5->email);
+				$body = "Здравствуйте, изменилось время выходных часов ".substr($date1, 0, 10)." числа: с ".substr($date1, 11, 5)." до ".substr($date2, 11, 5)." \n";
+				$body .= "\n";
+				$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
+				$mailer->setSubject('Выходные часы');
+				$mailer->setBody($body);
+				$send = $mailer->Send();
 			} else {
 				$query->insert('#__gm_ceiling_day_off')
 					->columns("id_user, date_from, date_to")
 					->values("'$id', '$date1', '$date2'");
 				$db->setQuery($query);
 				$db->execute();
+
+				// письмо
+				$mailer = JFactory::getMailer();
+				$config = JFactory::getConfig();
+				$sender = array(
+					$config->get('mailfrom'),
+					$config->get('fromname')
+				);
+				$mailer->setSender($sender);
+				$mailer->addRecipient($items5->email);
+				$body = "Здравствуйте, у Вас появились выходные часы ".substr($date1, 0, 10)." числа с ".substr($date1, 11, 5)." до ".substr($date2, 11, 5)." \n";
+				$body .= "\n";
+				$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
+				$mailer->setSubject('Выходные часы');
+				$mailer->setBody($body);
+				$send = $mailer->Send();
 			}
 
 			$query4->select("id_user")
@@ -279,6 +320,57 @@ class Gm_ceilingModelTeams extends JModelItem {
         }
 	}
 
+	public function DeleteFreeDay($id, $date) {
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query2 = $db->getQuery(true);
+			$query3 = $db->getQuery(true);
+
+			$query3->select("email")
+				->from("#__users")
+				->where("id = '$id'");
+			$db->setQuery($query3);
+			$items3 = $db->loadObject();
+
+			$query->delete("#__gm_ceiling_day_off")
+				->where("id_user = '$id' and date_from between '$date 00:00:00' and '$date 23:59:59'");
+			$db->setQuery($query);
+			$db->execute();
+
+			// письмо
+			$mailer = JFactory::getMailer();
+			$config = JFactory::getConfig();
+			$sender = array(
+				$config->get('mailfrom'),
+				$config->get('fromname')
+			);
+			$mailer->setSender($sender);
+			$mailer->addRecipient($items3->email);
+			$body = "Здравствуйте, выходные часы $date числа были удалены \n";
+			$body .= "\n";
+			$body .= "Чтобы перейти на сайт, щелкните здесь: <a href=\"http://test1.gm-vrn.ru/\">http://test1.gm-vrn.ru</a>";		
+			$mailer->setSubject('Выходные часы');
+			$mailer->setBody($body);
+			$send = $mailer->Send();
+
+			$query2->select("id_user")
+				->from("#__gm_ceiling_day_off")
+				->where("id_user = '$id' and date_from = '$date1 00:00:00' and date_to = '$date2 23:59:59'");
+			$db->setQuery($query2);
+			$items2 = $db->loadObject();
+
+			return $items2;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 
 	public function getAllItems() {
 		try

@@ -223,6 +223,14 @@ $results = $db->loadObjectList();
                                     </div>
                                 </td>
                             </tr>
+                            <?  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+                                 $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
+                            <tr>
+                                <th>Дата рождения</th>
+                                <td><input name="new_birthday" id="jform_birthday" class="inputactive"
+                                            value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date"></td>
+                                <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
+                            </tr>
                             <tr>
                                 <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
                                 <td><?php foreach ($phones AS $contact) { echo $contact->phone; echo "<br>"; }?></td>
@@ -868,6 +876,12 @@ $results = $db->loadObjectList();
                         $json2 = json_encode($pdf_names); ?>
                     </td>
                     <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+                    </td>
+                    <td></td><td></td>
                 </tr>
             <? }?>
         </table>
@@ -1596,6 +1610,41 @@ $results = $db->loadObjectList();
                 }
             });
         });
+
+        jQuery("#add_birthday").click(function () {
+            var birthday = jQuery("#jform_birthday").val();
+            var id_client = <?php echo $this->item->id_client;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.addBirthday",
+                data: {
+                    birthday: birthday,
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Дата рождения добавлена"
+                    });
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка отправки"
+                    });
+                }
+            });
+        });
+
         // ----------------------------------------
 
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
@@ -1890,6 +1939,12 @@ $results = $db->loadObjectList();
             calculate_total();
             calculate_total1();
             trans();
+        });
+
+        jQuery("input[name^='smeta']").click(function () {
+            if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
+                jQuery("input[name='smeta']").val(1);
+            else jQuery("input[name='smeta']").val(0);
         });
 
         jQuery("#client_order").click(function () {
