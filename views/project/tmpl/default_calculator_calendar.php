@@ -1308,7 +1308,7 @@ $results = $db->loadObjectList();
                         <input id ="jform_project_mounting_to" name="jform_project_mounting_to" value="" type='hidden'>
                         <input  id ="project_sum" name="project_sum" value="<?php// echo $project_total_discount ?>" type="hidden">
                 </div>-->
-    <div class="project_activation" style="display: none;">
+    <div class="project_activation" style="display: none;" id="project_activation">
         <?php if ($user->dealer_type != 2) { ?>
         <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">
             Примечание к договору
@@ -2053,7 +2053,7 @@ var $ = jQuery;
                 jQuery(".buttons_wrapper").show();
                 jQuery(".project_activation").hide();
                 jQuery("#refuse").hide();
-                jQuery("#mounting_date_control").show();
+                jQuery("#project_activation").show();
                 $tmp_accept = 1;
             } else {
                 jQuery(".project_activation").hide();
