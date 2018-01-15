@@ -35,7 +35,7 @@ $year = date("Y");
         <option value = "10">Ноябрь</option>
         <option value = "11">Декабрь</option>
     </select><label id = "year"><?php echo $year?></label>
-    <button  type= "button" class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+    <button  type= "button"\ class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
     <div id="modal_window_container" class = "modal_window_container">
 		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal_window_sum" class = "modal_window">
@@ -272,12 +272,12 @@ $year = date("Y");
         
     });
     function update_month_year(month,year){
-      /*   jQuery("#month option").each(function()
+        jQuery("#month option").each(function()
         {
             if(jQuery(this).val()==month){
                 jQuery(this).attr("selected",true);
             }
         });
-        jQuery("#year").val(year); */
+        jQuery("#year").val(year); 
     }
 </script>
