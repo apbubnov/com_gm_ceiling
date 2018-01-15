@@ -2041,22 +2041,49 @@ var $ = jQuery;
             jQuery("input[name='project_verdict']").val(1);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
         });
-
+        $tmp_accept = 0; $tmp_refuse = 0;
         jQuery("#accept_project").click(function () {
             jQuery("input[name='project_verdict']").val(1);
-            jQuery(".project_activation").toggle();
-            jQuery("#mounter_wraper").toggle();
-            jQuery("#title").toggle();
-            jQuery(".calendar_wrapper").toggle();
-            jQuery(".buttons_wrapper").toggle();
-            jQuery("#mounting_date_control").show();
+            
+            if($tmp_accept == 0) {
+                
+                jQuery("#mounter_wraper").show();
+                jQuery("#title").show();
+                jQuery(".calendar_wrapper").show();
+                jQuery(".buttons_wrapper").show();
+                jQuery(".project_activation").hide();
+                jQuery("#refuse").hide();
+                jQuery("#mounting_date_control").show();
+                $tmp_accept = 1;
+            } else {
+                jQuery(".project_activation").hide();
+                jQuery("#mounter_wraper").hide();
+                jQuery("#title").hide();
+                jQuery(".calendar_wrapper").hide();
+                jQuery(".buttons_wrapper").hide();
+                $tmp_accept = 0;
+            }
+            
         });
-
         jQuery("#refuse_project").click(function () {
             jQuery("input[name='project_verdict']").val(0);
-            jQuery(".project_activation").toggle();
-            jQuery("#refuse").toggle();
-            jQuery("#mounting_date_control").hide();
+            if($tmp_refuse == 0) {
+                jQuery(".project_activation").show();
+                jQuery("#refuse").show();
+                jQuery("#mounter_wraper").hide();
+                jQuery("#title").hide();
+                jQuery(".calendar_wrapper").hide();
+                jQuery(".buttons_wrapper").hide();
+                jQuery("#mounting_date_control").hide();
+                $tmp_refuse = 1;
+            } else {
+                jQuery(".project_activation").hide();
+                jQuery("#refuse").hide();
+                $tmp_refuse = 0;
+            }
+            //jQuery(".project_activation").toggle();
+            //jQuery("#refuse").toggle();
+           // 
         });
 
         jQuery("#choose_mounter").click(function () {

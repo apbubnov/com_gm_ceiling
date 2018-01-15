@@ -1,0 +1,1671 @@
+12.01.2018 09:45:42 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+12.01.2018 09:45:42 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 09:57:17 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/mounterscalendar.php | DataOrder | SQLSTATE[42S22]: Column not found: 1054 Unknown column '$query2' in 'field list'
+----------
+12.01.2018 09:57:17 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/mounterscalendar.php | ChangeStatus | Ошибка!
+----------
+12.01.2018 09:59:00 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/client_history.php | getDataByClientId | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY `date_time`' at line 3
+----------
+12.01.2018 09:59:00 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 09:59:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/mounterscalendar.php | DataOrder | SQLSTATE[42S22]: Column not found: 1054 Unknown column '$query2' in 'field list'
+----------
+12.01.2018 09:59:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/mounterscalendar.php | ChangeStatus | Ошибка!
+----------
+12.01.2018 11:05:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/cashbox.php | getData | SQLSTATE[42S22]: Column not found: 1054 Unknown column 's.title' in 'field list'
+----------
+12.01.2018 11:05:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 11:14:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | 48
+----------
+12.01.2018 11:26:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/client_history.php | getDataByClientId | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY `date_time`' at line 3
+----------
+12.01.2018 11:26:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 11:37:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/client_history.php | getDataByClientId | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY `date_time`' at line 3
+----------
+12.01.2018 11:37:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 11:38:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/client_history.php | getDataByClientId | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY `date_time`' at line 3
+----------
+12.01.2018 11:38:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 11:38:41 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/client_history.php | getDataByClientId | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY `date_time`' at line 3
+----------
+12.01.2018 11:38:41 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 11:38:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/client_history.php | getDataByClientId | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY `date_time`' at line 3
+----------
+12.01.2018 11:38:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 11:39:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/client_history.php | getDataByClientId | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY `date_time`' at line 3
+----------
+12.01.2018 11:39:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 11:59:20 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+12.01.2018 11:59:20 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 15:09:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/teams.php | SaveFreeDay | natanya1996@gmail.com
+----------
+12.01.2018 15:09:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/teams.php | SaveFreeDay | Ошибка!
+----------
+12.01.2018 15:51:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+12.01.2018 15:51:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 17:28:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Макет default_gmdealermainpage не найден
+----------
+12.01.2018 17:28:59 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Макет default_gmdealermainpage не найден
+----------
+12.01.2018 19:11:36 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | save_or_update_data_from_android | SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`srv112238_test1`.`rgzbn_gm_ceiling_calculations`, CONSTRAINT `rgzbn_gm_ceiling_calculations_ibfk_11` FOREIGN KEY (`project_id`) REFERENCES `rgzbn_gm_ceiling_projects` (`id`) ON DELETE CASCADE)
+----------
+12.01.2018 19:11:36 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | addDataFromAndroid | Ошибка!
+----------
+12.01.2018 19:20:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | save_or_update_data_from_android | SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`srv112238_test1`.`rgzbn_gm_ceiling_calculations`, CONSTRAINT `rgzbn_gm_ceiling_calculations_ibfk_11` FOREIGN KEY (`project_id`) REFERENCES `rgzbn_gm_ceiling_projects` (`id`) ON DELETE CASCADE)
+----------
+12.01.2018 19:20:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | addDataFromAndroid | Ошибка!
+----------
+12.01.2018 20:48:17 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | save_or_update_data_from_android | SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`srv112238_test1`.`rgzbn_gm_ceiling_calculations`, CONSTRAINT `rgzbn_gm_ceiling_calculations_ibfk_11` FOREIGN KEY (`project_id`) REFERENCES `rgzbn_gm_ceiling_projects` (`id`) ON DELETE CASCADE)
+----------
+12.01.2018 20:48:17 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | addDataFromAndroid | Ошибка!
+----------
+12.01.2018 21:11:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+12.01.2018 21:11:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+12.01.2018 22:52:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+12.01.2018 22:52:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+14.01.2018 03:02:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+14.01.2018 03:02:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+14.01.2018 13:09:00 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+14.01.2018 13:09:00 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+14.01.2018 21:49:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+14.01.2018 21:49:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+14.01.2018 22:41:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+14.01.2018 22:41:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 01:09:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projectshistory.php | save | SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`srv112238_test1`.`rgzbn_gm_ceiling_projects_history`, CONSTRAINT `rgzbn_gm_ceiling_projects_history_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `rgzbn_gm_ceiling_projects` (`id`) ON DELETE )
+----------
+15.01.2018 01:09:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | done | Ошибка!
+----------
+15.01.2018 01:09:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/project.php | done | Ошибка!
+----------
+15.01.2018 08:48:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/components.php | getDealerInfo | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 08:48:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:05:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyGauger | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:05:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:05:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:05:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:05:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:05:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:05:38 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:05:42 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:07:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyGauger | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:07:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:07:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:07:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:07:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:07:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:07:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:07:37 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:07:37 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:07:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyGauger | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:07:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:08:37 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:08:37 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:09:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:09:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:09:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:09:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:09:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:09:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:09:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:09:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:09:35 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:09:35 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:09:35 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:10:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:10:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:10:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:11:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:11:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:12:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:12:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:13:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:13:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:14:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:14:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:15:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:15:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:16:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:16:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:17:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:17:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:17:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:17:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:18:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:18:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:19:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:19:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:20:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:20:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:20:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:21:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:21:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:21:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:21:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyGauger | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:21:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:22:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:22:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:23:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:23:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:24:31 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:24:31 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:25:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:26:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:26:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:26:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:26:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:27:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:27:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:27:36 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:28:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:28:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:28:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:28:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:28:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:28:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:28:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:29:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:29:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:30:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:30:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:30:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:30:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:31:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'field list'
+----------
+15.01.2018 10:31:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 10:31:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:31:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:32:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:32:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:33:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:33:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:33:39 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:33:58 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:33:58 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:34:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:34:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:34:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:34:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:34:31 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:31 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:34:31 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:34:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:34:58 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:34:58 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:35:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:35:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:35:17 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:35:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'field list'
+----------
+15.01.2018 10:35:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 10:36:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:36:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:37:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:06 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:06 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:37:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:37:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:37:12 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:37:12 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:37:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:37:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:37:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:37:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:38:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:38:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:38:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:38:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:39:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:39:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:40:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:40:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:41:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:41:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:41:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:41:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:41:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'id' in field list is ambiguous
+----------
+15.01.2018 10:41:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:42:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:42:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 10:42:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:42:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:42:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:42:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:42:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:42:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:42:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:45:42 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:45:42 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:48:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:48:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'field list'
+----------
+15.01.2018 10:48:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 10:48:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:35 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:36 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:37 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:37 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:38 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:38 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:49:57 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:49:57 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:50:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:06 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:27 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:50:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:53:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:53:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:53:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 10:54:14 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:54:14 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:56:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 10:56:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 10:58:01 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'field list'
+----------
+15.01.2018 10:58:01 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 10:58:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 10:59:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 10:59:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:00:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:00:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:01:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'field list'
+----------
+15.01.2018 11:01:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:02:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:03:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:04:16 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:04:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'field list'
+----------
+15.01.2018 11:04:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:04:35 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:05:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'a.dealer_id' in 'on clause'
+----------
+15.01.2018 11:05:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:05:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 11:05:57 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:05:57 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:01 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:01 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:01 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:01 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:01 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:01 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:02 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:02 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:02 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:02 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:02 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:02 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 11:06:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:52 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:52 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:52 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:52 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:52 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:52 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getDataByStatus | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyGauger | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:54 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:06:58 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyGauger | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:06:58 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:07:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:07:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 11:08:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/api.php | get_data_android | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'dealer_id' in 'where clause'
+----------
+15.01.2018 11:08:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/api.php | sendDataToAndroid | Ошибка!
+----------
+15.01.2018 11:10:06 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:16 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:10:32 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:15:33 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:15:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:15 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:16 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:16 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:17 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:17 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:39 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:41 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyMounters | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'projects.dealer_id' in 'where clause'
+----------
+15.01.2018 11:17:41 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:17:43 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:17:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyMounters | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'projects.dealer_id' in 'where clause'
+----------
+15.01.2018 11:17:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:17:55 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyMounters | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'projects.dealer_id' in 'where clause'
+----------
+15.01.2018 11:17:55 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:18:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/calculations.php | FindBusyMounters | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'projects.dealer_id' in 'where clause'
+----------
+15.01.2018 11:18:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:19:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:44 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:45 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:45 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:46 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:19:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:20:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:20:14 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:20:55 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:12 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:21:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:22:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:23:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:23:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:24:11 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:25:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:26:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:26:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:26:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:26:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:29:40 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:29:43 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:32:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:32:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:32:31 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:32:31 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:33:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:33:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:34:37 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:36:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:36:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:36:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:36:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:37:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:37:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:38:38 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:38:38 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:41:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | transport | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+----------
+15.01.2018 11:41:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controllers/big_smeta.php | transport | Ошибка!
+----------
+15.01.2018 11:42:24 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:50:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:52:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getListQuery | Error Processing Request
+----------
+15.01.2018 11:52:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getItems | Ошибка!
+----------
+15.01.2018 11:52:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:53:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getListQuery | Error Processing Request
+----------
+15.01.2018 11:53:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getItems | Ошибка!
+----------
+15.01.2018 11:53:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 11:55:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:55:12 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:55:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:55:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:55:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:55:13 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:55:14 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:55:14 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:55:40 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:55:45 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:49 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:50 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:51 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:52 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:57:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:59:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:59:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:59:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:59:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 11:59:09 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:01:57 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getListQuery | Error Processing Request
+----------
+15.01.2018 12:01:57 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getItems | Ошибка!
+----------
+15.01.2018 12:01:57 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 12:02:42 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:04:20 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'dealer_id' in field list is ambiguous
+SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'dealer_id' in field list is ambiguous
+----------
+15.01.2018 12:05:34 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:07:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:07:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:07:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:07:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:07:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:07:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:09:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:09:22 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:09:23 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:09:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:09:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:09:26 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:10:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:10:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:10:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:10:08 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:10:40 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.id' in 'on clause'
+----------
+15.01.2018 12:12:41 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/encashment.php | getData | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '00:00:00 and 1970-01-01 23:59:00
+ORDER BY `date_time` ASC' at line 3
+----------
+15.01.2018 12:12:41 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/cashbox.php | getData | Ошибка!
+----------
+15.01.2018 12:12:41 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 12:14:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/encashment.php | getData | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '00:00:00 and 2018-01-31 23:59:00
+ORDER BY `date_time` ASC' at line 3
+----------
+15.01.2018 12:14:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/cashbox.php | getData | Ошибка!
+----------
+15.01.2018 12:14:18 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 12:15:01 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:02 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:02 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:03 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:05 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:07 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:19 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:15:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:16:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:25 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:28 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:29 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:30 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:17:31 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:20:59 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'on clause'
+----------
+15.01.2018 12:23:56 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:24:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getListQuery | 
+SELECT a.*,(a.components_margin_sum + a.canvases_margin_sum + a.mounting_margin_sum) AS project_margin_sum
+FROM (
+SELECT DISTINCT a.*,DATE_FORMAT(a.project_calculation_date, '%d.%m.%Y') AS calculation_date,CONCAT(DATE_FORMAT(a.project_calculation_date, '%H:%i'),'-',DATE_FORMAT(DATE_ADD(a.project_calculation_date, INTERVAL 1 HOUR), '%H:%i')) AS calculation_time,DATE_FORMAT(a.project_mounting_date, '%d.%m.%Y %H:%i') AS mounting_date,CONCAT(DATE_FORMAT(a.project_mounting_start, '%H:%i'),'-',DATE_FORMAT(a.project_mounting_end, '%H:%i')) AS mounting_time,a.project_info AS address,status.title AS status, status.id AS status_id,client.client_name AS client_name,dealer.name AS dealer_name, client_contact.phone AS client_contacts,mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id,sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings,((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum,((sum(calculation.canvases_sum) * 100) / (100 - a.gm_canvases_margin - a.dealer_canvases_margin + a.gm_canvases_margin * a.dealer_canvases_margin)) AS canvases_margin_sum,((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum,uc.id AS editor, uc.name AS editor_name,created_by.name AS created_name,modified_by.name AS modified_name
+FROM `#__gm_ceiling_projects` AS a
+LEFT JOIN `#__gm_ceiling_status` AS status ON status.id = a.project_status
+LEFT JOIN `#__gm_ceiling_clients` AS client ON client.id = a.client_id
+LEFT JOIN `#__users` as dealer ON dealer.id = client.dealer_id
+LEFT JOIN `#__gm_ceiling_clients_contacts` AS client_contact ON client_contact.client_id = a.client_id
+LEFT JOIN `#__gm_ceiling_groups` AS mounter_group ON mounter_group.id = a.project_mounter
+LEFT JOIN `#__gm_ceiling_calculations` AS calculation ON calculation.project_id = a.id
+LEFT JOIN `#__users` AS uc ON uc.id = a.checked_out
+LEFT JOIN `#__users` AS created_by ON created_by.id = a.created_by
+LEFT JOIN `#__users` AS modified_by ON modified_by.id = a.modified_by
+WHERE a.state = 1
+GROUP BY id) AS a
+WHERE client.dealer_id = 1 AND a.project_status = 1
+ORDER BY a.project_calculation_date,a.calculation_date DESC,a.id DESC
+----------
+15.01.2018 12:24:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getItems | Ошибка!
+----------
+15.01.2018 12:24:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 12:27:42 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getListQuery | 
+SELECT a.*,(a.components_margin_sum + a.canvases_margin_sum + a.mounting_margin_sum) AS project_margin_sum
+FROM (
+SELECT DISTINCT a.*,DATE_FORMAT(a.project_calculation_date, '%d.%m.%Y') AS calculation_date,CONCAT(DATE_FORMAT(a.project_calculation_date, '%H:%i'),'-',DATE_FORMAT(DATE_ADD(a.project_calculation_date, INTERVAL 1 HOUR), '%H:%i')) AS calculation_time,DATE_FORMAT(a.project_mounting_date, '%d.%m.%Y %H:%i') AS mounting_date,CONCAT(DATE_FORMAT(a.project_mounting_start, '%H:%i'),'-',DATE_FORMAT(a.project_mounting_end, '%H:%i')) AS mounting_time,a.project_info AS address,status.title AS status, status.id AS status_id,client.client_name AS client_name,dealer.name AS dealer_name, client_contact.phone AS client_contacts,mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id,sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings,((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum,((sum(calculation.canvases_sum) * 100) / (100 - a.gm_canvases_margin - a.dealer_canvases_margin + a.gm_canvases_margin * a.dealer_canvases_margin)) AS canvases_margin_sum,((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum,uc.id AS editor, uc.name AS editor_name,created_by.name AS created_name,modified_by.name AS modified_name
+FROM `#__gm_ceiling_projects` AS a
+LEFT JOIN `#__gm_ceiling_status` AS status ON status.id = a.project_status
+LEFT JOIN `#__gm_ceiling_clients` AS client ON client.id = a.client_id
+LEFT JOIN `#__users` as dealer ON dealer.id = client.dealer_id
+LEFT JOIN `#__gm_ceiling_clients_contacts` AS client_contact ON client_contact.client_id = a.client_id
+LEFT JOIN `#__gm_ceiling_groups` AS mounter_group ON mounter_group.id = a.project_mounter
+LEFT JOIN `#__gm_ceiling_calculations` AS calculation ON calculation.project_id = a.id
+LEFT JOIN `#__users` AS uc ON uc.id = a.checked_out
+LEFT JOIN `#__users` AS created_by ON created_by.id = a.created_by
+LEFT JOIN `#__users` AS modified_by ON modified_by.id = a.modified_by
+WHERE a.state = 1
+GROUP BY id) AS a
+WHERE a.project_status in (10,11, 16, 17)
+ORDER BY a.id DESC
+----------
+15.01.2018 12:27:42 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getItems | Ошибка!
+----------
+15.01.2018 12:27:42 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 12:27:43 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getListQuery | 
+SELECT a.*,(a.components_margin_sum + a.canvases_margin_sum + a.mounting_margin_sum) AS project_margin_sum
+FROM (
+SELECT DISTINCT a.*,DATE_FORMAT(a.project_calculation_date, '%d.%m.%Y') AS calculation_date,CONCAT(DATE_FORMAT(a.project_calculation_date, '%H:%i'),'-',DATE_FORMAT(DATE_ADD(a.project_calculation_date, INTERVAL 1 HOUR), '%H:%i')) AS calculation_time,DATE_FORMAT(a.project_mounting_date, '%d.%m.%Y %H:%i') AS mounting_date,CONCAT(DATE_FORMAT(a.project_mounting_start, '%H:%i'),'-',DATE_FORMAT(a.project_mounting_end, '%H:%i')) AS mounting_time,a.project_info AS address,status.title AS status, status.id AS status_id,client.client_name AS client_name,dealer.name AS dealer_name, client_contact.phone AS client_contacts,mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id,sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings,((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum,((sum(calculation.canvases_sum) * 100) / (100 - a.gm_canvases_margin - a.dealer_canvases_margin + a.gm_canvases_margin * a.dealer_canvases_margin)) AS canvases_margin_sum,((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum,uc.id AS editor, uc.name AS editor_name,created_by.name AS created_name,modified_by.name AS modified_name
+FROM `#__gm_ceiling_projects` AS a
+LEFT JOIN `#__gm_ceiling_status` AS status ON status.id = a.project_status
+LEFT JOIN `#__gm_ceiling_clients` AS client ON client.id = a.client_id
+LEFT JOIN `#__users` as dealer ON dealer.id = client.dealer_id
+LEFT JOIN `#__gm_ceiling_clients_contacts` AS client_contact ON client_contact.client_id = a.client_id
+LEFT JOIN `#__gm_ceiling_groups` AS mounter_group ON mounter_group.id = a.project_mounter
+LEFT JOIN `#__gm_ceiling_calculations` AS calculation ON calculation.project_id = a.id
+LEFT JOIN `#__users` AS uc ON uc.id = a.checked_out
+LEFT JOIN `#__users` AS created_by ON created_by.id = a.created_by
+LEFT JOIN `#__users` AS modified_by ON modified_by.id = a.modified_by
+WHERE a.state = 1
+GROUP BY id) AS a
+WHERE a.project_status in (10,11, 16, 17)
+ORDER BY a.id DESC
+----------
+15.01.2018 12:27:43 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getItems | Ошибка!
+----------
+15.01.2018 12:27:43 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 12:27:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getListQuery | 
+SELECT a.*,(a.components_margin_sum + a.canvases_margin_sum + a.mounting_margin_sum) AS project_margin_sum
+FROM (
+SELECT DISTINCT a.*,DATE_FORMAT(a.project_calculation_date, '%d.%m.%Y') AS calculation_date,CONCAT(DATE_FORMAT(a.project_calculation_date, '%H:%i'),'-',DATE_FORMAT(DATE_ADD(a.project_calculation_date, INTERVAL 1 HOUR), '%H:%i')) AS calculation_time,DATE_FORMAT(a.project_mounting_date, '%d.%m.%Y %H:%i') AS mounting_date,CONCAT(DATE_FORMAT(a.project_mounting_start, '%H:%i'),'-',DATE_FORMAT(a.project_mounting_end, '%H:%i')) AS mounting_time,a.project_info AS address,status.title AS status, status.id AS status_id,client.client_name AS client_name,dealer.name AS dealer_name, client_contact.phone AS client_contacts,mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id,sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings,((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum,((sum(calculation.canvases_sum) * 100) / (100 - a.gm_canvases_margin - a.dealer_canvases_margin + a.gm_canvases_margin * a.dealer_canvases_margin)) AS canvases_margin_sum,((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum,uc.id AS editor, uc.name AS editor_name,created_by.name AS created_name,modified_by.name AS modified_name
+FROM `#__gm_ceiling_projects` AS a
+LEFT JOIN `#__gm_ceiling_status` AS status ON status.id = a.project_status
+LEFT JOIN `#__gm_ceiling_clients` AS client ON client.id = a.client_id
+LEFT JOIN `#__users` as dealer ON dealer.id = client.dealer_id
+LEFT JOIN `#__gm_ceiling_clients_contacts` AS client_contact ON client_contact.client_id = a.client_id
+LEFT JOIN `#__gm_ceiling_groups` AS mounter_group ON mounter_group.id = a.project_mounter
+LEFT JOIN `#__gm_ceiling_calculations` AS calculation ON calculation.project_id = a.id
+LEFT JOIN `#__users` AS uc ON uc.id = a.checked_out
+LEFT JOIN `#__users` AS created_by ON created_by.id = a.created_by
+LEFT JOIN `#__users` AS modified_by ON modified_by.id = a.modified_by
+WHERE a.state = 1
+GROUP BY id) AS a
+WHERE a.project_status = 5 or a.project_status = 4 AND a.project_verdict  = 1
+ORDER BY a.id DESC
+----------
+15.01.2018 12:27:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getItems | Ошибка!
+----------
+15.01.2018 12:27:47 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 12:32:56 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getListQuery | 
+SELECT a.*,(a.components_margin_sum + a.canvases_margin_sum + a.mounting_margin_sum) AS project_margin_sum
+FROM (
+SELECT DISTINCT a.*,DATE_FORMAT(a.project_calculation_date, '%d.%m.%Y') AS calculation_date,CONCAT(DATE_FORMAT(a.project_calculation_date, '%H:%i'),'-',DATE_FORMAT(DATE_ADD(a.project_calculation_date, INTERVAL 1 HOUR), '%H:%i')) AS calculation_time,DATE_FORMAT(a.project_mounting_date, '%d.%m.%Y %H:%i') AS mounting_date,CONCAT(DATE_FORMAT(a.project_mounting_start, '%H:%i'),'-',DATE_FORMAT(a.project_mounting_end, '%H:%i')) AS mounting_time,a.project_info AS address,client.dealer_id,status.title AS status, status.id AS status_id,client.client_name AS client_name,dealer.name AS dealer_name, client_contact.phone AS client_contacts,mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id,sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings,((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum,((sum(calculation.canvases_sum) * 100) / (100 - a.gm_canvases_margin - a.dealer_canvases_margin + a.gm_canvases_margin * a.dealer_canvases_margin)) AS canvases_margin_sum,((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum,uc.id AS editor, uc.name AS editor_name,created_by.name AS created_name,modified_by.name AS modified_name
+FROM `#__gm_ceiling_projects` AS a
+LEFT JOIN `#__gm_ceiling_status` AS status ON status.id = a.project_status
+LEFT JOIN `#__gm_ceiling_clients` AS client ON client.id = a.client_id
+LEFT JOIN `#__users` as dealer ON dealer.id = client.dealer_id
+LEFT JOIN `#__gm_ceiling_clients_contacts` AS client_contact ON client_contact.client_id = a.client_id
+LEFT JOIN `#__gm_ceiling_groups` AS mounter_group ON mounter_group.id = a.project_mounter
+LEFT JOIN `#__gm_ceiling_calculations` AS calculation ON calculation.project_id = a.id
+LEFT JOIN `#__users` AS uc ON uc.id = a.checked_out
+LEFT JOIN `#__users` AS created_by ON created_by.id = a.created_by
+LEFT JOIN `#__users` AS modified_by ON modified_by.id = a.modified_by
+WHERE a.state = 1
+GROUP BY id) AS a
+WHERE client.dealer_id = 1 AND a.project_status = 1
+ORDER BY a.project_calculation_date,a.calculation_date DESC,a.id DESC
+----------
+15.01.2018 12:32:56 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getItems | Ошибка!
+----------
+15.01.2018 12:32:56 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 12:33:31 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:35:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getListQuery | 
+SELECT a.*,(a.components_margin_sum + a.canvases_margin_sum + a.mounting_margin_sum) AS project_margin_sum
+FROM (
+SELECT DISTINCT a.*,DATE_FORMAT(a.project_calculation_date, '%d.%m.%Y') AS calculation_date,CONCAT(DATE_FORMAT(a.project_calculation_date, '%H:%i'),'-',DATE_FORMAT(DATE_ADD(a.project_calculation_date, INTERVAL 1 HOUR), '%H:%i')) AS calculation_time,DATE_FORMAT(a.project_mounting_date, '%d.%m.%Y %H:%i') AS mounting_date,CONCAT(DATE_FORMAT(a.project_mounting_start, '%H:%i'),'-',DATE_FORMAT(a.project_mounting_end, '%H:%i')) AS mounting_time,a.project_info AS address,client.dealer_id,status.title AS status, status.id AS status_id,client.client_name AS client_name,dealer.name AS dealer_name, client_contact.phone AS client_contacts,mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id,sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings,((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum,((sum(calculation.canvases_sum) * 100) / (100 - a.gm_canvases_margin - a.dealer_canvases_margin + a.gm_canvases_margin * a.dealer_canvases_margin)) AS canvases_margin_sum,((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum,uc.id AS editor, uc.name AS editor_name,created_by.name AS created_name,modified_by.name AS modified_name
+FROM `#__gm_ceiling_projects` AS a
+LEFT JOIN `#__gm_ceiling_status` AS status ON status.id = a.project_status
+LEFT JOIN `#__gm_ceiling_clients` AS client ON client.id = a.client_id
+LEFT JOIN `#__users` as dealer ON dealer.id = client.dealer_id
+LEFT JOIN `#__gm_ceiling_clients_contacts` AS client_contact ON client_contact.client_id = a.client_id
+LEFT JOIN `#__gm_ceiling_groups` AS mounter_group ON mounter_group.id = a.project_mounter
+LEFT JOIN `#__gm_ceiling_calculations` AS calculation ON calculation.project_id = a.id
+LEFT JOIN `#__users` AS uc ON uc.id = a.checked_out
+LEFT JOIN `#__users` AS created_by ON created_by.id = a.created_by
+LEFT JOIN `#__users` AS modified_by ON modified_by.id = a.modified_by
+WHERE a.state = 1
+GROUP BY id) AS a
+WHERE a.project_status = 5 or a.project_status = 4 AND a.project_verdict  = 1
+ORDER BY a.id DESC
+----------
+15.01.2018 12:35:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/projects.php | getItems | Ошибка!
+----------
+15.01.2018 12:35:48 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Ошибка!
+----------
+15.01.2018 12:37:17 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:37:37 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:39:21 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:42:02 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:42:10 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------
+15.01.2018 12:43:41 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'client.dealer_id' in 'where clause'
+----------

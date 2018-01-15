@@ -143,8 +143,8 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
 
             Day = $(day),
             Month = Day.closest(".Month");
-
-        ModalDay.find("Name").text(Month.attr(""));
+      
+        ModalDay.find(".Title").text(Day.text + " " + Month.attr("modalname") + " " + Month.attr("year") + "г.");
 
         Modal.show();
         ModalDay.show();
