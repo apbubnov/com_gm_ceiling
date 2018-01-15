@@ -345,6 +345,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
              var input_value = jQuery("#input_check").val();
              var input_mounting = jQuery("#input_mounting").val();
              var input_material = jQuery("#input_material").val();*/
+            alert(new_project_sum);
 			modal({
 				type: 'primary',
 				title: subject,
