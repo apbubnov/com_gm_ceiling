@@ -129,9 +129,9 @@ class Gm_ceilingModelProjects extends JModelList
             $query->select('status.title AS status, status.id AS status_id')
                 ->join('LEFT', '`#__gm_ceiling_status` AS status ON status.id = a.project_status');
 
-/*             $query->select('dealer.name AS dealer_name')
+            $query->select('dealer.name AS dealer_name')
                 ->join('LEFT', '`#__users` as dealer ON dealer.id = client.dealer_id');
- */
+
             $query->select('client.client_name AS client_name')
                 ->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id');
 
