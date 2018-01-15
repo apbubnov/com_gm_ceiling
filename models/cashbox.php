@@ -29,7 +29,7 @@ class Gm_ceilingModelCashbox extends JModelList
 			$query = $db->getQuery(true);
 			if(empty($date1) && empty($date2)){
 				$date1 = date('Y-m-01');
-				$date2 = date('Y-m-t');
+				$date2 = date('Y-m-t'); 
 			}
 			$query->select('p.id')
 				->select('p.closed')
@@ -48,7 +48,7 @@ class Gm_ceilingModelCashbox extends JModelList
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			$encashment_model = Gm_ceilingHelpersGm_ceiling::getModel('Encashment');
-			$encashments = $encashment_model->getData();
+			$encashments = $encashment_model->getData($date1,$date2);
 			$new_encash = [];
 			foreach($encashments as $value){
 				$el = array(
