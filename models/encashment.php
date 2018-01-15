@@ -13,10 +13,12 @@
 class Gm_ceilingModelEncashment extends JModelList
 {
 	
-	function getData()
+	function getData($date1,$date2)
 	{
 		try
 		{
+			$date1 = date('Y-m-d 00:00:00',strtotime($date1));
+			$date2 = date('Y-m-d 23:59:00',strtotime($date2));
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
             $query
@@ -24,6 +26,7 @@ class Gm_ceilingModelEncashment extends JModelList
                 ->select('sum')
 				->select('manager_id')
 				->from('#__gm_ceiling_encashment')
+				->where("`date_time` between $date1 and $date2")
 				->order('`date_time` ASC');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
