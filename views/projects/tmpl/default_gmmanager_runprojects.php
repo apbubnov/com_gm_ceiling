@@ -249,6 +249,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     }
 
     function click_ok(id) {
+
+        
         var project_id = id;
         //td = jQuery( this );
         //var project_id =  td.data("project_id");
@@ -257,8 +259,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         var input_mounting_itog = jQuery("#input_mounting_itog").val();
         var input_material = jQuery("#input_material").val();
         var check = jQuery("input[name='check_mount']:checked").val();
-        if (check == undefined) { check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
-        else if (check == 1){ check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
+        if (check == undefined) { check = 1; }
+        else if (check == 1){ check = 1;}
         else check = 0;
 
         //alert(input_value);
@@ -275,7 +277,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 check: check
             },
             success: function(data){
-                if(check == 1) button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
+                button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
                 var n = noty({
                     theme: 'relax',
                     layout: 'center',
@@ -354,7 +356,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 					text: 'Выполнено', //Button Text
 					val: 0, //Button Value
 					eKey: true, //Enter Keypress
-                    addId: '#idCalcDelete',
 					addClass: 'btn-danger', //Button Classes (btn-large | btn-small | btn-green | btn-light-green | btn-purple | btn-orange | btn-pink | btn-turquoise | btn-blue | btn-light-blue | btn-light-red | btn-red | btn-yellow | btn-white | btn-black | btn-rounded | btn-circle | btn-square | btn-disabled)
 					onClick: function(dialog) {
                         var input_value = jQuery("#input_check").val();
@@ -363,20 +364,23 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var input_material = jQuery("#input_material").val();
                         var check = jQuery("input[name='check_mount']:checked").val();
                         //Просчет прибыли
+                        new_project_sum = (new_project_sum === "")?0:new_project_sum;
+                        input_value = (input_value === "")?0:input_value;
+                        cost_price = (cost_price === "")?0:cost_price;
                         var profit = parseFloat(new_project_sum) + parseFloat(input_value) - parseFloat(cost_price); 
-                        alert(profit);
+                        //alert(new_project_sum + " ------- " + profit);
                         if (profit < 0 && (check == undefined || check == 1)) 
                         {
-                            check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();
-                            //if (check == undefined) { check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
-                        //else if (check == 1){ check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
+                            //check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();
+                            if (check == undefined) { check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
+                        else if (check == 1){ check = 1; jQuery("#modal_window_container_"+ td.data("project_id")+", #modal_window_container_" + td.data("project_id") +" *").show();}
                         }
                         else { 
                             
                             //check = 0;
 
-                            if (check == undefined) { check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
-                            else if (check == 1){ check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
+                            if (check == undefined) { check = 1;}
+                            else if (check == 1){ check = 1;}
                             else check = 0;
 
                             //alert(input_value);

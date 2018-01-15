@@ -63,10 +63,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		<tbody>
 			<?php foreach ($this->items as $i => $item):
 				$canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
-				$client_id = $item->client_id;
-				$model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-				$client = $model_client->getClientById($client_id);
-				$dealer = JFactory::getUser($client->dealer_id);
 				if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')):
 					$canEdit = JFactory::getUser()->id == $item->created_by;
 				endif;
@@ -97,7 +93,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						<?php echo $item->client_name; ?>
 					</td>
 					<td class="center one-touch">
-						<?php echo $dealer->name; ?>
+						<?php echo $item->dealer_name; ?>
 					</td>
 				</tr>
 			<?php endforeach; ?>

@@ -69,7 +69,6 @@ $subtype = $jinput->getString('subtype', '', 'STRING');
         <? foreach ($this->items as $i => $item): ?>
             <?
             $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
-            $dealer = JFactory::getUser($item->dealer_id);
             if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
                 $canEdit = JFactory::getUser()->id == $item->created_by;
             ?>

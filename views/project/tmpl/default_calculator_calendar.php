@@ -2054,7 +2054,6 @@ var $ = jQuery;
                 jQuery(".project_activation").hide();
                 jQuery("#refuse").hide();
                 jQuery("#project_activation").show();
-                jQuery("#project_activation").prependTo();
                 $tmp_accept = 1;
                 $tmp_refuse = 0;
             } else {
@@ -2069,7 +2068,7 @@ var $ = jQuery;
             }
             
             setTimeout(() => {
-                window.location = "#bottom";
+                window.location = "#project_activation";
             }, 100); 
         });
         jQuery("#refuse_project").click(function () {
@@ -2090,6 +2089,9 @@ var $ = jQuery;
                 $tmp_refuse = 0;
                 $tmp_accept = 0;
             }
+            setTimeout(() => {
+                window.location = "#refuse";
+            }, 100); 
             //jQuery(".project_activation").toggle();
             //jQuery("#refuse").toggle();
            // 
