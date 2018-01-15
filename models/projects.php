@@ -123,37 +123,37 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('CONCAT(DATE_FORMAT(a.project_mounting_start, \'%H:%i\'),\'-\',DATE_FORMAT(a.project_mounting_end, \'%H:%i\')) AS mounting_time')
                 ->select('a.project_info AS address')
                 ->select('client.dealer_id')
-                ->from('`#__gm_ceiling_projects` AS a')
+                ->from('`#__gm_ceiling_projects` AS `a`')
                 ->where('a.state = 1')
                 ->group('id');
 
             $query->select('status.title AS status, status.id AS status_id')
-                ->join('LEFT', '`#__gm_ceiling_status` AS status ON status.id = a.project_status');
+                ->join('LEFT', '`#__gm_ceiling_status` AS `status` ON status.id = a.project_status');
 
             $query->select('client.client_name AS client_name')//, client.dealer_id, client.id
-                ->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id');
+                ->join('LEFT', '`#__gm_ceiling_clients` AS `client` ON client.id = a.client_id');
 
             $query->select('dealer.name AS dealer_name')
-                ->join('LEFT', '`#__users` as dealer ON dealer.id = client.dealer_id');
+                ->join('LEFT', '`#__users` as `dealer` ON dealer.id = client.dealer_id');
 
             $query->select(' client_contact.phone AS client_contacts')
-                ->join('LEFT', '`#__gm_ceiling_clients_contacts` AS client_contact ON client_contact.client_id = a.client_id');
+                ->join('LEFT', '`#__gm_ceiling_clients_contacts` AS `client_contact` ON client_contact.client_id = a.client_id');
 
             $query->select('mounter_group.name AS group_name, mounter_group.id AS group_id, mounter_group.brigadir_id AS brigadir_id')
-                ->join('LEFT', '`#__gm_ceiling_groups` AS mounter_group ON mounter_group.id = a.project_mounter');
+                ->join('LEFT', '`#__gm_ceiling_groups` AS `mounter_group` ON mounter_group.id = a.project_mounter');
 
             $query->select('sum(calculation.n4) AS quadrature, count(calculation.id) AS count_ceilings')
                 ->select('((sum(calculation.components_sum) * 100) / (100 - a.gm_components_margin - a.dealer_components_margin + a.gm_components_margin * a.dealer_components_margin)) AS components_margin_sum')
                 ->select('((sum(calculation.canvases_sum) * 100) / (100 - a.gm_canvases_margin - a.dealer_canvases_margin + a.gm_canvases_margin * a.dealer_canvases_margin)) AS canvases_margin_sum')
                 ->select('((sum(calculation.mounting_sum) * 100) / (100 - a.dealer_mounting_margin)) AS mounting_margin_sum')
-                ->join('LEFT', '`#__gm_ceiling_calculations` AS calculation ON calculation.project_id = a.id');
+                ->join('LEFT', '`#__gm_ceiling_calculations` AS `calculation` ON calculation.project_id = a.id');
 
             $query->select('uc.id AS editor, uc.name AS editor_name')
-                ->join('LEFT', '`#__users` AS uc ON uc.id = a.checked_out')
+                ->join('LEFT', '`#__users` AS `uc` ON uc.id = a.checked_out')
                 ->select('created_by.name AS created_name')
-                ->join('LEFT', '`#__users` AS created_by ON created_by.id = a.created_by')
+                ->join('LEFT', '`#__users` AS `created_by` ON created_by.id = a.created_by')
                 ->select('modified_by.name AS modified_name')
-                ->join('LEFT', '`#__users` AS modified_by ON modified_by.id = a.modified_by');
+                ->join('LEFT', '`#__users` AS `modified_by` ON modified_by.id = a.modified_by');
 
             $sql_query = (string)$query;
 
