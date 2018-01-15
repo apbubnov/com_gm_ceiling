@@ -11,13 +11,30 @@ defined('_JEXEC') or die;
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
+$month = date("n");
+$year = date("Y");
 ?>
-
 <form>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <button type = "button" id = "add" class = "btn btn-primary">Инкассация</button>
+    <button class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+    <select id = "mounth" class="inputactive">
+        <option value = 0>Январь</option>
+        <option value = 1>Февраль</option>
+        <option value = 2>Март</option>
+        <option value = 3>Апрель</option>
+        <option value = 4>Май</option>
+        <option value = 5>Июнь</option>
+        <option value = 6>Июль</option>
+        <option value = 7>Август</option>
+        <option value = 8>Сентябрь</option>
+        <option value = 9>Октябрь</option>
+        <option value = 10>Ноябрь</option>
+        <option value = 11>Декабрь</option>
+    </select><label class = "inputactive" id = "year"><?php echo $year?></label>
+    <button class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
     <div id="modal_window_container" class = "modal_window_container">
 		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal_window_sum" class = "modal_window">
@@ -70,7 +87,6 @@ $userId     = $user->get('id');
                ?>
                 <tr>
                     <td>
-                        
                         <?php
                             if(isset($item->id)){
                                 echo date_format(date_create($item->closed),"d.m.Y");
@@ -213,6 +229,54 @@ $userId     = $user->get('id');
                 });
             }
         });
-        })
+        });
+        month_old = 0;
+        year_old = 0;
+        jQuery("#next").click(function () {
+            month = <?php echo $month; ?>;
+            year = <?php echo $year; ?>;
+            if (month_old != 0) {
+                month = month_old;
+                year = year_old;
+            }
+            if (month == 12) {
+                month = 1;
+                year++;
+            } else {
+                month++;
+            }
+            month_old = month;
+            year_old = year;
+            update_month_year(month,year);  
+            console.log(month,year);          
+        });
+        jQuery("#prev").click(function () {
+            month = <?php echo $month; ?>;
+            year = <?php echo $year; ?>;
+            if (month_old != 0) {
+                month = month_old;
+                year = year_old;
+            }
+            if (month == 1) {
+                month = 12;
+                year--;
+            } else {
+                month--;
+            }
+            month_old = month;
+            year_old = year;
+            update_month_year(month,year);
+            console.log(month,year);
+        });
+        
     });
+    function update_month_year(month,year){
+        jQuery("#month option").each(function()
+        {
+            if(this.val()==month){
+                jQuery(this).attr("selected",true);
+            }
+        });
+        jQuery("#year").val(year);
+    }
 </script>
