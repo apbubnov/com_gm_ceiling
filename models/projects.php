@@ -292,8 +292,9 @@ class Gm_ceilingModelProjects extends JModelList
                     $who = "'1', '0'";
                 }
                 $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
-                    ->where("project_status = '1' and who_calculate in ($who) and dealer_id = '$user->dealer_id'");
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->innerJoin("#__users as users ON projects.client_id = users.id")
+                    ->where("projects.project_status = '1' and projects.who_calculate in ($who) and users.dealer_id = '$user->dealer_id'");
             } else
             // НМС (монтажи)
             if ($status == "Mountings") {
