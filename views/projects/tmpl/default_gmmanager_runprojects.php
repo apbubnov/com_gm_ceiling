@@ -257,8 +257,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
         var input_mounting_itog = jQuery("#input_mounting_itog").val();
         var input_material = jQuery("#input_material").val();
         var check = jQuery("input[name='check_mount']:checked").val();
-        if (check == undefined) { check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
-        else if (check == 1){ check = 1; $("modal_window_container #ok").click(function() { click_ok(this); });}
+        if (check == undefined) { check = 1; }
+        else if (check == 1){ check = 1;}
         else check = 0;
 
         //alert(input_value);
