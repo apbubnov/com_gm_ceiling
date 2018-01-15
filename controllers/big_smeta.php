@@ -79,27 +79,30 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             }
             }*/
             $model = $this->getModel();
-            $calculation = $model->calculation($POST['include_calculation']);
+            if(!empty($POST['include_calculation'])) {
+                $calculation = $model->calculation($POST['include_calculation']);
 
-            $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-            $html = ' <h1>Номер договора: ' . $POST['project_id'] . '</h1><br>';
-            $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
-            $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
-            $html .= '<table border="0" cellspacing="0" width="100%">
-			<tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
-            //написать модель, которая будет возвращать данные о калькуляции
-            foreach ($calculation as $calc) {
-                $html .= '<tr>';
-                $html .= '<td>' . $calc->calculation_title . '</td>';
-                $html .= '<td class="center">' . $calc->n4 . '</td>';
-                $html .= '<td class="center">' . $calc->n5 . '</td>';
-                $html .= '<td class="center">' . round($POST['calculation_total_discount'][ $calc->id], 2) . '</td>';
-                $html .= '</tr>';
-                $sum += $POST['calculation_total_discount'][ $calc->id];
+                $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+                $html = ' <h1>Номер договора: ' . $POST['project_id'] . '</h1><br>';
+                $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
+                $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
+                $html .= '<table border="0" cellspacing="0" width="100%">
+                <tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
+                //написать модель, которая будет возвращать данные о калькуляции
+                foreach ($calculation as $calc) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $calc->calculation_title . '</td>';
+                    $html .= '<td class="center">' . $calc->n4 . '</td>';
+                    $html .= '<td class="center">' . $calc->n5 . '</td>';
+                    $html .= '<td class="center">' . round($POST['calculation_total_discount'][ $calc->id], 2) . '</td>';
+                    $html .= '</tr>';
+                    $sum += $POST['calculation_total_discount'][ $calc->id];
+                }
+                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
+                $html .= '</tbody></table><p>&nbsp;</p><br>';
+    
             }
-            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
-            $html .= '</tbody></table><p>&nbsp;</p><br>';
-
+            
             $html .= '<h2>Транспортные расходы: </h2>';
             $html .= '<table border="0" cellspacing="0" width="100%">
 			<tbody><tr><th>Вид транспорта</th><th class="center">Кол-во км<sup>2</sup>.</th><th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th></tr>';
