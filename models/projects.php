@@ -304,9 +304,10 @@ class Gm_ceilingModelProjects extends JModelList
                 } else {
                     $dealer = $user->dealer_id;
                 }
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
-                    ->where("project_status in ('5', '6', '7', '8', '10', '11', '16', '17') and dealer_id = '$dealer'");
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                    ->where("projects.project_status in ('5', '6', '7', '8', '10', '11', '16', '17') and clients.dealer_id = '$dealer'");
             } else
             if ($status == "ComplitedMountings") {
                 if ($user->dealer_id == 1) {
