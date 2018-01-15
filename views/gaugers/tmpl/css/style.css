@@ -114,6 +114,117 @@
     font-size: 14px;
 }
 
+/* #hours1, #hours2 {
+    width: 200px;
+}
+
+#hours {
+    margin-left: calc(50% - 115px);
+}
+
+#hours td {
+    padding: 10px;        
+} */
+
+#wrong-window {
+    color: #ff3d3d;
+    margin-bottom: 1em;
+}
+
+#modal-window-with-table {
+    display: none;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+#close-modal-window {
+    display: none;
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background-color: transparent;
+    border: 0px;
+    outline: none;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 50px;
+}
+
+#close-modal-window:hover {
+    color: #d3d3f9;
+    transition: 0.3s;
+    -moz-transition: 0.3s;
+    -webkit-transition: 0.3s;
+}
+
+#window-with-table {
+    display: none;
+    width: 80%;
+    margin-left: 10%;
+    background-color: #ffffff;
+    text-align: center;
+    padding: 25px;
+    transform: translateY(50px);
+    overflow-x: auto;
+    max-height: calc(100% - 100px);
+    overflow-y: auto;
+}
+
+@media screen and (min-width: 992px) {
+    #window-with-table {
+        display: none;
+        width: 80%;
+        margin-left: 10%;
+        background-color: #ffffff;
+        text-align: center;
+        padding: 25px;
+        transform: translateY(150px);
+        overflow-x: auto;
+        max-height: calc(100% - 300px);
+        overflow-y: auto;
+    }
+}
+
+#table-gauging {
+    min-width: 300px;
+    width: 100%;
+    color: #414099;
+    text-align: center !important;
+    margin-bottom: 1em;
+}
+
+#table-gauging td {
+    border: 1px solid #414099;
+    padding: 5px;
+    text-align: center !important;
+}
+
+@media screen and (min-width: 992px) {
+    #table-gauging td {
+        padding: 15px;
+    }
+}
+
+#caption-tr, #caption-data td {
+    background-color: #d3d3f9;
+    text-align: center !important;    
+}
+
+.clickabel {
+    cursor: pointer;
+}
+
+#free_day_container {
+    width: 100%;
+    text-align: right;
+}
+
 #hours1, #hours2 {
     width: 200px;
 }
@@ -124,9 +235,4 @@
 
 #hours td {
     padding: 10px;        
-}
-
-#wrong-window {
-    color: #ff3d3d;
-    margin-bottom: 1em;
 }

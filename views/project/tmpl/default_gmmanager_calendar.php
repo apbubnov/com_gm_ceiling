@@ -68,7 +68,7 @@ $mount_transport = $mountModel->getDataAll();
 
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-if($this->item->transport == 2 ) $sum_transport = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
+if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
 if($this->item->transport == 1 ) {
 $min = 100;
 foreach($calculations as $d) {
@@ -260,7 +260,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id))? $this->item->api_phone_id: '0' ?>" type="hidden">
                     <input name = "recoil" id = "recoil" value = "" type = "hidden">
                     <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if(isset($_SESSION['time'])){ echo $_SESSION['time']; }?>"class="inputactive" type="hidden">
-                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; }?>" type="hidden">
+                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; } else if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;}?>" type="hidden">
                     <input name = "project_gauger" id = "jform_project_gauger" class ="inputactive" value="<?php if(isset($_SESSION['gauger'])){ echo $_SESSION['gauger']; } else {echo "0";}?>" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
@@ -303,6 +303,14 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                         <select id="found_clients" class="inputactive">
                                         </select>
                                     </td>
+                                </tr>
+                                <?  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+                                 $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
+                                <tr>
+                                    <th>Дата рождения</th>
+                                    <td><input name="new_birthday" id="jform_birthday" class="inputactive"
+                                                value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date"></td>
+                                    <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
                                 </tr>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
@@ -1309,7 +1317,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             jQuery("#modal_window_del").hide();
         }
     });
-
 
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
@@ -2967,6 +2974,40 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             }
         });
     });
+
+    jQuery("#add_birthday").click(function () {
+            var birthday = jQuery("#jform_birthday").val();
+            var id_client = <?php echo $this->item->id_client;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.addBirthday",
+                data: {
+                    birthday: birthday,
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Дата рождения добавлена"
+                    });
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка отправки"
+                    });
+                }
+            });
+        });
 
 ymaps.ready(init);
 

@@ -60,7 +60,7 @@ $mount_transport = $mountModel->getDataAll();
 
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-if($this->item->transport == 2 ) $sum_transport = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
+if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
 if($this->item->transport == 1 ) {
 $min = 100;
 foreach($calculations as $d) {
@@ -305,12 +305,15 @@ $results = $db->loadObjectList();
                                 </div>
                             </td>
                         </tr>
+                        <?  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+                            $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
                         <tr>
                             <th>Дата рождения</th>
                             <td><input name="new_birthday" id="jform_birthday" class="inputactive"
-                                        value="" placeholder="Дата рождения" type="text"></td>
+                                        value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date"></td>
                             <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
                         </tr>
+                        
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
                             <?php $phone = $model->getClientPhones($this->item->id_client); ?>
@@ -961,6 +964,7 @@ $results = $db->loadObjectList();
 
                 </td>
             </tr>
+            <? }?>
             <!-- общий наряд на монтаж--> 
              <tr>
                 <td><b>Общий наряд на монтаж <b></td>
@@ -976,7 +980,14 @@ $results = $db->loadObjectList();
                 </td>
                 <td></td>
             </tr>
-            <? }?>
+            <tr>
+                <td>
+                    <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+                </td>
+                <td></td><td></td>
+            </tr>
+
+            
           
         </table>
 
@@ -1748,6 +1759,41 @@ var $ = jQuery;
             });
         });
 
+        jQuery("#add_birthday").click(function () {
+            var birthday = jQuery("#jform_birthday").val();
+            var id_client = <?php echo $this->item->id_client;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.addBirthday",
+                data: {
+                    birthday: birthday,
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Дата рождения добавлена"
+                    });
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка отправки"
+                    });
+                }
+            });
+        });
+        
+
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -1983,6 +2029,12 @@ var $ = jQuery;
             calculate_total();
             calculate_total1();
             trans();
+        });
+
+        jQuery("input[name^='smeta']").click(function () {
+            if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
+                jQuery("input[name='smeta']").val(1);
+            else jQuery("input[name='smeta']").val(0);
         });
 
         jQuery("#client_order").click(function () {

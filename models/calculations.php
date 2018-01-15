@@ -504,6 +504,32 @@ class Gm_ceilingModelCalculations extends JModelList {
         }
     }
 
+    public function new_getProjectItems($project_id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query
+            ->select('*')
+            ->from('#__gm_ceiling_calculations')
+            ->where('project_id = '.$project_id);
+        $db->setQuery($query);
+        $results = $db->loadObjectList();
+        return $results;
+    }
+
+    public function updateComponents_sum($id)
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->update($db->quoteName('#__gm_ceiling_calculations'));
+        $query->set("`components_sum` = 0")
+            ->where('id = '.$id);
+        //print_r((string)$query); exit;
+        $db->setQuery($query);
+        $db->execute();
+        return true;
+    }
+
     //KM_CHANGED START
 
     public function getProjectItems($project_id)
@@ -893,6 +919,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                     break;
                 }
             }
+            ($index == 0) ? $index = count($items) : 0;
             for ($i=0; $i < count($items); $i++) {
                 $items[$i]->project_mounting_day_off = "";
             }

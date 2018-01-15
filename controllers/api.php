@@ -37,18 +37,20 @@ class Gm_ceilingControllerApi extends JControllerLegacy
     {
         try
         {
-            $authorization = json_decode($POST['authorizations']);
+            $authorization = json_decode($_POST['authorizations']);
             $model = $this->getModel();
             $user = JFactory::getUser($model->getUserId($authorization->username));
             $Password = $authorization->password;
             $verifyPass = JUserHelper::verifyPassword($Password, $user->password, $user->id);
             if ($verifyPass)
             {
+
                 die(json_encode($user));
+
             }
             else
             {
-                die(null);
+                die(json_encode(null));
             }
         }
         catch(Exception $e)
@@ -219,7 +221,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         {
             try
             {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api2');
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
                 if(!empty($_POST['sync_data']))
                 {
                     $table_data = json_decode($_POST['sync_data']);
@@ -241,7 +243,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         {
             try
             {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api2');
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
                 if(!empty($_POST['sync_data']))
                 {
                     $table_data = json_decode($_POST['sync_data']);
@@ -263,7 +265,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         {
             try
             {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api2');
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
                 if(!empty($_POST['sync_data']))
                 {
                     $table_data = json_decode($_POST['sync_data']);

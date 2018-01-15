@@ -28,7 +28,8 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 
 			// письмо
 			$emails = $model->AllNMSEmails();
-			$DataOrder = $model->DataOrder($id);		
+			$DataOrder = $model->DataOrder($id);	
+			$NamesMounters = $model->NamesMounters($DataOrder[0]->project_mounter);
 			$mailer = JFactory::getMailer();
 			$config = JFactory::getConfig();
 			$sender = array(
@@ -43,6 +44,12 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 			$body = "Здравствуйте.\n";
 			$body .= "Проект №$id был прочитан Монтажной Бригадой.\n";
 			$body .= "\n";
+			$body .= "Монтажная Бригада: ".$DataOrder[0]->project_mounter_name." (";
+			foreach ($NamesMounters as $value) {
+				$names .= "$value->name, ";
+			}
+			$body .= substr($names, 0, -2);
+			$body .= ").\n";
 			$body .= "Адреc: ".$DataOrder[0]->project_info."\n";
 			$body .= "Дата и время: ".substr($DataOrder[0]->project_mounting_date,8, 2).".".substr($DataOrder[0]->project_mounting_date,5, 2).".".substr($DataOrder[0]->project_mounting_date,0, 4)." ".substr($DataOrder->project_mounting_date,11, 5)." \n";
 			if (strlen($note) != 0) {

@@ -566,13 +566,42 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
+			$query2 = $db->getQuery(true);
 
-			$query->select('project_info, project_mounting_date')
-			->from('#__gm_ceiling_projects')
-			->where("id = $id");
+			$query2->select("users.name")
+			->from('#__users as users')
+			->where("users.id = projects.project_mounter");
+
+			$query->select("projects.project_info, projects.project_mounting_date, projects.project_mounter, ($query2) as project_mounter_name")
+			->from('#__gm_ceiling_projects as projects')
+			->where("projects.id = $id");
 			$db->setQuery($query);
 
 			$items = $db->loadObjectList();
+			return $items;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	function NamesMounters($id) {
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select("mounters.name")
+			->from('#__gm_ceiling_mounters as mounters')
+			->innerJoin('#__gm_ceiling_mounters_map as map ON mounters.id = map.id_mounter')
+			->where("map.id_brigade = $id");
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			
 			return $items;
 		}
 		catch(Exception $e)
