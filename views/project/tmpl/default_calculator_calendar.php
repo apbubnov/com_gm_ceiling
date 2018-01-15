@@ -2057,7 +2057,6 @@ var $ = jQuery;
                 jQuery("#project_activation").prependTo();
                 $tmp_accept = 1;
                 $tmp_refuse = 0;
-                window.location = "#bottom";
             } else {
                 jQuery(".project_activation").hide();
                 jQuery("#mounter_wraper").hide();
@@ -2069,6 +2068,9 @@ var $ = jQuery;
                 $tmp_refuse = 0;
             }
             
+            setTimeout(() => {
+                window.location = "#bottom";
+            }, 100); 
         });
         jQuery("#refuse_project").click(function () {
             jQuery("input[name='project_verdict']").val(0);
