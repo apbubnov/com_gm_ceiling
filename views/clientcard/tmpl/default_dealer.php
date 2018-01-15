@@ -104,6 +104,9 @@
 </div>
 
 <br>
+
+<button type="button" id="new_client" class="btn btn-primary">Создать клиента</button>
+
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
         <p class="caption-tar">Клиенты дилера</p>
@@ -172,38 +175,48 @@
     </div>
 </div>
 <div id="modal-window-container-tar">
-		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal-window-call-tar">
-			<h6>Введите новое ФИО клиента</h6>
-			<p><input type="text" id="new_fio" placeholder="ФИО" required></p>
-			<p><button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
-		</div>
-	</div>
+    <button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal-window-call-tar">
+        <h6>Введите новое ФИО клиента</h6>
+        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
+        <p><button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+    </div>
+</div>
+<div id="modal-window-container">
+    <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal-window-1-tar">
+        <p><strong>Создание нового клиента</strong></p>
+        <p>ФИО:</p>
+        <input type="text" id="">
+        <p>Номер телефона:</p>
+        <input type="text" id="">
+    </div>
+</div>
 
 <script>
-    	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
-		if (!div.is(e.target) // если клик был не по нашему блоку
-		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
-			jQuery("#modal-window-call-tar").hide();
-		}
-		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
-		if (!div1.is(e.target) // если клик был не по нашему блоку
-		    && div1.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery("#close2-tar").hide();
-			jQuery("#modal-window-container2-tar").hide();
-			jQuery("#modal-window-enroll-tar").hide();
-		}
-		var div2 = jQuery("#modal-window-registration-tar"); // тут указываем ID элемента
-		if (!div2.is(e.target) // если клик был не по нашему блоку
-		    && div2.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery("#close3-tar").hide();
-			jQuery("#modal-window-container3-tar").hide();
-			jQuery("#modal-window-registration-tar").hide();
-		}
-	});
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+            jQuery("#modal-window-call-tar").hide();
+        }
+        var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
+        if (!div1.is(e.target) // если клик был не по нашему блоку
+            && div1.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close2-tar").hide();
+            jQuery("#modal-window-container2-tar").hide();
+            jQuery("#modal-window-enroll-tar").hide();
+        }
+        var div2 = jQuery("#modal-window-registration-tar"); // тут указываем ID элемента
+        if (!div2.is(e.target) // если клик был не по нашему блоку
+            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close3-tar").hide();
+            jQuery("#modal-window-container3-tar").hide();
+            jQuery("#modal-window-registration-tar").hide();
+        }
+    });
     jQuery("#cancel").click(function(){
         jQuery("#close-tar").hide();
 		jQuery("#modal-window-container-tar").hide();
