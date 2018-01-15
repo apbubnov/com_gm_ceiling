@@ -250,7 +250,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 
     function click_ok(id) {
 
-        
+        var button = jQuery("[data-project_id='" + id + "']");	
         var project_id = id;
         //td = jQuery( this );
         //var project_id =  td.data("project_id");
@@ -285,7 +285,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     type: "success",
                     text: data
                 });
-
+                $("#modal-window").hide();
 
             },
             dataType: "text",
@@ -356,7 +356,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 					text: 'Выполнено', //Button Text
 					val: 0, //Button Value
 					eKey: true, //Enter Keypress
-                    addId: '#idCalcDelete',
 					addClass: 'btn-danger', //Button Classes (btn-large | btn-small | btn-green | btn-light-green | btn-purple | btn-orange | btn-pink | btn-turquoise | btn-blue | btn-light-blue | btn-light-red | btn-red | btn-yellow | btn-white | btn-black | btn-rounded | btn-circle | btn-square | btn-disabled)
 					onClick: function(dialog) {
                         var input_value = jQuery("#input_check").val();

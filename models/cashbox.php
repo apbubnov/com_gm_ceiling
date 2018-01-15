@@ -80,7 +80,31 @@ class Gm_ceilingModelCashbox extends JModelList
 					}
 			   }         
 			}
-			return $items;
+			$result = [];
+			for($i=0; $i<count($items); $i++){
+				$el['closed']=$items[$i]->date_time;
+				$el['id'] = $items[$i]->id;
+				$el['status'] = $items[$i]->status;
+				$el['name'] = $items[$i]->name;
+				$el['new_project_sum'] = $items[$i]->new_project_sum;
+				$el['new_mount_sum'] = $items[$i]->new_mount_sum;
+				if($items[$i]->done!=1&&$items[$i]->project_status != 12){
+					$el['not_issued'] =  $items[$i]->new_mount_sum - $items[$i]->new_project_mounting;
+				}
+				else
+				{
+					$el['not_issued'] = 0;
+				}
+				$el['new_material_sum'] = $items[$i]->new_material_sum;
+				$el['residue'] = $items[$i]->new_project_sum - $items[$i]->new_mount_sum -$items[$i]->new_material_sum;
+				$el['cashbox'] += $el['residue'] - $encash;
+				$encash = 0;
+				$encash = $item->sum;
+				$el['sum'] = $items[$i]->sum;
+				array_push($result ,(object)$el);
+			}
+			return $result;
+
 		}
 		catch(Exception $e)
         {
