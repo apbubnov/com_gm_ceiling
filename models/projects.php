@@ -111,7 +111,6 @@ class Gm_ceilingModelProjects extends JModelList
     {
         try
         {
-            throw new Exception("Error Processing Request", 1);
             // Create a new query object.
             $db = $this->getDbo();
             $query = $db->getQuery(true);
@@ -131,9 +130,9 @@ class Gm_ceilingModelProjects extends JModelList
                 ->join('LEFT', '`#__gm_ceiling_status` AS status ON status.id = a.project_status');
 
             $query->select('dealer.name AS dealer_name')
-                ->join('LEFT', '`#__users` dealer ON dealer.id = client.id');
+                ->join('LEFT', '`#__users` as dealer ON dealer.id = client.dealer_id');
 
-            $query->select('client.client_name AS client_name')
+            $query->select('client.client_name AS client_name')//, client.dealer_id, client.id
                 ->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id');
 
             $query->select(' client_contact.phone AS client_contacts')
