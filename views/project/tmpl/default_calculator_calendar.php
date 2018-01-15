@@ -2054,9 +2054,10 @@ var $ = jQuery;
                 jQuery(".project_activation").hide();
                 jQuery("#refuse").hide();
                 jQuery("#project_activation").show();
-                jQuery("#project_activation").focus();
+                jQuery("#project_activation").prependTo();
                 $tmp_accept = 1;
                 $tmp_refuse = 0;
+                window.location = "#bottom";
             } else {
                 jQuery(".project_activation").hide();
                 jQuery("#mounter_wraper").hide();
