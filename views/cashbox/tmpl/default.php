@@ -15,11 +15,11 @@ $month = date("n");
 $year = date("Y");
 ?>
 <form>
-    <a class="btn btn-large btn-primary"
-       href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
-       id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
-    <button type = "button" id = "add" class = "btn btn-primary">Инкассация</button>
-    <div style="display:block;position: absolute; right:0px">
+    <div style="display:block; right:0px">
+        <a class="btn btn-large btn-primary"
+        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
+        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
+        <button type = "button" id = "add" class = "btn btn-primary">Инкассация</button>
         <button type= "button" class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
         <select id = "month">
             <option value = "1">Январь</option>
