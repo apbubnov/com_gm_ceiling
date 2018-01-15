@@ -60,6 +60,36 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
     <div class="Dark" onclick="hideModalCalendar();"></div>
     <div class="ModalDay">
         <div class="Title"></div>
+        <div class="Employees"></div>
+        <div class="Add">
+            <div class="ButtomAdd">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            </div>
+            <form class="AddEmployeeForm" action="JavaScript::AddEmployee()">
+                <div class="Line">
+                    <div class="Name">Рабочий:</div>
+                    <select name="employee"></select>
+                </div>
+                <div class="Line">
+                    <div class="Name">Событие:</div>
+                    <select name="function">
+                        <option value="1">Пришел</option>
+                        <option value="0">Ушел</option>
+                    </select>
+                </div>
+                <div class="Line">
+                    <div class="Name">Время:</div>
+                    <div class="Time">
+                        <select name="hour"></select>
+                        <select name="minute"></select>
+                    </div>
+                </div>
+                <div class="Line">
+                    <button type="submit"> Добавить </button>
+                    <button type="button"> Отмена </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -144,7 +174,7 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
             Day = $(day),
             Month = Day.closest(".Month");
       
-        ModalDay.find(".Title").text(Day.text + " " + Month.attr("modalname") + " " + Month.attr("year") + "г.");
+        ModalDay.find(".Title").text(Day.attr("day") + " " + Month.attr("modalname") + " " + Month.attr("year") + "г.");
 
         Modal.show();
         ModalDay.show();
@@ -152,7 +182,7 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
 
     function hideModalCalendar() {
         $(".ModalCalendar").hide();
-        $(".ModalCalendar div:not(.Dark)").hide();
+        $(".ModalCalendar>div:not(.Dark)").hide();
     }
 
 </script>

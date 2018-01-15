@@ -4919,7 +4919,7 @@ class Gm_ceilingHelpersGm_ceiling
                 : sprintf($Day, "IssetDay" . $Now, $TDay, $dotw, $TDay, $TDay);
         }
 
-        $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATA->Month[$DATE->MonthNumber], $DATA->Month2[$DATE->MonthNumber], $DATE->TopName, $DaysOfTheWeek, $Days);
+        $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATA->Month[intval($DATE->MonthNumber) - 1], $DATA->Month2[intval($DATE->MonthNumber) - 1], $DATE->TopName, $DaysOfTheWeek, $Days);
 
         return $Calendar;
     }
