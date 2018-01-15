@@ -22,18 +22,18 @@ $year = date("Y");
     <br>
     <button type= "button" class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
     <select id = "month" class="inputactive">
-        <option value = "0">Январь</option>
-        <option value = "1">Февраль</option>
-        <option value = "2">Март</option>
-        <option value = "3">Апрель</option>
-        <option value = "4">Май</option>
-        <option value = "5">Июнь</option>
-        <option value = "6">Июль</option>
-        <option value = "7">Август</option>
-        <option value = "8">Сентябрь</option>
-        <option value = "9">Октябрь</option>
-        <option value = "10">Ноябрь</option>
-        <option value = "11">Декабрь</option>
+        <option value = "1">Январь</option>
+        <option value = "2">Февраль</option>
+        <option value = "3">Март</option>
+        <option value = "4">Апрель</option>
+        <option value = "5">Май</option>
+        <option value = "6">Июнь</option>
+        <option value = "7">Июль</option>
+        <option value = "8">Август</option>
+        <option value = "9">Сентябрь</option>
+        <option value = "10">Октябрь</option>
+        <option value = "11">Ноябрь</option>
+        <option value = "12">Декабрь</option>
     </select><label id = "year"><?php echo $year?></label>
     <button  type= "button"\ class = "btn btn-primary" id = "next"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
     <div id="modal_window_container" class = "modal_window_container">
