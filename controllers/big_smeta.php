@@ -52,7 +52,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $res = $model_project->transport($data);
             $dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
             $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
-
+            print_r("allooooo"); exit;
             if($res) {
                 if($data->transport == 1) { $transport_sum = $this->margin1($res->transport * $distance_col, $margin);
                 $transport_sum_1 = $res->transport * $distance_col;
@@ -78,7 +78,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $transport_sum_1 = $transport_sum_1 * ((100 - $min)/100);
             }
             }*/
-            print_r("allooooo"); exit;
+            
             $model = $this->getModel();
             if(!empty($POST['include_calculation'])) {
                 
