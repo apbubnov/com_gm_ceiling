@@ -1,0 +1,33 @@
+.Calendars, .Calendars div
+{
+    display: inline-block;
+}
+.Calendars
+{
+    width: 100%;
+    height: 310px;
+}
+
+.Calendars .Name
+{
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    float: left;
+    background-color: #4e4cb7;
+    color: #FFFFFF;
+    font-size: 14px;
+}
+
+.Calendars .Block
+{
+    width: 100%;
+    height: 280px;
+    float: left;
+    text-align: center;
+}
+
+.Calendars .Block .CalBlock
+{
+    float: none;
+}

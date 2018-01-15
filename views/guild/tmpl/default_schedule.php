@@ -32,11 +32,21 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
 
 <?if ($chief || true):?>
     <h1>Начальник цеха: <?=$user->name;?></h1>
-<link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/calendar.css">
-    <div class="">
-        <?=$calendars[0];?>
-        <?=$calendars[1];?>
-        <?=$calendars[2];?>
+    <div class="Calendars">
+        <div class="Name">Календарь работ</div>
+        <div class="Block">
+            <div class="Left">
+                <div
+            </div>
+            <div class="CalBlock">
+                <?=$calendars[0];?>
+                <?=$calendars[1];?>
+                <?=$calendars[2];?>
+            </div>
+            <div class="Right">
+
+            </div>
+        </div>
     </div>
 <?elseif($employee):?>
 <h1>Работник цеха: <?=$user->name;?></h1>
@@ -44,3 +54,6 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
 <h1>К сожалению данный кабинет вам не доступен!</h1>
 Что бы получить доступ, обратитесь к IT отделу.
 <?endif;?>
+
+<link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/calendar.css">
+<link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/schedule.css">
