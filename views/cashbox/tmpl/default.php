@@ -116,7 +116,7 @@ $year = date("Y");
                     </td>
                     <td>
                         <?php
-        
+                            $all_not_issued+= $item->not_issued;
                             echo $item->not_issued;
                         ?>
                     </td>
@@ -150,7 +150,7 @@ $year = date("Y");
                     <b>Итого в кассе:</b>
                 </td>
                 <td>
-                    <b><?php echo $cashbox;?></b>
+                    <b><?php echo $item->cashbox;?></b>
                 </td>
             </tr>
             <tr>
