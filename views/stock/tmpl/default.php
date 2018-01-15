@@ -19,6 +19,7 @@ $userGroup = $user->groups;
 if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header('Location: '.$_SERVER['REDIRECT_URL']);
 ?>
 
+
 <style>
     body {
         background-color: #E6E6FA;
