@@ -4878,7 +4878,7 @@ class Gm_ceilingHelpersGm_ceiling
         ];
 
         $Calendar = '
-                <div class="Calendar Month" id="m%s" month="%s" year="%s">
+                <div class="Calendar Month" id="m%s" month="%s" year="%s" name="%s" modalname="%s">
                 <div class="Name">%s</div>
                 <div class="DaysOfTheWeek">%s</div>
                 <div class="Days">%s</div>
@@ -4919,7 +4919,7 @@ class Gm_ceilingHelpersGm_ceiling
                 : sprintf($Day, "IssetDay" . $Now, $TDay, $dotw, $TDay, $TDay);
         }
 
-        $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATE->TopName, $DaysOfTheWeek, $Days);
+        $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATA->Month[$DATE->MonthNumber], $DATA->Month2[$DATE->MonthNumber], $DATE->TopName, $DaysOfTheWeek, $Days);
 
         return $Calendar;
     }
