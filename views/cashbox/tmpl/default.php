@@ -116,16 +116,8 @@ $year = date("Y");
                     </td>
                     <td>
                         <?php
-                            if($item->done!=1&&$item->project_status != 12){
-                                $not_issued =  $item->new_mount_sum - $item->new_project_mounting;
-                                
-                            }
-                            else
-                            {
-                                $not_issued = 0;
-                            }
-                            $all_not_issued +=$not_issued;
-                            echo $not_issued;
+        
+                            echo $item->not_issued;
                         ?>
                     </td>
                     <td>
@@ -133,17 +125,14 @@ $year = date("Y");
                     </td>
                     <td>
                         <?php
-                            if(!isset($item->sum)){
-                                $residue = $item->new_project_sum - $item->new_mount_sum -$item->new_material_sum;
-                                echo $residue;
-                            }
+                            
+                                echo $item->residue;
+                           
                         ?>        
                     </td>
                     <td>
                         <?php
-                            $cashbox += $residue - $encash;
-                            $encash = 0;
-                            echo $cashbox;
+                            echo $item->cashbox;
                         ?>
                     </td>
                     <td>
