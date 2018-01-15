@@ -1261,7 +1261,12 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                     $db->execute();
                 }
 
-
+                $query = $db->getQuery(true);
+                $query->insert('`#__gm_ceiling_cuttings`')
+                    ->columns('id')
+                    ->values($calculationId);
+                $db->setQuery($query);
+                $db->execute();
             } else {
                 //print_r($data); exit;
                 
