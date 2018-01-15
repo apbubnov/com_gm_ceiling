@@ -187,12 +187,15 @@
 <div id="modal-window-container">
     <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal-window-1-tar">
-        <p><strong>Создание нового клиента</strong></p>
-        <p>ФИО:</p>
-        <p><input type="text" id="fio_client"></p>
-        <p>Номер телефона:</p>
-        <p><input type="text" id="phone_client"></p>
-        <p><button type="button" id="save_client" class="btn btn-primary">ОК</button></p>
+        <form action="/index.php?option=com_gm_ceiling&task=clientform.save" method="post" enctype="multipart/form-data">
+            <p><strong>Создание нового клиента</strong></p>
+            <p>ФИО:</p>
+            <p><input type="text" id="fio_client" name="jform[client_name]"></p>
+            <p>Номер телефона:</p>
+            <p><input type="text" id="jform_client_contacts" name="jform[client_contacts]"></p>
+            <input type="hidden" id="jform_dealer_id" name="jform[dealer_id]" value="<?php echo $client->dealer_id; ?>">
+            <p><button type="submit" id="save_client" class="btn btn-primary">ОК</button></p>
+        </form>
     </div>
 </div>
 
@@ -340,6 +343,7 @@
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
+        jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
     });
 
     jQuery("#back_btn").click(function (){

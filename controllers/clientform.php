@@ -86,7 +86,7 @@ class Gm_ceilingControllerClientForm extends JControllerForm
 
 			// Get the user data.
 			$data = JFactory::getApplication()->input->get('jform', array(), 'array');
-
+			
 			$data['client_contacts'] = preg_replace('/[\(\)\-\s]/', '', $data['client_contacts']);
 
 			// Validate the posted data.
@@ -101,7 +101,7 @@ class Gm_ceilingControllerClientForm extends JControllerForm
 			$data = $model->validate($form, $data);
 			
 			$data['created'] = date("Y-m-d");
-
+			throw new Exception($data['dealer_id']);
 			// Check for errors.
 			if ($data === false)
 			{
