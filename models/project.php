@@ -1538,7 +1538,7 @@ class Gm_ceilingModelProject extends JModelItem
 				->where('a.id = ' . $data->id);
 			$db->setQuery($query);
 			$results = $db->loadObject();
-
+			print_r($results); exit;
 			$query = $db->getQuery(true);
 			$query
 				->select('m.*')

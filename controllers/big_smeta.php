@@ -47,7 +47,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             elseif($POST['transport'] == 2 ) $distance_col = $POST['jform']['distance_col'];
             else $distance_col = 0;
             $data->distance_col = $distance_col ;
-            print_r("allooooo"); exit;
+            
             $model_project = $this->getModel('Project', 'Gm_ceilingModel');
             $res = $model_project->transport($data);
             $dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
