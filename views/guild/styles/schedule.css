@@ -139,6 +139,23 @@ h1
     float: left;
 }
 
+.ModalCalendar .ModalDay .Add
+{
+    width: 100%;
+    padding: 15px;
+    display: inline-block;
+}
+
+.ModalCalendar .ModalDay .Add .ButtomAdd
+{
+    width: 100%;
+    height: 20px;
+    background-color: #4e4cb7;
+    color: #FFFFFF;
+    font-size: 16px;
+    text-align: center;
+}
+
 @media (max-width: 1200px) {
     .Calendars .Calendar {
         width: calc(30px * 8);

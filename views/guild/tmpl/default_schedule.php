@@ -102,6 +102,9 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
     $(document).ready(Init);
 
     function Init() {
+        $('.chosen-container').remove();
+        $('select').removeAttr("style");
+
         var calendars = $(".Calendars"),
             button = calendars.find(".button");
         button.attr("onclick", "ButtomCalendarClick(this);");
