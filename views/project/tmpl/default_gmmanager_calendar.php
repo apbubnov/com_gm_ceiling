@@ -1514,6 +1514,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
     jQuery(document).ready(function () {
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         trans();
+
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -1574,9 +1575,12 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 }
             });
             //если сессия есть, то выдать время, которое записано в сессии
+            console.log(datesession);
             if (date == datesession) {
                 var timesession = jQuery("#jform_new_project_calculation_daypart").val();
                 var gaugersession = jQuery("#jform_project_gauger").val();
+                console.log(timesession);
+                console.log(gaugersession);
                 setTimeout(function() {
                     var times = jQuery("input[name='choose_time_gauger']");
                     if (timesession != undefined) {
