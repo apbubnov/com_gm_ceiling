@@ -3418,8 +3418,6 @@ class Gm_ceilingHelpersGm_ceiling
         }
 
         return $return;
-
-
     }
 
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
@@ -4785,9 +4783,13 @@ class Gm_ceilingHelpersGm_ceiling
      * @result  string  html
      */
 
-    public function LiteCalendar($month = 0)
+    public function LiteCalendar($month = null, $year = null, $day = null)
     {
-        $m = $month;
+        $month = ($month == null && $month != 0)?date("m"):intval($month);
+        $monthNow = date("m");
+        $year = ($year == null)?date("Y"):$year;
+        $yearNow = date("Y");
+        $day = ($day == null)?date("j"):$day;
 
         $DATA = (object)[
             "Month" => ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
@@ -4797,7 +4799,7 @@ class Gm_ceilingHelpersGm_ceiling
         ];
 
         $Calendar = '
-                <div class="Calendar Month" id="m%s" month="%s" year="%s" diff="%s">
+                <div class="Calendar Month" id="m%s" month="%s" year="%s">
                 <div class="Name">%s</div>
                 <div class="DaysOfTheWeek">%s</div>
                 <div class="Days">%s</div>
@@ -4807,13 +4809,9 @@ class Gm_ceilingHelpersGm_ceiling
         $DayOfTheWeek = '<div class="DayOfTheWeek" id="w%s">%s</div>';
         $Day = '<div class="Day %s" id="d%s" dotw="%s" day="%s">%s</div>';
 
-        $year = date("Y");
-        $month = date("m");
-        $day = date("j");
-
         $DATE = (object)[
-            "Year" => date("Y", mktime(0, 0, 0, $month + $m, 1, $year)),
-            "MonthNumber" => date("m", mktime(0, 0, 0, $month + $m, 1, $year))
+            "Year" => date("Y", mktime(0, 0, 0, $month, 1, $year)),
+            "MonthNumber" => date("m", mktime(0, 0, 0, $month, 1, $year))
         ];
 
         $DATE->MonthName = $DATA->Month[$DATE->MonthNumber - 1];
@@ -4835,14 +4833,14 @@ class Gm_ceilingHelpersGm_ceiling
             $dotw = "w" . ($TDayOfTheWeek + 1);
             $TDay = date("j", mktime(0, 0, 0, $DATE->MonthNumber, $i + 1 - $DATE->FirstDay, $DATE->Year));//$i + 1 - $DATE->FirstDay;
 
-            $Now = ($TDay == $day && $m == 0) ? " Now" : "";
+            $Now = ($TDay == $day && $DATE->MonthNumber == $monthNow && $DATE->Year == $yearNow) ? " Now" : "";
 
             $Days .= ($i < $DATE->FirstDay || $SumDays <= $i)
                 ? sprintf($Day, "EmptyDay", 0, $dotw, "none", $TDay)
                 : sprintf($Day, "IssetDay" . $Now, $TDay, $dotw, $TDay, $TDay);
         }
 
-        $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $m, $DATE->TopName, $DaysOfTheWeek, $Days);
+        $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATE->TopName, $DaysOfTheWeek, $Days);
 
         return $Calendar;
     }
