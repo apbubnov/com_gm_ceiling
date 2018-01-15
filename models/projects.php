@@ -130,7 +130,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->join('LEFT', '`#__gm_ceiling_status` AS status ON status.id = a.project_status');
 
             $query->select('dealer.name AS dealer_name')
-                ->join('LEFT', '`#__users` dealer ON dealer.id = a.dealer_id');
+                ->join('LEFT', '`#__users` dealer ON dealer.id = client.id');
 
             $query->select('client.client_name AS client_name')
                 ->join('LEFT', '`#__gm_ceiling_clients` AS client ON client.id = a.client_id');
@@ -296,7 +296,7 @@ class Gm_ceilingModelProjects extends JModelList
                     ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
                     ->where("projects.project_status = '1' and projects.who_calculate in ($who) and clients.dealer_id = '$user->dealer_id'");
             } else
-            
+
             // НМС (монтажи)
             if ($status == "Mountings") {
                 if ($user->dealer_id == 1) {
