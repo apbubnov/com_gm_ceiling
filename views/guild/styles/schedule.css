@@ -85,3 +85,20 @@
 {
     float: right;
 }
+
+@media (max-width: 1200px) {
+    .Calendars .Calendar {
+        width: calc(30px * 8);
+    }
+}
+
+@media (max-width: 995px) {
+    .Calendars .Calendar {
+        width: calc(35px * 8);
+    }
+
+    .Calendars .Calendar:first-child,
+    .Calendars .Calendar:last-child{
+        display: none;
+    }
+}
