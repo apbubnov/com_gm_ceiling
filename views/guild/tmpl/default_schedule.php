@@ -139,9 +139,12 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
 
     function getWorkingDay(day) {
         var Modal = $(".ModalCalendar"),
-            ModalDay = Modal.find(".ModalDay");
+            ModalDay = Modal.find(".ModalDay"),
 
-        ModalDay.
+            Day = $(day),
+            Month = Day.closest(".Month");
+
+        ModalDay.find("Name").text(Month.attr(""));
 
         Modal.show();
         ModalDay.show();
