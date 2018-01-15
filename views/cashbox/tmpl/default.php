@@ -318,7 +318,6 @@ $year = date("Y");
                 if(Object.keys(data[i])[j]!='name'){
                     jQuery(table_name+' > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
                 }
-                jQuery(table_name+' > tbody > tr:last').append("<td><button class='clear_form_group btn btn-primary' type='button'><i class=\"fa fa-eye-slash\" aria-hidden=\"true\"></i></button></td> ");
             }
         }
 </script>
