@@ -1447,6 +1447,7 @@ echo parent::getPreloader();
                     success: function(data) {
                         window.DataOfProject = JSON.parse(data);
                         data = JSON.parse(data);
+                        console.log(data);
                         jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
                         jQuery("#mounters").empty();
                         Allbrigades = <?php echo json_encode($Allbrigades); ?>;
@@ -1474,7 +1475,8 @@ echo parent::getPreloader();
                                     table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
                                 } else {
                                     table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
-                                }                            }
+                                }
+                            }
                         });
                         table_projects += "</table>";
                         jQuery("#projects_brigade_container").append(table_projects);

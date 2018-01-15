@@ -82,7 +82,7 @@ class Gm_ceilingModelCashbox extends JModelList
 			}
 			$result = [];
 			for($i=0; $i<count($items); $i++){
-				$el['closed']=$items[$i]->date_time;
+				$el['closed']=$items[$i]->closed;
 				$el['id'] = $items[$i]->id;
 				$el['status'] = $items[$i]->status;
 				$el['name'] = $items[$i]->name;
