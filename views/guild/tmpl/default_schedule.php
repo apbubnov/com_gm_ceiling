@@ -23,7 +23,7 @@ $chief = (in_array(23, $groups));
 $employee = (in_array(18, $groups));
 
 //$app = JFactory::getApplication();
-$schedule = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getSchedule();
+//$schedule = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getSchedule();
 $calendars = [];
 $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(-1);
 $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(0);
@@ -66,16 +66,21 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
     function Init() {
         var calendars = $(".Calendars"),
             button = calendars.find("button");
-        button.click(ButtomCalendarClick(this));
+        button.click(function () {ButtomCalendarClick(this);});
     }
 
-    function ButtomCalendarClick(element) {
+    function ButtomCalendarClick(element = null) {
         element = $(element);
+
         var val = parseInt(element.val()),
-            calendars = $(".Calendars .block .CalBlock");
-            calendar = (val < 0)?calendars.find(".Calendar:first-child"):calendars.find(".Calendar:last-child"),
-            calendar2 = (val > 0)?calendars.find(".Calendar:first-child"):calendars.find(".Calendar:last-child"),
-            diff = parseInt(calendar.attr("diff")) + val;
+            calendars = $(".Calendars .block .CalBlock"),
+            calendarFirst = calendars.find(".Calendar:first-child"),
+            calendarLast = calendars.find(".Calendar:last-child"),
+            diff = (parseInt(((val < 0)?calendarFirst:calendarLast).attr("diff"))) + val;
+
+        console.log(val);
+        console.log(calendarFirst);
+        console.log(calendarLast);
 
         jQuery.ajax({
             type: 'POST',
@@ -90,10 +95,15 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(1);
                 {
                     var newCalendar = $(data.calendar);
                     if (val < 0)
+                    {
                         calendars.prepend(newCalendar);
+                        calendarLast.remove();
+                    }
                     else
+                    {
                         calendars.append(newCalendar);
-                    calendar2.remove();
+                        calendarFirst.remove();
+                    }
                 }
             },
             dataType: "text",
