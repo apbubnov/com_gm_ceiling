@@ -2069,7 +2069,7 @@ var $ = jQuery;
             }
             
             setTimeout(() => {
-                window.location = "#bottom";
+                window.location = "#project_activation";
             }, 100); 
         });
         jQuery("#refuse_project").click(function () {
