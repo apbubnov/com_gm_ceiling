@@ -61,12 +61,16 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($this->items as $i => $item) : ?>
-				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-				<?php $dealer = JFactory::getUser($item->dealer_id); ?>
-				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
-					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
-				<?php endif; ?>
+			<?php foreach ($this->items as $i => $item):
+				$canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
+				$client_id = $item->client_id;
+				$model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
+				$client = $model_client->getClientById($client_id);
+				$dealer = JFactory::getUser($client->dealer_id);
+				if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')):
+					$canEdit = JFactory::getUser()->id == $item->created_by;
+				endif;
+				?>
 
 				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&id='.(int) $item->id); ?>">
 					<td class="center one-touch">
