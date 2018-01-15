@@ -26,7 +26,7 @@ class Gm_ceilingModelEncashment extends JModelList
                 ->select('sum')
 				->select('manager_id')
 				->from('#__gm_ceiling_encashment')
-				->where("`date_time` between $date1 and $date2")
+				->where("`date_time` between '$date1' and '$date2'")
 				->order('`date_time` ASC');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();

@@ -44,7 +44,7 @@ class Gm_ceilingModelCashbox extends JModelList
 				->from('#__gm_ceiling_projects as p')
 				->innerJoin('#__users as u ON p.project_mounter = u.id')
 				->innerJoin('#__gm_ceiling_status as s on p.project_status = s.id')
-				->where("p.project_status in (12,17) and p.closed between $date1 and $date2");
+				->where("p.project_status in (12,17) and p.closed between '$date1' and '$date2'");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			$encashment_model = Gm_ceilingHelpersGm_ceiling::getModel('Encashment');
