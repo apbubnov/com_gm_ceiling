@@ -25,24 +25,9 @@ $type = $jinput->getString('type', NULL);
 
 ?>
 <script type="text/javascript">
-	if (jQuery === 'undefined') {
-		document.addEventListener("DOMContentLoaded", function (event) {
-			jQuery('#form-client').submit(function (event) {
-				
-			});
-
-			
-		});
-	} else {
 		jQuery(document).ready(function () {
 			jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
-			jQuery('#form-client').submit(function (event) {
-				
-			});
-
-			
 		});
-	}
 </script>
 
 <div class="client-edit front-end-edit">
