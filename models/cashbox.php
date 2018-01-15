@@ -21,13 +21,16 @@
 class Gm_ceilingModelCashbox extends JModelList
 {
 	
-	function getData()
+	function getData($date1 = null,$date2 = null)
 	{
 		try
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-
+			if(empty($date1) && empty($date2)){
+				$date1 = date('Y-m-01');
+				$date2 = date('Y-m-t'); 
+			}
 			$query->select('p.id')
 				->select('p.closed')
 				->select('u.name')
@@ -41,11 +44,11 @@ class Gm_ceilingModelCashbox extends JModelList
 				->from('#__gm_ceiling_projects as p')
 				->innerJoin('#__users as u ON p.project_mounter = u.id')
 				->innerJoin('#__gm_ceiling_status as s on p.project_status = s.id')
-				->where('p.project_status in (12,17)');
+				->where("p.project_status in (12,17) and p.closed between '$date1' and '$date2'");
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			$encashment_model = Gm_ceilingHelpersGm_ceiling::getModel('Encashment');
-			$encashments = $encashment_model->getData();
+			$encashments = $encashment_model->getData($date1,$date2);
 			$new_encash = [];
 			foreach($encashments as $value){
 				$el = array(
