@@ -99,7 +99,7 @@ class Gm_ceilingModelCashbox extends JModelList
 				$el['residue'] = $items[$i]->new_project_sum - $items[$i]->new_mount_sum -$items[$i]->new_material_sum;
 				$el['cashbox'] += $el['residue'] - $encash;
 				$encash = 0;
-				$encash = $item->sum;
+				$encash = $items[$i]->sum;
 				$el['sum'] = $items[$i]->sum;
 				array_push($result ,(object)$el);
 			}
