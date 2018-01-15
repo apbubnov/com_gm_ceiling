@@ -166,7 +166,7 @@ $year = date("Y");
                    <b>Остаток</b>
                 </td>
                 <td>
-                    <b><?php echo $cashbox-$all_not_issued;?></b>
+                    <b><?php echo $item->cashbox-$all_not_issued;?></b>
                 </td>
             </tr>
         </tbody>
@@ -239,8 +239,7 @@ $year = date("Y");
             }
             month_old = month;
             year_old = year;
-            update_month_year(month,year);  
-            console.log(month,year);          
+            update_month_year(month,year);           
         });
         jQuery("#prev").click(function () {
             month = <?php echo $month; ?>;
@@ -300,6 +299,7 @@ $year = date("Y");
         jQuery("#year").text(year); 
     }
     function fill_table(data){
+        console.log(data);
         jQuery('#cashbox_table tbody').empty();
         for(var i=0;i<data.length;i++) {
             jQuery("#cashbox_table").append('<tr></tr>');
