@@ -192,7 +192,7 @@
         <p><input type="text" id="fio_client"></p>
         <p>Номер телефона:</p>
         <p><input type="text" id="phone_client"></p>
-        <p><button type="button" id="save_client">ОК</button></p>
+        <p><button type="button" id="save_client" class="btn btn-primary">ОК</button></p>
     </div>
 </div>
 
