@@ -21,7 +21,7 @@ $year = date("Y");
     <button type = "button" id = "add" class = "btn btn-primary">Инкассация</button>
     <br>
     <button type= "button" class = "btn btn-primary" id="prev"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-    <select id = "mounth" class="inputactive">
+    <select id = "month" class="inputactive">
         <option value = "0">Январь</option>
         <option value = "1">Февраль</option>
         <option value = "2">Март</option>
