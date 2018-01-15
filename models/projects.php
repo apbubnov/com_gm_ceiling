@@ -215,7 +215,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('a.project_verdict = 0');
                 }
             } elseif ($type == "calculator") {
-                $query->where('client.dealer_id = ' . $user->dealer_id);
+                //$query->where('client.dealer_id = ' . $user->dealer_id);
                 if ($subtype == "calendar") {
                     $query->where('a.project_status = 1');
                     $query->order('a.project_calculation_date');
