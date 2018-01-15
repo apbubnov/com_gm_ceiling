@@ -273,7 +273,7 @@ $year = date("Y");
         });
         jQuery("#month").change(function() {
             var month = this.value;
-            var year = jQuery("#year").text());
+            var year = jQuery("#year").text();
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=getCashboxByMonth",
