@@ -187,7 +187,7 @@
 <div id="modal-window-container">
     <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal-window-1-tar">
-        <form method="post" enctype="multipart/form-data">
+        <form action="/index.php?option=com_gm_ceiling&task=clientform.save" method="post" enctype="multipart/form-data">
             <p><strong>Создание нового клиента</strong></p>
             <p>ФИО:</p>
             <p><input type="text" id="fio_client" name="jform[client_name]"></p>
