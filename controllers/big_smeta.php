@@ -78,10 +78,12 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $transport_sum_1 = $transport_sum_1 * ((100 - $min)/100);
             }
             }*/
+            print_r("allooooo"); exit;
             $model = $this->getModel();
             if(!empty($POST['include_calculation'])) {
+                
                 $calculation = $model->calculation($POST['include_calculation']);
-
+                
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
                 $html = ' <h1>Номер договора: ' . $POST['project_id'] . '</h1><br>';
                 $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
