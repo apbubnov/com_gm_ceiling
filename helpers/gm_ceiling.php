@@ -3444,6 +3444,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         return $return;
     }
+    }
 
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
     public static function print_components($project_id, $components_data)
