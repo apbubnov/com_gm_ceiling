@@ -360,7 +360,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         var input_material = jQuery("#input_material").val();
                         var check = jQuery("input[name='check_mount']:checked").val();
                         //Просчет прибыли
-                        var profit = new_project_sum + input_value - cost_price; 
+                        var profit = parseFloat(new_project_sum) + parseFloat(input_value) - parseFloat(cost_price); 
                         alert(profit);
                         if (profit < 0 && (check == undefined || check == 1)) 
                         {
