@@ -243,7 +243,7 @@ $year = date("Y");
             month_old = month;
             year_old = year;
             update_month_year(month,year);  
-            console.log(month,year);          
+            getCashboxByDate(month,year);        
         });
         jQuery("#prev").click(function () {
             month = <?php echo $month; ?>;
@@ -261,11 +261,17 @@ $year = date("Y");
             month_old = month;
             year_old = year;
             update_month_year(month,year);
+            getCashboxByDate(month,year);
         });
         jQuery("#month").change(function() {
             var month = this.value;
             var year = jQuery("#year").text();
-            jQuery.ajax({
+            getCashboxByDate(month,year);
+        });
+        
+    });
+    function getCashboxByDate(month,year){
+        jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=getCashboxByMonth",
                 async: false,
@@ -289,10 +295,7 @@ $year = date("Y");
                     });
                 }
             });
-
-        });
-        
-    });
+    }
     function update_month_year(month,year){
         jQuery("#month option").each(function()
         {
@@ -312,7 +315,7 @@ $year = date("Y");
             for(var j=0;j<Object.keys(data[i]).length;j++){
                 if(data[i][Object.keys(data[i])[j]]!=null){
                     if(Object.keys(data[i])[j]=="closed"){
-                        data[i][Object.keys(data[i])[j]] = formatDate(data[i][Object.keys(data[i])[j]]);
+                        data[i][Object.keys(data[i])[j]] = formatDate(new Date(data[i][Object.keys(data[i])[j]]));
                     }
                     jQuery('#cashbox_table > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
                     if(Object.keys(data[i])[j]=="cashbox"){
@@ -327,7 +330,7 @@ $year = date("Y");
                 }
             }
         }
-        
+
         jQuery("#cashbox_table").append('<tr></tr>');
         jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Итого в кассе:<b></td><td>'+cashbox+'</td>');
         jQuery("#cashbox_table").append('<tr></tr>');
