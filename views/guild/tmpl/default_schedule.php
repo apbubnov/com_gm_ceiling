@@ -61,10 +61,14 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <div class="Dark" onclick="hideModalCalendar();"></div>
     <div class="ModalDay">
         <div class="Title"></div>
-        <div class="Employees"></div>
+        <div class="Actions">
+            <button type="button" class="ShowBigInfo">
+                <i class="fa fa-info-circle" aria-hidden="true"></i> Подробнее
+            </button>
+        </div>
         <div class="Add">
             <div class="ButtomAdd">
-                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>  Добавить
             </div>
             <form class="AddEmployeeForm" action="javascript:setWorking();">
                 <div class="Line">
@@ -103,11 +107,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 </div>
             </form>
         </div>
-        <div class="Actions">
-            <button type="button" class="ShowBigInfo">
-                <i class="fa fa-info-circle" aria-hidden="true"></i>
-            </button>
-        </div>
+        <div class="Employees"></div>
     </div>
 </div>
 
@@ -244,11 +244,25 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             Employee.attr("id", value.id);
             if (value.action === "0") Employee.addClass("Out"); else Employee.addClass("In");
 
-            ModalDay.find(".Employees").append(Employee);
+            ModalDay.find(".Employees").prepend(Employee);
         });
 
         Modal.show();
         ModalDay.show();
+
+        UpdateModalModalTop();
+    }
+
+    function UpdateModalModalTop() {
+        var Modal = $(".ModalCalendar"),
+            ModalDay = Modal.find(".ModalDay");
+
+        var ModalDayHeight = ModalDay.height(),
+            ModalHeight = Modal.height(),
+            Top = (ModalHeight - ModalDayHeight) / 2;
+        Top = (Top/3*2 < 0)?0:Top/3*2;
+
+        ModalDay.css("top", Top + "px");
     }
 
     function showAddForm(button) {
@@ -257,6 +271,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
         button.hide();
         form.css("display","inline-block");
+
+        UpdateModalModalTop();
     }
 
     function hideAddForm(button = null) {
@@ -268,6 +284,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
         button.css("display","inline-block");
         form.hide();
+
+        UpdateModalModalTop();
     }
 
     function hideModalCalendar() {
@@ -300,7 +318,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 noty({
                     theme: 'relax',
                     layout: 'center',
-                    timeout: 1500,
+                    timeout: 50000,
                     type: data.status,
                     text: data.message
                 });
