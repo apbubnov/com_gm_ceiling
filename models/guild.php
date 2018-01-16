@@ -256,6 +256,8 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function getWorking($data = null)
     {
+        if (empty($data)) $data = (object) [];
+
         if (empty($data->DateStart))
             $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
@@ -290,6 +292,8 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function setWorking($data = null)
     {
+        if (empty($data)) $data = (object) [];
+
         if (empty($data->user_id) || empty($data->date) || empty($data->action))
             throw new Exception("Не все данные переданы!");
 
@@ -307,6 +311,8 @@ class Gm_ceilingModelGuild extends JModelList
 
     public function getSalaries($data = null)
     {
+        if (empty($data)) $data = (object) [];
+
         if (empty($data->DateStart))
             $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
