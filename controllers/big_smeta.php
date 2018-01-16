@@ -81,7 +81,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             
             $model = $this->getModel();
             if(!empty($POST['include_calculation'])) {
-                
+                print_r(" alloooo"); exit;
                 $calculation = $model->calculation($POST['include_calculation']);
                 
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
