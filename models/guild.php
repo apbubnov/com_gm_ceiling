@@ -281,6 +281,8 @@ class Gm_ceilingModelGuild extends JModelList
         if (!empty($data->user_id))
             $query->where("w.user_id = '$data->user_id'");
 
+        echo (string) $query;
+
         $db->setQuery($query);
         $working = $db->loadObjectList();
 
@@ -291,6 +293,9 @@ class Gm_ceilingModelGuild extends JModelList
             $working[$key]->time = $time;
             $working[$key]->user = $users[$key->user_id];
         }
+
+        print_r($working);
+        exit();
 
         return $working;
     }
