@@ -27,17 +27,15 @@ $mount = $model_mount->getDataAll();
 		Редактирование маржинальности и прайса монтажа
 	</h2>
 
-	<div class = "col-md-4"></div>
 	<div class = "col-md-4">
-
 	<div class="control-group">
-		<div class="control-label">
-			<label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >Маржинальность на полотна</label>
+			<div class="control-label">
+				<label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >Маржинальность на полотна</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo $margin->dealer_canvases_margin ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
+			</div>
 		</div>
-		<div class="controls">
-			<input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo $margin->dealer_canvases_margin ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
-		</div>
-	</div>
 		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">Маржинальность на комплектующие</label>
@@ -110,6 +108,8 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[mp7]" id="jform_mp7" value=<?php echo $mount->mp7 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
 			</div>
 		</div>
+	</div>
+	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_mp8-lbl" for="jform_mp8" >	Обвод трубы D < 120мм</label>
@@ -214,8 +214,35 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[transport]" id="jform_transport" value=<?php echo $mount->transport ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 			</div>
 		</div>
-		<br>
-		<button class="btn btn-primary" style="width:100%;"> Сохранить </button>
 	</div>
-	
+	<div class = "col-md-4">
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp18-lbl" for="jform_mp18" >Дополнительный монтаж</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp18]" id="jform_mp18" value=<?php echo $mount->mp18 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp19-lbl" for="jform_mp19" >??? </label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp19]" id="jform_mp19" value=<?php echo $mount->mp19 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_transport-lbl" for="jform_transport" >Транспортные расходы</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[transport]" id="jform_transport" value=<?php echo $mount->transport ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+	</div>
+	<br>
+	<div  class = "col-md-12">
+		<button class="btn btn-primary" style="width:30%;"> Сохранить </button>
+	</div>
 </form>
