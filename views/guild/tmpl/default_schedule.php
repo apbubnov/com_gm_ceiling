@@ -103,6 +103,11 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 </div>
             </form>
         </div>
+        <div class="Actions">
+            <button type="button" class="ShowBigInfo">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -211,7 +216,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         jQuery.ajax({
             type: 'POST',
             url: "/index.php?option=com_gm_ceiling&task=guild.getData",
-            data: {Day: day, Month: month, Year: year, Type: "Employee"},
+            data: {Day: day, Month: month, Year: year, Type: "Working"},
             cache: false,
             async: false,
             success: function (data) {

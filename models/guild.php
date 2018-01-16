@@ -223,6 +223,7 @@ class Gm_ceilingModelGuild extends JModelList
             {
                 if ($work->action == 1 && $Start == null)
                     $Start = $work->date;
+
                 if ($work->action == 0)
                     $End = $work->date;
 
