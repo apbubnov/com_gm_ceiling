@@ -151,6 +151,9 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
         if (!empty($User))
             $data->user_id = $User;
 
+        print_r($data);
+        exit();
+
         $model = $this->getModel();
 
         die(json_encode($model->getWorking($data)));
