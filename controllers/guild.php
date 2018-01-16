@@ -114,9 +114,11 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
         die(json_encode((object) ["status" => "success", "calendar" => Gm_ceilingHelpersGm_ceiling::LiteCalendar($month, $year)]));
     }
 
-    public function getWorking()
+    public function getData()
     {
         $app = JFactory::getApplication();
+
+        $Type = $app->input->get('Type', null, 'string');
 
         $DateStart = $app->input->get('DateStart', null, 'string');
         $DateEnd = $app->input->get('DateEnd', null, 'string');
@@ -153,7 +155,8 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         $model = $this->getModel();
 
-        die(json_encode($model->getWorking($data)));
+        if ($Type == "Working") die(json_encode($model->getWorking($data)));
+        else if ($Type == "Employee") die(json_encode($model->getBigDataEmployees($data)));
     }
 
     public function setWorking()

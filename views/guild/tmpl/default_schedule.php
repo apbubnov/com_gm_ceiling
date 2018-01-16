@@ -137,7 +137,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     function InitCalendarFunction() {
         var calendars = $(".Calendars"),
             calendar = $(".Calendar"),
-            days = calendar.find(".Day");
+            days = calendar.find(".Day.IssetDay");
 
         days.attr("onclick", "getWorkingDay(this);");
     }
@@ -210,8 +210,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
         jQuery.ajax({
             type: 'POST',
-            url: "/index.php?option=com_gm_ceiling&task=guild.getWorking",
-            data: {Day: day, Month: month, Year: year},
+            url: "/index.php?option=com_gm_ceiling&task=guild.getData",
+            data: {Day: day, Month: month, Year: year, Type: "Employees"},
             cache: false,
             async: false,
             success: function (data) {

@@ -170,13 +170,85 @@ class Gm_ceilingModelGuild extends JModelList
     {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
-        $query->select('user.id, user.name')
+        $query->select('user.id, user.name, user.username, user.email')
             ->from("`#__users` as user")
             ->join("LEFT", "`#__user_usergroup_map` as map ON map.user_id = user.id")
             ->where("map.group_id = '18'");
         if (!empty($id)) $query->where("user.id = '$id'");
+
         $db->setQuery($query);
-        return (empty($id)) ? $db->loadObjectList() : $db->loadObject();
+
+        $employees = (empty($id)) ? $db->loadObjectList() : $db->loadObject();
+
+        if (empty($id))
+        {
+            $employeesTemp = [];
+            foreach ($employees as $employee)
+                $employeesTemp[$employee->id] = $employee;
+            $employees = $employeesTemp;
+        }
+
+        return $employees;
+    }
+
+    public function getBigDataEmployees($data = null)
+    {
+        $db = $this->getDbo();
+
+        if (empty($data->DateStart))
+            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
+
+        if (empty($data->DateEnd))
+            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+
+        $employees = (empty($data->user_id))?$this->getEmployees():[$data->user_id => $this->getEmployees($data->user_id)];
+
+        foreach ($employees as $key => $employee)
+        {
+            // Получение расписания для данного работника
+            $query = $db->getQuery(true);
+            $query->from("`#__gm_ceiling_guild_working` as w")
+                ->select("w.`id`, w.`user_id`, w.`date`, w.`action`")
+                ->where("w.date BETWEEN '$data->DateStart' AND '$data->DateEnd'")
+                ->where("w.user_id = '$employee->id'")
+                ->order("w.date");
+            $db->setQuery($query);
+            $working = $db->loadObjectList();
+
+            $Start = null;
+            $End = null;
+            $WorkingTimes = [];
+            $WorkingTime = 0.0;
+            foreach ($working as $work)
+            {
+                if ($work->action == 1 && $Start == null)
+                    $Start = $work->date;
+                if ($work->action == 0)
+                    $End = $work->date;
+
+                $TempWT = $WorkingTimes[count($WorkingTimes) - 1];
+                if ($TempWT->End != null && $work->action == 1)
+                    $WorkingTimes[] = (object) ["Start" => $work->date, "End" => null, "Time" => null];
+                else if ($work->action == 0)
+                {
+                    $TempWT->End = $work->date;
+
+                    $hours = floatval(date("H", strtotime($TempWT->End)) - date("H", strtotime($TempWT->Start)));
+                    $minute = floatval(date("i", strtotime($TempWT->End)) - date("i", strtotime($TempWT->Start)));
+                    $hours += (floatval($minute) / 60.0);
+                    $TempWT->Time = $hours;
+                    $WorkingTime += $hours;
+
+                    $WorkingTimes[count($WorkingTimes) - 1] = $TempWT;
+                }
+            }
+
+            $employee->Working = (object) ["Start" => $Start, "End" => $End, "Time" => $WorkingTime, "Times" => $WorkingTimes];
+
+            $employees[$key] = $employee;
+        }
+
+        return $employees;
     }
 
     public function sendWork($data)
@@ -268,10 +340,6 @@ class Gm_ceilingModelGuild extends JModelList
 
         $users = $this->getEmployees();
 
-        $tempUsers = [];
-        foreach ($users as $user) $tempUsers[$user->id] = $user;
-        $users = $tempUsers;
-
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_guild_working` as w")
             ->select("w.`id`, w.`user_id`, w.`date`, w.`action`")
@@ -327,10 +395,6 @@ class Gm_ceilingModelGuild extends JModelList
         $db = $this->getDbo();
 
         $users = $this->getEmployees();
-
-        $tempUsers = [];
-        foreach ($users as $user) $tempUsers[$user->id] = $user;
-        $users = $tempUsers;
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_guild_salaries` as s")
