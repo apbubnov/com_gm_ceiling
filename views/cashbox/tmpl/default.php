@@ -315,7 +315,13 @@ $year = date("Y");
             for(var j=0;j<Object.keys(data[i]).length;j++){
                 if(data[i][Object.keys(data[i])[j]]!=null){
                     if(Object.keys(data[i])[j]=="closed"){
-                        data[i][Object.keys(data[i])[j]] = formatDate(new Date(data[i][Object.keys(data[i])[j]]));
+                        if(data[i][Object.keys(data[i])[j]].search(':')!=-1){
+                            flag = 1;
+                        }
+                        else{
+                            flag = 0;
+                        }
+                        data[i][Object.keys(data[i])[j]] = formatDate(new Date(data[i][Object.keys(data[i])[j]]),flag);
                     }
                     jQuery('#cashbox_table > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
                     if(Object.keys(data[i])[j]=="cashbox"){
@@ -339,7 +345,7 @@ $year = date("Y");
         jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Остаток:<b></td><td>'+(cashbox-all_not_issued)+'</td>');
 
     }
-    function formatDate(date) {
+    function formatDate(date,flag) {
         var dd = date.getDate();
         if (dd < 10) dd = '0' + dd;
 
@@ -349,16 +355,20 @@ $year = date("Y");
         var yy = date.getFullYear();
         if (yy < 10) yy = '0' + yy;
 
-        var hh = date.getHours();
-        console.log(hh);
-        if (hh < 10) hh = '0' + hh;
+        if(flag == 1){
+            var hh = date.getHours();
+            if (hh < 10) hh = '0' + hh;
 
-        var ii = date.getMinutes();
-        if (ii < 10) ii = '0' + ii;
+            var ii = date.getMinutes();
+            if (ii < 10) ii = '0' + ii;
 
-        var ss = date.getSeconds();
-        if (ss < 10) ss = '0' + ss;
+            var ss = date.getSeconds();
+            if (ss < 10) ss = '0' + ss;
 
-        return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
+            return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
         }
+        else{
+            return dd + '.' + mm + '.' + yy;
+        }
+    }
 </script>
