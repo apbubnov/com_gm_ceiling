@@ -78,19 +78,23 @@ class Gm_ceilingModelRecoil extends JModelList
 	{
 		try
 		{
-			$db = JFactory::getDbo();
-			$name = $db->escape($name, true);
-			$phone = $db->escape($phone, true);
-
-			$query = $db->getQuery(true);
-			$query->insert('`#__gm_ceiling_recoil`');
-			$query->columns('`recoil_name`, `phone`');
-			$query->values("'$name','$phone'");
-			
-			$db->setQuery($query);
-	        $db->execute();
-	        $last_id  = $db->insertid();
-	        return $last_id;
+			$phones = [];
+			array_push($phones,$phone);
+			$user = JFactory::getUser();
+			//Создание клиента
+			$clientform_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
+			$client_data['client_name'] = $name;
+			$client_data['manager_id'] = $user->id;
+			$client_data['created'] = date("Y-m-d");
+			$client_id = $clientform_model->save($client_data);
+			//сохранение телефонов
+			$cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
+			$cl_phones_model->save($client_id,$phones);
+			//создание user'а
+			$dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name,$phone,"$client_id@$client_id",$client_id);
+			$client_model = $this->getModel('Client', 'Gm_ceilingModel');
+			$client_model->updateClient($client_id,null,$userID);
+	        return $dealer_id;
 	    }
 	    catch(Exception $e)
         {
