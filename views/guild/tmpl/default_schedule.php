@@ -206,7 +206,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             year = Month.attr("year"),
             Workings;
 
-        ModalDay.attr({"day":day, "month":month, "year":year, "dayid": "#" + Month.attr("id") + " #" + day.attr("id")});
+        ModalDay.attr({"day":day, "month":month, "year":year, "dayid": "#" + Month.attr("id") + " #" + Day.attr("id")});
 
         jQuery.ajax({
             type: 'POST',
