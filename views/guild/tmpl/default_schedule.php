@@ -66,7 +66,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             <div class="ButtomAdd">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
             </div>
-            <form class="AddEmployeeForm" action="JavaScript::setWorking()">
+            <form class="AddEmployeeForm" action="javascript:setWorking();">
                 <div class="Line">
                     <div class="Name">Рабочий:</div>
                     <select name="employee">
