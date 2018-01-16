@@ -85,12 +85,8 @@ $type = $jinput->getString('type', NULL);
 					?>
                     
 				</td>
-				<td class="one-touch">
-					<?php echo $this->escape($item->client_name); ?>
-				</td>
-				<td class="one-touch">
-					<?php echo $item->client_contacts; ?>
-				</td>
+				<td class="one-touch"><?php echo $this->escape($item->client_name); ?></td>
+				<td class="one-touch"><?php echo $item->client_contacts; ?></td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>
