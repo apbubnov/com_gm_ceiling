@@ -141,7 +141,6 @@ $mount = $model_mount->getDataAll();
 			</div>
 		</div>
 	</div>
-	
 	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
