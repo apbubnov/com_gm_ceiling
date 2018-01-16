@@ -46,6 +46,9 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 	public function updatedata($key = NULL, $urlVar = NULL)
 	{
         /* переделать*/
+
+
+print_r($_POST); exit; 
 		$message = "Успешно сохранено!";
 		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
 		$userID = JFactory::getUser()->id;
