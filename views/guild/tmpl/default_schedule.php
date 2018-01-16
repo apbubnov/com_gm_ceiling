@@ -237,6 +237,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             Employee.find(".time").text(value.time);
             Employee.find(".name").text(value.user.name);
             Employee.attr("id", value.id);
+            if (value.action === "0") Employee.addClass("Out"); else Employee.addClass("In");
 
             ModalDay.find(".Employees").append(Employee);
         });
