@@ -169,6 +169,8 @@ class Gm_ceilingModelClient extends JModelItem
 				$query->set("`dealer_id` = $dealer_id");
 			}
 			$query->where("id = $id");
+			throw new Exception($query);
+			
 			$db->setQuery($query);
 			$db->execute();
 		}
