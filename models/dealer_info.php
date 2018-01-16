@@ -168,5 +168,73 @@ class Gm_ceilingModelDealer_info extends JModelList
         }
 	}
 
-
+	public function updateMarginAndMount($id, $data)
+	{
+		try
+		{
+			
+			$db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+            $query->update('`#__gm_ceiling_dealer_info`')
+				->set('dealer_canvases_margin = ' . $db->quote($data['dealer_canvases_margin']))
+				->set('dealer_components_margin = ' . $db->quote($data['dealer_components_margin']))
+				->set('dealer_mounting_margin = ' . $db->quote($data['dealer_mounting_margin']))
+				->where('dealer_id = ' . $id);
+                $db->setQuery($query);
+				$db->execute();
+				
+			$query = $db->getQuery(true);
+			$query->update('`#__gm_ceiling_mount`')
+				->set('mp1 = ' . $db->quote($data['mp1']))
+				->set('mp2 = ' . $db->quote($data['mp2']))
+				->set('mp3 = ' . $db->quote($data['mp3']))
+				->set('mp4 = ' . $db->quote($data['mp4']))
+				->set('mp5 = ' . $db->quote($data['mp5']))
+				->set('mp6 = ' . $db->quote($data['mp6']))
+				->set('mp7 = ' . $db->quote($data['mp7']))
+				->set('mp8 = ' . $db->quote($data['mp8']))
+				->set('mp9 = ' . $db->quote($data['mp9']))
+				->set('mp10 = ' . $db->quote($data['mp10']))
+				->set('mp11 = ' . $db->quote($data['mp11']))
+				->set('mp12 = ' . $db->quote($data['mp12']))
+				->set('mp13 = ' . $db->quote($data['mp13']))
+				->set('mp14 = ' . $db->quote($data['mp14']))
+				->set('mp15 = ' . $db->quote($data['mp15']))
+				->set('mp16 = ' . $db->quote($data['mp16']))
+				->set('mp17 = ' . $db->quote($data['mp17']))
+				->set('mp18 = ' . $db->quote($data['mp18']))
+				->set('mp19 = ' . $db->quote($data['mp19']))
+				->set('mp22 = ' . $db->quote($data['mp22']))
+				->set('mp23 = ' . $db->quote($data['mp23']))
+				->set('mp24 = ' . $db->quote($data['mp24']))
+				->set('mp25 = ' . $db->quote($data['mp25']))
+				->set('mp26 = ' . $db->quote($data['mp26']))
+				->set('mp27 = ' . $db->quote($data['mp27']))
+				->set('mp30 = ' . $db->quote($data['mp30']))
+				->set('mp31 = ' . $db->quote($data['mp31']))
+				->set('mp32 = ' . $db->quote($data['mp32']))
+				->set('mp33 = ' . $db->quote($data['mp33']))
+				->set('mp34 = ' . $db->quote($data['mp34']))
+				->set('mp36 = ' . $db->quote($data['mp36']))
+				->set('mp37 = ' . $db->quote($data['mp37']))
+				->set('mp38 = ' . $db->quote($data['mp38']))
+				->set('mp40 = ' . $db->quote($data['mp40']))
+				->set('mp41 = ' . $db->quote($data['mp41']))
+				->set('mp42 = ' . $db->quote($data['mp42']))
+				->set('mp43 = ' . $db->quote($data['mp43']))
+				->set('transport = ' . $db->quote($data['transport']))
+				->set('distance = ' . $db->quote($data['distance']))
+				->where('user_id = ' . $id);
+				$db->setQuery($query);
+				$db->execute();	
+				return 1;
+		}
+	    catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }

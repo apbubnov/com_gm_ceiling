@@ -50,48 +50,13 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
         $userID = JFactory::getUser()->id;
         $jinput = JFactory::getApplication()->input;
         $data = JFactory::getApplication()->input->get('jform', array(), 'array');
-        //$dealer_canvases_margin = $jinput->get('dealer_canvases_margin', '0', 'INT');
-
-print_r($data['dealer_canvases_margin']); exit; 
-		$message = "Успешно сохранено!";
-		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
-		
-		//$user =& JUser::getInstance((int)$userID);
-		$post['dealer_canvases_margin'] = $data['dealer_canvases_margin'];
-		$post['dealer_components_margin'] = $data['dealer_components_margin'];
-		$post['dealer_mounting_margin'] = $data['dealer_mounting_margin'];
-		$post['mp1'] = $data['mp1'];
-		$post['mp2'] = $data['mp2'];
-		$post['mp3'] = $data['mp3'];
-		$post['mp4'] = $data['mp4'];
-		$post['mp5'] = $data['mp5'];
-		$post['mp6'] = $data['mp6'];
-		$post['mp7'] = $data['mp7'];
-		$post['mp8'] = $data['mp8'];
-		$post['mp9'] = $data['mp9'];
-		$post['mp10'] = $data['mp10'];
-		$post['mp11'] = $data['mp11'];
-		$post['mp12'] = $data['mp12'];
-		$post['mp13'] = $data['mp13'];
-		$post['mp14'] = $data['mp14'];
-		$post['mp15'] = $data['mp15'];
-		$post['mp16'] = $data['mp16'];
-		$post['mp17'] = $data['mp17'];
-		$post['mp18'] = $data['mp18'];
-		$post['mp19'] = $data['mp19'];
-		$post['transport'] = $data['transport'];
-		if (!$user->bind($post))
-		{
-			$message = $user->getError();
-		} 
-		if ( !$user->save() )
-		{
-			$message = $user->getError();
-		}
-		$this->setMessage($message);
-		$menu = JFactory::getApplication()->getMenu();
-		$item = $menu->getActive();
-		$url  = 'index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage';
+        $model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+        $result = $model_dealer_info->updateMarginAndMount($user->dealer_id, $data);
+        if($result == 1) $message = "Успешно сохранено!";
+        else $message = "Возникла ошибка сохранения!";
+        $this->setMessage($message);
+        $url  = 'index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage';
 		$this->setRedirect(JRoute::_($url, false));
+		
 	}
 }
