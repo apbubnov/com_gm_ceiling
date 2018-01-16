@@ -305,7 +305,7 @@ class Gm_ceilingModelGuild extends JModelList
         $db = $this->getDbo();
         $query = $db->getQuery(true);
         $query->insert("`#__gm_ceiling_guild_working`")
-            ->colums("`user_id`, `date`, `action`")
+            ->columns("`user_id`, `date`, `action`")
             ->values("'$data->user_id', '$data->date', '$data->action'");
         $db->setQuery($query);
         $result = $db->execute();
