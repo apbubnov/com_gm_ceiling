@@ -14,8 +14,7 @@ $userId     = $user->get('id');
 
 $api_phone_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $phones = $api_phone_model->getArrayNumbers();
-throw new Exception(json_encode($this->item));
-
+$items = json_encode($this->item);
 ?>
 <form>
     <a class="btn btn-large btn-primary"
@@ -51,7 +50,8 @@ throw new Exception(json_encode($this->item));
 </form>
 
 <script>
-
+    var obr_calls = JSON.parse('<?php echo $items; ?>');
+    console.log(obr_calls);
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
     var phones = <?php echo json_encode($phones);?>;
