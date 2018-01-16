@@ -230,7 +230,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             }
         });
 
-
+        ModalDay.find(".Employees").empty();
         $.each(Workings, function (key, value) {
             var Employee = Data.Employee.clone();
 
