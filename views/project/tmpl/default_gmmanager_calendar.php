@@ -2188,7 +2188,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     for (var i = 0; i < data.length; i++) {
                         var opt = document.createElement('option');
                         opt.value = data[i].id;
-                        opt.innerHTML = data[i].client_name;
+                        opt.innerHTML = data[i].client_name + ' ' + data[i].client_contacts;
                         document.getElementById("found_clients").appendChild(opt);
                     }
                 },
