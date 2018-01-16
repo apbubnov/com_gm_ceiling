@@ -253,7 +253,7 @@ class Gm_ceilingModelGuild extends JModelList
 
         return;
     }
-
+/*
     public function getWorking($data = (object) [])
     {
         if (empty($data->DateStart))
@@ -337,5 +337,5 @@ class Gm_ceilingModelGuild extends JModelList
             $salaries[$key]->user = $users[$key->user_id];
 
         return $salaries;
-    }
+    }*/
 }
