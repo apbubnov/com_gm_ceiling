@@ -253,4 +253,89 @@ class Gm_ceilingModelGuild extends JModelList
 
         return;
     }
+
+    public function getWorking($data = (object) [])
+    {
+        if (empty($data->DateStart))
+            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
+
+        if (empty($data->DateEnd))
+            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+
+        $db = $this->getDbo();
+
+        $users = $this->getEmployees();
+
+        $tempUsers = [];
+        foreach ($users as $user) $tempUsers[$user->id] = $user;
+        $users = $tempUsers;
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_guild_working` as w")
+            ->select("w.*")
+            ->where("w.date BETWEEN '$data->StartDate' AND '$data->EndDate'")
+            ->order("w.date");
+
+        if (!empty($data->user_id))
+            $query->where("w.user_id = '$data->user_id'");
+
+        $db->setQuery($query);
+        $working = $db->loadObjectList();
+
+        foreach ($working as $key => $work)
+            $working[$key]->user = $users[$key->user_id];
+
+        return $working;
+    }
+
+    public function setWorking($data = (object) [])
+    {
+        if (empty($data->user_id) || empty($data->date) || empty($data->action))
+            throw new Exception("Не все данные переданы!");
+
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->insert("`#__gm_ceiling_guild_working`")
+            ->colums("`user_id`, `date`, `action`")
+            ->values("'$data->user_id', '$data->date', '$data->action'");
+        $db->setQuery($query);
+        $result = $db->execute();
+
+        if (empty($result))
+            throw new Exception("Не удалось добавить в расписание! Попробуйте снова!");
+    }
+
+    public function getSalaries($data = (object) [])
+    {
+        if (empty($data->DateStart))
+            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
+
+        if (empty($data->DateEnd))
+            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+
+        $db = $this->getDbo();
+
+        $users = $this->getEmployees();
+
+        $tempUsers = [];
+        foreach ($users as $user) $tempUsers[$user->id] = $user;
+        $users = $tempUsers;
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_guild_salaries` as s")
+            ->select("s.*")
+            ->where("s.accrual_date BETWEEN '$data->StartDate' AND '$data->EndDate'")
+            ->order("s.accrual_date");
+
+        if (!empty($data->user_id))
+            $query->where("w.user_id = '$data->user_id'");
+
+        $db->setQuery($query);
+        $salaries = $db->loadObjectList();
+
+        foreach ($salaries as $key => $salar)
+            $salaries[$key]->user = $users[$key->user_id];
+
+        return $salaries;
+    }
 }
