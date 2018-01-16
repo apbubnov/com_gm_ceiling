@@ -241,8 +241,11 @@ $mount = $model_mount->getDataAll();
 			</div>
 		</div>
 	</div>
-	<br>
-	<div  class = "col-md-12">
-		<button class="btn btn-primary" style="width:30%;"> Сохранить </button>
-	</div>
+	<div  class = "col-md-12" style="margin-top:15px;">
+		<div  class = "col-md-4">
+		</div>
+		<div  class = "col-md-4">
+			<button class="btn btn-primary" style="width:100%;"> Сохранить </button>
+		</div>
+	</div>	
 </form>
