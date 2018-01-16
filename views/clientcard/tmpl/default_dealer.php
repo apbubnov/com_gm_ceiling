@@ -11,7 +11,8 @@
     $historyModel = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
     $history = $historyModel->getDataByClientId($this->item->id);
     $projects = $clientcardModel->getProjects($this->item->id);
-    $jinput = JFactory::getApplication()->input;
+    $app = JFactory::getApplication();
+    $jinput = $app->input;
     $phoneto = $jinput->get('phoneto', '', 'STRING');
     $phonefrom = $jinput->get('phonefrom', '', 'STRING');
     $call_id = $jinput->get('call_id', 0, 'INT');
@@ -19,6 +20,12 @@
     $client = $client_model->getClientById($this->item->id);
     $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
     $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
+    $dealer = JFactory::getUser($client->dealer_id);
+    if ($dealer->associated_client != $this->item->id)
+    {
+        throw new Exception("this is not dealer", 403);
+    }
+    
     
     if(!empty($client->manager_id)){
         $manager_name = JFactory::getUser($client->manager_id)->name;
@@ -187,12 +194,13 @@
 <div id="modal-window-container">
     <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal-window-1-tar">
-        <form method="post" enctype="multipart/form-data">
+        <form action="/index.php?option=com_gm_ceiling&task=clientform.save" method="post" enctype="multipart/form-data">
             <p><strong>Создание нового клиента</strong></p>
             <p>ФИО:</p>
             <p><input type="text" id="fio_client" name="jform[client_name]"></p>
             <p>Номер телефона:</p>
-            <p><input type="text" id="phone_client" name="jform[client_contacts]"></p>
+            <p><input type="text" id="jform_client_contacts" name="jform[client_contacts]"></p>
+            <input type="hidden" id="jform_dealer_id" name="jform[dealer_id]" value="<?php echo $client->dealer_id; ?>">
             <p><button type="submit" id="save_client" class="btn btn-primary">ОК</button></p>
         </form>
     </div>
@@ -342,6 +350,7 @@
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
+        jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
     });
 
     jQuery("#back_btn").click(function (){
