@@ -242,7 +242,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 	</div>
 	<br>
-	<div  class = "col-md-12">
+	<div  class = "col-md-12" style="margin-top:15px;">
 		<div  class = "col-md-4">
 		</div>
 		<div  class = "col-md-4">
