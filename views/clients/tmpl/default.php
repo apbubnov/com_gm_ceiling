@@ -51,7 +51,7 @@ $type = $jinput->getString('type', NULL);
 			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
 	</div>
-	<table class="table table-striped one-touch-view" id="clientList">
+	<table class="table table-striped table_cashbox one-touch-view" id="clientList">
 		<thead>
 			<tr>
 				<th class=''>
@@ -85,12 +85,8 @@ $type = $jinput->getString('type', NULL);
 					?>
                     
 				</td>
-				<td class="one-touch">
-					<?php echo $this->escape($item->client_name); ?>
-				</td>
-				<td class="one-touch">
-					<?php echo $item->client_contacts; ?>
-				</td>
+				<td class="one-touch"><?php echo $this->escape($item->client_name); ?></td>
+				<td class="one-touch"><?php echo $item->client_contacts; ?></td>
 			</tr>
 		<?php endforeach; ?>
 		</tbody>

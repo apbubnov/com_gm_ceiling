@@ -120,7 +120,7 @@ if (empty($list['direction']))
 						'list.select', ' a.*'
 					)
 				);
-			$query->select('b.phone as client_contacts');		
+			$query->select('GROUP_CONCAT(b.phone SEPARATOR \', \') as client_contacts');		
 			$query->from('`#__gm_ceiling_clients` AS a');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` as b ON a.id = b.client_id ');
 			$user = JFactory::getUser();
@@ -174,7 +174,7 @@ if (empty($list['direction']))
 						'list.select', ' a.*'
 					)
 				);
-			$query->select('b.phone as client_contacts');		
+			$query->select('GROUP_CONCAT(b.phone SEPARATOR \', \') as client_contacts');		
 			$query->from('`#__gm_ceiling_clients` AS a');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` as b ON a.id = b.client_id ');
 			$user = JFactory::getUser();
@@ -293,9 +293,12 @@ if (empty($list['direction']))
 			$client_name = $db->escape($client_name);
 			$query = $db->getQuery(true);
 			$query
-				->select("*")
-				->from("`#__gm_ceiling_clients`")
-				->where("client_name LIKE('%".$client_name."%')");
+				->select("a.*, GROUP_CONCAT(b.phone SEPARATOR ', ') as client_contacts")
+				->from("`#__gm_ceiling_clients` as `a`")
+				->leftJoin('`#__gm_ceiling_clients_contacts` as `b` ON a.id = b.client_id ')
+				->where("client_name LIKE('%".$client_name."%')")
+				->order('`id` DESC')
+				->group('`id`');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;

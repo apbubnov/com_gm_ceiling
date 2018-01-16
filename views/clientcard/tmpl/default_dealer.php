@@ -120,7 +120,7 @@
     <div class="col-sm-12" id = "cliens_of_dealer">
         <p class="caption-tar">Клиенты дилера</p>
         <div id="cliens_of_dealer_2">
-            <table id="cliens_of_dealer_table" class="table table-striped one-touch-view" cellspacing="0">
+            <table id="cliens_of_dealer_table" class="table table-striped table_cashbox one-touch-view" cellspacing="0">
                 <tbody>
                 <?php foreach ($clients_items as $i => $item) : ?>
                     <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
@@ -136,12 +136,8 @@
                             ?>
                             
                         </td>
-                        <td class="one-touch">
-                            <?php echo $item->client_name; ?>
-                        </td>
-                        <td class="one-touch">
-                            <?php echo $item->client_contacts; ?>
-                        </td>
+                        <td class="one-touch"><?php echo $item->client_name; ?></td>
+                        <td class="one-touch"><?php echo $item->client_contacts; ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
