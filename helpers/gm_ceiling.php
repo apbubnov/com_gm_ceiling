@@ -220,7 +220,7 @@ class Gm_ceilingHelpersGm_ceiling
                     'n30' => 'float',
                     'n31' => 'float',
                     'n32' => 'int',
-                    'height' => 'int',
+                    'height'=>'int',
                     'distance' => 'float',
                     'distance_col' => 'int',
                     'dop_krepezh' => 'float', //Доп. крепеж
@@ -245,12 +245,7 @@ class Gm_ceilingHelpersGm_ceiling
 
             $data['n3'] = ($_SESSION['n3']) ? ($_SESSION['n3']) : $data['n3'];
             //print_r($data); exit;
-            if ($data['n2'] == 0) {
-                $data['n3'] = 0;
-                $data['n4'] = 0;
-                $data['n5'] = 0;
-                $data['n9'] = 0;
-            }
+            if($data['n2'] == 0) { $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;}
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
             $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -453,14 +448,14 @@ class Gm_ceilingHelpersGm_ceiling
                 $data['distance'] = 0;
                 $data['distance_col'] = 0;
             }
-             
+
         }*/
         //if (!empty($data['distance']) && !empty($data['distance_col']) && $data['transport'] == 1)
         // $data['transport'] = 0;
         //print_r($data['n15']); exit;
         //print_r($data); exit;
 
-        if ($data['n2'] == 29) $data['n1'] = 29;
+        if($data['n2'] == 29) $data['n1'] = 29;
 
         //Получаем объект дилера
         if (empty($data['dealer_id'])) {
@@ -502,7 +497,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Маржа дилера на монтажные работы
         }
 
-//print_r( $dealer_canvases_margin);exit;
+        //print_r( $dealer_canvases_margin);exit;
         //------------------- РАСЧЕТ СТОИМОСТИ КОМПЛЕКТУЮЩИХ -------------------------------------//
 
         //print_r($data['n13']);
@@ -535,6 +530,8 @@ class Gm_ceilingHelpersGm_ceiling
 
         $filter = "a.title  LIKE('%303 белая%') AND component.title LIKE('%Вставка%') ";
         $items_vstavka_bel = $components_model->getFilteredItems($filter);
+
+
 
         if ($data['color'] > 0) {
             $color_model1 = Gm_ceilingHelpersGm_ceiling::getModel('colors');
@@ -823,6 +820,8 @@ class Gm_ceilingHelpersGm_ceiling
                     if ($cornice->n15_count > 0) $component_count[$cornice->n15_size] += $cornice->n15_count;
                 }
             }
+
+
 
 
             $n29 = $data['n29'];
@@ -1157,10 +1156,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $mounting_data[] = array(
                     "title" => "Периметр",                                                                    //Название
                     "quantity" => $data['n5'],                                                                //Кол-во
-                    "gm_salary" => ($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => ($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    "gm_salary" => ($data['height']==1)?($results->mp1 + 10):$results->mp1,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp1 + 10):$results->mp1) ,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => ($data['height']==1)?($results->mp1 + 10):$results->mp1,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp1 + 10):$results->mp1)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
             //периметр
@@ -1168,10 +1167,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $mounting_data[] = array(
                     "title" => "Периметр",                                                                    //Название
                     "quantity" => $data['n5'],                                                                //Кол-во
-                    "gm_salary" => ($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => ($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31)                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    "gm_salary" => ($data['height']==1)?($results->mp31 + 10):$results->mp31,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp31 + 10):$results->mp31),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => ($data['height']==1)?($results->mp31 + 10):$results->mp31,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp31 + 10):$results->mp31)                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
 
             }
@@ -1180,10 +1179,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $mounting_data[] = array(
                     "title" => "Периметр",                                                                    //Название
                     "quantity" => $data['n5'],                                                                //Кол-во
-                    "gm_salary" => ($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => ($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32)                                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    "gm_salary" => ($data['height']==1)?($results->mp32 + 10):$results->mp32,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp32 + 10):$results->mp32),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => ($data['height']==1)?($results->mp32 + 10):$results->mp32,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n5'] * ( ($data['height']==1)?($results->mp32 + 10):$results->mp32  )                                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
 
             }
@@ -1217,7 +1216,7 @@ class Gm_ceilingHelpersGm_ceiling
                 );
             }
 
-            if ($data['n31'] > 0) {
+            if ( $data['n31'] > 0) {
                 //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
                 $guild_data[] = array(
                     "title" => "Внутренний вырез(в цеху)",                                                                    //Название
@@ -1750,6 +1749,8 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
 
+
+
             //пожарная сигнализация
             if ($data['n21'] > 0) {
                 $mounting_data[] = array(
@@ -1832,10 +1833,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $mounting_data[] = array(
                     "title" => "Периметр",                                                                    //Название
                     "quantity" => $data['n5'],                                                                //Кол-во
-                    "gm_salary" => ($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => ($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    "gm_salary" => ($data['height']==1)?($results->mp33 + 10):$results->mp33,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp33 + 10):$results->mp33),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => ($data['height']==1)?($results->mp33 + 10):$results->mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp33 + 10):$results->mp33)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
 
             }
@@ -1888,7 +1889,7 @@ class Gm_ceilingHelpersGm_ceiling
                 );
             }
 
-            //закладная брусом 
+            //закладная брусом
             if ($data['n17'] > 0) {
                 $mounting_data[] = array(
                     "title" => "Закладная брусом",                                                    //Название
@@ -2491,34 +2492,14 @@ class Gm_ceilingHelpersGm_ceiling
 
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
-              
-                if ($new_client != 1) {
-                    
-                    $ajax_return['id'] = $calculation_model->save($data, $del_flag);
-                }
-
-                $filename = md5("calculation_sketch" . $ajax_return['id']);
-                $cut_filename = md5("cut_sketch" . $ajax_return['id']);
-              
+                $calc_id = $calculation_model->save($data, 1);
+                $filename = md5("calculation_sketch" . $calc_id);
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
                     rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".png");
 
                 }
 
             }
-          
-            
-            //throw new Exception($ajax_return['id']);
-            //throw new Exception($pdf);
-            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-            $phone = $project_model->getClientPhones($project->id_client);
-            $mount = $project_model->getMount($project->id);
-            if(!empty($mount->id)) $mount_name = $project_model->getMounterBrigade($mount->id);
-
-            //Пошла печать PDF
-            if ($pdf == 1) {
-                $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-              
 
         }
         //throw new Exception($ajax_return['id']);
@@ -2526,7 +2507,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
         $phone = $project_model->getClientPhones($project->id_client);
         $mount = $project_model->getMount($project->id);
-        if (!empty($mount->id)) $mount_name = $project_model->getMounterBrigade($mount->id);
+        if(!empty($mount->id)) $mount_name = $project_model->getMounterBrigade($mount->id);
 
         //Пошла печать PDF
         if ($pdf == 1) {
@@ -3443,7 +3424,8 @@ class Gm_ceilingHelpersGm_ceiling
         }
 
         return $return;
-    }
+
+
     }
 
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж

@@ -28,6 +28,7 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) - 1);
 $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(date("m"));
 $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
 
+$employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 //$schedule = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getSchedule();
 ?>
 
@@ -60,7 +61,20 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
     <div class="Dark" onclick="hideModalCalendar();"></div>
     <div class="ModalDay">
         <div class="Title"></div>
-        <div class="Employees"></div>
+        <div class="Employees">
+            <div class="Employee">
+                <div class="time">11:30</div>
+                <div class="name">Новый Гуский</div>
+            </div>
+            <div class="Employee">
+                <div class="time">11:45</div>
+                <div class="name">Новый Гуский</div>
+            </div>
+            <div class="Employee">
+                <div class="time">11:50</div>
+                <div class="name">Новый Гуский</div>
+            </div>
+        </div>
         <div class="Add">
             <div class="ButtomAdd">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -68,7 +82,11 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
             <form class="AddEmployeeForm" action="JavaScript::AddEmployee()">
                 <div class="Line">
                     <div class="Name">Рабочий:</div>
-                    <select name="employee"></select>
+                    <select name="employee">
+                        <?foreach ($employees as $employee):?>
+                            <option value="<?=$employee->id;?>"><?=$employee->name;?></option>
+                        <?endforeach;?>
+                    </select>
                 </div>
                 <div class="Line">
                     <div class="Name">Событие:</div>
@@ -80,13 +98,21 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
                 <div class="Line">
                     <div class="Name">Время:</div>
                     <div class="Time">
-                        <select name="hour"></select>
-                        <select name="minute"></select>
+                        <select name="hour">
+                            <?for($i = 0; $i < 24; $i++): $H = date("H", mktime($i, 0, 0, 1, 1, 1));?>
+                                <option value="<?=$H;?>"><?=$H;?></option>
+                            <?endfor;?>
+                        </select>
+                        <select name="minute">
+                            <?for($i = 0; $i <= 59; $i+=5): $I = date("i", mktime(0, $i, 0, 1, 1, 1));?>
+                                <option value="<?=$I;?>"><?=$I;?></option>
+                            <?endfor;?>
+                        </select>
                     </div>
                 </div>
                 <div class="Line">
-                    <button type="submit"> Добавить </button>
-                    <button type="button"> Отмена </button>
+                    <button type="submit" class="Send"> Добавить </button>
+                    <button type="button" class="Cancel"> Отмена </button>
                 </div>
             </form>
         </div>
@@ -114,6 +140,7 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
         Data.ModalDay = Data.Modal.find(".ModalDay");
 
         Data.ModalDay.find(".ButtomAdd").attr("onclick", "showAddForm(this);");
+        Data.ModalDay.find(".Cancel").attr("onclick", "hideAddForm(this);");
 
         InitCalendarFunction();
     }
@@ -195,6 +222,15 @@ $calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
 
         button.hide();
         form.css("display","inline-block");
+    }
+
+    function hideAddForm(button) {
+        button = $(button);
+        var form = button.closest(".AddEmployeeForm")
+        button = form.siblings(".ButtomAdd");
+
+        button.css("display","inline-block");
+        form.hide();
     }
 
     function hideModalCalendar() {
