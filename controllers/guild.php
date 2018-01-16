@@ -162,7 +162,7 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         $user_id = $app->input->get('user_id', null, 'string');
         $date = $app->input->get('date', null, 'string');
-        $action = $app->input->get('action', null, 'string');
+        $action = $app->input->get('action', 0, 'int');
 
         $model = $this->getModel();
 
