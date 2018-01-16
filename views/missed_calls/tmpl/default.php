@@ -196,43 +196,63 @@ $items = json_encode($this->item);
 
         jQuery('body').on('click', 'tr', function(e)
         {
-            alert(this.id);
-            if(jQuery(this).data('href')!=""){
-                document.location.href = jQuery(this).data('href');
-            }
-            else{
-                console.log(jQuery(this)[0].childNodes[1].innerText);
-                pt = get_number(jQuery(this)[0].childNodes[1].innerText);
-                pf = jQuery(this)[0].childNodes[0].innerText;
-                 jQuery.ajax({
-                    type: 'POST',
-                    url: "index.php?option=com_gm_ceiling&task=create_empty_project",
-                    data: {
-                        client_id: 1
-                    },
-                    success: function(data){
-                        
-                        data = JSON.parse(data);
-                        url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
-                        location.href =url;
-                    },
-                    dataType: "text",
-                    async: false,
-                    timeout: 10000,
-                    error: function(data){
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка при создании заказа. Сервер не отвечает"
-                        });
-                    }                   
-                });  
-            }
-            
-            
+            var call_id = this.id;
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=addObrCall",
+                data: {
+                    call_id: call_id
+                },
+                success: function(data){
+                    if(jQuery(this).data('href')!=""){
+                        document.location.href = jQuery(this).data('href');
+                    }
+                    else{
+                        console.log(jQuery(this)[0].childNodes[1].innerText);
+                        pt = get_number(jQuery(this)[0].childNodes[1].innerText);
+                        pf = jQuery(this)[0].childNodes[0].innerText;
+                        jQuery.ajax({
+                            type: 'POST',
+                            url: "index.php?option=com_gm_ceiling&task=create_empty_project",
+                            data: {
+                                client_id: 1
+                            },
+                            success: function(data){
+                                
+                                data = JSON.parse(data);
+                                url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
+                                location.href =url;
+                            },
+                            dataType: "text",
+                            async: false,
+                            timeout: 10000,
+                            error: function(data){
+                                var n = noty({
+                                    timeout: 2000,
+                                    theme: 'relax',
+                                    layout: 'center',
+                                    maxVisible: 5,
+                                    type: "error",
+                                    text: "Ошибка. Сервер не отвечает"
+                                });
+                            }                   
+                        });  
+                    }
+                },
+                dataType: "text",
+                async: false,
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });
         });
     });
 </script>
