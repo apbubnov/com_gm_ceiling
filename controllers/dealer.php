@@ -45,14 +45,18 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 	 */
 	public function updatedata($key = NULL, $urlVar = NULL)
 	{
-        /* переделать*/
+        $app = JFactory::getApplication();
+        $user = JFactory::getUser();
+        $userID = JFactory::getUser()->id;
+        $jinput = JFactory::getApplication()->input;
+        $data = JFactory::getApplication()->input->get('jform', array(), 'array');
+        //$dealer_canvases_margin = $jinput->get('dealer_canvases_margin', '0', 'INT');
 
-
-print_r($_POST); exit; 
+print_r($data); exit; 
 		$message = "Успешно сохранено!";
 		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
-		$userID = JFactory::getUser()->id;
-		$user =& JUser::getInstance((int)$userID);
+		
+		//$user =& JUser::getInstance((int)$userID);
 		$post['dealer_canvases_margin'] = $data['dealer_canvases_margin'];
 		$post['dealer_components_margin'] = $data['dealer_components_margin'];
 		$post['dealer_mounting_margin'] = $data['dealer_mounting_margin'];
