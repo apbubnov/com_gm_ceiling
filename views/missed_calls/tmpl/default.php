@@ -85,34 +85,47 @@ $items = json_encode($this->item);
     }
     function show_calls(data)
     {
+        var call_bool = false;
         jQuery("#empty").hide();
         jQuery('#callbacksList').show();
         jQuery('#callbacksList tbody').empty();
          for(var i=0;i<data.length;i++) {
-            jQuery('#callbacksList').append('<tr data-href=""></tr>');
-            for(var j=0;j<Object.keys(data[i]).length;j++){
-                if(Object.keys(data[i])[j]=='businessNumber'){
-                    data[i][Object.keys(data[i])[j]] = phones[data[i][Object.keys(data[i])[j]].replace('+','')];
-                }
-                if(Object.keys(data[i])[j]=='from'){
-                    data[i][Object.keys(data[i])[j]] = data[i][Object.keys(data[i])[j]].replace('+','');
-                    getClient(data[i][Object.keys(data[i])[j]]);
-                    if(client)
-                    {
-                        data[i][Object.keys(data[i])[j]] = client['client_name']+"/"+data[i][Object.keys(data[i])[j]];
-                        jQuery('#callbacksList > tbody > tr:last').attr('data-href','index.php?option=com_gm_ceiling&view=clientcard&id='+client['id']);
-                    }
-                }
-                if(Object.keys(data[i])[j]=='dateTimeUtc'){
-                    date_t = new Date(data[i][Object.keys(data[i])[j]]);
-                    data[i][Object.keys(data[i])[j]] = formatDate(date_t);
-                }
-                if(Object.keys(data[i])[j]=='businessNumber' || Object.keys(data[i])[j]=='dateTimeUtc'||Object.keys(data[i])[j]=='from'||Object.keys(data[i])[j]=='participants'){ 
-                    jQuery('#callbacksList > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
-                }
-                if(Object.keys(data[i])[j]=='id')
+            call_bool = false;
+            for(var key in obr_calls)
+            {
+                if(data[i].id == obr_calls[key].call_id)
                 {
-                    jQuery('#callbacksList > tbody > tr:last').attr('id',data[i][Object.keys(data[i])[j]]);
+                    call_bool = true;
+                    break;
+                } 
+            }
+            if (!call_bool)
+            {
+                jQuery('#callbacksList').append('<tr data-href=""></tr>');
+                for(var j=0;j<Object.keys(data[i]).length;j++){
+                    if(Object.keys(data[i])[j]=='businessNumber'){
+                        data[i][Object.keys(data[i])[j]] = phones[data[i][Object.keys(data[i])[j]].replace('+','')];
+                    }
+                    if(Object.keys(data[i])[j]=='from'){
+                        data[i][Object.keys(data[i])[j]] = data[i][Object.keys(data[i])[j]].replace('+','');
+                        getClient(data[i][Object.keys(data[i])[j]]);
+                        if(client)
+                        {
+                            data[i][Object.keys(data[i])[j]] = client['client_name']+"/"+data[i][Object.keys(data[i])[j]];
+                            jQuery('#callbacksList > tbody > tr:last').attr('data-href','index.php?option=com_gm_ceiling&view=clientcard&id='+client['id']);
+                        }
+                    }
+                    if(Object.keys(data[i])[j]=='dateTimeUtc'){
+                        date_t = new Date(data[i][Object.keys(data[i])[j]]);
+                        data[i][Object.keys(data[i])[j]] = formatDate(date_t);
+                    }
+                    if(Object.keys(data[i])[j]=='businessNumber' || Object.keys(data[i])[j]=='dateTimeUtc'||Object.keys(data[i])[j]=='from'||Object.keys(data[i])[j]=='participants'){ 
+                        jQuery('#callbacksList > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+                    }
+                    if(Object.keys(data[i])[j]=='id')
+                    {
+                        jQuery('#callbacksList > tbody > tr:last').attr('id',data[i][Object.keys(data[i])[j]]);
+                    }
                 }
             } 
         } 
