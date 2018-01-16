@@ -168,10 +168,10 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         try {
             $model->setWorking((object)["user_id" => $user_id, "date" => $date, "action" => $action]);
-        } catch (Exception $ex)
-        {
-            die((object)["status"=>"error", "message"=>$ex->getMessage()]);
         }
+        catch (Exception $ex) { die((object)["status"=>"error", "message"=>$ex->getMessage()]); }
+        catch (SQLiteException $ex) { die((object)["status"=>"error", "message"=>$ex->getMessage()]); }
+
         die((object)["status"=>"success", "message"=>"Успешно выполнено!"]);
     }
 }
