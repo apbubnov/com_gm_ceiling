@@ -285,7 +285,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         jQuery.ajax({
             type: 'POST',
             url: "/index.php?option=com_gm_ceiling&task=guild.setWorking",
-            data: {user_id: user_id, date: "${year}.${month}.${day} ${hour}:${minute}:00", action: action},
+            data: {user_id: user_id, date: year+"."+month+"."+day+" "+hour+":"+minute+":00", action: action},
             cache: false,
             async: false,
             success: function (data) {
