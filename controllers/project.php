@@ -260,8 +260,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 // добавление проекта к откатнику
 				if($api_phone_id == 17)
 				{
-					$client_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
-					$client_model->save($recoil,$project_id,0);
+					$rec_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
+					$rec_model->save($recoil,$project_id,0);
 				}
 				//добавление его номеров телефонов в бд
 				$cl_phones_model->save($client_id,$phones);
@@ -349,8 +349,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					}
                     if($api_phone_id == 17)
                     {
-                        $client_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
-                        $client_model->save($recoil,$project_id,0);
+                        $rec_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
+                        $rec_model->save($recoil,$project_id,0);
                     }
 					$rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
 					$rep_proj = $rep_model->getDataByProjectId($project_id);

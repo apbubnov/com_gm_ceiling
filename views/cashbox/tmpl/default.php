@@ -307,9 +307,13 @@ $year = date("Y");
         jQuery('#cashbox_table tbody').empty();
         for(var i=0;i<data.length;i++) {
             jQuery("#cashbox_table").append('<tr></tr>');
-            for(var j=0;j<Object.keys(data[i]).length;j++){ 
-                jQuery('#cashbox_table > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
-                
+            for(var j=0;j<Object.keys(data[i]).length;j++){
+                if(data[i][Object.keys(data[i])[j]]!=null){
+                    jQuery('#cashbox_table > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+                }
+                else{
+                    jQuery('#cashbox_table > tbody > tr:last').append('<td>' '</td>');
+                }
             }
         }
     }

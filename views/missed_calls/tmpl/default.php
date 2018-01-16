@@ -199,7 +199,7 @@ $items = json_encode($this->item);
             var call_id = this.id;
             jQuery.ajax({
                 type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=addObrCall",
+                url: "index.php?option=com_gm_ceiling&task=missed_calls.addObrCall",
                 data: {
                     call_id: call_id
                 },
