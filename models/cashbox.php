@@ -105,7 +105,7 @@ class Gm_ceilingModelCashbox extends JModelList
 				array_push($items,(object)$el);
 				
 			}
-			throw new Exception (implode('|',$items[$i]));
+			throw new Exception (implode('|',$items[count($items)-1]));
 			return $items; 
 
 		}
