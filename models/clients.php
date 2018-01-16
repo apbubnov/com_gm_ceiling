@@ -289,7 +289,6 @@ if (empty($list['direction']))
 	{
 		try
 		{
-			$query
 			$db    = JFactory::getDbo();
 			$client_name = $db->escape($client_name);
 			$query = $db->getQuery(true);
