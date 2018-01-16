@@ -294,8 +294,8 @@ if (empty($list['direction']))
 			$query = $db->getQuery(true);
 			$query
 				->select("a.*, GROUP_CONCAT(b.phone SEPARATOR ', ') as client_contacts")
-				->from("`#__gm_ceiling_clients`")
-				->leftJoin('`#__gm_ceiling_clients_contacts` as b ON a.id = b.client_id ')
+				->from("`#__gm_ceiling_clients` as `a`")
+				->leftJoin('`#__gm_ceiling_clients_contacts` as `b` ON a.id = b.client_id ')
 				->where("client_name LIKE('%".$client_name."%')")
 				->order('`id` DESC')
 				->group('`id`');
