@@ -78,7 +78,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $transport_sum_1 = $transport_sum_1 * ((100 - $min)/100);
             }
             }*/
-            print_r(" alloooo"); exit;
+           
             $model = $this->getModel();
             if(!empty($POST['include_calculation'])) {
                 
