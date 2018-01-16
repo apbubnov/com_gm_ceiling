@@ -14,8 +14,7 @@ $userId     = $user->get('id');
 
 $api_phone_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $phones = $api_phone_model->getArrayNumbers();
-throw new Exception(json_encode($this->item));
-
+$items = json_encode($this->item);
 ?>
 <form>
     <a class="btn btn-large btn-primary"
@@ -51,7 +50,8 @@ throw new Exception(json_encode($this->item));
 </form>
 
 <script>
-
+    var obr_calls = JSON.parse('<?php echo $items; ?>');
+    console.log(obr_calls);
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
     var phones = <?php echo json_encode($phones);?>;
@@ -109,7 +109,11 @@ throw new Exception(json_encode($this->item));
                 }
                 if(Object.keys(data[i])[j]=='businessNumber' || Object.keys(data[i])[j]=='dateTimeUtc'||Object.keys(data[i])[j]=='from'||Object.keys(data[i])[j]=='participants'){ 
                     jQuery('#callbacksList > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
-                }   
+                }
+                if(Object.keys(data[i])[j]=='id')
+                {
+                    jQuery('#callbacksList > tbody > tr:last').attr('id',data[i][Object.keys(data[i])[j]]);
+                }
             } 
         } 
     }
@@ -192,7 +196,7 @@ throw new Exception(json_encode($this->item));
 
         jQuery('body').on('click', 'tr', function(e)
         {
-
+            alert(this.id);
             if(jQuery(this).data('href')!=""){
                 document.location.href = jQuery(this).data('href');
             }

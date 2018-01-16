@@ -166,6 +166,7 @@ class Gm_ceilingModelDealer_info extends JModelList
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }
+	}
+
 
 }
