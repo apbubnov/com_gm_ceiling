@@ -50,7 +50,7 @@ $items = json_encode($this->item);
 </form>
 
 <script>
-    var obr_calls = JSON.parse("<?php echo $items; ?>");
+    var obr_calls = JSON.parse('<?php echo $items; ?>');
     console.log(obr_calls);
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
