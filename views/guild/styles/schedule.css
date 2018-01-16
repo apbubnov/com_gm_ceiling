@@ -151,12 +151,12 @@ h1
     box-shadow: inset 0 1px 0 0 #4e4cb7;
 }
 
-.ModalCalendar .ModalDay .Employees.In
+.ModalCalendar .ModalDay .Employees .Employee.In
 {
     background-color: rgb(0, 198, 133);
     color: #ffffff;
 }
-.ModalCalendar .ModalDay .Employees.Out
+.ModalCalendar .ModalDay .Employees .Employee.Out
 {
     background-color: rgb(216, 21, 0);
     color: #ffffff;
