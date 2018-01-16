@@ -51,7 +51,7 @@ $type = $jinput->getString('type', NULL);
 			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
 	</div>
-	<table class="table table-striped one-touch-view" id="clientList">
+	<table class="table table-striped table_cashbox" id="clientList">
 		<thead>
 			<tr>
 				<th class=''>
