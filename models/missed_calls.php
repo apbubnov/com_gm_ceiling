@@ -10,20 +10,16 @@
  *
  * @since  1.6
  */
-class Gm_ceilingModelCallback extends JModelList
+class Gm_ceilingModelMissed_Calls extends JModelList
 {
     function getData()
 	{
 		try
 		{
-
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-
-			
+			$query->select('`call_id`')->from('`#__gm_ceiling_missed_calls`');
 			$db->setQuery($query);
-			
-
 			$items = $db->loadObjectList();
 			return $items;
 		}
