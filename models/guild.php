@@ -341,11 +341,16 @@ class Gm_ceilingModelGuild extends JModelList
         if (!empty($data->user_id))
             $query->where("w.user_id = '$data->user_id'");
 
+        echo (string) $query;
+
         $db->setQuery($query);
         $salaries = $db->loadObjectList();
 
         foreach ($salaries as $key => $salar)
             $salaries[$key]->user = $users[$key->user_id];
+
+        print_r($salaries);
+        exit();
 
         return $salaries;
     }
