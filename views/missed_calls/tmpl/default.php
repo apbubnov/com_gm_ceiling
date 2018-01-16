@@ -14,7 +14,7 @@ $userId     = $user->get('id');
 
 $api_phone_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $phones = $api_phone_model->getArrayNumbers();
-throw new Exception(json_encode($this));
+throw new Exception(json_encode($this->item));
 
 ?>
 <form>
