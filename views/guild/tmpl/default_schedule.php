@@ -275,7 +275,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     function setWorking() {
         var Form = Data.ModalDay.find(".AddEmployeeForm"),
             user_id = Form.find("[name='employee']").val(),
-            action = Form.find("[name='action]"),
+            action = Form.find("[name='action']"),
             hour = Form.find("[name='hour']"),
             minute = Form.find("[name='minute']"),
             day = Data.ModalDay.attr("day"),
