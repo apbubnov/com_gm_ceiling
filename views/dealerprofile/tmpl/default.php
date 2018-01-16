@@ -46,7 +46,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">Маржинальность на монтаж></label>
+				<label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">Маржинальность на монтаж</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo $margin->dealer_mounting_margin ?> class="required" style="width:100%;"size="3" required aria-required="true" />				
@@ -140,6 +140,8 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[mp9]" id="jform_mp9" value=<?php echo $mount->mp9 ?> class="required" style="width:100%;" size="3" required aria-required="true" />			
 			</div>
 		</div>
+	</div>
+	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_mp10-lbl" for="jform_mp10" >Вставка</label>
@@ -156,8 +158,6 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[mp11]" id="jform_mp11" value=<?php echo $mount->mp11 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 			</div>
 		</div>
-	</div>
-	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_mp12-lbl" for="jform_mp12" >Установка электровытяжки</label>
@@ -254,6 +254,9 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[mp25]" id="jform_mp25" value=<?php echo $mount->mp25 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 			</div>
 		</div>
+		
+	</div>
+	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_mp26-lbl" for="jform_mp26" >Переход уровня по кривой с нишей </label>
@@ -270,8 +273,6 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[mp27]" id="jform_mp27" value=<?php echo $mount->mp27 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 			</div>
 		</div>
-	</div>
-	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_mp30-lbl" for="jform_mp30" >Парящий потолок</label>
