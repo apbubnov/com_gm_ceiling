@@ -63,10 +63,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         <div class="Title"></div>
         <div class="Employees">
             <div class="Employee">
-                <div class="time">11:30</div>
-                <div class="name">Новый Гуский</div>
-            </div>
-            <div class="Employee">
                 <div class="time">11:45</div>
                 <div class="name">Новый Гуский</div>
             </div>
@@ -129,6 +125,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     $(document).ready(Init);
 
     function Init() {
+        Data.Employee = $("<div class=\"Employee\"><div class=\"time\"></div><div class=\"name\"></div></div>");
+        Data.Employee.append("<div>Hi!</div>");
+
         $('.chosen-container').remove();
         $('select').removeAttr("style");
 
@@ -211,6 +210,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             Month = Day.closest(".Month");
       
         ModalDay.find(".Title").text(Day.attr("day") + " " + Month.attr("modalname") + " " + Month.attr("year") + "г.");
+        $(".Employees").append(Data.Employee);
 
         Modal.show();
         ModalDay.show();
