@@ -13,6 +13,7 @@
     <field name="checked_out_time" default="0000-00-00 00:00:00" type="hidden" filter="unset"/>
     <field name="client_name" type="text" filter="string" required="true" label="COM_GM_CEILING_FORM_LBL_CLIENT_CLIENT_NAME" description="COM_GM_CEILING_FORM_DESC_CLIENT_CLIENT_NAME" hint="COM_GM_CEILING_FORM_LBL_CLIENT_CLIENT_NAME"/>
     <field name="client_contacts" type="text" filter="safehtml" label="COM_GM_CEILING_FORM_LBL_CLIENT_CLIENT_CONTACTS" description="COM_GM_CEILING_FORM_DESC_CLIENT_CLIENT_CONTACTS" hint="COM_GM_CEILING_FORM_LBL_CLIENT_CLIENT_CONTACTS"/>
-    <field name="version_note" type="text" label="JGLOBAL_FIELD_VERSION_NOTE_LABEL" description="JGLOBAL_FIELD_VERSION_NOTE_DESC" class="inputbox" size="45" labelclass="control-label"/>
+    <field name="dealer_id" type="text" filter="safehtml" label="dealer_id" description="dealer_id" hint="deler_id"/>
+   <field name="version_note" type="text" label="JGLOBAL_FIELD_VERSION_NOTE_LABEL" description="JGLOBAL_FIELD_VERSION_NOTE_DESC" class="inputbox" size="45" labelclass="control-label"/>
   </fieldset>
 </form>
