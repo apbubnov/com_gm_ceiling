@@ -172,6 +172,7 @@ class Gm_ceilingModelDealer_info extends JModelList
 	{
 		try
 		{
+			$db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
             $query->update('`#__gm_ceiling_dealer_info`')
 				->set('dealer_canvases_margin = ' . $db->quote($data['dealer_canvases_margin'])
@@ -222,7 +223,6 @@ class Gm_ceilingModelDealer_info extends JModelList
 				->set('mp43 = ' . $db->quote($data['mp43'])
 				->set('transport = ' . $db->quote($data['transport'])
 				->set('distance = ' . $db->quote($data['distance'])
-
 				->where('user_id = ' . $id);
 				$db->setQuery($query);
 				$db->execute();	
