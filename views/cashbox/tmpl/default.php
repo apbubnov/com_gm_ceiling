@@ -322,13 +322,13 @@ $year = date("Y");
                     jQuery('#cashbox_table > tbody > tr:last').append('<td> </td>');
                 }
             }
-            jQuery("#cashbox_table").append('<tr></tr>');
-            jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Итого в кассе:<b></td><td>'+cashbox+'</td>');
-            jQuery("#cashbox_table").append('<tr></tr>');
-            jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Недовыдано:<b></td><td>'+all_not_issued+'</td>');
-            jQuery("#cashbox_table").append('<tr></tr>');
-            jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Остаток:<b></td><td>'+cashbox-all_not_issued+'</td>');
-
         }
+        jQuery("#cashbox_table").append('<tr></tr>');
+        jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Итого в кассе:<b></td><td>'+cashbox+'</td>');
+        jQuery("#cashbox_table").append('<tr></tr>');
+        jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Недовыдано:<b></td><td>'+all_not_issued+'</td>');
+        jQuery("#cashbox_table").append('<tr></tr>');
+        jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Остаток:<b></td><td>'+cashbox-all_not_issued+'</td>');
+
     }
 </script>
