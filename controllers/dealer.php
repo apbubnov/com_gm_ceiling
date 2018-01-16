@@ -51,7 +51,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
         $jinput = JFactory::getApplication()->input;
         $data = JFactory::getApplication()->input->get('jform', array(), 'array');
         $model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
-        $result = $model_dealer_info->updateMarginAndMount($userID, $data);
+        $result = $model_dealer_info->updateMarginAndMount($user->dealer_id, $data);
         if($result == 1) $message = "Успешно сохранено!";
         else $message = "Возникла ошибка сохранения!";
         $this->setMessage($message);

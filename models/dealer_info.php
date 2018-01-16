@@ -172,6 +172,7 @@ class Gm_ceilingModelDealer_info extends JModelList
 	{
 		try
 		{
+			
 			$db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
             $query->update('`#__gm_ceiling_dealer_info`')
