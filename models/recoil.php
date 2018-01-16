@@ -93,7 +93,7 @@ class Gm_ceilingModelRecoil extends JModelList
 			//создание user'а
 			$dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name,$phone,"$client_id@$client_id",$client_id);
 			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
-			$client_model->updateClient($client_id,null,$userID);
+			$client_model->updateClient($client_id,null,$dealer_id);
 	        return $dealer_id;
 	    }
 	    catch(Exception $e)
