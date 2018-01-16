@@ -103,9 +103,9 @@ class Gm_ceilingModelCashbox extends JModelList
 				$encash = $items1[$i]->sum;
 				$el['sum'] = $items1[$i]->sum;
 				array_push($items,(object)$el);
+				unset($el['done']);
 				
 			}
-			throw new Exception (implode('|',$items[$i]));
 			return $items; 
 
 		}

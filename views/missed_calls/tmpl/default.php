@@ -109,7 +109,11 @@ $items = json_encode($this->item);
                 }
                 if(Object.keys(data[i])[j]=='businessNumber' || Object.keys(data[i])[j]=='dateTimeUtc'||Object.keys(data[i])[j]=='from'||Object.keys(data[i])[j]=='participants'){ 
                     jQuery('#callbacksList > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
-                }   
+                }
+                if(Object.keys(data[i])[j]=='id')
+                {
+                    jQuery('#callbacksList > tbody > tr:last').attr('id',data[i][Object.keys(data[i])[j]]);
+                }
             } 
         } 
     }
@@ -192,7 +196,7 @@ $items = json_encode($this->item);
 
         jQuery('body').on('click', 'tr', function(e)
         {
-
+            alert(this.id);
             if(jQuery(this).data('href')!=""){
                 document.location.href = jQuery(this).data('href');
             }
