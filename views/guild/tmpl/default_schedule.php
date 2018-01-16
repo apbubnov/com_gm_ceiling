@@ -77,7 +77,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 </div>
                 <div class="Line">
                     <div class="Name">Событие:</div>
-                    <select name="function">
+                    <select name="action">
                         <option value="1">Пришел</option>
                         <option value="0">Ушел</option>
                     </select>
@@ -206,6 +206,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             year = Month.attr("year"),
             Workings;
 
+        ModalDay.attr({"day":day, "month":month, "year":year, "dayid": "#" + Month.attr("id") + " #" + day.attr("id")});
+
         jQuery.ajax({
             type: 'POST',
             url: "/index.php?option=com_gm_ceiling&task=guild.getWorking",
@@ -251,8 +253,10 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         form.css("display","inline-block");
     }
 
-    function hideAddForm(button) {
-        button = $(button);
+    function hideAddForm(button = null) {
+        if (button !== null) button = $(button);
+        else button = Data.ModalDay.find(".Cancel");
+
         var form = button.closest(".AddEmployeeForm")
         button = form.siblings(".ButtomAdd");
 
@@ -269,7 +273,48 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
     function setWorking() {
-        alert("Запущено!");
+        var Form = Data.ModalDay.find(".AddEmployeeForm"),
+            user_id = Form.find("[name='employee']").val(),
+            action = Form.find("[name='action]"),
+            hour = Form.find("[name='hour']"),
+            minute = Form.find("[name='minute']"),
+            day = Data.ModalDay.attr("day"),
+            month = Data.ModalDay.attr("month"),
+            year = Data.ModalDay.attr("year");
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.setWorking",
+            data: {user_id: user_id, date: "${year}.${month}.${day} ${hour}:${minute}:00", action: action},
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: data.status,
+                    text: data.message
+                });
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+
+
+        getWorkingDay(Data.ModalDay.attr("dayid"));
+        hideAddForm();
     }
 
 </script>

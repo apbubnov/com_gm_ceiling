@@ -155,4 +155,11 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         die(json_encode($model->getWorking($data)));
     }
+
+    public function setWorking()
+    {
+        $app = JFactory::getApplication();
+
+        $DateStart = $app->input->get('DateStart', null, 'string');
+    }
 }
