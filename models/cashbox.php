@@ -83,28 +83,27 @@ class Gm_ceilingModelCashbox extends JModelList
 			
 		 	$items = [];
 			for($i=0; $i<count($items1); $i++){
-				$el1['closed']=$items1[$i]->closed;
-				$el1['id'] = $items1[$i]->id;
-				$el1['status'] = $items1[$i]->status;
-				$el1['name'] = $items1[$i]->name;
-				$el1['new_project_sum'] = $items1[$i]->new_project_sum;
-				$el1['new_mount_sum'] = $items1[$i]->new_mount_sum;
+				$new_el['closed']=$items1[$i]->closed;
+				$new_el['id'] = $items1[$i]->id;
+				$new_el['status'] = $items1[$i]->status;
+
+				$new_el['name'] = $items1[$i]->name;
+				$new_el['new_project_sum'] = $items1[$i]->new_project_sum;
+				$new_el['new_mount_sum'] = $items1[$i]->new_mount_sum;
 				if($items1[$i]->done!=1&&$items1[$i]->project_status != 12){
-					$el1['not_issued'] =  $items1[$i]->new_mount_sum - $items1[$i]->new_project_mounting;
+					$new_el['not_issued'] =  $items1[$i]->new_mount_sum - $items1[$i]->new_project_mounting;
 				}
 				else
 				{
-					$el1['not_issued'] = 0;
+					$new_el['not_issued'] = 0;
 				}
-				$el1['new_material_sum'] = $items1[$i]->new_material_sum;
-				$el1['residue'] = $items1[$i]->new_project_sum - $items1[$i]->new_mount_sum -$items1[$i]->new_material_sum;
-				$el1['cashbox'] += $el1['residue'] - $encash;
+				$new_el['new_material_sum'] = $items1[$i]->new_material_sum;
+				$new_el['residue'] = $items1[$i]->new_project_sum - $items1[$i]->new_mount_sum -$items1[$i]->new_material_sum;
+				$new_el['cashbox'] += $new_el['residue'] - $encash;
 				$encash = 0;
 				$encash = $items1[$i]->sum;
-				$el1['sum'] = $items1[$i]->sum;
-				array_push($items,(object)$el1);
-				//unset($el1['done']);
-				
+				$new_el['sum'] = $items1[$i]->sum;
+				array_push($items,(object)$new_el);
 			}
 			return $items; 
 
