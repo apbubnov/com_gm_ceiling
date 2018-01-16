@@ -275,7 +275,7 @@ class Gm_ceilingModelGuild extends JModelList
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_guild_working` as w")
             ->select("w.`id`, w.`user_id`, w.`date`, w.`action`")
-            ->where("w.date BETWEEN '$data->StartDate' AND '$data->EndDate'")
+            ->where("w.date BETWEEN '$data->DateStart' AND '$data->DateEnd'")
             ->order("w.date");
 
         if (!empty($data->user_id))
