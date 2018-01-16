@@ -1538,7 +1538,7 @@ class Gm_ceilingModelProject extends JModelItem
 				->where('a.id = ' . $data->id);
 			$db->setQuery($query);
 			$results = $db->loadObject();
-			print_r($results); exit;
+			
 			if(empty($results->dealer_id)) $results->dealer_id = 1;
 			$query = $db->getQuery(true);
 			$query
@@ -1547,6 +1547,7 @@ class Gm_ceilingModelProject extends JModelItem
 				->where('m.user_id = ' . $results->dealer_id);
 			$db->setQuery($query);
 			$mount = $db->loadObject();
+			print_r($mount); exit;
 			return $mount;
 		}
 		catch(Exception $e)
