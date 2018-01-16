@@ -350,6 +350,7 @@ $year = date("Y");
         if (yy < 10) yy = '0' + yy;
 
         var hh = date.getHours();
+        console.log(hh);
         if (hh < 10) hh = '0' + hh;
 
         var ii = date.getMinutes();
