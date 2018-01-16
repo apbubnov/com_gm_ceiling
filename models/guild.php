@@ -289,7 +289,7 @@ class Gm_ceilingModelGuild extends JModelList
             $time = date("H:i", strtotime($work->date));
 
             $working[$key]->time = $time;
-            $working[$key]->user = $users[$key->user_id];
+            $working[$key]->user = $users[$work->user_id];
         }
 
         return $working;
