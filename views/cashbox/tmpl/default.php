@@ -305,6 +305,7 @@ $year = date("Y");
     function fill_table(data){
         console.log(data);
         all_not_issued = 0;
+        cashbox=0;
         jQuery('#cashbox_table tbody').empty();
         for(var i=0;i<data.length;i++) {
             jQuery("#cashbox_table").append('<tr></tr>');
