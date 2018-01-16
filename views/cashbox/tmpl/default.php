@@ -303,6 +303,7 @@ $year = date("Y");
         jQuery("#year").text(year); 
     }
     function fill_table(data){
+        console.log(data);
         jQuery('#cashbox_table tbody').empty();
         for(var i=0;i<data.length;i++) {
             jQuery("#cashbox_table").append('<tr></tr>');
