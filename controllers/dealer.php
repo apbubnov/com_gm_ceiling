@@ -52,7 +52,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
         $data = JFactory::getApplication()->input->get('jform', array(), 'array');
         //$dealer_canvases_margin = $jinput->get('dealer_canvases_margin', '0', 'INT');
 
-print_r($data); exit; 
+print_r($data['dealer_canvases_margin']); exit; 
 		$message = "Успешно сохранено!";
 		$data = JFactory::getApplication()->input->get('jform', array(), 'array');
 		
