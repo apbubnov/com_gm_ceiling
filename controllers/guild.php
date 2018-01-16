@@ -160,6 +160,18 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
     {
         $app = JFactory::getApplication();
 
-        $DateStart = $app->input->get('DateStart', null, 'string');
+        $user_id = $app->input->get('user_id', null, 'string');
+        $date = $app->input->get('date', null, 'string');
+        $action = $app->input->get('action', null, 'string');
+
+        $model = $this->getModel();
+
+        try {
+            $model->setWorking((object)["user_id" => $user_id, "date" => $date, "action" => $action]);
+        } catch (Exception $ex)
+        {
+            die((object)["status"=>"error", "message"=>$ex->getMessage()]);
+        }
+        die((object)["status"=>"success", "message"=>"Успешно выполнено!"]);
     }
 }
