@@ -61,16 +61,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <div class="Dark" onclick="hideModalCalendar();"></div>
     <div class="ModalDay">
         <div class="Title"></div>
-        <div class="Employees">
-            <div class="Employee">
-                <div class="time">11:45</div>
-                <div class="name">Новый Гуский</div>
-            </div>
-            <div class="Employee">
-                <div class="time">11:50</div>
-                <div class="name">Новый Гуский</div>
-            </div>
-        </div>
+        <div class="Employees"></div>
         <div class="Add">
             <div class="ButtomAdd">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
@@ -126,7 +117,6 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
     function Init() {
         Data.Employee = $("<div class=\"Employee\"><div class=\"time\"></div><div class=\"name\"></div></div>");
-        Data.Employee.append("<div>Hi!</div>");
 
         $('.chosen-container').remove();
         $('select').removeAttr("style");
@@ -210,7 +200,44 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             Month = Day.closest(".Month");
       
         ModalDay.find(".Title").text(Day.attr("day") + " " + Month.attr("modalname") + " " + Month.attr("year") + "г.");
-        $(".Employees").append(Data.Employee);
+
+        var day = Day.attr("day"),
+            month = Month.attr("month"),
+            year = Month.attr("year"),
+            Workings;
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getWorking",
+            data: {Day: day, Month: month, Year: year},
+            cache: false,
+            async: false,
+            success: function (data) {
+                Workings = JSON.parse(data);
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+
+
+        $.each(Workings, function (key, value) {
+            var Employee = Data.Employee.clone();
+
+            Employee.find(".time").text(value.time);
+            Employee.find(".name").text(value.user.name);
+            Employee.attr("id", value.id);
+
+            ModalDay.find(".Employees").append(Employee);
+        });
 
         Modal.show();
         ModalDay.show();

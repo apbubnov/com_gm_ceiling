@@ -113,4 +113,46 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
         $year = $app->input->get('year', 0, 'int');
         die(json_encode((object) ["status" => "success", "calendar" => Gm_ceilingHelpersGm_ceiling::LiteCalendar($month, $year)]));
     }
+
+    public function getWorking()
+    {
+        $app = JFactory::getApplication();
+
+        $DateStart = $app->input->get('DateStart', null, 'string');
+        $DateEnd = $app->input->get('DateEnd', null, 'string');
+        $Date = $app->input->get('Date', null, 'string');
+
+        $Day = $app->input->get('Day', null, 'int');
+        $Month = $app->input->get('Month', null, 'int');
+        $Year = $app->input->get('Year', null, 'int');
+
+        $User = $app->input->get('User', null, 'int');
+
+        $data = (object) [];
+
+        if (!empty($DateStart))
+            $data->DateStart = date("Y.m.d H:i:s", strtotime($DateStart));
+        if (!empty($DateEnd))
+            $data->DateEnd = date("Y.m.d H:i:s", strtotime($DateEnd));
+        if (!empty($Date))
+        {
+            $day = date("d", strtotime($Date));
+            $month = date("m", strtotime($Date));
+            $year = date("Y", strtotime($Date));
+
+            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
+            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
+        }
+        if (!empty($Day) || !empty($Month) || !empty($Year))
+        {
+            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, $Month, $Day, $Year));
+            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, $Month, $Day + 1, $Year));
+        }
+        if (!empty($User))
+            $data->user_id = $User;
+
+        $model = $this->getModel();
+
+        die(json_encode($model->getWorking($data)));
+    }
 }

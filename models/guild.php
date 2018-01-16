@@ -274,7 +274,7 @@ class Gm_ceilingModelGuild extends JModelList
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_guild_working` as w")
-            ->select("w.*")
+            ->select("w.`id`, w.`user_id`, w.`date`, w.`action`")
             ->where("w.date BETWEEN '$data->StartDate' AND '$data->EndDate'")
             ->order("w.date");
 
@@ -285,7 +285,12 @@ class Gm_ceilingModelGuild extends JModelList
         $working = $db->loadObjectList();
 
         foreach ($working as $key => $work)
+        {
+            $time = date("H:i", strtotime($work->date));
+
+            $working[$key]->time = $time;
             $working[$key]->user = $users[$key->user_id];
+        }
 
         return $working;
     }
