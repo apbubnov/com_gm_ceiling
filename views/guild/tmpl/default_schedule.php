@@ -66,7 +66,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             <div class="ButtomAdd">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
             </div>
-            <form class="AddEmployeeForm" action="JavaScript::AddEmployee()">
+            <form class="AddEmployeeForm" action="JavaScript::setWorking()">
                 <div class="Line">
                     <div class="Name">Рабочий:</div>
                     <select name="employee">
@@ -266,6 +266,10 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         Data.ModalDay.hide();
         Data.ModalDay.find(".ButtomAdd").css("display","inline-block");
         Data.ModalDay.find(".AddEmployeeForm").hide();
+    }
+
+    function setWorking() {
+        alert("Запущено!");
     }
 
 </script>
