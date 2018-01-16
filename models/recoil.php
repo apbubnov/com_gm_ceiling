@@ -82,17 +82,17 @@ class Gm_ceilingModelRecoil extends JModelList
 			array_push($phones,$phone);
 			$user = JFactory::getUser();
 			//Создание клиента
-			$clientform_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
+			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
 			$client_data['client_name'] = $name;
 			$client_data['manager_id'] = $user->id;
 			$client_data['created'] = date("Y-m-d");
 			$client_id = $clientform_model->save($client_data);
 			//сохранение телефонов
-			$cl_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('Client_phones', 'Gm_ceilingModel');
+			$cl_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('Client_phones');
 			$cl_phones_model->save($client_id,$phones);
 			//создание user'а
 			$dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name,$phone,"$client_id@$client_id",$client_id);
-			$client_model = $this->getModel('Client', 'Gm_ceilingModel');
+			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
 			$client_model->updateClient($client_id,null,$userID);
 	        return $dealer_id;
 	    }
