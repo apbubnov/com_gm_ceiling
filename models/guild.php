@@ -299,7 +299,7 @@ class Gm_ceilingModelGuild extends JModelList
     {
         if (empty($data)) $data = (object) [];
 
-        if (empty($data->user_id) || empty($data->date) || empty($data->action))
+        if (empty($data->user_id) || empty($data->date))
             throw new Exception("Не все данные переданы!");
 
         $db = $this->getDbo();
