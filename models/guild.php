@@ -227,7 +227,7 @@ class Gm_ceilingModelGuild extends JModelList
                     $End = $work->date;
 
                 $TempWT = $WorkingTimes[count($WorkingTimes) - 1];
-                if ($TempWT->End != null && $work->action == 1)
+                if (($TempWT->End != null || count($WorkingTimes) < 1) && $work->action == 1)
                     $WorkingTimes[] = (object) ["Start" => $work->date, "End" => null, "Time" => null];
                 else if ($work->action == 0)
                 {
