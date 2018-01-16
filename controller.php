@@ -2499,6 +2499,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $filter = $jinput->get('filter','','STRING');
             }
             $date2 =  date('Y-m-d', strtotime($date . ' +1 day'));
+            $date =  date('Y-m-d', strtotime($date . ' -7 day'));
             $token = json_decode(self::getAuthToken())->access_token;
             $curl = curl_init(); // Инициализируем запрос
             curl_setopt_array($curl, array(
