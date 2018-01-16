@@ -120,7 +120,7 @@ if (empty($list['direction']))
 						'list.select', ' a.*'
 					)
 				);
-			$query->select('b.phone as client_contacts');		
+			$query->select('GROUP_CONCAT(b.phone SEPARATOR \', \') as client_contacts');		
 			$query->from('`#__gm_ceiling_clients` AS a');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` as b ON a.id = b.client_id ');
 			$user = JFactory::getUser();
@@ -174,7 +174,7 @@ if (empty($list['direction']))
 						'list.select', ' a.*'
 					)
 				);
-			$query->select('b.phone as client_contacts');		
+			$query->select('GROUP_CONCAT(b.phone SEPARATOR \', \') as client_contacts');		
 			$query->from('`#__gm_ceiling_clients` AS a');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` as b ON a.id = b.client_id ');
 			$user = JFactory::getUser();
