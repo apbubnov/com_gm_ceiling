@@ -196,7 +196,7 @@ $items = json_encode($this->item);
 
         jQuery('body').on('click', 'tr', function(e)
         {
-            alert(jQuery(this).id);
+            alert(this.id);
             if(jQuery(this).data('href')!=""){
                 document.location.href = jQuery(this).data('href');
             }
