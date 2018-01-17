@@ -35,10 +35,9 @@ class Gm_ceilingModelRecoil extends JModelList
 	        $query
                 ->select('*')
                 ->select("ifnull(($subquery),0) as `sum`")
-				->from('#__gm_ceiling_recoil as r');
+				->from('#__users as r')
+				->where('r.dealer_type = 4');
 			$db->setQuery($query);
-			
-
 			$items = $db->loadObjectList();
 			return $items;
 		}
