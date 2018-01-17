@@ -22,7 +22,7 @@ $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
 $brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 
-// календарь
+/* // календарь
 $month1 = date("n");
 $year1 = date("Y");
 if ($month1 == 12) {
@@ -61,7 +61,7 @@ foreach ($brigade_id as $value) {
 	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
 	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
 	$calendars .= "</div>";
-}
+} */
 //----------------------------------------------------------------------------------------------------------
 
 
