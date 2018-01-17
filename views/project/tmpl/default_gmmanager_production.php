@@ -136,35 +136,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
     <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
     <?php $calculations = $model->getProjectItems($this->item->id); ?>
     <?php
-        $need_choose = false;
         $jinput = JFactory::getApplication()->input;
-        $phoneto = $jinput->get('phoneto', '0', 'STRING');
-        $phonefrom = $jinput->get('phonefrom', '0', 'STRING');
         $call_id = $jinput->get('call_id', 0, 'INT');
-        $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
-        $all_advt = $model_api_phones->getAdvt();
-        if (!empty($phoneto) && !empty($phonefrom)) {
-            $reklama = $model_api_phones->getNumberInfo($phoneto);
-            $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
-        } elseif (!empty($this->item->api_phone_id)) {
-            $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
-            $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
-            if($this->item->api_phone_id == 10)
-            {
-                if(!empty($repeat_advt->advt_id))
-                    $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
-                else
-                    $need_choose = true;
-            }
-            else {
-                $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
-
-            }
-            $write = $reklama->number . ' ' .$reklama->name . ' ' . $reklama->description;
-        } else {
-            $need_choose = true;
-        }
-
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
         $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
         $date_time = $this->item->project_calculation_date;
@@ -182,8 +155,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         $request_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
         $request_model->delete($this->item->id_client);
         $client_sex  = $model_client->getClientById($this->item->id_client)->sex;
-        //$client_dealer_id = $model_client->getClientById($this->item->id_client)->dealer_id;
-        //throw new Exception($client_dealer_id);
         if($this->item->id_client!=1){
             $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
             $email = $dop_contacts->getEmailByClientID($this->item->id_client);
@@ -197,7 +168,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         $all_recoil = $recoil_model->getData();
     ?>
     <h5 class="center">
-       
+       Дилер/клиент дилера
     </h5>
     <div id="modal-window-container">
 		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
