@@ -969,6 +969,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
+            
         }
     }
 
