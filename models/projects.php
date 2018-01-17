@@ -245,10 +245,7 @@ class Gm_ceilingModelProjects extends JModelList
             if (!empty($orderCol) && !empty($orderDirn)) $query->order($db->escape($orderCol . ' ' . $orderDirn));
             else if (($type == "gmcalculator" && $subtype == "calendar") || ($type == "calculator" && $subtype == "calendar"))
                 $query->order('a.calculation_date DESC');
-            $query->order('a.id DESC');
-
-            //31throw new Exception($query);
-            
+            $query->order('a.id DESC');            
 
             $this->setState('list.limit', null);
             return $query;
@@ -284,7 +281,6 @@ class Gm_ceilingModelProjects extends JModelList
                     ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
                     ->where("projects.project_status = '1' and projects.who_calculate in ($who) and clients.dealer_id = '$user->dealer_id'");
             } else
-
             // НМС (монтажи)
             if ($status == "Mountings") {
                 if ($user->dealer_id == 1) {
@@ -355,6 +351,11 @@ class Gm_ceilingModelProjects extends JModelList
                 $query->select('count(id) as count')
                     ->from('#__gm_ceiling_projects as projects')
                     ->where("project_status in ('4', '5', '10', '11', '16', '17') and read_by_manager in ($data)");
+            } else 
+            // менеджер (пропущенные)
+            if ($status == "MissedCalls") {
+                $query->select('call_id')
+                    ->from('#__gm_ceiling_missed_calls');
             }
             $db->setQuery($query);
             $items = $db->loadObjectList();

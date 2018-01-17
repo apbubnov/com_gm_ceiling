@@ -32,6 +32,9 @@ $date = date("Y")."-".date("n")."-".date("d");
 $answer4 = $model->getDataByStatus("Zvonki", $userId, $date);
 // пропущенные
 $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
+$answer6 = $model->getDataByStatus("MissedCalls");
+var_dump($answer5);
+var_dump($answer6);
 //--------------------------------------
 ?>
 
