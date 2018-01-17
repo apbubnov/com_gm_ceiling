@@ -79,6 +79,8 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		</thead>
 		<tbody>
 			<?php foreach ($this->items as $i => $item) : ?>
+				<? if (in_array("22", $groups)):
+				  if( $item->project_calculator == $userId ) : ?>
 				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
 
 				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
@@ -123,6 +125,54 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					<?php } ?>
 				</tr>
 				<?php } ?>
+				<?php endif; ?>
+				<?php endif; ?>
+				<? if (in_array("14", $groups)): ?>
+				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
+
+				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
+					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
+				<?php endif; ?>
+				<?php if($user->dealer_id == $item->dealer_id || $item->who_calculate == 1) {?>
+				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id='.(int) $item->id); ?>">
+					<td class="center one-touch">
+						<?php echo $item->id; ?>
+					</td>
+                    <td class="center one-touch">
+                        <? if ($item->calculation_date == "00.00.0000"): ?>-
+                        <? else: ?><?= $item->calculation_date; ?>
+                        <? endif; ?>
+                    </td>
+                    <td class="center one-touch">
+                        <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
+                        <? else: ?><?= $item->calculation_time; ?>
+                        <? endif; ?>
+                    </td>
+					<td class="center one-touch">
+						<?php echo $this->escape($item->project_info); ?>
+					</td>
+					<td class="center one-touch">
+						<?php echo $item->client_contacts; ?>
+					</td>
+                    <td>
+                    <?php echo $item->gm_manager_note; ?>
+                    </td>
+					<td class="center one-touch">
+						<?php echo $item->client_name; ?>
+					</td>
+					<?php
+						$user  = JFactory::getUser();
+						$groups = $user->get('groups');
+						//Если менеджер дилера, то показывать дилерских клиентов
+						if(in_array("16",$groups)){
+					?>
+						<td class="center one-touch">
+							<?php echo $item->dealer_id; ?>
+						</td>
+					<?php } ?>
+				</tr>
+				<?php } ?>
+				<?php endif; ?>
 			<?php endforeach; ?>
 		</tbody>
 	</table>
