@@ -2694,7 +2694,6 @@ class Gm_ceilingController extends JControllerLegacy
             $calculation->dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/* $project->gm_mounting_margin*/);
 
             $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-            //$calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $project->project_discount) / 100);
             $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
             $project_total += $calculation->calculation_total;
             $project_total_discount += $calculation->calculation_total_discount;
@@ -2763,19 +2762,6 @@ class Gm_ceilingController extends JControllerLegacy
                 Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
 
             }
-        }
-        $components_data = array();
-        $project_sum = 0;
-        foreach($calculations as $calculation){
-            $calculations = $calculationsModel->getProjectItems($calculation);
-            $from_db = 1;
-            $save = 0;
-            $ajax = 0;
-            $pdf = 0;
-            $print_components = 1;
-            $del_flag = 0;
-
-            $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db,$calculation, $save, $ajax, $pdf, $print_components,$del_flag);
         } 
        Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
     }
