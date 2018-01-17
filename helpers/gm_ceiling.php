@@ -84,11 +84,13 @@ class Gm_ceilingHelpersGm_ceiling
         return explode(',', $db->loadResult());
     }
 
-    public static function registerUser($FIO, $phone, $email, $client_id)
+    public static function registerUser($FIO, $phone, $email, $client_id,$type = null)
     {
 
         jimport('joomla.user.helper');
-
+        if(empty($type)){
+            $type = 0;
+        }
         $data = array(
             "name" => $FIO,
             "username" => $phone,
@@ -98,7 +100,7 @@ class Gm_ceilingHelpersGm_ceiling
             "groups" => array(2, 14),
             "phone" => $phone,
             "block" => 0,
-            "dealer_type" => 0
+            "dealer_type" => $type
         );
         $user = new JUser;
         if (!$user->bind($data)) {
@@ -448,13 +450,13 @@ class Gm_ceilingHelpersGm_ceiling
                 $data['distance'] = 0;
                 $data['distance_col'] = 0;
             }
-             
+
         }*/
         //if (!empty($data['distance']) && !empty($data['distance_col']) && $data['transport'] == 1)
         // $data['transport'] = 0;
         //print_r($data['n15']); exit;
         //print_r($data); exit;
-
+      
         if($data['n2'] == 29) $data['n1'] = 29; 
 
         //Получаем объект дилера
@@ -496,8 +498,8 @@ class Gm_ceilingHelpersGm_ceiling
 
             //Маржа дилера на монтажные работы
         }
-
-    //print_r( $dealer_canvases_margin);exit;
+      
+        //print_r( $dealer_canvases_margin);exit;
         //------------------- РАСЧЕТ СТОИМОСТИ КОМПЛЕКТУЮЩИХ -------------------------------------//
 
         //print_r($data['n13']);
@@ -1217,6 +1219,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             if ( $data['n31'] > 0) {
+              
             //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
             $guild_data[] = array(
                 "title" => "Внутренний вырез(в цеху)",                                                                    //Название
@@ -1889,7 +1892,7 @@ class Gm_ceilingHelpersGm_ceiling
                 );
             }
 
-            //закладная брусом 
+            //закладная брусом
             if ($data['n17'] > 0) {
                 $mounting_data[] = array(
                     "title" => "Закладная брусом",                                                    //Название
@@ -2450,12 +2453,14 @@ class Gm_ceilingHelpersGm_ceiling
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
+              
                 if ($new_client != 1) {
                     $ajax_return['id'] = $calculation_model->save($data, $del_flag);
                 }
 
                 $filename = md5("calculation_sketch" . $ajax_return['id']);
                 $cut_filename = md5("cut_sketch" . $ajax_return['id']);
+              
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
                     rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".png");
                 }
@@ -3424,8 +3429,6 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             return $return;
-
-
     }
 
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
@@ -4901,7 +4904,7 @@ class Gm_ceilingHelpersGm_ceiling
                 : sprintf($Day, "IssetDay" . $Now, $TDay, $dotw, $TDay, $TDay);
         }
 
-        $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATA->Month[$DATE->MonthNumber], $DATA->Month2[$DATE->MonthNumber], $DATE->TopName, $DaysOfTheWeek, $Days);
+        $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATA->Month[intval($DATE->MonthNumber) - 1], $DATA->Month2[intval($DATE->MonthNumber) - 1], $DATE->TopName, $DaysOfTheWeek, $Days);
 
         return $Calendar;
     }

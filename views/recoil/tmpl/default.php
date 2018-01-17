@@ -40,8 +40,8 @@ $_SESSION['dop_num'] = $dop_num;
         <tbody>
             <?php foreach($this->item as $item){?>
             <tr data-href ="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=recoil_map_project&id='.(int)$item->id);?>">
-                <td class="center one-touch"><?php echo $item->recoil_name;?></td>
-                <td class="center one-touch"><?php echo $item->phone; ?></td>
+                <td class="center one-touch"><?php echo $item->name;?></td>
+                <td class="center one-touch"><?php echo $item->username; ?></td>
                 <td class="center one-touch"><?php echo $item->sum;?></td>
             </tr>
             <?php }?>

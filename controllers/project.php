@@ -245,6 +245,17 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             else
 			if($client_id == 1 && $isDiscountChange == 0)
 			{
+				$model_clients_phones = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+				$result = $model_clients_phones->getItemsByPhoneNumber($number);
+				if (empty($result)) {
+					//если нет такого клиента
+				}
+				else{
+					//если клиент уже сохранен ранее
+				}
+				
+				$model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
+				$result_client = $model_client->getClientById($result->client_id);
 				//создание клиента
 				$client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
 				$client_data['client_name'] = $name;

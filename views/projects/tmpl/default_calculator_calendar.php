@@ -73,7 +73,8 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         </thead>
         <tbody>
         <? foreach ($this->items as $i => $item) : ?>
-            <?
+            <?if (in_array("22", $groups)):?>
+            <? if($item->project_calculator == $userId) :
             $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
             if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
                 $canEdit = JFactory::getUser()->id == $item->created_by;
@@ -98,6 +99,34 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <td class="center one-touch"><?= $item->dealer_name; ?></td>
                 <?endif;?>
             </tr>
+            <? endif; ?>
+            <? endif; ?>
+            <?if (in_array("14", $groups)):
+            $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
+            if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
+                $canEdit = JFactory::getUser()->id == $item->created_by;
+            ?>
+
+            <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
+                <td class="center one-touch"><?= $item->id; ?></td>
+                <td class="center one-touch">
+                    <? if ($item->calculation_date == "00.00.0000"): ?>-
+                    <? else: ?><?= $item->calculation_date; ?>
+                    <? endif; ?>
+                </td>
+                <td class="center one-touch">
+                    <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
+                    <? else: ?><?= $item->calculation_time; ?>
+                    <? endif; ?>
+                </td>
+                <td class="center one-touch"><?= $item->address; ?></td>
+                <td class="center one-touch"><?= $item->client_contacts; ?></td>
+                <td class="center one-touch"><?= $item->client_name; ?></td>
+                <?if (in_array("16", $groups)):?>
+                    <td class="center one-touch"><?= $item->dealer_name; ?></td>
+                <?endif;?>
+            </tr>
+            <? endif; ?>
         <? endforeach; ?>
         </tbody>
     </table>
