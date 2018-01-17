@@ -331,6 +331,16 @@ class Gm_ceilingModelGuild extends JModelList
     {
         if (empty($data)) $data = (object) [];
 
+        if (!empty($data->Date))
+        {
+            $year = date("Y", strtotime($data->Date));
+            $month = date("m", strtotime($data->Date));
+            $day = date("d", strtotime($data->Date));
+
+            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
+            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
+        }
+
         if (empty($data->DateStart))
             $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
@@ -370,6 +380,14 @@ class Gm_ceilingModelGuild extends JModelList
 
         if (empty($data->user_id) || empty($data->date))
             throw new Exception("Не все данные переданы!");
+
+        $getWorking = $this->getWorking((object) ["user_id" => $data->user_id, "Date" => $data->date]);
+        $countWorking = count($getWorking);
+
+        if (($countWorking < 1 && $data->action == 0) || ($getWorking[$countWorking - 1]->action == 0 && $data->action == 0))
+            throw new Exception("Невозможно добавить выход работника, когда он еще не пришел!");
+        else if ($countWorking > 0 && $getWorking[$countWorking - 1]->action == 1 && $data->action == 1)
+            throw new Exception("Данный работник еще на месте!");
 
         $db = $this->getDbo();
         $query = $db->getQuery(true);

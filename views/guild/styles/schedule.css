@@ -219,6 +219,11 @@ h1
     border: none;
 }
 
+.ModalCalendar .ModalDay .Actions button
+{
+    line-height: 0;
+}
+
 .ModalCalendar .ModalDay .Add .AddEmployeeForm
 {
     width: 100%;
