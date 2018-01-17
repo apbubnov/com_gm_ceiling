@@ -2795,9 +2795,9 @@ class Gm_ceilingController extends JControllerLegacy
                 else { $transport_sum = 0; $transport_sum_1 = 0; } 
             }
             $model = Gm_ceilingHelpersGm_ceiling::getModel('Big_smeta');
-            if(!empty($calculations) {
+            if(!empty($calculations)) {
                 
-                
+            
                 $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
                 $html = ' <h1>Номер договора: ' . $project->id . '</h1><br>';
                 $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
