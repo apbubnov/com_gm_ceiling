@@ -214,9 +214,9 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('a.project_verdict = 0');
                 }
             } elseif ($type == "calculator") {
+                if(in_array("14", $groups)) $query->where('( dealer_id = ' . $user->id . ')');
+                if(in_array("21", $groups) || in_array("12", $groups)) $query->where('( dealer_id = ' . $user->dealer_id . ')');
                 if ($subtype == "calendar") {
-                    if(in_array("14", $groups)) $query->where('( dealer_id = ' . $user->id . ')');
-                    if(in_array("21", $groups) || in_array("12", $groups)) $query->where('( dealer_id = ' . $user->dealer_id . ')');
                     $query->where('a.project_status = 1');
                     $query->order('a.project_calculation_date');
                 }
