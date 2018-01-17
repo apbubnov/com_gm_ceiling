@@ -2671,6 +2671,115 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public function createPdfs(){
+        $jinput = JFactory::getApplication()->input;
+        $project_id = $jinput->get('id','','INT');
+        $proj_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+        $project = $proj_model->getData($project_id);
+        $project_total = 0;
+        $project_total_discount = 0;
+        $total_square = 0;
+        $total_perimeter = 0;
+        $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+        $calculations = $model->getProjectItems($project->id);
+
+        foreach ($calculations as $calculation) {
+
+            $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$project->gm_canvases_margin*/, $project->dealer_canvases_margin);
+            $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$project->gm_components_margin*/, $project->dealer_components_margin);
+            $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$project->gm_mounting_margin*/, $project->dealer_mounting_margin);
+
+            $calculation->dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$project->gm_canvases_margin*/);
+            $calculation->dealer_components_sum_1 = margin($calculation->components_sum, 0/* $project->gm_components_margin*/);
+            $calculation->dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/* $project->gm_mounting_margin*/);
+
+            $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
+            //$calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $project->project_discount) / 100);
+            $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
+            $project_total += $calculation->calculation_total;
+            $project_total_discount += $calculation->calculation_total_discount;
+
+            if ($user->dealer_type != 2) {
+                $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$project->gm_canvases_margin*/);
+                $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$project->gm_components_margin*/);
+                $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$project->gm_mounting_margin*/);
+                $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
+                $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
+                $calculation_total_11 += $calculation_total_1;
+                $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
+            }
+            $project_total_11 += $project_total_1;
+
+            $calculation_total = $calculation->calculation_total;
+
+        }
+        $sum_transport = 0;  $sum_transport_discount = 0;
+        $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+        $mount_transport = $mountModel->getDataAll();
+
+        if($project->transport == 0 ) $sum_transport = 0;
+        if($project->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $project->distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
+        if($project->transport == 2 ) $sum_transport = ($mount_transport->distance * $project->distance + $mount_transport->transport)  * $project->distance_col;
+        if($project->transport == 1 ) {
+        $min = 100;
+        foreach($calculations as $d) {
+            if($d->discount < $min) $min = $d->discount;
+        }
+        if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
+        }
+        if($sum_transport < double_margin($mount_transport->transport, $project->gm_mounting_margin, $project->dealer_mounting_margin) && $sum_transport != 0) {
+            $sum_transport = double_margin($mount_transport->transport, $project->gm_mounting_margin, $project->dealer_mounting_margin);
+        }
+        $project_total_discount_transport = $project_total_discount + $sum_transport;
+        $del_flag = 0;
+        $project_total = $project_total  + $sum_transport;
+        $project_total_discount = $project_total_discount  + $sum_transport;
+            $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $calculations1 = $calculationsModel->getProjectItems($project->id);
+            $components_data = array();
+            $project_sum = 0;
+            $counter = 0;
+        foreach ($calculations1 as $calculation) {
+            $counter++;
+            $from_db = 1;
+            $save = 1;
+            $ajax = 0;
+            $pdf = 1;
+            $print_components = 0;
+            if($calculation->mounting_sum == 0) $need_mount = 0;
+            else $need_mount = 1;
+            Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
+            $from_db = 1;
+            $save = 0;
+            $ajax = 0;
+            $pdf = 0;
+            $print_components = 1;
+            $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
+            $project_sum += margin($calculation->components_sum, $project->gm_components_margin);
+            $project_sum += margin($calculation->canvases_sum, $project->gm_canvases_margin);
+            $project_sum += margin($calculation->mounting_sum, $project->gm_mounting_margin);
+            if ($counter == count($calculations1)) {
+                $flag_last = 1;
+                Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
+
+            }
+        }
+        $components_data = array();
+        $project_sum = 0;
+        foreach($calculations as $calculation){
+            $calculations = $calculationsModel->getProjectItems($calculation);
+            $from_db = 1;
+            $save = 0;
+            $ajax = 0;
+            $pdf = 0;
+            $print_components = 1;
+            $del_flag = 0;
+
+            $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db,$calculation, $save, $ajax, $pdf, $print_components,$del_flag);
+        } 
+       Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
+    }
+
 }
 
 ?>
