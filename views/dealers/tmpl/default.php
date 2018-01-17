@@ -19,6 +19,7 @@ $result_users = $users_model->getDealers();
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
+    <h2 class="center">Дилеры</h2>
     <table class="table table-striped one-touch-view" id="callbacksList">
         <thead>
         <tr>
