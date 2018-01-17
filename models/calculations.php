@@ -977,11 +977,17 @@ class Gm_ceilingModelCalculations extends JModelList {
         {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
+            
+            if ($dealer == 1) {
+                $who = 1;
+            } else {
+                $who = 0;
+            }
 
             $query->select('projects.project_info, projects.project_calculation_date, projects.project_calculator')
                 ->from('#__gm_ceiling_projects as projects')
                 ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                ->where("projects.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and clients.dealer_id = '$dealer'");
+                ->where("projects.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and projects.who_calculate = '$who'");
             $db->setQuery($query);
 
             $items = $db->loadObjectList();
