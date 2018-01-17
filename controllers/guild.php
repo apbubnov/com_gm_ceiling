@@ -120,6 +120,10 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         $Type = $app->input->get('Type', null, 'string');
 
+        if (gettype($Type) != "array")
+            $Type = [$Type];
+
+
         $DateStart = $app->input->get('DateStart', null, 'string');
         $DateEnd = $app->input->get('DateEnd', null, 'string');
         $Date = $app->input->get('Date', null, 'string');
@@ -159,8 +163,15 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         $model = $this->getModel();
 
-        if ($Type == "Working") die(json_encode($model->getWorking($data)));
-        else if ($Type == "Employee") die(json_encode($model->getBigDataEmployees($data)));
+        $answer = [];
+
+        if (in_array("Working", $Type)) $answer["Working"] = $model->getWorking($data);
+        if (in_array("Employee", $Type)) $answer["Employee"] = $model->getBigDataEmployees($data);
+
+        if (count($answer) == 1)
+            foreach ($answer as $a) $answer = $a;
+
+        die(json_encode($answer));
     }
 
     public function setWorking()

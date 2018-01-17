@@ -234,13 +234,13 @@ class Gm_ceilingModelGuild extends JModelList
                 {
                     $TempWT->End = $work->date;
 
-                    $Start = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->Start);
-                    $End = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End);
+                    $TStart = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->Start);
+                    $TEnd = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End);
 
-                    $hours = $End->format("H") - $Start->format("H");
-                    $minute = $End->format("i") - $Start->format("i");
+                    $hours = $TEnd->format("H") - $TStart->format("H");
+                    $minute = $TEnd->format("i") - $TStart->format("i");
 
-                    $hours += (floatval($minute) / 60.0);
+                    $hours += ceil(floatval($minute) / 60.0 * 100) / 100;
 
                     $TempWT->Time = $hours;
                     $WorkingTime += $hours;
@@ -254,13 +254,13 @@ class Gm_ceilingModelGuild extends JModelList
                 $TempWT = $WorkingTimes[count($WorkingTimes) - 1];
                 $TempWT->End = $data->DateEnd;
 
-                $Start = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->Start);
-                $End = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End);
+                $TStart = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->Start);
+                $TEnd = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End);
 
-                $hours = $End->format("H") - $Start->format("H");
-                $minute = $End->format("i") - $Start->format("i");
+                $hours = $TEnd->format("H") - $TStart->format("H");
+                $minute = $TEnd->format("i") - $TStart->format("i");
 
-                $hours += (floatval($minute) / 60.0);
+                $hours += ceil(floatval($minute) / 60.0 * 100) / 100;
 
                 $TempWT->Time = $hours;
                 $WorkingTime += $hours;

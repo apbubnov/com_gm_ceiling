@@ -155,17 +155,17 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             Schedule = InfoBlock.find(".Schedule"),
             day = InfoBlock.attr("day"),
             month = InfoBlock.attr("month"),
-            year = InfoBlock.attr("year");
+            year = InfoBlock.attr("year"),
+            data = null;
 
         jQuery.ajax({
             type: 'POST',
             url: "/index.php?option=com_gm_ceiling&task=guild.getData",
-            data: {day: day, month: month, year: year, Type: "Employee"},
+            data: {day: day, month: month, year: year, Type: ["Employee", "Working"]},
             cache: false,
             async: false,
             success: function (data) {
                 data = JSON.parse(data);
-                console.log(data);
 
                 noty({
                     theme: 'relax',
@@ -186,6 +186,17 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     text: "Сервер не отвечает!"
                 });
             }
+        });
+
+        $.each(data.Working, function (key, value) {
+            var Employee = Data.Employee.clone();
+
+            Employee.find(".time").text(value.time);
+            Employee.find(".name").text(value.user.name);
+            Employee.attr("id", value.id);
+            if (value.action === "0") Employee.addClass("Out"); else Employee.addClass("In");
+
+            Schedule.prepend(Employee);
         });
     }
 
