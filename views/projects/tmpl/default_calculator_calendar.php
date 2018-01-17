@@ -73,7 +73,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         </thead>
         <tbody>
         <? foreach ($this->items as $i => $item) : ?>
-            <?
+            <? if($item->project_calculator == $userId) :
             $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
             if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
                 $canEdit = JFactory::getUser()->id == $item->created_by;
@@ -98,6 +98,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <td class="center one-touch"><?= $item->dealer_name; ?></td>
                 <?endif;?>
             </tr>
+            <? endif; ?>
         <? endforeach; ?>
         </tbody>
     </table>
