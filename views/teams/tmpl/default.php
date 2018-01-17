@@ -7,7 +7,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // No direct access
-/*defined('_JEXEC') or die;
+defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
@@ -61,13 +61,13 @@ foreach ($brigade_id as $value) {
 	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
 	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
 	$calendars .= "</div>";
-} */
+}
 //----------------------------------------------------------------------------------------------------------
 
 
 ?>
 
-<!-- <?=parent::getButtonBack();?>
+<?=parent::getButtonBack();?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/teams/tmpl/css/style.css" type="text/css" />
 
@@ -742,4 +742,4 @@ foreach ($brigade_id as $value) {
 	});
 
 
-</script> -->
+</script>
