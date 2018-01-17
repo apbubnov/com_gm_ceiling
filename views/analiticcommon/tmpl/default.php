@@ -126,7 +126,7 @@ echo parent::getButtonBack();
 				<td><b><?php echo $c_all_deals;?></b></td>
                 <td><b><?php echo $c_all_done;?></b></td>
                 <td><b><?php echo $c_all_sum;?></b></td>
-                <td><b><?php echo $c_all_profit; ?></b></td>
+                <td><b><?php echo floor($c_all_profit); ?></b></td>
 			</tr>
 	</table>
 </form>
