@@ -84,7 +84,7 @@ $result_users = $users_model->getDealers();
             }
         });
 
-        jQuery("#new_client").click(function(){
+        jQuery("#new_dealer").click(function(){
             jQuery("#close4-tar").show();
             jQuery("#modal-window-container").show();
             jQuery("#modal-window-1-tar").show("slow");
