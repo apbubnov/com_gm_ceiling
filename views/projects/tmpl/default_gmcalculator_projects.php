@@ -63,7 +63,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		</thead>
 	
 		<tbody>
-			<?php foreach ($this->items as $i => $item) : 
+			<?php foreach ($this->items as $i => $item) :
+                if (in_array("22", $groups) && $item->project_calculator != $userId) continue;
+                else if (in_array("17", $groups) && $item->who_calculate != 1) continue;
 			if($item->project_status!=2) {?>
 				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
 				<?php $dealer = JFactory::getUser($item->dealer_id); ?>
