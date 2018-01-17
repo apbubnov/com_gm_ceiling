@@ -2780,15 +2780,15 @@ class Gm_ceilingController extends JControllerLegacy
             $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
            
             if($res) {
-                if($data->transport == 1) { $transport_sum = Gm_ceilingHelpersGm_ceiling::margin1($res->transport * $distance_col, $margin);
+                if($data->transport == 1) { $transport_sum = Gm_ceilingHelpersGm_ceiling::margin($res->transport * $distance_col, $margin);
                 $transport_sum_1 = $res->transport * $distance_col;
                 }
                 elseif($data->transport == 2) {
                     $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
                     $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                    if($transport_sum < Gm_ceilingHelpersGm_ceiling::margin1($res->transport, $margin))
+                    if($transport_sum < Gm_ceilingHelpersGm_ceiling::margin($res->transport, $margin))
                       { 
-                          $transport_sum = Gm_ceilingHelpersGm_ceiling::margin1($res->transport, $margin);
+                          $transport_sum = Gm_ceilingHelpersGm_ceiling::margin($res->transport, $margin);
                           $transport_sum_1 = $res->transport;
                       }  
                 }
