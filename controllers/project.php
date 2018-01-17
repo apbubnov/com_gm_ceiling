@@ -1081,7 +1081,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $recoil_id = $map_model->getRecoilId($project_id)->recoil_id;
                 $model_recoil =  $this->getModel('recoil', 'Gm_ceilingModel');
                 $recoil = $model_recoil->getRecoilInfo($recoil_id);
-                $result = "Заказ от откатника: ".$recoil->recoil_name.";Телефон: ".$recoil->phone;
+                $result = "Заказ от откатника: ".$recoil->name.";Телефон: ".$recoil->username;
                
             }
             // если проект был недовыолнен, а сейчас выполнен, то плюсовать сумму ранее записанную в переменнные  new

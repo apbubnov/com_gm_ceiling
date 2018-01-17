@@ -1624,7 +1624,8 @@
 				<?php if($this->type === "gmmanager"){?>
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-						<a style=id="save_button" type="button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
+<!-- 						<a style=id="save_button" type="button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
+ -->						<a id="save_button"  class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
 					</div>
 					<div class="col-sm-4"></div>
 				<?php } ?>

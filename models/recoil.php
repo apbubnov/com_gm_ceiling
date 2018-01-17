@@ -57,11 +57,10 @@ class Gm_ceilingModelRecoil extends JModelList
 			$query = $db->getQuery(true);
 	        $query
 	            ->select('*')
-                ->from('#__gm_ceiling_recoil')
+                ->from('#__users')
                 ->where("id=$id");
 			$db->setQuery($query);
             $items = $db->loadObject();
-            
 			return $items;
 		}
 		catch(Exception $e)
