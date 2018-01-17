@@ -51,6 +51,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $model_project = $this->getModel('Project', 'Gm_ceilingModel');
             $res = $model_project->transport($data);
             $dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
+            if(empty($res->user_id)) $res->user_id = 1;
             $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
            
             if($res) {

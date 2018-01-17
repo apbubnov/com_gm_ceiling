@@ -405,6 +405,11 @@ class Gm_ceilingModelClientForm extends JModelForm
 					$db = JFactory::getDbo();
 					$phone = $db->escape($data['client_contacts'], true);
 
+					$phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+		            if (mb_substr($phone, 0, 1) != '7' && strlen($phone) == 11) {
+		                $phone = substr_replace($phone, '7', 0, 1);
+		            }
+
 					$query = $db->getQuery(true);
 					$query->insert('#__gm_ceiling_clients_contacts');
 					$query->columns('`client_id`, `phone`');

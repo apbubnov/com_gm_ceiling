@@ -91,6 +91,12 @@ class Gm_ceilingHelpersGm_ceiling
         if(empty($type)){
             $type = 0;
         }
+
+        $phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+        if (mb_substr($phone, 0, 1) != '7' && strlen($phone) == 11) {
+            $phone = substr_replace($phone, '7', 0, 1);
+        }
+        
         $data = array(
             "name" => $FIO,
             "username" => $phone,

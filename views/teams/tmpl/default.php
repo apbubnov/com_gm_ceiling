@@ -9,20 +9,20 @@
 // No direct access
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+/* JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
+JHtml::_('behavior.multiselect'); */
 //JHtml::_('formbehavior.chosen', 'select');
 
-$user       = JFactory::getUser();
+/* $user       = JFactory::getUser();
 $userId     = $user->get('id');
-$dealerId   = $user->dealer_id;
+$dealerId   = $user->dealer_id; */
 
-$teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
+/* $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
-$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
+$brigade_mounter = $teams_model->getMounterBrigade($brigade_id); */
 
-// календарь
+ // календарь
 $month1 = date("n");
 $year1 = date("Y");
 if ($month1 == 12) {
@@ -364,7 +364,7 @@ foreach ($brigade_id as $value) {
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#window-with-table"); // тут указываем ID элемента
         if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+            && div.has(e.target).length == 0) { // и не по его дочерним элементам
             jQuery("#window-with-table").hide();
             jQuery("#close-modal-window").hide();
             jQuery("#modal-window-with-table").hide();
@@ -372,7 +372,7 @@ foreach ($brigade_id as $value) {
         }
 		var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
         if (!div2.is(e.target) // если клик был не по нашему блоку
-            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
+            && div2.has(e.target).length == 0) { // и не по его дочерним элементам
             jQuery("#modal-window-1-tar").hide();
             jQuery("#close-tar").hide();
             jQuery("#modal-window-container-tar").hide();

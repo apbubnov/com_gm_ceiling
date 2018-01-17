@@ -49,7 +49,7 @@ $answer2 = $model->getDataByStatus("Mountings", $userId, null);
         <a class="btn btn-large btn-danger" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=run', false); ?>"><i class="fa fa-lock" aria-hidden="true"></i> Завершенные заказы</a>
     </p>
 	<p class="center">
-		<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
+		<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
 	</p>
 	<p class="center">
 		<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
