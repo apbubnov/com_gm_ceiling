@@ -539,6 +539,9 @@ $AllMounters = $model->FindAllMounters($where);
                     },
                     success: function(data) {
                         window.location = window.location;
+                    },
+                    error: function(data) {
+                        console.log(data);
                     }
                 });
             });
