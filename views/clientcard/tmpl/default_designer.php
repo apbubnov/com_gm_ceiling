@@ -71,7 +71,7 @@
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
 <? if (!empty($dop_contacts)) { ?>
 <div>
-<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта дилера : </p>
+<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера : </p>
 </div>
 <div>
 <? foreach ($dop_contacts AS $contact) {?>
@@ -80,7 +80,7 @@
 <? } ?>
 <div class="row">
     <div class="col-sm-12" id = "calls">
-        <p class="caption-tar">История дилера</p>
+        <p class="caption-tar">История отделочника/дизайнера</p>
         <div id="calls-tar">
             <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
             
@@ -118,7 +118,7 @@
 
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
-        <p class="caption-tar">Клиенты дилера</p>
+        <p class="caption-tar">Клиенты отделочника/дизайнера</p>
         <div id="cliens_of_dealer_2">
             <table id="cliens_of_dealer_table" class="table table-striped table_cashbox one-touch-view" cellspacing="0">
                 <tbody>
