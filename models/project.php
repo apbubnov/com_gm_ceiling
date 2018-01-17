@@ -824,7 +824,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
 	}
 	
-	public function update_project_after_call($id,$client_id,$date,$address,$manager_comment,$status,$api_id,$manager_id, $gauger){
+	public function update_project_after_call($id,$client_id,$date,$address,$manager_comment,$status,$api_id,$manager_id, $gauger,$d_can_m=null,$d_com_m=null,$d_mou_m=null,$gm_can_m=null,$gm_com_m=null,$gm_mou_m=null){
 		try
 		{
 			$table = $this->getTable();
@@ -840,6 +840,16 @@ class Gm_ceilingModelProject extends JModelItem
                 $table->who_calculate = 1;
                 if(!empty($gauger)){
                     $table->project_calculator = $gauger;
+                }
+                if (!is_null($d_can_m) && !is_null($d_com_m) && !is_null($d_mou_m) &&
+                	!is_null($gm_can_m) && !is_null($gm_com_m) && !is_null($gm_mou_m))
+                {
+                	$table->dealer_canvases_margin = $d_can_m;
+                	$table->dealer_components_margin = $d_com_m;
+                	$table->dealer_mounting_margin = $d_mou_m;
+                	$table->gm_canvases_margin = $gm_can_m;
+                	$table->gm_components_margin = $gm_com_m;
+                	$table->gm_mounting_margin = $gm_mou_m;
                 }
 			}
 			$return = $table->store();

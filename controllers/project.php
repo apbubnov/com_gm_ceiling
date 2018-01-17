@@ -317,8 +317,17 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 					$client_model->updateClient($client_id,null,$userID);
 
+					$info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+					$dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', $userID);
+		            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', $userID);
+		            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', $userID);
+		            $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', $userID);
+		            $gm_components_margin = $info_model->getMargin('gm_components_margin', $userID);
+		            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', $userID);
+
 					$client_history_model->save($client_id,"Клиент переведен в дилеры.");				
-					$model->update_project_after_call($project_id,$client_id,$date_time,$address,$manager_comment,20,$api_phone_id,$user->id, $gauger);
+					$model->update_project_after_call($project_id,$client_id,$date_time,$address,$manager_comment,20,$api_phone_id,$user->id,$gauger,$dealer_canvases_margin,$dealer_components_margin,
+						$dealer_mounting_margin,$gm_canvases_margin,$gm_components_margin,$gm_mounting_margin);
 					$status = 20;
 				}
 				if($call_type == "client"){
@@ -433,17 +442,27 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     if($client_model->checkIsDealer($username)==0){
                         $userID = Gm_ceilingHelpersGm_ceiling::registerUser($name,$username,$email,$client_id);
                         $client_model->updateClient($client_id,null,$userID);
+
+                        $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+						$dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', $userID);
+			            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', $userID);
+			            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', $userID);
+			            $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', $userID);
+			            $gm_components_margin = $info_model->getMargin('gm_components_margin', $userID);
+			            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', $userID);
                     }
 
 					$rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
 					$rep_proj = $rep_model->getDataByProjectId($project_id);
 					if (empty($rep_proj))
 					{
-						$model->update_project_after_call($project_id,$client_id,$date_time,$address,$manager_comment,20,$api_phone_id,$user->id, $gauger);
+						$model->update_project_after_call($project_id,$client_id,$date_time,$address,$manager_comment,20,$api_phone_id,$user->id,$gauger,$dealer_canvases_margin,$dealer_components_margin,
+						$dealer_mounting_margin,$gm_canvases_margin,$gm_components_margin,$gm_mounting_margin);
 					}
 					else
 					{
-						$model->update_project_after_call($project_id,$client_id,$date_time,$address,$manager_comment,20,10,$user->id, $gauger);
+						$model->update_project_after_call($project_id,$client_id,$date_time,$address,$manager_comment,20,10,$user->id,$gauger,$dealer_canvases_margin,$dealer_components_margin,
+						$dealer_mounting_margin,$gm_canvases_margin,$gm_components_margin,$gm_mounting_margin);
 						$rep_upd = $rep_model->update($project_id,$api_phone_id);
 					}
 					$status = 20;
