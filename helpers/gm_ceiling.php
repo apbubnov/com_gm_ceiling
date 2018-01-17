@@ -117,7 +117,10 @@ class Gm_ceilingHelpersGm_ceiling
         if (!$user->bind($post)) return false;
         if (!$user->save()) return false;
         JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
+        $margin_model = self::getModel('Dealer_info');
+        $margin_model->save(0,0,0,0,0,0,$userID,0);
         return $userID;
+
         //header('location: /index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage');
     }
 
