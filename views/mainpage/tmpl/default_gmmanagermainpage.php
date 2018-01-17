@@ -37,7 +37,7 @@ var_dump($answer5);
 var_dump($answer6);
 $result = array_diff($answer5, $answer6);
 //echo count($result);
-var_dump($result);
+//var_dump($result);
 
 //--------------------------------------
 ?>
