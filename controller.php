@@ -1915,6 +1915,9 @@ class Gm_ceilingController extends JControllerLegacy
             $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $client = $client_model->getClientById($client_id);
             $dealer_id = $client->dealer_id;
+            if(empty($dealer_id)){
+                $dealer_id = 1;
+            }
             $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
             $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', $dealer_id);
             $gm_components_margin = $info_model->getMargin('gm_components_margin', $dealer_id);
