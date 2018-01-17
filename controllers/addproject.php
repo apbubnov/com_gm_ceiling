@@ -97,7 +97,7 @@ class Gm_ceilingControllerAddProject extends Gm_ceilingController
 				$client_data['client_contacts'] = preg_replace('/[\(\)\-\s]/', '', $data['client_contacts']);
 				
 				$groups = $user->get('groups');
-				if (in_array("22", $groups)) $client_data['dealer_id'] = $user->dealer_id;
+				if (in_array("22", $groups)|| in_array("21", $groups) || in_array("17", $groups) || in_array("12", $groups)) $client_data['dealer_id'] = $user->dealer_id;
 				else (in_array("14", $groups)) $client_data['dealer_id'] = $userId;
 				//$client_data['manager_id'] = $user->id;
 				$client_id = $client_model->save($client_data);			
