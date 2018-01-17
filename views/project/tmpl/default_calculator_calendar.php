@@ -1169,7 +1169,7 @@ $results = $db->loadObjectList();
                     <?php if ($calculation->n29) { ?>
                         <h4>Переход уровня</h4>
                         <?php foreach ($calculation->n29 as $key => $n29_item) {
-                            echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <b><br>";
+                            echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <br>";
                             ?>
                         <?php }
                     } ?>
