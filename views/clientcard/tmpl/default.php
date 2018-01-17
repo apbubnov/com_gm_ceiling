@@ -275,7 +275,7 @@
     });
 
     jQuery("#back_btn").click(function (){
-        history.go(-2);
+        history.go(-1);
     });
 
     jQuery("#add_comment").click(function ()
