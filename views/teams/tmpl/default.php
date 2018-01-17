@@ -9,20 +9,20 @@
 // No direct access
 defined('_JEXEC') or die;
 
-/* JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect'); */
+JHtml::_('behavior.multiselect');
 //JHtml::_('formbehavior.chosen', 'select');
 
-/* $user       = JFactory::getUser();
+$user       = JFactory::getUser();
 $userId     = $user->get('id');
-$dealerId   = $user->dealer_id; */
+$dealerId   = $user->dealer_id;
 
-/* $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
+$teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
-$brigade_mounter = $teams_model->getMounterBrigade($brigade_id); */
+$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 
- // календарь
+// календарь
 $month1 = date("n");
 $year1 = date("Y");
 if ($month1 == 12) {
@@ -361,18 +361,16 @@ foreach ($brigade_id as $value) {
     //------------------------------------------
 
 	// закрытие модального окна, при нажатии вне модального окна
-    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+    jQuery(document).mouseup(function (e) { // событие клика по веб-документу
         var div = jQuery("#window-with-table"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length == 0) { // и не по его дочерним элементам
+        if (!div.is(e.target) && div.has(e.target).length == 0) { // не по элементу и не по его дочерним элементам
             jQuery("#window-with-table").hide();
             jQuery("#close-modal-window").hide();
             jQuery("#modal-window-with-table").hide();
 			jQuery("#table-mounting").empty();
         }
 		var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-        if (!div2.is(e.target) // если клик был не по нашему блоку
-            && div2.has(e.target).length == 0) { // и не по его дочерним элементам
+        if (!div2.is(e.target) && div2.has(e.target).length == 0) { // и не по его дочерним элементам
             jQuery("#modal-window-1-tar").hide();
             jQuery("#close-tar").hide();
             jQuery("#modal-window-container-tar").hide();
@@ -572,19 +570,19 @@ foreach ($brigade_id as $value) {
 							if (element.project_mounting_date.length < 6) {
 								if (element.project_status == 5) {
 									status = "В производстве";
-								} else if (element.project_status == 6 ) {
+								} else if (element.project_status == 6) {
 									status = "На раскрое";
-								} else if (element.project_status == 7 ) {
+								} else if (element.project_status == 7) {
 									status = "Укомплектован";
-								} else if (element.project_status == 8 ) {
+								} else if (element.project_status == 8) {
 									status = "Выдан";
-								} else if (element.project_status == 10 ) {
+								} else if (element.project_status == 10) {
 									status = "Ожидание монтажа";
-								} else if (element.project_status == 16 ) {
+								} else if (element.project_status == 16) {
 									status = "Монтаж";
-								} else if (element.project_status == 11 ) {
+								} else if (element.project_status == 11) {
 									status = "Монтаж выполнен";
-								} else if (element.project_status == 17 ) {
+								} else if (element.project_status == 17) {
 									status = "Монтаж недовыполнен";
 								}
 								if (element.read_by_mounter == 0) {
