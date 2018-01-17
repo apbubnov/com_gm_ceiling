@@ -19,7 +19,7 @@ $userId     = $user->get('id');
 /* циферки на кнопки */
 $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
 // замеры
-$answer1 = $model->getDataByStatus("GaugingsGraph", $userId, null);
+$answer1 = $model->getDataByStatus("GaugingsGraph", $userId, "all");
 // монтажи
 $answer2 = $model->getDataByStatus("Mountings", $userId, null);
 // завершенные монтажи
