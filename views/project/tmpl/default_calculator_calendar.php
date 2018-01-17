@@ -467,10 +467,8 @@ $results = $db->loadObjectList();
                         <tr>
                             <th>Дилер</th>
                             <td><?php
-                                $user = JFactory::getUser();
-                                $dealer = JFactory::getUser($user->dealer_id);
-
-                                echo $dealer->name; ?>
+                                $dealer = $client_model->getDealer($this->item->id_client);
+                                echo $dealer; ?>
                             </td>
 
                         </tr>
