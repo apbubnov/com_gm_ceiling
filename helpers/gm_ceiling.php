@@ -112,7 +112,13 @@ class Gm_ceilingHelpersGm_ceiling
 
         $userID = $user->id;
         $user =& JUser::getInstance((int)$userID);
-        $post['dealer_id'] = $userID;
+        if($type == 3){
+            $post['dealer_id'] = 1;
+        }
+        else {
+            $post['dealer_id'] = $userID;
+        }
+        
         $post['associated_client'] = $client_id;
         if (!$user->bind($post)) return false;
         if (!$user->save()) return false;

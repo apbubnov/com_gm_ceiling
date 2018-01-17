@@ -1085,16 +1085,21 @@ class Gm_ceilingModelCalculationForm extends JModelForm
     {
         try
         {
-            
+            $db = $this->getDbo();
             $user = JFactory::getUser();
-            /*if (empty($data['dealer_id'])) {
-                if (isset($user->dealer_id)) {
-                    $data['dealer_id'] = $user->dealer_id;
-                } else {
-                    $data['dealer_id'] = 2;
-                }
-            }*/
             if (empty($user->id)) $user->id = 2;
+            //эта функция на всякий случай, если вдруг цвет не запишется, пока причину потери цвета найти не могу!
+            if(!empty($data['n3']) && empty($data['color']) && ($data['n2'] == 2 || $data['n2'] == 4 || $data['n2'] == 6 || $data['n2'] == 29))
+            {
+                $query = $db->getQuery(true);
+                $query
+                    ->select(' canvases.id AS canvases_id, canvases.color_id')
+                    ->from('`#__gm_ceiling_canvases` AS canvases')
+                    ->where('canvases.id =' . $data['n3'] . ' AND canvases.color_id IS NOT NULL');
+                $db->setQuery($query);
+                $color_id = $db->loadObject()->color_id;
+                $data['color'] = $color_id;
+            }
 
             $n13 = json_decode($data['n13']);
             $n14 = json_decode($data['n14']);
@@ -1104,7 +1109,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $n26 = json_decode($data['n26']);
             $n29 = json_decode($data['n29']);
 
-            $db = $this->getDbo();
+            
             $calculationId = $data['id'];
             $date_created = date("Y-m-d H:i:s");
             foreach ($n29 as $key => $value) $n29[$key][0] = str_replace(",",".", $value[0]);
