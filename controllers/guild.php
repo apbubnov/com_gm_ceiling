@@ -150,11 +150,19 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
             $month = $Date->format("m");
             $year = $Date->format("Y");
 
+            $day = intval($day);
+            $month = intval($month);
+            $year = intval($year);
+
             $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
             $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
         }
         if (!empty($Day) || !empty($Month) || !empty($Year))
         {
+            $Day = intval($Day);
+            $Month = intval($Month);
+            $Year = intval($Year);
+
             $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $Month, $Day, $Year));
             $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $Month, $Day + 1, $Year));
         }

@@ -298,7 +298,45 @@ h1
     margin: 0 0 0 1%;
 }
 
+.InfoBlock
+{
+    width: calc(100% + 40px);
+    margin: 15px -20px 0 -20px;
+}
 
+.Calendars .InfoBName
+{
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    float: left;
+    background-color: #4e4cb7;
+    color: #FFFFFF;
+    font-size: 18px;
+    padding: 0 15px;
+}
+
+.InfoBlock .Block
+{
+    width: 100%;
+    height: 320px;
+    line-height: 320px;
+    float: left;
+    text-align: center;
+    box-shadow: inset 0 0 0 1px #4e4cb7;
+    overflow: hidden;
+}
+
+.InfoBlock .Block .Schedule
+{
+    max-width: calc(100% - 110px);
+    padding: 1px;
+    float: none;
+    vertical-align: middle;
+    overflow: visible;
+    margin-top: -2px;
+    margin-bottom: 2px;
+}
 @media (max-width: 1200px) {
     .Calendars .Calendar {
         width: calc(30px * 8);
