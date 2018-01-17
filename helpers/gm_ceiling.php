@@ -84,11 +84,13 @@ class Gm_ceilingHelpersGm_ceiling
         return explode(',', $db->loadResult());
     }
 
-    public static function registerUser($FIO, $phone, $email, $client_id)
+    public static function registerUser($FIO, $phone, $email, $client_id,$type = null)
     {
 
         jimport('joomla.user.helper');
-
+        if(empty($type)){
+            $type = 0;
+        }
         $data = array(
             "name" => $FIO,
             "username" => $phone,
@@ -98,7 +100,7 @@ class Gm_ceilingHelpersGm_ceiling
             "groups" => array(2, 14),
             "phone" => $phone,
             "block" => 0,
-            "dealer_type" => 0
+            "dealer_type" => $type
         );
         $user = new JUser;
         if (!$user->bind($data)) {
