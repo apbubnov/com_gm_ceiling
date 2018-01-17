@@ -2672,6 +2672,7 @@ class Gm_ceilingController extends JControllerLegacy
     }
 
     public function createPdfs(){
+        try{
         $jinput = JFactory::getApplication()->input;
         $project_id = $jinput->get('id','','INT');
         $proj_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
@@ -2780,15 +2781,15 @@ class Gm_ceilingController extends JControllerLegacy
             $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
            
             if($res) {
-                if($data->transport == 1) { $transport_sum = Gm_ceilingHelpersGm_ceiling::margin($res->transport * $distance_col, $margin);
+                if($data->transport == 1) { $transport_sum = margin($res->transport * $distance_col, $margin);
                 $transport_sum_1 = $res->transport * $distance_col;
                 }
                 elseif($data->transport == 2) {
                     $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
                     $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                    if($transport_sum < Gm_ceilingHelpersGm_ceiling::margin($res->transport, $margin))
+                    if($transport_sum < margin($res->transport, $margin))
                       { 
-                          $transport_sum = Gm_ceilingHelpersGm_ceiling::margin($res->transport, $margin);
+                          $transport_sum = margin($res->transport, $margin);
                           $transport_sum_1 = $res->transport;
                       }  
                 }
@@ -2941,6 +2942,13 @@ class Gm_ceilingController extends JControllerLegacy
             $filename = md5($project->id . "-10") . ".pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($array_html, $sheets_dir . $filename, "A4");
         }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }
 
 ?>
