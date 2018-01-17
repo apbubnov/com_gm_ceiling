@@ -65,7 +65,7 @@ class Gm_ceilingModelDealer_info extends JModelList
 	 *
 	 * @since    1.6
 	 */
-	protected function  getListQuery()
+	protected function getListQuery()
 	{
 		try
 		{
@@ -146,7 +146,7 @@ class Gm_ceilingModelDealer_info extends JModelList
         }
     }
     
-    public function save ($d_margin_canv,$d_margin_comp,$d_margin_mount,$gm_margin_canv,$gm_margin_comp,$gm_margin_mount,$dealer_id,$dealer_type,$discount)
+    public function save ($d_margin_canv,$d_margin_comp,$d_margin_mount,$gm_margin_canv,$gm_margin_comp,$gm_margin_mount,$dealer_id,$discount)
 	{
 		try
 		{
@@ -154,8 +154,8 @@ class Gm_ceilingModelDealer_info extends JModelList
 	        $query = $db->getQuery(true);
 	        $query
 	            ->insert('#__gm_ceiling_dealer_info')
-	            ->columns('`dealer_canvases_margin`, `dealer_components_margin`, `dealer_mounting_margin`,`gm_canvases_margin`, `gm_components_margin`, `gm_mounting_margin`,`dealer_id`,`dealer_type`,`discount`')
-	            ->values("$d_margin_canv,$d_margin_comp,$d_margin_mount,$gm_margin_canv,$gm_margin_comp,$gm_margin_mount,$dealer_id,$dealer_type,$discount");
+	            ->columns('`dealer_canvases_margin`, `dealer_components_margin`, `dealer_mounting_margin`,`gm_canvases_margin`, `gm_components_margin`, `gm_mounting_margin`,`dealer_id`,`discount`')
+	            ->values("$d_margin_canv,$d_margin_comp,$d_margin_mount,$gm_margin_canv,$gm_margin_comp,$gm_margin_mount,$dealer_id,$discount");
 	        $db->setQuery($query);
 	        $db->execute();
 	    }
