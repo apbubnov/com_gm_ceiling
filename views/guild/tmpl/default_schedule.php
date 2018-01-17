@@ -1,4 +1,5 @@
 <?php
+echo parent::getPreloaderNotJS();
 /**
  * @version    CVS: 1.0.0
  * @package    Com_Gm_ceiling
@@ -21,25 +22,294 @@ $groups = $user->get('groups');
 
 $chief = (in_array(23, $groups));
 $employee = (in_array(18, $groups));
-
-//$app = JFactory::getApplication();
-$calendars = [];
-$calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) - 1);
-$calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(date("m"));
-$calendars[] = Gm_ceilingHelpersGm_ceiling::LiteCalendar(intval(date("m")) + 1);
-
-$employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
-//$schedule = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getSchedule();
 ?>
+<link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/calendar.css">
+<link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/schedule.css">
 
-<? if ($chief || true): ?>
-    <h1>Начальник цеха: <?= $user->name; ?></h1>
-<? elseif ($employee): ?>
-    <h1>Работник цеха: <?= $user->name; ?></h1>
-<? else: ?>
+<?if (!($chief || $employee)): ?>
     <h1>К сожалению данный кабинет вам не доступен!</h1>
-    Что бы получить доступ, обратитесь к IT отделу.
-<? endif; ?>
+    <p>Что бы получить доступ, обратитесь к IT отделу. Через <span>5</span> секунды вы вернетесь на предыдущую страницу!</p>
+    <div style="display: none;"><?=parent::getButtonBack(); ?></div>
+    <script type="text/javascript">
+        var $ = jQuery;
+        $(function () {
+            $(".PRELOADER_GM").hide();
+            setTimeout(function () {
+                $("#BackPage").click();
+            }, 5000);
+            setInterval(function () {
+                var span = $("p span"),
+                    text = span.text();
+                span.text(parseInt(text) - 1);
+            }, 1000);
+        });
+    </script>
+<?else:?>
+
+<h1><?=($chief)?"Начальник":"Работник";?> цеха: <?= $user->name; ?></h1>
+<div class="Actions">
+    <?=parent::getButtonBack(); ?>
+</div>
+<div class="Page">
+    <div class="Main MainCalendar">
+        <div class="MainName">Календарь работ</div>
+        <div class="MainBlock">
+            <div class="Arrow Left">
+                <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+            </div>
+            <div class="Calendars"></div>
+            <div class="Arrow Right">
+                <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+    <div class="Main MainWork">
+        <div class="MainName">Работы за <span class="Date"></span> г.</div>
+        <div class="MainBlock"></div>
+    </div>
+</div>
+<div class="Modal">
+    <div class="ModalDark" onclick="DATA.MODAL.MODAL.hide();"></div>
+    <div class="ModalDay">
+        <div class="Title"></div>
+        <div class="ActionsDay">
+
+        </div>
+        <div class="Schedule"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var $ = jQuery,
+        DATA = {};
+
+    $(document).ready(Init);
+    $(window).resize(Resize);
+
+
+    function Init() {
+        DATA.PRELOADER = $(".PRELOADER_GM");
+
+        DATA.MODAL = {};
+        DATA.MODAL.MODAL = $(".Modal");
+        DATA.MODAL.ModalDay = $(".Modal .ModalDay");
+        DATA.MODAL.ModalSchedule = $(".Modal .ModalDay .Schedule");
+
+        DATA.MODAL.MODAL.show = modalShow;
+        DATA.MODAL.MODAL.hide = modalHide;
+        DATA.MODAL.ModalDay.show = modalShow;
+
+        DATA.HTML = {};
+        DATA.HTML.Employee = $("<div class=\"Employee\"><div class=\"time\"></div><div class=\"name\"></div></div>");
+
+        DATA.DATE = {};
+        DATA.DATE.DAY = "<?=date("d");?>";
+        DATA.DATE.MONTH = "<?=date("m");?>";
+        DATA.DATE.YEAR = "<?=date("Y");?>";
+        DATA.DATE.DATE = "<?=date("Y-m-d H:i:s");?>";
+
+        DATA.MainCalendar = $(".Page .Main.MainCalendar");
+        DATA.MainWork = $(".Page .Main.MainWork");
+
+        DATA.CALENDARS = $(".Page .Main .MainBlock .Calendars");
+
+        DATA.CALENDARS.siblings(".Arrow").attr({"onclick":"getNextCalendar(this);"});
+
+        $('.chosen-container').remove();
+        $('select').removeAttr("style");
+
+        for (var i = -1; i < 2; ++i)
+            getCalendar({MONTH: parseInt(DATA.DATE.MONTH) + i, YEAR: DATA.DATE.YEAR});
+
+        selectDay(DATA.DATE);
+
+        DATA.PRELOADER.hide();
+    }
+
+    function Resize() {
+
+    }
+
+    function getCalendar(Date) {
+        var MONTH = Date.MONTH,
+            YEAR = Date.YEAR;
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getCalendar",
+            data: {month: MONTH, year: YEAR},
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+
+                if (data.status === "success")
+                {
+                    data.calendar = $(data.calendar);
+
+                    data.calendar.find(".IssetDay").click(getDay);
+
+                    if (DATA.CALENDARS.find(".Calendar").length < 3)
+                        DATA.CALENDARS.append(data.calendar);
+                    else
+                    {
+                        var First = DATA.CALENDARS.find(".Calendar").filter(":first-child"),
+                            Last = DATA.CALENDARS.find(".Calendar").filter(":last-child"),
+                            Month = First.attr("month"),
+                            Year = First.attr("year"),
+                            Logic1 = (parseInt(YEAR) > parseInt(Year)),
+                            Logic2 = (parseInt(YEAR) === parseInt(Year)),
+                            Logic3 = (parseInt(MONTH) > parseInt(Month));
+
+                        if (Logic1 || (Logic2 && Logic3))
+                        {
+                            DATA.CALENDARS.append(data.calendar);
+                            First.remove();
+                        }
+                        else
+                        {
+                            DATA.CALENDARS.prepend(data.calendar);
+                            Last.remove();
+                        }
+                    }
+                }
+                else
+                {
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: 1500,
+                        type: "error",
+                        text: "Что то пошло не так! Попробуйте снова!"
+                    });
+                }
+            },
+            dataType: "text",
+            timeout: 1000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает! Попробуйте снова!"
+                });
+            }
+        });
+    }
+    function getNextCalendar(value) {
+        if (typeof value === "object")
+            value = ($(value).hasClass("Left"))?-1:1;
+
+        var First = DATA.CALENDARS.find(".Calendar").filter(":first-child"),
+            Last = DATA.CALENDARS.find(".Calendar").filter(":last-child"),
+            Month = (value < 0)
+                ?parseInt(First.attr("month")) - 1
+                :parseInt(Last.attr("month")) + 1,
+            Year = (value < 0)?First.attr("year"):Last.attr("year");
+
+        getCalendar({MONTH: Month, YEAR: Year});
+    }
+    function selectDay(Date) {
+        var Month = DATA.CALENDARS.find("[month='"+Date.MONTH+"']"),
+            Day = Month.find("[day='"+Date.DAY+"']");
+
+        DATA.MainWork.find(".MainName .Date")
+            .text(Date.DAY + " " + Month.attr("modalname") + " " + Month.attr("year"));
+    }
+    function getDay() {
+        var _this = $(this),
+            month = _this.closest(".Month"),
+            Day = _this.attr("day"),
+            Month = month.attr("month"),
+            Year = month.attr("year");
+
+        showModalDay({DAY: Day, MONTH: Month, YEAR: Year});
+    }
+    function showModalDay(Date = null) {
+        if (Date === null)
+            Date = DATA.DATE;
+
+        var DAY = Date.DAY,
+            MONTH = Date.MONTH,
+            YEAR = Date.YEAR,
+
+            Month = DATA.CALENDARS.find("[month='"+MONTH+"']"),
+            Day = Month.find("[day='"+DAY+"']"),
+            Workings = null;
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getData",
+            data: {Day: DAY, Month: MONTH, Year: YEAR, Type: "Working"},
+            cache: false,
+            async: false,
+            success: function (data) {
+                Workings = JSON.parse(data);
+            },
+            dataType: "text",
+            timeout: 5000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает! Попробуйте позже!"
+                });
+            }
+        });
+
+        DATA.MODAL.ModalDay.find(".Title")
+            .text(DAY + " " + Month.attr("modalname") + " " + YEAR + " г.");
+
+        DATA.MODAL.ModalSchedule.empty();
+        $.each(Workings, function (key, value) {
+            var Employee = DATA.HTML.Employee.clone();
+
+            Employee.find(".time").text(value.time);
+            Employee.find(".name").text(value.user.name);
+            Employee.attr("id", value.id);
+            if (value.action === "0")
+                Employee.addClass("Out"); else Employee.addClass("In");
+
+            DATA.MODAL.ModalSchedule.prepend(Employee);
+        });
+
+        DATA.MODAL.MODAL.show();
+        DATA.MODAL.ModalDay.show();
+    }
+
+    function modalShow() {
+        var _this = $(this);
+
+        if (_this.hasClass("Modal"))
+        {
+            $("body").css({"overflow":"hidden"});
+            _this.css({"display":"inline-block"});
+        }
+        else
+        {
+            _this.css({"display":"inline-block"});
+        }
+    }
+    function modalHide() {
+        var _this = $(this);
+
+        if (_this.hasClass("Modal"))
+        {
+            $("body").css({"overflow":"auto"});
+            _this.css({"display":"none"});
+            _this.find("> div:not(.ModalDark)").hide();
+        }
+        else
+        {
+            _this.css({"display":"none"});
+        }
+    }
+</script>
+
+<?if(false):?>
 
 <div class="Calendars">
     <div class="CalName">Календарь работ</div>
@@ -436,3 +706,5 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     }
 
 </script>
+        <?endif;?>
+<?endif;?>
