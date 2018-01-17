@@ -242,10 +242,10 @@ class Gm_ceilingModelDealer_info extends JModelList
 					->values("'".$data['mp1']."', '".$data['mp2']."', '".$data['mp3']."', '".$data['mp4']."', '".$data['mp5']
 					."', '".$data['mp6']."', '".$data['mp7']."', '".$data['mp8']."', '".$data['mp9']."', '".$data['mp10']."', '".$data['mp11']
 					."', '".$data['mp12']."', '".$data['mp13']."', '".$data['mp14']."', '".$data['mp15']."', '".$data['mp16']."', '".$data['mp17']
-					."', '".$data['mp18']."', '".$data['mp19']."', '".$data['mp22']."', '".$data['mp23']."', '".$data['mp24'])."', '".$data['mp25']
-					."', '".$data['mp26']."', '".$data['mp27']."', '".$data['mp30']."', '".$data['mp31']."', '".$data['mp32'])."', '".$data['mp33']
-					."', '".$data['mp34']."', '".$data['mp36']."', '".$data['mp37']."', '".$data['mp38']."', '".$data['mp40'])."', '".$data['mp41']
-					."', '".$data['mp42']."', '".$data['mp43']."', '".$data['transport']."', '".$data['distance'])."', '".$id."'");
+					."', '".$data['mp18']."', '".$data['mp19']."', '".$data['mp22']."', '".$data['mp23']."', '".$data['mp24']."', '".$data['mp25']
+					."', '".$data['mp26']."', '".$data['mp27']."', '".$data['mp30']."', '".$data['mp31']."', '".$data['mp32']."', '".$data['mp33']
+					."', '".$data['mp34']."', '".$data['mp36']."', '".$data['mp37']."', '".$data['mp38']."', '".$data['mp40']."', '".$data['mp41']
+					."', '".$data['mp42']."', '".$data['mp43']."', '".$data['transport']."', '".$data['distance']."', '".$id."'");
 	        $db->setQuery($query);
 	        $db->execute();
 			}
