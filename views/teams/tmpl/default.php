@@ -397,6 +397,10 @@ foreach ($brigade_id as $value) {
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый"></td>';	
 			legenda += '<td>Монтаж недовыполнен</td></tr>';
 			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
+			legenda += '<td>Монтаж выполнен</td>';
+			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
+			legenda += '<td>Выходные часы</td></tr>';
+			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/d3d3f9.png" alt="Голубой"></td>';
 			legenda += '<td>Монтаж выполнен</td></tr>';
 			jQuery("#button-prev").css({"width":"25px"});
 			jQuery("#prev-button-container").css({"left":"0px"});
@@ -415,6 +419,8 @@ foreach ($brigade_id as $value) {
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
 			legenda += '<td>Монтаж выполнен</td>';
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
+			legenda += '<td>Выходные часы</td>';
+			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/d3d3f9.png" alt="Голубой"></td>';
 			legenda += '<td>Монтаж выполнен</td></tr>';
 			jQuery("#legenda").append(legenda);
 		}
@@ -431,7 +437,7 @@ foreach ($brigade_id as $value) {
         //------------------------------------------
 
 		// нажатие на день, чтобы посмотреть проекты на день
-		jQuery("#calendars-container").on("click", ".day-not-read, .day-read, .day-in-work, .day-underfulfilled, .day-complite", function() {
+		jQuery("#calendars-container").on("click", ".day-not-read, .day-read, .day-in-work, .day-underfulfilled, .day-complite, .old-project", function() {
 			ChoosenDay = this.id;
 			kind = "no-empty";
 			WhatDay(ChoosenDay);
@@ -584,6 +590,8 @@ foreach ($brigade_id as $value) {
 									status = "Монтаж выполнен";
 								} else if (element.project_status == 17) {
 									status = "Монтаж недовыполнен";
+								} else if (element.project_status == 12) {
+									status = "Заказ закрыт";
 								}
 								if (element.read_by_mounter == 0) {
 									status += " / Не прочитан";

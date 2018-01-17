@@ -116,6 +116,7 @@ $AllMounters = $model->FindAllMounters($where);
                 Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
             }
         }
+        Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
     ?>
 
     <div class="container">
