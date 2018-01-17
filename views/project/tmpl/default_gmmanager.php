@@ -178,7 +178,7 @@ $AllMounters = $model->FindAllMounters($where);
             </div>
             <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
             <input name="client" id="client_id" value="<?php echo $this->item->client_id; ?>" type="hidden">
-            <button id = "create_pdfs">Сгенерировать сметы</button>
+            <button class = "btn btn-primary" id = "create_pdfs">Сгенерировать сметы</button>
             <div class="">
                 <h4>Информация для менеджера</h4>
                 <table class="table">
