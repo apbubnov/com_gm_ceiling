@@ -24,15 +24,12 @@ $userPhone = substr_replace($userPhone, ") ", 7, 0);
 $userPhone = substr_replace($userPhone, "-", 12, 0);
 $userPhone = substr_replace($userPhone, "-", 15, 0);
 
-
 $clientId = $model->getItemsByOwnerID($userId, $userPhone);
 
 /* циферки на кнопки */
 $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-
 // замерщик
-$sumcalculator = $model->getDataByStatus("GaugingsGraph", $userId, null);
-
+$sumcalculator = $model->getDataByStatus("GaugingsGraph", $userId, "all");
 // менеджер
 if ($user->dealer_id == 1) {
     $managers = $model->getDataByStatus("FindManagers", $userId, null);
@@ -54,7 +51,6 @@ if ($user->dealer_id == 1) {
     // кол-во
     $sumManager = $answer1[0]->count + $answer2[0]->count + $answer3[0]->count;
 }
-
 //НМС
 $mounting = $model->getDataByStatus("Mountings", $userId, null);
 //--------------------------------------

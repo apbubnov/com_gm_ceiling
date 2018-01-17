@@ -15,11 +15,14 @@ $userId     = $user->get('id');
 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
 $result_users = $users_model->getDealers();
 ?>
-<form>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Дилеры</h2>
+    <div style="width: 100%; text-align: left;">
+        <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
+    </div>
+    <br>
     <table class="table table-striped one-touch-view" id="callbacksList">
         <thead>
         <tr>
@@ -49,17 +52,42 @@ $result_users = $users_model->getDealers();
         	?>
         </tbody>
     </table>
-</form>
-
+    <div id="modal-window-container">
+        <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="modal-window-1-tar">
+                <p><strong>Создание нового дилера</strong></p>
+                <p>ФИО:</p>
+                <p><input type="text" id="fio_dealer"></p>
+                <p>Номер телефона:</p>
+                <p><input type="text" id="dealer_contacts"></p>
+                <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
+        </div>
+    </div>
 <script>
     jQuery(document).ready(function()
     {
+        jQuery('#dealer_contacts').mask('+7(999) 999-9999');
         jQuery('body').on('click', 'tr', function(e)
         {
-
             if(jQuery(this).data('href')!=""){
                 document.location.href = jQuery(this).data('href');
             } 
+        });
+
+        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+            var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+            if (!div3.is(e.target) // если клик был не по нашему блоку
+                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+                jQuery("#close4-tar").hide();
+                jQuery("#modal-window-container").hide();
+                jQuery("#modal-window-1-tar").hide();
+            }
+        });
+
+        jQuery("#new_dealer").click(function(){
+            jQuery("#close4-tar").show();
+            jQuery("#modal-window-container").show();
+            jQuery("#modal-window-1-tar").show("slow");
         });
     });
 </script>
