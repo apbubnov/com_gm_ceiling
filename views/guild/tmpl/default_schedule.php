@@ -214,7 +214,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
             Day = $(day),
             Month = Day.closest(".Month");
-      
+
+
         ModalDay.find(".Title").text(Day.attr("day") + " " + Month.attr("modalname") + " " + Month.attr("year") + "г.");
 
         var day = Day.attr("day"),
