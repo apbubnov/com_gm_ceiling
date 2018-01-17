@@ -4765,7 +4765,6 @@ class Gm_ceilingHelpersGm_ceiling
                                 $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
                             }
                         }
-                        
                     }
                 }
                 //для вывода монтажной бригады в личном кабинете монтажной бригады
