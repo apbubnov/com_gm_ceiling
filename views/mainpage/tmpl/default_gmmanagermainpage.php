@@ -33,12 +33,16 @@ $answer4 = $model->getDataByStatus("Zvonki", $userId, $date);
 // пропущенные
 $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
 $answer6 = $model->getDataByStatus("MissedCalls");
-var_dump($answer5);
-var_dump($answer6);
-$result = array_diff($answer5, $answer6);
-//echo count($result);
-//var_dump($result);
-
+$missAnswer1 = [];
+$missAnswer2 = [];
+foreach ($answer5 as $value) {
+	array_push($missAnswer1, $value->id);
+}
+foreach ($answer6 as $value) {
+	array_push($missAnswer2, $value->call_id);
+}
+var_dump($missAnswer1);
+var_dump($missAnswer2);
 //--------------------------------------
 ?>
 
