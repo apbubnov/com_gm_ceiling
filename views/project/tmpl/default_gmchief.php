@@ -319,19 +319,20 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                 <a class="btn btn-primary"
                                    href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить
                                     расчет</a>
-                                <? if (!empty($filename)):?>
+                                <? if (!empty($filename)): ?>
                                     <div class="sketch_image_block">
                                         <h3 class="section_header">
                                             Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
                                         </h3>
                                         <div class="section_content">
-                                            <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+                                            <img class="sketch_image" src="<?php echo $filename . '?t=' . time(); ?>"
+                                                 style="width:80vw;"/>
                                         </div>
                                     </div>
                                 <? endif; ?>
                                 <div class="row-fluid">
                                     <div class="span6">
-                                        <?if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                                        <? if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
                                             <h4>Материал</h4>
                                             <div>
                                                 Тип потолка: <?php echo $calculation->n1; ?>
@@ -347,8 +348,9 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                                 <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
                                                 <?php $color = $color_model->getData($calculation->color); ?>
                                                 <div>
-                                                    Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
-                                                                                                   alt=""/>
+                                                    Цвет: <?php echo $color->colors_title; ?> <img
+                                                            src="/<?php echo $color->file; ?>"
+                                                            alt=""/>
                                                 </div>
                                             <?php } ?>
                                             <h4>Размеры помещения</h4>
@@ -358,21 +360,23 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                             <div>
                                                 Периметр, м: <?php echo $calculation->n5; ?>
                                             </div>
-                                            <?php if ($calculation->n6 > 0) {?>
+                                            <?php if ($calculation->n6 > 0) { ?>
                                                 <div>
                                                     <h4> Вставка</h4>
                                                 </div>
-                                                <? if ($calculation->n6 == 314) {?>
-                                                    <div> Белая </div>
-                                                <?php } else  {?>
+                                                <? if ($calculation->n6 == 314) { ?>
+                                                    <div> Белая</div>
+                                                <?php } else { ?>
                                                     <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
                                                     <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
                                                     <div>
-                                                        Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>"
-                                                                                                         alt=""/>
+                                                        Цветная : <?php echo $color_1[0]->title; ?> <img
+                                                                style='width: 50px; height: 30px;'
+                                                                src="/<?php echo $color_1[0]->file; ?>"
+                                                                alt=""/>
                                                     </div>
-                                                <?php }?>
-                                            <?} endif; ?>
+                                                <?php } ?>
+                                            <? } endif; ?>
                                         <?php if ($calculation->n16) { ?>
                                             <div>
                                                 Скрытый карниз: <?php echo $calculation->n16; ?>
@@ -407,7 +411,7 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                                 ?>
                                             <?php }
                                         } ?>
-                                        <?php if ($calculation->n27> 0) { ?>
+                                        <?php if ($calculation->n27 > 0) { ?>
                                             <h4>Шторный карниз</h4>
                                             <? if ($calculation->n16) echo "Скрытый карниз"; ?>
                                             <? if (!$calculation->n16) echo "Обычный карниз"; ?>
@@ -446,84 +450,85 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                             <?php }
                                         } ?>
                                         <h4>Прочее</h4>
-                                        <?php if ($calculation->n9> 0) { ?>
+                                        <?php if ($calculation->n9 > 0) { ?>
                                             <div>
                                                 Углы, шт.: <?php echo $calculation->n9; ?>
                                             </div>
                                         <?php } ?>
-                                        <?php if ($calculation->n10> 0) { ?>
+                                        <?php if ($calculation->n10 > 0) { ?>
                                             <div>
                                                 Криволинейный вырез, м: <?php echo $calculation->n10; ?>
                                             </div>
                                         <?php } ?>
-                                        <?php if ($calculation->n11> 0) { ?>
+                                        <?php if ($calculation->n11 > 0) { ?>
                                             <div>
                                                 Внутренний вырез, м: <?php echo $calculation->n11; ?>
                                             </div>
                                         <?php } ?>
-                                        <?php if ($calculation->n7> 0) { ?>
+                                        <?php if ($calculation->n7 > 0) { ?>
                                             <div>
                                                 Крепление в плитку, м: <?php echo $calculation->n7; ?>
                                             </div>
                                         <?php } ?>
-                                        <?php if ($calculation->n8> 0) { ?>
+                                        <?php if ($calculation->n8 > 0) { ?>
                                             <div>
                                                 Крепление в керамогранит, м: <?php echo $calculation->n8; ?>
                                             </div>
                                         <?php } ?>
-                                        <?php if ($calculation->n17> 0) { ?>
+                                        <?php if ($calculation->n17 > 0) { ?>
                                             <div>
                                                 Закладная брусом, м: <?php echo $calculation->n17; ?>
                                             </div>
                                         <?php } ?>
-                                        <?php if ($calculation->n19> 0) { ?>
+                                        <?php if ($calculation->n19 > 0) { ?>
                                             <div>
                                                 Провод, м: <?php echo $calculation->n19; ?>
                                             </div>
                                         <?php } ?>
-                                        <?php if ($calculation->n20> 0) { ?>
+                                        <?php if ($calculation->n20 > 0) { ?>
                                             <div>
                                                 Разделитель, м: <?php echo $calculation->n20; ?>
                                             </div>
                                         <?php } ?>
-                                        <?php if ($calculation->n21> 0) { ?>
+                                        <?php if ($calculation->n21 > 0) { ?>
                                             <div>
                                                 Пожарная сигнализация, м: <?php echo $calculation->n21; ?>
                                             </div>
                                         <?php } ?>
 
-                                        <?php if ($calculation->dop_krepezh> 0) { ?>
+                                        <?php if ($calculation->dop_krepezh > 0) { ?>
                                             <div>
                                                 Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
                                             </div>
                                         <?php } ?>
 
-                                        <?php if ($calculation->n24> 0) { ?>
+                                        <?php if ($calculation->n24 > 0) { ?>
                                             <div>
                                                 Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
                                             </div>
                                         <?php } ?>
 
-                                        <?php if ($calculation->n30> 0) { ?>
+                                        <?php if ($calculation->n30 > 0) { ?>
                                             <div>
                                                 Парящий потолок, м: <?php echo $calculation->n30; ?>
                                             </div>
                                         <?php } ?>
-                                        <?php if ($calculation->n32> 0) { ?>
+                                        <?php if ($calculation->n32 > 0) { ?>
                                             <div>
                                                 Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                                             </div>
                                         <?php } ?>
-                                        <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
-                                        <?php if (!empty($extra_mounting) ) { ?>
+                                        <? $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
+                                        <?php if (!empty($extra_mounting)) { ?>
                                             <div>
                                                 <h4>Дополнительные работы</h4>
-                                                <? foreach($extra_mounting as $dop) {
-                                                    echo "<b>Название:</b> " . $dop->title .  "<br>";
-                                                }?>
+                                                <? foreach ($extra_mounting as $dop) {
+                                                    echo "<b>Название:</b> " . $dop->title . "<br>";
+                                                } ?>
                                             </div>
                                         <?php } ?>
                                     </div>
+                                </div>
                             </div>
                         <?php } ?>
 
