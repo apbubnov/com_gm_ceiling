@@ -984,7 +984,6 @@ class Gm_ceilingModelCalculations extends JModelList {
                 $who = 0;
             }
 
-            
             $query->select('projects.project_info, projects.project_calculation_date, projects.project_calculator')
                 ->from('#__gm_ceiling_projects as projects')
                 ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")

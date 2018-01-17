@@ -67,7 +67,7 @@ foreach ($brigade_id as $value) {
 
 ?>
 
-<?=parent::getButtonBack();?>
+<!-- <?=parent::getButtonBack();?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/teams/tmpl/css/style.css" type="text/css" />
 
@@ -742,4 +742,4 @@ foreach ($brigade_id as $value) {
 	});
 
 
-</script>
+</script> -->
