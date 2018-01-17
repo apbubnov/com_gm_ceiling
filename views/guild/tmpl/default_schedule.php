@@ -57,14 +57,29 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         </div>
     </div>
 </div>
-<div class="InfoBlock">
-    <div class="InfoBName">Подробная информация - <span></span></div>
+<div class="InfoBlock" day="<?=date("d");?>" month="<?=date("m");?>" year="<?=date("Y");?>">
+    <div class="InfoBName">Подробная информация - <span class="InfoBDate"><?=date("d");?>.<?=date("m");?>.<?=date("Y");?></span></div>
     <div class="Block">
-        <div class="Big">
-            
-        </div>
-        <div class="Info">
+        <div class="Schedule">
 
+        </div>
+        <div class="BigData">
+            <div class="Employee">
+                <div class="EmployeeName">Петя</div>
+                <div class="EmployeeTime">
+                    <div class="TimeName">Время работы ~ 8 часов</div>
+                    <div class="TimeList">
+                        <div class="TimeItem">11:30-19:30</div>
+                    </div>
+                </div>
+                <div class="EmployeeSalaries">
+                    <div class="SalariesName">Заработок за день ~ 80000 руб.</div>
+                    <div class="SalariesList">
+                        <div class="SalariesItem">Охуенный потолок 25000 руб.</div>
+                        <div class="SalariesItem">Хуевый потолок 55000 руб.</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -73,7 +88,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <div class="ModalDay">
         <div class="Title"></div>
         <div class="Actions">
-            <button type="button" class="ShowBigInfo">
+            <button type="button" class="ShowBigInfo" onclick="setBigDataEmployees();">
                 <i class="fa fa-info-circle" aria-hidden="true"></i> Подробнее
             </button>
         </div>
@@ -148,6 +163,71 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         Data.ModalDay.find(".Cancel").attr("onclick", "hideAddForm(this);");
 
         InitCalendarFunction();
+        getBigDataEmployees();
+    }
+
+    function getBigDataEmployees() {
+        var InfoBlock = $(".InfoBlock"),
+            Schedule = InfoBlock.find(".Schedule"),
+            day = InfoBlock.attr("day"),
+            month = InfoBlock.attr("month"),
+            year = InfoBlock.attr("year");
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getData",
+            data: {Day: day, Month: month, Year: year, Type: ["Employee", "Working"]},
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+
+                Schedule.empty();
+                $.each(data.Working, function (key, value) {
+                    var Employee = Data.Employee.clone();
+
+                    Employee.find(".time").text(value.time);
+                    Employee.find(".name").text(value.user.name);
+                    Employee.attr("id", value.id);
+                    if (value.action === "0") Employee.addClass("Out"); else Employee.addClass("In");
+
+                    Schedule.prepend(Employee);
+                });
+
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: data.status,
+                    text: data.message
+                });
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+
+        hideModalCalendar();
+    }
+
+    function setBigDataEmployees() {
+        Data.InfoBlock = $(".InfoBlock");
+
+        var day = Data.ModalDay.attr("day"),
+            month = Data.ModalDay.attr("month"),
+            year = Data.ModalDay.attr("year");
+
+        Data.InfoBlock.attr({"day":day, "month":month, "year":year});
+        Data.InfoBlock.find(".InfoBDate").text(day+"."+month+"."+year);
+        getBigDataEmployees();
     }
 
     function InitCalendarFunction() {
@@ -316,21 +396,23 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             minute = Form.find("[name='minute']").val(),
             day = Data.ModalDay.attr("day"),
             month = Data.ModalDay.attr("month"),
-            year = Data.ModalDay.attr("year");
+            year = Data.ModalDay.attr("year"),
+            status = null;
 
         jQuery.ajax({
             type: 'POST',
             url: "/index.php?option=com_gm_ceiling&task=guild.setWorking",
-            data: {user_id: user_id, date: year+"."+month+"."+day+" "+hour+":"+minute+":00", action: action},
+            data: {user_id: user_id, date: year+"-"+month+"-"+day+" "+hour+":"+minute+":00", action: action},
             cache: false,
             async: false,
             success: function (data) {
                 data = JSON.parse(data);
+                status = data.status;
 
                 noty({
                     theme: 'relax',
                     layout: 'center',
-                    timeout: 50000,
+                    timeout: 1500,
                     type: data.status,
                     text: data.message
                 });
@@ -350,7 +432,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
 
         getWorkingDay(Data.ModalDay.attr("dayid"));
-        hideAddForm();
+        if (status !== "error") hideAddForm();
     }
 
 </script>

@@ -120,6 +120,10 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         $Type = $app->input->get('Type', null, 'string');
 
+        if (gettype($Type) != "array")
+            $Type = [$Type];
+
+
         $DateStart = $app->input->get('DateStart', null, 'string');
         $DateEnd = $app->input->get('DateEnd', null, 'string');
         $Date = $app->input->get('Date', null, 'string');
@@ -133,30 +137,55 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
         $data = (object) [];
 
         if (!empty($DateStart))
-            $data->DateStart = date("Y.m.d H:i:s", strtotime($DateStart));
+            $data->DateStart = $DateStart;
+
         if (!empty($DateEnd))
-            $data->DateEnd = date("Y.m.d H:i:s", strtotime($DateEnd));
+            $data->DateEnd = $DateEnd;
+
         if (!empty($Date))
         {
-            $day = date("d", strtotime($Date));
-            $month = date("m", strtotime($Date));
-            $year = date("Y", strtotime($Date));
+            $Date = DateTime::createFromFormat("Y-m-d H:i:s", $Date);
 
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
+            $day = $Date->format("d");
+            $month = $Date->format("m");
+            $year = $Date->format("Y");
+
+            $day = intval($day);
+            $month = intval($month);
+            $year = intval($year);
+
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
         }
         if (!empty($Day) || !empty($Month) || !empty($Year))
         {
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, $Month, $Day, $Year));
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, $Month, $Day + 1, $Year));
+            $Day = intval($Day);
+            $Month = intval($Month);
+            $Year = intval($Year);
+
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $Month, $Day, $Year));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $Month, $Day + 1, $Year));
         }
         if (!empty($User))
             $data->user_id = $User;
 
         $model = $this->getModel();
 
-        if ($Type == "Working") die(json_encode($model->getWorking($data)));
-        else if ($Type == "Employee") die(json_encode($model->getBigDataEmployees($data)));
+        $answer = [];
+
+        if (in_array("Working", $Type)) $answer["Working"] = $model->getWorking($data);
+        if (in_array("Employee", $Type)) $answer["Employee"] = $model->getBigDataEmployees($data);
+
+        if (count($answer) == 1)
+            foreach ($answer as $a) $answer = $a;
+        else
+        {
+            $answer = json_decode(json_encode($answer));
+            $answer->status = "success";
+            $answer->message = "Данные успешно получены";
+        }
+
+        die(json_encode($answer));
     }
 
     public function setWorking()
