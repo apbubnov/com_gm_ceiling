@@ -31,8 +31,10 @@ class Gm_ceilingModelCashbox extends JModelList
 				$date1 = date('Y-m-01');
 				$date2 = date('Y-m-t'); 
 			}
-			$query->select('p.id')
+			$query
 				->select('p.closed')
+				->select('p.id')
+				->select('s.title as status')
 				->select('u.name')
 				->select('p.new_project_sum')
 				->select('p.new_mount_sum')
@@ -40,13 +42,13 @@ class Gm_ceilingModelCashbox extends JModelList
 				->select('p.new_material_sum')
 				->select('p.new_project_mounting')
 				->select('p.check_mount_done as `done`')
-				->select('s.title as status')
+				
 				->from('#__gm_ceiling_projects as p')
 				->innerJoin('#__users as u ON p.project_mounter = u.id')
 				->innerJoin('#__gm_ceiling_status as s on p.project_status = s.id')
 				->where("p.project_status in (12,17) and p.closed between '$date1' and '$date2'");
 			$db->setQuery($query);
-			$items = $db->loadObjectList();
+			$items1 = $db->loadObjectList();
 			$encashment_model = Gm_ceilingHelpersGm_ceiling::getModel('Encashment');
 			$encashments = $encashment_model->getData($date1,$date2);
 			$new_encash = [];
@@ -67,18 +69,44 @@ class Gm_ceilingModelCashbox extends JModelList
 				array_push($new_encash,(object)$el);
 			}
 
-			$items = array_merge($items,$new_encash);
+			$items1 = array_merge($items1,$new_encash);
 
-			for($i=0; $i<count($items); $i++){
-				for($j=$i+1; $j<count($items); $j++){
-					if(strtotime($items[$i]->closed)>strtotime($items[$j]->closed)){
-						$temp = $items[$j];
-						$items[$j] = $items[$i];
-						$items[$i] = $temp;
+			for($i=0; $i<count($items1); $i++){
+				for($j=$i+1; $j<count($items1); $j++){
+					if(strtotime($items1[$i]->closed)>strtotime($items1[$j]->closed)){
+						$temp = $items1[$j];
+						$items1[$j] = $items1[$i];
+						$items1[$i] = $temp;
 					}
 			   }         
 			}
-			return $items;
+			
+		 	$items = [];
+			for($i=0; $i<count($items1); $i++){
+				$new_el['closed']=$items1[$i]->closed;
+				$new_el['id'] = $items1[$i]->id;
+				$new_el['status'] = $items1[$i]->status;
+
+				$new_el['name'] = $items1[$i]->name;
+				$new_el['new_project_sum'] = $items1[$i]->new_project_sum;
+				$new_el['new_mount_sum'] = $items1[$i]->new_mount_sum;
+				if($items1[$i]->done!=1&&$items1[$i]->project_status != 12){
+					$new_el['not_issued'] =  $items1[$i]->new_mount_sum - $items1[$i]->new_project_mounting;
+				}
+				else
+				{
+					$new_el['not_issued'] = 0;
+				}
+				$new_el['new_material_sum'] = $items1[$i]->new_material_sum;
+				$new_el['residue'] = $items1[$i]->new_project_sum - $items1[$i]->new_mount_sum -$items1[$i]->new_material_sum;
+				$new_el['cashbox'] += $new_el['residue'] - $encash;
+				$encash = 0;
+				$encash = $items1[$i]->sum;
+				$new_el['sum'] = $items1[$i]->sum;
+				array_push($items,(object)$new_el);
+			}
+			return $items; 
+
 		}
 		catch(Exception $e)
         {

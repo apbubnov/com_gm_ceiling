@@ -14,6 +14,7 @@ $userId     = $user->get('id');
 
 $api_phone_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $phones = $api_phone_model->getArrayNumbers();
+$items = json_encode($this->item);
 ?>
 <form>
     <a class="btn btn-large btn-primary"
@@ -49,7 +50,8 @@ $phones = $api_phone_model->getArrayNumbers();
 </form>
 
 <script>
-
+    var obr_calls = JSON.parse('<?php echo $items; ?>');
+    console.log(obr_calls);
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
     var phones = <?php echo json_encode($phones);?>;
@@ -83,31 +85,48 @@ $phones = $api_phone_model->getArrayNumbers();
     }
     function show_calls(data)
     {
+        var call_bool = false;
         jQuery("#empty").hide();
         jQuery('#callbacksList').show();
         jQuery('#callbacksList tbody').empty();
          for(var i=0;i<data.length;i++) {
-            jQuery('#callbacksList').append('<tr data-href=""></tr>');
-            for(var j=0;j<Object.keys(data[i]).length;j++){
-                if(Object.keys(data[i])[j]=='businessNumber'){
-                    data[i][Object.keys(data[i])[j]] = phones[data[i][Object.keys(data[i])[j]].replace('+','')];
-                }
-                if(Object.keys(data[i])[j]=='from'){
-                    data[i][Object.keys(data[i])[j]] = data[i][Object.keys(data[i])[j]].replace('+','');
-                    getClient(data[i][Object.keys(data[i])[j]]);
-                    if(client)
+            call_bool = false;
+            for(var key in obr_calls)
+            {
+                if(data[i].id == obr_calls[key].call_id)
+                {
+                    call_bool = true;
+                    break;
+                } 
+            }
+            if (!call_bool)
+            {
+                jQuery('#callbacksList').append('<tr data-href=""></tr>');
+                for(var j=0;j<Object.keys(data[i]).length;j++){
+                    if(Object.keys(data[i])[j]=='businessNumber'){
+                        data[i][Object.keys(data[i])[j]] = phones[data[i][Object.keys(data[i])[j]].replace('+','')];
+                    }
+                    if(Object.keys(data[i])[j]=='from'){
+                        data[i][Object.keys(data[i])[j]] = data[i][Object.keys(data[i])[j]].replace('+','');
+                        getClient(data[i][Object.keys(data[i])[j]]);
+                        if(client)
+                        {
+                            data[i][Object.keys(data[i])[j]] = client['client_name']+"/"+data[i][Object.keys(data[i])[j]];
+                            jQuery('#callbacksList > tbody > tr:last').attr('data-href','index.php?option=com_gm_ceiling&view=clientcard&id='+client['id']);
+                        }
+                    }
+                    if(Object.keys(data[i])[j]=='dateTimeUtc'){
+                        date_t = new Date(data[i][Object.keys(data[i])[j]]);
+                        data[i][Object.keys(data[i])[j]] = formatDate(date_t);
+                    }
+                    if(Object.keys(data[i])[j]=='businessNumber' || Object.keys(data[i])[j]=='dateTimeUtc'||Object.keys(data[i])[j]=='from'||Object.keys(data[i])[j]=='participants'){ 
+                        jQuery('#callbacksList > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+                    }
+                    if(Object.keys(data[i])[j]=='id')
                     {
-                        data[i][Object.keys(data[i])[j]] = client['client_name']+"/"+data[i][Object.keys(data[i])[j]];
-                        jQuery('#callbacksList > tbody > tr:last').attr('data-href','index.php?option=com_gm_ceiling&view=clientcard&id='+client['id']);
+                        jQuery('#callbacksList > tbody > tr:last').attr('id',data[i][Object.keys(data[i])[j]]);
                     }
                 }
-                if(Object.keys(data[i])[j]=='dateTimeUtc'){
-                    date_t = new Date(data[i][Object.keys(data[i])[j]]);
-                    data[i][Object.keys(data[i])[j]] = formatDate(date_t);
-                }
-                if(Object.keys(data[i])[j]=='businessNumber' || Object.keys(data[i])[j]=='dateTimeUtc'||Object.keys(data[i])[j]=='from'||Object.keys(data[i])[j]=='participants'){ 
-                    jQuery('#callbacksList > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
-                }   
             } 
         } 
     }
@@ -190,43 +209,68 @@ $phones = $api_phone_model->getArrayNumbers();
 
         jQuery('body').on('click', 'tr', function(e)
         {
-
-            if(jQuery(this).data('href')!=""){
-                document.location.href = jQuery(this).data('href');
+            var suc = false;
+            var call_id = this.id;
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=missed_calls.addObrCall",
+                data: {
+                    call_id: call_id
+                },
+                success: function(data){
+                    suc = true;
+                },
+                dataType: "text",
+                async: false,
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });
+            if (suc)
+            {
+                if(jQuery(this).data('href')!=""){
+                    document.location.href = jQuery(this).data('href');
+                }
+                else{
+                    console.log(jQuery(this)[0].childNodes[1].innerText);
+                    pt = get_number(jQuery(this)[0].childNodes[1].innerText);
+                    pf = jQuery(this)[0].childNodes[0].innerText;
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: "index.php?option=com_gm_ceiling&task=create_empty_project",
+                        data: {
+                            client_id: 1
+                        },
+                        success: function(data){
+                            
+                            data = JSON.parse(data);
+                            url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
+                            location.href =url;
+                        },
+                        dataType: "text",
+                        async: false,
+                        timeout: 10000,
+                        error: function(data){
+                            var n = noty({
+                                timeout: 2000,
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Ошибка. Сервер не отвечает"
+                            });
+                        }                   
+                    });  
+                }
             }
-            else{
-                console.log(jQuery(this)[0].childNodes[1].innerText);
-                pt = get_number(jQuery(this)[0].childNodes[1].innerText);
-                pf = jQuery(this)[0].childNodes[0].innerText;
-                 jQuery.ajax({
-                    type: 'POST',
-                    url: "index.php?option=com_gm_ceiling&task=create_empty_project",
-                    data: {
-                        client_id: 1
-                    },
-                    success: function(data){
-                        
-                        data = JSON.parse(data);
-                        url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
-                        location.href =url;
-                    },
-                    dataType: "text",
-                    async: false,
-                    timeout: 10000,
-                    error: function(data){
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка при создании заказа. Сервер не отвечает"
-                        });
-                    }                   
-                });  
-            }
-            
-            
         });
     });
 </script>

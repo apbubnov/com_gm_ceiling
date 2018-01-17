@@ -60,7 +60,12 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
 //--------------------------------------
 
 ?>
-<h2><?php echo $user->name; ?></h2>
+
+<div class="form-group">
+<h2 style = "display:inline-block;"><?php echo $user->name; ?></h2> <?php if($user->dealer_type!=2){?>
+<button id="toProfile" class = "btn btn-primary" style = "diaplay:inline-block;"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
+<?php }?>
+</div>
 
 <div class="start_page">
     <?php if ($userId == 1 || $userId == 2): ?>
@@ -277,6 +282,9 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                 }
             });
         });
+        jQuery("#toProfile").click(function(){
+		location.href = "index.php?option=com_gm_ceiling&view=dealerprofile";
+	    });
         jQuery("#new_msrmnt_btn").click(function () {
             location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>";
         });

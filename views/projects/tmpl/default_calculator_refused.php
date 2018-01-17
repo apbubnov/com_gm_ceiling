@@ -110,7 +110,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						if(in_array("16",$groups)){
 					?>
 						<td class="center one-touch">
-							<?php echo $item->dealer_id; ?>
+							<?php echo $item->dealer_name; ?>
 						</td>
 					<?php } ?>
 				</tr>

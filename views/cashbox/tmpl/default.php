@@ -116,16 +116,8 @@ $year = date("Y");
                     </td>
                     <td>
                         <?php
-                            if($item->done!=1&&$item->project_status != 12){
-                                $not_issued =  $item->new_mount_sum - $item->new_project_mounting;
-                                
-                            }
-                            else
-                            {
-                                $not_issued = 0;
-                            }
-                            $all_not_issued +=$not_issued;
-                            echo $not_issued;
+        
+                            echo $item->not_issued;
                         ?>
                     </td>
                     <td>
@@ -208,30 +200,31 @@ $year = date("Y");
         jQuery("#save").click(function(){
             id = <?php echo $userId;?>;
             jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=saveEncashment",
-            async: false,
-            data: {
-                sum: jQuery("#sum").val(),
-                id: id
-            },
-            success: function (data) {
-                window.location = window.location;
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function () {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка cервер не отвечает"
-                });
-            }
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=saveEncashment",
+                async: false,
+                data: {
+                    sum: jQuery("#sum").val(),
+                    id: id
+                },
+                success: function (data) {
+                    window.location = window.location;
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка cервер не отвечает"
+                    });
+                }
+            });
         });
-        });
+        
         month_old = 0;
         year_old = 0;
         jQuery("#next").click(function () {
@@ -250,7 +243,7 @@ $year = date("Y");
             month_old = month;
             year_old = year;
             update_month_year(month,year);  
-            console.log(month,year);          
+            getCashboxByDate(month,year);        
         });
         jQuery("#prev").click(function () {
             month = <?php echo $month; ?>;
@@ -268,10 +261,41 @@ $year = date("Y");
             month_old = month;
             year_old = year;
             update_month_year(month,year);
-            console.log(month,year);
+            getCashboxByDate(month,year);
+        });
+        jQuery("#month").change(function() {
+            var month = this.value;
+            var year = jQuery("#year").text();
+            getCashboxByDate(month,year);
         });
         
     });
+    function getCashboxByDate(month,year){
+        jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=getCashboxByMonth",
+                async: false,
+                data: {
+                    month: month,
+                    year: year
+                },
+                success: function (data) {
+                   fill_table(JSON.parse(data));
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка cервер не отвечает"
+                    });
+                }
+            });
+    }
     function update_month_year(month,year){
         jQuery("#month option").each(function()
         {
@@ -280,5 +304,71 @@ $year = date("Y");
             }
         });
         jQuery("#year").text(year); 
+    }
+    function fill_table(data){
+        console.log(data);
+        all_not_issued = 0;
+        cashbox=0;
+        jQuery('#cashbox_table tbody').empty();
+        for(var i=0;i<data.length;i++) {
+            jQuery("#cashbox_table").append('<tr></tr>');
+            for(var j=0;j<Object.keys(data[i]).length;j++){
+                if(data[i][Object.keys(data[i])[j]]!=null){
+                    if(Object.keys(data[i])[j]=="closed"){
+                        if(data[i][Object.keys(data[i])[j]].search(':')!=-1){
+                            flag = 1;
+                        }
+                        else{
+                            flag = 0;
+                        }
+                        data[i][Object.keys(data[i])[j]] = formatDate(new Date(data[i][Object.keys(data[i])[j]]),flag);
+                    }
+                    jQuery('#cashbox_table > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+                    if(Object.keys(data[i])[j]=="cashbox"){
+                        cashbox = data[i][Object.keys(data[i])[j]];
+                    }
+                    if(Object.keys(data[i])[j]=="not_issued"){
+                        all_not_issued += data[i][Object.keys(data[i])[j]];
+                    }
+                }
+                else{
+                    jQuery('#cashbox_table > tbody > tr:last').append('<td> </td>');
+                }
+            }
+        }
+
+        jQuery("#cashbox_table").append('<tr></tr>');
+        jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Итого в кассе:<b></td><td>'+cashbox+'</td>');
+        jQuery("#cashbox_table").append('<tr></tr>');
+        jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Недовыдано:<b></td><td>'+all_not_issued+'</td>');
+        jQuery("#cashbox_table").append('<tr></tr>');
+        jQuery('#cashbox_table > tbody > tr:last').append('<td style = "text-align:right" colspan = "10"> <b> Остаток:<b></td><td>'+(cashbox-all_not_issued)+'</td>');
+
+    }
+    function formatDate(date,flag) {
+        var dd = date.getDate();
+        if (dd < 10) dd = '0' + dd;
+
+        var mm = date.getMonth() + 1;
+        if (mm < 10) mm = '0' + mm;
+
+        var yy = date.getFullYear();
+        if (yy < 10) yy = '0' + yy;
+
+        if(flag == 1){
+            var hh = date.getHours();
+            if (hh < 10) hh = '0' + hh;
+
+            var ii = date.getMinutes();
+            if (ii < 10) ii = '0' + ii;
+
+            var ss = date.getSeconds();
+            if (ss < 10) ss = '0' + ss;
+
+            return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
+        }
+        else{
+            return dd + '.' + mm + '.' + yy;
+        }
     }
 </script>

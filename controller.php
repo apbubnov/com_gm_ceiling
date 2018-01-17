@@ -2499,10 +2499,11 @@ class Gm_ceilingController extends JControllerLegacy
                 $filter = $jinput->get('filter','','STRING');
             }
             $date2 =  date('Y-m-d', strtotime($date . ' +1 day'));
+            $date =  date('Y-m-d', strtotime($date . ' -7 day'));
             $token = json_decode(self::getAuthToken())->access_token;
             $curl = curl_init(); // Инициализируем запрос
             curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.yandex.mightycall.ru/api/v2/calls?callFilter=$filter&startUtc=$date&endUtc=$date2", // Полный адрес метода
+                CURLOPT_URL => "https://api.yandex.mightycall.ru/api/v2/calls?callFilter=$filter&startUtc=$date&endUtc=$date2&pageSize=1000", // Полный адрес метода
                 CURLOPT_RETURNTRANSFER => true, // Возвращать ответ
                 CURLOPT_HTTPHEADER => array(
                     'Authorization : bearer '.$token

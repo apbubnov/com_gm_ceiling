@@ -245,6 +245,17 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             else
 			if($client_id == 1 && $isDiscountChange == 0)
 			{
+				$model_clients_phones = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+				$result = $model_clients_phones->getItemsByPhoneNumber($number);
+				if (empty($result)) {
+					//если нет такого клиента
+				}
+				else{
+					//если клиент уже сохранен ранее
+				}
+				
+				$model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
+				$result_client = $model_client->getClientById($result->client_id);
 				//создание клиента
 				$client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
 				$client_data['client_name'] = $name;
@@ -260,8 +271,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 // добавление проекта к откатнику
 				if($api_phone_id == 17)
 				{
-					$client_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
-					$client_model->save($recoil,$project_id,0);
+					$rec_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
+					$rec_model->save($recoil,$project_id,0);
 				}
 				//добавление его номеров телефонов в бд
 				$cl_phones_model->save($client_id,$phones);
@@ -349,8 +360,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					}
                     if($api_phone_id == 17)
                     {
-                        $client_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
-                        $client_model->save($recoil,$project_id,0);
+                        $rec_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
+                        $rec_model->save($recoil,$project_id,0);
                     }
 					$rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
 					$rep_proj = $rep_model->getDataByProjectId($project_id);

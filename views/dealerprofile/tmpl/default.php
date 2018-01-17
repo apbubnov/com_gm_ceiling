@@ -1,0 +1,380 @@
+<?php
+/**
+ * @version    CVS: 1.0.0
+ * @package    Com_Gm_ceiling
+ * @author     Mikhail "Spectral Eye" Vinyukov <vms@itctl.ru>
+ * @copyright  2016 Mikhail "Spectral Eye" Vinyukov
+ * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ */
+// No direct access
+defined('_JEXEC') or die;
+
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+
+$user       = JFactory::getUser();
+$userId     = $user->get('id');
+$model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+$margin = $model_dealer_info->getData();
+$model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+$mount = $model_mount->getDataAll();
+
+?>
+
+<form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
+	<h2>
+		Редактирование маржинальности и прайса монтажа
+	</h2>
+
+	<div class = "col-md-4">
+	<div class="control-group">
+			<div class="control-label">
+				<label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >Маржинальность на полотна</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo $margin->dealer_canvases_margin ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">Маржинальность на комплектующие</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo $margin->dealer_components_margin ?> class="required"style="width:100%;" size="3" required aria-required="true" />	
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">Маржинальность на монтаж</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo $margin->dealer_mounting_margin ?> class="required" style="width:100%;"size="3" required aria-required="true" />				
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp1-lbl" for="jform_mp1" >	Монтаж</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp1]" id="jform_mp1" value=<?php echo $mount->mp1 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp31-lbl" for="jform_mp31" >	Монтаж, если выбран потолочный багет</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp31]" id="jform_mp31" value=<?php echo $mount->mp31 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp32-lbl" for="jform_mp32" >	Монтаж, если выбран алюминиевый багет</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp32]" id="jform_mp32" value=<?php echo $mount->mp32 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp2-lbl" for="jform_mp2">Люстра планочная</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp2]" id="jform_mp2" value=<?php echo $mount->mp2 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp3-lbl" for="jform_mp3" >	Люстра большая</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp3]" id="jform_mp3" value=<?php echo $mount->mp3 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp4-lbl" for="jform_mp4" class="hasTooltip required">	Установка светильников</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp4]" id="jform_mp4" value=<?php echo $mount->mp4 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp5-lbl" for="jform_mp5" >	Светильники квадратные</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp5]" id="jform_mp5" value=<?php echo $mount->mp5 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp6-lbl" for="jform_mp6" >Пожарная сигнализация</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp6]" id="jform_mp6" value=<?php echo $mount->mp6 ?> class="required" style="width:100%;" size="3" required aria-required="true" />			
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp7-lbl" for="jform_mp7">Обвод трубы D > 120мм</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp7]" id="jform_mp7" value=<?php echo $mount->mp7 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp8-lbl" for="jform_mp8" >	Обвод трубы D < 120мм</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp8]" id="jform_mp8" value=<?php echo $mount->mp8 ?> class="required" style="width:100%;" size="3" required aria-required="true" />			
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp9-lbl" for="jform_mp9" >Брус-разделитель, брус-отбойник</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp9]" id="jform_mp9" value=<?php echo $mount->mp9 ?> class="required" style="width:100%;" size="3" required aria-required="true" />			
+			</div>
+		</div>
+	</div>
+	<div class = "col-md-4">
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp10-lbl" for="jform_mp10" >Вставка</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp10]" id="jform_mp10" value=<?php echo $mount->mp10 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp11-lbl" for="jform_mp11" >Шторный карниз на полотно</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp11]" id="jform_mp11" value=<?php echo $mount->mp11 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp12-lbl" for="jform_mp12" >Установка электровытяжки</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp12]" id="jform_mp12" value=<?php echo $mount->mp12 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp13-lbl" for="jform_mp13" >Крепление в плитку</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp13]" id="jform_mp13" value=<?php echo $mount->mp13 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp14-lbl" for="jform_mp14" >Крепление в керамогранит</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp14]" id="jform_mp14" value=<?php echo $mount->mp14 ?> class="required"  style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp15-lbl" for="jform_mp15" >Усиление стен</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp15]" id="jform_mp15" value=<?php echo $mount->mp15 ?> class="required" style="width:100%;" size="3" required aria-required="true" />					
+				</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp16-lbl" for="jform_mp16" >Установка вентиляции</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp16]" id="jform_mp16" value=<?php echo $mount->mp16 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp17-lbl" for="jform_mp17" >Сложность доступа</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp17]" id="jform_mp17" value=<?php echo $mount->mp17 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp18-lbl" for="jform_mp18" >Дополнительный монтаж</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp18]" id="jform_mp18" value=<?php echo $mount->mp18 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp19-lbl" for="jform_mp19" >Установка диффузора </label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp19]" id="jform_mp19" value=<?php echo $mount->mp19 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp22-lbl" for="jform_mp22" >Внутренний вырез для ПВХ </label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp22]" id="jform_mp22" value=<?php echo $mount->mp22 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp23-lbl" for="jform_mp23" >Переход уровня по прямой </label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp23]" id="jform_mp23" value=<?php echo $mount->mp23 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp24-lbl" for="jform_mp24" >Переход уровня по кривой </label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp24]" id="jform_mp24" value=<?php echo $mount->mp24 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp25-lbl" for="jform_mp25" >Переход уровня по прямой с нишей </label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp25]" id="jform_mp25" value=<?php echo $mount->mp25 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		
+	</div>
+	<div class = "col-md-4">
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp26-lbl" for="jform_mp26" >Переход уровня по кривой с нишей </label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp26]" id="jform_mp26" value=<?php echo $mount->mp26 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp27-lbl" for="jform_mp27" >Слив воды </label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp27]" id="jform_mp27" value=<?php echo $mount->mp27 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp30-lbl" for="jform_mp30" >Парящий потолок</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp30]" id="jform_mp30" value=<?php echo $mount->mp30 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp33-lbl" for="jform_mp33" >Монтаж (ткань) </label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp33]" id="jform_mp33" value=<?php echo $mount->mp33 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp34-lbl" for="jform_mp34" >Установка люстры (ткань)</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp34]" id="jform_mp34" value=<?php echo $mount->mp34 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp36-lbl" for="jform_mp36" >Установка светильников (ткань)</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp36]" id="jform_mp36" value=<?php echo $mount->mp36 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp37-lbl" for="jform_mp37" >Светильники квадратные (ткань)</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp37]" id="jform_mp37" value=<?php echo $mount->mp37 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp38-lbl" for="jform_mp38" >Пожарная сигнализация (ткань)</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp38]" id="jform_mp38" value=<?php echo $mount->mp38 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp40-lbl" for="jform_mp40" >Обвод трубы D < 120мм (ткань)</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp40]" id="jform_mp40" value=<?php echo $mount->mp40 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp41-lbl" for="jform_mp41" >Шторный карниз на полотно (ткань)</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp41]" id="jform_mp41" value=<?php echo $mount->mp41 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp42-lbl" for="jform_mp42" >Установка вентиляции (ткань)</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp42]" id="jform_mp42" value=<?php echo $mount->mp42 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp43-lbl" for="jform_mp43" >Обработка каждого угла (ткань)</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp43]" id="jform_mp43" value=<?php echo $mount->mp43 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_transport-lbl" for="jform_transport" >Транспортные расходы</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[transport]" id="jform_transport" value=<?php echo $mount->transport ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_distance-lbl" for="jform_distance" >Выезд за город</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[distance]" id="jform_distance" value=<?php echo $mount->distance ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+	</div>
+	<div  class = "col-md-12" style="margin-top:15px;">
+		<div  class = "col-md-4">
+		</div>
+		<div  class = "col-md-4">
+			<button class="btn btn-primary" style="width:100%;"> Сохранить </button>
+		</div>
+	</div>	
+</form>

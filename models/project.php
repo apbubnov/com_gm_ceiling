@@ -1538,6 +1538,7 @@ class Gm_ceilingModelProject extends JModelItem
 				->where('a.id = ' . $data->id);
 			$db->setQuery($query);
 			$results = $db->loadObject();
+			
 			if(empty($results->dealer_id)) $results->dealer_id = 1;
 			$query = $db->getQuery(true);
 			$query
