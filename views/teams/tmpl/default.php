@@ -22,7 +22,7 @@ $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
 $brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 
-// календарь
+ // календарь
 $month1 = date("n");
 $year1 = date("Y");
 if ($month1 == 12) {

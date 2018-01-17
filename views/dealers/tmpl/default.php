@@ -89,5 +89,32 @@ $result_users = $users_model->getDealers();
             jQuery("#modal-window-container").show();
             jQuery("#modal-window-1-tar").show("slow");
         });
+
+        jQuery("#save_dealer").click(function(){
+             jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=dealer.create_dealer",
+                data: {
+                    fio: document.getElementById('fio_dealer').value,
+                    phone: document.getElementById('dealer_contacts').value
+                },
+                success: function(data){
+                    location.href = location.href;
+                },
+                dataType: "text",
+                async: false,
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });
+        });
     });
 </script>
