@@ -2672,6 +2672,7 @@ class Gm_ceilingController extends JControllerLegacy
     }
 
     public function createPdfs(){
+        try{
         $jinput = JFactory::getApplication()->input;
         $project_id = $jinput->get('id','','INT');
         $proj_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
@@ -2941,6 +2942,13 @@ class Gm_ceilingController extends JControllerLegacy
             $filename = md5($project->id . "-10") . ".pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($array_html, $sheets_dir . $filename, "A4");
         }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }
 
 ?>
