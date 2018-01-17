@@ -592,6 +592,7 @@ foreach ($brigade_id as $value) {
 									status = "Монтаж недовыполнен";
 								} else if (element.project_status == 12) {
 									status = "Заказ закрыт";
+									
 								}
 								if (element.read_by_mounter == 0) {
 									status += " / Не прочитан";

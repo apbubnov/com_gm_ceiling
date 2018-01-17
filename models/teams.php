@@ -164,6 +164,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 				->order('projects.project_mounting_date');
 			$db->setQuery($query);
 			$items = $db->loadObjectList(); 
+			
 
 			$query4->select("date_from, date_to")
 				->from('#__gm_ceiling_day_off')
