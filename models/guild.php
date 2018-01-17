@@ -196,10 +196,10 @@ class Gm_ceilingModelGuild extends JModelList
         $db = $this->getDbo();
 
         if (empty($data->DateStart))
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
         if (empty($data->DateEnd))
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
 
         $employees = (empty($data->user_id))?$this->getEmployees():[$data->user_id => $this->getEmployees($data->user_id)];
 
@@ -234,8 +234,8 @@ class Gm_ceilingModelGuild extends JModelList
                 {
                     $TempWT->End = $work->date;
 
-                    $Start = DateTime::createFromFormat("Y.m.d H:i:s", $TempWT->Start);
-                    $End = DateTime::createFromFormat("Y.m.d H:i:s", $TempWT->End);
+                    $Start = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->Start);
+                    $End = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End);
 
                     $hours = $End->format("H") - $Start->format("H");
                     $minute = $End->format("i") - $Start->format("i");
@@ -254,8 +254,8 @@ class Gm_ceilingModelGuild extends JModelList
                 $TempWT = $WorkingTimes[count($WorkingTimes) - 1];
                 $TempWT->End = $data->DateEnd;
 
-                $Start = DateTime::createFromFormat("Y.m.d H:i:s", $TempWT->Start);
-                $End = DateTime::createFromFormat("Y.m.d H:i:s", $TempWT->End);
+                $Start = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->Start);
+                $End = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End);
 
                 $hours = $End->format("H") - $Start->format("H");
                 $minute = $End->format("i") - $Start->format("i");
@@ -358,20 +358,20 @@ class Gm_ceilingModelGuild extends JModelList
 
         if (isset($data->Date))
         {
-            $Date = DateTime::createFromFormat("Y.m.d H:i:s", $data->Date);
+            $Date = DateTime::createFromFormat("Y-m-d H:i:s", $data->Date);
 
             $year = $Date->format("Y");
             $month = $Date->format("m");
             $day = $Date->format("d");
 
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
         }
         if (empty($data->DateStart))
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
         if (empty($data->DateEnd))
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
 
         $db = $this->getDbo();
 
@@ -391,7 +391,7 @@ class Gm_ceilingModelGuild extends JModelList
 
         foreach ($working as $key => $work)
         {
-            $Date = DateTime::createFromFormat("Y.m.d H:i:s", $work->date);
+            $Date = DateTime::createFromFormat("Y-m-d H:i:s", $work->date);
 
             $time = $Date->format("H:i");
 
@@ -434,10 +434,10 @@ class Gm_ceilingModelGuild extends JModelList
         if (empty($data)) $data = (object) [];
 
         if (empty($data->DateStart))
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
         if (empty($data->DateEnd))
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
 
         $db = $this->getDbo();
 

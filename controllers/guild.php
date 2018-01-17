@@ -140,19 +140,19 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         if (!empty($Date))
         {
-            $Date = DateTime::createFromFormat("Y.m.d H:i:s", $Date);
+            $Date = DateTime::createFromFormat("Y-m-d H:i:s", $Date);
 
             $day = $Date->format("d");
             $month = $Date->format("m");
-            $year = $Date->format("y");
+            $year = $Date->format("Y");
 
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
         }
         if (!empty($Day) || !empty($Month) || !empty($Year))
         {
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, $Month, $Day, $Year));
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, $Month, $Day + 1, $Year));
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $Month, $Day, $Year));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $Month, $Day + 1, $Year));
         }
         if (!empty($User))
             $data->user_id = $User;
