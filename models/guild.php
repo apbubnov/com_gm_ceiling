@@ -331,21 +331,26 @@ class Gm_ceilingModelGuild extends JModelList
     {
         if (empty($data)) $data = (object) [];
 
-        if (!empty($data->Date))
+        if (isset($data->Date))
         {
-            $year = date("Y", strtotime($data->Date));
-            $month = date("m", strtotime($data->Date));
-            $day = date("d", strtotime($data->Date));
+            $year = intval(substr($data->Date, 0, 4));
+            $month = intval(substr($data->Date, 5, 2));
+            $day = intval(substr($data->Date, 8, 2));
 
             $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
             $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
         }
+
+        print_r($data);
 
         if (empty($data->DateStart))
             $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
         if (empty($data->DateEnd))
             $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+
+        print_r($data);
+        exit();
 
         $db = $this->getDbo();
 
