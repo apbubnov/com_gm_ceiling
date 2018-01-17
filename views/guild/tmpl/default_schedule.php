@@ -73,7 +73,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <div class="ModalDay">
         <div class="Title"></div>
         <div class="Actions">
-            <button type="button" class="ShowBigInfo">
+            <button type="button" class="ShowBigInfo" onclick="setBigDataEmployees();">
                 <i class="fa fa-info-circle" aria-hidden="true"></i> Подробнее
             </button>
         </div>
@@ -148,6 +148,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         Data.ModalDay.find(".Cancel").attr("onclick", "hideAddForm(this);");
 
         InitCalendarFunction();
+        getBigDataEmployees();
     }
 
     function getBigDataEmployees() {
@@ -166,7 +167,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             success: function (data) {
                 data = JSON.parse(data);
 
-                console.log(data);
+                Schedule.empty();
                 $.each(data.Working, function (key, value) {
                     var Employee = Data.Employee.clone();
 
@@ -198,6 +199,17 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 });
             }
         });
+    }
+
+    function setBigDataEmployees() {
+        Data.InfoBlock = $(".InfoBlock");
+
+        var day = Data.ModalDay.attr("day"),
+            month = Data.ModalDay.attr("month"),
+            year = Data.ModalDay.attr("year");
+
+        Data.InfoBlock.attr({"day":day, "month":month, "year":year});
+        getBigDataEmployees();
     }
 
     function InitCalendarFunction() {

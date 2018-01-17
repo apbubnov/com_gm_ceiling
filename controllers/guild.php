@@ -171,13 +171,16 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         $model = $this->getModel();
 
-        $answer = [];
+        $answer = (object)[];
 
-        if (in_array("Working", $Type)) $answer["Working"] = $model->getWorking($data);
-        if (in_array("Employee", $Type)) $answer["Employee"] = $model->getBigDataEmployees($data);
+        if (in_array("Working", $Type)) $answer->Working = $model->getWorking($data);
+        if (in_array("Employee", $Type)) $answer->Employee = $model->getBigDataEmployees($data);
 
         if (count($answer) == 1)
             foreach ($answer as $a) $answer = $a;
+
+        $answer->status = "success";
+        $answer->message = "Данные успешно получены";
 
         die(json_encode($answer));
     }
