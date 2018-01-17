@@ -57,13 +57,13 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         </div>
     </div>
 </div>
-<div class="InfoBlock">
-    <div class="InfoBName">Подробная информация - <span></span></div>
+<div class="InfoBlock" day="<?=date("d");?>" month="<?=date("m");?>" year="<?=date("Y");?>">
+    <div class="InfoBName">Подробная информация - <span class="InfoBDate"></span></div>
     <div class="Block">
-        <div class="Big">
-            
+        <div class="Schedule">
+
         </div>
-        <div class="Info">
+        <div class="BigData">
 
         </div>
     </div>
@@ -148,6 +148,45 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         Data.ModalDay.find(".Cancel").attr("onclick", "hideAddForm(this);");
 
         InitCalendarFunction();
+    }
+
+    function getBigDataEmployees() {
+        var InfoBlock = $(".InfoBlock"),
+            Schedule = InfoBlock.find(".Schedule"),
+            day = InfoBlock.attr("day"),
+            month = InfoBlock.attr("month"),
+            year = InfoBlock.attr("year");
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getData",
+            data: {day: day, month: month, year: year, Type: "Employee"},
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: data.status,
+                    text: data.message
+                });
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
     }
 
     function InitCalendarFunction() {
@@ -316,7 +355,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             minute = Form.find("[name='minute']").val(),
             day = Data.ModalDay.attr("day"),
             month = Data.ModalDay.attr("month"),
-            year = Data.ModalDay.attr("year");
+            year = Data.ModalDay.attr("year"),
+            status = null;
 
         jQuery.ajax({
             type: 'POST',
@@ -326,11 +366,12 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             async: false,
             success: function (data) {
                 data = JSON.parse(data);
+                status = data.status;
 
                 noty({
                     theme: 'relax',
                     layout: 'center',
-                    timeout: 50000,
+                    timeout: 1500,
                     type: data.status,
                     text: data.message
                 });
@@ -350,7 +391,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
 
 
         getWorkingDay(Data.ModalDay.attr("dayid"));
-        hideAddForm();
+        if (status !== "error") hideAddForm();
     }
 
 </script>
