@@ -2764,8 +2764,183 @@ class Gm_ceilingController extends JControllerLegacy
             }
         } 
        Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
-    }
+       
+            
+            $sum = 0;
+            $data->id = $project->id;
+            $data->transport = $project->transport;
+            $data->distance = $project->distance;
+            $distance_col = $project->distance_col;
+            $data->distance_col = $distance_col ;
+            
+            $model_project = Gm_ceilingHelpersGm_ceiling::getModel('Project');
+            $res = $model_project->transport($data);
+            $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info');
+            if(empty($res->user_id)) $res->user_id = 1;
+            $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
+           
+            if($res) {
+                if($data->transport == 1) { $transport_sum = Gm_ceilingHelpersGm_ceiling::margin1($res->transport * $distance_col, $margin);
+                $transport_sum_1 = $res->transport * $distance_col;
+                }
+                elseif($data->transport == 2) {
+                    $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
+                    $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
+                    if($transport_sum < Gm_ceilingHelpersGm_ceiling::margin1($res->transport, $margin))
+                      { 
+                          $transport_sum = Gm_ceilingHelpersGm_ceiling::margin1($res->transport, $margin);
+                          $transport_sum_1 = $res->transport;
+                      }  
+                }
+                else { $transport_sum = 0; $transport_sum_1 = 0; } 
+            }
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('Big_smeta');
+            if(!empty($calculations) {
+                
+                
+                $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+                $html = ' <h1>Номер договора: ' . $project->id . '</h1><br>';
+                $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
+                $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
+                $html .= '<table border="0" cellspacing="0" width="100%">
+                <tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
+                //написать модель, которая будет возвращать данные о калькуляции
+                foreach ($calculations as $calc) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $calc->calculation_title . '</td>';
+                    $html .= '<td class="center">' . $calc->n4 . '</td>';
+                    $html .= '<td class="center">' . $calc->n5 . '</td>';
+                    $html .= '<td class="center">' . round($POST['calculation_total_discount'][ $calc->id], 2) . '</td>';
+                    $html .= '</tr>';
+                    $sum += $POST['calculation_total_discount'][ $calc->id];
+                }
+                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
+                $html .= '</tbody></table><p>&nbsp;</p><br>';
+    
+            }
+            
+            $html .= '<h2>Транспортные расходы: </h2>';
+            $html .= '<table border="0" cellspacing="0" width="100%">
+			<tbody><tr><th>Вид транспорта</th><th class="center">Кол-во км<sup>2</sup>.</th><th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th></tr>';
+                if($project->transport == '2' ) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . 'Выезд за город' . '</td>';
+                    $html .= '<td class="center">' . $project->distance . '</td>';
+                    $html .= '<td class="center">' .$project->distance_col . '</td>';
+                    $html .= '<td class="center">' . $transport_sum . '</td>';
+                    $html .= '</tr>';
+                }
+                elseif($project->transport == '1' ) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . 'Транспорт по городу' . '</td>';
+                    $html .= '<td class="center"> - </td>';
+                    $html .= '<td class="center">' . $project->distance_col . '</td>';
+                    $html .= '<td class="center">' . $transport_sum . '</td>';
+                    $html .= '</tr>';
+                }
+                elseif($project->transport == '0' ) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . 'Без транспорта' . '</td>';
+                    $html .= '<td class="center"> - </td>';
+                    $html .= '<td class="center"> - </td>';
+                    $html .= '<td class="center"> 0 </td>';
+                    $html .= '</tr>';
+                }
 
+            $html .= '</tbody></table><p>&nbsp;</p>';
+            $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport_sum + $sum, 2) . ' руб.</div>';
+
+            $array_html = array();
+            $array_html[] = $html;
+
+            foreach ($calculations as $calc) {
+
+               $patch = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($calc . "-0-0") . ".pdf";
+               $array_html[] = $patch;
+            }
+            //print_r($components_data); exit;
+            $filename = md5($project->id . "-9") . ".pdf";
+            Gm_ceilingHelpersGm_ceiling::save_pdf($array_html, $sheets_dir . $filename, "A4");
+
+
+             $mount = $model_project->getMount($project->id);
+             if(!empty($mount->id)) $mount_name = $model_project->getMounterBrigade($mount->id);
+            //смета по монтажным работам
+            $html = ' <h1>Номер договора: ' . $project->id . '</h1><br>';
+            $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
+            if(!empty($mount->name)) $html .= '<h2>Монтажная бригада: ' . $mount->name . '</h2>';
+             if (isset($mount_name)) {
+                    $html .= "<h2>Состав монтажной бригады: </h2>";
+                    foreach ($mount_name AS $k => $value) {
+                        $html .= $value->name . (($k < count($mount_name) - 1) ? " , " : " ");
+                    }
+                    $html .= "<br>";
+                   // foreach($mount_name as $value) $html .= $value->name." ,";
+                    
+                   
+                }
+            if(!empty($calculations)) {
+                $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
+                $html .= '<table border="0" cellspacing="0" width="100%">
+                <tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
+                //написать модель, которая будет возвращать данные о калькуляции
+                foreach ($calculations as $calc) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $calc->calculation_title . '</td>';
+                    $html .= '<td class="center">' . $calc->n4 . '</td>';
+                    $html .= '<td class="center">' . $calc->n5 . '</td>';
+                    $html .= '<td class="center">' . $calc->mounting_sum . '</td>';
+                    $html .= '</tr>';
+                    $sum_1 += $calc->mounting_sum;
+                }
+                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum_1 . '</th></tr>';
+                $html .= '</tbody></table><p>&nbsp;</p><br>';
+
+            }
+          
+            $html .= '<h2>Транспортные расходы: </h2>';
+            $html .= '<table border="0" cellspacing="0" width="100%">
+			<tbody><tr><th>Вид транспорта</th><th class="center">Кол-во км<sup>2</sup>.</th><th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th></tr>';
+                if($project->transport == '2' ) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . 'Выезд за город' . '</td>';
+                    $html .= '<td class="center">' . $project->distance . '</td>';
+                    $html .= '<td class="center">' . $project->distance_col . '</td>';
+                    $html .= '<td class="center">' . $transport_sum_1 . '</td>';
+                    $html .= '</tr>';
+                }
+                elseif($project->transport == '1' ) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . 'Транспорт по городу' . '</td>';
+                    $html .= '<td class="center"> - </td>';
+                    $html .= '<td class="center">' .$project->distance_col . '</td>';
+                    $html .= '<td class="center">' . $transport_sum_1 . '</td>';
+                    $html .= '</tr>';
+                }
+                elseif($project->transport == '0' ) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . 'Без транспорта' . '</td>';
+                    $html .= '<td class="center"> - </td>';
+                    $html .= '<td class="center"> - </td>';
+                    $html .= '<td class="center"> 0 </td>';
+                    $html .= '</tr>';
+                }
+
+            $html .= '</tbody></table><p>&nbsp;</p>';
+            $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport_sum_1 + $sum_1, 2) . ' руб.</div>';
+
+            $array_html = array();
+            $array_html[] = $html;
+
+            foreach ($calculations as $calc) {
+
+               $patch = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($calc . "-2") . ".pdf";
+               $array_html[] = $patch;
+            }
+            //print_r($components_data); exit;
+            $filename = md5($project->id . "-10") . ".pdf";
+            Gm_ceilingHelpersGm_ceiling::save_pdf($array_html, $sheets_dir . $filename, "A4");
+        }
 }
 
 ?>
