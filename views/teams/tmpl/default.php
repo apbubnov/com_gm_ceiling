@@ -7,7 +7,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // No direct access
-defined('_JEXEC') or die;
+/*defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
@@ -22,7 +22,7 @@ $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
 $brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 
-/* // календарь
+ // календарь
 $month1 = date("n");
 $year1 = date("Y");
 if ($month1 == 12) {
