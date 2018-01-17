@@ -62,6 +62,8 @@ foreach ($gaugers_id as $value) {
 				<td>День занят полностью</td>
 				<td><img src="components/com_gm_ceiling/views/gaugers/tmpl/images/d3d3f9.png" alt="Голубой"></td>
 				<td>Есть замеры в этот день</td>
+				<td><img src="components/com_gm_ceiling/views/gaugers/tmpl/images/9e9e9e.png" alt="Серый"></td>
+				<td>Замер был выполнен</td>
 				<td><img src="components/com_gm_ceiling/views/gaugers/tmpl/images/digits.png" alt="Выходной"></td>
 				<td>Выходные часы</td>
 			</tr>
