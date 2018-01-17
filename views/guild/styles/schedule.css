@@ -154,7 +154,6 @@ h1
     width: calc(100% - 2px);
     height: auto;
     max-height: calc(100vh - 120px);
-    min-height: 75px;
     float: left;
     margin: 0 1px;
     box-shadow: inset 0 1px 0 0 #4e4cb7;
@@ -334,11 +333,10 @@ h1
 
 .InfoBlock .Block .Schedule
 {
-    width: calc(100% - 2px);
+    width: 30%;
     height: auto;
     line-height: normal;
     float: left;
-    margin: 0 1px;
     box-shadow: inset 0 1px 0 0 #4e4cb7;
     overflow-y: auto;
     overflow-x: hidden;
@@ -378,6 +376,35 @@ h1
 {
     content: '-';
     margin: 0 5px;
+}
+
+.InfoBlock .BigData
+{
+    width: 70%;
+    height: auto;
+    line-height: normal;
+    float: left;
+}
+
+.InfoBlock .BigData .Employee
+{
+    float: left;
+    width: 100%;
+    height: auto;
+    box-shadow: 0 1px 0 0 #4e4cb7;
+}
+
+.InfoBlock .BigData .Employee .EmployeeName
+{
+    float: left;
+    text-align: left;
+    padding: 0 30px;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    background-color: #00c685;
+    color: #4e4cb7;
+    font-size: 16px;
 }
 
 @media (max-width: 1200px) {

@@ -58,13 +58,28 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     </div>
 </div>
 <div class="InfoBlock" day="<?=date("d");?>" month="<?=date("m");?>" year="<?=date("Y");?>">
-    <div class="InfoBName">Подробная информация - <span class="InfoBDate"></span></div>
+    <div class="InfoBName">Подробная информация - <span class="InfoBDate"><?=date("d");?>.<?=date("m");?>.<?=date("Y");?></span></div>
     <div class="Block">
         <div class="Schedule">
 
         </div>
         <div class="BigData">
-
+            <div class="Employee">
+                <div class="EmployeeName">Петя</div>
+                <div class="EmployeeTime">
+                    <div class="TimeName">Время работы ~ 8 часов</div>
+                    <div class="TimeList">
+                        <div class="TimeItem">11:30-19:30</div>
+                    </div>
+                </div>
+                <div class="EmployeeSalaries">
+                    <div class="SalariesName">Заработок за день ~ 80000 руб.</div>
+                    <div class="SalariesList">
+                        <div class="SalariesItem">Охуенный потолок 25000 руб.</div>
+                        <div class="SalariesItem">Хуевый потолок 55000 руб.</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -199,6 +214,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 });
             }
         });
+
+        hideModalCalendar();
     }
 
     function setBigDataEmployees() {
@@ -209,6 +226,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             year = Data.ModalDay.attr("year");
 
         Data.InfoBlock.attr({"day":day, "month":month, "year":year});
+        Data.InfoBlock.find(".InfoBDate").text(day+"."+month+"."+year);
         getBigDataEmployees();
     }
 

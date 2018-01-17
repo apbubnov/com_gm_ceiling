@@ -255,12 +255,14 @@ class Gm_ceilingModelGuild extends JModelList
                 $TempWT->End = $data->DateEnd;
 
                 $TStart = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->Start);
-                $TEnd = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End);
+                $TEnd = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End)->modify("+1 second");
+                $TempWT->End = $TEnd->format("Y-m-d H:i:s");
 
+                $day = $TEnd->format("d") - $TStart->format("d");
                 $hours = $TEnd->format("H") - $TStart->format("H");
                 $minute = $TEnd->format("i") - $TStart->format("i");
 
-                $hours += ceil(floatval($minute) / 60.0 * 100) / 100;
+                $hours += (floatval($day)*24.0) + ceil(floatval($minute) / 60.0 * 100) / 100;
 
                 $TempWT->Time = $hours;
                 $WorkingTime += $hours;
