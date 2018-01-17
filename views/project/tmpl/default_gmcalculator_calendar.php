@@ -944,6 +944,7 @@ $results = $db->loadObjectList();
             <a class="btn btn-primary"
                 href="index.php?option=com_gm_ceiling&view=calculationform&type=gmcalculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить
                 расчет</a>
+            <? if (!empty($filename)):?>
             <div class="sketch_image_block">
                 <h3 class="section_header">
                     Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
@@ -952,6 +953,7 @@ $results = $db->loadObjectList();
                     <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
                 </div>
             </div>
+            <? endif; ?>
             <div class="row-fluid">
                 <div class="span6">
                     <?if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
