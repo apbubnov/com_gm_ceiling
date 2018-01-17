@@ -441,22 +441,7 @@
                 var pt = "<?php echo $phoneto; ?>";
                 var pf = "<?php echo $phonefrom; ?>";
                 var call_id = <?php echo $call_id; ?>;
-                if (pt === "" || pf === "")
-                {
-                    if (call_id === 0)
-                    {
-                        url = '/index.php?option=com_gm_ceiling&view=clientcard&id=' + id_client;
-                    }
-                    else
-                    {
-                        url = '/index.php?option=com_gm_ceiling&view=clientcard&id=' + id_client + '&call_id=' + call_id;
-                    }
-                }
-                else
-                {
-                    url = '/index.php?option=com_gm_ceiling&view=clientcard&id=' + id_client + '&phoneto=' + pt + '&phonefrom=' + pf;
-                }
-                setTimeout(function(){location.href = url;}, 1000);
+                setTimeout(function(){location.href = location.href;}, 1000);
             },
             error: function (data) {
                 console.log(data);
