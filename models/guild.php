@@ -384,6 +384,9 @@ class Gm_ceilingModelGuild extends JModelList
         $getWorking = $this->getWorking((object) ["user_id" => $data->user_id, "Date" => $data->date]);
         $countWorking = count($getWorking);
 
+        print_r($getWorking);
+        print_r($countWorking);
+
         if (($countWorking < 1 && $data->action == 0) || ($getWorking[$countWorking - 1]->action == 0 && $data->action == 0))
             throw new Exception("Невозможно добавить выход работника, когда он еще не пришел!");
         else if ($countWorking > 0 && $getWorking[$countWorking - 1]->action == 1 && $data->action == 1)
