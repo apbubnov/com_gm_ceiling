@@ -86,6 +86,7 @@ class Gm_ceilingControllerAddProject extends Gm_ceilingController
 			$dealer_mounting_margin = $dealer_info_model->getMargin('dealer_mounting_margin',$user->dealer_id);
 			$project_model = $this->getModel('ProjectForm', 'Gm_ceilingModel');
 			$project_data = array();
+			$client_data = array();
 			
 			
 			if($data['client_id']==0)// если новый клиент создаем нового клиента
