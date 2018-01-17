@@ -100,13 +100,13 @@ echo parent::getButtonBack();
                 <td>
                     <?php
                         $c_all_sum +=round($item->sum,2);
-                        echo round($item->sum,2);
+                        echo floor($item->sum);
                     ?>
                 </td>
                 <td>
                     <?php
                         $c_all_profit +=round($item->profit,2);
-                        echo round($item->profit,2); 
+                        echo floor($item->profit); 
                     ?>
                 </td>
 				<td>
@@ -126,7 +126,7 @@ echo parent::getButtonBack();
 				<td><b><?php echo $c_all_deals;?></b></td>
                 <td><b><?php echo $c_all_done;?></b></td>
                 <td><b><?php echo $c_all_sum;?></b></td>
-                <td><b><?php echo $c_all_profit; ?></b></td>
+                <td><b><?php echo floor($c_all_profit); ?></b></td>
 			</tr>
 	</table>
 </form>
