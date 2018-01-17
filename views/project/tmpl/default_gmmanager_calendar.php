@@ -1116,8 +1116,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                         </div>
                     <?php } ?>-->
 
-
-
                     <?php if ($calculation->n12) { ?>
                         <h4>Установка люстры</h4>
                         <?php echo $calculation->n12; ?> шт.
