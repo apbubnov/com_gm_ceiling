@@ -41,8 +41,10 @@ foreach ($answer5 as $value) {
 foreach ($answer6 as $value) {
 	array_push($missAnswer2, $value->call_id);
 }
-var_dump($missAnswer1);
-var_dump($missAnswer2);
+count($missAnswer1);
+count($missAnswer2);
+$answer7 = array_diff($missAnswer1, $missAnswer2);
+var_dump($answer7);
 //--------------------------------------
 ?>
 
