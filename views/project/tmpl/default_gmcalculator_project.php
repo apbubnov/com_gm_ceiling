@@ -481,7 +481,6 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                         </div>
                     <?php } ?>
                 </div>
-            </div>
         <?php } ?>
         <?php } ?>
     </div>
