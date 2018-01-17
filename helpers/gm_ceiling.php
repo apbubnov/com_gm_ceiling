@@ -4726,6 +4726,9 @@ class Gm_ceilingHelpersGm_ceiling
                                         if ($value[2] == 11) {
                                             $DayMounters[$r] = "green";
                                         }
+                                        if ($value[2] == 12) {
+                                            $DayMounters[$r] = "blue";
+                                        }
                                     }
                                 }
                             }
@@ -4753,14 +4756,14 @@ class Gm_ceilingHelpersGm_ceiling
                             $table .= '<td class="day-underfulfilled" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                         } else if ($DayMounters[$j - $first_day_of_week + 1] == "green") {
                             $table .= '<td class="day-complite" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                        } else if ($DayMounters[$j - $first_day_of_week + 1] == "blue") {
+                            $table .= '<td class="old-project" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                         } else {
-                          
                             if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
                                 $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
                             } else {
                                 $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
                             }
-                          
                         }
                     }
                 }
