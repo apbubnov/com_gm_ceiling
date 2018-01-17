@@ -399,9 +399,9 @@ foreach ($brigade_id as $value) {
 			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
 			legenda += '<td>Монтаж выполнен</td>';
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
+			legenda += '<td>Заказ закрыт</td></tr>';
+			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/digits.png" alt="Выходной"></td>';
 			legenda += '<td>Выходные часы</td></tr>';
-			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/d3d3f9.png" alt="Голубой"></td>';
-			legenda += '<td>Монтаж выполнен</td></tr>';
 			jQuery("#button-prev").css({"width":"25px"});
 			jQuery("#prev-button-container").css({"left":"0px"});
 			jQuery("#button-next").css({"width":"25px"});
@@ -419,9 +419,9 @@ foreach ($brigade_id as $value) {
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
 			legenda += '<td>Монтаж выполнен</td>';
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
-			legenda += '<td>Выходные часы</td>';
-			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/d3d3f9.png" alt="Голубой"></td>';
 			legenda += '<td>Монтаж выполнен</td></tr>';
+			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/digits.png" alt="Выходной"></td>';
+			legenda += '<td>Выходные часы</td>';
 			jQuery("#legenda").append(legenda);
 		}
 		// -------------------------------
@@ -592,7 +592,6 @@ foreach ($brigade_id as $value) {
 									status = "Монтаж недовыполнен";
 								} else if (element.project_status == 12) {
 									status = "Заказ закрыт";
-									
 								}
 								if (element.read_by_mounter == 0) {
 									status += " / Не прочитан";
