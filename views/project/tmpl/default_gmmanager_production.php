@@ -492,28 +492,13 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                             </table>
                         </div>
                     </div>
-                       <!-- <div class="radio-toolbar-two">
-
-                            <input type="radio" id="radio4" name="radios-two" value="all" checked>
-                            <label for="radio4">16 ГБ</label>
-
-                            <input type="radio" id="radio5" name="radios-two"value="false">
-                            <label for="radio5">32 ГБ</label>
-
-                            <input type="radio" id="radio6" name="radios-two" value="true">
-                            <label for="radio6">64 ГБ</label>
-
-                            <input type="radio" id="radio7" name="radios-two" value="true">
-                            <label for="radio7">128 ГБ</label>
-
-                        </div> -->
-                        <label ><b>Предоставление личного кабиента</b></label>
-                            <br>
-                            <div class="radio-group">
-                            <input id='no' class='' type='radio' name='client_lk' value='0' <?php if(!$lk) echo checked ?>>
-                            <label for='no'>Убрать</label>
-                            <input id='yes' class='' type='radio' name='client_lk' value='1' <?php if($lk) echo checked ?>>
-                            <label class='' for='yes'>Предоставить</label>
+                    <label ><b>Предоставление личного кабиента</b></label>
+                    <br>
+                    <div class="radio-group">
+                        <input id='no' class='' type='radio' name='client_lk' value='0' <?php if(!$lk) echo checked ?>>
+                        <label for='no'>Убрать</label>
+                        <input id='yes' class='' type='radio' name='client_lk' value='1' <?php if($lk) echo checked ?>>
+                        <label class='' for='yes'>Предоставить</label>
                     </div>
             </div>
             <table class="table calculation_sum">
@@ -542,7 +527,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 </tr>
                 </tbody>
             </table>
-            <!--</form>-->
         </div>
     </div>
     </div>
@@ -1215,20 +1199,11 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             <table>
                 <tr>
                     <td>
-                        <a class="btn  btn-primary" id="rec_to_measurement">
-                            Записать на замер
+                        <a class="btn  btn-primary" id="run_in_production">
+                            Запустить в производство
                         </a>
                     </td>
-                    <td>
-                        <a class="btn  btn-danger" id="refuse_project">
-                            Отказ от замера
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn  btn-primary" id="refuse_partnership">
-                            Отказ от сотрудничества с ГМ
-                        </a>
-                    </td>
+                    
                 </tr>
                 <tr>
                     <td colspan=3>
@@ -1935,8 +1910,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
         });
 
-        jQuery("#rec_to_measurement").click(function () {
-            jQuery("#project_status").val(1);
+        jQuery("#run_in_production").click(function () {
+            jQuery("#project_status").val(5);
             jQuery("#call").toggle();
         });
         jQuery("#refuse_partnership").click(function () {
