@@ -57,6 +57,17 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         </div>
     </div>
 </div>
+<div class="InfoBlock">
+    <div class="InfoBName">Подробная информация - <span></span></div>
+    <div class="Block">
+        <div class="Big">
+            
+        </div>
+        <div class="Info">
+
+        </div>
+    </div>
+</div>
 <div class="ModalCalendar">
     <div class="Dark" onclick="hideModalCalendar();"></div>
     <div class="ModalDay">
