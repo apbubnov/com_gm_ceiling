@@ -79,6 +79,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		</thead>
 		<tbody>
 			<?php foreach ($this->items as $i => $item) : ?>
+				<? if($item->project_calculator == $userId) : ?>
 				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
 
 				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
@@ -123,6 +124,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					<?php } ?>
 				</tr>
 				<?php } ?>
+					<?php endif; ?>
 			<?php endforeach; ?>
 		</tbody>
 	</table>
