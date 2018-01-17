@@ -15,12 +15,13 @@ $userId     = $user->get('id');
 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
 $result_users = $users_model->getDealers();
 ?>
-<form>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Дилеры</h2>
-    
+    <div style="width: 100%; text-align: center;">
+        <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
+    </div>
     <table class="table table-striped one-touch-view" id="callbacksList">
         <thead>
         <tr>
@@ -50,14 +51,23 @@ $result_users = $users_model->getDealers();
         	?>
         </tbody>
     </table>
-</form>
-
+    <div id="modal-window-container">
+        <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="modal-window-1-tar">
+                <p><strong>Создание нового дилера</strong></p>
+                <p>ФИО:</p>
+                <p><input type="text" id="fio_dealer"></p>
+                <p>Номер телефона:</p>
+                <p><input type="text" id="dealer_contacts"></p>
+                <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
+        </div>
+    </div>
 <script>
     jQuery(document).ready(function()
     {
+        jQuery('#dealer_contacts').mask('+7(999) 999-9999');
         jQuery('body').on('click', 'tr', function(e)
         {
-
             if(jQuery(this).data('href')!=""){
                 document.location.href = jQuery(this).data('href');
             } 
