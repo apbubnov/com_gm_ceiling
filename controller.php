@@ -2516,7 +2516,6 @@ class Gm_ceilingController extends JControllerLegacy
             
             if(!empty($flag)){
                 $response = json_decode($response);                
-                //return(count($response->data->calls));
                 return($response->data->calls);
             }
             else{
