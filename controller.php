@@ -2811,9 +2811,9 @@ class Gm_ceilingController extends JControllerLegacy
                     $html .= '<td>' . $calc->calculation_title . '</td>';
                     $html .= '<td class="center">' . $calc->n4 . '</td>';
                     $html .= '<td class="center">' . $calc->n5 . '</td>';
-                    $html .= '<td class="center">' . round($POST['calculation_total_discount'][ $calc->id], 2) . '</td>';
+                    $html .= '<td class="center">' . 0 . '</td>';
                     $html .= '</tr>';
-                    $sum += $POST['calculation_total_discount'][ $calc->id];
+                    $sum +=0;
                 }
                 $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
                 $html .= '</tbody></table><p>&nbsp;</p><br>';
