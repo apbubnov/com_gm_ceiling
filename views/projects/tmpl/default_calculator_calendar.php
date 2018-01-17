@@ -75,9 +75,8 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         <? foreach ($this->items as $i => $item) : ?>
         
         <?
-        if(in_array("22", $groups) || in_array("14", $groups) || in_array("12", $groups)) :
-        if (in_array("22", $groups) && $item->project_calculator != $userId) continue;
-        else if (!in_array("14", $groups)) continue;
+        if (in_array("21", $groups) && $item->project_calculator != $userId) continue;
+        else if (!in_array("14", $groups) && $item->dealer_id != $userId ) continue;
         else if (in_array("12", $groups) && $item->who_calculate != 0) continue;
         ?>
 
@@ -100,7 +99,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <td class="center one-touch"><?= $item->dealer_name; ?></td>
                 <?endif;?>
             </tr>
-            <?endif;?>
         <? endforeach; ?>
         </tbody>
     </table>
