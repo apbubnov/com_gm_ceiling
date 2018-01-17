@@ -954,6 +954,7 @@ $results = $db->loadObjectList();
             </div>
             <div class="row-fluid">
                 <div class="span6">
+                    <?if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
                     <h4>Материал</h4>
                     <div>
                         Тип потолка: <?php echo $calculation->n1; ?>
@@ -994,15 +995,7 @@ $results = $db->loadObjectList();
                                                                     alt=""/>
                         </div>
                     <?php }?>
-                    <?}?>
-
-                    <?php if ($calculation->transport) { ?>
-                        <h4>Транспортные расходы</h4>
-                        <div>
-                            Транспортные расходы, шт.: <?php echo $calculation->transport; ?>
-                        </div>
-                    <?php } ?>
-
+                    <?} endif; ?>
                     <?php if ($calculation->n16) { ?>
                         <div>
                             Скрытый карниз: <?php echo $calculation->n16; ?>
@@ -1071,13 +1064,12 @@ $results = $db->loadObjectList();
                     <?php if ($calculation->n29) { ?>
                         <h4>Переход уровня</h4>
                         <?php foreach ($calculation->n29 as $key => $n29_item) {
-                            echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <b>Профиль:</b> " .$n29_item->component_title ." " . $n29_item->image . "<br>";
+                            echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <b><br>";
                             ?>
                         <?php }
                     } ?>
-
+                    <h4>Прочее</h4>
                     <?php if ($calculation->n9> 0) { ?>
-                        <h4>Прочее</h4>
                         <div>
                             Углы, шт.: <?php echo $calculation->n9; ?>
                         </div>
@@ -1140,10 +1132,9 @@ $results = $db->loadObjectList();
                             Парящий потолок, м: <?php echo $calculation->n30; ?>
                         </div>
                     <?php } ?>
-                    <?php if ($calculation->distance && $calculation->distance_col) { ?>
+                    <?php if ($calculation->n32> 0) { ?>
                         <div>
-                            Выезд за город: <?php echo $calculation->distance; ?> км.
-                            , <?php echo $calculation->distance_col; ?> кол-во раз
+                            Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                         </div>
                     <?php } ?>
                     <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
