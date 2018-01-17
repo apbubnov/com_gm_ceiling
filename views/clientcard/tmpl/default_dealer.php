@@ -159,7 +159,7 @@
      
         <?php foreach($projects as $item):?>
 
-            <tr class = "row_project" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id='.(int) $item->id.'&call_id='.(int) $call_id); ?>">
+            <tr class = "row_project" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=production&id='.(int) $item->id.'&call_id='.(int) $call_id); ?>">
                 <td><?php echo $item->id;?></td>
                 <td>
                     <?php 
@@ -307,25 +307,8 @@
             },
             success: function(data){
                 data = JSON.parse(data);
-                var pt = "<?php echo $phoneto; ?>";
-                var pf = "<?php echo $phonefrom; ?>";
                 var call_id = <?php echo $call_id; ?>;
-                if (pt === "" || pf === "")
-                {
-                    if (call_id === 0)
-                    {
-                        url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data+ '&call_id=0';
-                    }
-                    else
-                    {
-                        url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&call_id=' + call_id;
-                    }
-                }
-                else
-                {
-                    url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
-                }
-
+                url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=production&id=' + data + '&call_id=' + call_id;
                 location.href =url;
             },
             dataType: "text",
