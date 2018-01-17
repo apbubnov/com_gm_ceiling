@@ -15,10 +15,13 @@ $userId     = $user->get('id');
 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
 $result_users = $users_model->getDesigners();
 ?>
-<form>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
+    <div style="width: 100%; text-align: left;">
+        <button type="button" id="new_designer" class="btn btn-primary">Создать Отделочника/дизайнера</button>
+    </div>
+    <br>
     <h2 class="center">Отделочники/Дизайнеры</h2>
     <table class="table table-striped one-touch-view" id="callbacksList">
         <thead>
@@ -49,17 +52,70 @@ $result_users = $users_model->getDesigners();
         	?>
         </tbody>
     </table>
-</form>
+    <div id="modal-window-container">
+        <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="modal-window-1-tar">
+                <p><strong>Создание нового отделочника/дизайнера</strong></p>
+                <p>ФИО:</p>
+                <p><input type="text" id="fio_designer"></p>
+                <p>Номер телефона:</p>
+                <p><input type="text" id="designer_contacts"></p>
+                <p><button type="submit" id="save_designer" class="btn btn-primary">ОК</button></p>
+        </div>
+    </div>
 
 <script>
     jQuery(document).ready(function()
     {
+        jQuery('#designer_contacts').mask('+7(999) 999-9999');
         jQuery('body').on('click', 'tr', function(e)
         {
-
             if(jQuery(this).data('href')!=""){
                 document.location.href = jQuery(this).data('href');
             } 
+        });
+
+        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+            var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+            if (!div3.is(e.target) // если клик был не по нашему блоку
+                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+                jQuery("#close4-tar").hide();
+                jQuery("#modal-window-container").hide();
+                jQuery("#modal-window-1-tar").hide();
+            }
+        });
+
+        jQuery("#new_designer").click(function(){
+            jQuery("#close4-tar").show();
+            jQuery("#modal-window-container").show();
+            jQuery("#modal-window-1-tar").show("slow");
+        });
+
+        jQuery("#save_designer").click(function(){
+             jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=dealer.create_designer",
+                data: {
+                    fio: document.getElementById('fio_designer').value,
+                    phone: document.getElementById('designer_contacts').value
+                },
+                success: function(data){
+                    location.href = location.href;
+                },
+                dataType: "text",
+                async: false,
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });
         });
     });
 </script>
