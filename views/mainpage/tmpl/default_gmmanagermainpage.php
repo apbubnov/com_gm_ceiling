@@ -33,8 +33,15 @@ $answer4 = $model->getDataByStatus("Zvonki", $userId, $date);
 // пропущенные
 $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
 $answer6 = $model->getDataByStatus("MissedCalls");
-var_dump($answer5);
-var_dump($answer6);
+$missAnswer1 = [];
+$missAnswer2 = [];
+foreach ($answer5 as $value) {
+	array_push($missAnswer1, $value->id);
+}
+foreach ($answer6 as $value) {
+	array_push($missAnswer2, $value->call_id);
+}
+$answer7 = array_diff($missAnswer1, $missAnswer2);
 //--------------------------------------
 ?>
 
@@ -110,7 +117,7 @@ var_dump($answer6);
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=missed_calls', false); ?>"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Пропущенные</a>
 				<?php if ($answer5 != 0) { ?>
-					<div class="circl-digits"><?php echo $answer5; ?></div>
+					<div class="circl-digits"><?php echo count($answer7); ?></div>
 				<?php } ?>
 			</div>
 		</div>
