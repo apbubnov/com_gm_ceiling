@@ -1912,16 +1912,19 @@ class Gm_ceilingController extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $client_id = $jinput->get('client_id', 1, 'INT');
             $api_phone_id = $jinput->get('api_id');
-            $user = JFactory::getUser();
-            //$owner_id = $user->id;
-            $dealer = JFactory::getUser($user->dealer_id);
+            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $client = $client_model->getClientById($client_id);
+            $dealer_id = $client->dealer_id;
+            if(empty($dealer_id)){
+                $dealer_id = 1;
+            }
             $info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
-            $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', $dealer->id);
-            $gm_components_margin = $info_model->getMargin('gm_components_margin', $dealer->id);
-            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', $dealer->id);
-            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', $dealer->id);
-            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', $dealer->id);
-            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', $dealer->id);
+            $gm_canvases_margin = $info_model->getMargin('gm_canvases_margin', $dealer_id);
+            $gm_components_margin = $info_model->getMargin('gm_components_margin', $dealer_id);
+            $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', $dealer_id);
+            $dealer_canvases_margin = $info_model->getMargin('dealer_canvases_margin', $dealer_id);
+            $dealer_components_margin = $info_model->getMargin('dealer_components_margin', $dealer_id);
+            $dealer_mounting_margin = $info_model->getMargin('dealer_mounting_margin', $dealer_id);
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
             $project_data['state'] = 1;
             if (!empty($client_id)) {
