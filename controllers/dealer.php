@@ -98,4 +98,34 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
 	}
+	
+	public function create_designer()
+	{
+        try
+		{
+			$app = JFactory::getApplication();
+	        $jinput = $app->input;
+	        $name = $jinput->get('fio', null, 'STRING');
+	        $phone = $jinput->get('phone', null, 'STRING');
+			//Создание клиента
+			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
+			$client_data['client_name'] = $name;
+			$client_data['manager_id'] = $user->id;
+			$client_data['created'] = date("Y-m-d");
+			$client_data['client_contacts'] = $phone;
+			$client_id = $clientform_model->save($client_data);
+			//создание user'а
+			$dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, "$client_id@$client_id", $client_id, 3);
+			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
+			$client_model->updateClient($client_id,null,$dealer_id);
+	        die($dealer_id);
+	    }
+	    catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }
