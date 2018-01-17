@@ -67,7 +67,7 @@ foreach ($brigade_id as $value) {
 
 ?>
 
-<!-- <?=parent::getButtonBack();?>
+<?=parent::getButtonBack();?>
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/teams/tmpl/css/style.css" type="text/css" />
 
@@ -361,18 +361,16 @@ foreach ($brigade_id as $value) {
     //------------------------------------------
 
 	// закрытие модального окна, при нажатии вне модального окна
-    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+    jQuery(document).mouseup(function (e) { // событие клика по веб-документу
         var div = jQuery("#window-with-table"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+        if (!div.is(e.target) && div.has(e.target).length == 0) { // не по элементу и не по его дочерним элементам
             jQuery("#window-with-table").hide();
             jQuery("#close-modal-window").hide();
             jQuery("#modal-window-with-table").hide();
 			jQuery("#table-mounting").empty();
         }
 		var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-        if (!div2.is(e.target) // если клик был не по нашему блоку
-            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
+        if (!div2.is(e.target) && div2.has(e.target).length == 0) { // и не по его дочерним элементам
             jQuery("#modal-window-1-tar").hide();
             jQuery("#close-tar").hide();
             jQuery("#modal-window-container-tar").hide();
@@ -399,6 +397,10 @@ foreach ($brigade_id as $value) {
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/461f08.png" alt="Коричневый"></td>';	
 			legenda += '<td>Монтаж недовыполнен</td></tr>';
 			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
+			legenda += '<td>Монтаж выполнен</td>';
+			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
+			legenda += '<td>Выходные часы</td></tr>';
+			legenda += '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/d3d3f9.png" alt="Голубой"></td>';
 			legenda += '<td>Монтаж выполнен</td></tr>';
 			jQuery("#button-prev").css({"width":"25px"});
 			jQuery("#prev-button-container").css({"left":"0px"});
@@ -417,6 +419,8 @@ foreach ($brigade_id as $value) {
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/1ffe4e.png" alt="Зеленый"></td>';
 			legenda += '<td>Монтаж выполнен</td>';
 			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/9e9e9e.png" alt="Серый"></td>';
+			legenda += '<td>Выходные часы</td>';
+			legenda += '<td><img src="components/com_gm_ceiling/views/teams/tmpl/images/d3d3f9.png" alt="Голубой"></td>';
 			legenda += '<td>Монтаж выполнен</td></tr>';
 			jQuery("#legenda").append(legenda);
 		}
@@ -433,7 +437,7 @@ foreach ($brigade_id as $value) {
         //------------------------------------------
 
 		// нажатие на день, чтобы посмотреть проекты на день
-		jQuery("#calendars-container").on("click", ".day-not-read, .day-read, .day-in-work, .day-underfulfilled, .day-complite", function() {
+		jQuery("#calendars-container").on("click", ".day-not-read, .day-read, .day-in-work, .day-underfulfilled, .day-complite, .old-project", function() {
 			ChoosenDay = this.id;
 			kind = "no-empty";
 			WhatDay(ChoosenDay);
@@ -572,19 +576,19 @@ foreach ($brigade_id as $value) {
 							if (element.project_mounting_date.length < 6) {
 								if (element.project_status == 5) {
 									status = "В производстве";
-								} else if (element.project_status == 6 ) {
+								} else if (element.project_status == 6) {
 									status = "На раскрое";
-								} else if (element.project_status == 7 ) {
+								} else if (element.project_status == 7) {
 									status = "Укомплектован";
-								} else if (element.project_status == 8 ) {
+								} else if (element.project_status == 8) {
 									status = "Выдан";
-								} else if (element.project_status == 10 ) {
+								} else if (element.project_status == 10) {
 									status = "Ожидание монтажа";
-								} else if (element.project_status == 16 ) {
+								} else if (element.project_status == 16) {
 									status = "Монтаж";
-								} else if (element.project_status == 11 ) {
+								} else if (element.project_status == 11) {
 									status = "Монтаж выполнен";
-								} else if (element.project_status == 17 ) {
+								} else if (element.project_status == 17) {
 									status = "Монтаж недовыполнен";
 								}
 								if (element.read_by_mounter == 0) {
@@ -742,4 +746,4 @@ foreach ($brigade_id as $value) {
 	});
 
 
-</script> -->
+</script>

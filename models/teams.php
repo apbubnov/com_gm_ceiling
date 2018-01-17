@@ -138,7 +138,7 @@ class Gm_ceilingModelTeams extends JModelItem {
 		try
 		{
 			$user       = JFactory::getUser();
-			if ($user-> == 1) {
+			if ($user->dealer_id == 1) {
 				$note = "gm_calculator_note";
 			} else {
 				$note = "dealer_calculator_note";

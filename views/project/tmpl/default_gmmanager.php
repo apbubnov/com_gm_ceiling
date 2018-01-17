@@ -116,6 +116,7 @@ $AllMounters = $model->FindAllMounters($where);
                 Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
             }
         }
+        Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
     ?>
 
     <div class="container">
@@ -177,6 +178,7 @@ $AllMounters = $model->FindAllMounters($where);
             </div>
             <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
             <input name="client" id="client_id" value="<?php echo $this->item->client_id; ?>" type="hidden">
+            <button id = "create_pdfs">Сгенерировать сметы</button>
             <div class="">
                 <h4>Информация для менеджера</h4>
                 <table class="table">
@@ -528,6 +530,18 @@ $AllMounters = $model->FindAllMounters($where);
             }
         });
         jQuery(document).ready(function () {
+            jQuery('#create_pdfs').click(function(){
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "/index.php?option=com_gm_ceiling&task=createPdfs",
+                    data: {
+                        id:<?php echo $this->item->id;?>
+                    },
+                    success: function(data) {
+                        window.location = window.location;
+                    }
+                });
+            });
             jQuery("#cancel").click(function(){
                 jQuery("#close").hide();
                 jQuery("#modal_window_container").hide();
