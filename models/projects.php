@@ -216,7 +216,10 @@ class Gm_ceilingModelProjects extends JModelList
             } elseif ($type == "calculator") {
                 //$query->where('( dealer_id = ' . $user->id . ' OR dealer_id = ' . $user->dealer_id . ')');
                 if ($subtype == "calendar") {
+                    if(in_array("14", $groups)) $query->where('( dealer_id = ' . $user->id . ')');
+                    if(in_array("21", $groups) || in_array("12", $groups)) $query->where('( dealer_id = ' . $user->dealer_id . ')');
                     $query->where('a.project_status = 1');
+                    $query->where('a.who_calculate = 0');
                     $query->order('a.project_calculation_date');
                 }
                 if ($subtype == "projects") {
