@@ -23,6 +23,15 @@
     else{
         $manager_name = "-";
     }
+
+    if ($client->dealer_id == 1)
+    {
+        $subtype = 'calendar';
+    }
+    else
+    {
+        $subtype = 'production';
+    }
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
@@ -113,7 +122,7 @@
      
         <?php foreach($projects as $item):?>
 
-            <tr class = "row_project" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id='.(int) $item->id.'&call_id='.(int) $call_id); ?>">
+            <tr class = "row_project" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); ?>">
                 <td><?php echo $item->id;?></td>
                 <td>
                     <?php 
@@ -235,20 +244,21 @@
                 var pt = "<?php echo $phoneto; ?>";
                 var pf = "<?php echo $phonefrom; ?>";
                 var call_id = <?php echo $call_id; ?>;
+                var subtype = "<?php echo $subtype; ?>";
                 if (pt === "" || pf === "")
                 {
                     if (call_id === 0)
                     {
-                        url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data+ '&call_id=0';
+                        url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=' + subtype +'&id=' + data+ '&call_id=0';
                     }
                     else
                     {
-                        url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&call_id=' + call_id;
+                        url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=' + subtype + '&id=' + data + '&call_id=' + call_id;
                     }
                 }
                 else
                 {
-                    url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=calendar&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
+                    url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=' + subtype + '&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
                 }
 
                 location.href =url;
