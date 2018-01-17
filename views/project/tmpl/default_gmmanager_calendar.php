@@ -203,7 +203,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 <select id="recoil_choose" name ="recoil_choose">
                     <option value="0">-Выберите откатника-</option>
                     <?php foreach ($all_recoil as $item) { ?>
-                        <option value="<?php echo $item->id ?>"><?php echo $item->recoil_name ?></option>
+                        <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
                     <?php } ?>
             </select>
             <button type="button" id = "show_window" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
@@ -221,7 +221,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 <select id="recoil_choose" name ="recoil_choose" style="display:none;">
                     <option value="0">-Выберите откатника-</option>
                     <?php foreach ($all_recoil as $item) { ?>
-                        <option value="<?php echo $item->id ?>"><?php echo $item->recoil_name ?></option>
+                        <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
                     <?php } ?>
             </select>
             <button type="button" id = "show_window" style = "display:none;" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
