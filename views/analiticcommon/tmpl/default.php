@@ -99,14 +99,14 @@ echo parent::getButtonBack();
                 </td>
                 <td>
                     <?php
-                        $c_all_sum +=round($item->sum,2);
-                        echo round($item->sum,2);
+                        $c_all_sum +=round($item->sum,0);
+                        echo round($item->sum,0);
                     ?>
                 </td>
                 <td>
                     <?php
-                        $c_all_profit +=round($item->profit,2);
-                        echo round($item->profit,2); 
+                        $c_all_profit +=round($item->profit,0);
+                        echo round($item->profit,0); 
                     ?>
                 </td>
 				<td>
