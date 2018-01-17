@@ -350,7 +350,7 @@
     });
 
     jQuery("#back_btn").click(function (){
-        history.go(-2);
+        location.href = '/index.php?option=com_gm_ceiling&view=dealers';
     });
 
     jQuery("#add_comment").click(function ()
