@@ -239,13 +239,13 @@ class Gm_ceilingModelDealer_info extends JModelList
 				$query = $db->getQuery(true);
 	        	$query->insert('#__gm_ceiling_mount')
 	            	->columns('`mp1`, `mp2`, `mp3`,`mp4`, `mp5`, `mp6`,`mp7`,`mp8`,`mp9`,`mp10`,`mp11`,`mp12`,`mp13`,`mp14`,`mp15`,`mp16`,`mp17`,`mp18`,`mp19`,`mp22`,`mp23`,`mp24`,`mp25`,`mp26`,`mp27`,`mp30`,`mp31`,`mp32`,`mp33`,`mp34`,`mp36`,`mp37`,`mp38`,`mp40`,`mp41`,`mp42`,`mp43`,`transport`,`distance`,`user_id`')
-					->values("$db->quote($data['mp1']), $db->quote($data['mp2']),$db->quote($data['mp3']),$db->quote($data['mp4']),$db->quote($data['mp5'])
-					,$db->quote($data['mp6']),$db->quote($data['mp7']),$db->quote($data['mp8']),$db->quote($data['mp9']),$db->quote($data['mp10']), ,$db->quote($data['mp11'])
-					,$db->quote($data['mp12']),$db->quote($data['mp13']),$db->quote($data['mp14']),$db->quote($data['mp15']),$db->quote($data['mp16']), ,$db->quote($data['mp17'])
-					,$db->quote($data['mp18']),$db->quote($data['mp19']),$db->quote($data['mp22']),$db->quote($data['mp23']),$db->quote($data['mp24']), ,$db->quote($data['mp25'])
-					,$db->quote($data['mp26']),$db->quote($data['mp27']),$db->quote($data['mp30']),$db->quote($data['mp31']),$db->quote($data['mp32']), ,$db->quote($data['mp33'])
-					,$db->quote($data['mp34']),$db->quote($data['mp36']),$db->quote($data['mp37']),$db->quote($data['mp38']),$db->quote($data['mp40']), ,$db->quote($data['mp41'])
-					,$db->quote($data['mp42']),$db->quote($data['mp43']),$db->quote($data['transport']),$db->quote($data['distance']),$id");
+					->values("'".$data['mp1']."', '".$data['mp2']."', '".$data['mp3']."', '".$data['mp4']."', '".$data['mp5']
+					."', '".$data['mp6']."', '".$data['mp7']."', '".$data['mp8']."', '".$data['mp9']."', '".$data['mp10']."', '".$data['mp11']
+					."', '".$data['mp12']."', '".$data['mp13']."', '".$data['mp14']."', '".$data['mp15']."', '".$data['mp16']."', '".$data['mp17']
+					."', '".$data['mp18']."', '".$data['mp19']."', '".$data['mp22']."', '".$data['mp23']."', '".$data['mp24'])."', '".$data['mp25']
+					."', '".$data['mp26']."', '".$data['mp27']."', '".$data['mp30']."', '".$data['mp31']."', '".$data['mp32'])."', '".$data['mp33']
+					."', '".$data['mp34']."', '".$data['mp36']."', '".$data['mp37']."', '".$data['mp38']."', '".$data['mp40'])."', '".$data['mp41']
+					."', '".$data['mp42']."', '".$data['mp43']."', '".$data['transport']."', '".$data['distance'])."', '".$id."'");
 	        $db->setQuery($query);
 	        $db->execute();
 			}
