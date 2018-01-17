@@ -81,8 +81,8 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 			<?php foreach ($this->items as $i => $item) : ?>
 			<?
 			if (in_array("22", $groups) && $item->project_calculator != $userId) continue;
+			else if (in_array("17", $groups) && $item->who_calculate != 1) continue;
 			else if (!in_array("14", $groups)) continue;
-			else if (in_array("12", $groups) && $item->who_calculate != 1) continue;
 			?>
 				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
 
