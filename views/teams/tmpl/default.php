@@ -9,14 +9,14 @@
 // No direct access
 defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+/* JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
+JHtml::_('behavior.multiselect'); */
 //JHtml::_('formbehavior.chosen', 'select');
 
-$user       = JFactory::getUser();
+/* $user       = JFactory::getUser();
 $userId     = $user->get('id');
-$dealerId   = $user->dealer_id;
+$dealerId   = $user->dealer_id; */
 
 /* $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
