@@ -19,9 +19,10 @@ $result_users = $users_model->getDealers();
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Дилеры</h2>
-    <div style="width: 100%; text-align: center;">
+    <div style="width: 100%; text-align: left;">
         <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
     </div>
+    <br>
     <table class="table table-striped one-touch-view" id="callbacksList">
         <thead>
         <tr>
@@ -71,6 +72,22 @@ $result_users = $users_model->getDealers();
             if(jQuery(this).data('href')!=""){
                 document.location.href = jQuery(this).data('href');
             } 
+        });
+
+        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+            var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+            if (!div3.is(e.target) // если клик был не по нашему блоку
+                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+                jQuery("#close4-tar").hide();
+                jQuery("#modal-window-container").hide();
+                jQuery("#modal-window-1-tar").hide();
+            }
+        });
+
+        jQuery("#new_client").click(function(){
+            jQuery("#close4-tar").show();
+            jQuery("#modal-window-container").show();
+            jQuery("#modal-window-1-tar").show("slow");
         });
     });
 </script>
