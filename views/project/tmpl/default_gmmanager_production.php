@@ -1514,6 +1514,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 }
             });
             }
+            
         })
 
         jQuery("input[name^='include_calculation']").click(function () {
