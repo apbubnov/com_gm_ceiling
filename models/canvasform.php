@@ -367,7 +367,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                 $query->update('`#__gm_ceiling_canvases_all` AS rollers')
                     ->where('rollers.id = ' . $db->quote($data['roller']['id']));
 
-                if ($data['roller']['quad'] != "") $query->set('rollers.lenght = ' . $db->quote($data['roller']['quad']));
+                if ($data['roller']['quad'] != "") $query->set('rollers.quad = ' . $db->quote($data['roller']['quad']));
                 if ($data['roller']['purchasingPrice'] != "") $query->set('rollers.purchasing_price = ' . $db->quote($data['roller']['purchasingPrice']));
 
                 $db->setQuery($query);
@@ -380,7 +380,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
                 $query = $db->getQuery(true);
                 $query->insert($db->quoteName('#__gm_ceiling_analytics_canvases'))
-                    ->columns('id_canvas, lenght, price, date_update, dealer_id, user_id, note')
+                    ->columns('id_canvas, quad, price, date_update, dealer_id, user_id, note')
                     ->values($db->quote($data['roller']['id']) . ', ' . $db->quote(0) . ', ' . $db->quote($data['roller']['purchasingPrice']) . ', ' .
                         $db->quote($data['date']) . ', ' . $db->quote($user->dealer_id) . ', ' . $db->quote($user->id) . ', ' .
                         $db->quote("Изменение цены"));
@@ -419,7 +419,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                     'fullTitle' => 'CONCAT(canvases.country, \' \', canvases.name, \' \', canvases.width)',
                     'count' => 'canvases.count',
                     'price' => 'canvases_all.purchasing_price',
-                    'lenght' => 'canvases_all.lenght'
+                    'quad' => 'canvases_all.quad'
                 ),
                 'where' => array(
                     '=' => array(
@@ -433,7 +433,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
             $fullTitle = $result->fullTitle;
             $count = $result->count;
             $purchasing_price = $result->price;
-            $lenght = $result->lenght;
+            $quad = $result->quad;
 
             $filter = array(
                 'select' => array(
@@ -457,8 +457,8 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
                 $query = $db->getQuery(true);
                 $query->insert($db->quoteName('#__gm_ceiling_analytics_canvases'))
-                    ->columns('id_canvas, lenght, price, date_update, dealer_id, user_id, note')
-                    ->values($db->quote($canvasesId) . ', ' . $db->quote('-' . $lenght) . ', ' . $db->quote($purchasing_price) . ', ' .
+                    ->columns('id_canvas, quad, price, date_update, dealer_id, user_id, note')
+                    ->values($db->quote($canvasesId) . ', ' . $db->quote('-' . $quad) . ', ' . $db->quote($purchasing_price) . ', ' .
                         $db->quote($date) . ', ' . $db->quote($user->dealer_id) . ', ' . $db->quote($user->id) . ', ' .
                         $db->quote("Удаление " . $fullTitle . " - " . $pk));
                 $db->setQuery($query);
