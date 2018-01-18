@@ -234,7 +234,6 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                     id: <?php echo $userId?>,
                 },
                 success: function(data) {
-                    console.log(data);
                     if (data.length > 0) { 
                         Array.from(data).forEach(function(element) {
                             TrOrders += '<tr><td style="width: 25%;">'+element.project_mounting_date+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
@@ -243,9 +242,9 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                     jQuery("#table-mounting").append(TrOrders);
                 }
             });
-        } else {
-            TrOrders = '<tr id="caption-data"><td colspan="6">'+day+'-'+month+'-'+year+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
-            jQuery("#table-mounting").append(TrOrders);
+        } else if (kind == "no-empty") {
+            TrOrders2 = '<tr id="caption-data"><td colspan="6">'+day+'-'+month+'-'+year+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
+            jQuery("#table-mounting").append(TrOrders2);
              jQuery.ajax( {
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
@@ -309,10 +308,11 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                             }
                             // рисовка таблицы
                             TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+                            jQuery("#table-mounting").append(TrOrders2);
                         } else {
-                            TrOrders2 += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
+                            TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
+                            jQuery("#table-mounting").append(TrOrders2);
                         }                  
-                        jQuery("#table-mounting").append(TrOrders2);
                     });
                 }
             });
@@ -344,10 +344,6 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 			jQuery("#button-next").css({"width":"25px"});
 		}
         // --------------------------------
-
-
-
-
     });
 
 </script>

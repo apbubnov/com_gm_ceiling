@@ -406,7 +406,12 @@ class Gm_ceilingModelClientForm extends JModelForm
 					$phone = $db->escape($data['client_contacts'], true);
 
 					$phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
-		            if (mb_substr($phone, 0, 1) != '7' && strlen($phone) == 11) {
+					if (strlen($phone) != 11)
+					{
+		            	throw new Exception('Invalid phone number');
+		            }
+		            if (mb_substr($phone, 0, 1) != '7')
+		            {
 		                $phone = substr_replace($phone, '7', 0, 1);
 		            }
 

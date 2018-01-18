@@ -185,7 +185,6 @@ class Gm_ceilingModelTeams extends JModelItem {
             for($i=0;$i<count($items);$i++){
                 $items[$i]->project_mounting_date = substr($items[$i]->project_mounting_date,11,5);
 			}
-			// привет
 			
 			//создание нового массива
 			if (!empty($day_off)) {

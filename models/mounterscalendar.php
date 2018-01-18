@@ -283,14 +283,17 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $items4 = $db->loadObject();
 
             // объединение с выходным днем
-            $index = 0;
+			$index = 0;
+			$was_break = false;
             //поиск индекса для вставки и замена даты на просто время
             for ($i=0; $i < count($items); $i++) {
                 if (strtotime($items[$i]->project_mounting_date) >= strtotime($items4->date_from)) {
-                    $index = $i;
+					$index = $i;
+					$was_break = true;
                     break;
                 }
-            }
+			}
+			($index == 0 && !$was_break) ? $index = count($items) : 0;
             for ($i=0; $i < count($items); $i++) {
                 $items[$i]->project_mounting_date = substr($items[$i]->project_mounting_date, 11, 5);
             }
