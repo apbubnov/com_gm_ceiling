@@ -319,7 +319,7 @@ if (count($AllGaugerDealer) == 0) {
 				height1 = jQuery("#div1").css("height");
 				height2 = jQuery("#div2").css("height");
 				height = heightAll.slice(-2) - height1.slice(-2) - height2.slice(-2);
-				console.log(heightAll);
+				console.log(heightAll.slice(-2));
 				console.log(height1);
 				console.log(height2);
 				console.log(height);
