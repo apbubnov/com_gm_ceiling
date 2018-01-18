@@ -255,7 +255,6 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                 },
                 success: function(msg) {
                     console.log(msg);
-                    TrOrders2 = "";
                     msg.forEach(function(element) {
                         console.log("цикл");
                         if (element.project_mounting_date.length < 6) {
@@ -311,12 +310,14 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                                 salary = 1500;
                             }
                             // рисовка таблицы
-                            TrOrders2 += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+                            jQuery("#table-mounting").append(TrOrders2);
                         } else {
                             console.log("не вых");
-                            TrOrders2 += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
+                            TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
+                            jQuery("#table-mounting").append(TrOrders2);
                         }                  
-                        jQuery("#table-mounting").append(TrOrders2);
+                        //jQuery("#table-mounting").append(TrOrders2);
                     });
                 }
             });
