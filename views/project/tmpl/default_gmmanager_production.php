@@ -1265,8 +1265,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             }
         }
 
-        if (jQuery("#comments_id").val() == "" && jQuery("#client_id").val() == 1 && <?php echo $phonefrom; ?> != "0") {
-            var comment = "Входящий звонок c " +<?php echo $phonefrom;?>;
+        if (jQuery("#comments_id").val() == "" && jQuery("#client_id").val() == 1) {
             var reg_comment = /[\\\<\>\/\'\"\#]/;
             var id_client = <?php echo $this->item->id_client;?>;
             if (reg_comment.test(comment)) {
