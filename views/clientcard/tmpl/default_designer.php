@@ -205,8 +205,8 @@
 <div id="modal_window_container" class = "modal_window_container">
     <button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_comm" class = "modal_window">
-        <h6 style = "margin-top:10px">Введите сумму</h6>
-        <p><input type="text" id="sum" placeholder="Сумма" required></p>
+        <h6 style = "margin-top:10px">Введите почту</h6>
+        <p><input type="text" id="sum" placeholder="Почта" required></p>
         <p><button type="button" id="send_comm" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
     </div>
 </div>
