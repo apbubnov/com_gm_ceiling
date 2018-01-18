@@ -184,7 +184,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
                     <input name="type" value="gmmanager" type="hidden">
                     <input name="subtype" value="calendar" type="hidden">
-                    <input name="data_change" value="0" type="hidden">
+                    <input name="data_change" id = "data_change" value="0" type="hidden">
                     <input name="data_delete" value="0" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
@@ -1590,11 +1590,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         });
 
         jQuery("#run_in_production").click(function () {
-            console.log(jQuery("#data_change").val());
             jQuery("#project_status").val(5);
             jQuery("#data_change").val(1);
-            jQuery("#data_change").val();
-            //jQuery("#form-client").submit();
+            jQuery("#form-client").submit();
         });
         jQuery("#change_discount").click(function () {
             jQuery(".new_discount").toggle();
