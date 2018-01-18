@@ -153,7 +153,7 @@ if (count($AllGaugerDealer) == 0) {
 				<p id="date-modal"></p>
 				<p><strong>Выберите время замера (и замерщика):</strong></p>
 			</div>
-			<div class="table_wraper">
+			<div id="table_wraper">
 				<p>
 					<table id="projects_gaugers"></table>
 				</p>
@@ -178,9 +178,8 @@ if (count($AllGaugerDealer) == 0) {
 		heightAll = jQuery("#modal-window-choose-tar").css("height");
 		height1 = jQuery("#div1").css("height");
 		height2 = jQuery("#div2").css("height");
-		console.log(heightAll);
-		console.log(height1);
-		console.log(height2);
+		height = heightAll - height1 - height2;
+		jQuery("#div2").css("height", height)
 	});
 
 	// листание календаря
