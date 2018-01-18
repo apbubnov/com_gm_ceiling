@@ -401,29 +401,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 </td>
                                 </tr>
                                 <tr>
-                                    <th>Дата и время замера</th>
-                                    <td>
-                                        <div id="calendar-container">
-                                            <div class="btn-small-l">
-                                                <button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                                            </div>
-                                            <?php echo $calendar; ?>
-                                            <div class="btn-small-r">
-                                                <button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Примечание менеджера</th>
-                                    <td>
-                                        <input name="gmmanager_note" id="gmmanager_note" class="inputactive"
-                                               value="<?php if (isset($_SESSION['manager_comment'])) {
-                                                   echo $_SESSION['manager_comment'];
-                                               } else echo $this->item->gm_manager_note; ?>">
-                                    </td>
-                                </tr>
-                                <tr>
                                     <th>Менеджер</th>
                                     <td>
                                         <input name="Manager_name" id="manager_name" class="inputhidden"
@@ -432,16 +409,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                                } ?>">
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th>Замерщик</th>
-                                    <td>
-                                        <input name="calculator_name" id="calculator_name" class="inputhidden"
-                                               value="<?php if (isset($this->item->project_calculator)) {
-                                                   echo JFactory::getUser($this->item->project_calculator)->name;
-                                               }?>">
-                                    </td>
-                                </tr>
-                        </div>
+                            </div>
                         </table>
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-6">
@@ -459,7 +427,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 </tr>
                             </table>
                         </div>
-                    </div>
+                    </div> 
             </div>
             <table class="table calculation_sum">
                 <?php if ($this->item->project_verdict == 0) { ?>
