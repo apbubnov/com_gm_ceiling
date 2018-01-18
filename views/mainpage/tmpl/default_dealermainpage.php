@@ -59,7 +59,7 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
 
 <div class="form-group">
 <h2 style = "display:inline-block;"><?php echo $user->name; ?></h2> <?php if($user->dealer_type!=2 ){
-    if($userId == 1 || $userId == 2 ($userId != 1 && $user->dealer_id != 1)) { ?>
+    if($userId == 1 || $userId == 2 || ($userId != 1 && $user->dealer_id != 1)) { ?>
 <button id="toProfile" class = "btn btn-primary" style = "diaplay:inline-block;"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
 <?php } }?>
 </div>
