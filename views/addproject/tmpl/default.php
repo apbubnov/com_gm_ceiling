@@ -167,13 +167,6 @@ if (count($AllGaugerDealer) == 0) {
 
 <script>
 
-	heightAll = jQuery("#modal-window-choose-tar").css("height");
-	height1 = jQuery("#div1").css("height");
-	height2 = jQuery("#div2").css("height");
-	console.log(heightAll);
-	console.log(height1);
-	console.log(height2);
-
 	jQuery(window).resize(function() {
 		heightAll = jQuery("#modal-window-choose-tar").css("height");
 		height1 = jQuery("#div1").css("height");
