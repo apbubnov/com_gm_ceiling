@@ -257,7 +257,9 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                     console.log(msg);
                     TrOrders2 = "";
                     msg.forEach(function(element) {
+                        console.log("цикл");
                         if (element.project_mounting_date.length < 6) {
+                            console.log("вых");
                             project = element.id;
                             adress = element.project_info;
                             perimeter = element.n5;
@@ -311,6 +313,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                             // рисовка таблицы
                             TrOrders2 += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
                         } else {
+                            console.log("не вых");
                             TrOrders2 += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
                         }                  
                         jQuery("#table-mounting").append(TrOrders2);
