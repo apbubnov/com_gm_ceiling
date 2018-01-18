@@ -467,10 +467,8 @@ $results = $db->loadObjectList();
                         <tr>
                             <th>Дилер</th>
                             <td><?php
-                                $user = JFactory::getUser();
-                                $dealer = JFactory::getUser($user->dealer_id);
-
-                                echo $dealer->name; ?>
+                                $dealer = $client_model->getDealer($this->item->id_client);
+                                echo $dealer; ?>
                             </td>
 
                         </tr>
@@ -1049,70 +1047,65 @@ $results = $db->loadObjectList();
             <a class="btn btn-primary"
                 href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить
                 расчет</a>
-            <div class="sketch_image_block">
-                <h3 class="section_header">
-                    Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                </h3>
-                <div class="section_content">
-                    <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+            <? if (!empty($filename)):?>
+                <div class="sketch_image_block">
+                    <h3 class="section_header">
+                        Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                    </h3>
+                    <div class="section_content">
+                        <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+                    </div>
                 </div>
-            </div>
+            <? endif; ?>
             <div class="row-fluid">
                 <div class="span6">
-                    <h4>Материал</h4>
-                    <div>
-                        Тип потолка: <?php echo $calculation->n1; ?>
-                    </div>
-                    <div>
-                        Тип фактуры: <?php echo $calculation->n2; ?>
-                    </div>
-                    <div>
-                        Производитель, ширина: <?php echo $calculation->n3; ?>
-                    </div>
-
-                    <?php if ($calculation->color > 0) { ?>
-                        <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
-                        <?php $color = $color_model->getData($calculation->color); ?>
+                    <?if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                        <h4>Материал</h4>
                         <div>
-                            Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
-                                                                    alt=""/>
+                            Тип потолка: <?php echo $calculation->n1; ?>
                         </div>
-                    <?php } ?>
-                    <h4>Размеры помещения</h4>
-                    <div>
-                        Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
-                    </div>
-                    <div>
-                        Периметр, м: <?php echo $calculation->n5; ?>
-                    </div>
-
-
-                    <?php if ($calculation->n6 > 0) { ?>
                         <div>
-                            <h4> Вставка</h4>
+                            Тип фактуры: <?php echo $calculation->n2; ?>
                         </div>
-                        <? if ($calculation->n6 == 314) { ?>
-                            <div> Белая</div>
-                        <?php } else { ?>
-                            <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
-                            <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
+                        <div>
+                            Производитель, ширина: <?php echo $calculation->n3; ?>
+                        </div>
+
+                        <?php if ($calculation->color > 0) { ?>
+                            <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
+                            <?php $color = $color_model->getData($calculation->color); ?>
                             <div>
-                                Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;'
-                                                                                    src="/<?php echo $color_1[0]->file; ?>"
-                                                                                    alt=""/>
+                                Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
+                                                                               alt=""/>
                             </div>
                         <?php } ?>
-                    <? } ?>
-
-
-                    <!--<?php if ($calculation->transport) { ?>
-                        <h4>Транспортные расходы</h4>
+                        <h4>Размеры помещения</h4>
                         <div>
-                            Транспортные расходы, шт.: <?php echo $calculation->transport; ?>
+                            Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
                         </div>
-                    <?php } ?>-->
-
-
+                        <div>
+                            Периметр, м: <?php echo $calculation->n5; ?>
+                        </div>
+                        <?php if ($calculation->n6 > 0) {?>
+                            <div>
+                                <h4> Вставка</h4>
+                            </div>
+                            <? if ($calculation->n6 == 314) {?>
+                                <div> Белая </div>
+                            <?php } else  {?>
+                                <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
+                                <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
+                                <div>
+                                    Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>"
+                                                                                     alt=""/>
+                                </div>
+                            <?php }?>
+                        <?} endif; ?>
+                    <?php if ($calculation->n16) { ?>
+                        <div>
+                            Скрытый карниз: <?php echo $calculation->n16; ?>
+                        </div>
+                    <?php } ?>
 
                     <?php if ($calculation->n12) { ?>
                         <h4>Установка люстры</h4>
@@ -1176,19 +1169,17 @@ $results = $db->loadObjectList();
                     <?php if ($calculation->n29) { ?>
                         <h4>Переход уровня</h4>
                         <?php foreach ($calculation->n29 as $key => $n29_item) {
-                            echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <b>Профиль:</b> " .$n29_item->component_title ." " . $n29_item->image . "<br>";
+                            echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <br>";
                             ?>
                         <?php }
                     } ?>
-
-
-                    <?php if ($calculation->n9 > 0) { ?>
-                        <h4>Прочее</h4>
+                    <h4>Прочее</h4>
+                    <?php if ($calculation->n9> 0) { ?>
                         <div>
                             Углы, шт.: <?php echo $calculation->n9; ?>
                         </div>
                     <?php } ?>
-                    <?php if ($calculation->n10 > 0) { ?>
+                    <?php if ($calculation->n10> 0) { ?>
                         <div>
                             Криволинейный вырез, м: <?php echo $calculation->n10; ?>
                         </div>
@@ -1240,27 +1231,26 @@ $results = $db->loadObjectList();
                             Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
                         </div>
                     <?php } ?>
+
                     <?php if ($calculation->n30> 0) { ?>
                         <div>
                             Парящий потолок, м: <?php echo $calculation->n30; ?>
                         </div>
                     <?php } ?>
-                    <?php if ($calculation->distance && $calculation->distance_col) { ?>
+                    <?php if ($calculation->n32> 0) { ?>
                         <div>
-                            Выезд за город: <?php echo $calculation->distance; ?> км.
-                            , <?php echo $calculation->distance_col; ?> кол-во раз
+                            Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                         </div>
                     <?php } ?>
                     <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
                     <?php if (!empty($extra_mounting) ) { ?>
                         <div>
-                        <h4>Дополнительные работы</h4>
+                            <h4>Дополнительные работы</h4>
                             <? foreach($extra_mounting as $dop) {
                                 echo "<b>Название:</b> " . $dop->title .  "<br>";
                             }?>
                         </div>
                     <?php } ?>
-
                 </div>
                    <button class="btn  btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
                    <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>

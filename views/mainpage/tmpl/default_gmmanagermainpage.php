@@ -74,6 +74,9 @@ $answer7 = array_diff($missAnswer1, $missAnswer2);
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=recoil', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Откатники</a>
 		</p>
 		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=designers', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Отделочники/дизайнеры</a>
+		</p>
+		<p>
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fa fa-usd" aria-hidden="true"></i> Касса</a>
 		</p>
 		<!-- <p>

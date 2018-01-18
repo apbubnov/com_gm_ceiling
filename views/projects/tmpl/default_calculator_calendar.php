@@ -76,7 +76,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         
         <?
         if (in_array("21", $groups) && $item->project_calculator != $userId) continue;
-        else if (in_array("14", $groups) && $item->dealer_id != $userId ) continue;
+        //else if (in_array("14", $groups) && $item->dealer_id != $userId ) continue;
         else if (in_array("12", $groups) && $item->who_calculate != 0) continue;
         ?>
 

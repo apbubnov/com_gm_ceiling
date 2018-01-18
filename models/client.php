@@ -652,5 +652,35 @@ class Gm_ceilingModelClient extends JModelItem
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    public function getDealer($client_id)
+    {
+        try
+        {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query ->select('dealer_id')
+                ->from('#__gm_ceiling_clients')
+                ->where('id = '. $client_id);
+            $db->setQuery($query);
+            $data = $db->loadObject();
+
+            $query = $db->getQuery(true);
+            $query ->select('name')
+                ->from('#__users')
+                ->where('id = '. $data->dealer_id);
+            $db->setQuery($query);
+            $result = $db->loadObject()->name;
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+
+    }
 	
 }

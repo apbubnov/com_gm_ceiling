@@ -209,249 +209,235 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 	<?}?>
 	
 	<!-- Tab panes -->
-	<div class="tab-content">
-		<?foreach($calculations as $k => $calculation) {?>
-			<?$mounters = json_decode($calculation->mounting_sum);?>
-			<?$filename = "/calculation_images/".md5("calculation_sketch".$calculation->id).".png";?>
-			<div class="tab-pane<?if($k == 0) { echo " active"; }?>" id="calculation<?=$calculation->id;?>" role="tabpanel">
-				<h3><?=$calculation->calculation_title;?></h3>
-				<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?=$calculation->id;?>">Изменить расчет</a>
-				<div class="sketch_image_block">
-					<h3 class="section_header">
-						Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
-					</h3>
-					<div class="section_content">
-                        <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
-					</div>
-				</div>
-				<div class="row-fluid">
-					<div class="span6">
-						<h4>Материал</h4>
-						<div>
-							Тип потолка: <?=$calculation->n1;?>
-						</div>
-						<div>
-							Тип фактуры: <?=$calculation->n2;?>
-							</div>
-						<div>
-							Производитель, ширина: <?=$calculation->n3;?>
-						</div>
-						<?if($calculation->color > 0){?>
-							<?$color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');?>
-							<?$color = $color_model->getData($calculation->color);?>
-							<div>
-								Цвет: <?=$color->color_title;?> <img src="/<?=$color->color_file;?>" alt="" />
-							</div>
-						<?}?>
-						<h4>Размеры помещения</h4>
-						<div>
-							Площадь, м<sup>2</sup>: <?=$calculation->n4;?>
-						</div>
-						<div>
-							Периметр, м: <?=$calculation->n5;?>
-						</div>
-						<?if($calculation->n6) {?>
-							<div>
-								Со вставкой: да
-							</div>
-						<?}?>
-						<?if($calculation->transport) {?>
-							<h4>Транспортные расходы</h4>
-							<div>
-								Транспортные расходы, шт.: <?=$calculation->transport;?>
-							</div>
-						<?}?>
-						<?if($calculation->n15) {?>
-							<div>
-								Шторный карниз, м: <?=$calculation->n15;?>
-							</div>
-						<?}?>
-						<?if($calculation->n16) {?>
-							<div>
-								Скрытый карниз: <?=$calculation->n16;?>
-							</div>
-						<?}?>
-						<?
-							if($calculation->n12_advanced) {
-								$n12 = json_decode($calculation->n12, true);
-								$n12_num = $n12['n12_num'];
-								for($i = 1; $i <= $n12_num; $i++) {
-									$n12_type[$i] = $n12["n12_type".$i];
-									$n12_count[$i] = $n12["n12_count".$i];
-								}
-							} else {
-								$n12_easycount = $calculation->n12_easycount;
-							}							
-						?>
-						
-						<?if($calculation->n12_advanced) {?>
-							<h4>Установка люстры</h4>
-							<?for($i = 1; $i <= $n12_num; $i++) {?>
-								<div>
-									<?=JText::_('COM_GM_CEILING_N12_TYPE_TEXT_'.$n12_type[$i]);?>, <?=$n12_count[$i];?> шт.
-								</div>
-							<?}?>
-						<?} else {?>
-							<h4>Установка люстры (упрощ)</h4>
-							<?=$n12_easycount;?> шт.
-						<?}?>
-						
-						<?
-							if($calculation->n13_advanced) {
-								$n13 = json_decode($calculation->n13, true);
-								$n13_num = $n13['n13_num'];
-								for($i = 1; $i <= $n13_num; $i++) {
-									$n13_ring[$i] = $n13["n13_ring".$i];
-									$n13_platform[$i] = $n13["n13_platform".$i];
-									$n13_type[$i] = $n13["n13_type".$i];
-									$n13_count[$i] = $n13["n13_count".$i];
-								}
-							} else {
-								$n13_easycount = $calculation->n13_easycount;
-							}
-						?>
-						<?if($calculation->n13_advanced) {?>
-							<h4>Установка светильников</h4>
-							<?for($i = 1; $i <= $n13_num; $i++) {?>
-								<div>
-									<?=JText::_('COM_GM_CEILING_N13_RING_TEXT_'.$n13_ring[$i]);?>,
-									<?=JText::_('COM_GM_CEILING_N13_PLATFORM_TEXT_'.$n13_platform[$i]);?>,
-									<?=JText::_('COM_GM_CEILING_N13_TYPE_TEXT_'.$n13_type[$i]);?>, <?=$n13_count[$i];?> шт.
-								</div>
-							<?}?>
-						<?} else {?>
-							<h4>Установка светильников (упрощ)</h4>
-							<?=$n13_easycount;?> шт.
-						<?}?>
-						
-						<?
-							if($calculation->n14_advanced) {
-								$n14 = json_decode($calculation->n14, true);
-								$n14_num = $n14['n14_num'];
-								for($i = 1; $i <= $n14_num; $i++) {
-									$n14_type[$i] = $n14["n14_type".$i];
-									$n14_count[$i] = $n14["n14_count".$i];
-								}
-							} else {
-								$n14_easycount = $calculation->n14_easycount;
-							}
-						?>
-						<?if($calculation->ecola1) {?>
-							<div>
-								Эcola, белый: <?=$calculation->ecola1;?>
-							</div>
-						<?}?>
-						<?if($calculation->ecola2) {?>
-							<div>
-								Эcola, хром: <?=$calculation->ecola2;?>
-							</div>
-						<?}?>
-						<?if($calculation->ecola3) {?>
-							<div>
-								Эcola, черный хром: <?=$calculation->ecola3;?>
-							</div>
-						<?}?>
-						<?if($calculation->ecola4) {?>
-							<div>
-								Эcola, бронза: <?=$calculation->ecola4;?>
-							</div>
-						<?}?>
-						<?if($calculation->ecola5) {?>
-							<div>
-								Эcola, лампа теплого свечения: <?=$calculation->ecola5;?>
-							</div>
-						<?}?>
-						<?if($calculation->ecola6) {?>
-							<div>
-								Эcola, лампа холодного свечения: <?=$calculation->ecola6;?>
-							</div>
-						<?}?>
-						<?if($calculation->dop_krepezh) {?>
-							<div>
-								Эcola, лампа холодного свечения: <?=$calculation->dop_krepezh;?>
-							</div>
-						<?}?>
+    <div class="tab-content">
+        <?
+        foreach ($calculations as $k => $calculation) { ?>
+            <?
+            $mounters = json_decode($calculation->mounting_sum); ?>
+            <?
+            $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".png"; ?>
+            <div class="tab-pane<?
+            if ($k == 0) {
+                echo " active";
+            } ?>" id="calculation<?= $calculation->id; ?>" role="tabpanel">
+                <h3><?= $calculation->calculation_title; ?></h3>
+                <a class="btn btn-primary"
+                   href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?= $calculation->id; ?>">Изменить
+                    расчет</a>
+                <? if (!empty($filename)): ?>
+                    <div class="sketch_image_block">
+                        <h3 class="section_header">
+                            Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                        </h3>
+                        <div class="section_content">
+                            <img class="sketch_image" src="<?php echo $filename . '?t=' . time(); ?>"
+                                 style="width:80vw;"/>
+                        </div>
+                    </div>
+                <? endif; ?>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <?
+                        if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
+                            <h4>Материал</h4>
+                            <div>
+                                Тип потолка: <?php echo $calculation->n1; ?>
+                            </div>
+                            <div>
+                                Тип фактуры: <?php echo $calculation->n2; ?>
+                            </div>
+                            <div>
+                                Производитель, ширина: <?php echo $calculation->n3; ?>
+                            </div>
 
-						<?if($calculation->n14_advanced) {?>
-							<h4>Обвод трубы</h4>
-							<?for($i = 1; $i <= $n14_num; $i++) {?>
-								<div>
-									<?=JText::_('COM_GM_CEILING_N14_TYPE_TEXT_'.$n14_type[$i]);?>, <?=$n14_count[$i];?> шт.
-								</div>
-							<?}?>
-						<?} else {?>
-							<h4>Обвод трубы (упрощ)</h4>
-							<?=$n14_easycount;?> шт.
-						<?}?>
-						<?if($calculation->n9) {?>
-							<h4>Прочее</h4>
-							<div>
-								Углы, шт.: <?=$calculation->n9;?>
-							</div>
-						<?}?>
-						<?if($calculation->n10) {?>
-							<div>
-								Криволинейный вырез, м: <?=$calculation->n10;?>
-							</div>
-						<?}?>
-						<?if($calculation->n11) {?>
-							<div>
-								Внутренний вырез, м: <?=$calculation->n11;?>
-							</div>
-						<?}?>
-						<?if($calculation->n7) {?>
-							<div>
-								Крепление в плитку, м: <?=$calculation->n7;?>
-							</div>
-						<?}?>
-						<?if($calculation->n8) {?>
-							<div>
-								Крепление в керамогранит, м: <?=$calculation->n8;?>
-							</div>
-						<?}?>
-						<?if($calculation->n17) {?>
-							<div>
-								Закладная брусом, м: <?=$calculation->n17;?>
-							</div>
-						<?}?>
-						<?if($calculation->n19) {?>
-							<div>
-								Провод, м: <?=$calculation->n19;?>
-							</div>
-						<?}?>
-						<?if($calculation->n20) {?>
-							<div>
-								Разделитель, м: <?=$calculation->n20;?>
-							</div>
-						<?}?>
-						<?if($calculation->n21) {?>
-							<div>
-								Пожарная сигнализация, м: <?=$calculation->n21;?>
-							</div>
-						<?}?>
-						<?if($calculation->n22) {?>
-							<div>
-								Установка вентиляции: <?=$calculation->n22;?>
-							</div>
-						<?}?>
-						<?if($calculation->n23) {?>
-							<div>
-								Установка электровытяжки: <?=$calculation->n23;?>
-							</div>
-						<?}?>
-						<?if($calculation->n24) {?>
-							<div>
-								Сложность доступа к месту монтажа, м: <?=$calculation->n24;?>
-							</div>
-						<?}?>
-					</div>
-					<div class="span6">
+                            <?php if ($calculation->color > 0) { ?>
+                                <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
+                                <?php $color = $color_model->getData($calculation->color); ?>
+                                <div>
+                                    Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
+                                                                                   alt=""/>
+                                </div>
+                            <?php } ?>
+                            <h4>Размеры помещения</h4>
+                            <div>
+                                Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
+                            </div>
+                            <div>
+                                Периметр, м: <?php echo $calculation->n5; ?>
+                            </div>
+                            <?php if ($calculation->n6 > 0) { ?>
+                                <div>
+                                    <h4> Вставка</h4>
+                                </div>
+                                <? if ($calculation->n6 == 314) { ?>
+                                    <div> Белая</div>
+                                <?php } else { ?>
+                                    <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
+                                    <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
+                                    <div>
+                                        Цветная : <?php echo $color_1[0]->title; ?> <img
+                                                style='width: 50px; height: 30px;'
+                                                src="/<?php echo $color_1[0]->file; ?>"
+                                                alt=""/>
+                                    </div>
+                                <?php } ?>
+                            <? } endif; ?>
+                        <?php if ($calculation->n16) { ?>
+                            <div>
+                                Скрытый карниз: <?php echo $calculation->n16; ?>
+                            </div>
+                        <?php } ?>
 
-					</div>
-				</div>
-			</div>
-		<?}?>
-	</div>
+                        <?php if ($calculation->n12) { ?>
+                            <h4>Установка люстры</h4>
+                            <?php echo $calculation->n12; ?> шт.
+                        <?php } ?>
+
+                        <?php if ($calculation->n13) { ?>
+                            <h4>Установка светильников</h4>
+                            <?php foreach ($calculation->n13 as $key => $n13_item) {
+                                echo "<b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
+
+                        <?php if ($calculation->n14) { ?>
+                            <h4>Обвод трубы</h4>
+                            <?php foreach ($calculation->n14 as $key => $n14_item) {
+                                echo "<b>Количество:</b> " . $n14_item->n14_count . " шт  -  <b>Диаметр:</b>  " . $n14_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
+
+                        <?php if ($calculation->n15) { ?>
+                            <h4>Шторный карниз Гильдии мастеров</h4>
+                            <?php foreach ($calculation->n15 as $key => $n15_item) {
+                                echo "<b>Количество:</b> " . $n15_item->n15_count . " шт - <b>Тип:</b>   " . $n15_item->type_title . " <b>Длина:</b> " . $n15_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
+                        <?php if ($calculation->n27 > 0) { ?>
+                            <h4>Шторный карниз</h4>
+                            <? if ($calculation->n16) echo "Скрытый карниз"; ?>
+                            <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                            <?php echo $calculation->n27; ?> м.
+                        <?php } ?>
+
+                        <?php if ($calculation->n26) { ?>
+                            <h4>Светильники Эcola</h4>
+                            <?php foreach ($calculation->n26 as $key => $n26_item) {
+                                echo "<b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
+
+                        <?php if ($calculation->n22) { ?>
+                            <h4>Вентиляция</h4>
+                            <?php foreach ($calculation->n22 as $key => $n22_item) {
+                                echo "<b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
+
+                        <?php if ($calculation->n23) { ?>
+                            <h4>Диффузор</h4>
+                            <?php foreach ($calculation->n23 as $key => $n23_item) {
+                                echo "<b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
+
+                        <?php if ($calculation->n29) { ?>
+                            <h4>Переход уровня</h4>
+                            <?php foreach ($calculation->n29 as $key => $n29_item) {
+                                echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <br>";
+                                ?>
+                            <?php }
+                        } ?>
+                        <h4>Прочее</h4>
+                        <?php if ($calculation->n9 > 0) { ?>
+                            <div>
+                                Углы, шт.: <?php echo $calculation->n9; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n10 > 0) { ?>
+                            <div>
+                                Криволинейный вырез, м: <?php echo $calculation->n10; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n11 > 0) { ?>
+                            <div>
+                                Внутренний вырез, м: <?php echo $calculation->n11; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n7 > 0) { ?>
+                            <div>
+                                Крепление в плитку, м: <?php echo $calculation->n7; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n8 > 0) { ?>
+                            <div>
+                                Крепление в керамогранит, м: <?php echo $calculation->n8; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n17 > 0) { ?>
+                            <div>
+                                Закладная брусом, м: <?php echo $calculation->n17; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n19 > 0) { ?>
+                            <div>
+                                Провод, м: <?php echo $calculation->n19; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n20 > 0) { ?>
+                            <div>
+                                Разделитель, м: <?php echo $calculation->n20; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n21 > 0) { ?>
+                            <div>
+                                Пожарная сигнализация, м: <?php echo $calculation->n21; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($calculation->dop_krepezh > 0) { ?>
+                            <div>
+                                Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($calculation->n24 > 0) { ?>
+                            <div>
+                                Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($calculation->n30 > 0) { ?>
+                            <div>
+                                Парящий потолок, м: <?php echo $calculation->n30; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n32 > 0) { ?>
+                            <div>
+                                Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
+                            </div>
+                        <?php } ?>
+                        <? $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
+                        <?php if (!empty($extra_mounting)) { ?>
+                            <div>
+                                <h4>Дополнительные работы</h4>
+                                <? foreach ($extra_mounting as $dop) {
+                                    echo "<b>Название:</b> " . $dop->title . "<br>";
+                                } ?>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        <?
+        } ?>
+    </div>
 	
 <script>
 	jQuery(document).ready(function(){
