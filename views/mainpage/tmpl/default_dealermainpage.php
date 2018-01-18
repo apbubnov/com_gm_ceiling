@@ -146,6 +146,7 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                             class="fa fa-mobile" aria-hidden="true"></i> Телефоны</a>
             </p>
         <?php }?>
+        
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
             <a class="btn btn-large btn-primary"
