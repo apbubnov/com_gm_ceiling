@@ -1590,8 +1590,10 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         });
 
         jQuery("#run_in_production").click(function () {
+            console.log(jQuery("#data_change").val());
             jQuery("#project_status").val(5);
             jQuery("#data_change").val(1);
+            jQuery("#data_change").val();
             //jQuery("#form-client").submit();
         });
         jQuery("#change_discount").click(function () {
