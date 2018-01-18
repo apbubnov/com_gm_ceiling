@@ -318,8 +318,8 @@ if (count($AllGaugerDealer) == 0) {
 				heightAll = jQuery("#modal-window-choose-tar").css("height");
 				height1 = jQuery("#div1").css("height");
 				height2 = jQuery("#div2").css("height");
-				height = heightAll.slice(-2) - height1.slice(-2) - height2.slice(-2);
-				console.log(heightAll.slice(-2));
+				height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
+				console.log(heightAll.slice(0, -2));
 				console.log(height1);
 				console.log(height2);
 				console.log(height);
