@@ -70,7 +70,7 @@ $project_total_discount = round($project_total_discount, 2);
 $extra_spend_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_spend);
 $penalty_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->penalty);
 $bonus_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->bonus);
-$month1 = date("n");
+/* $month1 = date("n");
 $year1 = date("Y");
 if ($month1 == 12) {
     $month2 = 1;
@@ -84,10 +84,7 @@ $jdate = new JDate($this->item->project_mounting_from);
 $current_from = $jdate->format('Y-m-d H:i:s');
 
 $jdate = new JDate($this->item->project_mounting_to);
-$current_to = $jdate->format('Y-m-d H:i:s');
-
-$calendar = Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->item->project_mounter, $month1, $year1, $current_from, $current_to);
-$calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->item->project_mounter, $month2, $year2, $current_from, $current_to);
+$current_to = $jdate->format('Y-m-d H:i:s'); */
 
 echo parent::getPreloader();
 ?>

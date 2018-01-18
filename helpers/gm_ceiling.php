@@ -4104,7 +4104,7 @@ class Gm_ceilingHelpersGm_ceiling
 		$current_from - фильтр даты от
 		$current_to - фильтр даты до
 	*/
-    public static function draw_calendar($project_id, $project_mounter, $month, $year, $current_from, $current_to)
+    /* public static function draw_calendar($project_id, $project_mounter, $month, $year, $current_from, $current_to)
     {
 
         if ($project_mounter > 0) {
@@ -4127,7 +4127,7 @@ class Gm_ceilingHelpersGm_ceiling
         //$jdate = new JDate($current_to);
         //$current_to = strtotime($jdate->format('d.m.Y H:i'));
 
-        $db = JFactory::getDbo();
+        /*$db = JFactory::getDbo();
         $query = $db->getQuery(true);
 
         $query
@@ -4234,8 +4234,8 @@ class Gm_ceilingHelpersGm_ceiling
                 //$from = strtotime($each->project_mounting_from);
 
                 //$to = strtotime($each->project_mounting_to);
-                if ($current_day = $from /*&& $current_day <= $to*/) {
-                    $class = " busy";
+                if ($current_day = $from /*&& $current_day <= $to*///) {
+                    /*$class = " busy";
                 }
             }
             if ($current_is_set == 1) {
@@ -4304,7 +4304,7 @@ class Gm_ceilingHelpersGm_ceiling
         $calendar .= '</table></div>';
 
         return $calendar;
-    }
+    } */
 
     /*
 		отрисовка календаря монтажей
@@ -4312,7 +4312,7 @@ class Gm_ceilingHelpersGm_ceiling
 		$month - месяц
 		$year - год
 	*/
-    public static function draw_calendar2($calculated_by, $month, $year)
+    /* public static function draw_calendar2($calculated_by, $month, $year)
     {
 
         if ($calculated_by > 0) {
@@ -4493,7 +4493,7 @@ class Gm_ceilingHelpersGm_ceiling
         $calendar .= '</table></div>';
 
         return $calendar;
-    }
+    } */
 
     // рисует календарь
     public static function DrawCalendarTar($id, $month, $year, $flag)

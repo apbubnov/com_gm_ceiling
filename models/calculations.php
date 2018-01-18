@@ -904,9 +904,10 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
-            $query3->select('id_user, date_from, date_to')
-                ->from('#__gm_ceiling_day_off')
-                ->where("date_from between '$date1 00:00:00' and '$date2 23:59:59'");
+            $query3->select('day_off.id_user, day_off.date_from, day_off.date_to')
+                ->from('#__gm_ceiling_day_off as day_off')
+                ->LeftJoin("#__user_usergroup_map as users ON day_off.id_user = users.user_id")
+                ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and group_id = 11");
             $db->setQuery($query3);
             $items3 = $db->loadObject();
             
@@ -979,11 +980,14 @@ class Gm_ceilingModelCalculations extends JModelList {
         {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
+            $query2 = $db->getQuery(true);
             
             if ($dealer == 1) {
                 $who = 1;
+                $who2 = 22;
             } else {
                 $who = 0;
+                $who2 = 21;
             }
 
             $query->select('projects.project_info, projects.project_calculation_date, projects.project_calculator')
@@ -991,8 +995,42 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
                 ->where("projects.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and projects.who_calculate = '$who' and projects.project_status NOT IN (2, 3, 9, 15, 22)");
             $db->setQuery($query);
-
             $items = $db->loadObjectList();
+
+            $query2->select('day_off.id_user, day_off.date_from, day_off.date_to')
+                ->from('#__gm_ceiling_day_off as day_off')
+                ->LeftJoin("#__user_usergroup_map as users ON day_off.id_user = users.user_id")
+                ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and users.group_id = $who2");
+            $db->setQuery($query2);
+            $items2 = $db->loadObject();
+            
+            // объединение с выходным днем
+            $index = 0;
+            $was_break = false;
+            //поиск индекса для вставки и замена даты на просто время
+            for ($i=0; $i < count($items); $i++) {
+                if (strtotime($items[$i]->project_mounting_date) >= strtotime($items2->date_from)) {
+                    $index = $i;
+                    $was_break = true;
+                    break;
+                }
+            }
+            ($index == 0 && !$was_break) ? $index = count($items) : 0;
+            for ($i=0; $i < count($items); $i++) {
+                $items[$i]->project_calculation_day_off = "";
+            }
+            //создание нового массива
+            if (!empty($items2)) {
+                $day = array(
+                    'project_calculator'=>$items2->id_user,
+                    'project_calculation_date'=>$items2->date_from,
+                    'project_info'=>"Выходной",
+                    'project_calculation_day_off'=>$items2->date_to
+                );
+                $day = array((object)$day);
+                array_splice($items,$index,0,$day);
+            }
+
     		return $items;
         }
         catch(Exception $e)

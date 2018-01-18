@@ -1579,7 +1579,11 @@ echo parent::getPreloader();
                 table_projects2 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
                 Array.from(DataOfProject).forEach(function(element) {
                     if (element.project_mounter == id) {
-                        table_projects2 += '<tr><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                        if (element.project_mounting_day_off != "") {
+                            table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                        } else {
+                            table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                        }
                     }
                 });
                 table_projects2 += "</table>";

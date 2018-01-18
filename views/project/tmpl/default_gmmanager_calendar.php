@@ -70,11 +70,11 @@ if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
 if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
 if($this->item->transport == 1 ) {
-$min = 100;
-foreach($calculations as $d) {
-    if($d->discount < $min) $min = $d->discount;
-}
-if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
+    $min = 100;
+    foreach($calculations as $d) {
+        if($d->discount < $min) $min = $d->discount;
+    }
+    if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
 }
 if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
     $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
@@ -1306,9 +1306,11 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         <div id="modal-window-choose-tar">
             <p id="date-modal"></p>
             <p><strong>Выберите время замера:</strong></p>
-            <p>
-                <table id="projects_gaugers"></table>
-            </p>
+            <div class="table_wraper">
+                <p>
+                    <table id="projects_gaugers"></table>
+                </p>
+            </div>
             <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
         </div>
     </div>
@@ -1461,10 +1463,12 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
     //------------------------------------------
 
     jQuery(document).ready(function () {
+
         $("#modal_window_container #ok").click(function() { click_ok(this); });
+        
         trans();
 
-        // открытие модального окна с календаря и получение даты и вывода свободных монтажников
+        // открытие модального окна с календаря и получение даты и вывода свободных замерщиков
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
             reg1 = "D(.*)D";
@@ -1515,7 +1519,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                         TableForSelect += '<tr><td></td>';
                                     }
                                     TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-
                                     TableForSelect += '<td>'+elementProject.project_info+'</td>';
                                     emptytd = 1;
                                 }
@@ -1616,6 +1619,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 break;
             }
         }
+
         jQuery("#back_btn").click(function(){
             var client_id = jQuery("#client_id").val();
             if(client_id == 1){
@@ -1630,7 +1634,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 history.back();
 
             }
-        })
+        });
 
         document.onkeydown = function (e) {
             if (e.keyCode === 13) {
@@ -1686,6 +1690,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             });
 
         }
+
         var time = <?php if (isset($_SESSION['time'])) {
             echo "\"" . $_SESSION['time'] . "\"";
         } else echo "\"" . $time . "\"";?>;
@@ -1904,7 +1909,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 }
             });
             }
-        })
+        });
 
         jQuery("input[name^='include_calculation']").click(function () {
             var _this = jQuery(this);
@@ -1938,15 +1943,18 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 jQuery("#recoil_choose").hide();
                 jQuery("#show_window").hide();
             }
-        })
+        });
+
         jQuery("#show_window").click(function(){
             jQuery("#modal-window-container").show();
             jQuery("#modal-window-call-tar").show("slow");
             jQuery("#close-tar").show();
-        })
+        });
+
         jQuery("#recoil_choose").change(function(){
             jQuery("#recoil").val(jQuery("#recoil_choose").val());
-        })
+        });
+
         jQuery("#add_recoil").click(function(){
             jQuery.ajax({
                 type: 'POST',
@@ -1984,7 +1992,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     });
                 }
             });
-        })
+        });
+
         jQuery("#client_order").click(function () {
             jQuery("input[name='project_verdict']").val(1);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
@@ -1994,6 +2003,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             jQuery("#project_status").val(1);
             jQuery("#call").toggle();
         });
+
         jQuery("#refuse_partnership").click(function () {
             jQuery("#project_status").val(15);
             if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){
@@ -2010,13 +2020,16 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 });
             }
         });
+
         jQuery("#refuse_project").click(function () {
             jQuery("#project_status").val(2);
             jQuery("#call").toggle();
         });
+
         jQuery("#accept_changes").click(function () {
             jQuery("input[name='data_change']").val(1);
         });
+
         jQuery("#add_call_and_submit").click(function () {
             if (jQuery("#project_status").val() == 1) {
                 if (jQuery("#jform_project_gauger").val() == 0) {
@@ -2267,17 +2280,19 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             call(jQuery("#select_phones").val());
             add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+', ''));
         });
+
         jQuery("#make_call").click(function () {
             phone = jQuery("#jform_client_contacts").val();
             client_id = jQuery("#client_id").val();
             call(phone);
             add_history(client_id, "Исходящий звонок на " + phone);
-        })
+        });
 
         jQuery("#broke").click(function(){
             jQuery("#call_up").show();
 
-        })
+        });
+
         jQuery("#add_call_and_submit_up").click(function(){
             client_id = <?php echo $this->item->id_client;?>;
                     jQuery.ajax({
@@ -2312,7 +2327,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                             });
                         }
                     });
-        })
+        });
 
         jQuery("#add_comment").click(function () {
             var comment = jQuery("#new_comment").val();
@@ -2383,9 +2398,11 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 
             trans();
         });
+
         jQuery("#click_transport").click(function () {
             trans();
         });
+
         jQuery("#click_transport_1").click(function () {
             trans();
         });
@@ -2393,6 +2410,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         if (jQuery("input[name='transport']:checked").val() == '2') {
             jQuery("#transport_dist").show();
         }
+
         if (jQuery("input[name='transport']:checked").val() == '1') {
             jQuery("#transport_dist_col").show();
         }
@@ -2688,6 +2706,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         });
 
     });
+
     jQuery("#send_all_to_email3").click(function () {
         var email = jQuery("#all-email3").val();
         var id  = jQuery("#project_id").val();

@@ -59,7 +59,7 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
 
 <div class="form-group">
 <h2 style = "display:inline-block;"><?php echo $user->name; ?></h2> <?php if($user->dealer_type!=2 ){
-    if($userId == 1 || ($userId != 1 && $user->dealer_id != 1)) { ?>
+    if($userId == 1 || $userId == 2 || ($userId != 1 && $user->dealer_id != 1)) { ?>
 <button id="toProfile" class = "btn btn-primary" style = "diaplay:inline-block;"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
 <?php } }?>
 </div>
@@ -76,12 +76,14 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                 <a class="btn btn-large btn-warning" href="<?php
                 if ($userId == 1 || $userId == 2)
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false);
-                else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
+                else //echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); 
+                echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
                 ?>">
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-clock-o" aria-hidden="true"></i> ГМ Менеджер</a>
                 <?php else: ?>
-                    <i class="fa fa-clock-o" aria-hidden="true"></i> Менеджер</a>
+                    <i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
+                    <!--<i class="fa fa-clock-o" aria-hidden="true"></i>Менеджер</a>-->
                 <?php endif; ?>
                 <?php if ($sumManager != 0) { ?>
                     <div class="circl-digits"><?php echo $sumManager; ?></div>
@@ -115,7 +117,7 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-user" aria-hidden="true"></i> ГМ Начальник МС</a>
                 <?php else: ?>
-                    <i class="fa fa-user" aria-hidden="true"></i> Начальник МС</a>
+                    <i class="fa fa-user" aria-hidden="true"></i>Начальник МС</a>
                 <?php endif; ?>
                 <?php if ($mounting[0]->count != 0) { ?>
                     <div class="circl-digits"><?php echo $mounting[0]->count; ?></div>
