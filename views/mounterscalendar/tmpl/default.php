@@ -344,10 +344,6 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 			jQuery("#button-next").css({"width":"25px"});
 		}
         // --------------------------------
-
-
-
-
     });
 
 </script>
