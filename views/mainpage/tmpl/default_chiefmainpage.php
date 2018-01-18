@@ -56,7 +56,7 @@ $answer2 = $model->getDataByStatus("Mountings", $userId, null);
 		</p>
 	</div>
 <?endif;?>
-<?elseif ($user->dealer_type == 1): ?>
+<?if ($user->dealer_type == 1): ?>
 	<div class="start_page">
 		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
