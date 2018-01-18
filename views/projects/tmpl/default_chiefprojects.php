@@ -29,7 +29,8 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 <h2 class="center">Неназначенные на монтаж</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects'); ?>" method="post"
       name="adminForm" id="adminForm">
-	  <? if (count($this->items) > 0): ?>
+	  <? if (count($this->items) > 0 && empty($this->items->project_mounter)): ?>
+	
 	  <table class="table table-striped one-touch-view" id="projectList">
 			  <thead>
 			  <tr>
@@ -51,9 +52,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 				  <th class="center">
 					  <?= JHtml::_('grid.sort', 'Квадратура', 'quadrature', $listDirn, $listOrder); ?>
 				  </th>
-				  <th class="center">
-					  <?= JHtml::_('grid.sort', 'Бригада', 'group_name', $listDirn, $listOrder); ?>
-				  </th>
 			  </tr>
 			  </thead>
 			  <tbody>
@@ -74,9 +72,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						  <td class="center one-touch"><?= $item->client_name; ?></td>
 						  <td class="center one-touch"><?= $item->dealer_name; ?></td>
 						  <td class="center one-touch"><?= round($item->quadrature, 2); ?></td>
-						  <? if ($item->project_mounter) {$mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
-						  $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
-						  <td class="center one-touch"><?= $mounter->name; ?></td>
 					  </tr>
 				  <? endif; ?>
 			  <? endforeach; ?>
