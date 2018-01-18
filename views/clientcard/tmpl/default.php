@@ -30,7 +30,14 @@
     }
     else
     {
-        $subtype = 'production';
+        if(JFactory::getUser($client->dealer_id)->dealer_type == 3)
+        {
+            $subtype = 'designer';
+        }
+        else
+        {
+            $subtype = 'production';
+        }
     }
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>

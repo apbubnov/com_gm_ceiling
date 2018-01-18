@@ -159,7 +159,7 @@
      
         <?php foreach($projects as $item):?>
 
-            <tr class = "row_project" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=production&id='.(int) $item->id.'&call_id='.(int) $call_id); ?>">
+            <tr class = "row_project" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=designer&id='.(int) $item->id.'&call_id='.(int) $call_id); ?>">
                 <td><?php echo $item->id;?></td>
                 <td>
                     <?php 
@@ -308,7 +308,7 @@
             success: function(data){
                 data = JSON.parse(data);
                 var call_id = <?php echo $call_id; ?>;
-                url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=production&id=' + data + '&call_id=' + call_id;
+                url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=designer&id=' + data + '&call_id=' + call_id;
                 location.href =url;
             },
             dataType: "text",
