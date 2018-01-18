@@ -153,7 +153,7 @@ if (count($AllGaugerDealer) == 0) {
 				<p id="date-modal"></p>
 				<p><strong>Выберите время замера (и замерщика):</strong></p>
 			</div>
-			<div class="table_wraper">
+			<div id="table_wraper">
 				<p>
 					<table id="projects_gaugers"></table>
 				</p>
@@ -168,12 +168,11 @@ if (count($AllGaugerDealer) == 0) {
 <script>
 
 	jQuery(window).resize(function() {
-		heightAll = jQuery("#modal-window-choose-tar").height;
-		height1 = jQuery("#div1").height;
-		height2 = jQuery("#div2").height;
-		console.log(heightAll);
-		console.log(height1);
-		console.log(height2);
+		heightAll = jQuery("#modal-window-choose-tar").css("height");
+		height1 = jQuery("#div1").css("height");
+		height2 = jQuery("#div2").css("height");
+		height = heightAll - height1 - height2;
+		jQuery("#table_wraper").css("height", height);
 	});
 
 	// листание календаря
@@ -315,6 +314,13 @@ if (count($AllGaugerDealer) == 0) {
             jQuery("#modal-window-container-tar").show();
 			jQuery("#modal-window-choose-tar").show("slow");
             jQuery("#close-tar").show();
+			heightAll = jQuery("#modal-window-choose-tar").css("height");
+			height1 = jQuery("#div1").css("height");
+			height2 = jQuery("#div2").css("height");
+			height = heightAll - height1 - height2;
+			console.log(height);
+			jQuery("#table_wraper").css("height", height);
+			console.log(jQuery("#table_wraper").css("height"));
 			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
 				var dealer = 1;
 			} else {
