@@ -206,8 +206,8 @@
     <button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_comm" class = "modal_window">
         <h6 style = "margin-top:10px">Введите почту</h6>
-        <p><input type="text" id="sum" placeholder="Почта" required></p>
-        <p><button type="button" id="send_comm" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
+        <p><input type="text" id="email_comm" placeholder="Почта" required></p>
+        <p><button type="button" id="send_comm" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
     </div>
 </div>
 <script>
@@ -356,7 +356,44 @@
     {
         document.getElementById('calls-tar').scrollTop = 9999;
         jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
+
+        jQuery("#send_comm").click(function(){
+            var user_id = <?php echo $dealer->id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
+                data: {
+                    user_id:<?php echo $call_id;?>,
+                    email: jQuery("#email_comm").val()
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Коммерческое предложение отправленно"
+                    });
+
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+        
     });
+
 
     jQuery("#back_btn").click(function (){
         location.href = '/index.php?option=com_gm_ceiling&view=designers';
