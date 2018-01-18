@@ -136,8 +136,12 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
     <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
     <?php $calculations = $model->getProjectItems($this->item->id); ?>
     <?php
+        $need_choose = false;
         $jinput = JFactory::getApplication()->input;
+        $phoneto = $jinput->get('phoneto', '0', 'STRING');
+        $phonefrom = $jinput->get('phonefrom', '0', 'STRING');
         $call_id = $jinput->get('call_id', 0, 'INT');
+
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
         $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
         $date_time = $this->item->project_calculation_date;
@@ -155,6 +159,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         $request_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
         $request_model->delete($this->item->id_client);
         $client_sex  = $model_client->getClientById($this->item->id_client)->sex;
+        //$client_dealer_id = $model_client->getClientById($this->item->id_client)->dealer_id;
+        //throw new Exception($client_dealer_id);
         if($this->item->id_client!=1){
             $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
             $email = $dop_contacts->getEmailByClientID($this->item->id_client);
@@ -167,15 +173,23 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
         $all_recoil = $recoil_model->getData();
     ?>
-    <h5 class="center">
-       Дилер/клиент дилера
-    </h5>
+
+    <div id="modal-window-container">
+		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+		<div id="modal-window-call-tar">
+			<h6>Введите ФИО</h6>
+			<p><input type="text" id="new_fio" placeholder="ФИО" required></p>
+            <h6>Введите номер телефона</h6>
+			<p><input type="text" id="new_phone" placeholder="ФИО" required></p>
+			<p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+	    </div>
+    </div>
     <div class="container">
         <div class="row">
             <div class="item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.run_in_production&type=gmmanager&subtype=calendar"
+                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
@@ -186,6 +200,11 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="subtype" value="calendar" type="hidden">
                     <input name="data_change" value="0" type="hidden">
                     <input name="data_delete" value="0" type="hidden">
+                    <input name="designer" value="1" type="hidden">
+                    <input name = "recoil" id = "recoil" value = "" type = "hidden">
+                    <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if(isset($_SESSION['time'])){ echo $_SESSION['time']; } else if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); }?>"class="inputactive" type="hidden">
+                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; } else if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;}?>" type="hidden">
+                    <input name = "project_gauger" id = "jform_project_gauger" class ="inputactive" value="<?php if(isset($_SESSION['gauger'])){ echo $_SESSION['gauger']; } else if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else {echo "0";}?>" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                     <input id = "emails" name = "emails" value = "" type = "hidden"> 
@@ -391,6 +410,29 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 </td>
                                 </tr>
                                 <tr>
+                                    <th>Дата и время замера</th>
+                                    <td>
+                                        <div id="calendar-container">
+                                            <div class="btn-small-l">
+                                                <button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                            </div>
+                                            <?php echo $calendar; ?>
+                                            <div class="btn-small-r">
+                                                <button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Примечание менеджера</th>
+                                    <td>
+                                        <input name="gmmanager_note" id="gmmanager_note" class="inputactive"
+                                               value="<?php if (isset($_SESSION['manager_comment'])) {
+                                                   echo $_SESSION['manager_comment'];
+                                               } else echo $this->item->gm_manager_note; ?>">
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>Менеджер</th>
                                     <td>
                                         <input name="Manager_name" id="manager_name" class="inputhidden"
@@ -399,7 +441,16 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                                } ?>">
                                     </td>
                                 </tr>
-                            </div>
+                                <tr>
+                                    <th>Замерщик</th>
+                                    <td>
+                                        <input name="calculator_name" id="calculator_name" class="inputhidden"
+                                               value="<?php if (isset($this->item->project_calculator)) {
+                                                   echo JFactory::getUser($this->item->project_calculator)->name;
+                                               }?>">
+                                    </td>
+                                </tr>
+                        </div>
                         </table>
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-6">
@@ -417,7 +468,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 </tr>
                             </table>
                         </div>
-                    </div> 
+                    </div>
             </div>
             <table class="table calculation_sum">
                 <?php if ($this->item->project_verdict == 0) { ?>
@@ -445,6 +496,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 </tr>
                 </tbody>
             </table>
+            <!--</form>-->
         </div>
     </div>
     </div>
@@ -895,210 +947,215 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 <a class="btn btn-primary" onclick='send_and_redirect(<?php echo $calculation->id; ?>)'
                    href='javascript:'>Изменить
                     расчет</a>
-                <? if (!empty($filename)):?>
-                    <div class="sketch_image_block">
-                        <h3 class="section_header">
-                            Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                        </h3>
-                        <div class="section_content">
-                            <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
-                        </div>
+                <div class="sketch_image_block">
+                    <h3 class="section_header">
+                        Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                    </h3>
+                    <div class="section_content">
+                        <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
                     </div>
-                <? endif; ?>
+                </div>
                 <div class="row-fluid">
                     <div class="span6">
-                        <?if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
-                            <h4>Материал</h4>
-                            <div>
-                                Тип потолка: <?php echo $calculation->n1; ?>
-                            </div>
-                            <div>
-                                Тип фактуры: <?php echo $calculation->n2; ?>
-                            </div>
-                            <div>
-                                Производитель, ширина: <?php echo $calculation->n3; ?>
-                            </div>
+                        <h4>Материал</h4>
+                        <div>
+                        Тип потолка: <?php echo $calculation->n1; ?>
+                    </div>
+                    <div>
+                        Тип фактуры: <?php echo $calculation->n2; ?>
+                    </div>
+                    <div>
+                        Производитель, ширина: <?php echo $calculation->n3; ?>
+                    </div>
 
-                            <?php if ($calculation->color > 0) { ?>
-                                <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
-                                <?php $color = $color_model->getData($calculation->color); ?>
-                                <div>
-                                    Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
-                                                                                   alt=""/>
-                                </div>
-                            <?php } ?>
-                            <h4>Размеры помещения</h4>
+                    <?php if ($calculation->color > 0) { ?>
+                        <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
+                        <?php $color = $color_model->getData($calculation->color); ?>
+                        <div>
+                            Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
+                                                                    alt=""/>
+                        </div>
+                    <?php } ?>
+                    <h4>Размеры помещения</h4>
+                    <div>
+                        Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
+                    </div>
+                    <div>
+                        Периметр, м: <?php echo $calculation->n5; ?>
+                    </div>
+
+
+                    <?php if ($calculation->n6 > 0) { ?>
+                        <div>
+                            <h4> Вставка</h4>
+                        </div>
+                        <? if ($calculation->n6 == 314) { ?>
+                            <div> Белая</div>
+                        <?php } else { ?>
+                            <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
+                            <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
                             <div>
-                                Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
-                            </div>
-                            <div>
-                                Периметр, м: <?php echo $calculation->n5; ?>
-                            </div>
-                            <?php if ($calculation->n6 > 0) {?>
-                                <div>
-                                    <h4> Вставка</h4>
-                                </div>
-                                <? if ($calculation->n6 == 314) {?>
-                                    <div> Белая </div>
-                                <?php } else  {?>
-                                    <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
-                                    <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
-                                    <div>
-                                        Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>"
-                                                                                         alt=""/>
-                                    </div>
-                                <?php }?>
-                            <?} endif; ?>
-                        <?php if ($calculation->n16) { ?>
-                            <div>
-                                Скрытый карниз: <?php echo $calculation->n16; ?>
+                                Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;'
+                                                                                    src="/<?php echo $color_1[0]->file; ?>"
+                                                                                    alt=""/>
                             </div>
                         <?php } ?>
+                    <? } ?>
 
-                        <?php if ($calculation->n12) { ?>
-                            <h4>Установка люстры</h4>
-                            <?php echo $calculation->n12; ?> шт.
-                        <?php } ?>
 
-                        <?php if ($calculation->n13) { ?>
-                            <h4>Установка светильников</h4>
-                            <?php foreach ($calculation->n13 as $key => $n13_item) {
-                                echo "<b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "<br>";
-                                ?>
-                            <?php }
-                        } ?>
+                    <!--<?php if ($calculation->transport) { ?>
+                        <h4>Транспортные расходы</h4>
+                        <div>
+                            Транспортные расходы, шт.: <?php echo $calculation->transport; ?>
+                        </div>
+                    <?php } ?>-->
 
-                        <?php if ($calculation->n14) { ?>
-                            <h4>Обвод трубы</h4>
-                            <?php foreach ($calculation->n14 as $key => $n14_item) {
-                                echo "<b>Количество:</b> " . $n14_item->n14_count . " шт  -  <b>Диаметр:</b>  " . $n14_item->component_title . "<br>";
-                                ?>
-                            <?php }
-                        } ?>
+                    <?php if ($calculation->n12) { ?>
+                        <h4>Установка люстры</h4>
+                        <?php echo $calculation->n12; ?> шт.
+                    <?php } ?>
 
-                        <?php if ($calculation->n15) { ?>
-                            <h4>Шторный карниз Гильдии мастеров</h4>
-                            <?php foreach ($calculation->n15 as $key => $n15_item) {
-                                echo "<b>Количество:</b> " . $n15_item->n15_count . " шт - <b>Тип:</b>   " . $n15_item->type_title . " <b>Длина:</b> " . $n15_item->component_title . "<br>";
-                                ?>
-                            <?php }
-                        } ?>
-                        <?php if ($calculation->n27> 0) { ?>
-                            <h4>Шторный карниз</h4>
-                            <? if ($calculation->n16) echo "Скрытый карниз"; ?>
-                            <? if (!$calculation->n16) echo "Обычный карниз"; ?>
-                            <?php echo $calculation->n27; ?> м.
-                        <?php } ?>
+                    <?php if ($calculation->n13) { ?>
+                        <h4>Установка светильников</h4>
+                        <?php foreach ($calculation->n13 as $key => $n13_item) {
+                            echo "<b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "<br>";
+                            ?>
+                        <?php }
+                    } ?>
 
-                        <?php if ($calculation->n26) { ?>
-                            <h4>Светильники Эcola</h4>
-                            <?php foreach ($calculation->n26 as $key => $n26_item) {
-                                echo "<b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "<br>";
-                                ?>
-                            <?php }
-                        } ?>
+                    <?php if ($calculation->n14) { ?>
+                        <h4>Обвод трубы</h4>
+                        <?php foreach ($calculation->n14 as $key => $n14_item) {
+                            echo "<b>Количество:</b> " . $n14_item->n14_count . " шт  -  <b>Диаметр:</b>  " . $n14_item->component_title . "<br>";
+                            ?>
+                        <?php }
+                    } ?>
 
-                        <?php if ($calculation->n22) { ?>
-                            <h4>Вентиляция</h4>
-                            <?php foreach ($calculation->n22 as $key => $n22_item) {
-                                echo "<b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "<br>";
-                                ?>
-                            <?php }
-                        } ?>
+                    <?php if ($calculation->n15) { ?>
+                        <h4>Шторный карниз Гильдии мастеров</h4>
+                        <?php foreach ($calculation->n15 as $key => $n15_item) {
+                            echo "<b>Количество:</b> " . $n15_item->n15_count . " шт - <b>Тип:</b>   " . $n15_item->type_title . " <b>Длина:</b> " . $n15_item->component_title . "<br>";
+                            ?>
+                        <?php }
+                    } ?>
+                    <?php if ($calculation->n27> 0) { ?>
+                        <h4>Шторный карниз</h4>
+                        <? if ($calculation->n16) echo "Скрытый карниз"; ?>
+                        <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                        <?php echo $calculation->n27; ?> м.
+                    <?php } ?>
 
-                        <?php if ($calculation->n23) { ?>
-                            <h4>Диффузор</h4>
-                            <?php foreach ($calculation->n23 as $key => $n23_item) {
-                                echo "<b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "<br>";
-                                ?>
-                            <?php }
-                        } ?>
+                    <?php if ($calculation->n26) { ?>
+                        <h4>Светильники Эcola</h4>
+                        <?php foreach ($calculation->n26 as $key => $n26_item) {
+                            echo "<b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "<br>";
+                            ?>
+                        <?php }
+                    } ?>
 
-                        <?php if ($calculation->n29) { ?>
-                            <h4>Переход уровня</h4>
-                            <?php foreach ($calculation->n29 as $key => $n29_item) {
-                                echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <br>";
-                                ?>
-                            <?php }
-                        } ?>
+                    <?php if ($calculation->n22) { ?>
+                        <h4>Вентиляция</h4>
+                        <?php foreach ($calculation->n22 as $key => $n22_item) {
+                            echo "<b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "<br>";
+                            ?>
+                        <?php }
+                    } ?>
+
+                    <?php if ($calculation->n23) { ?>
+                        <h4>Диффузор</h4>
+                        <?php foreach ($calculation->n23 as $key => $n23_item) {
+                            echo "<b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "<br>";
+                            ?>
+                        <?php }
+                    } ?>
+
+                    <?php if ($calculation->n29) { ?>
+                        <h4>Переход уровня</h4>
+                        <?php foreach ($calculation->n29 as $key => $n29_item) {
+                            echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <b>Профиль:</b> " .$n29_item->component_title ." " . $n29_item->image . "<br>";
+                            ?>
+                        <?php }
+                    } ?>
+
+
+                    <?php if ($calculation->n9 > 0) { ?>
                         <h4>Прочее</h4>
-                        <?php if ($calculation->n9> 0) { ?>
-                            <div>
-                                Углы, шт.: <?php echo $calculation->n9; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($calculation->n10> 0) { ?>
-                            <div>
-                                Криволинейный вырез, м: <?php echo $calculation->n10; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($calculation->n11> 0) { ?>
-                            <div>
-                                Внутренний вырез, м: <?php echo $calculation->n11; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($calculation->n7> 0) { ?>
-                            <div>
-                                Крепление в плитку, м: <?php echo $calculation->n7; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($calculation->n8> 0) { ?>
-                            <div>
-                                Крепление в керамогранит, м: <?php echo $calculation->n8; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($calculation->n17> 0) { ?>
-                            <div>
-                                Закладная брусом, м: <?php echo $calculation->n17; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($calculation->n19> 0) { ?>
-                            <div>
-                                Провод, м: <?php echo $calculation->n19; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($calculation->n20> 0) { ?>
-                            <div>
-                                Разделитель, м: <?php echo $calculation->n20; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($calculation->n21> 0) { ?>
-                            <div>
-                                Пожарная сигнализация, м: <?php echo $calculation->n21; ?>
-                            </div>
-                        <?php } ?>
+                        <div>
+                            Углы, шт.: <?php echo $calculation->n9; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->n10 > 0) { ?>
+                        <div>
+                            Криволинейный вырез, м: <?php echo $calculation->n10; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->n11> 0) { ?>
+                        <div>
+                            Внутренний вырез, м: <?php echo $calculation->n11; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->n7> 0) { ?>
+                        <div>
+                            Крепление в плитку, м: <?php echo $calculation->n7; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->n8> 0) { ?>
+                        <div>
+                            Крепление в керамогранит, м: <?php echo $calculation->n8; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->n17> 0) { ?>
+                        <div>
+                            Закладная брусом, м: <?php echo $calculation->n17; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->n19> 0) { ?>
+                        <div>
+                            Провод, м: <?php echo $calculation->n19; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->n20> 0) { ?>
+                        <div>
+                            Разделитель, м: <?php echo $calculation->n20; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->n21> 0) { ?>
+                        <div>
+                            Пожарная сигнализация, м: <?php echo $calculation->n21; ?>
+                        </div>
+                    <?php } ?>
 
-                        <?php if ($calculation->dop_krepezh> 0) { ?>
-                            <div>
-                                Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
-                            </div>
-                        <?php } ?>
+                    <?php if ($calculation->dop_krepezh> 0) { ?>
+                        <div>
+                            Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
+                        </div>
+                    <?php } ?>
 
-                        <?php if ($calculation->n24> 0) { ?>
-                            <div>
-                                Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
-                            </div>
-                        <?php } ?>
-
-                        <?php if ($calculation->n30> 0) { ?>
-                            <div>
-                                Парящий потолок, м: <?php echo $calculation->n30; ?>
-                            </div>
-                        <?php } ?>
-                        <?php if ($calculation->n32> 0) { ?>
-                            <div>
-                                Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
-                            </div>
-                        <?php } ?>
-                        <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
-                        <?php if (!empty($extra_mounting) ) { ?>
-                            <div>
-                                <h4>Дополнительные работы</h4>
-                                <? foreach($extra_mounting as $dop) {
-                                    echo "<b>Название:</b> " . $dop->title .  "<br>";
-                                }?>
-                            </div>
-                        <?php } ?>
+                    <?php if ($calculation->n24> 0) { ?>
+                        <div>
+                            Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->n30> 0) { ?>
+                        <div>
+                            Парящий потолок, м: <?php echo $calculation->n30; ?>
+                        </div>
+                    <?php } ?>
+                    <?php if ($calculation->distance && $calculation->distance_col) { ?>
+                        <div>
+                            Выезд за город: <?php echo $calculation->distance; ?> км.
+                            , <?php echo $calculation->distance_col; ?> кол-во раз
+                        </div>
+                    <?php } ?>
+                    <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
+                    <?php if (!empty($extra_mounting) ) { ?>
+                        <div>
+                        <h4>Дополнительные работы</h4>
+                            <? foreach($extra_mounting as $dop) {
+                                echo "<b>Название:</b> " . $dop->title .  "<br>";
+                            }?>
+                        </div>
+                    <?php } ?>
                     </div>
                     <button class="btn  btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
                     <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
@@ -1112,11 +1169,20 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             <table>
                 <tr>
                     <td>
-                        <a class="btn  btn-primary" id="run_in_production">
-                            Запустить в производство
+                        <a class="btn  btn-primary" id="rec_to_measurement">
+                            Записать на замер
                         </a>
                     </td>
-                    
+                    <td>
+                        <a class="btn  btn-danger" id="refuse_project">
+                            Отказ от замера
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn  btn-primary" id="refuse_partnership">
+                            Отказ от сотрудничества с ГМ
+                        </a>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan=3>
@@ -1186,6 +1252,79 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         }
     });
 
+    // листание календаря
+    month_old = 0;
+    year_old = 0;
+    jQuery("#calendar-container").on("click", "#button-next", function () {
+        month = <?php echo $month; ?>;
+        year = <?php echo $year; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 12) {
+            month = 1;
+            year++;
+        } else {
+            month++;
+        }
+        month_old = month;
+        year_old = year;
+        update_calendar(month, year);
+    });
+    jQuery("#calendar-container").on("click", "#button-prev", function () {
+        month = <?php echo $month; ?>;
+        year = <?php echo $year; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 1) {
+            month = 12;
+            year--;
+        } else {
+            month--;
+        }
+        month_old = month;
+        year_old = year;
+        update_calendar(month, year);
+    });
+    function update_calendar(month, year) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+            data: {
+                id: <?php echo $userId; ?>,
+                id_dealer: <?php echo $user->dealer_id; ?>,
+                flag: 3,
+                month: month,
+                year: year,
+            },
+            success: function (msg) {
+                jQuery("#calendar-container").empty();
+                msg += '<div class="btn-small-l"><button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
+                jQuery("#calendar-container").append(msg);
+                Today(day, NowMonth, NowYear);
+                var datesession = jQuery("#jform_project_new_calc_date").val();
+                if (datesession != undefined) {
+                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("class", "change");
+                }
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+                });
+            }
+        });
+    }
+    //-----------------------------------------------------------------
+
     //скрыть модальное окно
     jQuery(document).mouseup(function (e) {
 		var div = jQuery("#modal-window-choose-tar");
@@ -1198,6 +1337,12 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
     });
     //-------------------------------------------------------------------
 
+    // функция подсвета сегоднешней даты
+    var Today = function (day, month, year) {
+        month++;
+        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"I").addClass("today");
+    }
+    //------------------------------------------
 
     // функция чтобы другая функция выполнилась позже чем document ready
     Function.prototype.process= function(state){
@@ -1217,6 +1362,147 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
     jQuery(document).ready(function () {
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         trans();
+
+        // открытие модального окна с календаря и получение даты и вывода свободных монтажников
+        jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
+            window.idDay = jQuery(this).attr("id");
+            reg1 = "D(.*)D";
+            reg2 = "M(.*)M";
+            reg3 = "Y(.*)Y";
+            if (idDay.match(reg1)[1].length == 1) {
+                d = "0"+idDay.match(reg1)[1];
+            } else {
+                d = idDay.match(reg1)[1];
+            }
+            if (idDay.match(reg2)[1].length == 1) {
+                m = "0"+idDay.match(reg2)[1];
+            } else {
+                m = idDay.match(reg2)[1];
+            }
+            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
+            jQuery("#modal-window-container-tar").show();
+			jQuery("#modal-window-choose-tar").show("slow");
+            jQuery("#close-tar").show();
+            jQuery.ajax({
+                type: 'POST',
+                url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
+                data: {
+                    date: date,
+                    dealer: <?php echo $user->dealer_id; ?>,
+                },
+                success: function(data) {
+                    Array.prototype.diff = function(a) {
+                        return this.filter(function(i) {return a.indexOf(i) < 0;});
+                    };
+                    AllGauger = <?php echo json_encode($AllGauger); ?>;
+                    data = JSON.parse(data); // замеры
+                    console.log(data);
+                    AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                    var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
+                    AllTime.forEach( elementTime => {
+                        var t = elementTime.substr(0, 2);
+                        t++;
+                        Array.from(AllGauger).forEach(function(elementGauger) {
+                            var emptytd = 0;
+                            Array.from(data).forEach(function(elementProject) {
+                                if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                                    var gaugersession = jQuery("#jform_project_gauger").val();
+                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                    } else {
+                                        TableForSelect += '<tr><td></td>';
+                                    }
+                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+
+                                    TableForSelect += '<td>'+elementProject.project_info+'</td>';
+                                    emptytd = 1;
+                                }
+                            });
+                            if (emptytd == 0) {
+                                TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+
+                                TableForSelect += '<td></td>';
+                            }
+                            TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
+                        });
+                    });
+                    jQuery("#projects_gaugers").empty();
+                    jQuery("#projects_gaugers").append(TableForSelect);
+                    jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
+                }
+            });
+            //если сессия есть, то выдать время, которое записано в сессии
+            if (date == datesession.substr(0, 10)) {
+                var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                var gaugersession = jQuery("#jform_project_gauger").val();
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    if (timesession != undefined) {
+                        times.each(function(element) {
+                            if (timesession == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                jQuery(this).prop("checked", true);
+                            }
+                        });
+                    }
+                }, 200);
+            }
+        });
+        //--------------------------------------------------------------------------------------------------
+
+        // получение значений из селектов
+        jQuery("#save-choise-tar").click(function() {
+            var times = jQuery("input[name='choose_time_gauger']");
+            var time = "";
+            gauger = "";
+            times.each(function(element) {
+                if (jQuery(this).prop("checked") == true) {
+                    time = jQuery(this).val();
+                    gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
+                }
+            });
+            jQuery("#jform_new_project_calculation_daypart").val(time);
+            jQuery("#jform_project_new_calc_date").val(date);
+            jQuery("#jform_project_gauger").val(gauger);
+            if (jQuery(".change").length == 0) {
+                jQuery("#"+idDay).addClass("change");
+            } else {
+                jQuery(".change").removeClass("change");
+                jQuery("#"+idDay).addClass("change");
+            }
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+            jQuery("#modal-window-choose-tar").hide();
+        });
+        //------------------------------------------
+
+        // подсвет сегоднешней даты
+        window.today = new Date();
+        window.NowYear = today.getFullYear();
+        window.NowMonth = today.getMonth();
+        window.day = today.getDate();
+        Today(day, NowMonth, NowYear);
+        //------------------------------------------
+
+        //если сессия есть, то выдать дату, которая записана в сессии
+        var datesession = jQuery("#jform_project_new_calc_date").val();
+        if (datesession != undefined) {
+            if (datesession.substr(8, 1) == "0") {
+                    daytocalendar = datesession.substr(9, 1);
+                } else {
+                    daytocalendar = datesession.substr(8, 2);
+                }
+                if (datesession.substr(5, 1) == "0") {
+                    monthtocalendar = datesession.substr(6, 1);
+                } else {
+                    monthtocalendar = datesession.substr(5, 2);
+                }
+            jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+        }
+        //-----------------------------------------------------------
+
+
         var hrefs = document.getElementsByTagName("a");
         var regexp = /index\.php\?option=com_gm_ceiling\&task=mainpage/;
         for(var i = 0; i < hrefs.length;i++){
@@ -1234,6 +1520,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             if(client_id == 1){
                 if(jQuery("#jform_client_name").val() == ""){
                     jQuery("#jform_client_name").val("Безымянный");
+
+
                 }
                 jQuery("#form-client").submit();
             }
@@ -1255,7 +1543,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             }
         }
 
-        if (jQuery("#comments_id").val() == "" && jQuery("#client_id").val() == 1) {
+        if (jQuery("#comments_id").val() == "" && jQuery("#client_id").val() == 1 && <?php echo $phonefrom; ?> != "0") {
+            var comment = "Входящий звонок c " +<?php echo $phonefrom;?>;
             var reg_comment = /[\\\<\>\/\'\"\#]/;
             var id_client = <?php echo $this->item->id_client;?>;
             if (reg_comment.test(comment)) {
@@ -1538,6 +1827,17 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             trans();
         });
 
+        jQuery("#advt_choose").change(function () {
+            jQuery("#selected_advt").val(jQuery("#advt_choose").val());
+            if(jQuery("#advt_choose").val()==17){
+                jQuery("#recoil_choose").show();
+                jQuery("#show_window").show();
+            }
+            else{
+                jQuery("#recoil_choose").hide();
+                jQuery("#show_window").hide();
+            }
+        })
         jQuery("#show_window").click(function(){
             jQuery("#modal-window-container").show();
             jQuery("#modal-window-call-tar").show("slow");
@@ -1589,10 +1889,74 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
         });
 
-        jQuery("#run_in_production").click(function () {
-            jQuery("#project_status").val(5);
-            jQuery("#form-client").submit();
+        jQuery("#rec_to_measurement").click(function () {
+            jQuery("#project_status").val(1);
+            jQuery("#call").toggle();
         });
+        jQuery("#refuse_partnership").click(function () {
+            jQuery("#project_status").val(15);
+            if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){
+                jQuery("#form-client").submit();
+            }
+            else {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Укажите рекламу"
+                });
+            }
+        });
+        jQuery("#refuse_project").click(function () {
+            jQuery("#project_status").val(2);
+            jQuery("#call").toggle();
+        });
+        jQuery("#accept_changes").click(function () {
+            jQuery("input[name='data_change']").val(1);
+        });
+        jQuery("#add_call_and_submit").click(function () {
+            if (jQuery("#project_status").val() == 1) {
+                if (jQuery("#jform_project_gauger").val() == 0) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Укажите время замера"
+                    });
+                } else if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){
+                    jQuery("#form-client").submit();
+                }
+                else {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Укажите рекламу"
+                    });
+                }
+            } else if (jQuery("#project_status").val() == 2) {
+                if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){
+                    jQuery("#form-client").submit();
+                }
+                else {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Укажите рекламу"
+                    });
+                }
+            }
+        });
+
         jQuery("#change_discount").click(function () {
             jQuery(".new_discount").toggle();
 
@@ -2137,6 +2501,40 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         });
     });
 
+    jQuery("#add_new_dvt").click(function () {
+        jQuery("#new_advt_div").toggle();
+    })
+
+    jQuery("#save_advt").click(function () {
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=addNewAdvt",
+            data: {
+                name: jQuery("#new_advt_name").val()
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                select = document.getElementById('advt_choose');
+                var opt = document.createElement('option');
+                opt.selected = true;
+                opt.value = data.id;
+                opt.innerHTML = data.name;
+                select.appendChild(opt);
+                jQuery("#new_advt_div").hide();
+                jQuery("#selected_advt").val(data.id);
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "ошибка"
+                });
+            }
+        });
+    })
 
     jQuery("#send_all_to_email2").click(function () {
         var email = jQuery("#all-email2").val();
