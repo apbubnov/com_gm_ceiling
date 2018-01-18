@@ -189,7 +189,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
-                    <input name="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
                     <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
                     <input name="status" id="project_status" value="" type="hidden">
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
@@ -197,11 +196,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="subtype" value="calendar" type="hidden">
                     <input name="data_change" value="0" type="hidden">
                     <input name="data_delete" value="0" type="hidden">
-                    <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id))? $this->item->api_phone_id: '0' ?>" type="hidden">
-                    <input name = "recoil" id = "recoil" value = "" type = "hidden">
-                    <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if(isset($_SESSION['time'])){ echo $_SESSION['time']; } else if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); }?>"class="inputactive" type="hidden">
-                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; } else if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;}?>" type="hidden">
-                    <input name = "project_gauger" id = "jform_project_gauger" class ="inputactive" value="<?php if(isset($_SESSION['gauger'])){ echo $_SESSION['gauger']; } else if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else {echo "0";}?>" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                     <input id = "emails" name = "emails" value = "" type = "hidden"> 
@@ -451,32 +445,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                         </table>
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-6">
-                    <label for="slider-table"><b>Тип:</b></label>
-                        <table class="slider-table">
-                            <tr>
-                                <td></td>
-                                <td>Клиент</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Диллер</td>
-                                <td>
-                                    <div class='switcher'>
-                                        <label class='switcher-label switcher-state1' for='state1'>Дилер</label>
-                                        <input id='state1' class='switcher-radio-state1' type='radio'
-                                               name='slider-radio' value='dealer'<?php if($this->item->project_status == 20) echo "checked"?>>
-                                        <label class='switcher-label switcher-state2' for='state2'>Клиент</label>
-                                        <input id='state2' class='switcher-radio-state2' type='radio'
-                                               name='slider-radio' value='client' <?php if($this->item->project_status != 20 && $this->item->project_status !=21 ) echo "checked"?>>
-                                        <label class='switcher-label switcher-state3' for='state3'>Реклама</label>
-                                        <input id='state3' class='switcher-radio-state3' type='radio'
-                                               name='slider-radio' value='promo' <?php if($this->item->project_status == 21) echo "checked"?>>
-                                        <div class='switcher-slider'></div>
-                                    </div>
-                                </td>
-                                <td>Реклама</td>
-                            </tr>
-                        </table>
                         <div class="comment">
                             <label> История клиента: </label>
                             <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
@@ -491,14 +459,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 </tr>
                             </table>
                         </div>
-                    </div>
-                    <label ><b>Предоставление личного кабиента</b></label>
-                    <br>
-                    <div class="radio-group">
-                        <input id='no' class='' type='radio' name='client_lk' value='0' <?php if(!$lk) echo checked ?>>
-                        <label for='no'>Убрать</label>
-                        <input id='yes' class='' type='radio' name='client_lk' value='1' <?php if($lk) echo checked ?>>
-                        <label class='' for='yes'>Предоставить</label>
                     </div>
             </div>
             <table class="table calculation_sum">
