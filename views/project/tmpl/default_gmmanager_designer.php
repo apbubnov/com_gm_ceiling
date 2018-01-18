@@ -141,29 +141,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         $phoneto = $jinput->get('phoneto', '0', 'STRING');
         $phonefrom = $jinput->get('phonefrom', '0', 'STRING');
         $call_id = $jinput->get('call_id', 0, 'INT');
-        $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
-        $all_advt = $model_api_phones->getAdvt();
-        if (!empty($phoneto) && !empty($phonefrom)) {
-            $reklama = $model_api_phones->getNumberInfo($phoneto);
-            $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
-        } elseif (!empty($this->item->api_phone_id)) {
-            $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
-            $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
-            if($this->item->api_phone_id == 10)
-            {
-                if(!empty($repeat_advt->advt_id))
-                    $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
-                else
-                    $need_choose = true;
-            }
-            else {
-                $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
-
-            }
-            $write = $reklama->number . ' ' .$reklama->name . ' ' . $reklama->description;
-        } else {
-            $need_choose = true;
-        }
 
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
         $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
@@ -196,40 +173,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
         $all_recoil = $recoil_model->getData();
     ?>
-    <h5 class="center">
-        <?php if (!$need_choose) { ?>
-            <input id="advt_info" class="h5-input" readonly value= <?php echo '"' . $write . '"'; ?>>
-            <?php if($reklama->id == 17) { ?>
-                <select id="recoil_choose" name ="recoil_choose">
-                    <option value="0">-Выберите откатника-</option>
-                    <?php foreach ($all_recoil as $item) { ?>
-                        <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
-                    <?php } ?>
-            </select>
-            <button type="button" id = "show_window" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-            <?php }?>
-        <?php } elseif ($need_choose) { ?>
-            <select id="advt_choose">
-                <option value="0">Выберите рекламу</option>
-                <?php foreach ($all_advt as $item) { ?>
-                    <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
-                <?php } ?>
-            </select>
-            <button type="button" id="add_new_dvt" class="btn btn-primary"><i class="fa fa-plus-square-o"
-                                                                              aria-hidden="true"></i></button>
 
-                <select id="recoil_choose" name ="recoil_choose" style="display:none;">
-                    <option value="0">-Выберите откатника-</option>
-                    <?php foreach ($all_recoil as $item) { ?>
-                        <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
-                    <?php } ?>
-            </select>
-            <button type="button" id = "show_window" style = "display:none;" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-            <div id="new_advt_div" style="display:none;"><input id="new_advt_name" placeholder="Название рекламы"><br>
-                <button type="button" class="btn btn-primary" id="save_advt">Ok</button>
-            </div>
-        <?php } ?>
-    </h5>
     <div id="modal-window-container">
 		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-call-tar">
