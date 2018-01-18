@@ -146,83 +146,28 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                             class="fa fa-mobile" aria-hidden="true"></i> Телефоны</a>
             </p>
         <?php }?>
+        
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
-            <button class="btn btn-large btn-primary" id="precalc_btn"><i class="fa fa-list-alt" aria-hidden="true"></i>
-                Предварительный <br> расчет
-            </button>
+            <a class="btn btn-large btn-primary"
+               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i
+                        class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
         </p>
-
         <p class="center">
-            <button class="btn btn-large btn-primary" id="msrmnt_btn"><i class="fa fa-list-alt" aria-hidden="true"></i>
-                График замеров и <br> новый расчет
-            </button>
-        <p>
-            <button class="btn btn-large btn-primary-right" id="new_msrmnt_btn" style="display: none"><i
-                        class="fa fa-list-alt" aria-hidden="true"></i> Новый замер
-            </button>
+            <a class="btn btn-large btn-primary"
+               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); ?>"><i
+                        class="fa fa-calculator" aria-hidden="true"></i> Замерщик</a>
         </p>
-        <p>
-            <button class="btn btn-large btn-primary-right" id="exist_msrmnt_btn" style="display: none"><i
-                        class="fa fa-list-alt" aria-hidden="true"></i> Выбрать из списка
-            </button>
-        </p>
-
-        </p>
-
         <p class="center">
-            <button class="btn btn-large btn-primary" id="prices_btn"><i class="fa fa-list-alt" aria-hidden="true"></i>
-                Прайсы
-            </button>
-        <p>
-            <button id="canvases_price_btn" style="display: none;" class="btn btn-large btn-primary-right"><i
-                        class="fa fa-pencil-square-o" aria-hidden="true"></i> Прайс полотен
-            </button>
+            <a class="btn btn-large btn-primary"
+               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i
+                        class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
         </p>
-        <p>
-            <button id="components_price_btn" style="display: none;" class="btn btn-large btn-primary-right"><i
-                        class="fa fa-pencil-square-o" aria-hidden="true"></i> Прайс комплектующих
-            </button>
-        </p>
-        <p>
-            <button id="mounting_price_btn" style="display: none;" class="btn btn-large btn-primary-right"><i
-                        class="fa fa-pencil-square-o" aria-hidden="true"></i> Прайс монтажа
-            </button>
-        </p>
-        </p>
-
         <p class="center">
-            <button class="btn btn-large btn-primary" id="show_additional"><i class="fa fa-list-alt"
-                                                                              aria-hidden="true"></i> Все данные <br>о
-                заказах и клиентах
-            </button>
-        <p>
-            <button class="btn btn-large btn-primary-right" id="montages_btn" style="display: none;"><i
-                        class="fa fa-list-alt" aria-hidden="true"></i> Запущенные в <br> производство
-            </button>
-        </p>
-        <p>
-            <button class="btn btn-large btn-primary-right" id="accounting_btn" style="display: none;"><i
-                        class="fa fa-list-alt" aria-hidden="true"></i> Бухгалтерия
-            </button>
-        </p>
-        <p>
-            <button class="btn btn-large btn-primary-right" id="contracts_btn" style="display: none;"><i
-                        class="fa fa-list-alt" aria-hidden="true"></i> Договоры
-            </button>
-        </p>
-        <p>
-            <button class="btn btn-large btn-primary-right" id="clients_btn" style="display: none;"><i
-                        class="fa fa-list-alt" aria-hidden="true"></i> Клиенты
-            </button>
-        </p>
-        <p>
-            <button class="btn btn-large btn-primary-right" id="refused_btn" style="display: none;"><i class="fa fa-ban"
-                                                                                                       aria-hidden="true"></i>
-                Отказы
-            </button>
-        </p>
-        </p>
+            <a class="btn btn-large btn-primary"
+                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i
+                    class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
+       
     <?php } elseif ($user->dealer_type == 2) { ?>
         <p class="center">
             <button class="btn btn-large btn-primary" id="create_order_btn"><i class="fa fa-list-alt"
