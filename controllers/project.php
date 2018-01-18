@@ -502,7 +502,161 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 	}
 
 	public function run_in_production(){
-		
+		try{
+			$app = JFactory::getApplication();
+			$user = JFactory::getUser();
+			//получение нужных моделей
+			$model = $this->getModel('Project', 'Gm_ceilingModel');
+			$client_history_model = $this->getModel('Client_history', 'Gm_ceilingModel');
+			$cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
+			$client_model =  $this->getModel('client', 'Gm_ceilingModel');
+			$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+			//--------
+			$jinput = JFactory::getApplication()->input;
+			$project_id = $jinput->get('project_id', '0', 'INT');
+			$data = $model->getData($project_id);
+			$type = $jinput->get('type', '', 'STRING');
+			$subtype = $jinput->get('subtype', '', 'STRING');
+			$new_discount =  $jinput->get('new_discount',$data->project_discount, 'RAW');
+			$call_id =  $jinput->get('call_id',0, 'INT');
+			$isDiscountChange = $jinput->get('isDiscountChange', '0', 'INT');
+			$isDataChange = $jinput->get('data_change', '0', 'INT');
+			$client_id = $jinput->get('client_id', 1, 'INT');
+            $sex = $jinput->get('slider-sex',"NULL",'STRING');
+			$include_calculation = $jinput->get('include_calculation', '', 'ARRAY');
+			$call_comment = $jinput->get('call_comment', "Отсутствует", 'STRING');
+			$call_date = $jinput->get('call_date', "0", 'STRING');
+			$status = $jinput->get('status','','INT');
+			if($isDiscountChange){
+				if($model->change_discount($project_id,$new_discount))
+				{
+					
+					if(!empty($_SESSION['url'])){
+						$this->setMessage("Процент скидки успешно изменен!");
+						$this->setRedirect(JRoute::_($_SESSION['url'], false));
+					}
+				}
+			}
+			$name = $jinput->get('new_client_name', '', 'STRING');
+			$phones = $jinput->get('new_client_contacts', array(), 'ARRAY');
+			foreach ($phones as $key => $value) {
+				$phones[$key] = preg_replace('/[\(\)\-\s]/', '', $value);
+			}
+			$street = $jinput->get('new_address', '', 'STRING');
+			$house = $jinput->get('new_house', '', 'STRING');
+			$bdq = $jinput->get('new_bdq', '', 'STRING');
+			$apartment = $jinput->get('new_apartment', '', 'STRING');
+			$porch = $jinput->get('new_porch', '', 'STRING');
+			$floor = $jinput->get('new_floor', '', 'STRING');
+			$code = $jinput->get('new_code', '', 'STRING');
+			if(!empty($house)) $address = $street.", дом: ".$house;
+			if(!empty($bdq)) $address .= ", корпус: ".$bdq;
+			if(!empty($apartment)) $address .= ", квартира: ".$apartment;
+			if(!empty($porch)) $address .= ", подъезд: ".$porch;
+			if(!empty($floor)) $address .= ", этаж: ".$floor;
+			if(!empty($code)) $address .= ", код: ".$code;
+            $isDataDelete = $jinput->get('data_delete', '0', 'INT');
+            if($isDataDelete) {
+                $idCalc = $jinput->get('idCalcDelete','0', 'INT');
+				$resultDel = $calculationsModel->delete($idCalc);
+                if($resultDel == 1) {
+					$this->setMessage("Потолок удален");
+                    $this->setRedirect(JRoute::_($_SESSION['url'], false));
+                }
+			}
+			if($isDataChange){
+				if(!empty($name)){
+					if($name!=$data->client_id){
+						$client_model->updateClient($data->id_client,$name);
+						$client_history_model->save($data->id_client,"Изменено ФИО");	
+					}				
+				}
+				if(!empty($address)){
+					if($address!=$data->project_info){
+						$model->update_address($data->id,$address);
+						$client_history_model->save($data->id_client,"Адрес замера изменен с ".$data->project_info." на ".$address);
+					}							
+				}
+				$new_phones = [];
+				$change_phones = [];
+				foreach ($phones as $key => $value) {
+					if(strlen($key)<3){
+						array_push($new_phones,$value);
+					}
+					else{
+						if($key!=$value){
+							$change_phones[$key] = $value;
+						}
+					}
+				}
+				$client_model->updateClientSex($client_id,$sex);
+				if(count($new_phones)>0){
+					$cl_phones_model->save($client_id,$new_phones);
+				}
+				if(count($change_phones)>0){
+					$cl_phones_model->update($client_id,$change_phones);
+				}
+				$data->project_verdict = 1;
+				$calculations = $calculationsModel->getProjectItems($data->id);
+				$all_calculations = array();
+				foreach($calculations as $calculation){
+					$all_calculations[] = $calculation->id;
+				}
+				$ignored_calculations = array_diff($all_calculations, $include_calculation);
+				$return = $model->activate($data, 5);
+				if ($return === false)
+					{
+						$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
+					}
+					else {
+
+						if(count($ignored_calculations) > 0) {
+
+							$client_id = $data->id_client;
+							$project_data = $model->getData($project_id);
+							$project_data->project_status = 3;
+							$project_data->gm_calculator_note = "Не вошедшие в договор №" . $data->id;
+							$project_data->project_verdict = 0;
+							$project_data->client_id = 	$client_id;
+							$project_data->api_phone_id = 10;
+
+							unset($project_data->id);
+							$project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
+							$refuse_id = $project_model->save(get_object_vars($project_data));
+							$client_history_model->save($client_id, "Не вошедшие в договор № ".$project_id." потолки перемещены в проект №".$refuse_id);
+							$calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+							foreach($ignored_calculations as $ignored_calculation){
+								$calculationModel->changeProjectId($ignored_calculation, $refuse_id);
+							}
+						}
+					}
+
+					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+					$calculations = $calculationsModel->getProjectItems($data->id);
+					$components_data = array();
+					$project_sum = 0;
+					foreach($include_calculation as $calculation){
+						if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
+						$calculations = $calculationsModel->getProjectItems($calculation);
+						$from_db = 1;
+						$save = 0;
+						$ajax = 0;
+						$pdf = 0;
+						$print_components = 1;
+						$del_flag = 0;
+
+						$components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db,$calculation, $save, $ajax, $pdf, $print_components,$del_flag);
+					} 
+					Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
+			}
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
 	}
 	public function activate() {
 		try
