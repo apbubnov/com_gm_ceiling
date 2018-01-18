@@ -76,8 +76,8 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                 <a class="btn btn-large btn-warning" href="<?php
                 if ($userId == 1 || $userId == 2)
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false);
-                else echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); 
-                //echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
+                else //echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); 
+                echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
                 ?>">
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-clock-o" aria-hidden="true"></i> ГМ Менеджер</a>
@@ -117,14 +117,13 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-user" aria-hidden="true"></i> ГМ Начальник МС</a>
                 <?php else: ?>
-                    <i class="fa fa-user" aria-hidden="true"></i> Монтажи <!--Начальник МС--></a>
+                    <i class="fa fa-user" aria-hidden="true"></i>Начальник МС</a>
                 <?php endif; ?>
                 <?php if ($mounting[0]->count != 0) { ?>
                     <div class="circl-digits"><?php echo $mounting[0]->count; ?></div>
                 <?php } ?>
             </div>
         </div>
-        <?if ($userId == 1 || $userId == 2):?>
         <p class="center">
             <a class="btn btn-large btn-danger"
                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=dealer&subtype=buh', false); ?>"><i
@@ -147,7 +146,6 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                             class="fa fa-mobile" aria-hidden="true"></i> Телефоны</a>
             </p>
         <?php }?>
-        <?php endif; ?>
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
             <button class="btn btn-large btn-primary" id="precalc_btn"><i class="fa fa-list-alt" aria-hidden="true"></i>
