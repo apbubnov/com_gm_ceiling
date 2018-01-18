@@ -912,14 +912,16 @@ class Gm_ceilingModelCalculations extends JModelList {
             
             // объединение с выходным днем
             $index = 0;
+            $was_break = false;
             //поиск индекса для вставки и замена даты на просто время
             for ($i=0; $i < count($items); $i++) {
                 if (strtotime($items[$i]->project_mounting_date) >= strtotime($items3->date_from)) {
                     $index = $i;
+                    $was_break = true;
                     break;
                 }
             }
-            ($index == 0) ? $index = count($items) : 0;
+            ($index == 0 && !$was_break) ? $index = count($items) : 0;
             for ($i=0; $i < count($items); $i++) {
                 $items[$i]->project_mounting_day_off = "";
             }
