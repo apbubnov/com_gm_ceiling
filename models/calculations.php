@@ -997,10 +997,10 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
-            $query2->select('id_user, date_from, date_to')
-                ->from('#__gm_ceiling_day_off')
+            $query2->select('day_off.id_user, day_off.date_from, day_off.date_to')
+                ->from('#__gm_ceiling_day_off as day_off')
                 ->LeftJoin("#__user_usergroup_map as users ON day_off.id_user = users.user_id")
-                ->where("date_from between '$date1 00:00:00' and '$date2 23:59:59' and group_id = $who2");
+                ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and users.group_id = $who2");
             $db->setQuery($query2);
             $items2 = $db->loadObject();
             
