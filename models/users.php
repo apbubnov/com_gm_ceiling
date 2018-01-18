@@ -101,4 +101,39 @@ class Gm_ceilingModelUsers extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	function acceptCommercialOfferCode($code)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from('`rgzbn_users_commercial_offer`');
+			$query->where("`code` = '$code'");
+			$db->setQuery($query);
+			$item = $db->loadObject();
+
+			$client_id = JFactory::getUser($item->user_id)->associated_client;
+
+			$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+			$callback_model->save(date('Y-m-d H:i:s'),'Просмотрено коммерческое предложение',
+				$client_id,$item->user_id);
+
+			$query = $db->getQuery(true);
+			$query->update('`rgzbn_users_commercial_offer`');
+			$query->set('`status` = 1');
+			$query->where("`user_id` = $user_id");
+			$db->setQuery($query);
+			$db->execute();
+			return true;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }
