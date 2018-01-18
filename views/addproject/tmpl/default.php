@@ -149,31 +149,31 @@ if (count($AllGaugerDealer) == 0) {
 	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-choose-tar">
-			<div id="div1">
+			<!-- <div id="div1"> -->
 				<p id="date-modal"></p>
 				<p><strong>Выберите время замера (и замерщика):</strong></p>
-			</div>
-			<div id="table_wraper">
+			<!-- </div>
+			<div id="table_wraper"> -->
 				<p>
 					<table id="projects_gaugers"></table>
 				</p>
-			</div>
-			<div id="div2">
+			<!-- </div>
+			<div id="div2"> -->
 				<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
-			</div>
+			<!-- </div> -->
 		</div>
 	</div>
 </form>
 
 <script>
 
-	jQuery(window).resize(function() {
+	/* jQuery(window).resize(function() {
 		heightAll = jQuery("#modal-window-choose-tar").css("height");
 		height1 = jQuery("#div1").css("height");
 		height2 = jQuery("#div2").css("height");
-		height = heightAll - height1 - height2;
-		jQuery("#table_wraper").css("height", height);
-	});
+		height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
+		jQuery("#table_wraper").css("height", height+"px");
+	}); */
 
 	// листание календаря
     month_old = 0;
@@ -314,17 +314,13 @@ if (count($AllGaugerDealer) == 0) {
             jQuery("#modal-window-container-tar").show();
 			jQuery("#modal-window-choose-tar").show("slow");
             jQuery("#close-tar").show();
-			setTimeout(function () {
+			/* setTimeout(function () {
 				heightAll = jQuery("#modal-window-choose-tar").css("height");
 				height1 = jQuery("#div1").css("height");
 				height2 = jQuery("#div2").css("height");
 				height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
-				console.log(heightAll);
-				console.log(height1);
-				console.log(height2);
-				console.log(height);
 				jQuery("#table_wraper").css("height", height+"px");
-				console.log(jQuery("#table_wraper").css("height"));}, 500);
+			}, 500); */
 			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
 				var dealer = 1;
 			} else {
