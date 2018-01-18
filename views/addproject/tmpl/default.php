@@ -318,7 +318,7 @@ if (count($AllGaugerDealer) == 0) {
 			height1 = jQuery("#div1").css("height");
 			height2 = jQuery("#div2").css("height");
 			height = heightAll - height1 - height2;
-			jQuery("#table_wraper").css("height", height);
+			jQuery("#table_wraper").css({"height", height; "overflow-y": "auto"});
 			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
 				var dealer = 1;
 			} else {
