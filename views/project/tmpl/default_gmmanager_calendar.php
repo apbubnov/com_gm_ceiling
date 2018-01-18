@@ -1306,11 +1306,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         <div id="modal-window-choose-tar">
             <p id="date-modal"></p>
             <p><strong>Выберите время замера:</strong></p>
-            <div class="table_wraper">
-                <p>
-                    <table id="projects_gaugers"></table>
-                </p>
-            </div>
+            <p>
+                <table id="projects_gaugers"></table>
+            </p>
             <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
         </div>
     </div>
