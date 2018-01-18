@@ -314,13 +314,17 @@ if (count($AllGaugerDealer) == 0) {
             jQuery("#modal-window-container-tar").show();
 			jQuery("#modal-window-choose-tar").show("slow");
             jQuery("#close-tar").show();
-			heightAll = jQuery("#modal-window-choose-tar").css("height");
-			height1 = jQuery("#div1").css("height");
-			height2 = jQuery("#div2").css("height");
-			height = heightAll - height1 - height2;
-			console.log(height);
-			jQuery("#table_wraper").css("height", height);
-			console.log(jQuery("#table_wraper").css("height"));
+			setTimeout(function () {
+				heightAll = jQuery("#modal-window-choose-tar").css("height");
+				height1 = jQuery("#div1").css("height");
+				height2 = jQuery("#div2").css("height");
+				height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
+				console.log(heightAll);
+				console.log(height1);
+				console.log(height2);
+				console.log(height);
+				jQuery("#table_wraper").css("height", height+"px");
+				console.log(jQuery("#table_wraper").css("height"));}, 500);
 			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
 				var dealer = 1;
 			} else {

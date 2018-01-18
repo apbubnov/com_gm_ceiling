@@ -43,6 +43,7 @@
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
+    <button class="btn btn-primary" type="button" id="but_comm">Отправить коммерческое предложение</button>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
 
@@ -201,7 +202,14 @@
         </form>
     </div>
 </div>
-
+<div id="modal_window_container" class = "modal_window_container">
+    <button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal_window_comm" class = "modal_window">
+        <h6 style = "margin-top:10px">Введите сумму</h6>
+        <p><input type="text" id="sum" placeholder="Сумма" required></p>
+        <p><button type="button" id="send_comm" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
+    </div>
+</div>
 <script>
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
@@ -232,6 +240,13 @@
             jQuery("#modal-window-container").hide();
             jQuery("#modal-window-1-tar").hide();
         }
+        var div4 = jQuery("#modal_window_comm"); // тут указываем ID элемента
+        if (!div4.is(e.target) // если клик был не по нашему блоку
+            && div4.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_comm").hide();
+        }
     });
 
     jQuery("#new_client").click(function(){
@@ -240,12 +255,23 @@
 		jQuery("#modal-window-1-tar").show("slow");
     });
 
-
     jQuery("#cancel").click(function(){
         jQuery("#close-tar").hide();
 		jQuery("#modal-window-container-tar").hide();
 		jQuery("#modal-window-call-tar").hide();
-    })
+    });
+
+    jQuery("#cancel2").click(function(){
+        jQuery("#close").hide();
+        jQuery("#modal_window_container").hide();
+        jQuery("#modal_window_comm").hide();
+    });
+    jQuery("#but_comm").click(function (){
+        jQuery("#modal_window_container").show();
+        jQuery("#modal_window_comm").show("slow");
+        jQuery("#close").show();
+    });
+
     jQuery("#update_fio").click(function(){
         jQuery.ajax({
             type: 'POST',
