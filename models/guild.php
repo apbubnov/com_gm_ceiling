@@ -229,7 +229,7 @@ class Gm_ceilingModelGuild extends JModelList
 
                 $TempWT = $WorkingTimes[count($WorkingTimes) - 1];
                 if (($TempWT->End != null || count($WorkingTimes) < 1) && $work->action == 1)
-                    $WorkingTimes[] = (object) ["Start" => $work->date, "End" => null, "Time" => null];
+                    $WorkingTimes[] = (object) ["Start" => $work->date, "End" => null, "Time" => null, "TimeLine" => null];
                 else if ($work->action == 0)
                 {
                     $TempWT->End = $work->date;
@@ -241,6 +241,8 @@ class Gm_ceilingModelGuild extends JModelList
                     $minute = $TEnd->format("i") - $TStart->format("i");
 
                     $hours += ceil(floatval($minute) / 60.0 * 100) / 100;
+
+                    $TempWT->TimeLine = $TStart->format("H:i") . " - " . $TEnd->format("H:i");
 
                     $TempWT->Time = $hours;
                     $WorkingTime += $hours;
@@ -264,14 +266,30 @@ class Gm_ceilingModelGuild extends JModelList
 
                 $hours += (floatval($day)*24.0) + ceil(floatval($minute) / 60.0 * 100) / 100;
 
+                $TempWT->TimeLine = $TStart->format("H:i") . " - " . $TEnd->format("H:i");
+
                 $TempWT->Time = $hours;
                 $WorkingTime += $hours;
 
                 $WorkingTimes[count($WorkingTimes) - 1] = $TempWT;
             }
 
-
             $employee->Working = (object) ["Start" => $Start, "End" => $End, "Time" => $WorkingTime, "Times" => $WorkingTimes];
+
+            $Salaries = $this->getSalaries((object) ["user_id" => $key, "DateStart" => $data->DateStart, "DateEnd" => $data->DateEnd]);
+            $employee->Salaries = [];
+            foreach ($Salaries as $value)
+            {
+                $date = DateTime::createFromFormat("Y-m-d H:i:s", $value->accrual_date);
+                $S = (object) [];
+
+                $S->Time = $date->format("H:i");
+                $S->Work = $value->note;
+                $S->Ceiling = "";
+                $S->Price = $value->salaries;
+
+                $employee->Salaries[] = $S;
+            }
 
             $employees[$key] = $employee;
         }
@@ -448,22 +466,17 @@ class Gm_ceilingModelGuild extends JModelList
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_guild_salaries` as s")
             ->select("s.*")
-            ->where("s.accrual_date BETWEEN '$data->StartDate' AND '$data->EndDate'")
+            ->where("s.accrual_date BETWEEN '$data->DateStart' AND '$data->DateEnd'")
             ->order("s.accrual_date");
 
         if (!empty($data->user_id))
-            $query->where("w.user_id = '$data->user_id'");
-
-        echo (string) $query;
+            $query->where("s.user_id = '$data->user_id'");
 
         $db->setQuery($query);
         $salaries = $db->loadObjectList();
 
         foreach ($salaries as $key => $salar)
-            $salaries[$key]->user = $users[$key->user_id];
-
-        print_r($salaries);
-        exit();
+            $salaries[$key]->user = $users[$salar->user_id];
 
         return $salaries;
     }

@@ -26,128 +26,101 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 ?>
 <?=parent::getButtonBack();?>
-<h2 class="center">Монтажи</h2>
+<h2 class="center">Неназначенные на монтаж</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects'); ?>" method="post"
       name="adminForm" id="adminForm">
-	  <div class="toolbar">
-		<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-	  </div>
-	<table class="table table-striped one-touch-view" id="projectList">
-		<thead>
-			<tr>
-				<th>
-					
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_MOUNTING_DATE', 'a.project_mounting_date', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_MOUNTING_DAYPART', 'a.project_mounting_daypart', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					Имя дилера
-				</th>
-				<th class='center'>
-					Квадратура
-				</th>
-				<th class='center'>
-					Бригада
-				</th>
-			</tr>
-		</thead>
-		<tfoot>
-			<tr>
-				<td colspan="<?php echo isset($this->items[0]) ? count(get_object_vars($this->items[0])) : 10; ?>">
-					<?php echo $this->pagination->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
-		<tbody>
-			<?php foreach ($this->items as $i => $item) : ?>
-				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
+	  <? if (count($this->items) > 0 && empty($this->items->project_mounter)): ?>
+	
+	  <table class="table table-striped one-touch-view" id="projectList">
+			  <thead>
+			  <tr>
+				  <th class='center'>
+					  <?= JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
+				  </th>
+				  <th class='center'>
+					  <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+				  </th>
+				  <th class='center'>
+					  <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
+				  </th>
+				  <th class='center'>
+					  <?= JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
+				  </th>
+				  <th class="center">
+					  <?= JHtml::_('grid.sort', 'Дилер', 'dealer_name', $listDirn, $listOrder); ?>
+				  </th>
+				  <th class="center">
+					  <?= JHtml::_('grid.sort', 'Квадратура', 'quadrature', $listDirn, $listOrder); ?>
+				  </th>
+			  </tr>
+			  </thead>
+			  <tbody>
 
-				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
-					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
-				<?php endif; ?>
+			  <? foreach ($this->items as $i => $item) :
+				  $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
+				  if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
+					  $canEdit = JFactory::getUser()->id == $item->created_by;
+				  ?>
 
-				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=chiefprojects&id='.(int) $item->id); ?>">
-					<td>
-						<a class="btn">Утверждено</a>
-						<a class="btn">Выполнено</>
-					</td>
-					<td class="center">
-						<?php echo $item->id; ?>
-					</td>
-					<td class="center project_status<?php echo $item->project_status_id; ?>">
-						<i class="fa fa-circle" aria-hidden="true" title="<?php echo $item->project_status; ?>"></i>
-					</td>
-					<td class="center">
-						<?php if($item->project_mounting_date == "0000-00-00") { ?>
-							-
-						<?php } else { ?>
-							<?php echo $item->project_mounting_date; ?>
-						<?php } ?>
-					</td>
-					<td class="center">
-						<?php echo $item->project_mounting_daypart; ?>
-					</td>
-					<td class="center">
-						<?php echo $this->escape($item->project_info); ?>
-					</td>
-					<td class="center">
-						<?php echo $item->project_calculations; ?>
-					</td>
-					<td class="center">
-						<?php echo $item->client_id; ?>
-					</td>
-					<td class="center">
-						<?php echo $item->client_contacts; ?>
-					</td>
-					<?php if($item->project_mounter) { ?>
-						<td class="center">
-							<?php echo $item->project_mounter; ?>
-						</td>						
-					<?php } else { ?>
-						<td class="center">
-							-
-						</td>
-					<?php } ?>
-				</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
+				  <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
+					  <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
+						  <td class="center one-touch">
+							  <?= $item->id; ?>
+						  </td>
+						  <td class="center one-touch"><?= $item->address; ?></td>
+						  <td class="center one-touch"><?= $item->client_contacts; ?></td>
+						  <td class="center one-touch"><?= $item->client_name; ?></td>
+						  <td class="center one-touch"><?= $item->dealer_name; ?></td>
+						  <td class="center one-touch"><?= round($item->quadrature, 2); ?></td>
+					  </tr>
+				  <? endif; ?>
+			  <? endforeach; ?>
+			  </tbody>
+	  </table>
 
-	<input type="hidden" name="task" value=""/>
-	<input type="hidden" name="boxchecked" value="0"/>
-	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-	<?php echo JHtml::_('form.token'); ?>
+	  <input type="hidden" name="task" value=""/>
+	  <input type="hidden" name="boxchecked" value="0"/>
+	  <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
+	  <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
+	  <?= JHtml::_('form.token'); ?>
+  <? else: ?>
+	  <p class="center">
+	  <h3>У вас нет заказов, неназначенных на монтаж!</h3>
+	  </p>
+  <? endif; ?>
 </form>
 
-<?php if($canDelete) : ?>
 <script type="text/javascript">
 
-	jQuery(document).ready(function () {
-		jQuery('.delete-button').click(deleteItem);
-	});
+  jQuery(document).ready(function () {
 
-	function deleteItem() {
+	  jQuery(".btn-done").click(function () {
+		  var button = jQuery(this);
+		  jQuery.get(
+			  "/index.php?option=com_gm_ceiling&task=project.done",
+			  {
+				  project_id: button.data("project_id")
+			  },
+			  function (data) {
+				  if (data == "1") {
+					  button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
+				  }
+			  }
+		  );
 
-		if (!confirm("<?php echo JText::_('COM_GM_CEILING_DELETE_MESSAGE'); ?>")) {
-			return false;
-		}
-	}
+	  });
+
+	  jQuery('.delete-button').click(deleteItem);
+
+	  jQuery("#new_order_btn").click(function () {
+		  location.href = "<?=JRoute::_('/index.php?option=com_gm_ceiling&view=calculationform&type=calculator', false); ?>";
+	  });
+  });
+
+  function deleteItem() {
+
+	  if (!confirm("<?=JText::_('COM_GM_CEILING_DELETE_MESSAGE'); ?>")) {
+		  return false;
+	  }
+  }
 </script>
-<?php endif; ?>
