@@ -36,6 +36,6 @@ $answer1 = $model->getDataByStatus("GaugingsGraph", $userId, "one");
 		</div>
 	</div>
 	<p class="center">
-		<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects', false); ?>"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Запущенные</a>
+		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects', false); ?>"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Запущенные</a>
 	</p>
 </div>
