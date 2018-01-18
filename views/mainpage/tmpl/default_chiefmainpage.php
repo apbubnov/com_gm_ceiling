@@ -27,7 +27,7 @@ $answer2 = $model->getDataByStatus("Mountings", $userId, null);
 ?>
 <?=parent::getButtonBack();?>
 <h2 class="center">Монтажи</h2>
-<? if ($user->dealer_type == 2) { ?>
+<? if ($user->dealer_type == 0) { ?>
 	<div class="start_page">
 		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
