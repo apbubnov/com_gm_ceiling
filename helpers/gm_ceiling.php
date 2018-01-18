@@ -89,7 +89,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         jimport('joomla.user.helper');
         if(empty($type)){
-            $type = 0;
+            $type = 1;
         }
 
         $phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
