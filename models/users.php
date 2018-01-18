@@ -80,12 +80,18 @@ class Gm_ceilingModelUsers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
+			$query->delete('`rgzbn_users_commercial_offer`');
+			$query->where('`user_id` = $user_id');
+			$db->setQuery($query);
+			$db->execute();
+
+			$query = $db->getQuery(true);
 			$query->insert('`rgzbn_users_commercial_offer`');
 			$query->columns('`user_id`,`code`');
 			$query->values("$user_id, '$code'");
 			$db->setQuery($query);
-			$item = $db->loadObjectList();
-			return $item;
+			$db->execute();
+			return true;
 		}
 		catch(Exception $e)
         {

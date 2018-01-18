@@ -358,7 +358,7 @@
         jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
 
         jQuery("#send_comm").click(function(){
-            var user_id = <?php echo $dealer->id; ?>;
+            var user_id = <?php echo $client->dealer_id; ?>;
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
                 data: {
