@@ -193,7 +193,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
-                    <input name="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
                     <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
                     <input name="status" id="project_status" value="" type="hidden">
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
@@ -201,7 +200,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="subtype" value="calendar" type="hidden">
                     <input name="data_change" value="0" type="hidden">
                     <input name="data_delete" value="0" type="hidden">
-                    <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id))? $this->item->api_phone_id: '0' ?>" type="hidden">
+                    <input name="designer" value="1" type="hidden">
                     <input name = "recoil" id = "recoil" value = "" type = "hidden">
                     <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if(isset($_SESSION['time'])){ echo $_SESSION['time']; } else if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); }?>"class="inputactive" type="hidden">
                     <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; } else if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;}?>" type="hidden">
