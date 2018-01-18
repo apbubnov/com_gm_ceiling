@@ -501,6 +501,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
 	}
 
+	public function run_in_production(){
+		
+	}
 	public function activate() {
 		try
 		{

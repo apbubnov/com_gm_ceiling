@@ -238,7 +238,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
 
                 if ($info->page != $info->pages) die(json_encode($result));
                 else {
-                    die(json_encode((object)array("document" => "http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=stock")));
+                    die(json_encode((object)array("document" => "http://".$_SERVER['SERVER_NAME']."/index.php?option=com_gm_ceiling&view=stock")));
                 }
             } else if ($info->type == 'SendComponents') {
                 $components = $app->input->get('components', null, 'Array');
@@ -249,7 +249,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
 
                 if ($info->page != $info->pages) die(json_encode($result));
                 else {
-                    die(json_encode((object)array("document" => "http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=stock")));
+                    die(json_encode((object)array("document" => "http://".$_SERVER['SERVER_NAME']."/index.php?option=com_gm_ceiling&view=stock")));
                 }
             } else if ($info->type == 'GetCanvases') {
                 $model = $this->getModel('Canvases', 'Gm_ceilingModel');

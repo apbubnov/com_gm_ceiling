@@ -189,7 +189,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
-                    <input name="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
                     <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
                     <input name="status" id="project_status" value="" type="hidden">
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
@@ -197,11 +196,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="subtype" value="calendar" type="hidden">
                     <input name="data_change" value="0" type="hidden">
                     <input name="data_delete" value="0" type="hidden">
-                    <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id))? $this->item->api_phone_id: '0' ?>" type="hidden">
-                    <input name = "recoil" id = "recoil" value = "" type = "hidden">
-                    <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if(isset($_SESSION['time'])){ echo $_SESSION['time']; } else if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); }?>"class="inputactive" type="hidden">
-                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; } else if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;}?>" type="hidden">
-                    <input name = "project_gauger" id = "jform_project_gauger" class ="inputactive" value="<?php if(isset($_SESSION['gauger'])){ echo $_SESSION['gauger']; } else if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else {echo "0";}?>" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                     <input id = "emails" name = "emails" value = "" type = "hidden"> 
@@ -407,29 +401,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 </td>
                                 </tr>
                                 <tr>
-                                    <th>Дата и время замера</th>
-                                    <td>
-                                        <div id="calendar-container">
-                                            <div class="btn-small-l">
-                                                <button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                                            </div>
-                                            <?php echo $calendar; ?>
-                                            <div class="btn-small-r">
-                                                <button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Примечание менеджера</th>
-                                    <td>
-                                        <input name="gmmanager_note" id="gmmanager_note" class="inputactive"
-                                               value="<?php if (isset($_SESSION['manager_comment'])) {
-                                                   echo $_SESSION['manager_comment'];
-                                               } else echo $this->item->gm_manager_note; ?>">
-                                    </td>
-                                </tr>
-                                <tr>
                                     <th>Менеджер</th>
                                     <td>
                                         <input name="Manager_name" id="manager_name" class="inputhidden"
@@ -438,45 +409,10 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                                } ?>">
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th>Замерщик</th>
-                                    <td>
-                                        <input name="calculator_name" id="calculator_name" class="inputhidden"
-                                               value="<?php if (isset($this->item->project_calculator)) {
-                                                   echo JFactory::getUser($this->item->project_calculator)->name;
-                                               }?>">
-                                    </td>
-                                </tr>
-                        </div>
+                            </div>
                         </table>
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-6">
-                    <label for="slider-table"><b>Тип:</b></label>
-                        <table class="slider-table">
-                            <tr>
-                                <td></td>
-                                <td>Клиент</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Диллер</td>
-                                <td>
-                                    <div class='switcher'>
-                                        <label class='switcher-label switcher-state1' for='state1'>Дилер</label>
-                                        <input id='state1' class='switcher-radio-state1' type='radio'
-                                               name='slider-radio' value='dealer'<?php if($this->item->project_status == 20) echo "checked"?>>
-                                        <label class='switcher-label switcher-state2' for='state2'>Клиент</label>
-                                        <input id='state2' class='switcher-radio-state2' type='radio'
-                                               name='slider-radio' value='client' <?php if($this->item->project_status != 20 && $this->item->project_status !=21 ) echo "checked"?>>
-                                        <label class='switcher-label switcher-state3' for='state3'>Реклама</label>
-                                        <input id='state3' class='switcher-radio-state3' type='radio'
-                                               name='slider-radio' value='promo' <?php if($this->item->project_status == 21) echo "checked"?>>
-                                        <div class='switcher-slider'></div>
-                                    </div>
-                                </td>
-                                <td>Реклама</td>
-                            </tr>
-                        </table>
                         <div class="comment">
                             <label> История клиента: </label>
                             <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
@@ -491,15 +427,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 </tr>
                             </table>
                         </div>
-                    </div>
-                    <label ><b>Предоставление личного кабиента</b></label>
-                    <br>
-                    <div class="radio-group">
-                        <input id='no' class='' type='radio' name='client_lk' value='0' <?php if(!$lk) echo checked ?>>
-                        <label for='no'>Убрать</label>
-                        <input id='yes' class='' type='radio' name='client_lk' value='1' <?php if($lk) echo checked ?>>
-                        <label class='' for='yes'>Предоставить</label>
-                    </div>
+                    </div> 
             </div>
             <table class="table calculation_sum">
                 <?php if ($this->item->project_verdict == 0) { ?>
@@ -977,215 +905,210 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 <a class="btn btn-primary" onclick='send_and_redirect(<?php echo $calculation->id; ?>)'
                    href='javascript:'>Изменить
                     расчет</a>
-                <div class="sketch_image_block">
-                    <h3 class="section_header">
-                        Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                    </h3>
-                    <div class="section_content">
-                        <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+                <? if (!empty($filename)):?>
+                    <div class="sketch_image_block">
+                        <h3 class="section_header">
+                            Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                        </h3>
+                        <div class="section_content">
+                            <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+                        </div>
                     </div>
-                </div>
+                <? endif; ?>
                 <div class="row-fluid">
                     <div class="span6">
-                        <h4>Материал</h4>
-                        <div>
-                        Тип потолка: <?php echo $calculation->n1; ?>
-                    </div>
-                    <div>
-                        Тип фактуры: <?php echo $calculation->n2; ?>
-                    </div>
-                    <div>
-                        Производитель, ширина: <?php echo $calculation->n3; ?>
-                    </div>
-
-                    <?php if ($calculation->color > 0) { ?>
-                        <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
-                        <?php $color = $color_model->getData($calculation->color); ?>
-                        <div>
-                            Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
-                                                                    alt=""/>
-                        </div>
-                    <?php } ?>
-                    <h4>Размеры помещения</h4>
-                    <div>
-                        Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
-                    </div>
-                    <div>
-                        Периметр, м: <?php echo $calculation->n5; ?>
-                    </div>
-
-
-                    <?php if ($calculation->n6 > 0) { ?>
-                        <div>
-                            <h4> Вставка</h4>
-                        </div>
-                        <? if ($calculation->n6 == 314) { ?>
-                            <div> Белая</div>
-                        <?php } else { ?>
-                            <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
-                            <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
+                        <?if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                            <h4>Материал</h4>
                             <div>
-                                Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;'
-                                                                                    src="/<?php echo $color_1[0]->file; ?>"
-                                                                                    alt=""/>
+                                Тип потолка: <?php echo $calculation->n1; ?>
+                            </div>
+                            <div>
+                                Тип фактуры: <?php echo $calculation->n2; ?>
+                            </div>
+                            <div>
+                                Производитель, ширина: <?php echo $calculation->n3; ?>
+                            </div>
+
+                            <?php if ($calculation->color > 0) { ?>
+                                <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
+                                <?php $color = $color_model->getData($calculation->color); ?>
+                                <div>
+                                    Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
+                                                                                   alt=""/>
+                                </div>
+                            <?php } ?>
+                            <h4>Размеры помещения</h4>
+                            <div>
+                                Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
+                            </div>
+                            <div>
+                                Периметр, м: <?php echo $calculation->n5; ?>
+                            </div>
+                            <?php if ($calculation->n6 > 0) {?>
+                                <div>
+                                    <h4> Вставка</h4>
+                                </div>
+                                <? if ($calculation->n6 == 314) {?>
+                                    <div> Белая </div>
+                                <?php } else  {?>
+                                    <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
+                                    <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
+                                    <div>
+                                        Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>"
+                                                                                         alt=""/>
+                                    </div>
+                                <?php }?>
+                            <?} endif; ?>
+                        <?php if ($calculation->n16) { ?>
+                            <div>
+                                Скрытый карниз: <?php echo $calculation->n16; ?>
                             </div>
                         <?php } ?>
-                    <? } ?>
 
+                        <?php if ($calculation->n12) { ?>
+                            <h4>Установка люстры</h4>
+                            <?php echo $calculation->n12; ?> шт.
+                        <?php } ?>
 
-                    <!--<?php if ($calculation->transport) { ?>
-                        <h4>Транспортные расходы</h4>
-                        <div>
-                            Транспортные расходы, шт.: <?php echo $calculation->transport; ?>
-                        </div>
-                    <?php } ?>-->
+                        <?php if ($calculation->n13) { ?>
+                            <h4>Установка светильников</h4>
+                            <?php foreach ($calculation->n13 as $key => $n13_item) {
+                                echo "<b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
 
-                    <?php if ($calculation->n12) { ?>
-                        <h4>Установка люстры</h4>
-                        <?php echo $calculation->n12; ?> шт.
-                    <?php } ?>
+                        <?php if ($calculation->n14) { ?>
+                            <h4>Обвод трубы</h4>
+                            <?php foreach ($calculation->n14 as $key => $n14_item) {
+                                echo "<b>Количество:</b> " . $n14_item->n14_count . " шт  -  <b>Диаметр:</b>  " . $n14_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
 
-                    <?php if ($calculation->n13) { ?>
-                        <h4>Установка светильников</h4>
-                        <?php foreach ($calculation->n13 as $key => $n13_item) {
-                            echo "<b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "<br>";
-                            ?>
-                        <?php }
-                    } ?>
+                        <?php if ($calculation->n15) { ?>
+                            <h4>Шторный карниз Гильдии мастеров</h4>
+                            <?php foreach ($calculation->n15 as $key => $n15_item) {
+                                echo "<b>Количество:</b> " . $n15_item->n15_count . " шт - <b>Тип:</b>   " . $n15_item->type_title . " <b>Длина:</b> " . $n15_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
+                        <?php if ($calculation->n27> 0) { ?>
+                            <h4>Шторный карниз</h4>
+                            <? if ($calculation->n16) echo "Скрытый карниз"; ?>
+                            <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                            <?php echo $calculation->n27; ?> м.
+                        <?php } ?>
 
-                    <?php if ($calculation->n14) { ?>
-                        <h4>Обвод трубы</h4>
-                        <?php foreach ($calculation->n14 as $key => $n14_item) {
-                            echo "<b>Количество:</b> " . $n14_item->n14_count . " шт  -  <b>Диаметр:</b>  " . $n14_item->component_title . "<br>";
-                            ?>
-                        <?php }
-                    } ?>
+                        <?php if ($calculation->n26) { ?>
+                            <h4>Светильники Эcola</h4>
+                            <?php foreach ($calculation->n26 as $key => $n26_item) {
+                                echo "<b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
 
-                    <?php if ($calculation->n15) { ?>
-                        <h4>Шторный карниз Гильдии мастеров</h4>
-                        <?php foreach ($calculation->n15 as $key => $n15_item) {
-                            echo "<b>Количество:</b> " . $n15_item->n15_count . " шт - <b>Тип:</b>   " . $n15_item->type_title . " <b>Длина:</b> " . $n15_item->component_title . "<br>";
-                            ?>
-                        <?php }
-                    } ?>
-                    <?php if ($calculation->n27> 0) { ?>
-                        <h4>Шторный карниз</h4>
-                        <? if ($calculation->n16) echo "Скрытый карниз"; ?>
-                        <? if (!$calculation->n16) echo "Обычный карниз"; ?>
-                        <?php echo $calculation->n27; ?> м.
-                    <?php } ?>
+                        <?php if ($calculation->n22) { ?>
+                            <h4>Вентиляция</h4>
+                            <?php foreach ($calculation->n22 as $key => $n22_item) {
+                                echo "<b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
 
-                    <?php if ($calculation->n26) { ?>
-                        <h4>Светильники Эcola</h4>
-                        <?php foreach ($calculation->n26 as $key => $n26_item) {
-                            echo "<b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "<br>";
-                            ?>
-                        <?php }
-                    } ?>
+                        <?php if ($calculation->n23) { ?>
+                            <h4>Диффузор</h4>
+                            <?php foreach ($calculation->n23 as $key => $n23_item) {
+                                echo "<b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "<br>";
+                                ?>
+                            <?php }
+                        } ?>
 
-                    <?php if ($calculation->n22) { ?>
-                        <h4>Вентиляция</h4>
-                        <?php foreach ($calculation->n22 as $key => $n22_item) {
-                            echo "<b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "<br>";
-                            ?>
-                        <?php }
-                    } ?>
-
-                    <?php if ($calculation->n23) { ?>
-                        <h4>Диффузор</h4>
-                        <?php foreach ($calculation->n23 as $key => $n23_item) {
-                            echo "<b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "<br>";
-                            ?>
-                        <?php }
-                    } ?>
-
-                    <?php if ($calculation->n29) { ?>
-                        <h4>Переход уровня</h4>
-                        <?php foreach ($calculation->n29 as $key => $n29_item) {
-                            echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <b>Профиль:</b> " .$n29_item->component_title ." " . $n29_item->image . "<br>";
-                            ?>
-                        <?php }
-                    } ?>
-
-
-                    <?php if ($calculation->n9 > 0) { ?>
+                        <?php if ($calculation->n29) { ?>
+                            <h4>Переход уровня</h4>
+                            <?php foreach ($calculation->n29 as $key => $n29_item) {
+                                echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <br>";
+                                ?>
+                            <?php }
+                        } ?>
                         <h4>Прочее</h4>
-                        <div>
-                            Углы, шт.: <?php echo $calculation->n9; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->n10 > 0) { ?>
-                        <div>
-                            Криволинейный вырез, м: <?php echo $calculation->n10; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->n11> 0) { ?>
-                        <div>
-                            Внутренний вырез, м: <?php echo $calculation->n11; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->n7> 0) { ?>
-                        <div>
-                            Крепление в плитку, м: <?php echo $calculation->n7; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->n8> 0) { ?>
-                        <div>
-                            Крепление в керамогранит, м: <?php echo $calculation->n8; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->n17> 0) { ?>
-                        <div>
-                            Закладная брусом, м: <?php echo $calculation->n17; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->n19> 0) { ?>
-                        <div>
-                            Провод, м: <?php echo $calculation->n19; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->n20> 0) { ?>
-                        <div>
-                            Разделитель, м: <?php echo $calculation->n20; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->n21> 0) { ?>
-                        <div>
-                            Пожарная сигнализация, м: <?php echo $calculation->n21; ?>
-                        </div>
-                    <?php } ?>
+                        <?php if ($calculation->n9> 0) { ?>
+                            <div>
+                                Углы, шт.: <?php echo $calculation->n9; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n10> 0) { ?>
+                            <div>
+                                Криволинейный вырез, м: <?php echo $calculation->n10; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n11> 0) { ?>
+                            <div>
+                                Внутренний вырез, м: <?php echo $calculation->n11; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n7> 0) { ?>
+                            <div>
+                                Крепление в плитку, м: <?php echo $calculation->n7; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n8> 0) { ?>
+                            <div>
+                                Крепление в керамогранит, м: <?php echo $calculation->n8; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n17> 0) { ?>
+                            <div>
+                                Закладная брусом, м: <?php echo $calculation->n17; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n19> 0) { ?>
+                            <div>
+                                Провод, м: <?php echo $calculation->n19; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n20> 0) { ?>
+                            <div>
+                                Разделитель, м: <?php echo $calculation->n20; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n21> 0) { ?>
+                            <div>
+                                Пожарная сигнализация, м: <?php echo $calculation->n21; ?>
+                            </div>
+                        <?php } ?>
 
-                    <?php if ($calculation->dop_krepezh> 0) { ?>
-                        <div>
-                            Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
-                        </div>
-                    <?php } ?>
+                        <?php if ($calculation->dop_krepezh> 0) { ?>
+                            <div>
+                                Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
+                            </div>
+                        <?php } ?>
 
-                    <?php if ($calculation->n24> 0) { ?>
-                        <div>
-                            Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->n30> 0) { ?>
-                        <div>
-                            Парящий потолок, м: <?php echo $calculation->n30; ?>
-                        </div>
-                    <?php } ?>
-                    <?php if ($calculation->distance && $calculation->distance_col) { ?>
-                        <div>
-                            Выезд за город: <?php echo $calculation->distance; ?> км.
-                            , <?php echo $calculation->distance_col; ?> кол-во раз
-                        </div>
-                    <?php } ?>
-                    <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
-                    <?php if (!empty($extra_mounting) ) { ?>
-                        <div>
-                        <h4>Дополнительные работы</h4>
-                            <? foreach($extra_mounting as $dop) {
-                                echo "<b>Название:</b> " . $dop->title .  "<br>";
-                            }?>
-                        </div>
-                    <?php } ?>
+                        <?php if ($calculation->n24> 0) { ?>
+                            <div>
+                                Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($calculation->n30> 0) { ?>
+                            <div>
+                                Парящий потолок, м: <?php echo $calculation->n30; ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($calculation->n32> 0) { ?>
+                            <div>
+                                Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
+                            </div>
+                        <?php } ?>
+                        <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
+                        <?php if (!empty($extra_mounting) ) { ?>
+                            <div>
+                                <h4>Дополнительные работы</h4>
+                                <? foreach($extra_mounting as $dop) {
+                                    echo "<b>Название:</b> " . $dop->title .  "<br>";
+                                }?>
+                            </div>
+                        <?php } ?>
                     </div>
                     <button class="btn  btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
                     <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>

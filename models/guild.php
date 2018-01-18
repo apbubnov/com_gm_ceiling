@@ -196,10 +196,10 @@ class Gm_ceilingModelGuild extends JModelList
         $db = $this->getDbo();
 
         if (empty($data->DateStart))
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
         if (empty($data->DateEnd))
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
 
         $employees = (empty($data->user_id))?$this->getEmployees():[$data->user_id => $this->getEmployees($data->user_id)];
 
@@ -234,15 +234,42 @@ class Gm_ceilingModelGuild extends JModelList
                 {
                     $TempWT->End = $work->date;
 
-                    $hours = floatval(date("H", strtotime($TempWT->End)) - date("H", strtotime($TempWT->Start)));
-                    $minute = floatval(date("i", strtotime($TempWT->End)) - date("i", strtotime($TempWT->Start)));
-                    $hours += (floatval($minute) / 60.0);
+                    $TStart = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->Start);
+                    $TEnd = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End);
+
+                    $hours = $TEnd->format("H") - $TStart->format("H");
+                    $minute = $TEnd->format("i") - $TStart->format("i");
+
+                    $hours += ceil(floatval($minute) / 60.0 * 100) / 100;
+
                     $TempWT->Time = $hours;
                     $WorkingTime += $hours;
 
                     $WorkingTimes[count($WorkingTimes) - 1] = $TempWT;
                 }
             }
+
+            if (count($WorkingTimes) > 0 && empty($WorkingTimes[count($WorkingTimes) - 1]->End))
+            {
+                $TempWT = $WorkingTimes[count($WorkingTimes) - 1];
+                $TempWT->End = $data->DateEnd;
+
+                $TStart = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->Start);
+                $TEnd = DateTime::createFromFormat("Y-m-d H:i:s", $TempWT->End)->modify("+1 second");
+                $TempWT->End = $TEnd->format("Y-m-d H:i:s");
+
+                $day = $TEnd->format("d") - $TStart->format("d");
+                $hours = $TEnd->format("H") - $TStart->format("H");
+                $minute = $TEnd->format("i") - $TStart->format("i");
+
+                $hours += (floatval($day)*24.0) + ceil(floatval($minute) / 60.0 * 100) / 100;
+
+                $TempWT->Time = $hours;
+                $WorkingTime += $hours;
+
+                $WorkingTimes[count($WorkingTimes) - 1] = $TempWT;
+            }
+
 
             $employee->Working = (object) ["Start" => $Start, "End" => $End, "Time" => $WorkingTime, "Times" => $WorkingTimes];
 
@@ -331,11 +358,22 @@ class Gm_ceilingModelGuild extends JModelList
     {
         if (empty($data)) $data = (object) [];
 
+        if (isset($data->Date))
+        {
+            $Date = DateTime::createFromFormat("Y-m-d H:i:s", $data->Date);
+
+            $year = $Date->format("Y");
+            $month = $Date->format("m");
+            $day = $Date->format("d");
+
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
+        }
         if (empty($data->DateStart))
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
         if (empty($data->DateEnd))
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
 
         $db = $this->getDbo();
 
@@ -355,7 +393,9 @@ class Gm_ceilingModelGuild extends JModelList
 
         foreach ($working as $key => $work)
         {
-            $time = date("H:i", strtotime($work->date));
+            $Date = DateTime::createFromFormat("Y-m-d H:i:s", $work->date);
+
+            $time = $Date->format("H:i");
 
             $working[$key]->time = $time;
             $working[$key]->user = $users[$work->user_id];
@@ -370,6 +410,14 @@ class Gm_ceilingModelGuild extends JModelList
 
         if (empty($data->user_id) || empty($data->date))
             throw new Exception("Не все данные переданы!");
+
+        $getWorking = $this->getWorking((object) ["user_id" => $data->user_id, "Date" => $data->date]);
+        $countWorking = count($getWorking);
+
+        if (($countWorking < 1 && $data->action == 0) || ($getWorking[$countWorking - 1]->action == 0 && $data->action == 0))
+            throw new Exception("Невозможно добавить выход работника, когда он еще не пришел!");
+        else if ($countWorking > 0 && $getWorking[$countWorking - 1]->action == 1 && $data->action == 1)
+            throw new Exception("Данный работник еще на месте!");
 
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -388,10 +436,10 @@ class Gm_ceilingModelGuild extends JModelList
         if (empty($data)) $data = (object) [];
 
         if (empty($data->DateStart))
-            $data->DateStart = date("Y.m.d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
+            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m") - 1, date("d"), date("Y")));
 
         if (empty($data->DateEnd))
-            $data->DateEnd = date("Y.m.d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
+            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
 
         $db = $this->getDbo();
 
