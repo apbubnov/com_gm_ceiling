@@ -541,6 +541,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					}
 				}
 			}
+			throw new Exception($isDataChange);
 			$name = $jinput->get('new_client_name', '', 'STRING');
 			$phones = $jinput->get('new_client_contacts', array(), 'ARRAY');
 			foreach ($phones as $key => $value) {
