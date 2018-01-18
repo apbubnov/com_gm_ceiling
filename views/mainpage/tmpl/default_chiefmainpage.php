@@ -55,8 +55,7 @@ $answer2 = $model->getDataByStatus("Mountings", $userId, null);
 			<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
 		</p>
 	</div>
-<? } ?>
-<? else if ($user->dealer_type == 1) { ?>
+<? } else if ($user->dealer_type == 1) { ?>
 	<div class="start_page">
 		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
