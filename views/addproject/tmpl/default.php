@@ -149,17 +149,32 @@ if (count($AllGaugerDealer) == 0) {
 	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-choose-tar">
-			<p id="date-modal"></p>
-			<p><strong>Выберите время замера (и замерщика):</strong></p>
-            <p>
-                <table id="projects_gaugers"></table>
-            </p>
-			<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+			<div id="div1">
+				<p id="date-modal"></p>
+				<p><strong>Выберите время замера (и замерщика):</strong></p>
+			</div>
+			<div class="table_wraper">
+				<p>
+					<table id="projects_gaugers"></table>
+				</p>
+			</div>
+			<div id="div2">
+				<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+			</div>
 		</div>
 	</div>
 </form>
 
 <script>
+
+	jQuery(window).resize(function() {
+		heightAll = jQuery("#modal-window-choose-tar").height;
+		height1 = jQuery("#div1").height;
+		height2 = jQuery("#div2").height;
+		console.log(heightAll);
+		console.log(height1);
+		console.log(height2);
+	});
 
 	// листание календаря
     month_old = 0;
@@ -504,14 +519,15 @@ if (count($AllGaugerDealer) == 0) {
         }*/
     }
 	// ---------------------------------
-var $ = jQuery;
-		$(document).ready(function() {
+
+	var $ = jQuery;
+	$(document).ready(function() {
 		$(window).keydown(function(event){
 			if(event.keyCode == 13) {
 			event.preventDefault();
 			return false;
 			}
 		});
-		});
+	});
 
 </script>
