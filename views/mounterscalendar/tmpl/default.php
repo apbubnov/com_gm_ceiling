@@ -243,9 +243,9 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                     jQuery("#table-mounting").append(TrOrders);
                 }
             });
-        } else {
+        } else if (kind == "no-empty") {
             TrOrders2 = '<tr id="caption-data"><td colspan="6">'+day+'-'+month+'-'+year+'</td></tr><tr id="caption-tr"><td>Время</td><td>Адрес</td><td>Периметр</td><td>З/П</td><td>Примечание</td><td>Статус</td></tr>';
-            jQuery("#table-mounting").append(TrOrders);
+            //jQuery("#table-mounting").append(TrOrders2);
              jQuery.ajax( {
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.GetDataOfMounting",
