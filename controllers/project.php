@@ -136,7 +136,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$client_id = $jinput->get('client_id', 1, 'INT');
 			$api_phone_id =  $jinput->get('advt_id', '0', 'INT');
 			$selected_advt =  $jinput->get('selected_advt', '0', 'INT');
-			$call_type = $jinput->get('slider-radio', '', 'STRING');
+			$call_type = $jinput->get('slider-radio', 'client', 'STRING');
 			$recoil = $jinput->get('recoil', '', 'STRING');
             $sex = $jinput->get('slider-sex',"NULL",'STRING');
             $email_str = $jinput->get('emails',"","STRING");
