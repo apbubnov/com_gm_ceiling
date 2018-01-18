@@ -1217,16 +1217,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
     jQuery(document).ready(function () {
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         trans();
-
-
-        // подсвет сегоднешней даты
-        window.today = new Date();
-        window.NowYear = today.getFullYear();
-        window.NowMonth = today.getMonth();
-        window.day = today.getDate();
-        Today(day, NowMonth, NowYear);
-        //------------------------------------------
-
         var hrefs = document.getElementsByTagName("a");
         var regexp = /index\.php\?option=com_gm_ceiling\&task=mainpage/;
         for(var i = 0; i < hrefs.length;i++){
