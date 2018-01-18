@@ -254,6 +254,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                     id : <?php echo $userId; ?>
                 },
                 success: function(msg) {
+                    TrOrders2 = "";
                     msg.forEach(function(element) {
                         if (element.project_mounting_date.length < 6) {
                             project = element.id;
@@ -307,7 +308,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                                 salary = 1500;
                             }
                             // рисовка таблицы
-                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+                            TrOrders2 += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
                         } else {
                             TrOrders2 += '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
                         }                  
