@@ -2671,6 +2671,24 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public function sendCommercialOffer(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $user_id = $jinput->get('user_id', null, 'INT');
+            $email = $jinput->get('email', null, 'STRING');
+            $code = md5($user_id.'commercial_offer');
+            $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $result  = $users_model->addCommercialOfferCode($user_id, $code);
+            die(json_encode($result));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function createPdfs(){
         try{
         $jinput = JFactory::getApplication()->input;

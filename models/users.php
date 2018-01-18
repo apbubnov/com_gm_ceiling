@@ -73,4 +73,32 @@ class Gm_ceilingModelUsers extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	function addCommercialOfferCode($user_id, $code)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->delete('`rgzbn_users_commercial_offer`');
+			$query->where("`user_id` = $user_id");
+			$db->setQuery($query);
+			$db->execute();
+
+			$query = $db->getQuery(true);
+			$query->insert('`rgzbn_users_commercial_offer`');
+			$query->columns('`user_id`,`code`');
+			$query->values("$user_id, '$code'");
+			$db->setQuery($query);
+			$db->execute();
+			return true;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }
