@@ -184,7 +184,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
                     <input name="type" value="gmmanager" type="hidden">
                     <input name="subtype" value="calendar" type="hidden">
-                    <input name="data_change" value="0" type="hidden">
+                    <input name="data_change" id = "data_change" value="0" type="hidden">
                     <input name="data_delete" value="0" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
@@ -212,7 +212,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                         Пол клиента
                                     </th>
                                     <td>
-                                    
                                         <input id='male' type='radio' class = "radio" name='slider-sex' value='0' <?php if($client_sex == "0") echo "checked";?>>
                                         <label  for='male'>Mужской</label>
                                         <input id='female' type='radio' class = "radio" name='slider-sex' value='1'  <?php if($client_sex == "1") echo "checked";?> >
@@ -1514,6 +1513,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 }
             });
             }
+
         })
 
         jQuery("input[name^='include_calculation']").click(function () {
