@@ -652,6 +652,17 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db,$calculation, $save, $ajax, $pdf, $print_components,$del_flag);
 					} 
 					Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
+					if(count($ignored_calculations) > 0 ) {
+						$data = $model->getNewData($project_id);
+						$data->refuse_id = $refuse_id;
+						Gm_ceilingHelpersGm_ceiling::notify($data, 6);
+						$this->setMessage("Проект сформирован! <br>  Неотмеченные потолки перемещены в копию проекта с отказом");
+					} else {
+						Gm_ceilingHelpersGm_ceiling::notify($data, 2);
+						$this->setMessage("Проект сформирован");
+						Gm_ceilingHelpersGm_ceiling::notify($data, 7);
+					}
+					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
 			}
 		}
 		catch(Exception $e)
