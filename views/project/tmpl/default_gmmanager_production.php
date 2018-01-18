@@ -212,7 +212,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                         Пол клиента
                                     </th>
                                     <td>
-                                    
                                         <input id='male' type='radio' class = "radio" name='slider-sex' value='0' <?php if($client_sex == "0") echo "checked";?>>
                                         <label  for='male'>Mужской</label>
                                         <input id='female' type='radio' class = "radio" name='slider-sex' value='1'  <?php if($client_sex == "1") echo "checked";?> >
@@ -1514,7 +1513,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 }
             });
             }
-            
+
         })
 
         jQuery("input[name^='include_calculation']").click(function () {
@@ -1593,7 +1592,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         jQuery("#run_in_production").click(function () {
             jQuery("#project_status").val(5);
             jQuery("#data_change").val(1);
-            jQuery("#form-client").submit();
+            //jQuery("#form-client").submit();
         });
         jQuery("#change_discount").click(function () {
             jQuery(".new_discount").toggle();
