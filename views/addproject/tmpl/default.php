@@ -321,7 +321,7 @@ if (count($AllGaugerDealer) == 0) {
 				height = heightAll - height1 - height2;
 				console.log(heightAll);
 				jQuery("#table_wraper").css("height", height);
-				console.log(jQuery("#table_wraper").css("height"));}, 200);
+				console.log(jQuery("#table_wraper").css("height"));}, 500);
 			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
 				var dealer = 1;
 			} else {
