@@ -1466,7 +1466,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         
         trans();
 
-        // открытие модального окна с календаря и получение даты и вывода свободных монтажников
+        // открытие модального окна с календаря и получение даты и вывода свободных замерщиков
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
             reg1 = "D(.*)D";
@@ -1517,7 +1517,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                         TableForSelect += '<tr><td></td>';
                                     }
                                     TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-
                                     TableForSelect += '<td>'+elementProject.project_info+'</td>';
                                     emptytd = 1;
                                 }
