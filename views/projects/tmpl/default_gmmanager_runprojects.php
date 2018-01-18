@@ -122,6 +122,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                 if($item->transport == 2 ) { 
                                     $sum_transport = ($mount_transport->distance * $item->distance + $mount_transport->transport) * $item->distance_col;
                                     $sum_transport_cost = $sum_transport; }
+                                
                                 $cost_price = $cost_price + $sum_transport_cost;
                                 
                                 $temp = 0;
