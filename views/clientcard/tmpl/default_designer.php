@@ -362,7 +362,7 @@
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
                 data: {
-                    user_id:<?php echo $call_id;?>,
+                    user_id: user_id,
                     email: jQuery("#email_comm").val()
                 },
                 dataType: "json",
