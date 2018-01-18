@@ -254,6 +254,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
                     id : <?php echo $userId; ?>
                 },
                 success: function(msg) {
+                    console.log(msg);
                     TrOrders2 = "";
                     msg.forEach(function(element) {
                         if (element.project_mounting_date.length < 6) {
