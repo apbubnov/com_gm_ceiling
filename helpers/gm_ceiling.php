@@ -5387,13 +5387,14 @@ class Gm_ceilingHelpersGm_ceiling
                     } else {
                         $monthfull = $month;
                     }
+                    $masID = [];
                     if (!empty($brigade_id)) {
-                        $masID = [];
                         foreach ($brigade_id as $value) {
                             array_push($masID, $value->id);
                         }
+                    } else {
+                        $masID = [$id];
                     }
-                    
                     //if (!empty($brigade_id)) {
                         $date1 = $year . "-" . $monthfull . "-01";
                         $date2 = $year . "-" . $monthfull . "-" . $current_days;
@@ -5470,7 +5471,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
                             }
                         }
-                    }
+                    //}
                 }
                 //для вывода монтажной бригады в личном кабинете монтажной бригады
                 if ($flag[0] == 5) {
