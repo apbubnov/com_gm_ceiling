@@ -216,7 +216,7 @@ class Gm_ceilingModelGuild extends JModelList
             }
 
             $WORKING = 0;
-            if ($START < strtotime($date) && ($END == null || $END < $START || $END > strtotime($date))) $WORKING = 1;
+            if ($START != null && $START < strtotime($date) && ($END == null || $END < $START || $END > strtotime($date))) $WORKING = 1;
             $employees[$key]->Work = $WORKING;
         }
 
