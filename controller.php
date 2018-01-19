@@ -2676,6 +2676,7 @@ class Gm_ceilingController extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id', null, 'INT');
             $email = $jinput->get('email', null, 'STRING');
+            throw new Exception($user_id);
             if (empty($email))
             {
                 throw new Exception('empty email');
