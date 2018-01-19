@@ -13,7 +13,6 @@ $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
-throw new Exception(count($brigade_id));
 
 if (!empty($brigade_id)) {
 	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
