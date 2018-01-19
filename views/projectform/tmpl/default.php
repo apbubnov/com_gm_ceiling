@@ -1030,7 +1030,6 @@ echo parent::getPreloader();
                     </div>
                 </form>
             </div>
-            
             <div class="col-xl-6">
                 <div class="comment">
                     <label style="font-weight: bold;"> История клиента: </label>
