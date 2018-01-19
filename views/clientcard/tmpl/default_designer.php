@@ -365,7 +365,7 @@
                     user_id: user_id,
                     email: jQuery("#email_comm").val()
                 },
-                dataType: "text",
+                dataType: "json",
                 async: false,
                 success: function(data) {
                     var n = noty({
