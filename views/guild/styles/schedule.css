@@ -126,7 +126,7 @@ h1 {
 
 .Page .MainBlock .Employee .Name {
     padding: 0 15px;
-    height: 30px;
+    height: auto;
     line-height: 30px;
     color: rgb(255, 255, 255);
 }
@@ -139,19 +139,19 @@ h1 {
     background-color: rgb(234, 89, 0);
 }
 
-.Page .MainBlock .Employee.In .Name ~ .Info .List:last-child {
+.Page .MainBlock .Employee.In .Name ~ .Info .PreList:last-child {
     box-shadow: -2px 0 0 0 rgb(0, 198, 133);
 }
 
-.Page .MainBlock .Employee.Out .Name ~ .Info .List:last-child {
+.Page .MainBlock .Employee.Out .Name ~ .Info .PreList:last-child {
     box-shadow: -2px 0 0 0 rgb(234, 89, 0);
 }
 
-.Page .MainBlock .Employee.In .Name ~ .Info .List:first-child {
+.Page .MainBlock .Employee.In .Name ~ .Info .PreList:first-child {
     box-shadow: 2px 0 0 0 rgb(0, 198, 133);
 }
 
-.Page .MainBlock .Employee.Out .Name ~ .Info .List:first-child {
+.Page .MainBlock .Employee.Out .Name ~ .Info .PreList:first-child {
     box-shadow: 2px 0 0 0 rgb(234, 89, 0);
 }
 
@@ -159,21 +159,35 @@ h1 {
     background-color: rgb(255, 255, 255);
 }
 
-.Page .MainBlock .Employee .Info .List {
+.Page .MainBlock .Employee .Info .PreList {
     float: left;
     width: 20%;
     background-color: rgb(255, 255, 255);
 }
 
-.Page .MainBlock .Employee .Info .List:last-child {
+.Page .MainBlock .Employee .Info .PreList:last-child {
     width: calc(80% - 2px);
     margin-left: 2px;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+.Page .MainBlock .Employee .Info .List {
+    width: 100%;
+}
+
+.Page .MainBlock .Employee .Info .PreList .Working {
+    min-width: 800px;
 }
 
 .Page .MainBlock .Employee .Info .List thead td {
     background-color: rgb(65, 64, 153);
     color: rgb(255, 255, 255);
     text-align: center;
+}
+
+.Page .MainBlock .Employee .Info .List td {
+    padding: 0 5px;
 }
 
 .Page .MainBlock .Employee .Info .List td:nth-child(n + 2) {
@@ -364,5 +378,11 @@ h1 {
 
     .Page .Main .MainBlock .Calendars .Calendar:nth-child(2) {
         width: calc(100% - 10px);
+    }
+
+    .Page .MainBlock .Employee .Info .PreList {
+        width: 100% !important;
+        margin: 0 !important;
+        box-shadow: none !important;
     }
 }

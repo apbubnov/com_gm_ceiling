@@ -17,11 +17,33 @@ JHtml::_('behavior.multiselect');
 $user = JFactory::getUser();
 $userId = $user->get('id');
 $userGroup = $user->groups;
-if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header('Location: ' . $_SERVER['REDIRECT_URL']);
+
+$chief = (in_array(23, $groups));
+$employee = (in_array(18, $groups));
 
 $calculations = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getCuts();
-$employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
+$employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getWorkingEmployees();
 ?>
+<? if (!($chief) && !($employee)): ?>
+<h1>К сожалению данный кабинет вам не доступен!</h1>
+<p>Что бы получить доступ, обратитесь к IT отделу. Через <span>5</span> секунды вы вернетесь на предыдущую страницу!
+</p>
+<div style="display: none;"><?= parent::getButtonBack(); ?></div>
+<script type="text/javascript">
+    var $ = jQuery;
+    $(function () {
+        $(".PRELOADER_GM").hide();
+        setTimeout(function () {
+            $("#BackPage").click();
+        }, 5000);
+        setInterval(function () {
+            var span = $("p span"),
+                text = span.text();
+            span.text(parseInt(text) - 1);
+        }, 1000);
+    });
+</script>
+<?else:?>
 <link rel="stylesheet" href="http://<?= str_replace("/home/srv112238/", "", __DIR__); ?>/style.css" type="text/css">
 <script type="text/javascript" src="/files/library/touchwipe.js"></script>
 
@@ -29,9 +51,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <h1>Раскрои</h1>
     <actions>
         <?= parent::getButtonBack(); ?>
-        <a class="btn btn-large btn-primary" id="Create" href="/index.php?option=com_gm_ceiling&view=guild&type=create">
+        <!--<a class="btn btn-large btn-primary" id="Create" href="/index.php?option=com_gm_ceiling&view=guild&type=create">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Создать раскрой
-        </a>
+        </a>-->
     </actions>
     <cuts class="container">
         <types class="row">
@@ -152,6 +174,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             cursor: null,
             ceilingPosition: {X: 0, Y: 0},
             employees: <?=(empty($employees)) ? "[]" : json_encode($employees);?>,
+            works: null
         };
 
     $(document).ready(Init);
@@ -268,13 +291,37 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             Ceilings.append(Data);
         });
 
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getData",
+            data: {Type: "EmployeeWorking"},
+            cache: false,
+            async: false,
+            success: function (data) {
+                Data.employees = JSON.parse(data);
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
 
         $.each(json.works, function (i, v) {
             BlockName.find("b").html(v.name + "<br/>" + v.count + " " + v.unit + " - " + v.sum + " р.");
             var size = 0;
             $.each(Data.employees, function (j, val) {
-                BlockSelect.append(BlockOption.text(val.name).val(val.id).clone());
-                size++;
+                if (val.Work == 1)
+                {
+                    BlockSelect.append(BlockOption.text(val.name).val(val.id).clone());
+                    size++;
+                }
             });
             BlockSelect.attr({"name": "employees[" + v.id + "][]", "size": (size < 5) ? size : 5});
             BlockData.append(BlockSelect.clone());
@@ -738,3 +785,4 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
         $(".PRELOADER_GM").hide();
     }
 </script>
+<?endif;?>
