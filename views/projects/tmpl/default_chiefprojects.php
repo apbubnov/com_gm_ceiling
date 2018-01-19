@@ -23,10 +23,9 @@ $canEdit    = $user->authorise('core.edit', 'com_gm_ceiling') && file_exists(JPA
 $canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
 $canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
-
 ?>
 <?=parent::getButtonBack();?>
-<h2 class="center">Неназначенные на монтаж</h2>
+<h2 class="center">Не назначенные на монтаж</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects'); ?>" method="post"
       name="adminForm" id="adminForm">
 	  <? if (count($this->items) > 0 && empty($this->items->project_mounter)): ?>
@@ -85,7 +84,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 	  <?= JHtml::_('form.token'); ?>
   <? else: ?>
 	  <p class="center">
-	  <h3>У вас нет заказов, неназначенных на монтаж!</h3>
+	  <h3>У вас нет заказов, не назначенных на монтаж!</h3>
 	  </p>
   <? endif; ?>
 </form>

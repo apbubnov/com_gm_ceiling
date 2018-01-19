@@ -1,11 +1,4 @@
 <?php
-/**
- * @version    CVS: 1.0.0
- * @package    Com_Gm_ceiling
- * @author     Mikhail  <vms@itctl.ru>
- * @copyright  2016 Mikhail 
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
- */
 // No direct access
 defined('_JEXEC') or die;
 
@@ -37,6 +30,7 @@ if ($month1 == 12) {
     $year2 = $year1;
 }
 $FlagCalendar = [1, $dealerId];
+
 if (!empty($brigade_id)) {
 	foreach ($brigade_id as $value) {
 		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
@@ -196,65 +190,69 @@ if (!empty($brigade_id)) {
         month_old2 = month2;
         year_old2 = year2;
         jQuery("#calendars-container").empty();
-		<?php foreach ($brigade_id as $value) { ?>
-			calendars = "";
-			jQuery.ajax({
-				async: false,
-				type: 'POST',
-				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-				data: {
-					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
-					flag: 1,
-					month: month1,
-					year: year1,
-				},
-				success: function (msg) {
-					calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
-					calendars += msg;
-				},
-				dataType: "text",
-				timeout: 10000,
-				error: function () {
-					var n = noty({
-						theme: 'relax',
-						layout: 'center',
-						maxVisible: 5,
-						type: "error",
-						text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-					});
-				}
-			});
-			jQuery.ajax({
-				async: false,
-				type: 'POST',
-				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-				data: {
-					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
-					flag: 1,
-					month: month2,
-					year: year2,
-				},
-				success: function (msg) {
-					calendars += msg;
-					calendars += '</div>';
-					jQuery("#calendars-container").append(calendars);
-				},
-				dataType: "text",
-				timeout: 10000,
-				error: function () {
-					var n = noty({
-						theme: 'relax',
-						layout: 'center',
-						maxVisible: 5,
-						type: "error",
-						text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-					});
-				}
-			});
-			Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
-		<?php } ?>
+		<?php
+			if (!empty($brigade_id)) {
+				foreach ($brigade_id as $value) { ?>
+				calendars = "";
+				jQuery.ajax({
+					async: false,
+					type: 'POST',
+					url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+					data: {
+						id: <?php echo $value->id; ?>,
+						id_dealer: <?php echo $dealerId; ?>,
+						flag: 1,
+						month: month1,
+						year: year1,
+					},
+					success: function (msg) {
+						calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
+						calendars += msg;
+					},
+					dataType: "text",
+					timeout: 10000,
+					error: function () {
+						var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "error",
+							text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+						});
+					}
+				});
+				jQuery.ajax({
+					async: false,
+					type: 'POST',
+					url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+					data: {
+						id: <?php echo $value->id; ?>,
+						id_dealer: <?php echo $dealerId; ?>,
+						flag: 1,
+						month: month2,
+						year: year2,
+					},
+					success: function (msg) {
+						calendars += msg;
+						calendars += '</div>';
+						jQuery("#calendars-container").append(calendars);
+					},
+					dataType: "text",
+					timeout: 10000,
+					error: function () {
+						var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "error",
+							text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+						});
+					}
+				});
+				Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
+			<?php }
+			}
+		?>		
     });
     jQuery("#button-prev").click(function () {
         month1 = <?php echo $month1; ?>;
@@ -347,10 +345,14 @@ if (!empty($brigade_id)) {
 	//---------------------------------------------
 
 	// функция подсвета сегоднешней даты
-	var Today = function (day, month, year, id) {
-        month++;
-        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+id+"I").addClass("today");
-    }   
+	<?php
+		if (!empty($brigade_id)) { ?>
+			var Today = function (day, month, year, id) {
+				month++;
+				jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+id+"I").addClass("today");
+			}   		 
+		<?php }
+	?>
     //------------------------------------------
 
     // функция чтобы другая функция выполнилась позже чем document ready
