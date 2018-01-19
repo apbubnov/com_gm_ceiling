@@ -1010,7 +1010,7 @@ echo parent::getPreloader();
                                 </tr>
                             </table>
                         </div>
-                        <input type='hidden' name='page_url' id='page_url' value='<?php echo \JURI::getInstance()->toString(); ?>' />
+                        
                     <?php if ($userId != $user->dealer_id) { ?>
                         <input name="type" value="chief" type="hidden">
                     <?php } else { ?>
