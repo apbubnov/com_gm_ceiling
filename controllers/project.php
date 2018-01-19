@@ -1029,7 +1029,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			// Checking if the user can remove object
 			$user = JFactory::getUser();
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
-
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('jform[id]', '0', 'INT');
 			$get_data = JFactory::getApplication()->input->get('jform', array(), 'array');
@@ -1076,6 +1075,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			}
 			if($type === "gmchief") {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
+			} elseif($type === "chief" && $user->dealer_type == 1 && $old_date) {
+				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
 			} else {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
 			}
