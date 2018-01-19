@@ -91,6 +91,8 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->values("$user_id, '$code'");
 			$db->setQuery($query);
 			$db->execute();
+			throw new Exception($user_id.$code);
+			
 			return true;
 		}
 		catch(Exception $e)
