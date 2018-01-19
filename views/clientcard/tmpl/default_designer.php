@@ -404,116 +404,115 @@
                 }
             });
         });
-        
-    });
-
-
-    jQuery("#back_btn").click(function (){
-        location.href = '/index.php?option=com_gm_ceiling&view=designers';
-    });
-
-    jQuery("#add_comment").click(function ()
-    {
-        var comment = jQuery("#new_comment").val();
-        var reg_comment = /[\\\<\>\/\'\"\#]/;
-        var id_client = <?php echo $this->item->id; ?>;
-
-        if (reg_comment.test(comment) || comment === "")
-        {
-            alert('Неверный формат примечания!');
-            return;
-        }
-
-        add_history(id_client, comment);
-    });
-
-    jQuery("#but_call").click(function ()
-    {
-        document.getElementById('select_phones').style.display = 'block';
-    });
-
-    jQuery("#select_phones").change(function ()
-    {
-        var id_client = <?php echo $this->item->id; ?>;
-        call(jQuery("#select_phones").val());
-        add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
-    });
-    jQuery("#broke").click(function(){
-        jQuery("#call").show();
-            
-    })
-    jQuery("#add_call_and_submit").click(function(){
-        client_id = <?php echo $this->item->id;?>;
-                jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=changeCallTime",
-                    data: {
-                        id:<?php echo $call_id;?>,
-                        date: jQuery("#call_date").val(),
-                        comment: jQuery("#call_comment").val()
-                    },
-                    dataType: "json",
-                    async: true,
-                    success: function (data) {
-                       add_history(client_id,"Звонок перенесен");
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "success",
-                            text: "Звонок сдвинут"
-                        });
-
-                    },
-                    error: function (data) {
-                        console.log(data);
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка сервера"
-                        });
-                    }
-                });
-    })
-    function add_history(id_client, comment)
-    {
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=addComment",
-            data: {
-                comment: comment,
-                id_client: id_client
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Добавленна запись в историю клиента"
-                });
-                var pt = "<?php echo $phoneto; ?>";
-                var pf = "<?php echo $phonefrom; ?>";
-                var call_id = <?php echo $call_id; ?>;
-                setTimeout(function(){location.href = location.href;}, 1000);
-            },
-            error: function (data) {
-                console.log(data);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка отправки"
-                });
-            }
+        jQuery("#back_btn").click(function (){
+            location.href = '/index.php?option=com_gm_ceiling&view=designers';
         });
-    }
 
+        jQuery("#add_comment").click(function ()
+        {
+            var comment = jQuery("#new_comment").val();
+            var reg_comment = /[\\\<\>\/\'\"\#]/;
+            var id_client = <?php echo $this->item->id; ?>;
+
+            if (reg_comment.test(comment) || comment === "")
+            {
+                alert('Неверный формат примечания!');
+                return;
+            }
+
+            add_history(id_client, comment);
+        });
+
+        jQuery("#but_call").click(function ()
+        {
+            document.getElementById('select_phones').style.display = 'block';
+        });
+
+        jQuery("#select_phones").change(function ()
+        {
+            var id_client = <?php echo $this->item->id; ?>;
+            call(jQuery("#select_phones").val());
+            add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
+        });
+
+        jQuery("#broke").click(function(){
+            jQuery("#call").show();
+                
+        });
+
+        jQuery("#add_call_and_submit").click(function(){
+            client_id = <?php echo $this->item->id;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=changeCallTime",
+                data: {
+                    id:<?php echo $call_id;?>,
+                    date: jQuery("#call_date").val(),
+                    comment: jQuery("#call_comment").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                   add_history(client_id,"Звонок перенесен");
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Звонок сдвинут"
+                    });
+
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+        
+        function add_history(id_client, comment)
+        {
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addComment",
+                data: {
+                    comment: comment,
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Добавленна запись в историю клиента"
+                    });
+                    var pt = "<?php echo $phoneto; ?>";
+                    var pf = "<?php echo $phonefrom; ?>";
+                    var call_id = <?php echo $call_id; ?>;
+                    setTimeout(function(){location.href = location.href;}, 1000);
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка отправки"
+                    });
+                }
+            });
+        }
+    });
 </script>
