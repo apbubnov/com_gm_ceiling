@@ -49,10 +49,10 @@ $answer2 = $model->getDataByStatus("Mountings", $userId, null);
 			<a class="btn btn-large btn-danger" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=run', false); ?>"><i class="fa fa-lock" aria-hidden="true"></i> Завершенные заказы</a>
 		</p>
 		<p class="center">
-			<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
+			<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
 		</p>
 		<p class="center">
-			<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
+			<a class="btn btn-large btn-success" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
 		</p>
 	</div>
 <? } else if ($user->dealer_type == 1) { ?>
@@ -67,7 +67,7 @@ $answer2 = $model->getDataByStatus("Mountings", $userId, null);
 		</div>
 		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Неназначенные <br>на монтаж</a>
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Не назначенные <br>на монтаж</a>
 				<?php if ($answer2[0]->count != 0) { ?>
 					<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
 				<?php } ?>
