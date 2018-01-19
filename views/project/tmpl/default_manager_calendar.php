@@ -122,6 +122,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 
 // все замерщики
 $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
+if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 //----------------------------------------------------------------------------------
 
 
@@ -300,12 +301,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                         <?php }
                                             } ?>
                                     </td>
-                                    <?php if (count($cl_phones) == 1): ?>
-                                        <td>
-                                            <button id="make_call" type="button" class="btn btn-primary"><i
-                                                        class="fa fa-phone" aria-hidden="true"></i></button>
-                                        </td>
-                                    <?php endif; ?>
                                 </tr>
                                 <?php if (isset($_SESSION['phones']) && count($_SESSION['phones'] > 1)) {
                                     for ($i = 1; $i < count($_SESSION['phones']); $i++) { ?>
@@ -504,7 +499,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             </button>
         </li>
     </ul>
-    
+
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active" id="summary" role="tabpanel">
