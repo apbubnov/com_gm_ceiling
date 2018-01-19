@@ -191,8 +191,12 @@ class Gm_ceilingModelGuild extends JModelList
         return $employees;
     }
 
-    public function getWorkingEmployees($id = null)
+    public function getWorkingEmployees($data = null)
     {
+        $id = null;
+        if (gettype($id) == "object")
+            $id = $data->id;
+
         $date = date("Y-m-d H:i:s");
 
         $employees = null;
@@ -208,7 +212,7 @@ class Gm_ceilingModelGuild extends JModelList
             foreach ($working as $work)
             {
                 if ($work->action == 1 && strtotime($work->date) <= strtotime($date)) $START = strtotime($work->date);
-                if ($work->action == 0) {$END = strtotime($work->date); break; }
+                if ($work->action == 0) $END = strtotime($work->date);
             }
 
             $WORKING = 0;

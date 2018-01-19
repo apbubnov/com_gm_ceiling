@@ -20,7 +20,7 @@ $userGroup = $user->groups;
 if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header('Location: ' . $_SERVER['REDIRECT_URL']);
 
 $calculations = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getCuts();
-$employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
+$employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getWorkingEmployees();
 ?>
 <link rel="stylesheet" href="http://<?= str_replace("/home/srv112238/", "", __DIR__); ?>/style.css" type="text/css">
 <script type="text/javascript" src="/files/library/touchwipe.js"></script>
@@ -152,6 +152,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             cursor: null,
             ceilingPosition: {X: 0, Y: 0},
             employees: <?=(empty($employees)) ? "[]" : json_encode($employees);?>,
+            works: null
         };
 
     $(document).ready(Init);
@@ -268,13 +269,37 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
             Ceilings.append(Data);
         });
 
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=guild.getData",
+            data: {Type: "EmployeeWorking"},
+            cache: false,
+            async: false,
+            success: function (data) {
+                Data.employees = JSON.parse(data);
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
 
         $.each(json.works, function (i, v) {
             BlockName.find("b").html(v.name + "<br/>" + v.count + " " + v.unit + " - " + v.sum + " р.");
             var size = 0;
             $.each(Data.employees, function (j, val) {
-                BlockSelect.append(BlockOption.text(val.name).val(val.id).clone());
-                size++;
+                if (val.Work == 1)
+                {
+                    BlockSelect.append(BlockOption.text(val.name).val(val.id).clone());
+                    size++;
+                }
             });
             BlockSelect.attr({"name": "employees[" + v.id + "][]", "size": (size < 5) ? size : 5});
             BlockData.append(BlockSelect.clone());

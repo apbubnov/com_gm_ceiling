@@ -365,4 +365,10 @@ h1 {
     .Page .Main .MainBlock .Calendars .Calendar:nth-child(2) {
         width: calc(100% - 10px);
     }
+
+    .Page .MainBlock .Employee .Info .List {
+        width: 100% !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
 }
