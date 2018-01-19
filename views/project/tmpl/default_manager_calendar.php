@@ -3045,22 +3045,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 		var s = e.get('item').value.replace('Россия, ','');
 		input.val(s);
 		});
-		/*,
-           map,
-            placemark;
-        /*function geocode() {
-            // Забираем запрос из поля ввода.
-            var request = $('#jform_project_info').val();
-            // Геокодируем введённые данные.
-            ymaps.geocode(request).then(function (res) {
-                var obj = res.geoObjects.get(0),
-                    error, hint;
-
-            }, function (e) {
-                console.log(e)
-            })
-
-        }*/
     }
 
 </script>
