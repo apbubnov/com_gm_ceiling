@@ -884,7 +884,10 @@ echo parent::getPreloader();
                                         $status = "Собран";
                                     } else if ($this->item->project_status == 22) {
                                         $status = "Отказ от производства";
+                                    } else if ($this->item->project_status == 4) {
+                                        $status = "Не назначен на монтаж";
                                     }
+
                                     echo $status; 
                                 ?>
                             </td>
@@ -1022,7 +1025,7 @@ echo parent::getPreloader();
                                 <button type="submit" class="validate btn btn-primary">Сохранить</button>
                             <?php endif; ?>
                             <a class="btn btn-success"
-                                href="<?php if ($this->item->status == 4 && $user->dealer_type == 1)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects');
+                                href="<?php if ($this->item->status == 4)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects');
                                 elseif ($userId == $user->dealer_id)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief');
                                 else echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>"
                                 title="">Вернуться к монтажам</a>
@@ -1030,7 +1033,7 @@ echo parent::getPreloader();
                     </div>
                 </form>
             </div>
-            
+
             <div class="col-xl-6">
                 <div class="comment">
                     <label style="font-weight: bold;"> История клиента: </label>
