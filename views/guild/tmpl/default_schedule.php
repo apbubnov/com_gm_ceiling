@@ -335,17 +335,27 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                     Schedule = Block.find(".Schedule tbody"),
                     Working = Block.find(".Working tbody");
 
-                Block.addClass("In");
+                Block.addClass((Value.Work === 1)?"In":"Out");
                 var Title = Block.find(".Name");
 
                 Title.find(".EName").text(Value.name);
                 Title.find(".Hour").text(Value.Working.Time);
+                Title.find(".Salaries").text(Value.Salaries.Price);
 
                 $.each(Value.Working.Times, function (I, V) {
                     var Time = DATA.HTML.Time.clone();
                     Time.find(".Time").text(V.TimeLine);
                     Time.find(".Hour").text(V.Time + " ч.");
                     Schedule.append(Time);
+                });
+
+                $.each(Value.Salaries.List, function (I, V) {
+                    var Salar = DATA.HTML.Salaries.clone();
+                    Salar.find(".Time").text(V.Time);
+                    Salar.find(".Work").text(V.Work);
+                    Salar.find(".Name").text(V.Ceiling);
+                    Salar.find(".Price").text(V.Price);
+                    Working.append(Salar);
                 });
 
                 DATA.MainWork.MainBlock.append(Block);
