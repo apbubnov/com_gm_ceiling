@@ -3142,7 +3142,13 @@ class Gm_ceilingHelpersGm_ceiling
         $count_profil_2 = 0;
         $count_profil_3 = 0;
         $count_profil_4 = 0;
-
+        $n13 = json_decode($data['n13']);
+        $n26 = json_decode($data['n26']);
+        $n22 = json_decode($data['n22']);
+        $n14 = json_decode($data['n14']);
+        $n23 = json_decode($data['n23']);
+        $n15 = json_decode($data['n15']);
+        $n29 = json_decode($data['n29']);
         if ($data['n1'] == 28 && $data['n9'] > 4) {
             //Обработка 1 угла
             if ($data['n9']) {
