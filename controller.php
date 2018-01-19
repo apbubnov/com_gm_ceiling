@@ -2682,6 +2682,7 @@ class Gm_ceilingController extends JControllerLegacy
             }
             $code = md5($user_id.'commercial_offer');
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            throw new Exception($user_id, $code);
             $result  = $users_model->addCommercialOfferCode($user_id, $code);
             die(json_encode($result));
         }
