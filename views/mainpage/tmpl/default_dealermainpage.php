@@ -82,8 +82,7 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-clock-o" aria-hidden="true"></i> ГМ Менеджер</a>
                 <?php else: ?>
-                    <i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
-                    <!--<i class="fa fa-clock-o" aria-hidden="true"></i>Менеджер</a>-->
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>Менеджер</a>
                 <?php endif; ?>
                 <?php if ($sumManager != 0) { ?>
                     <div class="circl-digits"><?php echo $sumManager; ?></div>
