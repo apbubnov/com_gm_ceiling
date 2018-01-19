@@ -209,12 +209,13 @@ class Gm_ceilingModelGuild extends JModelList
             {
                 echo "$work->date \n";
                 if ($work->date <= $date && $work->action == 1) $START = $work->date;
-                if ($work->date > $date && $work->action == 0) {$END = $work->date; break; }
+                if ($work->action == 0) {$END = $work->date; break; }
             }
             echo "$START - $date - $END\n\n";
 
+
             $WORKING = 0;
-            if ($START < $date && ($END == null || $END > $date)) $WORKING = 1;
+            if ($START < $date && ($END <= $START || $END == null || $END > $date)) $WORKING = 1;
             $employees[$key]->Work = $WORKING;
         }
 
