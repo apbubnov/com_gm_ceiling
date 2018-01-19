@@ -51,7 +51,7 @@ $employee = (in_array(18, $groups));
 
 <div class="start_page">
     <h3>Цех</h3>
-    <?if($employee):?>
+    <?if($chief):?>
     <p class="center">
         <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=guild&type=schedule', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Расписание</a>
     </p>
