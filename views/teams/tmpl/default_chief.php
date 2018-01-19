@@ -8,7 +8,7 @@ JHtml::_('behavior.multiselect');
 //JHtml::_('formbehavior.chosen', 'select');
 
 $user       = JFactory::getUser();
-$userId     = $user->get('id');
+$userId     = $user->id;
 $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
@@ -34,6 +34,8 @@ $FlagCalendar = [1, $dealerId];
 
 if (!empty($brigade_id)) {
 	foreach ($brigade_id as $value) {
+        throw new Exception($value->id);
+        
 		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
 		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name:</a>";
 		$calendars .= "</p>";
@@ -54,7 +56,6 @@ if (!empty($brigade_id)) {
 				}
 			}
 		}
-		
 		$calendars .= "<table id=\"name\"><tr><td nowrap>$names</tr></td></table>";
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
