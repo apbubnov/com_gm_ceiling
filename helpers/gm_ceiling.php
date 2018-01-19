@@ -3114,7 +3114,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
-        $results = $mount_model->getAllData($user->dealer_id);
+        $results = $mount_model->getDataAll($user->dealer_id);
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
             $calculation_data = $calculation_model->getData($calculation_id);
