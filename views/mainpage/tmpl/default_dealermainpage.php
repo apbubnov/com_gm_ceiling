@@ -15,6 +15,7 @@ JHtml::_('behavior.multiselect');
 
 $user = JFactory::getUser();
 $userId = $user->get('id');
+$dealerInfo = $user->getDealerInfo();
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 
@@ -56,11 +57,59 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
 //--------------------------------------
 
 ?>
-
+<?if(!$dealerInfo->update_check):?>
+<style>
+    #toProfile {
+        position: relative;
+        width: 52px;
+        height: 38px;
+        display: inline-block;
+    }
+    #toProfile .pix {
+        position: absolute;
+        right: -6px;
+        top: -6px;
+        width: 12px;
+        height: 12px;
+        border-radius: 6px;
+        background-color: rgb(255,0,0);
+        box-shadow: 1px 1px 1px 0 rgba(0,0,0,.5), inset 1px 1px 1px 0 rgba(255,255,255,.5), inset -.5px -.5px 1px 0 rgba(0,0,0,.5);
+    }
+    #toProfile .message {
+        position: absolute;
+        left: 58px;
+        top: 0;
+        border-radius: .25rem;
+        height: 38px;
+        line-height: 38px;
+        width: auto;
+        padding: 0 10px;
+        background-color: rgb(65,64,153);
+        color: rgb(255,255,255);
+        display: none;
+    }
+    #toProfile:hover .message {
+        display: inline-block;
+    }
+    #toProfile .message:before {
+        position: absolute;
+        left: -8px;
+        content: "◀";
+        font-size: 12px;
+        color: rgb(65,64,153);
+    }
+</style>
+<?endif;?>
 <div class="form-group">
 <h2 style = "display:inline-block;"><?php echo $user->name; ?></h2> <?php if($user->dealer_type!=2 ){
     if($userId == 1 || $userId == 2 || ($userId != 1 && $user->dealer_id != 1)) { ?>
-<button id="toProfile" class = "btn btn-primary" style = "diaplay:inline-block;"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
+<button id="toProfile" class = "btn btn-primary">
+    <i class="fa fa-cogs" aria-hidden="true"></i>
+    <?if(!$dealerInfo->update_check):?>
+        <div class="pix"></div>
+        <div class="message">Зайти сюда!</div>
+    <?endif;?>
+</button>
 <?php } }?>
 </div>
 
