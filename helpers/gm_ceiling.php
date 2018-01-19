@@ -3274,6 +3274,7 @@ class Gm_ceilingHelpersGm_ceiling
             if ($del_flag == 0) {
                 //Установка светильников
 
+                throw new Exception(count($n13));
                 if (count($n13) > 0) {
 
                     foreach ($n13 as $svet) {
