@@ -207,8 +207,8 @@ if (!empty($brigade_id)) {
                         },
                         success: function (msg) {
                             calendars = '<div class="calendars-brigade"><p class="brigade-name">';
-                            calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
-                            calendars += "<table id=\"name\"><tr><td nowrap><?php echo $names; ?></tr></td></table>";
+                            calendars += '<a href="/index.php?option=com_gm_ceiling&view=team&id=<?php echo $value->id; ?>" class="site-tar"><?php echo $value->name; ?>:</a></p>';
+                            calendars += '<table id="name"><tr><td nowrap><?php echo $names; ?></tr></td></table>';
                             calendars += msg;
                         },
                         dataType: "text",
@@ -359,8 +359,8 @@ if (!empty($brigade_id)) {
                     },
                     success: function (msg) {
                         calendars = '<div class="calendars-brigade"><p class="brigade-name"></p>';
-                        calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
-                        calendars += "<table id=\"name\"><tr><td nowrap>"+<?php echo $names; ?>+"</tr></td></table>";
+                        calendars += '<a href="/index.php?option=com_gm_ceiling&view=team&id=<?php echo $value->id; ?>" class="site-tar"><?php echo $value->name; ?>:</a></p>';
+                        calendars += '<table id="name"><tr><td nowrap><?php echo $names; ?></tr></td></table>';
                         calendars += msg;
                     },
                     dataType: "text",
