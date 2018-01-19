@@ -1035,7 +1035,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             if (empty($id->project_id)) {
 
                 $query = $db->getQuery(true);
-                $columns = array('state', 'checked_out_time', 'created_by', 'modified_by', 'client_id', 'project_status', 'dealer_id'
+                $columns = array('state', 'checked_out_time', 'created_by', 'modified_by', 'client_id', 'project_status'
                 , 'project_verdict', 'created', 'gm_canvases_margin', 'gm_components_margin', 'gm_mounting_margin',
                     'dealer_canvases_margin', 'dealer_components_margin', 'dealer_mounting_margin', 'project_discount', 'api_phone_id');
                 $query
@@ -1048,7 +1048,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         . $data['dealer_id'] . ', '
                         . $id_client . ', '
                         . '0' . ', '
-                        . $data['dealer_id'] . ', '
                         . '0' . ', '
                         . $db->quote($date_created) . ', '
                         . '0' . ', '
