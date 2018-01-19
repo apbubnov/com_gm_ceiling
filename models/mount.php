@@ -78,13 +78,15 @@ class Gm_ceilingModelMount extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
-    function getDataAll()
+    function getDataAll($dealerId=null)
     {
     	try
     	{
-	        $app = JFactory::getApplication();
-	        $user = JFactory::getUser();
-	        $dealerId = $user->dealer_id;
+			if(empty($dealerId)){
+				$app = JFactory::getApplication();
+				$user = JFactory::getUser();
+				$dealerId = $user->dealer_id;
+			}
 	        $db    = $this->getDbo();
 	        $query = $db->getQuery(true);
 	        $db = JFactory::getDbo();

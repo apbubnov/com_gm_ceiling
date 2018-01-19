@@ -1140,19 +1140,6 @@ class Gm_ceilingHelpersGm_ceiling
                 // $tmp += ($data['n9'] - 4) * $results->mp20;
             }
         }
-/*        if ($data['n1'] == 28 && $data['n10'] > 0) {
-            //криволинейный участок ТОЛЬКО ДЛЯ ПВХ
-            $guild_data[] = array(
-                "title" => "Криволинейный участок для ПВХ",                                                                    //Название
-                "quantity" => $data['n10'],                                                                //Кол-во
-                "gm_salary" => $results->mp21,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                "gm_salary_total" => $data['n10'] * $results->mp21,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                "dealer_salary" => $results->mp21,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                "dealer_salary_total" => $data['n10'] * $results->mp21                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-            );
-            //$tmp += $data['n10'] * $results->mp21;
-
-        }*/
         if ($data['n1'] == 28 && $data['n11'] > 0) {
             //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
             $mounting_data[] = array(
@@ -1433,82 +1420,6 @@ class Gm_ceilingHelpersGm_ceiling
                         );
                     }
                 }
-
-//коммент ниже не удалять!!!!!!!!!!!!!!!!!!!!!!!!!!1
-                /*
-                                if (count($n29) > 0) {
-                                    if ($kolNP > 0 && $kolKP > 0) {
-                                        if ($profil->n29_type == 12)
-                                            $mounting_data[] = array(
-                                                "title" => "Установка профиля КП + НП по прямой",                                                    //Название
-                                                "quantity" => $kolNP,                                                    //Кол-во
-                                                "gm_salary" => $results->mp27,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                "gm_salary_total" => $kolNP * $results->mp27,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                "dealer_salary" => $results->mp27,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                "dealer_salary_total" => $kolNP * $results->mp27                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                            );
-                                        else $mounting_data[] = array(
-                                            "title" => "Установка профиля КП + НП по кривой",                                                    //Название
-                                            "quantity" => $kolNP,                                                    //Кол-во
-                                            "gm_salary" => $results->mp28,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                            "gm_salary_total" => $kolNP * $results->mp28,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                            "dealer_salary" => $results->mp28,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                            "dealer_salary_total" => $kolNP * $results->mp278                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                        );
-                                    }
-                                    if ($kolSP > 0 && $kolKP > 0) {
-                                        $mounting_data[] = array(
-                                            "title" => "Установка профиля КП + СП",                                                    //Название
-                                            "quantity" => $kolSP,                                                    //Кол-во
-                                            "gm_salary" => $results->mp29,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                            "gm_salary_total" => $kolSP * $results->mp29,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                            "dealer_salary" => $results->mp29,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                            "dealer_salary_total" => $kolSP * $results->mp29                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                        );
-
-                                    }
-
-                                    foreach ($n29 as $profil) {
-                                        if ($profil->n29_count > 0) {
-                                            if ($profil->n29_profil == 650 && $profil->n29_type == 12)
-                                                $mounting_data[] = array(
-                                                    "title" => "Установка профиля ПП по прямой",                                                    //Название
-                                                    "quantity" => $profil->n29_count,                                                    //Кол-во
-                                                    "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "gm_salary_total" => $profil->n29_count * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                    "dealer_salary_total" => $profil->n29_count * $results->mp23                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                                );
-                                            if ($profil->n29_profil == 650 && $profil->n29_type == 13)
-                                                $mounting_data[] = array(
-                                                    "title" => "Установка профиля ПП по кривой",                                                    //Название
-                                                    "quantity" => $profil->n29_count,                                                    //Кол-во
-                                                    "gm_salary" => $results->mp24,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "gm_salary_total" => $profil->n29_count * $results->mp24,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "dealer_salary" => $results->mp24,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                    "dealer_salary_total" => $profil->n29_count * $results->mp24                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                                );
-                                            if ($profil->n29_profil == 651 && $profil->n29_type == 12)
-                                                $mounting_data[] = array(
-                                                    "title" => "Установка профиля ПЛ по прямой",                                                    //Название
-                                                    "quantity" => $profil->n29_count,                                                    //Кол-во
-                                                    "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "gm_salary_total" => $profil->n29_count * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                    "dealer_salary_total" => $profil->n29_count * $results->mp25                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                                );
-                                            if ($profil->n29_profil == 651 && $profil->n29_type == 13)
-                                                $mounting_data[] = array(
-                                                    "title" => "Установка профиля ПЛ по кривой",                                                    //Название
-                                                    "quantity" => $profil->n29_count,                                                    //Кол-во
-                                                    "gm_salary" => $results->mp26,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "gm_salary_total" => $profil->n29_count * $results->mp26,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "dealer_salary" => $results->mp26,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                    "dealer_salary_total" => $profil->n29_count * $results->mp26                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                                );
-                                        }
-                                    }
-                                }*/
             } else {
                 //Установка светильников
                 if (count($n13) > 0) {
@@ -1665,82 +1576,6 @@ class Gm_ceilingHelpersGm_ceiling
                     }
 
                 }
-                //не удалять!!!!!!!!!!!!!!!!!!!!!!!!!!1
-                /*
-                                if (count($n29) > 0) {
-                                    if ($kolNP > 0 && $kolKP > 0) {
-                                        if ($profil[1] == 12)
-                                            $mounting_data[] = array(
-                                                "title" => "Установка профиля КП + НП по прямой",                                                    //Название
-                                                "quantity" => $kolNP,                                                    //Кол-во
-                                                "gm_salary" => $results->mp27,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                "gm_salary_total" => $kolNP * $results->mp27,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                "dealer_salary" => $results->mp27,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                "dealer_salary_total" => $kolNP * $results->mp27                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                            );
-                                        else $mounting_data[] = array(
-                                            "title" => "Установка профиля КП + НП по кривой",                                                    //Название
-                                            "quantity" => $kolNP,                                                    //Кол-во
-                                            "gm_salary" => $results->mp28,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                            "gm_salary_total" => $kolNP * $results->mp28,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                            "dealer_salary" => $results->mp28,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                            "dealer_salary_total" => $kolNP * $results->mp278                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                        );
-                                    }
-                                    if ($kolSP > 0 && $kolKP > 0) {
-                                        $mounting_data[] = array(
-                                            "title" => "Установка профиля КП + СП",                                                    //Название
-                                            "quantity" => $kolSP,                                                    //Кол-во
-                                            "gm_salary" => $results->mp29,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                            "gm_salary_total" => $kolSP * $results->mp29,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                            "dealer_salary" => $results->mp29,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                            "dealer_salary_total" => $kolSP * $results->mp29                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                        );
-
-                                    }
-
-                                    foreach ($n29 as $profil) {
-                                        if ($profil[0] > 0) {
-                                            if ($profil[2] == 650 && $profil[1] == 12)
-                                                $mounting_data[] = array(
-                                                    "title" => "Установка профиля ПП по прямой",                                                    //Название
-                                                    "quantity" => $profil[0],                                                    //Кол-во
-                                                    "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "gm_salary_total" => $profil[0] * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                    "dealer_salary_total" => $profil[0] * $results->mp23                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                                );
-                                            if ($profil[2] == 650 && $profil[1] == 13)
-                                                $mounting_data[] = array(
-                                                    "title" => "Установка профиля ПП по кривой",                                                    //Название
-                                                    "quantity" => $profil[0],                                                    //Кол-во
-                                                    "gm_salary" => $results->mp24,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "gm_salary_total" => $profil[0] * $results->mp24,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "dealer_salary" => $results->mp24,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                    "dealer_salary_total" => $profil[0] * $results->mp24                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                                );
-                                            if ($profil[2] == 651 && $profil[1] == 12)
-                                                $mounting_data[] = array(
-                                                    "title" => "Установка профиля ПЛ по прямой",                                                    //Название
-                                                    "quantity" => $profil[0],                                                    //Кол-во
-                                                    "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "gm_salary_total" => $profil[0] * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                    "dealer_salary_total" => $profil[0] * $results->mp25                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                                );
-                                            if ($profil[2] == 651 && $profil[1] == 13)
-                                                $mounting_data[] = array(
-                                                    "title" => "Установка профиля ПЛ по кривой",                                                    //Название
-                                                    "quantity" => $profil[0],                                                    //Кол-во
-                                                    "gm_salary" => $results->mp26,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "gm_salary_total" => $profil[0] * $results->mp26,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                                    "dealer_salary" => $results->mp26,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                                    "dealer_salary_total" => $profil[0] * $results->mp26                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                                                );
-                                        }
-                                    }
-                                }
-                            */
             }
             //шторный карниз
             if ($data['n27'] > 0) {
@@ -1803,7 +1638,6 @@ class Gm_ceilingHelpersGm_ceiling
                 );
             }
 
-
             if ($data['n32'] > 0) {
                 $mounting_data[] = array(
                     "title" => "Слив воды",                                                        //Название
@@ -1814,32 +1648,6 @@ class Gm_ceilingHelpersGm_ceiling
                     "dealer_salary_total" => $data['n32'] * $results->mp27                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
-
-            /*   //транспортные расходы
-               if ($data['transport']) {
-                   $mounting_data[] = array(
-                       "title" => "Транспортные расходы",                                                //Название
-                       "quantity" => $data['transport'],                                                //Кол-во
-                       "gm_salary" => $results->transport,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                       "gm_salary_total" => $data['transport'] * $results->transport,                        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                       "dealer_salary" => $results->transport,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                       "dealer_salary_total" => $data['transport'] * $results->transport                //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                   );
-               }
-           }
-           if ($data['distance'] && $data['distance_col']) {
-               $mounting_data[] = array(
-                   "title" => "Выезд за город ( км * кол-во раз)",                                                    //Название
-                   "quantity" => $data['distance'] *  $data['distance_col'],                                                        //Кол-во
-                   "gm_salary" => $results->distance,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
-                   "gm_salary_total" => $data['distance'] * $data['distance_col'] * $results->distance ,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                   "dealer_salary" => $results->distance,                                                //Себестоимость монтажа дилера (зарплата монтажников)
-                   "dealer_salary_total" => $data['distance']* $data['distance_col'] * $results->distance                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-               );
-               //print_r($mounting_data);exit;
-           }*/
-
-
         }
 
 
@@ -2349,52 +2157,28 @@ class Gm_ceilingHelpersGm_ceiling
                 $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
                 $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
             }
-
-
-            //Дебаг он и Африке дебаг
-            /*$debug = $jinput->get('debug', '0', 'INT');
-            if($debug == 1) {
-
-            }*/
-            //throw new Exception($need_mount);
-
-            //throw  new  Exception($components_sum);
             //Получаем скидку
-            // $new_discount = $data['project_discount'];
             $new_discount = $data['discount'];
             //Сюда забиваем ответ в JSON
             $ajax_return = array();
             $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
             //throw new Exception($total_with_gm_dealer_margin , 1);
             $ajax_return['project_discount'] = $new_discount;
-            /* if ($data['project_id']) {
-
-                 $ajax_return['project_discount'] = $new_discount; //($new_discount != -1)?$new_discount:0;///* Данные до 18.08 *///$project->project_discount;
-            //} else {
-            // $ajax_return['project_discount'] = $new_discount; //($new_discount != -1)?$new_discount:0;///* Данные до 18.08 *//$dealer->discount;
-            // }
-
             $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'];
             $ajax_return['components_sum'] = $components_sum;
             $ajax_return['mounting_sum'] = $total_gm_mounting;
-            //$ajax_return['mounting_sum'] = $total_dealer_mounting;
-
+            $ajax_return['mounting_sum11111'] = self::calculate_mount($del_flag,0,null,$data);
+            $ajax_return['mounting_arr'] = $data;
+            $ajax_return['mounting_arr111'] = self::calculate_mount($del_flag,1,null,$data);
             $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $total_gm_guild;
             $data['components_sum'] = $components_sum;
             $data['mounting_sum'] = $total_gm_mounting;
-            //$data['mounting_sum'] = $total_dealer_mounting;
-
             $data['project_discount'] = $dealer->discount;
-
             $data["state"] = 1;
             $data["checked_out"] = 0;
             $data["checked_out_time"] = "00.00.0000 00:00";
             $data["created_by"] = $user->id;
             $data["modified_by"] = $user->id;
-
-            if (empty($data['dealer_id'])) {
-                //$data["dealer_id"] = $dealer_id;
-            }
 
             $db = JFactory::getDBO();
             $query = 'SELECT `id` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
@@ -3444,6 +3228,1047 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             return $return;
+    }
+    public static function calculate_mount($del_flag,$what,$calc_id,$data){
+
+        $user = JFactory::getUser();
+        $mount_model = self::getModel('mount');
+        $results = $mount_model->getAllData($user->dealer_id);
+        if(!empty($calc_id)){
+            $calculation_model = self::getModel('calculation');
+            $calculation_data = $calculation_model->getData($calculation_id);
+            foreach ($calculation_data as $key => $item) {
+                $data[$key] = $item;
+            }
+            $data['n1'] = $calculation_data->n1_id;
+            $data['n2'] = $calculation_data->n2_id;
+            $data['n3'] = $calculation_data->n3_id;
+        }
+
+        //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
+        $mounting_data = array();
+        $guild_data = array();
+
+        $count_svet = 0;
+        $count_ventilation = 0;
+        $count_ventilation_1 = 0;
+        $count_diffuzor = 0;
+        $count_truba = 0;
+        $count_profil_1 = 0;
+        $count_profil_2 = 0;
+        $count_profil_3 = 0;
+        $count_profil_4 = 0;
+
+        if ($data['n1'] == 28 && $data['n9'] > 4) {
+            //Обработка 1 угла
+            if ($data['n9']) {
+                $guild_data[] = array(
+                    "title" => "Обработка 1 угла",                                                                    //Название
+                    "quantity" => $data['n9'] - 4,                                                                //Кол-во
+                    "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp20,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+        }
+        if ($data['n1'] == 28 && $data['n11'] > 0) {
+            //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
+            $mounting_data[] = array(
+                "title" => "Внутренний вырез для ПВХ",                                                                    //Название
+                "quantity" => $data['n11'],                                                                //Кол-во
+                "gm_salary" => $results->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['n11'] * $results->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $results->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['n11'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
+        }
+        //только для ПВХ
+        if ($data['n1'] == 28) {
+            //периметр
+            if ($data['n5'] > 0 && $data['n28'] == 0) {
+                $mounting_data[] = array(
+                    "title" => "Периметр",                                                                    //Название
+                    "quantity" => $data['n5'],                                                                //Кол-во
+                    "gm_salary" => ($data['height']==1)?($results->mp1 + 10):$results->mp1,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp1 + 10):$results->mp1) ,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => ($data['height']==1)?($results->mp1 + 10):$results->mp1,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp1 + 10):$results->mp1)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+            //периметр
+            if ($data['n5'] > 0 && $data['n28'] == 1) {
+                $mounting_data[] = array(
+                    "title" => "Периметр",                                                                    //Название
+                    "quantity" => $data['n5'],                                                                //Кол-во
+                    "gm_salary" => ($data['height']==1)?($results->mp31 + 10):$results->mp31,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp31 + 10):$results->mp31),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => ($data['height']==1)?($results->mp31 + 10):$results->mp31,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp31 + 10):$results->mp31)                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+
+            }
+            //периметр
+            if ($data['n5'] > 0 && $data['n28'] == 2) {
+                $mounting_data[] = array(
+                    "title" => "Периметр",                                                                    //Название
+                    "quantity" => $data['n5'],                                                                //Кол-во
+                    "gm_salary" => ($data['height']==1)?($results->mp32 + 10):$results->mp32,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp32 + 10):$results->mp32),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => ($data['height']==1)?($results->mp32 + 10):$results->mp32,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n5'] * ( ($data['height']==1)?($results->mp32 + 10):$results->mp32  )                                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+
+            }
+//?????????????????????????????????????????????????????????????????? здесь тоже + 10рублей????
+            if ($data['n31'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Периметр (внутренний вырез)",                                                                    //Название
+                    "quantity" => $data['n31'],                                                                //Кол-во
+                    "gm_salary" => $results->mp1,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n31'] * $results->mp1,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp1,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n31'] * $results->mp1                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+
+            }
+            if ($data['n31'] > 0) {
+                if ($data['color'] > 0) {
+                    $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+                    $color = $color_model->getData($data['color']);
+                    $name = "Вставка (внутренний вырез), цвет: " . $color->colors_title;
+                } else {
+                    $name = "Вставка (внутренний вырез)";
+                }
+                $mounting_data[] = array(
+                    "title" => $name,                                                                        //Название
+                    "quantity" => $data['n31'],                                                                //Кол-во
+                    "gm_salary" => $results->mp10,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n31'] * $results->mp10,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp10,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n31'] * $results->mp10                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+
+            if ( $data['n31'] > 0) {  
+                //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
+                $guild_data[] = array(
+                    "title" => "Внутренний вырез(в цеху)",                                                                    //Название
+                    "quantity" => $data['n31'],                                                                //Кол-во
+                    "gm_salary" => $results->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n31'] * $results->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n31'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+            //со вставкой
+            if ($data['n6'] > 0) {
+                if ($data['color'] > 0) {
+                    $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+                    $color = $color_model->getData($data['color']);
+                    $name = "Вставка, цвет: " . $color->colors_title;
+                } else {
+                    $name = "Вставка";
+                }
+                $mounting_data[] = array(
+                    "title" => $name,                                                                        //Название
+                    "quantity" => $data['n5'],                                                                //Кол-во
+                    "gm_salary" => $results->mp10,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n5'] * $results->mp10,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp10,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n5'] * $results->mp10                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+            //установка люстры
+            if ($data['n12'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Установка люстр",                                                                       //Название
+                    "quantity" => $data['n12'],//$count_lust,															//Кол-во
+                    "gm_salary" => $results->mp2,//max($gm->mp4, $gm->mp5),												//Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $results->mp2 * $data['n12'],//$count_lust * max($gm->mp4, $gm->mp5),			//Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp2,//max($dealer->mp4, $dealer->mp5),									//Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n12'] * $results->mp2//max($dealer->mp4, $dealer->mp5)				//Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+
+            if ($del_flag == 0) {
+                //Установка светильников
+
+                if (count($n13) > 0) {
+
+                    foreach ($n13 as $svet) {
+                        if ($svet->n13_count > 0) {
+
+                            $count_svet += $svet->n13_count;
+
+                        }
+                    }
+
+                    if ($count_svet > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка светильников",                                                //Название
+                            "quantity" => $count_svet,                                                          //Кол-во
+                            "gm_salary" => max($results->mp4, $results->mp5),                                   //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_svet * max($results->mp4, $results->mp5),               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => max($results->mp4, $results->mp5),                               //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_svet * max($results->mp4, $results->mp5)            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+
+
+                if (count($n22) > 0) {
+                    foreach ($n22 as $ventilation) {
+                        if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 5 || $ventilation->n22_type == 6)) {
+                            $count_ventilation += $ventilation->n22_count;
+                        }
+                        if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 7 || $ventilation->n22_type == 8)) {
+                            $count_ventilation_1 += $ventilation->n22_count;
+
+                        }
+                    }
+                    if ($count_ventilation > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка вентиляции",                                                    //Название
+                            "quantity" => $count_ventilation,                                                    //Кол-во
+                            "gm_salary" => $results->mp12,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation * $results->mp12,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp12,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation * $results->mp12                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_ventilation_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка электровытяжки",                                                    //Название
+                            "quantity" => $count_ventilation_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation_1 * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation_1 * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+
+                }
+
+                if (count($n29) > 0) {
+                    foreach ($n29 as $profil) {
+                        if ($profil->n29_count > 0 && $profil->n29_type == 12) {
+                            $count_profil_1 += $profil->n29_count;
+                        }
+                        if ($profil->n29_count > 0 && $profil->n29_type == 13) {
+                            $count_profil_2 += $profil->n29_count;
+                        }
+                        if ($profil->n29_count > 0 && $profil->n29_type == 15) {
+                            $count_profil_3 += $profil->n29_count;
+                        }
+                        if ($profil->n29_count > 0 && $profil->n29_type == 16) {
+                            $count_profil_4 += $profil->n29_count;
+                        }
+                    }
+                    if ($count_profil_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой",                                                    //Название
+                            "quantity" => $count_profil_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_1 * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_1 * $results->mp23                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_profil_2 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по кривой",                                                    //Название
+                            "quantity" => $count_profil_2,                                                    //Кол-во
+                            "gm_salary" => $results->mp24,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_2 * $results->mp24,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp24,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_2 * $results->mp24                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_profil_3 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой с нишей",                                                    //Название
+                            "quantity" => $count_profil_3,                                                    //Кол-во
+                            "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_3 * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_3 * $results->mp25                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_profil_4 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по кривой с нишей",                                                    //Название
+                            "quantity" => $count_profil_4,                                                    //Кол-во
+                            "gm_salary" => $results->mp26,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_4 * $results->mp26,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp26,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_4 * $results->mp26                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+
+                }
+                // установка диффузора
+                if (count($n23) > 0) {
+                    foreach ($n23 as $diffuzor) {
+                        if ($diffuzor->n23_count > 0) {
+                            $count_diffuzor += $diffuzor->n23_count;
+
+                        }
+                    }
+                    if ($count_diffuzor > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка диффузора",                                                    //Название
+                            "quantity" => $count_diffuzor,                                                    //Кол-во
+                            "gm_salary" => $results->mp19,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_diffuzor * $results->mp19,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp19,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_diffuzor * $results->mp19                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+                //обвод трубы
+                if (count($n14) > 0) {
+                    foreach ($n14 as $truba) {
+                        if ($truba->n14_count > 0) {
+                            $count_truba += $truba->n14_count;
+
+                        }
+                    }
+                    if ($count_truba > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Обвод трубы",                                                    //Название
+                            "quantity" => $count_truba,                                                    //Кол-во
+                            "gm_salary" => $results->mp8,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_truba * $results->mp8,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_truba * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+            } else {
+                //Установка светильников
+                if (count($n13) > 0) {
+
+                    foreach ($n13 as $svet) {
+                        if ($svet[0] > 0) {
+
+                            $count_svet += $svet[0];
+
+                        }
+                    }
+                    if ($count_svet > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка светильников",                                                //Название
+                            "quantity" => $count_svet,                                                            //Кол-во
+                            "gm_salary" => max($results->mp4, $results->mp5),                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_svet * max($results->mp4, $results->mp5),                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => max($results->mp4, $results->mp5),                                    //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_svet * max($results->mp4, $results->mp5)                //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+
+
+                if (count($n22) > 0) {
+                    foreach ($n22 as $ventilation) {
+                        if ($ventilation[0] > 0 && ($ventilation[1] == 5 || $ventilation[1] == 6)) {
+                            $count_ventilation += $ventilation[0];
+                        }
+                        if ($ventilation[0] > 0 && ($ventilation[1] == 7 || $ventilation[1] == 8)) {
+                            $count_ventilation_1 += $ventilation[0];
+
+                        }
+                    }
+                    if ($count_ventilation > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка вентиляции",                                                    //Название
+                            "quantity" => $count_ventilation,                                                    //Кол-во
+                            "gm_salary" => $results->mp12,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation * $results->mp12,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp12,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation * $results->mp12                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_ventilation_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка электровытяжки",                                                    //Название
+                            "quantity" => $count_ventilation_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation_1 * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation_1 * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+
+                }
+
+                // установка диффузора
+                if (count($n23) > 0) {
+                    foreach ($n23 as $diffuzor) {
+                        if ($diffuzor[0] > 0) {
+                            $count_diffuzor += $diffuzor[0];
+
+                        }
+                    }
+                    if ($count_diffuzor > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка диффузора",                                                    //Название
+                            "quantity" => $count_diffuzor,                                                    //Кол-во
+                            "gm_salary" => $results->mp19,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_diffuzor * $results->mp19,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp19,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_diffuzor * $results->mp19                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+                //обвод трубы
+                if (count($n14) > 0) {
+                    foreach ($n14 as $truba) {
+                        if ($truba[0] > 0) {
+                            $count_truba += $truba[0];
+
+                        }
+                    }
+                    if ($count_truba > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Обвод трубы",                                                    //Название
+                            "quantity" => $count_truba,                                                    //Кол-во
+                            "gm_salary" => $results->mp8,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_truba * $results->mp8,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_truba * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+
+                if (count($n29) > 0) {
+                    foreach ($n29 as $profil) {
+                        if ($profil[0] > 0 && $profil[1] == 12) {
+                            $count_profil_1 += $profil[0];
+                        }
+                        if ($profil[0] > 0 && $profil[1] == 13) {
+                            $count_profil_2 += $profil[0];
+                        }
+                        if ($profil[0] > 0 && $profil[1] == 15) {
+                            $count_profil_3 += $profil[0];
+                        }
+                        if ($profil[0] > 0 && $profil[1] == 16) {
+                            $count_profil_4 += $profil[0];
+                        }
+                    }
+                    if ($count_profil_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой",                                                    //Название
+                            "quantity" => $count_profil_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_1 * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_1 * $results->mp23                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_profil_2 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по кривой",                                                    //Название
+                            "quantity" => $count_profil_2,                                                    //Кол-во
+                            "gm_salary" => $results->mp24,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_2 * $results->mp24,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp24,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_2 * $results->mp24                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_profil_3 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой с нишей",                                                    //Название
+                            "quantity" => $count_profil_3,                                                    //Кол-во
+                            "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_3 * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_3 * $results->mp25                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_profil_4 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по кривой с нишей",                                                    //Название
+                            "quantity" => $count_profil_4,                                                    //Кол-во
+                            "gm_salary" => $results->mp26,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_4 * $results->mp26,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp26,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_4 * $results->mp26                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+
+                }
+            }
+            //шторный карниз
+            if ($data['n27'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Шторный карниз",                                                    //Название
+                    "quantity" => $data['n27'],                                                        //Кол-во
+                    "gm_salary" => $results->mp11,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n27'] * $results->mp11,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp11,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n27'] * $results->mp11                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+
+            //закладная брусом
+            if ($data['n17'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Закладная брусом",                                                    //Название
+                    "quantity" => $data['n17'],                                                        //Кол-во
+                    "gm_salary" => $results->mp11,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n17'] * $results->mp11,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp11,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n17'] * $results->mp11                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+
+
+
+
+            //пожарная сигнализация
+            if ($data['n21'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Пожарная сигнализация",                                                //Название
+                    "quantity" => $data['n21'],                                                        //Кол-во
+                    "gm_salary" => $results->mp6,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n21'] * $results->mp6,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp6,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n21'] * $results->mp6                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+            //парящий потолок
+            if ($data['n30'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Парящий потолок",                                                //Название
+                    "quantity" => $data['n30'],                                                        //Кол-во
+                    "gm_salary" => $results->mp30,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n30'] * $results->mp30,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp30,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n30'] * $results->mp30                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+        //разделитель
+            if ($data['n20'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Разделитель",                                                        //Название
+                    "quantity" => $data['n20'],                                                        //Кол-во
+                    "gm_salary" => $results->mp9,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n20'] * $results->mp9,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp9,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n20'] * $results->mp9                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+
+            if ($data['n32'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Слив воды",                                                        //Название
+                    "quantity" => $data['n32'],                                                        //Кол-во
+                    "gm_salary" => $results->mp27,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n32'] * $results->mp27,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp27,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n32'] * $results->mp27                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+        }
+
+
+        //--------------------------------------- ПРОСЧЕТ МОНТАЖА ДЛЯ ТКАНИ -----------------------------
+
+        if ($data['n1'] == 29) {
+            //периметр
+            if ($data['n5'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Периметр",                                                                    //Название
+                    "quantity" => $data['n5'],                                                                //Кол-во
+                    "gm_salary" => ($data['height']==1)?($results->mp33 + 10):$results->mp33,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp33 + 10):$results->mp33),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => ($data['height']==1)?($results->mp33 + 10):$results->mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n5'] * (($data['height']==1)?($results->mp33 + 10):$results->mp33)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+
+            }
+             if ($data['n11'] > 0) {
+            //внутренний вырез 
+            $mounting_data[] = array(
+                "title" => "Внутренний вырез",                                                                    //Название
+                "quantity" => $data['n11'],                                                                //Кол-во
+                "gm_salary" => $results->mp33,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['n11'] * $results->mp33,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $results->mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['n11'] * $results->mp33                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
+        }
+
+            if ($data['n9']) {
+                $mounting_data[] = array(
+                    "title" => "Обработка 1 угла",                                                                    //Название
+                    "quantity" => $data['n9'],                                                                //Кол-во
+                    "gm_salary" => $results->mp43,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => ($data['n9']) * $results->mp43,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp43,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => ($data['n9']) * $results->mp43                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+        
+            //установка люстры
+            if ($data['n12'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Установка люстр",
+                    "quantity" => $data['n12'],
+                    "gm_salary" => $results->mp34,
+                    "gm_salary_total" => $results->mp34 * $data['n12'],
+                    "dealer_salary" => $results->mp34,
+                    "dealer_salary_total" => $data['n12'] * $results->mp34
+                );
+            }
+
+            //шторный карниз
+            if ($data['n27'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Шторный карниз",                                                    //Название
+                    "quantity" => $data['n27'],                                                        //Кол-во
+                    "gm_salary" => $results->mp41,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n27'] * $results->mp41,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp41,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n27'] * $results->mp41                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+
+            //закладная брусом
+            if ($data['n17'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Закладная брусом",                                                    //Название
+                    "quantity" => $data['n17'],                                                        //Кол-во
+                    "gm_salary" => $results->mp41,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n17'] * $results->mp41,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp41,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n17'] * $results->mp41                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+
+            //пожарная сигнализация
+            if ($data['n21'] > 0) {
+                $mounting_data[] = array(
+                    "title" => "Пожарная сигнализация",                                                //Название
+                    "quantity" => $data['n21'],                                                        //Кол-во
+                    "gm_salary" => $results->mp38,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n21'] * $results->mp38,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp38,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n21'] * $results->mp38                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+            if ($del_flag == 0) {
+                //Установка светильников
+                if (count($n13) > 0) {
+
+                    foreach ($n13 as $svet) {
+                        if ($svet->n13_count > 0) {
+
+                            $count_svet += $svet->n13_count;
+
+                        }
+                    }
+
+                    if ($count_svet > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка светильников",                                                //Название
+                            "quantity" => $count_svet,                                                          //Кол-во
+                            "gm_salary" => max($results->mp36, $results->mp37),                                   //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_svet * max($results->mp36, $results->mp37),               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => max($results->mp36, $results->mp37),                               //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_svet * max($results->mp36, $results->mp37)            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+
+
+                if (count($n22) > 0) {
+                    foreach ($n22 as $ventilation) {
+                        if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 5 || $ventilation->n22_type == 6)) {
+                            $count_ventilation += $ventilation->n22_count;
+                        }
+                        if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 7 || $ventilation->n22_type == 8)) {
+                            $count_ventilation_1 += $ventilation->n22_count;
+
+                        }
+                    }
+                    if ($count_ventilation > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка вентиляции",                                                    //Название
+                            "quantity" => $count_ventilation,                                                    //Кол-во
+                            "gm_salary" => $results->mp42,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation * $results->mp42,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp42,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation * $results->mp42                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_ventilation_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка электровытяжки",                                                    //Название
+                            "quantity" => $count_ventilation_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation_1 * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation_1 * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+
+                }
+
+                if (count($n29) > 0) {
+                    foreach ($n29 as $profil) {
+                        if ($profil->n29_count > 0 && $profil->n29_type == 12) {
+                            $count_profil_1 += $profil->n29_count;
+                        }
+                        if ($profil->n29_count > 0 && $profil->n29_type == 15) {
+                            $count_profil_3 += $profil->n29_count;
+                        }
+                        
+                    }
+                    if ($count_profil_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой",                                                    //Название
+                            "quantity" => $count_profil_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_1 * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_1 * $results->mp23                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                   
+                    if ($count_profil_3 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой с нишей",                                                    //Название
+                            "quantity" => $count_profil_3,                                                    //Кол-во
+                            "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_3 * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_3 * $results->mp25                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    
+
+                }
+                // установка диффузора
+                if (count($n23) > 0) {
+                    foreach ($n23 as $diffuzor) {
+                        if ($diffuzor->n23_count > 0) {
+                            $count_diffuzor += $diffuzor->n23_count;
+
+                        }
+                    }
+                    if ($count_diffuzor > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка диффузора",                                                    //Название
+                            "quantity" => $count_diffuzor,                                                    //Кол-во
+                            "gm_salary" => $results->mp19,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_diffuzor * $results->mp19,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp19,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_diffuzor * $results->mp19                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+                //обвод трубы
+                if (count($n14) > 0) {
+                    foreach ($n14 as $truba) {
+                        if ($truba->n14_count > 0) {
+                            $count_truba += $truba->n14_count;
+
+                        }
+                    }
+                    if ($count_truba > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Обвод трубы",                                                    //Название
+                            "quantity" => $count_truba,                                                    //Кол-во
+                            "gm_salary" => $results->mp40,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_truba * $results->mp40,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp40,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_truba * $results->mp40                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+
+            } else {
+                //Установка светильников
+                if (count($n13) > 0) {
+
+                    foreach ($n13 as $svet) {
+                        if ($svet[0] > 0) {
+
+                            $count_svet += $svet[0];
+
+                        }
+                    }
+                    if ($count_svet > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка светильников",                                                //Название
+                            "quantity" => $count_svet,                                                            //Кол-во
+                            "gm_salary" => max($results->mp36, $results->mp37),                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_svet * max($results->mp36, $results->mp37),                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => max($results->mp36, $results->mp37),                                    //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_svet * max($results->mp36, $results->mp37)                //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+
+
+                if (count($n22) > 0) {
+                    foreach ($n22 as $ventilation) {
+                        if ($ventilation[0] > 0 && ($ventilation[1] == 5 || $ventilation[1] == 6)) {
+                            $count_ventilation += $ventilation[0];
+                        }
+                        if ($ventilation[0] > 0 && ($ventilation[1] == 7 || $ventilation[1] == 8)) {
+                            $count_ventilation_1 += $ventilation[0];
+
+                        }
+                    }
+                    if ($count_ventilation > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка вентиляции",                                                    //Название
+                            "quantity" => $count_ventilation,                                                    //Кол-во
+                            "gm_salary" => $results->mp42,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation * $results->mp42,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp42,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation * $results->mp42                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_ventilation_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка электровытяжки",                                                    //Название
+                            "quantity" => $count_ventilation_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation_1 * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation_1 * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+
+                }
+
+                // установка диффузора
+                if (count($n23) > 0) {
+                    foreach ($n23 as $diffuzor) {
+                        if ($diffuzor[0] > 0) {
+                            $count_diffuzor += $diffuzor[0];
+
+                        }
+                    }
+                    if ($count_diffuzor > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка диффузора",                                                    //Название
+                            "quantity" => $count_diffuzor,                                                    //Кол-во
+                            "gm_salary" => $results->mp19,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_diffuzor * $results->mp19,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp19,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_diffuzor * $results->mp19                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+                //обвод трубы
+                if (count($n14) > 0) {
+                    foreach ($n14 as $truba) {
+                        if ($truba[0] > 0) {
+                            $count_truba += $truba[0];
+
+                        }
+                    }
+                    if ($count_truba > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Обвод трубы",                                                    //Название
+                            "quantity" => $count_truba,                                                    //Кол-во
+                            "gm_salary" => $results->mp40,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_truba * $results->mp40,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp40,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_truba * $results->mp40                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+
+                if (count($n29) > 0) {
+                    foreach ($n29 as $profil) {
+                        if ($profil[0] > 0 && $profil[1] == 12) {
+                            $count_profil_1 += $profil[0];
+                        }
+                       
+                        if ($profil[0] > 0 && $profil[1] == 15) {
+                            $count_profil_3 += $profil[0];
+                        }
+                       
+                    }
+                    if ($count_profil_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой",                                                    //Название
+                            "quantity" => $count_profil_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_1 * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_1 * $results->mp23                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                 
+                    if ($count_profil_3 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой с нишей",                                                    //Название
+                            "quantity" => $count_profil_3,                                                    //Кол-во
+                            "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_3 * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_3 * $results->mp25                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    
+
+                }
+
+            }
+        }
+        //----------------------------- Общие просчеты и для ПВХ и для ткани ----------------------------------------
+        //крепление в плитку
+        if ($data['n7'] > 0) {
+            $mounting_data[] = array(
+                "title" => "Крепление в плитку",                                                        //Название
+                "quantity" => $data['n7'],                                                                //Кол-во
+                "gm_salary" => $results->mp13,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['n7'] * $results->mp13,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $results->mp13,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['n7'] * $results->mp13                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
+        }
+        //крепление в керамогранит
+        if ($data['n8'] > 0) {
+            $mounting_data[] = array(
+                "title" => "Крепление в керамогранит",                                                    //Название
+                "quantity" => $data['n8'],                                                                //Кол-во
+                "gm_salary" => $results->mp14,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['n8'] * $results->mp14,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $results->mp14,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['n8'] * $results->mp14                                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
+        }
+        //укрепление стены
+        if ($data['n18'] > 0) {
+            $mounting_data[] = array(
+                "title" => "Укрепление стены",                                                    //Название
+                "quantity" => $data['n18'],                                                        //Кол-во
+                "gm_salary" => $results->mp15,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['n18'] * $results->mp15,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $results->mp15,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['n18'] * $results->mp15                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
+        }
+        //сложность доступа к месту установки
+        if ($data['n24'] > 0) {
+            $mounting_data[] = array(
+                "title" => "Сложность доступа",                                                    //Название
+                "quantity" => $data['n24'],                                                        //Кол-во
+                "gm_salary" => $results->mp17,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['n24'] * $results->mp17,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $results->mp17,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['n24'] * $results->mp17                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
+        }
+
+        //сложность доступа к месту установки
+        if ($data['dop_krepezh'] > 0) {
+            $mounting_data[] = array(
+                "title" => "Дополнительный крепеж",                                                //Название
+                "quantity" => $data['dop_krepezh'],                                                //Кол-во
+                "gm_salary" => $results->mp18,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['dop_krepezh'] * $results->mp18,                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $results->mp18,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['dop_krepezh'] * $results->mp18                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
+        }
+        //Дополнительный монтаж
+        $extra_mounting = json_decode($data['extra_mounting']);
+        foreach ($extra_mounting as $extra_mount) {
+            $mounting_data[] = array(
+                "title" => $extra_mount->title,                                                        //Название
+                "quantity" => 1,                                                                    //Кол-во
+                "gm_salary" => $extra_mount->value,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $extra_mount->value,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $extra_mount->value,                                                //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $extra_mount->value                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
+        }
+            //Добавление маржи ГМ и дилера и округление
+            for ($i = 0; $i < count($mounting_data); $i++) {
+                $mounting_data[$i]['gm_salary_total'] = round($mounting_data[$i]['gm_salary_total'], 2); //Округление зарплаты монтажников ГМ
+                $mounting_data[$i]['dealer_salary_total'] = round($mounting_data[$i]['dealer_salary_total'], 2); //Округление зарплаты монтажников дилера
+
+                //Добавление маржи ГМ, если монтаж производит ГМ
+                $mounting_data[$i]['price_with_gm_margin'] = margin($mounting_data[$i]['gm_salary'], $gm_mounting_margin);
+                $mounting_data[$i]['total_with_gm_margin'] = round($mounting_data[$i]['quantity'] * $mounting_data[$i]['price_with_gm_margin'], 2);
+
+                //Добавление маржи ГМ и дилера, если монтаж производит Дилер с помощью ГМ
+                $mounting_data[$i]['price_with_gm_dealer_margin'] = double_margin($mounting_data[$i]['gm_salary'], $gm_mounting_margin, $dealer_mounting_margin);
+                $mounting_data[$i]['total_with_gm_dealer_margin'] = round($mounting_data[$i]['quantity'] * $mounting_data[$i]['price_with_gm_dealer_margin'], 2);
+
+                //Добавление маржи дилера, если монтаж производит Дилер с помощью ГМ
+                $mounting_data[$i]['price_with_dealer_margin'] = margin($mounting_data[$i]['dealer_salary'], $dealer_mounting_margin);
+                $mounting_data[$i]['total_with_dealer_margin'] = round($mounting_data[$i]['quantity'] * $mounting_data[$i]['price_with_dealer_margin'], 2);
+            }
+
+            for ($i = 0; $i < count($guild_data); $i++) {
+                $guild_data[$i]['gm_salary_total'] = round($guild_data[$i]['gm_salary_total'], 2); //Округление зарплаты монтажников ГМ
+                $guild_data[$i]['dealer_salary_total'] = round($guild_data[$i]['dealer_salary_total'], 2); //Округление зарплаты монтажников дилера
+
+                //Добавление маржи ГМ, если монтаж производит ГМ
+                $guild_data[$i]['price_with_gm_margin'] = margin($guild_data[$i]['gm_salary'], $gm_canvases_margin);
+                $guild_data[$i]['total_with_gm_margin'] = round($guild_data[$i]['quantity'] * $guild_data[$i]['price_with_gm_margin'], 2);
+
+                //Добавление маржи ГМ и дилера, если монтаж производит Дилер с помощью ГМ
+                $guild_data[$i]['price_with_gm_dealer_margin'] = double_margin($guild_data[$i]['gm_salary'], $gm_canvases_margin, $dealer_canvases_margin);
+                $guild_data[$i]['total_with_gm_dealer_margin'] = round($guild_data[$i]['quantity'] * $guild_data[$i]['price_with_gm_dealer_margin'], 2);
+
+                //Добавление маржи дилера, если монтаж производит Дилер с помощью ГМ
+                $guild_data[$i]['price_with_dealer_margin'] = margin($guild_data[$i]['dealer_salary'], $dealer_canvases_margin);
+                $guild_data[$i]['total_with_dealer_margin'] = round($guild_data[$i]['quantity'] * $guild_data[$i]['price_with_dealer_margin'], 2);
+            }
+            //Итоговая сумма компонентов
+            $total_sum = 0;
+            //Прибавляем к подсчету комплектующие
+            $components_sum = 0;
+            $gm_components_sum = 0;
+            $dealer_components_sum = 0;
+            //print_r($components_data); exit;
+            foreach ($components_data as $component_item) {
+                $components_sum += $component_item['self_total'];
+                $gm_components_sum += $component_item['gm_total'];
+                $dealer_components_sum += $component_item['dealer_total'];
+            }
+            //...и монтаж дилера с помощью ГМ
+            $total_gm_mounting = 0;
+            $total_dealer_mounting = 0;
+            $total_with_gm_margin = 0;
+            $total_with_gm_dealer_margin = 0;
+            $total_with_dealer_margin = 0;
+            $total_gm_guild = 0;
+            $total_dealer_guild = 0;
+            $total_with_gm_dealer_margin_guild = 0;
+            $total_with_gm_margin_guild = 0;
+            $total_with_dealer_margin_guild = 0;
+            foreach ($mounting_data as $mounting_item) {
+                $total_gm_mounting += $mounting_item['gm_salary_total'];
+                $total_dealer_mounting += $mounting_item['dealer_salary_total'];
+                $total_with_gm_margin += $mounting_item['total_with_gm_margin'];
+                $total_with_gm_dealer_margin += $mounting_item['total_with_gm_dealer_margin'];
+                $total_with_dealer_margin += $mounting_item['total_with_dealer_margin'];
+            }
+            foreach ($guild_data as $guild) {
+                $total_gm_guild += $guild['gm_salary_total'];
+                $total_dealer_guild += $guild['dealer_salary_total'];
+                $total_with_gm_margin_guild += $guild['total_with_gm_margin'];
+                $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
+                $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
+            }
+            if($what == 0){
+                return $total_gm_mounting;
+            }
+            else{
+                return $mounting_data;
+            }
     }
 
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
