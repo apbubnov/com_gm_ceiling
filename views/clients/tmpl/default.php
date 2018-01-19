@@ -72,6 +72,7 @@ $type = $jinput->getString('type', NULL);
 			<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
 				<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 			<?php endif; ?>
+			<?php if($item->id !== $user->associated_client): ?>
 			<tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
 				<td class="one-touch">
 					<?php
@@ -88,7 +89,7 @@ $type = $jinput->getString('type', NULL);
 				<td class="one-touch"><?php echo $this->escape($item->client_name); ?></td>
 				<td class="one-touch"><?php echo $item->client_contacts; ?></td>
 			</tr>
-		<?php endforeach; ?>
+			<?php endif; endforeach; ?>
 		</tbody>
 	</table>
 

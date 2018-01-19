@@ -82,6 +82,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
                     if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
                         $canEdit = JFactory::getUser()->id == $item->created_by;
+                        if($user->dealer_type == 1 && empty($item->project_mounter)) continue;
                     ?>
 
                     <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>

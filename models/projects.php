@@ -173,8 +173,9 @@ class Gm_ceilingModelProjects extends JModelList
                 $query->where('a.project_status = 3');
                 $query->where('dealer_id = ' . $user->dealer_id);
             } elseif ($type == "chiefprojects") {
-                $query->where('a.project_status = 4');
+                $query->where('a.project_status = 4 OR a.project_status = 5');
                 $query->where('dealer_id = ' . $user->dealer_id);
+                $query->where('a.project_mounter IS NULL');
             } elseif ($type == "calculatorprojects") {
                 $query->where('a.project_status = 1');
                 $query->where('dealer_id = ' . $user->dealer_id);

@@ -128,7 +128,9 @@ if (count($AllGaugerDealer) == 0) {
 				<p><input name="jform[who_calculate]" id="jform_who_calculate1" type="radio" value="1" checked><label id="jform_who_calculate-lbl" for="jform_who_calculate1" class="required">Замерщик ГМ</label></p>
 				<p><input name="jform[who_calculate]" id="jform_who_calculate2" type="radio" value="0"><label id="jform_who_calculate-lbl" for="jform_who_calculate2" class="required">Замерщик Дилера</label></p>
 			</div>
-		<?php } else { ?>
+		<?php } else if($user->dealer_type == 1){ ?>
+			<input name="jform[who_calculate]" id="jform_who_calculate2" type="hidden" value="0" checked>
+		<?php } else {?>
 			<input name="jform[who_calculate]" id="jform_who_calculate1" type="hidden" value="1" checked>
 		<?php } ?>
 	</div>
