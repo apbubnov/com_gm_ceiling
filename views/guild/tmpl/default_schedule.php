@@ -28,7 +28,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/calendar.css">
     <link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/guild/styles/schedule.css">
 
-<? if (!($chief || $employee)): ?>
+<? if (!$chief): ?>
     <h1>К сожалению данный кабинет вам не доступен!</h1>
     <p>Что бы получить доступ, обратитесь к IT отделу. Через <span>5</span> секунды вы вернетесь на предыдущую страницу!
     </p>
@@ -81,6 +81,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                         <span class="Salaries"></span> р.
                     </div>
                     <div class="Info">
+                        <div class="PreList">
                         <table class="List Schedule">
                             <thead>
                             <tr>
@@ -89,6 +90,8 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             </thead>
                             <tbody></tbody>
                         </table>
+                        </div>
+                        <div class="PreList">
                         <table class="List Working">
                             <thead>
                             <tr>
@@ -100,6 +103,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                             </thead>
                             <tbody></tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -382,7 +386,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 YEAR = DATA.MODAL.ModalDay.attr("year");
             selectDay({DAY: DAY, MONTH: MONTH, YEAR: YEAR});
             DATA.MODAL.MODAL.hide();
-            window.location = "#MainWork";
+            window.location.hash = 'MainWork';
         }
 
         function showModalDay(Date = null) {

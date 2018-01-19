@@ -8,7 +8,7 @@ JHtml::_('behavior.multiselect');
 //JHtml::_('formbehavior.chosen', 'select');
 
 $user       = JFactory::getUser();
-$userId     = $user->get('id');
+$userId     = $user->id;
 $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
@@ -33,7 +33,7 @@ if ($month1 == 12) {
 $FlagCalendar = [1, $dealerId];
 
 if (!empty($brigade_id)) {
-	foreach ($brigade_id as $value) {
+	foreach ($brigade_id as $value) {        
 		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
 		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name:</a>";
 		$calendars .= "</p>";
@@ -54,7 +54,6 @@ if (!empty($brigade_id)) {
 				}
 			}
 		}
-		
 		$calendars .= "<table id=\"name\"><tr><td nowrap>$names</tr></td></table>";
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
@@ -207,7 +206,9 @@ if (!empty($brigade_id)) {
                             year: year1,
                         },
                         success: function (msg) {
-                            calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
+                            calendars = '<div class="calendars-brigade"><p class="brigade-name">';
+                            calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
+                            calendars += "<table id=\"name\"><tr><td nowrap><?php echo $names; ?></tr></td></table>";
                             calendars += msg;
                         },
                         dataType: "text",
@@ -312,6 +313,7 @@ if (!empty($brigade_id)) {
 				Today(day, NowMonth, NowYear, <?php echo $userId; ?>);
         <?php } ?>		
     });
+
     jQuery("#button-prev").click(function () {
         month1 = <?php echo $month1; ?>;
         year1 = <?php echo $year1; ?>;
@@ -356,7 +358,9 @@ if (!empty($brigade_id)) {
                         year: year1,
                     },
                     success: function (msg) {
-                        calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
+                        calendars = '<div class="calendars-brigade"><p class="brigade-name"></p>';
+                        calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
+                        calendars += "<table id=\"name\"><tr><td nowrap>"+<?php echo $names; ?>+"</tr></td></table>";
                         calendars += msg;
                     },
                     dataType: "text",
@@ -511,8 +515,6 @@ if (!empty($brigade_id)) {
 	// ------------------------------------------------
 
 	jQuery(document).ready(function () {
-
-        console.log(<?php json_encode(var_dump($brigade_id));?>);
 
 		// легенда
 		if (screen.width < 768) {

@@ -129,7 +129,9 @@
      
         <?php foreach($projects as $item):?>
 
-            <tr class = "row_project" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); ?>">
+            <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) { 
+                echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id.'&call_id='.(int) $call_id); }
+                else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
                 <td><?php echo $item->id;?></td>
                 <td>
                     <?php 

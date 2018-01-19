@@ -289,6 +289,7 @@ if (empty($list['direction']))
 	{
 		try
 		{
+			$user = JFactory::getUser();
 			$db    = JFactory::getDbo();
 			$client_name = $db->escape($client_name);
 			$query = $db->getQuery(true);
@@ -296,7 +297,7 @@ if (empty($list['direction']))
 				->select("a.*, GROUP_CONCAT(b.phone SEPARATOR ', ') as client_contacts")
 				->from("`#__gm_ceiling_clients` as `a`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` as `b` ON a.id = b.client_id ')
-				->where("client_name LIKE('%".$client_name."%')")
+				->where("client_name LIKE('%".$client_name."%') AND a.dealer_id = $user->dealer_id")
 				->order('`id` DESC')
 				->group('`id`');
 			$db->setQuery($query);
