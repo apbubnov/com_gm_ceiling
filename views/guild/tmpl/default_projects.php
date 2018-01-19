@@ -24,7 +24,7 @@ $employee = (in_array(18, $groups));
 $calculations = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getCuts();
 $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getWorkingEmployees();
 ?>
-<? if (!($chief) && !($employee)): ?>
+<? if (!($chief || $employee)): ?>
 <h1>К сожалению данный кабинет вам не доступен!</h1>
 <p>Что бы получить доступ, обратитесь к IT отделу. Через <span>5</span> секунды вы вернетесь на предыдущую страницу!
 </p>
