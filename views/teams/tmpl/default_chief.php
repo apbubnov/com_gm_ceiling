@@ -13,6 +13,7 @@ $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
+
 if (!empty($brigade_id)) {
 	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 }
@@ -511,7 +512,7 @@ if (!empty($brigade_id)) {
 
 	jQuery(document).ready(function () {
 
-        console.log("uyfkudfku");
+        console.log("<?php echo $brigade_id;?>");
 
 		// легенда
 		if (screen.width < 768) {
