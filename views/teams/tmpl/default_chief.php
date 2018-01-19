@@ -206,7 +206,28 @@ if (!empty($brigade_id)) {
                             year: year1,
                         },
                         success: function (msg) {
-                            calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
+                            calendars = '<div class="calendars-brigade"><p class="brigade-name">';
+                            calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
+                            <?php
+                                $names = null;
+                                foreach ($brigade_mounter as $val) {
+                                    if ($val->id_brigade == $value->id) {
+                                        $name = stristr($val->name, ' ', true);			
+                                    } else {
+                                        $name = "&nbsp;";
+                                    }
+                                    if ($names == null) {
+                                        $names = $name;
+                                    } else if ($names == "&nbsp;") {
+                                        $names = null;
+                                    } else {
+                                        if ($name != "&nbsp;") {
+                                            $names .= ", ".$name;				
+                                        }
+                                    }
+                                } 
+                            ?>
+                            calendars += "<table id=\"name\"><tr><td nowrap>"+<?php echo $names; ?>+"</tr></td></table>";
                             calendars += msg;
                         },
                         dataType: "text",
@@ -355,7 +376,28 @@ if (!empty($brigade_id)) {
                         year: year1,
                     },
                     success: function (msg) {
-                        calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
+                        calendars = '<div class="calendars-brigade"><p class="brigade-name"></p>';
+                        calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
+                        <?php
+                            $names = null;
+                            foreach ($brigade_mounter as $val) {
+                                if ($val->id_brigade == $value->id) {
+                                    $name = stristr($val->name, ' ', true);			
+                                } else {
+                                    $name = "&nbsp;";
+                                }
+                                if ($names == null) {
+                                    $names = $name;
+                                } else if ($names == "&nbsp;") {
+                                    $names = null;
+                                } else {
+                                    if ($name != "&nbsp;") {
+                                        $names .= ", ".$name;				
+                                    }
+                                }
+                            } 
+                        ?>
+                        calendars += "<table id=\"name\"><tr><td nowrap>"+<?php echo $names; ?>+"</tr></td></table>";
                         calendars += msg;
                     },
                     dataType: "text",
