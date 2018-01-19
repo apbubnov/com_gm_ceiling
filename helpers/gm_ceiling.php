@@ -36,8 +36,6 @@ function double_margin($value, $margin1, $margin2)
 
 class Gm_ceilingHelpersGm_ceiling
 {
-
-
     /**
      * Get an instance of the named modelt
      *
@@ -402,75 +400,9 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             $data['extra_mounting'] = json_encode($extra_mounting, JSON_FORCE_OBJECT);
-            //Транспортные расходы
-            /*if($data['project_id'] <= 0) {
-			//Если калькуляция еще не привязана к договору, то добавляем транспортные, если не указано обратного
-				if($data['transport'] < 1) {
-					$data['transport'] = 1;
-				}
-			} else {
-			//Если калькуляция привязана к договору, то назначаем транспортные только если калькуляция первая.
-			//Если не первая, то автоматически не добавляем
-			$db= JFactory::getDBO();
-			$query = 'SELECT `id` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int) $data['project_id'];
-			$db->setQuery($query);
-			$calculations = $db->loadObjectList();
-			if(count($calculations) > 0) {
-				if($calculations[0]->id == $data['id']){
-					if($data['transport'] < 1) {
-						$data['transport'] = 1;
-					}
-				}
-			} else {
-				if($data['transport'] < 1) {
-					$data['transport'] = 1;
-				}
-			}
-		}*/
 
         }
 
-        /*
-        if ($data['project_id'] <= 0) {
-            //Если калькуляция еще не привязана к договору, то добавляем транспортные, если не указано обратного
-            if ($data['transport'] < 1) {
-                $data['transport'] = 1;
-            }
-        } else {
-            //Если калькуляция привязана к договору, то назначаем транспортные только если калькуляция первая.
-            //Если не первая, то автоматически не добавляем
-            $db = JFactory::getDBO();
-            $query = 'SELECT `id` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'];
-            $db->setQuery($query);
-            $calculations = $db->loadObjectList();
-            if (count($calculations) > 0) {
-                if ($calculations[0]->id == $data['id']) {
-                    if ($data['transport'] < 1) {
-                        $data['transport'] = 1;
-                    }
-                }
-            } else {
-                if ($data['transport'] < 1) {
-                    $data['transport'] = 1;
-                }
-            }
-        }
-
-        if($data['transport'] == 1) {
-            if (!empty($data['distance']) && !empty($data['distance_col']))
-             $data['transport'] = 0;
-        }
-        else {
-            if (!empty($data['distance']) && !empty($data['distance_col'])) {
-                $data['distance'] = 0;
-                $data['distance_col'] = 0;
-            }
-
-        }*/
-        //if (!empty($data['distance']) && !empty($data['distance_col']) && $data['transport'] == 1)
-        // $data['transport'] = 0;
-        //print_r($data['n15']); exit;
-        //print_r($data); exit;
       
         if($data['n2'] == 29) $data['n1'] = 29; 
 
@@ -483,7 +415,6 @@ class Gm_ceilingHelpersGm_ceiling
 
         $dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
         $dealer_marg = $dealer_info->getData();
-        //throw new Exception("Error Processing Request", 1);
         //Получаем объект ГМ
         $gm = JFactory::getUser(1);
 
@@ -655,16 +586,6 @@ class Gm_ceilingHelpersGm_ceiling
             
         }
 
-        //со вставкой
-        /*if($data['n1'] == 28 && $data['n6']) {
-			$n5_count = ceil($data['n5'] + 0.5);
-
-			if($data['n2'] == 1 || $data['n2'] == 3 || $data['n2'] == 5) { 											 //Белый
-				$component_count[$items_vstavka_bel[0]->id] += $n5_count + 0.5;
-			} elseif($data['n2'] == 2 || $data['n2'] == 4 || $data['n2'] == 6 || $data['n2'] == 7 || $data['n2'] == 8 || $data['n2'] == 9) { //Цветной
-				$component_count[$items_vstavka[0]->id] += $n5_count + 0.5;
-			}
-		}*/
         if ($data['n1'] == 28 && $data['n6']) {
             $n5_count = ceil($data['n5']);
             $component_count[$data['n6']] += $n5_count;
@@ -948,51 +869,9 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[655] = self::rounding($component_count[655], 2.5);
             $component_count[656] = self::rounding($component_count[656], 2.5);
             $component_count[$items_4[0]->id] = ceil($component_count[$items_4[0]->id]);
-/*
-            if ($data['n28'] == 0) $baget_type = $component_count[$items_11[0]->id];
-            elseif ($data['n28'] == 1) $baget_type = $component_count[$items_236[0]->id];
-            elseif ($data['n28'] == 2) $baget_type = $component_count[$items_239[0]->id];
-            $baget_count = intval($baget_type / 2.5);
-            if (floatval($baget_type / 2.5) > $baget_count) {
-                $baget_count++;
-            }
-            $baget_type = $baget_count * 2.5;
-            if ($data['n28'] == 0) $component_count[$items_11[0]->id] = $baget_type;
-            elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] = $baget_type;
-            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] = $baget_type;
 
-            $par_type = $component_count[$items_559[0]->id];
-            $baget_count = intval($par_type / 2.5);
-            if (floatval($par_type / 2.5) > $baget_count) {
-                $baget_count++;
-            }
-            $par_type = $baget_count * 2.5;
-            $component_count[$items_559[0]->id] = $par_type;
-
-
-            $brus_count = intval($component_count[$items_1[0]->id] / 0.5);
-            if (floatval($component_count[$items_1[0]->id] / 0.5) > $brus_count) {
-                $brus_count++;
-            }
-            $component_count[$items_1[0]->id] = $brus_count * 0.5;
-
-            $brus_count = intval($component_count[$items_38[0]->id] / 0.5);
-            if (floatval($component_count[$items_38[0]->id] / 0.5) > $brus_count) {
-                $brus_count++;
-            }
-            $component_count[$items_38[0]->id] = $brus_count * 0.5;
-
-            
-            */
         }
 
-        //print_r($component_count); exit;
-        //Клемы считаются блоками по 12 шт.
-        /*$klems_count = intval( $component_count[$items_2[0]->id] / 12 );
-        if ($component_count[$items_2[0]->id] % 6 > 0) {
-            $klems_count++;
-        }
-        $component_count[$items_2[0]->id] = $klems_count;*/
 
         //---------------------------------- ВОЗВРАЩАЕМ СТОИМОСТЬ КОМПЛЕКТУЮЩИХ --------------------------------------//
 
@@ -3233,7 +3112,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
-        $results = $mount_model->getAllData($user->dealer_id);
+        $results = $mount_model->getDataAll($user->dealer_id);
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
             $calculation_data = $calculation_model->getData($calculation_id);
@@ -5509,12 +5388,12 @@ class Gm_ceilingHelpersGm_ceiling
                         $monthfull = $month;
                     }
                     $masID = [];
-                    if (empty($brigade_id)) {
-                        $masID = [$id];
-                    } else {
+                    if (!empty($brigade_id)) {
                         foreach ($brigade_id as $value) {
                             array_push($masID, $value->id);
                         }
+                    } else {
+                        $masID = [$id];
                     }
                     //if (!empty($brigade_id)) {
                         $date1 = $year . "-" . $monthfull . "-01";

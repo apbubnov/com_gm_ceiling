@@ -2486,7 +2486,7 @@ var level = [];
 								url: "index.php?option=com_gm_ceiling&task=calculate&ajax=1&"+additional,
 								data: data,
 								success: function(data){
-									
+									console.log(data);
 									var html = "",
 									total_sum = parseFloat(data.total_sum),
 									project_discount = parseFloat(data.project_discount),
