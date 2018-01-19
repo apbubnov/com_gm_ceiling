@@ -34,7 +34,8 @@ $FlagCalendar = [1, $dealerId];
 
 if (!empty($brigade_id)) {
 	foreach ($brigade_id as $value) {
-        echo $value->id;
+        throw new Exception($value->id);
+        
 		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
 		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name:</a>";
 		$calendars .= "</p>";
