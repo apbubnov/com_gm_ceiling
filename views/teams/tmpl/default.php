@@ -20,7 +20,10 @@ $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
-$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
+if (!empty($teams_model)) {
+	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
+}
+
 
 // календарь
 $month1 = date("n");
