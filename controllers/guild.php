@@ -175,6 +175,7 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
         if (in_array("Working", $Type)) $answer["Working"] = $model->getWorking($data);
         if (in_array("Employee", $Type)) $answer["Employee"] = $model->getBigDataEmployees($data);
+        if (in_array("EmployeeWorking", $Type)) $answer["EmployeeWorking"] = $model->getWorkingEmployees($data);
 
         if (count($answer) == 1)
             foreach ($answer as $a) $answer = $a;

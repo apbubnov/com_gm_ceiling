@@ -20,6 +20,12 @@ $page = $app->input->get('page', null, 'string');
 $ready = $app->input->get('ready', null, 'int');
 
 $user = JFactory::getUser();
+$userId = $user->get('id');
+$userGroup = $user->groups;
+
+$chief = (in_array(23, $groups));
+$employee = (in_array(18, $groups));
+
 $model = $this->getModel();
 $cutModel = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
 $data = (empty($id))?null:$cutModel->getData($id);
