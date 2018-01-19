@@ -37,6 +37,7 @@ if ($month1 == 12) {
     $year2 = $year1;
 }
 $FlagCalendar = [1, $dealerId];
+
 if (!empty($brigade_id)) {
 	foreach ($brigade_id as $value) {
 		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
