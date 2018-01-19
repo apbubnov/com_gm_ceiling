@@ -258,7 +258,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
     {
         try{
             $jinput = JFactory::getApplication()->input;
-            $user_id = $jinput->get('code', null, 'STRING');
+            $code = $jinput->get('code', null, 'STRING');
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $result  = $users_model->acceptCommercialOfferCode($code);
             
