@@ -1076,6 +1076,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			}
 			if($type === "gmchief") {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
+			} elseif($type === "chiefprojects") {
+				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
 			} else {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
 			}

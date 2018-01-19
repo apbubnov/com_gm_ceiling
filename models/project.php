@@ -889,12 +889,14 @@ class Gm_ceilingModelProject extends JModelItem
 	{
 		try
 		{
+			$user = JFactory::getUser();
 			$table = $this->getTable();
 			if($data->id > 0) {
 				$table->load($data->id);
 				$table->gm_chief_note = $data->gm_chief_note;
 				if ($data->project_mounting_date != "00.00.0000 00:00")
 				$table->project_mounting_date = $data->project_mounting_date;
+				if($user->dealer_type == 1) $table->project_status = 5;
 				//$table->project_status = $data->project_status;
 				$table->project_mounter = $data->project_mounter;
 				//$table->project_sum = $data->project_sum;
