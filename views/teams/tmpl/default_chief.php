@@ -8,11 +8,12 @@ JHtml::_('behavior.multiselect');
 //JHtml::_('formbehavior.chosen', 'select');
 
 $user       = JFactory::getUser();
-$userId     = $user->get('id');
+$userId     = $user->id;
 $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
+
 if (!empty($brigade_id)) {
 	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 }
@@ -32,7 +33,7 @@ if ($month1 == 12) {
 $FlagCalendar = [1, $dealerId];
 
 if (!empty($brigade_id)) {
-	foreach ($brigade_id as $value) {
+	foreach ($brigade_id as $value) {        
 		$calendars .= '<div class="calendars-brigade"><p class="brigade-name">';
 		$calendars .= "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\">$value->name:</a>";
 		$calendars .= "</p>";
@@ -53,7 +54,6 @@ if (!empty($brigade_id)) {
 				}
 			}
 		}
-		
 		$calendars .= "<table id=\"name\"><tr><td nowrap>$names</tr></td></table>";
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
 		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
@@ -510,8 +510,6 @@ if (!empty($brigade_id)) {
 	// ------------------------------------------------
 
 	jQuery(document).ready(function () {
-
-        console.log("uyfkudfku");
 
 		// легенда
 		if (screen.width < 768) {
