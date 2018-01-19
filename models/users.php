@@ -119,19 +119,22 @@ class Gm_ceilingModelUsers extends JModelList
 			{
 				throw new Exception('Code not found');
 			}
-			$client_id = JFactory::getUser($item->user_id)->associated_client;
+			if ($item->status == 0)
+			{
+				$client_id = JFactory::getUser($item->user_id)->associated_client;
 
-			$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-			$callback_model->save(date('Y-m-d H:i:s'),'Просмотрено коммерческое предложение',
-				$client_id,1);
+				$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+				$callback_model->save(date('Y-m-d H:i:s'),'Просмотрено коммерческое предложение',
+					$client_id,1);
 
-			$query = $db->getQuery(true);
-			$query->update('`rgzbn_users_commercial_offer`');
-			$query->set('`status` = 1');
-			$query->where("`user_id` = $item->user_id");
-			$db->setQuery($query);
-			$db->execute();
-			return true;
+				$query = $db->getQuery(true);
+				$query->update('`rgzbn_users_commercial_offer`');
+				$query->set('`status` = 1');
+				$query->where("`user_id` = $item->user_id");
+				$db->setQuery($query);
+				$db->execute();
+			}
+			return $item->id;
 		}
 		catch(Exception $e)
         {
