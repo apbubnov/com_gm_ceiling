@@ -555,9 +555,14 @@ if (!empty($brigade_id)) {
         window.NowYear = today.getFullYear();
         window.NowMonth = today.getMonth();
 		window.day = today.getDate();
-		<?php foreach ($brigade_id as $value) { ?>
-			Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
-		<?php } ?>
+        <?php 
+            if (!empty($brigade_id)) {
+                foreach ($brigade_id as $value) { ?>
+                    Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
+                <?php }        	
+		    } else { ?>
+                Today(day, NowMonth, NowYear, <?php echo $userId; ?>);
+        <?php } ?>
         //------------------------------------------
 
 		// нажатие на день, чтобы посмотреть проекты на день
