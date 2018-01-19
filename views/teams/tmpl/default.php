@@ -24,6 +24,7 @@ if (!empty($teams_model)) {
 	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 }
 
+
 // календарь
 $month1 = date("n");
 $year1 = date("Y");
