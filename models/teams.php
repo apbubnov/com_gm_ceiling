@@ -44,7 +44,6 @@ class Gm_ceilingModelTeams extends JModelItem {
 	}
 
 	function getMounterBrigade($brigade_id) {
-		
 		try
 		{
 			$db = JFactory::getDbo();
