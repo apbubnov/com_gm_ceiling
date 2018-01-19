@@ -511,8 +511,8 @@ if (!empty($brigade_id)) {
 
 	jQuery(document).ready(function () {
 
-        console.log(<?php echo $brigade_id; ?>);
-        
+        console.log("uyfkudfku");
+
 		// легенда
 		if (screen.width < 768) {
 			var legenda = '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/ff3d3d.png" alt="Красный"></td>';
