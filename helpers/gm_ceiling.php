@@ -4691,6 +4691,7 @@ class Gm_ceilingHelpersGm_ceiling
                             array_push($masID, $value->id);
                         }
                     }
+                    
                     //if (!empty($brigade_id)) {
                         $date1 = $year . "-" . $monthfull . "-01";
                         $date2 = $year . "-" . $monthfull . "-" . $current_days;
