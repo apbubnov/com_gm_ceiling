@@ -3110,7 +3110,13 @@ class Gm_ceilingHelpersGm_ceiling
     public static function calculate_mount($del_flag,$what,$calc_id,$data){
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
-        $results = $mount_model->getDataAll($user->dealer_id);
+        if(!empty($user->dealer_id)){
+            $dealer_id = $user->dealer_id;
+        }
+        else{
+            $dealer_id = 1;
+        }
+        $results = $mount_model->getDataAll($dealer_id);
         //Если существующая калькуляция
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
