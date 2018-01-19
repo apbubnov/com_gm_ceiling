@@ -205,6 +205,12 @@
 <div id="modal_window_container" class = "modal_window_container">
     <button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_comm" class = "modal_window">
+        <? if (!empty($dop_contacts)) { ?>
+        <div>
+        <? foreach ($dop_contacts AS $contact) {?>
+            <radiobutton name='rb_email' onclick='rb_email_click()'><? echo $contact->contact; ?></radiobutton><br> <? }?>
+        </div>
+        <? } ?>
         <h6 style = "margin-top:10px">Введите почту</h6>
         <p><input type="text" id="email_comm" placeholder="Почта" required></p>
         <p><button type="button" id="send_comm" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
@@ -356,6 +362,11 @@
     {
         document.getElementById('calls-tar').scrollTop = 9999;
         jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
+
+        function rb_email_click()
+        {
+            jQuery("#email_comm").val(this.value);
+        }
 
         jQuery("#send_comm").click(function(){
             var user_id = <?php echo $client->dealer_id; ?>;
