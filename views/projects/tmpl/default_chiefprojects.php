@@ -23,7 +23,6 @@ $canEdit    = $user->authorise('core.edit', 'com_gm_ceiling') && file_exists(JPA
 $canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
 $canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
-
 ?>
 <?=parent::getButtonBack();?>
 <h2 class="center">Не назначенные на монтаж</h2>
