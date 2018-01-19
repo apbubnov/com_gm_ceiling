@@ -84,14 +84,14 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->where("`user_id` = $user_id");
 			$db->setQuery($query);
 			$db->execute();
-			
+
 			$query = $db->getQuery(true);
 			$query->insert('`rgzbn_users_commercial_offer`');
 			$query->columns('`user_id`,`code`');
 			$query->values("$user_id, '$code'");
 			$db->setQuery($query);
 			$db->execute();
-			
+			throw new Exception($query);
 			return true;
 		}
 		catch(Exception $e)
