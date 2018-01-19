@@ -84,13 +84,14 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->where("`user_id` = $user_id");
 			$db->setQuery($query);
 			$db->execute();
-
+			throw new Exception($user_id, $code);
 			$query = $db->getQuery(true);
 			$query->insert('`rgzbn_users_commercial_offer`');
 			$query->columns('`user_id`,`code`');
 			$query->values("$user_id, '$code'");
 			$db->setQuery($query);
 			$db->execute();
+			
 			return true;
 		}
 		catch(Exception $e)
@@ -114,6 +115,10 @@ class Gm_ceilingModelUsers extends JModelList
 			$db->setQuery($query);
 			$item = $db->loadObject();
 
+			if (empty($item))
+			{
+				throw new Exception('Code not found');
+			}
 			$client_id = JFactory::getUser($item->user_id)->associated_client;
 
 			$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
