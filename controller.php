@@ -2682,7 +2682,7 @@ class Gm_ceilingController extends JControllerLegacy
             }
             $code = md5($user_id.'commercial_offer');
 
-            $site = "test1.gm-vrn.ru/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
+            $site = "http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
             // письмо
 			$mailer = JFactory::getMailer();
 			$config = JFactory::getConfig();
@@ -2703,7 +2703,7 @@ class Gm_ceilingController extends JControllerLegacy
             $body .= '<p>Почта: gm-partner@mail.ru</p>';
             $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
             $body .= '</div></td></tr>';
-            $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку <a href=\"$site\">".substr($site, 0, 16)."</a>, где Вы можете получить более подробную информацию.</div>";
+            $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку <a href=\"$site\">".substr($site, 0, 22)."</a>, где Вы можете получить более подробную информацию.</div>";
             $mailer->setSubject('Коммерческое предложение');
             $mailer->isHtml(true);
             $mailer->Encoding = 'base64';
