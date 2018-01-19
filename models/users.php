@@ -123,7 +123,7 @@ class Gm_ceilingModelUsers extends JModelList
 
 			$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
 			$callback_model->save(date('Y-m-d H:i:s'),'Просмотрено коммерческое предложение',
-				$client_id,$item->user_id);
+				$client_id,1);
 
 			$query = $db->getQuery(true);
 			$query->update('`rgzbn_users_commercial_offer`');
