@@ -2681,6 +2681,33 @@ class Gm_ceilingController extends JControllerLegacy
                 throw new Exception('empty email');
             }
             $code = md5($user_id.'commercial_offer');
+
+            $site = "test1.gm-vrn.ru/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
+            // письмо
+			$mailer = JFactory::getMailer();
+			$config = JFactory::getConfig();
+			$sender = array(
+				$config->get('mailfrom'),
+				$config->get('fromname')
+			);
+			$mailer->setSender($sender);
+            $mailer->addRecipient($email);
+            $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+            $body += "<link rel=\'stylesheet\' type=\'text/css\' href=\'CSS/style_index.css\'/></head>";
+            $body += '<body style="margin: 10px;">';
+            $body += '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
+            $body += '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
+            $body += '<img src="http://test1.gm-vrn.ru/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">            ';
+            $body += '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
+            $body += '<p>Тел.: +7(473)2122359</p>';
+            $body += '<p>Почта: gm-partner@mail.ru</p>';
+            $body += '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
+            $body += '</div></td></tr><tr>';
+            $body .= "В продолжение нашего телефонного разговора отправляю ссылку <a href=\"$site\">$site</a>, где Вы можете получить более подробную информацию.";
+			$mailer->setSubject('Новый статус монтажа');
+			$mailer->setBody($body);
+            $send = $mailer->Send();
+            
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $result  = $users_model->addCommercialOfferCode($user_id, $code);
             die(json_encode($result));
