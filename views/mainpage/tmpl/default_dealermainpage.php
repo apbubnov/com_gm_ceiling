@@ -76,8 +76,7 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                 <a class="btn btn-large btn-warning" href="<?php
                 if ($userId == 1 || $userId == 2)
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false);
-                else //echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); 
-                echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
+                else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
                 ?>">
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-clock-o" aria-hidden="true"></i> ГМ Менеджер</a>
