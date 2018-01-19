@@ -191,8 +191,12 @@ class Gm_ceilingModelGuild extends JModelList
         return $employees;
     }
 
-    public function getWorkingEmployees($id = null)
+    public function getWorkingEmployees($data = null)
     {
+        $id = null;
+        if (gettype($id) == "object")
+            $id = $data->id;
+
         $date = date("Y-m-d H:i:s");
 
         $employees = null;
@@ -207,15 +211,12 @@ class Gm_ceilingModelGuild extends JModelList
             $END = null;
             foreach ($working as $work)
             {
-                echo "$work->date \n";
-                if ($work->date <= $date && $work->action == 1) $START = $work->date;
-                if ($work->action == 0) {$END = $work->date; break; }
+                if ($work->action == 1 && strtotime($work->date) <= strtotime($date)) $START = strtotime($work->date);
+                if ($work->action == 0) $END = strtotime($work->date);
             }
-            echo "$START - $date - $END\n\n";
-
 
             $WORKING = 0;
-            if ($START < $date && ($END <= $START || $END == null || $END > $date)) $WORKING = 1;
+            if ($START != null && $START < strtotime($date) && ($END == null || $END < $START || $END > strtotime($date))) $WORKING = 1;
             $employees[$key]->Work = $WORKING;
         }
 

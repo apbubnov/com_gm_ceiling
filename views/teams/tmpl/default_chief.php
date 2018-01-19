@@ -332,6 +332,7 @@ if (!empty($brigade_id)) {
 				Today(day, NowMonth, NowYear, <?php echo $userId; ?>);
         <?php } ?>		
     });
+    
     jQuery("#button-prev").click(function () {
         month1 = <?php echo $month1; ?>;
         year1 = <?php echo $year1; ?>;

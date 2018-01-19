@@ -16,7 +16,7 @@ JHtml::_('behavior.multiselect');
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
 $userGroup = $user->groups;
-if (!(array_search('19', $userGroup) || array_search('18', $userGroup)))
+if (!(in_array('23', $userGroup) || in_array('18', $userGroup)))
     header('Location: /index.php?option=com_gm_ceiling&view=mainpage');
 else header('Location: /index.php?option=com_gm_ceiling&view=guild')
 ?>

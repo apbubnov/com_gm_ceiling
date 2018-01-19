@@ -76,7 +76,7 @@ class Gm_ceilingController extends JControllerLegacy
                             $type = "gmcalculatormainpage"; //Замерщик ГМ
                         } elseif (in_array("19", $groups)) {
                             $type = "gmstock"; //Кладовщик ГМ
-                        } elseif (in_array("18", $groups)) {
+                        } elseif (in_array("18", $groups) || in_array("23", $groups)) {
                             $type = "gmguild"; //Цех ГМ
                         } elseif (in_array("11", $groups)) {
                             $type = "mountersmainpage";//монтажная бригада
