@@ -1010,7 +1010,6 @@ echo parent::getPreloader();
                                 </tr>
                             </table>
                         </div>
-                        
                     <?php if ($userId != $user->dealer_id) { ?>
                         <input name="type" value="chief" type="hidden">
                     <?php } else { ?>
