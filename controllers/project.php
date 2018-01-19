@@ -1029,8 +1029,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			// Checking if the user can remove object
 			$user = JFactory::getUser();
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
-			$id = $app->input->getInt('id', 0);
-			print_r("1 ===== $id");exit;
+			$tmp = $app->input->getString('type', '');
+			print_r("1 ===== $tmp");exit;
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('jform[id]', '0', 'INT');
 			$get_data = JFactory::getApplication()->input->get('jform', array(), 'array');
