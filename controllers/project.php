@@ -1045,7 +1045,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$data->old_date = $old_date;
 			$old_mounter = $jinput->get('jform_project_mounting_old','0','INT');
 			$data->old_mounter = $old_mounter;
-			
+			print_r("date $old_date");exit;
 			if (!empty($get_data['project_mounting'])) {
 				$data->project_mounter = $get_data['project_mounting'];
 			}
@@ -1076,7 +1076,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			}
 			if($type === "gmchief") {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
-			} elseif($type === "chief" && $user->dealer_type == 1 && $old_date == "0000-00-00 00:00:00") {
+			} elseif($type === "chief" && $user->dealer_type == 1 && $old_date) {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
 			} else {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
