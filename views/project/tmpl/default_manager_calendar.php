@@ -504,6 +504,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             </button>
         </li>
     </ul>
+    
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active" id="summary" role="tabpanel">
