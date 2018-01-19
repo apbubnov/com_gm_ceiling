@@ -2704,7 +2704,9 @@ class Gm_ceilingController extends JControllerLegacy
             $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
             $body .= '</div></td></tr><tr>';
             $body .= "В продолжение нашего телефонного разговора отправляю ссылку <a href=\"$site\">$site</a>, где Вы можете получить более подробную информацию.";
-			$mailer->setSubject('Новый статус монтажа');
+            $mailer->setSubject('Коммерческое предложение');
+            $mailer->isHtml(true);
+            $mailer->Encoding = 'base64';
 			$mailer->setBody($body);
             $send = $mailer->Send();
             
