@@ -191,6 +191,45 @@ class Gm_ceilingModelGuild extends JModelList
         return $employees;
     }
 
+    public function getWorkingEmployees($id = null)
+    {
+        $date = date("Y-m-d H:i:s");
+
+        $employees = null;
+        if (empty($id)) $employees = $this->getEmployees();
+        else $employees = [$this->getEmployees($id)];
+
+        foreach ($employees as $key => $employee)
+        {
+            $working = $this->getWorking((object) ["user_id" => $employee->id, "Date" => $date]);
+
+            $START = null;
+            $END = null;
+            foreach ($working as $work)
+            {
+                echo "$work->date \n";
+                if ($work->date <= $date && $work->action == 1) $START = $work->date;
+                if ($work->action == 0) {$END = $work->date; break; }
+            }
+            echo "$START - $date - $END\n\n";
+
+
+            $WORKING = 0;
+            if ($START < $date && ($END <= $START || $END == null || $END > $date)) $WORKING = 1;
+            $employees[$key]->Work = $WORKING;
+        }
+
+        if (isset($id)) $employees = $employees[0];
+        else {
+            $employeesTemp = [];
+            foreach ($employees as $employee)
+                $employeesTemp[$employee->id] = $employee;
+            $employees = $employeesTemp;
+        }
+
+        return $employees;
+    }
+
     public function getBigDataEmployees($data = null)
     {
         $db = $this->getDbo();
@@ -201,7 +240,7 @@ class Gm_ceilingModelGuild extends JModelList
         if (empty($data->DateEnd))
             $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), date("d") + 1, date("Y")));
 
-        $employees = (empty($data->user_id))?$this->getEmployees():[$data->user_id => $this->getEmployees($data->user_id)];
+        $employees = (empty($data->user_id))?$this->getWorkingEmployees():[$data->user_id => $this->getWorkingEmployees($data->user_id)];
 
         foreach ($employees as $key => $employee)
         {
@@ -277,18 +316,23 @@ class Gm_ceilingModelGuild extends JModelList
             $employee->Working = (object) ["Start" => $Start, "End" => $End, "Time" => $WorkingTime, "Times" => $WorkingTimes];
 
             $Salaries = $this->getSalaries((object) ["user_id" => $key, "DateStart" => $data->DateStart, "DateEnd" => $data->DateEnd]);
-            $employee->Salaries = [];
+            $employee->Salaries = (object) [];
+            $employee->Salaries->List = [];
+            $employee->Salaries->Price = 0.0;
             foreach ($Salaries as $value)
             {
                 $date = DateTime::createFromFormat("Y-m-d H:i:s", $value->accrual_date);
                 $S = (object) [];
 
                 $S->Time = $date->format("H:i");
-                $S->Work = $value->note;
-                $S->Ceiling = "";
+                $S->Work = $value->work;
+                $S->Ceiling = "Проект №$value->project_id : $value->name : $value->canvas $value->country "
+                . "$value->width $value->texture $value->invoice $value->color";
+                $S->Ceiling = str_replace("  ", " ", $S->Ceiling);
                 $S->Price = $value->salaries;
+                $employee->Salaries->Price += $S->Price;
 
-                $employee->Salaries[] = $S;
+                $employee->Salaries->List[] = $S;
             }
 
             $employees[$key] = $employee;
@@ -316,7 +360,7 @@ class Gm_ceilingModelGuild extends JModelList
         }
         $query = $db->getQuery(true);
         $query->insert("`#__gm_ceiling_guild_salaries`")
-            ->columns("`user_id`, `salaries`, `work`, `note`, `accrual_date`");
+            ->columns("`user_id`, `calc_id`, `salaries`, `work`, `note`, `accrual_date`");
 
         $i = 0;
         foreach ($employees as $key => $emp) {
@@ -327,7 +371,7 @@ class Gm_ceilingModelGuild extends JModelList
             $sum = ceil(floatval($work->sum) / floatval(count($emp)) * 100.0) / 100.0;
 
             foreach ($emp as $val)
-                $query->values("'$val', '$sum', '$work->id', '$work->name', '$data->date'");
+                $query->values("'$val', '$calculation', '$sum', '$work->id', '$work->name', '$data->date'");
 
             $i++;
         }
@@ -406,6 +450,9 @@ class Gm_ceilingModelGuild extends JModelList
         if (!empty($data->user_id))
             $query->where("w.user_id = '$data->user_id'");
 
+        if (!empty($data->action))
+            $query->where("w.action = '$data->action'");
+
         $db->setQuery($query);
         $working = $db->loadObjectList();
 
@@ -436,6 +483,10 @@ class Gm_ceilingModelGuild extends JModelList
             throw new Exception("Невозможно добавить выход работника, когда он еще не пришел!");
         else if ($countWorking > 0 && $getWorking[$countWorking - 1]->action == 1 && $data->action == 1)
             throw new Exception("Данный работник еще на месте!");
+        else if ($getWorking[$countWorking - 1]->date > $data->date)
+            throw new Exception("Нельзя добавить промежуточное значение!");
+        else if ($getWorking[$countWorking - 1]->date == $data->date)
+            throw new Exception("Данное время уже занято этим работником!");
 
         $db = $this->getDbo();
         $query = $db->getQuery(true);
@@ -465,7 +516,15 @@ class Gm_ceilingModelGuild extends JModelList
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_guild_salaries` as s")
-            ->select("s.*")
+            ->join("LEFT", "`#__gm_ceiling_guild_works` as w ON w.id = s.work")
+            ->join("LEFT", "`#__gm_ceiling_calculations` as c ON c.id = s.calc_id")
+            ->join("LEFT", "`#__gm_ceiling_canvases` as canvas ON canvas.id = c.n3")
+            ->join("LEFT", "`#__gm_ceiling_textures` as t1 ON t1.id = c.n1")
+            ->join("LEFT", "`#__gm_ceiling_textures` as t2 ON t2.id = c.n2")
+            ->join("LEFT", "`#__gm_ceiling_colors` as color ON color.id = canvas.color_id")
+            ->select("s.user_id, s.salaries, s.accrual_date, w.name as work, c.project_id, c.calculation_title as name")
+            ->select("canvas.name as canvas, canvas.country, canvas.width")
+            ->select("t1.texture_title as texture, t2.texture_title as invoice, color.title as color")
             ->where("s.accrual_date BETWEEN '$data->DateStart' AND '$data->DateEnd'")
             ->order("s.accrual_date");
 
@@ -476,7 +535,11 @@ class Gm_ceilingModelGuild extends JModelList
         $salaries = $db->loadObjectList();
 
         foreach ($salaries as $key => $salar)
+        {
             $salaries[$key]->user = $users[$salar->user_id];
+            if (empty($salar->invoice)) $salaries[$key]->invoice = "";
+            if (empty($salar->color)) $salaries[$key]->color = "";
+        }
 
         return $salaries;
     }
