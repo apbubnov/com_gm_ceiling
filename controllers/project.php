@@ -151,11 +151,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 //print_r($idCalc); exit;
                 $model_calc = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 $resultDel = $model_calc->delete($idCalc);
-                print_r($_SESSION['url']."test"); exit;
+                //print_r($_SESSION['url']."test"); exit;
                 if ($resultDel == 1) {
                     $this->setMessage("Потолок удален");
-
-                    $this->setRedirect(JRoute::_($_SESSION['url'], false));
+                    if(!empty($_SESSION['url'])) $this->setRedirect(JRoute::_($_SESSION['url'], false));
+                    else $this->setRedirect(JRoute::_($_SERVER['HTTP_REFERER'], false));
                 }
 
             } else {
