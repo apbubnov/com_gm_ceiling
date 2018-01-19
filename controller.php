@@ -2676,12 +2676,12 @@ class Gm_ceilingController extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id', null, 'INT');
             $email = $jinput->get('email', null, 'STRING');
-            throw new Exception($user_id);
             if (empty($email))
             {
                 throw new Exception('empty email');
             }
             $code = md5($user_id.'commercial_offer');
+            throw new Exception($user_id.$code);
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $result  = $users_model->addCommercialOfferCode($user_id, $code);
             die(json_encode($result));
