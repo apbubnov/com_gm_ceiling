@@ -13,6 +13,7 @@ $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 $brigade_id = $teams_model->getData($dealerId);
+
 if (!empty($brigade_id)) {
 	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 }
@@ -510,6 +511,9 @@ if (!empty($brigade_id)) {
 	// ------------------------------------------------
 
 	jQuery(document).ready(function () {
+
+        console.log(<?php json_encode(var_dump($brigade_id));?>);
+
 		// легенда
 		if (screen.width < 768) {
 			var legenda = '<tr><td><img src="components/com_gm_ceiling/views/teams/tmpl/images/ff3d3d.png" alt="Красный"></td>';
