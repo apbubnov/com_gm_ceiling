@@ -120,7 +120,7 @@ if (count($AllGaugerDealer) == 0) {
 		</div>
 	</div>
 	<div class="control-group">
-		<?php if ($user->dealer_id != 1) { ?>
+		<?php if ($user->dealer_id != 1 && $user->dealer_type == 0) { ?>
 			<div class="control-label">
 				<label id="jform_who_calculate-lbl" for="jform_who_calculate" class="required">Выберите замерщика<span class="star">&nbsp;*</span></label>
 			</div>
