@@ -20,7 +20,7 @@ $groups = $user->groups;
 $chief = (in_array(23, $groups));
 $employee = (in_array(18, $groups));
 ?>
-<? if (!($chief) && !($employee)): ?>
+<? if (!($chief || $employee)): ?>
     <h1>К сожалению данный кабинет вам не доступен!</h1>
     <p>Что бы получить доступ, обратитесь к IT отделу. Через <span>5</span> секунды вы вернетесь на предыдущую страницу!
     </p>
