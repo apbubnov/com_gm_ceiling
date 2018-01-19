@@ -512,7 +512,7 @@ if (!empty($brigade_id)) {
 
 	jQuery(document).ready(function () {
 
-        console.log("<?php echo $brigade_id;?>");
+        console.log("<?php var_dump($brigade_id);?>");
 
 		// легенда
 		if (screen.width < 768) {
