@@ -1022,7 +1022,8 @@ echo parent::getPreloader();
                                 <button type="submit" class="validate btn btn-primary">Сохранить</button>
                             <?php endif; ?>
                             <a class="btn btn-success"
-                                href="<?php if ($userId == $user->dealer_id)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief');
+                                href="<?php if ($this->item->status == 4 && $user->dealer_type == 1)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects');
+                                elseif ($userId == $user->dealer_id)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief');
                                 else echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>"
                                 title="">Вернуться к монтажам</a>
                         </div>
