@@ -114,6 +114,10 @@ class Gm_ceilingModelUsers extends JModelList
 			$db->setQuery($query);
 			$item = $db->loadObject();
 
+			if (empty($item))
+			{
+				throw new Exception('Code not found');
+			}
 			$client_id = JFactory::getUser($item->user_id)->associated_client;
 
 			$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
