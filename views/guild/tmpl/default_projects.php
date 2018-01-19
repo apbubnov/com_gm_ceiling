@@ -16,7 +16,7 @@ JHtml::_('behavior.multiselect');
 
 $user = JFactory::getUser();
 $userId = $user->get('id');
-$userGroup = $user->groups;
+$groups = $user->groups;
 
 $chief = (in_array(23, $groups));
 $employee = (in_array(18, $groups));
