@@ -382,7 +382,7 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
                 YEAR = DATA.MODAL.ModalDay.attr("year");
             selectDay({DAY: DAY, MONTH: MONTH, YEAR: YEAR});
             DATA.MODAL.MODAL.hide();
-            window.location = "#MainWork";
+            window.location.hash = 'MainWork';
         }
 
         function showModalDay(Date = null) {

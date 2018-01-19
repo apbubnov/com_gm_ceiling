@@ -29,9 +29,9 @@ $employees = Gm_ceilingHelpersGm_ceiling::getModel('Guild')->getEmployees();
     <h1>Раскрои</h1>
     <actions>
         <?= parent::getButtonBack(); ?>
-        <a class="btn btn-large btn-primary" id="Create" href="/index.php?option=com_gm_ceiling&view=guild&type=create">
+        <!--<a class="btn btn-large btn-primary" id="Create" href="/index.php?option=com_gm_ceiling&view=guild&type=create">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Создать раскрой
-        </a>
+        </a>-->
     </actions>
     <cuts class="container">
         <types class="row">
