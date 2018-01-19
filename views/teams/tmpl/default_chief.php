@@ -206,7 +206,8 @@ if (!empty($brigade_id)) {
                             year: year1,
                         },
                         success: function (msg) {
-                            calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
+                            calendars = '<div class="calendars-brigade"><p class="brigade-name">';
+                            calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
                             calendars += msg;
                         },
                         dataType: "text",
@@ -355,7 +356,8 @@ if (!empty($brigade_id)) {
                         year: year1,
                     },
                     success: function (msg) {
-                        calendars = '<div class="calendars-brigade"><p class="brigade-name"><?php echo $value->name; ?></p>';
+                        calendars = '<div class="calendars-brigade"><p class="brigade-name"></p>';
+                        calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
                         calendars += msg;
                     },
                     dataType: "text",
