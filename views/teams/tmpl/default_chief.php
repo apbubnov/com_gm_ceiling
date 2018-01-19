@@ -227,7 +227,7 @@ if (!empty($brigade_id)) {
                                     }
                                 } 
                             ?>
-                            calendars += "<table id=\"name\"><tr><td nowrap>"+<?php echo $names; ?>"+</tr></td></table>";
+                            calendars += "<table id=\"name\"><tr><td nowrap>"+<?php echo $names; ?>+"</tr></td></table>";
                             calendars += msg;
                         },
                         dataType: "text",
@@ -397,7 +397,7 @@ if (!empty($brigade_id)) {
                                 }
                             } 
                         ?>
-                        calendars += "<table id=\"name\"><tr><td nowrap>"+<?php echo $names; ?>"+</tr></td></table>";
+                        calendars += "<table id=\"name\"><tr><td nowrap>"+<?php echo $names; ?>+"</tr></td></table>";
                         calendars += msg;
                     },
                     dataType: "text",
