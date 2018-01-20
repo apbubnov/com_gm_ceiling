@@ -208,7 +208,7 @@
         <? if (!empty($dop_contacts)) { ?>
         <div>
         <? foreach ($dop_contacts AS $contact) {?>
-            <input type="radio" name=""> name='rb_email' onclick='rb_email_click()'><? echo $contact->contact; ?><br> <? }?>
+            <input type="radio" name='rb_email' onclick='rb_email_click()'><? echo $contact->contact; ?><br> <? }?>
         </div>
         <? } ?>
         <h6 style = "margin-top:10px">Введите почту</h6>
