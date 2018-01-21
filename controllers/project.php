@@ -293,16 +293,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $rec_model = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
                             $rec_model->save($recoil, $project_id, 0);
                         }
-                        $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
-                        $rep_proj = $rep_model->getDataByProjectId($project_id);
-                        if (empty($rep_proj) || $designer_bool == 1) {
-                            // условия на статус
-                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
-                        } else {
-                            // условия на статус
-                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, 10, $user->id, $gauger);
-                            $rep_upd = $rep_model->update($project_id, $api_phone_id);
-                        }
+//                        $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
+//                        $rep_proj = $rep_model->getDataByProjectId($project_id);
+//                        if (empty($rep_proj) || $designer_bool == 1) {
+//                            // условия на статус
+//                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
+//                        } else {
+//                            // условия на статус
+//                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, 10, $user->id, $gauger);
+//                            $rep_upd = $rep_model->update($project_id, $api_phone_id);
+//                        }
 
                         $callback_model = $this->getModel('callback', 'Gm_ceilingModel');
 
