@@ -117,7 +117,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
 	}
 
-	public function recToMeasure()
+	public function recToMeasureDealer()
     {
         try {
             $app = JFactory::getApplication();
@@ -422,7 +422,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 
                 if (!$isDiscountChange)
-                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
+                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=clients&type=manager', false));
             }
 
         } catch(Exception $e)

@@ -211,7 +211,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             <div class="item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar"
+                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasureDealer&type=manager&subtype=calendar"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
@@ -219,7 +219,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
                     <input name="status" id="project_status" value="" type="hidden">
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
-                    <input name="type" value="gmmanager" type="hidden">
+                    <input name="type" value="manager" type="hidden">
                     <input name="subtype" value="calendar" type="hidden">
                     <input name="data_change" value="0" type="hidden">
                     <input name="data_delete" value="0" type="hidden">
