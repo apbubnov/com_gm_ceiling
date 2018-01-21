@@ -143,27 +143,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         $call_id = $jinput->get('call_id', 0, 'INT');
         $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
         $all_advt = $model_api_phones->getAdvt();
-        if (!empty($phoneto) && !empty($phonefrom)) {
-            $reklama = $model_api_phones->getNumberInfo($phoneto);
-            $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
-        } elseif (!empty($this->item->api_phone_id)) {
-            $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
-            $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
-            if($this->item->api_phone_id == 10)
-            {
-                if(!empty($repeat_advt->advt_id))
-                    $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
-                else
-                    $need_choose = true;
-            }
-            else {
-                $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
-
-            }
-            $write = $reklama->number . ' ' .$reklama->name . ' ' . $reklama->description;
-        } else {
-            $need_choose = true;
-        }
 
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
         $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
