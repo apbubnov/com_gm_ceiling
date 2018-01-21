@@ -256,7 +256,7 @@
                 var pf = "<?php echo $phonefrom; ?>";
                 var call_id = <?php echo $call_id; ?>;
                 var subtype = "<?php echo $subtype; ?>";
-                if (pt === "" || pf === "")
+               if (pt === "" || pf === "")
                 {
                     if (call_id === 0)
                     {
@@ -271,6 +271,8 @@
                 {
                     url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=' + subtype + '&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
                 }
+                <?php if($user->dealer_type == 1) ?>
+                url = '/index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar'+'&id=' + data;
 
                 location.href =url;
             },
