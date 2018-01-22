@@ -54,6 +54,9 @@ if ($user->dealer_id == 1) {
 }
 //НМС /монтажи
 $countMounting = $model->getDataByStatus("Mountings");
+// незапущенные монтажи
+$answer1 = $model->getDataByStatus("UnComplitedMountings");
+$allMount = $countMounting[0]->count + $answer1[0]->count;
 //--------------------------------------
 
 ?>
@@ -210,8 +213,8 @@ $countMounting = $model->getDataByStatus("Mountings");
         <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
                 <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
-                <?php if ($countMounting[0]->count != 0) { ?>
-                    <div class="circl-digits"><?php echo $countMounting[0]->count; ?></div>
+                <?php if ($allMount != 0) { ?>
+                    <div class="circl-digits"><?php echo $allMount; ?></div>
                 <?php } ?>
             </div>
         </div>
