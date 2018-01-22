@@ -127,7 +127,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$user = JFactory::getUser();
 			$user_group = $user->groups;
 			if (in_array("16", $user_group)) {
-				throw new Exception(implode('|',$user_group);)
+				throw new Exception(implode('|',$user_group));
 				$usertype = "gmmanagermainpage"; 
 			} else {
 				$usertype = "managermainpage";
