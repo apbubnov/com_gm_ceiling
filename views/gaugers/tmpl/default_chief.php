@@ -18,7 +18,6 @@ $userId     = $user->id;
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
 $gaugers_id = $model->getDatas($user->dealer_id);
-var_dump($gaugers_id);
 
 // календарь
 $month1 = date("n");
@@ -33,13 +32,20 @@ if ($month1 == 12) {
     $year2 = $year1;
 }
 $FlagCalendar = [4, $user->dealer_id];
-foreach ($gaugers_id as $value) {
-	$calendars .= '<div class="calendars-gaugers"><p class="gaugers-name">';
-	$calendars .= $value->name;
-	$calendars .= "</p>";
-	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
-	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
+if (empty($gaugers_id)) {
+	$calendars .= '<div class="calendars-gaugers">';
+	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
+	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
 	$calendars .= "</div>";
+} else {
+	foreach ($gaugers_id as $value) {
+		$calendars .= '<div class="calendars-gaugers"><p class="gaugers-name">';
+		$calendars .= $value->name;
+		$calendars .= "</p>";
+		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
+		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
+		$calendars .= "</div>";
+	}
 }
 //----------------------------------------------------------------------------------------------------------
 
@@ -176,21 +182,21 @@ foreach ($gaugers_id as $value) {
         month_old2 = month2;
         year_old2 = year2;
         jQuery("#calendars-container").empty();
-		<?php foreach ($gaugers_id as $value) { ?>
+		<?php if (empty($gaugers_id)) { ?>
 			calendars = "";
 			jQuery.ajax({
 				async: false,
 				type: 'POST',
 				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 				data: {
-					id: <?php echo $value->id; ?>,
+					id: <?php echo $userId; ?>,
 					id_dealer: <?php echo $user->dealer_id; ?>,
 					flag: 4,
 					month: month1,
 					year: year1,
 				},
 				success: function (msg) {
-					calendars = '<div class="calendars-gaugers"><p class="gaugers-name"><?php echo $value->name; ?></p>';
+					calendars = '<div class="calendars-gaugers">';
 					calendars += msg;
 				},
 				dataType: "text",
@@ -210,7 +216,7 @@ foreach ($gaugers_id as $value) {
 				type: 'POST',
 				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 				data: {
-					id: <?php echo $value->id; ?>,
+					id: <?php echo $userId; ?>,
 					id_dealer: <?php echo $user->dealer_id; ?>,
 					flag: 4,
 					month: month2,
@@ -233,8 +239,68 @@ foreach ($gaugers_id as $value) {
 					});
 				}
 			});
-			Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
-		<?php } ?>
+			Today(day, NowMonth, NowYear, <?php echo $userId; ?>);
+		<?php } else {
+			foreach ($gaugers_id as $value) { ?>
+				calendars = "";
+				jQuery.ajax({
+					async: false,
+					type: 'POST',
+					url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+					data: {
+						id: <?php echo $value->id; ?>,
+						id_dealer: <?php echo $user->dealer_id; ?>,
+						flag: 4,
+						month: month1,
+						year: year1,
+					},
+					success: function (msg) {
+						calendars = '<div class="calendars-gaugers"><p class="gaugers-name"><?php echo $value->name; ?></p>';
+						calendars += msg;
+					},
+					dataType: "text",
+					timeout: 10000,
+					error: function () {
+						var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "error",
+							text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+						});
+					}
+				});
+				jQuery.ajax({
+					async: false,
+					type: 'POST',
+					url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+					data: {
+						id: <?php echo $value->id; ?>,
+						id_dealer: <?php echo $user->dealer_id; ?>,
+						flag: 4,
+						month: month2,
+						year: year2,
+					},
+					success: function (msg) {
+						calendars += msg;
+						calendars += '</div>';
+						jQuery("#calendars-container").append(calendars);
+					},
+					dataType: "text",
+					timeout: 10000,
+					error: function () {
+						var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "error",
+							text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+						});
+					}
+				});
+				Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
+			<?php }
+		} ?>
     });
     jQuery("#button-prev").click(function () {
         month1 = <?php echo $month1; ?>;
@@ -264,21 +330,21 @@ foreach ($gaugers_id as $value) {
         month_old2 = month2;
 		year_old2 = year2;
 		jQuery("#calendars-container").empty();
-		<?php foreach ($gaugers_id as $value) { ?>
+		<?php if (empty($gaugers_id)) { ?>
 			calendars = "";
 			jQuery.ajax({
 				async: false,
 				type: 'POST',
 				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 				data: {
-					id: <?php echo $value->id; ?>,
+					id: <?php echo $userId; ?>,
 					id_dealer: <?php echo $user->dealer_id; ?>,
 					flag: 4,
 					month: month1,
 					year: year1,
 				},
 				success: function (msg) {
-					calendars = '<div class="calendars-gaugers"><p class="gaugers-name"><?php echo $value->name; ?></p>';
+					calendars = '<div class="calendars-gaugers">';
 					calendars += msg;
 				},
 				dataType: "text",
@@ -298,7 +364,7 @@ foreach ($gaugers_id as $value) {
 				type: 'POST',
 				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 				data: {
-					id: <?php echo $value->id; ?>,
+					id: <?php echo $userId; ?>,
 					id_dealer: <?php echo $user->dealer_id; ?>,
 					flag: 4,
 					month: month2,
@@ -321,8 +387,68 @@ foreach ($gaugers_id as $value) {
 					});
 				}
 			});
-			Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
-		<?php } ?>
+			Today(day, NowMonth, NowYear, <?php echo $userId; ?>);
+		<?php } else {
+			foreach ($gaugers_id as $value) { ?>
+				calendars = "";
+				jQuery.ajax({
+					async: false,
+					type: 'POST',
+					url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+					data: {
+						id: <?php echo $value->id; ?>,
+						id_dealer: <?php echo $user->dealer_id; ?>,
+						flag: 4,
+						month: month1,
+						year: year1,
+					},
+					success: function (msg) {
+						calendars = '<div class="calendars-gaugers"><p class="gaugers-name"><?php echo $value->name; ?></p>';
+						calendars += msg;
+					},
+					dataType: "text",
+					timeout: 10000,
+					error: function () {
+						var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "error",
+							text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+						});
+					}
+				});
+				jQuery.ajax({
+					async: false,
+					type: 'POST',
+					url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+					data: {
+						id: <?php echo $value->id; ?>,
+						id_dealer: <?php echo $user->dealer_id; ?>,
+						flag: 4,
+						month: month2,
+						year: year2,
+					},
+					success: function (msg) {
+						calendars += msg;
+						calendars += '</div>';
+						jQuery("#calendars-container").append(calendars);
+					},
+					dataType: "text",
+					timeout: 10000,
+					error: function () {
+						var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "error",
+							text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+						});
+					}
+				});
+				Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
+			<?php } 
+		} ?>
 	});
 	//---------------------------------------------
 
@@ -373,8 +499,12 @@ foreach ($gaugers_id as $value) {
         window.NowYear = today.getFullYear();
         window.NowMonth = today.getMonth();
 		window.day = today.getDate();
-		<?php foreach ($gaugers_id as $value) { ?>
-			Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
+		<?php if (!empty($gaugers_id)) { ?>
+			<?php foreach ($gaugers_id as $value) { ?>
+				Today(day, NowMonth, NowYear, <?php echo $value->id; ?>);
+			<?php } 
+		} else { ?>
+			Today(day, NowMonth, NowYear, <?php echo $userId; ?>);
 		<?php } ?>
         //------------------------------------------
 
