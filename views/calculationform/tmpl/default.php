@@ -162,13 +162,13 @@
 							</td>
 							<td> 
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-								<span class="airhelp"><strong>Выберите фактуру для Вашего будущего потолка</strong>
-									<ul>
-										<li>Матовый больше похож на побелку.</li>
-										<li>Сатин – на, крашенный потолок.</li>
-										<li>Глянец – имеет легкий отблеск.</li>
-									</ul>
-								</span>
+									<span class="airhelp"><strong>Выберите фактуру для Вашего будущего потолка</strong>
+										<ul>
+											<li>Матовый больше похож на побелку.</li>
+											<li>Сатин – на, крашенный потолок.</li>
+											<li>Глянец – имеет легкий отблеск.</li>
+										</ul>
+									</span>
 								</a>
 							</td>
 						</tr>
@@ -478,16 +478,17 @@
 							</td>
 						</tr>
 					</table>
+					<input id="jform_n12" data-next="#jform_n13" name="jform[n12]" placeholder ="шт." value="<?php echo $this->item->n12; ?>" class="form-control" type="tel">
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
-			<div class="row sm-margin-bottom">
+			<!-- <div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<input id="jform_n12" data-next="#jform_n13" name="jform[n12]" placeholder ="шт." value="<?php echo $this->item->n12; ?>" class="form-control" type="tel">
 				</div>
 				<div class="col-sm-4"></div>
-			</div>
+			</div> -->
 		</div>
 		<!-- Светильники -->
 		<div class="container">
