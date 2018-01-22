@@ -139,7 +139,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $recoil = $jinput->get('recoil', '', 'STRING');
             $sex = $jinput->get('slider-sex', "NULL", 'STRING');
             $email_str = $jinput->get('emails', "", "STRING");
-			$designer_bool = $jinput->get('designer', '0', 'INT');
+			$without_advt = $jinput->get('without_advt', '0', 'INT');
 			$client_form_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
 			$client_model = $this->getModel('client', 'Gm_ceilingModel');
             $emails = [];
@@ -161,7 +161,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 }
 
             } else {
-                if ($api_phone_id == 0 && $designer_bool == 0) {
+                if ($api_phone_id == 0 && $without_advt == 0) {
                     if ($selected_advt != 0) {
                         $api_phone_id = $selected_advt;
                     } else {
@@ -170,7 +170,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             throw new Exception("Пожалуйста, укажите рекламу!");
                         }
                     }
-                } elseif ($designer_bool == 1) {
+                } elseif ($without_advt == 1) {
                     $api_phone_id = NULL;
                 }
 
@@ -350,7 +350,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         }
                         $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                         $rep_proj = $rep_model->getDataByProjectId($project_id);
-                        if (empty($rep_proj) || $designer_bool == 1) {
+                        if (empty($rep_proj) || $without_advt == 1) {
                             // условия на статус
                             $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
                         } else {
@@ -379,7 +379,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
                         $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                         $rep_proj = $rep_model->getDataByProjectId($project_id);
-                        if (empty($rep_proj) || $designer_bool == 1) {
+                        if (empty($rep_proj) || $without_advt == 1) {
                             $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 21, $api_phone_id, $user->id, $gauger);
                         } else {
                             $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 21, 10, $user->id, $gauger);
@@ -415,7 +415,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
                         $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                         $rep_proj = $rep_model->getDataByProjectId($project_id);
-                        if (empty($rep_proj) || $designer_bool == 1) {
+                        if (empty($rep_proj) || $without_advt == 1) {
                             $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 20, $api_phone_id, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
                                 $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
                         } else {
