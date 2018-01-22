@@ -16,6 +16,8 @@ JHtml::_('behavior.multiselect');
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
+throw new Exception($user->dealer_id);
+
 $model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
 $gaugers_id = $model->getData($user->dealer_id);
 
