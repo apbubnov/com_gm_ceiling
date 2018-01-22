@@ -75,10 +75,7 @@ class Gm_ceilingModelClient_history extends JModelList
 			$db = JFactory::getDbo();
 
 			$id_client = $db->escape($id_client, true);
-
-			$call_type = $db->escape($call_type, true);
-			$comment = $db->escape($comment, true);
-			$text_result = $db->escape($text_result, true);
+			$text = $db->escape($text, true);
 
 			$query = $db->getQuery(true);
 
