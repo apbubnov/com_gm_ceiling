@@ -273,7 +273,15 @@ class Gm_ceilingModelProjects extends JModelList
 
             // замерщик (график замеров), НМС (замеры), дилер (замерщик)
             if ($status == "GaugingsGraph") {
-                if ($data == "all") {
+                $query2 = $db->getQuery(true);
+                $query2->select('group_id')
+                    ->from('#__users as users')
+                    ->innerJoin("#__user_usergroup_map as map ON users.id = map.user_id")
+                    ->where("users.id = '$user'");
+                $db->setQuery($query2);
+                $group = $db->loadObject();
+
+                if ($group->group_id == 12 || $group->group_id == 14 || $group->group_id == 17) {
                     if ($user->dealer_id == 1) {
                         $who = "1";
                     } else {
@@ -283,7 +291,7 @@ class Gm_ceilingModelProjects extends JModelList
                         ->from('#__gm_ceiling_projects as projects')
                         ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
                         ->where("projects.project_status = '1' and projects.who_calculate in ($who) and clients.dealer_id = '$user->dealer_id'");    
-                } else if ($data == "one") {
+                } else if ($group->group_id == 21 || $group->group_id == 2) {
                     $query->select('count(projects.id) as count')
                         ->from('#__gm_ceiling_projects as projects')
                         ->where("projects.project_status = '1' and projects.project_calculator  = '$userId'");

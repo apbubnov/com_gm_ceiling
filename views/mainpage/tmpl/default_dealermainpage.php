@@ -30,7 +30,7 @@ $clientId = $model->getItemsByOwnerID($userId, $userPhone);
 /* циферки на кнопки */
 $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
 // замеры
-$sumcalculator = $model->getDataByStatus("GaugingsGraph", "all");
+$sumcalculator = $model->getDataByStatus("GaugingsGraph");
 // менеджер
 if ($user->dealer_id == 1) {
     $managers = $model->getDataByStatus("FindManagers");
