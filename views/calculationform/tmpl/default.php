@@ -451,12 +451,15 @@
 						<tr>
 							<td style="width: 90%; text-align: center;">
 								<h3>Освещение</h3>
-							</td>
-							<td style="width: 10%;">
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
 								Если на потолке будут люстры или светильники укажите их количество и характеристики. Если их не будет просто пропустите этот пункт
 								</span></a>
 							</td>
+							<!-- <td style="width: 10%;">
+								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+								Если на потолке будут люстры или светильники укажите их количество и характеристики. Если их не будет просто пропустите этот пункт
+								</span></a>
+							</td> -->
 						</tr>
 					</table>
 				</div>
