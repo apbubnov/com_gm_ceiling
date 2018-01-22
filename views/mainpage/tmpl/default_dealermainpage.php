@@ -29,11 +29,11 @@ $clientId = $model->getItemsByOwnerID($userId, $userPhone);
 
 /* циферки на кнопки */
 $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-// замерщик
-$sumcalculator = $model->getDataByStatus("GaugingsGraph", $userId, "all");
+// замеры
+$sumcalculator = $model->getDataByStatus("GaugingsGraph");
 // менеджер
 if ($user->dealer_id == 1) {
-    $managers = $model->getDataByStatus("FindManagers", $userId, null);
+    $managers = $model->getDataByStatus("FindManagers");
     $managersid = "";
     foreach ($managers as $value) {
         if ($managersid == "") {
@@ -43,21 +43,25 @@ if ($user->dealer_id == 1) {
         }
     }
     // менеджеры проекты запущенные и в производстве
-    $answer1 = $model->getDataByStatus("RunInProduction", $userId, $managersid);
+    $answer1 = $model->getDataByStatus("RunInProduction", $managersid);
     // заявки с сайта
-    $answer2 = $model->getDataByStatus("ZayavkiSSaita", $userId, null);
+    $answer2 = $model->getDataByStatus("ZayavkiSSaita", null);
     // звонки
     $date = date("Y")."-".date("n")."-".date("d");
-    $answer3 = $model->getDataByStatus("Zvonki", $userId, $date);
+    $answer3 = $model->getDataByStatus("Zvonki", $date);
     // кол-во
     $sumManager = $answer1[0]->count + $answer2[0]->count + $answer3[0]->count;
 }
-//НМС
-$mounting = $model->getDataByStatus("Mountings", $userId, null);
+//НМС /монтажи
+$countMounting = $model->getDataByStatus("Mountings");
+// незапущенные монтажи
+$answer1 = $model->getDataByStatus("UnComplitedMountings");
+$allMount = $countMounting[0]->count + $answer1[0]->count;
 //--------------------------------------
 
 ?>
-<?if(!$dealerInfo->update_check):?>
+
+<?php if(!$dealerInfo->update_check):?>
 <style>
     #toProfile {
         position: relative;
@@ -100,17 +104,18 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
     }
 </style>
 <?endif;?>
+
 <div class="form-group">
-<h2 style = "display:inline-block;"><?php echo $user->name; ?></h2> <?php if($user->dealer_type!=2 ){
-    if($userId == 1 || $userId == 2 || ($userId != 1 && $user->dealer_id != 1)) { ?>
-<button id="toProfile" class = "btn btn-primary">
-    <i class="fa fa-cogs" aria-hidden="true"></i>
-    <?if(!$dealerInfo->update_check):?>
-        <div class="pix"></div>
-        <div class="message">Зайти сюда!</div>
-    <?endif;?>
-</button>
-<?php } }?>
+    <h2 style = "display:inline-block;"><?php echo $user->name; ?></h2> <?php if($user->dealer_type!=2 ){
+        if($userId == 1 || $userId == 2 || ($userId != 1 && $user->dealer_id != 1)) { ?>
+    <button id="toProfile" class = "btn btn-primary">
+        <i class="fa fa-cogs" aria-hidden="true"></i>
+        <?if(!$dealerInfo->update_check):?>
+            <div class="pix"></div>
+            <div class="message">Зайти сюда!</div>
+        <?endif;?>
+    </button>
+    <?php } }?>
 </div>
 
 <div class="start_page">
@@ -140,9 +145,9 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
         <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-success" href="<?php
-                if ($userId == 1 || $userId == 2)
-                    echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false);
-                else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false);
+                if ($userId == 1 || $userId == 2) {
+                    echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); }
+                else { echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); }
                 ?>">
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-calculator" aria-hidden="true"></i> ГМ Замерщик</a>
@@ -164,10 +169,10 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-user" aria-hidden="true"></i> ГМ Начальник МС</a>
                 <?php else: ?>
-                    <i class="fa fa-user" aria-hidden="true"></i>Начальник МС</a>
+                    <i class="fa fa-user" aria-hidden="true"></i> Начальник МС</a>
                 <?php endif; ?>
-                <?php if ($mounting[0]->count != 0) { ?>
-                    <div class="circl-digits"><?php echo $mounting[0]->count; ?></div>
+                <?php if ($countMounting[0]->count != 0) { ?>
+                    <div class="circl-digits"><?php echo $countMounting[0]->count; ?></div>
                 <?php } ?>
             </div>
         </div>
@@ -193,28 +198,29 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
                             class="fa fa-mobile" aria-hidden="true"></i> Телефоны</a>
             </p>
         <?php }?>
-        
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
-            <a class="btn btn-large btn-primary"
-               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i
-                        class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
         </p>
+        <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+            <div class="container-for-circl">
+                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Замеры</a>
+                <?php if ($sumcalculator[0]->count != 0) { ?>
+                    <div class="circl-digits"><?php echo $sumcalculator[0]->count; ?></div>
+                <?php } ?>
+            </div>
+        </div>
+        <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+            <div class="container-for-circl">
+                <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
+                <?php if ($allMount != 0) { ?>
+                    <div class="circl-digits"><?php echo $allMount; ?></div>
+                <?php } ?>
+            </div>
+        </div>
         <p class="center">
-            <a class="btn btn-large btn-primary"
-               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); ?>"><i
-                        class="fa fa-calculator" aria-hidden="true"></i> Замерщик</a>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
         </p>
-        <p class="center">
-            <a class="btn btn-large btn-primary"
-               href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i
-                        class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
-        </p>
-        <p class="center">
-            <a class="btn btn-large btn-primary"
-                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=prices', false); ?>"><i
-                    class="fa fa-list-alt" aria-hidden="true"></i> Прайсы</a>
-       
     <?php } elseif ($user->dealer_type == 2) { ?>
         <p class="center">
             <button class="btn btn-large btn-primary" id="create_order_btn"><i class="fa fa-list-alt"
@@ -228,7 +234,9 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
         </p>
     <?php } ?>
 </div>
+
 <script>
+
     jQuery(document).ready(function () {
         jQuery("#show_additional").click(function () {
             jQuery("#montages_btn").toggle();
@@ -274,7 +282,7 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
             });
         });
         jQuery("#toProfile").click(function(){
-		location.href = "index.php?option=com_gm_ceiling&view=dealerprofile";
+		    location.href = "index.php?option=com_gm_ceiling&view=dealerprofile";
 	    });
         jQuery("#new_msrmnt_btn").click(function () {
             location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>";
@@ -306,7 +314,6 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
         jQuery("#mounting_price_btn").click(function () {
             location.href = "<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=mount', false, 2); ?>";
         });
-
         jQuery("#prev_orders_btn").click(function () {
             location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief', false); ?>";
         });
@@ -338,4 +345,5 @@ $mounting = $model->getDataByStatus("Mountings", $userId, null);
             }
         });
     });
+
 </script>
