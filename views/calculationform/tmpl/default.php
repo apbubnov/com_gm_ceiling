@@ -280,10 +280,10 @@
 					<div class="col-sm-4 xs-center">
 						<table style="width: 100%;">
 							<tr>
-								<td width=25%>
+								<td width=35%>
 									<label id="jform_n4-lbl" for="jform_n4" class="center" > S = </label>
 								</td>
-								<td width=65%>
+								<td width=55%>
 									<input name="jform[n4]" class="form-control-input" id="jform_n4" data-next="#jform_n5" value="<?php echo $this->item->n4;  ?>" placeholder="Площадь комнаты"  readonly  type="tel"> 
 								</td>
 								<td width=10%>
@@ -291,10 +291,10 @@
 								</td>
 							</tr>
 							<tr>
-								<td width=25%>
+								<td width=35%>
 									<label id="jform_n5-lbl" for="jform_n5" class="center" > P = </label>
 								</td>
-								<td width=65%>
+								<td width=55%>
 									<input name="jform[n5]" class="form-control-input" id="jform_n5" data-next="#jform_n9" value="<?php echo $this->item->n5; ?>" placeholder="Периметр комнаты" readonly  type="tel"> 
 								</td>
 								<td width=10%>
@@ -302,10 +302,10 @@
 								</td>
 							</tr>
 							<tr>
-								<td width=25%>
-									<label id="jform_n9-lbl" for="jform_n9" class="center"> Кол-во <br>углов = </label>
+								<td width=35%>
+									<label id="jform_n9-lbl" for="jform_n9" class="center"> Кол-во углов = </label>
 								</td>
-								<td width=65%>
+								<td width=55%>
 									<input name="jform[n9]" id="jform_n9" data-next="#jform_n27" value="<?php echo $this->item->n9; ?>" class="form-control-input" placeholder="Кол-во углов"  readonly  type="tel"> 
 								</td>
 								<td width=10%>
