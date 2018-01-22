@@ -14,12 +14,11 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 
 $user       = JFactory::getUser();
-$userId     = $user->get('id');
-
-throw new Exception($user->dealer_id);
+$userId     = $user->id;
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
-$gaugers_id = $model->getData($user->dealer_id);
+$gaugers_id = $model->getDatas($user->dealer_id);
+var_dump($gaugers_id);
 
 // календарь
 $month1 = date("n");

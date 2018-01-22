@@ -31,7 +31,7 @@ class Gm_ceilingModelGaugers extends JModelItem {
 		return $items;
 	}*/
 
-	function getData($dealerId) {
+	function getDatas($dealerId) {
 		try
 		{
 			$db = JFactory::getDbo();
