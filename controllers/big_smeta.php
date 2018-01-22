@@ -69,7 +69,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
                 }
                 else { $transport_sum = 0; $transport_sum_1 = 0; } 
             }
-           /if($data->transport == 1) { 
+           if($data->transport == 1) { 
             $discount = $model_project->getDiscount($data->id);
             $min = 100;
             foreach($discount as $d) {
