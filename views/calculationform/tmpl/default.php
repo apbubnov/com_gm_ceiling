@@ -203,7 +203,7 @@
 					<?php $imgurl = $color->file;?>
 				<?php } ?>
 				<label id="jform_color_switch-lbl" for="color_switch" style="display: none; text-align: left !important;">Выберите цвет:</label>
-				<button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none; margin-bottom: 1,5em;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px;' src="/<?php if(isset($imgurl)){ echo $imgurl; } ?>" alt="" /></button>
+				<button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none; margin-bottom: 1.5em;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px;' src="/<?php if(isset($imgurl)){ echo $imgurl; } ?>" alt="" /></button>
 				<input id="jform_color" name="jform[color]" value="<?php echo $this->item->color; ?>" type="hidden">
 			</div>
 			<div class="col-sm-4">
