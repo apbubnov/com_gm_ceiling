@@ -320,6 +320,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $status = 20;
                     }
                     if ($call_type == "client") {
+						throw new Exception($usertype);
                         $this->setMessage("Клиент создан и $result!");
                     }
                 } elseif ($client_id != 1 && $isDiscountChange == 0) {
@@ -436,7 +437,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $this->setMessage("Клиент $result!");
                     }
 				}
-				throw new Exception($usertype);
+				
                 if ($status == 1) {
 
                     $data_notify['client_name'] = $name;
