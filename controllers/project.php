@@ -453,9 +453,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $model_projectshistory->save($project_id, $status);
                 }
 
-                if (!$isDiscountChange)
+				throw new Exception($isDiscountChange);
+                if ($isDiscountChange == 0)
                 {
-                    throw new Exception($usertype);
                     $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
                 }
             }
