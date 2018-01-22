@@ -85,7 +85,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         if($user->dealer_type == 1 && empty($item->project_mounter)) continue;
                     ?>
 
-                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
+                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id) { ?>
                         <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
 
                             <td>
@@ -119,7 +119,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
                             <td class="center one-touch"><?= $mounter->name; ?></td>
                         </tr>
-                            <? } ?>
+                            <?php } } ?>
                 <? endforeach; ?>
                 </tbody>
             <? else: ?>
