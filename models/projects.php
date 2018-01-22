@@ -277,7 +277,7 @@ class Gm_ceilingModelProjects extends JModelList
                 $query2->select('group_id')
                     ->from('#__users as users')
                     ->innerJoin("#__user_usergroup_map as map ON users.id = map.user_id")
-                    ->where("users.id = '$user'");
+                    ->where("users.id = '$userId'");
                 $db->setQuery($query2);
                 $group = $db->loadObject();
 
