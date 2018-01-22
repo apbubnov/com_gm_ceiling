@@ -116,217 +116,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
 	}
-
-	public function recToMeasureDealer()
-    {
-        try {
-            $app = JFactory::getApplication();
-            $user = JFactory::getUser();
-            $model = $this->getModel('Project', 'Gm_ceilingModel');
-            $jinput = JFactory::getApplication()->input;
-            $project_id = $jinput->get('project_id', '0', 'INT');
-            $data = $model->getData($project_id);
-            $type = $jinput->get('type', '', 'STRING');
-            $subtype = $jinput->get('subtype', '', 'STRING');
-            $new_discount = $jinput->get('new_discount', $data->project_discount, 'RAW');
-            $call_id = $jinput->get('call_id', 0, 'INT');
-            $isDiscountChange = $jinput->get('isDiscountChange', '0', 'INT');
-            $isDataChange = $jinput->get('data_change', '0', 'INT');
-            $client_id = $jinput->get('client_id', 1, 'INT');
-            $api_phone_id = $jinput->get('advt_id', '0', 'INT');
-            $selected_advt = $jinput->get('selected_advt', '0', 'INT');
-            $call_type = $jinput->get('slider-radio', 'client', 'STRING');
-            $recoil = $jinput->get('recoil', '', 'STRING');
-            $sex = $jinput->get('slider-sex', "NULL", 'STRING');
-            $email_str = $jinput->get('emails', "", "STRING");
-            $designer_bool = $jinput->get('designer', '0', 'INT');
-            $emails = [];
-            if (!empty($email_str)) {
-                $emails = explode(";", $email_str);
-            }
-            array_pop($emails);
-
-            //extract($_POST); // Элементы массива в переменные
-            //if (empty($new_discount)) $new_discount = $data->project_discount;
-
-
-            if (isset($data_delete) && isset($idCalcDelete)) {
-                $model_calc = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-                $resultDel = $model_calc->delete($idCalcDelete);
-                if ($resultDel == 1) {
-                    $this->setMessage("Потолок удален");
-                    if(!empty($_SESSION['url'])) $this->setRedirect(JRoute::_($_SESSION['url'], false));
-                    else $this->setRedirect(JRoute::_($_SERVER['HTTP_REFERER'], false));
-                }
-
-            } else {
-                $comments_string = $jinput->get('comments_id', '', 'STRING');
-                $call_comment = $jinput->get('call_comment', "Отсутствует", 'STRING');
-                $call_date = $jinput->get('call_date', "0", 'STRING');
-                $comments_id = [];
-                $client_history_model = $this->getModel('Client_history', 'Gm_ceilingModel');
-                $status = $jinput->get('status', '0', 'INT');
-                $gauger = null;
-                $date = $jinput->get('project_new_calc_date', '', 'STRING');
-                $time = $jinput->get('new_project_calculation_daypart', '0', 'STRING');
-                $date_time = $date . " " . $time;
-                switch ($status) {
-                    case 1 :
-                        $gauger = $jinput->get('project_gauger', '', 'STRING');
-                        $result = "записан на замер";
-                        $answer = "записан на замер на " . $date_time;
-                        break;
-                    case 2 :
-                        $result = "переведен в статус отказа от замера";
-                        break;
-                    default:
-                        $result = "переведен в статус просчета";
-                        break;
-                }
-                if (!empty($comments_string))
-                    $comments_id = explode(";", $comments_string);
-                array_pop($comments_id);
-                if ($isDiscountChange) {
-                    if ($model->change_discount($project_id, $new_discount)) {
-
-                        if (!empty($_SESSION['url'])) {
-                            $this->setMessage("Процент скидки успешно изменен!");
-                            //header('Location: '.$_SESSION['url'] ); exit();
-                            $this->setRedirect(JRoute::_($_SESSION['url'], false));
-                            //$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
-                        }
-                    }
-                }
-                $name = $jinput->get('new_client_name', '', 'STRING');
-                $phones = $jinput->get('new_client_contacts', array(), 'ARRAY');
-                foreach ($phones as $key => $value) {
-                    $phones[$key] = preg_replace('/[\(\)\-\s]/', '', $value);
-                }
-
-                $street = $jinput->get('new_address', '', 'STRING');
-                $house = $jinput->get('new_house', '', 'STRING');
-                $bdq = $jinput->get('new_bdq', '', 'STRING');
-                $apartment = $jinput->get('new_apartment', '', 'STRING');
-                $porch = $jinput->get('new_porch', '', 'STRING');
-                $floor = $jinput->get('new_floor', '', 'STRING');
-                $code = $jinput->get('new_code', '', 'STRING');
-                if (!empty($house)) $address = $street . ", дом: " . $house;
-                if (!empty($bdq)) $address .= ", корпус: " . $bdq;
-                if (!empty($apartment)) $address .= ", квартира: " . $apartment;
-                if (!empty($porch)) $address .= ", подъезд: " . $porch;
-                if (!empty($floor)) $address .= ", этаж: " . $floor;
-                if (!empty($code)) $address .= ", код: " . $code;
-
-                $cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
-                $manager_comment = $jinput->get('gmmanager_note', '', 'STRING');
-
-
-                if ($client_id == 1 && $isDiscountChange == 0) {
-                    $model_clients_phones = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-                    $result = $model_clients_phones->getItemsByPhoneNumber($number);
-                    if (empty($result)) {
-                        //если нет такого клиента
-                    } else {
-                        //если клиент уже сохранен ранее
-                    }
-
-                    $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-                    $result_client = $model_client->getClientById($result->client_id);
-                    //создание клиента
-                    $client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
-                    $client_data['client_name'] = $name;
-                    $client_data['type_id'] = 1;
-                    $client_data['manager_id'] = $user->id;
-                    $client_data['dealer_id'] = $user->dealer_id;
-                    $client_data['created'] = date("Y-m-d");
-                    $client_data['sex'] = $sex;
-                    $client_id = $client_model->save($client_data);
-                    //обновление email
-                    $dop_contacts = $this->getModel('clients_dop_contacts', 'Gm_ceilingModel');
-                    $dop_contacts->update_client_id($emails, $client_id);
-                    //добавление его номеров телефонов в бд
-                    $cl_phones_model->save($client_id, $phones);
-                    //обновление комментов к клиенту
-                    if (count($comments_id) != 0) {
-                        $client_history_model->updateClientId($client_id, $comments_id);
-                    }
-                    if ($call_type == "client") {
-                        //обновление созданного проекта
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
-                        if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
-                        else $client_history_model->save($client_id, "Проект № " . $project_id . " " . $result);
-
-                    }
-                    if ($call_type == "client") {
-                        $this->setMessage("Клиент создан и $result!");
-                    }
-                } elseif ($client_id != 1 && $isDiscountChange == 0) {
-                    $new_phones = [];
-                    $change_phones = [];
-                    $client_model = $this->getModel('client', 'Gm_ceilingModel');
-                    $newFIO = $jinput->get('new_client_name', '', 'STRING');
-                    foreach ($phones as $key => $value) {
-                        if (strlen($key) < 3) {
-                            array_push($new_phones, $value);
-                        } else {
-                            if ($key != $value) {
-                                $change_phones[$key] = $value;
-                            }
-                        }
-                    }
-                    if (!empty($newFIO)) {
-                        if ($newFIO != $data->client_id) {
-                            $client_model->updateClient($client_id, $newFIO);
-                            $client_history_model->save($client_id, "Изменено ФИО пользователя");
-                        }
-                    }
-                    $client_model->updateClientSex($client_id, $sex);
-                    if ($call_type == "client") {
-                        if (count($new_phones) > 0) {
-                            $cl_phones_model->save($client_id, $new_phones);
-                        }
-
-                        if (count($change_phones) > 0) {
-                            $cl_phones_model->update($client_id, $change_phones);
-                        }
-                        $callback_model = $this->getModel('callback', 'Gm_ceilingModel');
-						$model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $user->id, $gauger);
-                        if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
-                        else $client_history_model->save($client_id, "Проект № " . $project_id . " " . $result);
-                    }
-                    if ($call_type == "client") {
-                        $this->setMessage("Клиент $result!");
-                    }
-                }
-                if ($status == 1) {
-
-                    $data_notify['client_name'] = $name;
-                    $data_notify['client_contacts'] = $phones;
-                    $data_notify['project_info'] = $address;
-                    $data_notify['project_calculation_date'] = $date;
-                    $data_notify['project_calculation_daypart'] = $time;
-                    $data_notify['project_note'] = $manager_comment;
-                    Gm_ceilingHelpersGm_ceiling::notify($data_notify, 0);
-                }
-                if ($data->project_status != $status) {
-                    $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
-                    $model_projectshistory->save($project_id, $status);
-                }
-
-
-                if (!$isDiscountChange)
-                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=clients&type=manager', false));
-            }
-
-        } catch(Exception $e)
-        {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
-        }
-    }
-
 	//запись на замер при входящем звонке
 	public function recToMeasurement()
 	{
@@ -350,7 +139,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $recoil = $jinput->get('recoil', '', 'STRING');
             $sex = $jinput->get('slider-sex', "NULL", 'STRING');
             $email_str = $jinput->get('emails', "", "STRING");
-            $designer_bool = $jinput->get('designer', '0', 'INT');
+			$without_advt = $jinput->get('without_advt', '0', 'INT');
+			$client_form_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
+			$client_model = $this->getModel('client', 'Gm_ceilingModel');
             $emails = [];
             if (!empty($email_str)) {
                 $emails = explode(";", $email_str);
@@ -370,7 +161,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 }
 
             } else {
-                if ($api_phone_id == 0 && $designer_bool == 0) {
+                if ($api_phone_id == 0 && $without_advt == 0) {
                     if ($selected_advt != 0) {
                         $api_phone_id = $selected_advt;
                     } else {
@@ -379,7 +170,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             throw new Exception("Пожалуйста, укажите рекламу!");
                         }
                     }
-                } elseif ($designer_bool == 1) {
+                } elseif ($without_advt == 1) {
                     $api_phone_id = NULL;
                 }
 
@@ -455,18 +246,15 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     } else {
                         //если клиент уже сохранен ранее
                     }
-
-                    $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-                    $result_client = $model_client->getClientById($result->client_id);
                     //создание клиента
-                    $client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
+                   
                     $client_data['client_name'] = $name;
                     $client_data['type_id'] = 1;
                     $client_data['manager_id'] = $user->id;
                     $client_data['dealer_id'] = $user->dealer_id;
                     $client_data['created'] = date("Y-m-d");
                     $client_data['sex'] = $sex;
-                    $client_id = $client_model->save($client_data);
+                    $client_id = $client_form_model->save($client_data);
                     //обновление email
                     $dop_contacts = $this->getModel('clients_dop_contacts', 'Gm_ceilingModel');
                     $dop_contacts->update_client_id($emails, $client_id);
@@ -530,7 +318,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 } elseif ($client_id != 1 && $isDiscountChange == 0) {
                     $new_phones = [];
                     $change_phones = [];
-                    $client_model = $this->getModel('client', 'Gm_ceilingModel');
                     $newFIO = $jinput->get('new_client_name', '', 'STRING');
                     foreach ($phones as $key => $value) {
                         if (strlen($key) < 3) {
@@ -563,7 +350,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         }
                         $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                         $rep_proj = $rep_model->getDataByProjectId($project_id);
-                        if (empty($rep_proj) || $designer_bool == 1) {
+                        if (empty($rep_proj) || $without_advt == 1) {
                             // условия на статус
                             $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
                         } else {
@@ -592,7 +379,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
                         $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                         $rep_proj = $rep_model->getDataByProjectId($project_id);
-                        if (empty($rep_proj) || $designer_bool == 1) {
+                        if (empty($rep_proj) || $without_advt == 1) {
                             $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 21, $api_phone_id, $user->id, $gauger);
                         } else {
                             $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 21, 10, $user->id, $gauger);
@@ -628,7 +415,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
                         $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                         $rep_proj = $rep_model->getDataByProjectId($project_id);
-                        if (empty($rep_proj) || $designer_bool == 1) {
+                        if (empty($rep_proj) || $without_advt == 1) {
                             $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 20, $api_phone_id, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
                                 $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
                         } else {

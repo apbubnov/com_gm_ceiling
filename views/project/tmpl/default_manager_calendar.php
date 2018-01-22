@@ -190,7 +190,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             <div class="item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasureDealer&type=manager&subtype=calendar"
+                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
@@ -210,6 +210,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                     <input id = "emails" name = "emails" value = "" type = "hidden"> 
+                    <input name="without_advt" value="1" type="hidden">
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             <table class="table">
