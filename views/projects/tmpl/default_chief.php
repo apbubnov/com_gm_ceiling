@@ -85,15 +85,19 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         if($user->dealer_type == 1 && empty($item->project_mounter)) continue;
                     ?>
 
-                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id) { ?>
+                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
                         <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
 
                             <td>
-                                <? if ($item->project_status == 10 || ($user->dealer_type == 1 && $item->project_status >= 5 && $item->project_status <= 11)){  ?>
+                                <? if ($item->project_status == 10 || ($user->dealer_type && $item->project_status >=5 && $item->project_status <= 11)): ?>
+<!--                                --><?// //elseif ($item->project_status == 8): ?><!-- Требует утверждения-->
+<!--                                --><?// //elseif ($item->project_status == 10): ?>
+                                    <? //if ($user->dealer_id == $item->brigadir_id): ?>
                                         <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>"
                                                 type="button">Выполнено
                                         </button>
-                                        
+<!--                                    --><?// //else: ?><!--Запущен. Монтаж ГМ--><? //endif; ?>
+<!--                                --><?// //else: ?><!--Требует утверждения--><? endif; ?>
                             </td>
                             <td class="center one-touch">
                                 <?= $item->id; ?>
@@ -119,7 +123,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
                             <td class="center one-touch"><?= $mounter->name; ?></td>
                         </tr>
-                            <?php } } ?>
+                    <? endif; ?>
                 <? endforeach; ?>
                 </tbody>
             <? else: ?>
@@ -184,21 +188,42 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
     jQuery(document).ready(function () {
 
-        jQuery(".btn-done").click(function () {
-            var button = jQuery(this);
-            jQuery.get(
-                "/index.php?option=com_gm_ceiling&task=project.done",
-                {
-                    project_id: button.data("project_id")
-                },
-                function (data) {
-                    if (data == "1") {
-                        button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
-                    }
-                }
-            );
+        
 
-        });
+        jQuery(".btn-done").click(function(){
+			var button = jQuery( this );
+			
+			noty({
+				layout	: 'center',
+				type	: 'warning',
+				modal	: true,
+				text	: 'Вы уверены, что хотите отметить договор выполненным?',
+				killer	: true,
+				buttons	: [
+					{addClass: 'btn btn-success', text: 'Выполнен', onClick: function($noty) {
+							jQuery.get(
+							  "/index.php?option=com_gm_ceiling&task=project.done",
+							  {
+								project_id: button.data("project_id"),
+                                check: 1
+							  },
+							  function(data){
+								  if(data == "Договор закрыт!") {
+									  button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
+								  }
+							  }
+							);
+							$noty.close();
+						}
+					},
+					{addClass: 'btn', text: 'Отмена', onClick: function($noty) {
+							$noty.close();
+						}
+					}
+				]
+			});
+
+		});
 
         jQuery('.delete-button').click(deleteItem);
 
