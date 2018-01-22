@@ -140,7 +140,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$recoil = $jinput->get('recoil', '', 'STRING');
             $sex = $jinput->get('slider-sex',"NULL",'STRING');
             $email_str = $jinput->get('emails',"","STRING");
-            $designer_bool =  $jinput->get('designer', '0', 'INT');
+			$designer_bool =  $jinput->get('designer', '0', 'INT');
+			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+			$client_form_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
             $emails = [];
             if(!empty($email_str)){
                 $emails = explode(";",$email_str);
@@ -261,14 +263,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				$model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
 				$result_client = $model_client->getClientById($result->client_id);
 				//создание клиента
-				$client_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
 				$client_data['client_name'] = $name;
 				$client_data['type_id'] = 1;
 				$client_data['manager_id'] = $user->id;
 				$client_data['dealer_id'] = $user->dealer_id;
 				$client_data['created'] = date("Y-m-d");
 				$client_data['sex'] = $sex;
-                $client_id = $client_model->save($client_data);
+                $client_id = $client_form_model->save($client_data);
                 //обновление email
                 $dop_contacts = $this->getModel('clients_dop_contacts','Gm_ceilingModel');
                 $dop_contacts->update_client_id($emails,$client_id);
@@ -342,7 +343,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			{
 				$new_phones = [];
 				$change_phones = [];
-				$client_model =  $this->getModel('client', 'Gm_ceilingModel');
 				$newFIO = $jinput->get('new_client_name', '', 'STRING');
 				foreach ($phones as $key => $value) {
 					if(strlen($key)<3){
