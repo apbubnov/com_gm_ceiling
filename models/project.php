@@ -586,8 +586,6 @@ class Gm_ceilingModelProject extends JModelItem
 				->set('project_status = ' . $db->quote($status));
 			if (empty($data->project_mounter)) $query->set('project_mounter = NULL');
 			else $query->set('project_mounter = ' . $db->quote($data->project_mounter));
-			if (empty($data->who_mounting)) $query->set('who_mounting = NULL');
-			else $query->set('who_mounting = ' . $db->quote($data->who_mounting));
 			if ($status == 3) {
 				$query->set('project_mounting_date = 0000-00-00 00:00:00');
 				$query->set('project_mounter = NULL');
