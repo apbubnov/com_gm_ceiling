@@ -193,10 +193,11 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             jQuery.get(
                 "/index.php?option=com_gm_ceiling&task=project.done",
                 {
-                    project_id: button.data("project_id")
+                    project_id: button.data("project_id"),
+                    check: 1
                 },
                 function (data) {
-                    if (data == "1") {
+                    if (data == "Договор закрыт!") {
                         button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
                     }
                 }
