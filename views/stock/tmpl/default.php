@@ -46,5 +46,4 @@ if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header(
     <p class="center">
         <?= parent::getButtonBack(); ?>
     </p>
-    В разработке
 </div>
