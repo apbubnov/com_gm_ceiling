@@ -446,20 +446,17 @@
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
-				<div class="col-sm-4">
-					<table style="width: 100%;">
+				<div class="col-sm-4" style="text-align: center;">
+					<table>
 						<tr>
-							<td style="width: 90%; text-align: center;">
-								<h3>Освещение
-								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-								Если на потолке будут люстры или светильники укажите их количество и характеристики. Если их не будет просто пропустите этот пункт
-								</span></a></h3>
+							<td>
+								<h3>Освещение</h3>
 							</td>
-							<!-- <td style="width: 10%;">
+							<td>
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
 								Если на потолке будут люстры или светильники укажите их количество и характеристики. Если их не будет просто пропустите этот пункт
 								</span></a>
-							</td> -->
+							</td>
 						</tr>
 					</table>
 				</div>
