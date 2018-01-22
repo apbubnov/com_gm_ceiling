@@ -203,13 +203,12 @@
 					<?php $imgurl = $color->file;?>
 				<?php } ?>
 				<label id="jform_color_switch-lbl" for="color_switch" style="display: none; text-align: left !important;">Выберите цвет:</label>
-				<button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none; margin-bottom: 1em;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px;' src="/<?php if(isset($imgurl)){ echo $imgurl; } ?>" alt="" /></button>
+				<button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none; margin-bottom: 1.5em;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px;' src="/<?php if(isset($imgurl)){ echo $imgurl; } ?>" alt="" /></button>
 				<input id="jform_color" name="jform[color]" value="<?php echo $this->item->color; ?>" type="hidden">
 			</div>
 			<div class="col-sm-4">
 			</div>
 		</div>
-		
 		<!-- Производитель -->
 		<div class="container">
 			<div class="col-sm-4"></div>
@@ -219,13 +218,10 @@
 						<table>
 							<tr>
 								<td>
-									<label id="jform_proizv-lbl" for="jform_proizv">
-										Выберите производителя
-									</label>
+									<label id="jform_proizv-lbl" for="jform_proizv">Выберите производителя</label>
 								</td>
 								<td>
-									<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">От производителя материала зависит качество потолка и его цена!
-									</span></a>
+									<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">От производителя материала зависит качество потолка и его цена!</span></a>
 								</td>
 							</tr>
 						</table>
@@ -241,15 +237,13 @@
 		</div>
 		<!-- размеры -->
 		<div class="container">
-			<div class="col-sm-4">
-			</div>
+			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
 					<h3>Размеры помещения</h3>
 				</div>
 			</div>
-			<div class="col-sm-4">
-			</div>
+			<div class="col-sm-4"></div>
 		</div>
 		<!-- начертить -->
 		<div class="container">
@@ -259,17 +253,17 @@
 					<button id="sketch_switch" class="btn btn-primary btn-big" type="button">Начертить потолок</button>
 					<div id="sketch_image_block">
 						<?php
-							if($this->item->id > 0)
+							if ($this->item->id > 0)
 							{
 								$filename = "/calculation_images/" . md5("calculation_sketch" . $this->item->id) . ".png";
 						?>
-						<img id="sketch_image" src="<?php echo $filename.'?t='.time(); ?>">
+							<img id="sketch_image" src="<?php echo $filename.'?t='.time(); ?>">
 						<?php 		
 							}
 							else
 							{
 						?>
-						<img id="sketch_image" hidden = true src="/">
+							<img id="sketch_image" hidden = true src="/">
 						<?php 	
 							}
 						?>
@@ -284,12 +278,12 @@
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4 xs-center">
-						<table class="">
+						<table style="width: 100%;">
 							<tr>
-								<td width=15%>
+								<td width=35%>
 									<label id="jform_n4-lbl" for="jform_n4" class="center" > S = </label>
 								</td>
-								<td width=75%>
+								<td width=55%>
 									<input name="jform[n4]" class="form-control-input" id="jform_n4" data-next="#jform_n5" value="<?php echo $this->item->n4;  ?>" placeholder="Площадь комнаты"  readonly  type="tel"> 
 								</td>
 								<td width=10%>
@@ -297,10 +291,10 @@
 								</td>
 							</tr>
 							<tr>
-								<td width=15%>
+								<td width=35%>
 									<label id="jform_n5-lbl" for="jform_n5" class="center" > P = </label>
 								</td>
-								<td width=75%>
+								<td width=55%>
 									<input name="jform[n5]" class="form-control-input" id="jform_n5" data-next="#jform_n9" value="<?php echo $this->item->n5; ?>" placeholder="Периметр комнаты" readonly  type="tel"> 
 								</td>
 								<td width=10%>
@@ -308,10 +302,10 @@
 								</td>
 							</tr>
 							<tr>
-								<td width=15%>
-									<label id="jform_n9-lbl" for="jform_n9" class="center"> Кол-во <br>углов = </label>
+								<td width=35%>
+									<label id="jform_n9-lbl" for="jform_n9" class="center"> Кол-во углов = </label>
 								</td>
-								<td width=75%>
+								<td width=55%>
 									<input name="jform[n9]" id="jform_n9" data-next="#jform_n27" value="<?php echo $this->item->n9; ?>" class="form-control-input" placeholder="Кол-во углов"  readonly  type="tel"> 
 								</td>
 								<td width=10%>
@@ -330,12 +324,11 @@
 			<div class="row">
 				<div class="col-sm-4" style="padding-left: 0px;">
 					<div class="form-group">
-						<h4>Выберите багет</h4>
+						<h3>Выберите багет</h3>
 					</div>
 				</div>
 				<div class="col-sm-4" style="padding-right: 0px;">
 					<div class="form-group">
-
 						<? if ($this->item->n28 == 0) {
 							?>
 							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio"
