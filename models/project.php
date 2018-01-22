@@ -863,7 +863,6 @@ class Gm_ceilingModelProject extends JModelItem
             throw new Exception('Ошибка!', 500);
         }
 	}
-
 	public function update_sb_order_id($id, $orderId)
 	{
 		try
