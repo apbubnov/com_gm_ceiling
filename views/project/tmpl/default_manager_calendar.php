@@ -121,7 +121,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 //----------------------------------------------------------------------------------
 
 // все замерщики
-$AllGauger = $model->FindAllGauger($user->dealer_id, 22);
+$AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 //----------------------------------------------------------------------------------
 
 
@@ -143,27 +143,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         $call_id = $jinput->get('call_id', 0, 'INT');
         $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
         $all_advt = $model_api_phones->getAdvt();
-        if (!empty($phoneto) && !empty($phonefrom)) {
-            $reklama = $model_api_phones->getNumberInfo($phoneto);
-            $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
-        } elseif (!empty($this->item->api_phone_id)) {
-            $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
-            $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
-            if($this->item->api_phone_id == 10)
-            {
-                if(!empty($repeat_advt->advt_id))
-                    $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
-                else
-                    $need_choose = true;
-            }
-            else {
-                $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
-
-            }
-            $write = $reklama->number . ' ' .$reklama->name . ' ' . $reklama->description;
-        } else {
-            $need_choose = true;
-        }
 
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
         $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
@@ -196,40 +175,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
         $all_recoil = $recoil_model->getData();
     ?>
-    <h5 class="center">
-        <?php if (!$need_choose) { ?>
-            <input id="advt_info" class="h5-input" readonly value= <?php echo '"' . $write . '"'; ?>>
-            <?php if($reklama->id == 17) { ?>
-                <select id="recoil_choose" name ="recoil_choose">
-                    <option value="0">-Выберите откатника-</option>
-                    <?php foreach ($all_recoil as $item) { ?>
-                        <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
-                    <?php } ?>
-            </select>
-            <button type="button" id = "show_window" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-            <?php }?>
-        <?php } elseif ($need_choose) { ?>
-            <select id="advt_choose">
-                <option value="0">Выберите рекламу</option>
-                <?php foreach ($all_advt as $item) { ?>
-                    <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
-                <?php } ?>
-            </select>
-            <button type="button" id="add_new_dvt" class="btn btn-primary"><i class="fa fa-plus-square-o"
-                                                                              aria-hidden="true"></i></button>
-
-                <select id="recoil_choose" name ="recoil_choose" style="display:none;">
-                    <option value="0">-Выберите откатника-</option>
-                    <?php foreach ($all_recoil as $item) { ?>
-                        <option value="<?php echo $item->id ?>"><?php echo $item->name ?></option>
-                    <?php } ?>
-            </select>
-            <button type="button" id = "show_window" style = "display:none;" class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i></button>
-            <div id="new_advt_div" style="display:none;"><input id="new_advt_name" placeholder="Название рекламы"><br>
-                <button type="button" class="btn btn-primary" id="save_advt">Ok</button>
-            </div>
-        <?php } ?>
-    </h5>
     <div id="modal-window-container">
 		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-call-tar">
@@ -245,7 +190,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             <div class="item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar"
+                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasureDealer&type=manager&subtype=calendar"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
@@ -253,7 +198,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
                     <input name="status" id="project_status" value="" type="hidden">
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
-                    <input name="type" value="gmmanager" type="hidden">
+                    <input name="type" value="manager" type="hidden">
                     <input name="subtype" value="calendar" type="hidden">
                     <input name="data_change" value="0" type="hidden">
                     <input name="data_delete" value="0" type="hidden">
@@ -334,12 +279,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                         <?php }
                                             } ?>
                                     </td>
-                                    <?php if (count($cl_phones) == 1): ?>
-                                        <td>
-                                            <button id="make_call" type="button" class="btn btn-primary"><i
-                                                        class="fa fa-phone" aria-hidden="true"></i></button>
-                                        </td>
-                                    <?php endif; ?>
                                 </tr>
                                 <tr>
                                     <th></th>
@@ -347,38 +286,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                         <div id="phones-block"></div>
                                     </td>
                                 </tr>
-                                <?php if (count($cl_phones) > 1): ?>
-                                    <tr>
-                                        <th>
-                                            Сделать звонок:
-                                        </th>
-                                        <td>
-                                            <select id="select_phones" class="inputactive">
-                                                <option value='0' disabled selected>Выберите номер для звонка:</option>
-                                                <?php foreach ($cl_phones as $item): ?>
-                                                    <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
-                                <?php if ($call_id != 0): ?>
-                                    <tr>
-                                        <td colspan=3>
-                                            <button id="broke" type="button" class="btn btn-primary">Звонок сорвался,
-                                                перенести время
-                                            </button>
-                                            <div id="call_up" class="call" style="display:none;">
-                                                <label for="call">Добавить звонок</label>
-                                                <br>
-                                                <input name="call_date" id="call_date_up" type="datetime-local" placeholder="Дата звонка">
-                                                <input name="call_comment" id="call_comment_up" placeholder="Введите примечание">
-                                                <button class="btn btn-primary" id="add_call_and_submit_up" type="button"><i
-                                                            class="fa fa-floppy-o" aria-hidden="true"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
                                 <?php if (isset($_SESSION['phones']) && count($_SESSION['phones'] > 1)) {
                                     for ($i = 1; $i < count($_SESSION['phones']); $i++) { ?>
                                         <tr class='dop-phone'>
@@ -511,32 +418,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                         </table>
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-6">
-                    <label for="slider-table"><b>Тип:</b></label>
-                        <table class="slider-table">
-                            <tr>
-                                <td></td>
-                                <td>Клиент</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Диллер</td>
-                                <td>
-                                    <div class='switcher'>
-                                        <label class='switcher-label switcher-state1' for='state1'>Дилер</label>
-                                        <input id='state1' class='switcher-radio-state1' type='radio'
-                                               name='slider-radio' value='dealer'<?php if($this->item->project_status == 20) echo "checked"?>>
-                                        <label class='switcher-label switcher-state2' for='state2'>Клиент</label>
-                                        <input id='state2' class='switcher-radio-state2' type='radio'
-                                               name='slider-radio' value='client' <?php if($this->item->project_status != 20 && $this->item->project_status !=21 ) echo "checked"?>>
-                                        <label class='switcher-label switcher-state3' for='state3'>Реклама</label>
-                                        <input id='state3' class='switcher-radio-state3' type='radio'
-                                               name='slider-radio' value='promo' <?php if($this->item->project_status == 21) echo "checked"?>>
-                                        <div class='switcher-slider'></div>
-                                    </div>
-                                </td>
-                                <td>Реклама</td>
-                            </tr>
-                        </table>
                         <div class="comment">
                             <label> История клиента: </label>
                             <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
@@ -567,13 +448,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                             <label for="radio7">128 ГБ</label>
 
                         </div> -->
-                        <label ><b>Предоставление личного кабиента</b></label>
-                            <br>
-                            <div class="radio-group">
-                            <input id='no' class='' type='radio' name='client_lk' value='0' <?php if(!$lk) echo checked ?>>
-                            <label for='no'>Убрать</label>
-                            <input id='yes' class='' type='radio' name='client_lk' value='1' <?php if($lk) echo checked ?>>
-                            <label class='' for='yes'>Предоставить</label>
                     </div>
             </div>
             <table class="table calculation_sum">
@@ -1279,18 +1153,12 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                             Отказ от замера
                         </a>
                     </td>
-                    <td>
-                        <a class="btn  btn-primary" id="refuse_partnership">
-                            Отказ от сотрудничества с ГМ
-                        </a>
-                    </td>
                 </tr>
                 <tr>
                     <td colspan=3>
                         <div id="call" class="call" style="display:none;">
-                            <label for="call">Добавить звонок</label>
+                            <label for="call">Примечание к договору</label>
                             <br>
-                            <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
                             <input name="call_comment" id="call_comment" placeholder="Введите примечание">
                             <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
                                         class="fa fa-floppy-o" aria-hidden="true"></i></button>
@@ -3045,6 +2913,22 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 		var s = e.get('item').value.replace('Россия, ','');
 		input.val(s);
 		});
+		/*,
+           map,
+            placemark;
+        /*function geocode() {
+            // Забираем запрос из поля ввода.
+            var request = $('#jform_project_info').val();
+            // Геокодируем введённые данные.
+            ymaps.geocode(request).then(function (res) {
+                var obj = res.geoObjects.get(0),
+                    error, hint;
+
+            }, function (e) {
+                console.log(e)
+            })
+
+        }*/
     }
 
 </script>
