@@ -278,7 +278,7 @@
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4 xs-center">
-						<table class="">
+						<table style="width: 100%;">
 							<tr>
 								<td width=25%>
 									<label id="jform_n4-lbl" for="jform_n4" class="center" > S = </label>
