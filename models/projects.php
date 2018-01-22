@@ -280,6 +280,7 @@ class Gm_ceilingModelProjects extends JModelList
                     ->where("users.id = '$userId'");
                 $db->setQuery($query2);
                 $group = $db->loadObject();
+                echo $group->group_id;
 
                 if ($group->group_id == 12 || $group->group_id == 14 || $group->group_id == 17) {
                     if ($user->dealer_id == 1) {
