@@ -209,6 +209,7 @@
 			<div class="col-sm-4">
 			</div>
 		</div>
+		
 		<!-- Производитель -->
 		<div class="container">
 			<div class="col-sm-4"></div>
