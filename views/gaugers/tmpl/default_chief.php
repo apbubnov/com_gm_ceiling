@@ -14,9 +14,9 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 
 $user       = JFactory::getUser();
-$userId     = $user->get('id');
+$userId     = $user->id;
 
-throw new Exception($user->dealer_id);
+//throw new Exception($user->dealer_id);
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
 $gaugers_id = $model->getData($user->dealer_id);
