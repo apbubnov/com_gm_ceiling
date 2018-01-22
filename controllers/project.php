@@ -277,10 +277,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					}
 					
                     if ($call_type == "client") {
-						throw new Exception($call_type);
+						
                         //обновление созданного проекта
                         $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
-                        if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
+						throw new Exception($call_type);
+						if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
                         else $client_history_model->save($client_id, "Проект № " . $project_id . " " . $result);
                         //добавление звонка
                         if ($call_date != "") {
