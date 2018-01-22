@@ -19,11 +19,11 @@ jimport('joomla.application.component.view');
  */
 class Gm_ceilingViewGaugers extends JViewLegacy
 {
-	protected $items;
-
-	protected $pagination;
-
 	protected $state;
+
+	protected $item;
+
+	protected $form;
 
 	protected $params;
 
@@ -38,14 +38,20 @@ class Gm_ceilingViewGaugers extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$app = JFactory::getApplication();
+		$app  = JFactory::getApplication();
+		$user = JFactory::getUser();
 
-		$this->state      = $this->get('State');
-		$this->items = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
-		$this->params     = $app->getParams('com_gm_ceiling');
-		$this->filterForm = $this->get('FilterForm');
-		$this->activeFilters = $this->get('ActiveFilters');
+		$this->state  = $this->get('State');
+		$this->item   = $this->get('Data');
+		
+		$this->params = $app->getParams('com_gm_ceiling');
+		
+		$tpl = $app->input->getString('type', NULL);
+
+		if (!empty($this->item))
+		{
+			$this->form = $this->get('Form');
+		}
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -53,7 +59,35 @@ class Gm_ceilingViewGaugers extends JViewLegacy
 			throw new Exception(implode("\n", $errors));
 		}
 
+		
+
+		if ($this->_layout == 'edit')
+		{
+			$authorised = $user->authorise('core.create', 'com_gm_ceiling');
+
+			if ($authorised !== true)
+			{
+				throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
+			}
+		}
+		
+		$this->type = $app->input->getString('type', NULL);
+		$this->subtype = $app->input->getString('subtype', NULL);
+		if($this->subtype != NULL) {
+		    if ($this->subtype == "run") $tpl = $this->type;
+			else $tpl = $this->type . "_" . $this->subtype;
+		} else {
+			$tpl = $this->type;
+		}
+		
+		$user = JFactory::getUser();
+		if($user->guest) {
+			$mainframe = &JFactory::getApplication();
+			$mainframe->redirect(JURI::root()."index.php?option=com_users&view=login","Требуется авторизация");
+		}
+
 		$this->_prepareDocument();
+
 		parent::display($tpl);
 	}
 
@@ -71,7 +105,7 @@ class Gm_ceilingViewGaugers extends JViewLegacy
 		$title = null;
 
 		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
+		// We need to get it from the menu item itself
 		$menu = $menus->getActive();
 
 		if ($menu)
@@ -114,17 +148,5 @@ class Gm_ceilingViewGaugers extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
-	}
-
-	/**
-	 * Check if state is set
-	 *
-	 * @param   mixed  $state  State
-	 *
-	 * @return bool
-	 */
-	public function getState($state)
-	{
-		return isset($this->state->{$state}) ? $this->state->{$state} : false;
 	}
 }
