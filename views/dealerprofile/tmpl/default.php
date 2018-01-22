@@ -33,7 +33,7 @@ $mount = $model_mount->getDataAll();
 				<label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >Маржинальность на полотна</label>
 			</div>
 			<div class="controls">
-				<input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo ($margin->dealer_canvases_margin) ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
+				<input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo ($margin->dealer_canvases_margin)?$margin->dealer_canvases_margin:0 ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
 			</div>
 		</div>
 		<div class="control-group">
@@ -41,7 +41,7 @@ $mount = $model_mount->getDataAll();
 				<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">Маржинальность на комплектующие</label>
 			</div>
 			<div class="controls">
-				<input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo ($margin->dealer_components_margin) ?> class="required"style="width:100%;" size="3" required aria-required="true" />	
+				<input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo ($margin->dealer_components_margin)?$margin->dealer_components_margin:0 ?> class="required"style="width:100%;" size="3" required aria-required="true" />	
 			</div>
 		</div>
 		<div class="control-group">
@@ -49,7 +49,7 @@ $mount = $model_mount->getDataAll();
 				<label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">Маржинальность на монтаж</label>
 			</div>
 			<div class="controls">
-				<input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo ($margin->dealer_mounting_margin) ?> class="required" style="width:100%;"size="3" required aria-required="true" />				
+				<input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo ($margin->dealer_mounting_margin)?$margin->dealer_mounting_margin:0 ?> class="required" style="width:100%;"size="3" required aria-required="true" />				
 			</div>
 		</div>
 		<div class="control-group">
