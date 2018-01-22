@@ -188,7 +188,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
     jQuery(document).ready(function () {
 
-
+        
 
         jQuery(".btn-done").click(function(){
 			var button = jQuery( this );
@@ -208,7 +208,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                                 check: 1
 							  },
 							  function(data){
-								  if(data == ""Договор закрыт!") {
+								  if(data == "Договор закрыт!") {
 									  button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
 								  }
 							  }
