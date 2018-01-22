@@ -254,7 +254,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         //если клиент уже сохранен ранее
                     }
                     //создание клиента
-                   	throw new Exception($usertype);
                     $client_data['client_name'] = $name;
                     $client_data['type_id'] = 1;
                     $client_data['manager_id'] = $user->id;
@@ -287,6 +286,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $callback_model->save($call_date, $call_comment, $client_id, $user->id);
                             //добавление в историю что добавлен звонок
 							$client_history_model->save($client_id, "Добавлен новый звонок. Примечание: $call_comment");
+							throw new Exception($usertype);
                         }
                     } elseif ($call_type == "promo") {
                         $client_history_model->save($client_id, "Клиент помечен как реклама.");
