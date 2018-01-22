@@ -335,13 +335,16 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 $floor = $floor[1];
                                 preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
                                 $code = $code[1];
+                                
                                 ?>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                     <td><input name="new_address" id="jform_address" class="inputactive"
                                                value="<?php if (isset($_SESSION['address'])) {
-                                                   echo $_SESSION['address'];
-                                               } else echo $street ?>" placeholder="Адрес"
+                                                   if($_SESSION['address'] != $this->item->project_info) {
+                                                   echo $_SESSION['address'];} 
+                                                   else echo $street;
+                                               } else echo $street; ?>" placeholder="Адрес"
                                                type="text" required="required"></td>
                                 </tr>
                                 <tr class="controls">
