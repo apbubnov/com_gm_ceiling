@@ -85,19 +85,15 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         if($user->dealer_type == 1 && empty($item->project_mounter)) continue;
                     ?>
 
-                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
+                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id) { ?>
                         <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
 
                             <td>
-                                <? if ($item->project_status == 10): ?>
-<!--                                --><?// //elseif ($item->project_status == 8): ?><!-- Требует утверждения-->
-<!--                                --><?// //elseif ($item->project_status == 10): ?>
-                                    <? //if ($user->dealer_id == $item->brigadir_id): ?>
+                                <? if ($item->project_status == 10 || ($user->dealer_type == 1 && $item->project_status >= 5 && $item->project_status <= 11)){  ?>
                                         <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>"
                                                 type="button">Выполнено
                                         </button>
-<!--                                    --><?// //else: ?><!--Запущен. Монтаж ГМ--><? //endif; ?>
-<!--                                --><?// //else: ?><!--Требует утверждения--><? endif; ?>
+                                        
                             </td>
                             <td class="center one-touch">
                                 <?= $item->id; ?>
@@ -123,7 +119,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
                             <td class="center one-touch"><?= $mounter->name; ?></td>
                         </tr>
-                    <? endif; ?>
+                            <?php } } ?>
                 <? endforeach; ?>
                 </tbody>
             <? else: ?>
