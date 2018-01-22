@@ -159,10 +159,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $isDataDelete = $jinput->get('data_delete', '0', 'INT');
             if ($isDataDelete) {
                 $idCalc = $jinput->get('idCalcDelete', '0', 'INT');
-                //print_r($idCalc); exit;
                 $model_calc = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 $resultDel = $model_calc->delete($idCalc);
-                //print_r($_SESSION['url']."test"); exit;
                 if ($resultDel == 1) {
                     $this->setMessage("Потолок удален");
                     if(!empty($_SESSION['url'])) $this->setRedirect(JRoute::_($_SESSION['url'], false));
@@ -213,7 +211,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $comments_id = explode(";", $comments_string);
                 array_pop($comments_id);
                 if ($isDiscountChange) {
-					throw new Exception("12312312312312312321");
                     if ($model->change_discount($project_id, $new_discount)) {
 
                         if (!empty($_SESSION['url'])) {
@@ -257,7 +254,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         //если клиент уже сохранен ранее
                     }
                     //создание клиента
-                   
                     $client_data['client_name'] = $name;
                     $client_data['type_id'] = 1;
                     $client_data['manager_id'] = $user->id;
@@ -278,18 +274,21 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     //обновление комментов к клиенту
                     if (count($comments_id) != 0) {
                         $client_history_model->updateClientId($client_id, $comments_id);
-                    }
+					}
+					
                     if ($call_type == "client") {
+						
                         //обновление созданного проекта
                         $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
-                        if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
+						throw new Exception($call_type);
+						if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
                         else $client_history_model->save($client_id, "Проект № " . $project_id . " " . $result);
                         //добавление звонка
                         if ($call_date != "") {
                             $callback_model = $this->getModel('callback', 'Gm_ceilingModel');
                             $callback_model->save($call_date, $call_comment, $client_id, $user->id);
                             //добавление в историю что добавлен звонок
-                            $client_history_model->save($client_id, "Добавлен новый звонок. Примечание: $call_comment");
+							$client_history_model->save($client_id, "Добавлен новый звонок. Примечание: $call_comment");
                         }
                     } elseif ($call_type == "promo") {
                         $client_history_model->save($client_id, "Клиент помечен как реклама.");
@@ -323,6 +322,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $status = 20;
                     }
                     if ($call_type == "client") {
+						
                         $this->setMessage("Клиент создан и $result!");
                     }
                 } elseif ($client_id != 1 && $isDiscountChange == 0) {
@@ -434,11 +434,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $rep_upd = $rep_model->update($project_id, $api_phone_id);
                         }
                         $status = 20;
-                    }
+					}
                     if ($call_type == "client") {
                         $this->setMessage("Клиент $result!");
                     }
-                }
+				}
+				
                 if ($status == 1) {
 
                     $data_notify['client_name'] = $name;
@@ -452,9 +453,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if ($data->project_status != $status) {
                     $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
                     $model_projectshistory->save($project_id, $status);
-                }
-
-				throw new Exception($isDiscountChange);
+				}
+				
                 if ($isDiscountChange == 0)
                 {
                     $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
