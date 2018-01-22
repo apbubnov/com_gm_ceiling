@@ -38,7 +38,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">Укажите, какой процент прибыли от заказа Вы желаете получать ( от комплектующих)</label>
+				<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin"> Укажите, какой процент прибыли от заказа Вы желаете получать (от комплектующих)</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo ($margin->dealer_components_margin)?$margin->dealer_components_margin:0 ?> class="required"style="width:100%;" size="3" required aria-required="true" />	
