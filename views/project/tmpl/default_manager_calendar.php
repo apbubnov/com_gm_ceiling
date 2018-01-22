@@ -286,21 +286,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                         <div id="phones-block"></div>
                                     </td>
                                 </tr>
-                                <?php if (count($cl_phones) > 1): ?>
-                                    <tr>
-                                        <th>
-                                            Сделать звонок:
-                                        </th>
-                                        <td>
-                                            <select id="select_phones" class="inputactive">
-                                                <option value='0' disabled selected>Выберите номер для звонка:</option>
-                                                <?php foreach ($cl_phones as $item): ?>
-                                                    <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
                                 <?php if (isset($_SESSION['phones']) && count($_SESSION['phones'] > 1)) {
                                     for ($i = 1; $i < count($_SESSION['phones']); $i++) { ?>
                                         <tr class='dop-phone'>
