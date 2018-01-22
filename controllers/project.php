@@ -213,6 +213,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $comments_id = explode(";", $comments_string);
                 array_pop($comments_id);
                 if ($isDiscountChange) {
+					throw new Exception("12312312312312312321");
                     if ($model->change_discount($project_id, $new_discount)) {
 
                         if (!empty($_SESSION['url'])) {
