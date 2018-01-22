@@ -569,28 +569,33 @@ class Gm_ceilingModelProject extends JModelItem
 	{
 		try
 		{
+
+			$db = $this->getDbo();
+			$query = $db->getQuery(true);
+			$query->update('`#__gm_ceiling_projects`')
+				->set('project_verdict = ' . $db->quote($data->project_verdict))
+				->set('project_note = ' . $db->quote($data->project_note))
+				->set('gm_calculator_note = ' . $db->quote($data->gm_calculator_note))
+				->set('dealer_calculator_note = ' . $db->quote($data->dealer_calculator_note))
+				->set('gm_manager_note = ' . $db->quote($data->gm_manager_note))
+				->set('dealer_manager_note = ' . $db->quote($data->dealer_manager_note))
+				->set('gm_chief_note = ' . $db->quote($data->gm_chief_note))
+				->set('dealer_chief_note = ' . $db->quote($data->dealer_chief_note))
+				->set('project_sum = ' . $db->quote($data->project_sum))
+				->set('project_mounting_date = ' . $db->quote($data->project_mounting_date))
+				->set('project_status = ' . $db->quote($status));
+			if (empty($data->project_mounter)) $query->set('project_mounter = NULL');
+			else $query->set('project_mounter = ' . $db->quote($data->project_mounter));
+			if (empty($data->who_mounting)) $query->set('who_mounting = NULL');
+			else $query->set('who_mounting = ' . $db->quote($data->who_mounting));
 			if ($status == 3) {
-				$table->project_mounting_date = "0000-00-00 00:00:00";
-				$table->project_mounter = NULL;
+				$query->set('project_mounting_date = 0000-00-00 00:00:00');
+				$query->set('project_mounter = NULL');
 			}
-			$table = $this->getTable();
-			$table->load($data->id);
-			$table->project_verdict = $data->project_verdict;
-			$table->project_note = $data->project_note;
-			$table->gm_calculator_note = $data->gm_calculator_note;
-			$table->dealer_calculator_note = $data->dealer_calculator_note;
-			$table->gm_manager_note = $data->gm_manager_note;
-			$table->gm_chief_note = $data->gm_chief_note;
-			$table->dealer_manager_note = $data->dealer_manager_note;
-			$table->dealer_chief_note = $data->dealer_chief_note;
-			$table->project_mounting_date = $data->project_mounting_date;
-
-			$table->project_mounter = $data->project_mounter?$data->project_mounter:NULL;
-
-			$table->project_status = $status;
-			$table->who_mounting = $data->who_mounting?$data->who_mounting:NULL;
-			$table->project_sum = $data->project_sum;
-            $return = $table->store();
+			$query->where('id = ' . $data->id);
+			$db->setQuery($query);
+			$return = $db->execute();
+				
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
             $model_projectshistory->save($data->id,$status);
 			//JFactory::getApplication()->enqueueMessage($return, 'error');
