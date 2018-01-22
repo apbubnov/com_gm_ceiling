@@ -121,8 +121,7 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 //----------------------------------------------------------------------------------
 
 // все замерщики
-$AllGauger = $model->FindAllGauger($user->dealer_id, 22);
-if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
+$AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 //----------------------------------------------------------------------------------
 
 
@@ -144,27 +143,6 @@ if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id,
         $call_id = $jinput->get('call_id', 0, 'INT');
         $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
         $all_advt = $model_api_phones->getAdvt();
-        if (!empty($phoneto) && !empty($phonefrom)) {
-            $reklama = $model_api_phones->getNumberInfo($phoneto);
-            $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
-        } elseif (!empty($this->item->api_phone_id)) {
-            $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
-            $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
-            if($this->item->api_phone_id == 10)
-            {
-                if(!empty($repeat_advt->advt_id))
-                    $reklama = $model_api_phones->getDataById($repeat_advt->advt_id);
-                else
-                    $need_choose = true;
-            }
-            else {
-                $reklama = $model_api_phones->getDataById($this->item->api_phone_id);
-
-            }
-            $write = $reklama->number . ' ' .$reklama->name . ' ' . $reklama->description;
-        } else {
-            $need_choose = true;
-        }
 
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
         $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
@@ -212,7 +190,7 @@ if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id,
             <div class="item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar"
+                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasureDealer&type=manager&subtype=calendar"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
@@ -220,7 +198,7 @@ if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id,
                     <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
                     <input name="status" id="project_status" value="" type="hidden">
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
-                    <input name="type" value="gmmanager" type="hidden">
+                    <input name="type" value="manager" type="hidden">
                     <input name="subtype" value="calendar" type="hidden">
                     <input name="data_change" value="0" type="hidden">
                     <input name="data_delete" value="0" type="hidden">
@@ -302,6 +280,27 @@ if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id,
                                             } ?>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th></th>
+                                    <td colspan=2>
+                                        <div id="phones-block"></div>
+                                    </td>
+                                </tr>
+                                <?php if (count($cl_phones) > 1): ?>
+                                    <tr>
+                                        <th>
+                                            Сделать звонок:
+                                        </th>
+                                        <td>
+                                            <select id="select_phones" class="inputactive">
+                                                <option value='0' disabled selected>Выберите номер для звонка:</option>
+                                                <?php foreach ($cl_phones as $item): ?>
+                                                    <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
                                 <?php if (isset($_SESSION['phones']) && count($_SESSION['phones'] > 1)) {
                                     for ($i = 1; $i < count($_SESSION['phones']); $i++) { ?>
                                         <tr class='dop-phone'>
@@ -434,7 +433,6 @@ if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id,
                         </table>
                     </div>
                     <div class="col-sm-6 col-md-6 col-lg-6">
-                    
                         <div class="comment">
                             <label> История клиента: </label>
                             <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
@@ -449,6 +447,22 @@ if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id,
                                 </tr>
                             </table>
                         </div>
+                    </div>
+                       <!-- <div class="radio-toolbar-two">
+
+                            <input type="radio" id="radio4" name="radios-two" value="all" checked>
+                            <label for="radio4">16 ГБ</label>
+
+                            <input type="radio" id="radio5" name="radios-two"value="false">
+                            <label for="radio5">32 ГБ</label>
+
+                            <input type="radio" id="radio6" name="radios-two" value="true">
+                            <label for="radio6">64 ГБ</label>
+
+                            <input type="radio" id="radio7" name="radios-two" value="true">
+                            <label for="radio7">128 ГБ</label>
+
+                        </div> -->
                     </div>
             </div>
             <table class="table calculation_sum">
@@ -499,7 +513,6 @@ if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id,
             </button>
         </li>
     </ul>
-
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane active" id="summary" role="tabpanel">
@@ -1155,18 +1168,12 @@ if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id,
                             Отказ от замера
                         </a>
                     </td>
-                    <td>
-                        <a class="btn  btn-primary" id="refuse_partnership">
-                            Отказ от сотрудничества с ГМ
-                        </a>
-                    </td>
                 </tr>
                 <tr>
                     <td colspan=3>
                         <div id="call" class="call" style="display:none;">
-                            <label for="call">Добавить звонок</label>
+                            <label for="call">Примечание к договору</label>
                             <br>
-                            <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
                             <input name="call_comment" id="call_comment" placeholder="Введите примечание">
                             <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
                                         class="fa fa-floppy-o" aria-hidden="true"></i></button>
@@ -2921,6 +2928,22 @@ if($user->dealer_type == 1) $AllGauger = $model->FindAllGauger($user->dealer_id,
 		var s = e.get('item').value.replace('Россия, ','');
 		input.val(s);
 		});
+		/*,
+           map,
+            placemark;
+        /*function geocode() {
+            // Забираем запрос из поля ввода.
+            var request = $('#jform_project_info').val();
+            // Геокодируем введённые данные.
+            ymaps.geocode(request).then(function (res) {
+                var obj = res.geoObjects.get(0),
+                    error, hint;
+
+            }, function (e) {
+                console.log(e)
+            })
+
+        }*/
     }
 
 </script>

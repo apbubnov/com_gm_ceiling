@@ -45,11 +45,13 @@
     <p>
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+     <? if ($user->dealer_type != 1):?>
     <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
+    <?endif;?>
 </div>
 
 
@@ -130,7 +132,7 @@
         <?php foreach($projects as $item):?>
 
             <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) { 
-                echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id.'&call_id='.(int) $call_id); }
+                echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
                 else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
                 <td><?php echo $item->id;?></td>
                 <td>
@@ -254,7 +256,7 @@
                 var pf = "<?php echo $phonefrom; ?>";
                 var call_id = <?php echo $call_id; ?>;
                 var subtype = "<?php echo $subtype; ?>";
-                if (pt === "" || pf === "")
+               if (pt === "" || pf === "")
                 {
                     if (call_id === 0)
                     {
@@ -269,6 +271,8 @@
                 {
                     url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=' + subtype + '&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
                 }
+                <?php if($user->dealer_type == 1) ?>
+                url = '/index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar'+'&id=' + data;
 
                 location.href =url;
             },
