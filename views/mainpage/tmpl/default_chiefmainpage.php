@@ -22,6 +22,8 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
 $answer1 = $model->getDataByStatus("GaugingsGraph");
 // монтажи
 $answer2 = $model->getDataByStatus("Mountings");
+// незапущенные монтажи
+$answer3 = $model->getDataByStatus("UnComplitedMountings");
 //--------------------------------------
 
 ?>
@@ -65,9 +67,14 @@ $answer2 = $model->getDataByStatus("Mountings");
 				<?php } ?>
 			</div>
 		</div>
-		<p class="center">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Не назначенные <br>на монтаж</a>
-		</p>
+		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+			<div class="container-for-circl">
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Не назначенные <br>на монтаж</a>
+				<?php if ($answer3[0]->count != 0) { ?>
+					<div class="circl-digits"><?php echo $answer3[0]->count; ?></div>
+				<?php } ?>
+			</div>
+		</div>
 		<p class="center">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
 		</p>
