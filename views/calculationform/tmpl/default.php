@@ -324,12 +324,11 @@
 			<div class="row">
 				<div class="col-sm-4" style="padding-left: 0px;">
 					<div class="form-group">
-						<h4>Выберите багет</h4>
+						<h3>Выберите багет</h3>
 					</div>
 				</div>
 				<div class="col-sm-4" style="padding-right: 0px;">
 					<div class="form-group">
-
 						<? if ($this->item->n28 == 0) {
 							?>
 							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio"
