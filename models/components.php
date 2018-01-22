@@ -455,7 +455,10 @@ class Gm_ceilingModelComponents extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            $query->select('a.*')
+            $user = JFactory::getUser();
+            if (empty($id)) $id = $user->id;
+
+                $query->select('a.*')
                 ->from('`#__gm_ceiling_dealer_info` AS a')
                 ->where('a.dealer_id = ' . $id);
 
