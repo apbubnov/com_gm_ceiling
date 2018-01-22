@@ -74,7 +74,7 @@ $answer2 = $model->getDataByStatus("Mountings", $userId, null);
 			</div>
 		</div>
 		<p class="center">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=teams&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Бригады</a>
 		</p>
 	</div>
 <? } ?>
