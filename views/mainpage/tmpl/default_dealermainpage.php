@@ -33,7 +33,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
 $sumcalculator = $model->getDataByStatus("GaugingsGraph", "all");
 // менеджер
 if ($user->dealer_id == 1) {
-    $managers = $model->getDataByStatus("FindManagers", $userId, null);
+    $managers = $model->getDataByStatus("FindManagers");
     $managersid = "";
     foreach ($managers as $value) {
         if ($managersid == "") {
@@ -43,12 +43,12 @@ if ($user->dealer_id == 1) {
         }
     }
     // менеджеры проекты запущенные и в производстве
-    $answer1 = $model->getDataByStatus("RunInProduction", $userId, $managersid);
+    $answer1 = $model->getDataByStatus("RunInProduction");
     // заявки с сайта
-    $answer2 = $model->getDataByStatus("ZayavkiSSaita", $userId, null);
+    $answer2 = $model->getDataByStatus("ZayavkiSSaita");
     // звонки
     $date = date("Y")."-".date("n")."-".date("d");
-    $answer3 = $model->getDataByStatus("Zvonki", $userId, $date);
+    $answer3 = $model->getDataByStatus("Zvonki", $date);
     // кол-во
     $sumManager = $answer1[0]->count + $answer2[0]->count + $answer3[0]->count;
 }
@@ -58,7 +58,7 @@ $countMounting = $model->getDataByStatus("Mountings");
 
 ?>
 
-<?if(!$dealerInfo->update_check):?>
+<?php if(!$dealerInfo->update_check):?>
 <style>
     #toProfile {
         position: relative;
@@ -142,9 +142,9 @@ $countMounting = $model->getDataByStatus("Mountings");
         <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-success" href="<?php
-                if ($userId == 1 || $userId == 2)
-                    echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false);
-                else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false);
+                if ($userId == 1 || $userId == 2) {
+                    echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); }
+                else { echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); }
                 ?>">
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-calculator" aria-hidden="true"></i> ГМ Замерщик</a>
@@ -166,10 +166,10 @@ $countMounting = $model->getDataByStatus("Mountings");
                     <?php if ($userId == 1 || $userId == 2): ?>
                     <i class="fa fa-user" aria-hidden="true"></i> ГМ Начальник МС</a>
                 <?php else: ?>
-                    <i class="fa fa-user" aria-hidden="true"></i>Начальник МС</a>
+                    <i class="fa fa-user" aria-hidden="true"></i> Начальник МС</a>
                 <?php endif; ?>
-                <?php if ($mounting[0]->count != 0) { ?>
-                    <div class="circl-digits"><?php echo $mounting[0]->count; ?></div>
+                <?php if ($countMounting[0]->count != 0) { ?>
+                    <div class="circl-digits"><?php echo $countMounting[0]->count; ?></div>
                 <?php } ?>
             </div>
         </div>
