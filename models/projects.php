@@ -322,7 +322,7 @@ class Gm_ceilingModelProjects extends JModelList
             if ($status == "InProduction") {
                 $query->select('count(id) as count')
                     ->from('#__gm_ceiling_projects')
-                    ->where("project_status in ('4', '5')");// and read_by_manager = '$manager_id'
+                    ->where("project_status in ('4', '5')");
             } else 
             //менеджер (заявки с сайта) 
             if ($status == "ZayavkiSSaita") {
@@ -339,7 +339,7 @@ class Gm_ceilingModelProjects extends JModelList
             if ($status == "Zapushennie") {
                 $query->select('count(id) as count')
                     ->from('#__gm_ceiling_projects')
-                    ->where("project_status in ('10', '11', '16', '17')");// and read_by_manager = '$manager_id'
+                    ->where("project_status in ('10', '11', '16', '17')");
             } else 
             // дилер (менеджер)
             if ($status == "FindManagers") {
