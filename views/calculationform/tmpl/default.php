@@ -447,7 +447,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table style="margin-left: calc(100% - 86px);">
+					<table style="margin-left: calc(50% - 86px);">
 						<tr>
 							<td>
 								<h3>Освещение</h3>
@@ -471,7 +471,7 @@
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n12-lbl" for="jform_n12" class=""><h4>Введите кол-во люстр:</h4></label>
+								<label id="jform_n12-lbl" for="jform_n12" class="">Введите кол-во люстр:</label>
 							</td>
 							<td>
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
