@@ -127,6 +127,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$user = JFactory::getUser();
 			$user_group = $user->groups;
 			if (in_array("16", $user_group)) {
+				throw new Exception(implode('|',$user_group));
 				$usertype = "gmmanagermainpage"; 
 			} else {
 				$usertype = "managermainpage";
@@ -452,10 +453,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
                     $model_projectshistory->save($project_id, $status);
                 }
-
-                if (!$isDiscountChange)
+                if ($isDiscountChange == 0)
                 {
-                    throw new Exception($usertype);
                     $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
                 }
             }
