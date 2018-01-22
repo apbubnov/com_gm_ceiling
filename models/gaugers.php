@@ -49,6 +49,9 @@ class Gm_ceilingModelGaugers extends JModelItem {
 				->where("dealer_id = $dealerId and usergroup.group_id = '$type'");
 			$db->setQuery($query);
 
+			throw new Exception($query);
+			
+
 			$items = $db->loadObjectList();
 			return $items;
 		}
