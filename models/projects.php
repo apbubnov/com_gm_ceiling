@@ -262,7 +262,7 @@ class Gm_ceilingModelProjects extends JModelList
     }
 
     // для кружочков на кнопках
-    public function getDataByStatus($status, $id, $data) {
+    public function getDataByStatus($status, $data=null) {
         try
         {
             $user       = JFactory::getUser();
@@ -286,21 +286,17 @@ class Gm_ceilingModelProjects extends JModelList
                 } else if ($data == "one") {
                     $query->select('count(projects.id) as count')
                         ->from('#__gm_ceiling_projects as projects')
-                        ->where("projects.project_status = '1' and projects.project_calculator  = '$id'");
+                        ->where("projects.project_status = '1' and projects.project_calculator  = '$userId'");
                 }
             } else
             // НМС (монтажи)
             if ($status == "Mountings") {
-                if ($user->dealer_id == 1) {
-                    $dealer = 1;
-                } else {
-                    $dealer = $user->dealer_id;
-                }
                 $query->select('count(projects.id) as count')
                     ->from('#__gm_ceiling_projects as projects')
                     ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                    ->where("projects.project_status in ('5', '6', '7', '8', '10', '11', '16', '17') and clients.dealer_id = '$dealer'");
+                    ->where("projects.project_status in ('5', '6', '7', '8', '10', '11', '16', '17') and clients.dealer_id = '$user->dealer_id'");
             } else
+            // НМС (завершенные заказы)
             if ($status == "ComplitedMountings") {
                 if ($user->dealer_id == 1) {
                     $dealer = 1;
@@ -327,7 +323,7 @@ class Gm_ceilingModelProjects extends JModelList
             if ($status == "Zvonki") {
                 $query->select('count(id) as count')
                     ->from('#__gm_ceiling_callback')
-                    ->where("date_time <= '$data 23:59:59' and manager_id = '$id'");
+                    ->where("date_time <= '$data 23:59:59' and manager_id = '$userId'");
             } else 
             // менеджер (запущенные) 
             if ($status == "Zapushennie") {
