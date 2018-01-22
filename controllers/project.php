@@ -120,9 +120,18 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 	public function recToMeasurement()
 	{
 		try {
+			$date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt',"qweqweqweqqeqweqweqweqweqweqweqweqweqweqweqweqweqweqweqeqeqwe\n", FILE_APPEND);
             $app = JFactory::getApplication();
-            $user = JFactory::getUser();
-            $model = $this->getModel('Project', 'Gm_ceilingModel');
+			$user = JFactory::getUser();
+			$user_group = $user->groups;
+			if (in_array("16", $groups)) {
+				$type = "gmmanagermainpage"; 
+			} else {
+				$type = "managermainpage"; 
+			}
+			$model = $this->getModel('Project', 'Gm_ceilingModel');
             $jinput = JFactory::getApplication()->input;
             $project_id = $jinput->get('project_id', '0', 'INT');
             $data = $model->getData($project_id);
@@ -446,7 +455,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 
                 if (!$isDiscountChange)
-                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
+                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$type, false));
             }
         }
 		catch(Exception $e)
@@ -1434,7 +1443,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if ($return)
 			{
 				$this->setMessage("Проект отправлен в отказы от производства!");
-				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
+				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$type, false));
 			} else {
 				$this->setMessage("Не удалось отправить проект в отказы от производства!");
 			}
