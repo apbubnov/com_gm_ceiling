@@ -12,14 +12,14 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
-//JHtml::_('formbehavior.chosen', 'select');
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
-$dealerId   = $user->dealer_id;
+
+throw new Exception($user->dealer_id);
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
-$gaugers_id = $model->getData($dealerId);
+$gaugers_id = $model->getData($user->dealer_id);
 
 // календарь
 $month1 = date("n");
@@ -33,7 +33,7 @@ if ($month1 == 12) {
     $month2++;
     $year2 = $year1;
 }
-$FlagCalendar = [4, $dealerId];
+$FlagCalendar = [4, $user->dealer_id];
 foreach ($gaugers_id as $value) {
 	$calendars .= '<div class="calendars-gaugers"><p class="gaugers-name">';
 	$calendars .= $value->name;
@@ -185,7 +185,7 @@ foreach ($gaugers_id as $value) {
 				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 				data: {
 					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
+					id_dealer: <?php echo $user->dealer_id; ?>,
 					flag: 4,
 					month: month1,
 					year: year1,
@@ -212,7 +212,7 @@ foreach ($gaugers_id as $value) {
 				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 				data: {
 					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
+					id_dealer: <?php echo $user->dealer_id; ?>,
 					flag: 4,
 					month: month2,
 					year: year2,
@@ -273,7 +273,7 @@ foreach ($gaugers_id as $value) {
 				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 				data: {
 					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
+					id_dealer: <?php echo $user->dealer_id; ?>,
 					flag: 4,
 					month: month1,
 					year: year1,
@@ -300,7 +300,7 @@ foreach ($gaugers_id as $value) {
 				url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 				data: {
 					id: <?php echo $value->id; ?>,
-					id_dealer: <?php echo $dealerId; ?>,
+					id_dealer: <?php echo $user->dealer_id; ?>,
 					flag: 4,
 					month: month2,
 					year: year2,

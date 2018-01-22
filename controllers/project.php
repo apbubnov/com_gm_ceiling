@@ -274,11 +274,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     //обновление комментов к клиенту
                     if (count($comments_id) != 0) {
                         $client_history_model->updateClientId($client_id, $comments_id);
-                    }
+					}
+					
                     if ($call_type == "client") {
+						
                         //обновление созданного проекта
                         $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
-                        if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
+						throw new Exception($call_type);
+						if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
                         else $client_history_model->save($client_id, "Проект № " . $project_id . " " . $result);
                         //добавление звонка
                         if ($call_date != "") {
@@ -286,7 +289,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $callback_model->save($call_date, $call_comment, $client_id, $user->id);
                             //добавление в историю что добавлен звонок
 							$client_history_model->save($client_id, "Добавлен новый звонок. Примечание: $call_comment");
-							throw new Exception($usertype);
                         }
                     } elseif ($call_type == "promo") {
                         $client_history_model->save($client_id, "Клиент помечен как реклама.");

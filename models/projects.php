@@ -288,7 +288,6 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->select('count(projects.id) as count')
                         ->from('#__gm_ceiling_projects as projects')
                         ->where("projects.project_status = '1' and projects.project_calculator  = '$userId'");
-                        
                 }
             } else
             // НМС (монтажи)
