@@ -188,22 +188,42 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
     jQuery(document).ready(function () {
 
-        jQuery(".btn-done").click(function () {
-            var button = jQuery(this);
-            jQuery.get(
-                "/index.php?option=com_gm_ceiling&task=project.done",
-                {
-                    project_id: button.data("project_id"),
-                    check: 1
-                },
-                function (data) {
-                    if (data == "Договор закрыт!") {
-                        button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
-                    }
-                }
-            );
 
-        });
+
+        jQuery(".btn-done").click(function(){
+			var button = jQuery( this );
+			
+			noty({
+				layout	: 'center',
+				type	: 'warning',
+				modal	: true,
+				text	: 'Вы уверены, что хотите отметить договор выполненным?',
+				killer	: true,
+				buttons	: [
+					{addClass: 'btn btn-success', text: 'Выполнен', onClick: function($noty) {
+							jQuery.get(
+							  "/index.php?option=com_gm_ceiling&task=project.done",
+							  {
+								project_id: button.data("project_id"),
+                                check: 1
+							  },
+							  function(data){
+								  if(data == ""Договор закрыт!") {
+									  button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
+								  }
+							  }
+							);
+							$noty.close();
+						}
+					},
+					{addClass: 'btn', text: 'Отмена', onClick: function($noty) {
+							$noty.close();
+						}
+					}
+				]
+			});
+
+		});
 
         jQuery('.delete-button').click(deleteItem);
 
