@@ -127,7 +127,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$user = JFactory::getUser();
 			$user_group = $user->groups;
 			if (in_array("16", $user_group)) {
-				throw new Exception(implode('|',$user_group));
 				$usertype = "gmmanagermainpage"; 
 			} else {
 				$usertype = "managermainpage";
@@ -160,10 +159,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $isDataDelete = $jinput->get('data_delete', '0', 'INT');
             if ($isDataDelete) {
                 $idCalc = $jinput->get('idCalcDelete', '0', 'INT');
-                //print_r($idCalc); exit;
                 $model_calc = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 $resultDel = $model_calc->delete($idCalc);
-                //print_r($_SESSION['url']."test"); exit;
                 if ($resultDel == 1) {
                     $this->setMessage("Потолок удален");
                     if(!empty($_SESSION['url'])) $this->setRedirect(JRoute::_($_SESSION['url'], false));
@@ -257,7 +254,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         //если клиент уже сохранен ранее
                     }
                     //создание клиента
-                   
                     $client_data['client_name'] = $name;
                     $client_data['type_id'] = 1;
                     $client_data['manager_id'] = $user->id;
@@ -289,7 +285,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $callback_model = $this->getModel('callback', 'Gm_ceilingModel');
                             $callback_model->save($call_date, $call_comment, $client_id, $user->id);
                             //добавление в историю что добавлен звонок
-                            $client_history_model->save($client_id, "Добавлен новый звонок. Примечание: $call_comment");
+							$client_history_model->save($client_id, "Добавлен новый звонок. Примечание: $call_comment");
+							throw new Exception($usertype);
                         }
                     } elseif ($call_type == "promo") {
                         $client_history_model->save($client_id, "Клиент помечен как реклама.");
@@ -323,6 +320,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $status = 20;
                     }
                     if ($call_type == "client") {
+						
                         $this->setMessage("Клиент создан и $result!");
                     }
                 } elseif ($client_id != 1 && $isDiscountChange == 0) {
@@ -434,11 +432,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $rep_upd = $rep_model->update($project_id, $api_phone_id);
                         }
                         $status = 20;
-                    }
+					}
                     if ($call_type == "client") {
                         $this->setMessage("Клиент $result!");
                     }
-                }
+				}
+				
                 if ($status == 1) {
 
                     $data_notify['client_name'] = $name;
@@ -452,7 +451,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if ($data->project_status != $status) {
                     $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
                     $model_projectshistory->save($project_id, $status);
-                }
+				}
+				
                 if ($isDiscountChange == 0)
                 {
                     $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
