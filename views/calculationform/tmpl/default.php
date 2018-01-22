@@ -373,27 +373,26 @@
 							</td>
 						</tr>
 					</table>
-				<div>
-					<?php
-						if ($this->item->n6 > 0) {
-							$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
-							$color_1 = $color_model_1->getColorId($this->item->n6);
-							$color_image_1 = $color_1[0]->file;
-							$color_id_1 = $color_1->id;
-						}
-					?>
-					<?if($this->item->n6 == 314 ) { ?>
-						<p>
-							<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>
-						</p>
-						<p>
-							<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"><label for="jform_n6_1">Цветная вставка</label>
-						</p>
-						<p>
-							<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>
-						</p>
-						<? } 
-						else {
+					<div>
+						<?php
+							if ($this->item->n6 > 0) {
+								$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
+								$color_1 = $color_model_1->getColorId($this->item->n6);
+								$color_image_1 = $color_1[0]->file;
+								$color_id_1 = $color_1->id;
+							}
+						?>
+						<? if ($this->item->n6 == 314 ) { ?>
+							<p>
+								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>
+							</p>
+							<p>
+								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"><label for="jform_n6_1">Цветная вставка</label>
+							</p>
+							<p>
+								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>
+							</p>
+						<? } else {
 							if ($this->item->n6 == 0 || empty($this->item->n6)) {?>
 							<p>
 								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
@@ -404,8 +403,7 @@
 							<p>
 								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" checked="checked" ><label for="jform_n6_2">Вставка не нужна</label>
 							</p>
-							<? } 
-							else {?>
+							<? } else {?>
 								<p>
 									<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
 								</p>
@@ -416,31 +414,31 @@
 									<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio"><label for="jform_n6_2">Вставка не нужна</label>
 								</p>
 							<? } 
-						}?>
+						} ?>
                     </div>
-                    <div class="col-sm-4"></div>
+                	<div class="col-sm-4"></div>
 				</div>
-				<?if(empty($this->item->n6) || $this->item->n6 == 0 ||$this->item->n6 ==314) {?>
+				<?php if(empty($this->item->n6) || $this->item->n6 == 0 ||$this->item->n6 ==314) { ?>
 					<div class="container">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none;">Выберите цвет:</label>
+							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none; text-align: center;">Выберите цвет:</label>
 							<button id="color_switch_1" class="btn btn-primary btn-width" type="button" style="display: none;">Цвет <img id="color_img_1" class="calculation_color_img" style='width: 50px; height: 30px;'src="<?php if(isset($color_image_1)){ echo $color_image_1; } ?>" alt="" /></button>
 							<input id="jform_color_1" name="jform[n6]" value="<?php echo $this->item->n6;?>" type="hidden">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-				<?} else {?>
+				<? } else { ?>
 					<div class="container">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="">Выберите цвет:</label>
+							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="text-align: center;">Выберите цвет:</label>
 							<button id="color_switch_1" class="btn btn-primary btn-width" type="button" style="">Цвет <img id="color_img_1" class="calculation_color_img" style='width: 50px; height: 30px;'src="<?php if(isset($color_image_1)){ echo $color_image_1; } ?>" alt="" /></button>
 							<input id="jform_color_1" name="jform[n6]" value="<?php echo $this->item->n6;?>" type="hidden">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-				<?}?>
+				<? } ?>
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
