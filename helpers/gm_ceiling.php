@@ -4924,54 +4924,48 @@ class Gm_ceilingHelpersGm_ceiling
                     } else {
                         $masID = [$id];
                     }
-                    //if (!empty($gaugers_id)) {
-                        //$masID = [];
-                        //foreach ($gaugers_id as $value) {
-                            //array_push($masID, $value->id);
-                        //}
-                        $date1 = $year . "-" . $monthfull . "-01";
-                        $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                        $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($masID, $date1, $date2);
-                        $Dates = [];
-                        for ($y = 1; $y <= $current_days; $y++) {
-                            if (strlen($y) == 1) {
-                                $u = "0" . strval($y);
-                            } else {
-                                $u = $y;
-                            }
-                            foreach ($AllGaugingOfGaugers as $value) {
-                                if ($value->project_calculator == $id) {
-                                    if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
-                                        $Dates[$y] += 1;
-                                    }
-                                }
-                            }
-                        }
-                        // выходные дни
-                        $statusDayOff = "";
-                        $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
-                        if (!empty($AllDayOff)) {
-                            foreach ($AllDayOff as $value) {
-                                if (substr($value->date_from, 8, 1) == "0") {
-                                    $perem1 = substr($value->date_from, 9, 1);
-                                } else {
-                                    $perem1 = substr($value->date_from, 8, 2);
-                                }
-                                $statusDayOff[$perem1] = "DayOff";
-                            }
-                        }
-                        if (count($Dates[$j - $first_day_of_week + 1]) == 0) {
-                            if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
-                                $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
-                            } else {
-                                $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
-                            }
-                        } else if (count($Dates[$j - $first_day_of_week + 1]) == 12) {
-                            $table .= '<td class="full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    $date1 = $year . "-" . $monthfull . "-01";
+                    $date2 = $year . "-" . $monthfull . "-" . $current_days;
+                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($masID, $date1, $date2);
+                    $Dates = [];
+                    for ($y = 1; $y <= $current_days; $y++) {
+                        if (strlen($y) == 1) {
+                            $u = "0" . strval($y);
                         } else {
-                            $table .= '<td class="not-full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                            $u = $y;
                         }
-                    //}
+                        foreach ($AllGaugingOfGaugers as $value) {
+                            if ($value->project_calculator == $id) {
+                                if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
+                                    $Dates[$y] += 1;
+                                }
+                            }
+                        }
+                    }
+                    // выходные дни
+                    $statusDayOff = "";
+                    $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
+                    if (!empty($AllDayOff)) {
+                        foreach ($AllDayOff as $value) {
+                            if (substr($value->date_from, 8, 1) == "0") {
+                                $perem1 = substr($value->date_from, 9, 1);
+                            } else {
+                                $perem1 = substr($value->date_from, 8, 2);
+                            }
+                            $statusDayOff[$perem1] = "DayOff";
+                        }
+                    }
+                    if (count($Dates[$j - $first_day_of_week + 1]) == 0) {
+                        if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
+                            $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                        } else {
+                            $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
+                        }
+                    } else if (count($Dates[$j - $first_day_of_week + 1]) == 12) {
+                        $table .= '<td class="full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    } else {
+                        $table .= '<td class="not-full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    }
                 }
                 // вывод свободных монтажников (всех)
                 if ($flag[0] == 2) {
