@@ -254,7 +254,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         //если клиент уже сохранен ранее
                     }
                     //создание клиента
-                   
+                   	throw new Exception($usertype);
                     $client_data['client_name'] = $name;
                     $client_data['type_id'] = 1;
                     $client_data['manager_id'] = $user->id;
@@ -286,7 +286,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $callback_model = $this->getModel('callback', 'Gm_ceilingModel');
                             $callback_model->save($call_date, $call_comment, $client_id, $user->id);
                             //добавление в историю что добавлен звонок
-                            $client_history_model->save($client_id, "Добавлен новый звонок. Примечание: $call_comment");
+							$client_history_model->save($client_id, "Добавлен новый звонок. Примечание: $call_comment");
                         }
                     } elseif ($call_type == "promo") {
                         $client_history_model->save($client_id, "Клиент помечен как реклама.");
@@ -320,7 +320,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $status = 20;
                     }
                     if ($call_type == "client") {
-						throw new Exception($usertype);
+						
                         $this->setMessage("Клиент создан и $result!");
                     }
                 } elseif ($client_id != 1 && $isDiscountChange == 0) {
