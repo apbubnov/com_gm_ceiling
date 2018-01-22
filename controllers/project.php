@@ -248,15 +248,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 
                 if ($client_id == 1 && $isDiscountChange == 0) {
-/*                     $model_clients_phones = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-                    $result = $model_clients_phones->getItemsByPhoneNumber($number);
-                    if (empty($result)) {
-                        //если нет такого клиента
-                    } else {
-                        //если клиент уже сохранен ранее
-                    }
-                    //создание клиента */
-                   
                     $client_data['client_name'] = $name;
                     $client_data['type_id'] = 1;
                     $client_data['manager_id'] = $user->id;
@@ -461,7 +452,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
                 if (!$isDiscountChange)
                 {
-                    $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
+                    $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
                 }
             }
         }
