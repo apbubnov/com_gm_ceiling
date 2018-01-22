@@ -835,7 +835,7 @@ class Gm_ceilingModelProject extends JModelItem
 				$table->project_calculation_date = $date;
 				$table->gm_manager_note = $manager_comment;
 				$table->project_status = $status;
-				if(!is_null($api_id)) $table->api_phone_id = $api_id;
+				if(!empty($api_id)) $table->api_phone_id = $api_id;
 	            $table->read_by_manager = $manager_id;
                 $table->who_calculate = 1;
                 if(!empty($gauger)){
