@@ -40,6 +40,7 @@
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
 ?>
+
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
 	<input name="url" id="url" value="" type="hidden">
 	<input name="user_id" id="user_id" value=<?php echo "\"".$user->id."\"";?> type="hidden">
@@ -68,11 +69,11 @@
 <div class="calculation-edit front-end-edit">
 	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-		<?php if($this->type === "guest") { ?>
-		<div class="show_before_calculate">
-			<h1>Натяжные потолки от производителя без посредников дешевле на 30%</h1>
-		</div>
-            <input type="hidden" name="jform[rek]" value="<?php echo  $rek; ?>" />
+		<?php if ($this->type === "guest") { ?>
+			<div class="show_before_calculate">
+				<h1>Натяжные потолки от производителя без посредников дешевле на 30%</h1>
+			</div>
+			<input type="hidden" name="jform[rek]" value="<?php echo  $rek; ?>" />
 		<?php }?>
         <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
         <input id="flag_auto" type="hidden" value="0"/>
@@ -114,7 +115,7 @@
 		<input name="jform[modified_by]" value="<?php echo $this->item->modified_by; ?>" type="hidden">
 		<input name="jform[transport]" value="<?php echo $this->item->transport; ?>" type="hidden">
 		<input id="jform_n1" class="n1" name="jform[n1]" value="28" type="hidden">
-		<?php if($user->dealer_type !=2 ){
+		<?php if ($user->dealer_type !=2 ){
 			$del_flag = 1;
 		} ?>
 		<?php if(!$new || $type === "gmcalculator" || $type === "calculator"||$type === "gmmanager"  ) { ?>
@@ -138,6 +139,7 @@
 					</div>
 					<div class="col-sm-4"></div>
 				</div>
+			</div>
 		<?php } ?>
 		<div class="container">
 			<div class="col-sm-4"></div>
@@ -156,9 +158,7 @@
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n2-lbl" for="jform_n2">
-									Выберите фактуру полотна
-								</label>
+								<label id="jform_n2-lbl" for="jform_n2">Выберите фактуру полотна</label>
 							</td>
 							<td> 
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
@@ -173,10 +173,12 @@
 							</td>
 						</tr>
 					</table>
-					<select id="jform_n2" name="jform[n2]" class="form-control inputbox "><option value="" selected="">- Выберите фактуру -</option></select>
+					<select id="jform_n2" name="jform[n2]" class="form-control inputbox ">
+						<option value="" selected="">- Выберите фактуру -</option>
+					</select>
 					<input id="jform_n2_hidden" class="n2" name="jform[n2_hidden]" value="<?php echo $this->item->n2; ?>" type="hidden">
 				</div>
-				</div>
+			</div>
 			<div class="col-sm-4"></div>
 		</div>
 		<!-- Ширина -->
@@ -195,12 +197,12 @@
 		<div class="container">
 			<div class="col-sm-4"></div>
 			<div class="col-sm-4">
-				<?php  if($this->item->color > 0){  ?> 
-				<?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
-				<?php $color = $color_model->getData($this->item->color); ?>
-				<?php $imgurl = $color->file;?>
+				<?php  if ($this->item->color > 0) {  ?> 
+					<?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
+					<?php $color = $color_model->getData($this->item->color); ?>
+					<?php $imgurl = $color->file;?>
 				<?php } ?>
-				<label id="jform_color_switch-lbl" for="color_switch" style="display: none;">Выберите цвет:</label>
+				<label id="jform_color_switch-lbl" for="color_switch" style="display: none; text-align: left;">Выберите цвет:</label>
 				<button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px;' src="/<?php if(isset($imgurl)){ echo $imgurl; } ?>" alt="" /></button>
 				<input id="jform_color" name="jform[color]" value="<?php echo $this->item->color; ?>" type="hidden">
 			</div>
