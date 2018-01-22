@@ -449,7 +449,7 @@
 				<div class="col-sm-4">
 					<table>
 						<tr>
-							<td>
+							<td style="text-align: center;">
 								<h3>Освещение</h3>
 							</td>
 							<td>
