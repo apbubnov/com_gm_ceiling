@@ -447,9 +447,9 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table style="width: 100%; text-align: center;">
+					<table style="width: 100%;">
 						<tr>
-							<td style="width: 90%;">
+							<td style="width: 90%; text-align: center;">
 								<h3>Освещение</h3>
 							</td>
 							<td style="width: 10%;">
