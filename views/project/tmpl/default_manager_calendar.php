@@ -341,19 +341,17 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                     <td><input name="new_address" id="jform_address" class="inputactive"
                                                value="<?php if (isset($_SESSION['address'])) {
-                                                   if($_SESSION['address'] != $this->item->project_info) {
-                                                   echo $_SESSION['address'];} 
-                                                   else echo $street;
+                                                   if($_SESSION['address'] != $this->item->project_info){ echo $_SESSION['address'];} else echo $street;
                                                } else echo $street; ?>" placeholder="Адрес"
                                                type="text" required="required"></td>
                                 </tr>
                                 <tr class="controls">
                                 <td>Дом / Корпус</td>
                                 <td>
-                                    <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
+                                    <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) { if(empty($_SESSION['house'])) { echo $house; } else { echo $_SESSION['house'];}
                                                } else echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" required="required" aria-required="true" type="text">
                                
-                                    <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) {echo $_SESSION['bdq'];
+                                    <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq']))  { if(empty($_SESSION['bdq'])) { echo $bdq; } else { echo $_SESSION['bdq'];}
                                                } else echo $bdq ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
                                </td>
                                 </tr>
