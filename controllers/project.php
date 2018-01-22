@@ -120,10 +120,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 	public function recToMeasurement()
 	{
 		try {
+			$date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', "wtf?wtf?wtf?wtf?wtf?wtf?wtf?wtf?wtf?wtf?\n", FILE_APPEND);
             $app = JFactory::getApplication();
 			$user = JFactory::getUser();
 			$user_group = $user->groups;
-			if (in_array("16", $groups)) {
+			if (in_array("16", $user_group)) {
 				$usertype = "gmmanagermainpage"; 
 			} else {
 				$usertype = "managermainpage"; 
