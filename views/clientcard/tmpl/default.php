@@ -271,9 +271,9 @@
                 {
                     url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=' + subtype + '&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
                 }
-                <?php if($user->dealer_type == 1) ?>
+                <?php if($user->dealer_type == 1) {?>
                 url = '/index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar'+'&id=' + data;
-
+                <?}?>
                 location.href =url;
             },
             dataType: "text",

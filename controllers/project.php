@@ -305,7 +305,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 //                        }
 
                         $callback_model = $this->getModel('callback', 'Gm_ceilingModel');
-						$model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
+						$model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $user->id, $gauger);
                         if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
                         else $client_history_model->save($client_id, "Проект № " . $project_id . " " . $result);
                     }
