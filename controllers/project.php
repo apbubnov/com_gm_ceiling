@@ -122,14 +122,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 		try {
 			$date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', "wtf?wtf?wtf?wtf?wtf?wtf?wtf?wtf?wtf?wtf?\n", FILE_APPEND);
+            file_put_contents($files.'error_log.txt', (string)$date."wtf?wtf?wtf?wtf?wtf?wtf?wtf?wtf?\n", FILE_APPEND);
             $app = JFactory::getApplication();
 			$user = JFactory::getUser();
 			$user_group = $user->groups;
 			if (in_array("16", $user_group)) {
 				$usertype = "gmmanagermainpage"; 
 			} else {
-				$usertype = "managermainpage"; 
+				$usertype = "managermainpage";
 			}
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
             $jinput = JFactory::getApplication()->input;
@@ -453,9 +453,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $model_projectshistory->save($project_id, $status);
                 }
 
-
                 if (!$isDiscountChange)
-                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
+                {
+                    throw new Exception($usertype);
+                    $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
+                }
             }
         }
 		catch(Exception $e)
