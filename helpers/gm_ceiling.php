@@ -4916,53 +4916,55 @@ class Gm_ceilingHelpersGm_ceiling
                     } else {
                         $monthfull = $month;
                     }
+                    $masID = [];
                     if (!empty($gaugers_id)) {
-                        $masID = [];
                         foreach ($gaugers_id as $value) {
                             array_push($masID, $value->id);
                         }
-                        $date1 = $year . "-" . $monthfull . "-01";
-                        $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                        $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($masID, $date1, $date2);
-                        $Dates = [];
-                        for ($y = 1; $y <= $current_days; $y++) {
-                            if (strlen($y) == 1) {
-                                $u = "0" . strval($y);
-                            } else {
-                                $u = $y;
-                            }
-                            foreach ($AllGaugingOfGaugers as $value) {
-                                if ($value->project_calculator == $id) {
-                                    if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
-                                        $Dates[$y] += 1;
-                                    }
-                                }
-                            }
-                        }
-                        // выходные дни
-                        $statusDayOff = "";
-                        $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
-                        if (!empty($AllDayOff)) {
-                            foreach ($AllDayOff as $value) {
-                                if (substr($value->date_from, 8, 1) == "0") {
-                                    $perem1 = substr($value->date_from, 9, 1);
-                                } else {
-                                    $perem1 = substr($value->date_from, 8, 2);
-                                }
-                                $statusDayOff[$perem1] = "DayOff";
-                            }
-                        }
-                        if (count($Dates[$j - $first_day_of_week + 1]) == 0) {
-                            if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
-                                $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
-                            } else {
-                                $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
-                            }
-                        } else if (count($Dates[$j - $first_day_of_week + 1]) == 12) {
-                            $table .= '<td class="full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    } else {
+                        $masID = [$id];
+                    }
+                    $date1 = $year . "-" . $monthfull . "-01";
+                    $date2 = $year . "-" . $monthfull . "-" . $current_days;
+                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($masID, $date1, $date2);
+                    $Dates = [];
+                    for ($y = 1; $y <= $current_days; $y++) {
+                        if (strlen($y) == 1) {
+                            $u = "0" . strval($y);
                         } else {
-                            $table .= '<td class="not-full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                            $u = $y;
                         }
+                        foreach ($AllGaugingOfGaugers as $value) {
+                            if ($value->project_calculator == $id) {
+                                if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
+                                    $Dates[$y] += 1;
+                                }
+                            }
+                        }
+                    }
+                    // выходные дни
+                    $statusDayOff = "";
+                    $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
+                    if (!empty($AllDayOff)) {
+                        foreach ($AllDayOff as $value) {
+                            if (substr($value->date_from, 8, 1) == "0") {
+                                $perem1 = substr($value->date_from, 9, 1);
+                            } else {
+                                $perem1 = substr($value->date_from, 8, 2);
+                            }
+                            $statusDayOff[$perem1] = "DayOff";
+                        }
+                    }
+                    if (count($Dates[$j - $first_day_of_week + 1]) == 0) {
+                        if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
+                            $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                        } else {
+                            $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
+                        }
+                    } else if (count($Dates[$j - $first_day_of_week + 1]) == 12) {
+                        $table .= '<td class="full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    } else {
+                        $table .= '<td class="not-full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
                     }
                 }
                 // вывод свободных монтажников (всех)
@@ -5015,83 +5017,81 @@ class Gm_ceilingHelpersGm_ceiling
                     } else {
                         $masID = [$id];
                     }
-                    //if (!empty($brigade_id)) {
-                        $date1 = $year . "-" . $monthfull . "-01";
-                        $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                        $AllMountingOfBrigades = $model->GetAllMountingOfBrigades($masID, $date1, $date2);
-                        $DateStatys = [];
-                        foreach ($AllMountingOfBrigades as $value) {
-                            if ($value->project_mounter == $id) {
-                                if ($value->read_by_mounter == null) {
-                                    $value->read_by_mounter = "0";
-                                }
-                                $arr = [substr($value->project_mounting_date, 0, 10), $value->read_by_mounter, $value->project_status];
-                                array_push($DateStatys, $arr);
+                    $date1 = $year . "-" . $monthfull . "-01";
+                    $date2 = $year . "-" . $monthfull . "-" . $current_days;
+                    $AllMountingOfBrigades = $model->GetAllMountingOfBrigades($masID, $date1, $date2);
+                    $DateStatys = [];
+                    foreach ($AllMountingOfBrigades as $value) {
+                        if ($value->project_mounter == $id) {
+                            if ($value->read_by_mounter == null) {
+                                $value->read_by_mounter = "0";
                             }
+                            $arr = [substr($value->project_mounting_date, 0, 10), $value->read_by_mounter, $value->project_status];
+                            array_push($DateStatys, $arr);
                         }
-                        for ($r = 1; $r <= $current_days; $r++) {
-                            if (strlen($r) == 1) {
-                                $t = "0" . strval($r);
-                            } else {
-                                $t = $r;
-                            }
-                            foreach ($DateStatys as $value) {
-                                if ($value[0] == $year . "-" . $monthfull . "-" . $t) {
-                                    if ($value[1] == 0) {
-                                        $DayMounters[$r] = "red";
-                                    } else if ($value[1] == 1) {
-                                        if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10) {
-                                            $DayMounters[$r] = "yellow";
-                                        }
-                                        if ($value[2] == 16) {
-                                            $DayMounters[$r] = "navy";
-                                        }
-                                        if ($value[2] == 17) {
-                                            $DayMounters[$r] = "brown";
-                                        }
-                                        if ($value[2] == 11) {
-                                            $DayMounters[$r] = "green";
-                                        }
-                                        if ($value[2] == 12) {
-                                            $DayMounters[$r] = "blue";
-                                        }
+                    }
+                    for ($r = 1; $r <= $current_days; $r++) {
+                        if (strlen($r) == 1) {
+                            $t = "0" . strval($r);
+                        } else {
+                            $t = $r;
+                        }
+                        foreach ($DateStatys as $value) {
+                            if ($value[0] == $year . "-" . $monthfull . "-" . $t) {
+                                if ($value[1] == 0) {
+                                    $DayMounters[$r] = "red";
+                                } else if ($value[1] == 1) {
+                                    if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10) {
+                                        $DayMounters[$r] = "yellow";
+                                    }
+                                    if ($value[2] == 16) {
+                                        $DayMounters[$r] = "navy";
+                                    }
+                                    if ($value[2] == 17) {
+                                        $DayMounters[$r] = "brown";
+                                    }
+                                    if ($value[2] == 11) {
+                                        $DayMounters[$r] = "green";
+                                    }
+                                    if ($value[2] == 12) {
+                                        $DayMounters[$r] = "blue";
                                     }
                                 }
                             }
                         }
-                        // выходные дни
-                        $statusDayOff = "";
-                        $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
-                        if (!empty($AllDayOff)) {
-                            foreach ($AllDayOff as $value) {
-                                if (substr($value->date_from, 8, 1) == "0") {
-                                    $perem1 = substr($value->date_from, 9, 1);
-                                } else {
-                                    $perem1 = substr($value->date_from, 8, 2);
-                                }
-                                $statusDayOff[$perem1] = "DayOff";
-                            }
-                        } 
-                        if ($DayMounters[$j - $first_day_of_week + 1] == "red") {
-                            $table .= '<td class="day-not-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
-                        } else if ($DayMounters[$j - $first_day_of_week + 1] == "yellow") {
-                            $table .= '<td class="day-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
-                        } else if ($DayMounters[$j - $first_day_of_week + 1] == "navy") {
-                            $table .= '<td class="day-in-work" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
-                        } else if ($DayMounters[$j - $first_day_of_week + 1] == "brown") {
-                            $table .= '<td class="day-underfulfilled" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
-                        } else if ($DayMounters[$j - $first_day_of_week + 1] == "green") {
-                            $table .= '<td class="day-complite" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
-                        } else if ($DayMounters[$j - $first_day_of_week + 1] == "blue") {
-                            $table .= '<td class="old-project" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
-                        } else {
-                            if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
-                                $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                    }
+                    // выходные дни
+                    $statusDayOff = "";
+                    $AllDayOff = $model->GetAllDayOff($id, $date1, $date2);
+                    if (!empty($AllDayOff)) {
+                        foreach ($AllDayOff as $value) {
+                            if (substr($value->date_from, 8, 1) == "0") {
+                                $perem1 = substr($value->date_from, 9, 1);
                             } else {
-                                $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
+                                $perem1 = substr($value->date_from, 8, 2);
                             }
+                            $statusDayOff[$perem1] = "DayOff";
                         }
-                    //}
+                    } 
+                    if ($DayMounters[$j - $first_day_of_week + 1] == "red") {
+                        $table .= '<td class="day-not-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    } else if ($DayMounters[$j - $first_day_of_week + 1] == "yellow") {
+                        $table .= '<td class="day-read" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    } else if ($DayMounters[$j - $first_day_of_week + 1] == "navy") {
+                        $table .= '<td class="day-in-work" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    } else if ($DayMounters[$j - $first_day_of_week + 1] == "brown") {
+                        $table .= '<td class="day-underfulfilled" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    } else if ($DayMounters[$j - $first_day_of_week + 1] == "green") {
+                        $table .= '<td class="day-complite" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    } else if ($DayMounters[$j - $first_day_of_week + 1] == "blue") {
+                        $table .= '<td class="old-project" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                    } else {
+                        if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
+                            $table .= '<td class="day-off" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
+                        } else {
+                            $table .= '<td class="current-month" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                        
+                        }
+                    }
                 }
                 //для вывода монтажной бригады в личном кабинете монтажной бригады
                 if ($flag[0] == 5) {
