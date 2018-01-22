@@ -275,9 +275,9 @@ class Gm_ceilingModelProjects extends JModelList
             if ($status == "GaugingsGraph") {
                 if ($data == "all") {
                     if ($user->dealer_id == 1) {
-                        $who = '1';
+                        $who = "1";
                     } else {
-                        $who = "'0'"; //'1', !
+                        $who = "0";
                     }
                     $query->select('count(projects.id) as count')
                         ->from('#__gm_ceiling_projects as projects')

@@ -195,7 +195,6 @@ $countMounting = $model->getDataByStatus("Mountings");
                             class="fa fa-mobile" aria-hidden="true"></i> Телефоны</a>
             </p>
         <?php }?>
-        
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
