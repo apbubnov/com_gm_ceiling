@@ -275,7 +275,7 @@ class Gm_ceilingModelProjects extends JModelList
             if ($status == "GaugingsGraph") {
                 $groups = $user->groups;
                 if (in_array("12", $groups) || in_array("14", $groups) || in_array("17", $groups)) {
-                    if ($user->groups == 1) {
+                    if ($user->dealer_id == 1) {
                         $who = "1";
                     } else {
                         $who = "0";
