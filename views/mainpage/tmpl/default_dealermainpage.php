@@ -45,7 +45,7 @@ if ($user->dealer_id == 1) {
     // менеджеры проекты запущенные и в производстве
     $answer1 = $model->getDataByStatus("RunInProduction", $managersid);
     // заявки с сайта
-    $answer2 = $model->getDataByStatus("ZayavkiSSaita", null);
+    $answer2 = $model->getDataByStatus("ZayavkiSSaita");
     // звонки
     $date = date("Y")."-".date("n")."-".date("d");
     $answer3 = $model->getDataByStatus("Zvonki", $date);

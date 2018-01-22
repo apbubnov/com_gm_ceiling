@@ -322,7 +322,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 </tr>
                                 <? 
                                 
-                                $street = preg_split("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info)[0];
+                                $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
                                 preg_match("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info,$house);
                                 $house = $house[1];
                                 preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
@@ -335,13 +335,16 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 $floor = $floor[1];
                                 preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
                                 $code = $code[1];
+                                
                                 ?>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                     <td><input name="new_address" id="jform_address" class="inputactive"
                                                value="<?php if (isset($_SESSION['address'])) {
-                                                   echo $_SESSION['address'];
-                                               } else echo $street ?>" placeholder="Адрес"
+                                                   if($_SESSION['address'] != $this->item->project_info) {
+                                                   echo $_SESSION['address'];} 
+                                                   else echo $street;
+                                               } else echo $street; ?>" placeholder="Адрес"
                                                type="text" required="required"></td>
                                 </tr>
                                 <tr class="controls">

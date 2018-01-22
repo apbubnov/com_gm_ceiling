@@ -148,7 +148,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $recoil = $jinput->get('recoil', '', 'STRING');
             $sex = $jinput->get('slider-sex', "NULL", 'STRING');
             $email_str = $jinput->get('emails', "", "STRING");
-			$without_advt = $jinput->get('without_advt', '0', 'INT');
+			$without_advt = $jinput->get('without_advt', 0, 'INT');
 			$client_form_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
 			$client_model = $this->getModel('client', 'Gm_ceilingModel');
             $emails = [];
@@ -248,15 +248,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 
                 if ($client_id == 1 && $isDiscountChange == 0) {
-                    $model_clients_phones = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-                    $result = $model_clients_phones->getItemsByPhoneNumber($number);
-                    if (empty($result)) {
-                        //если нет такого клиента
-                    } else {
-                        //если клиент уже сохранен ранее
-                    }
-                    //создание клиента
-                   
                     $client_data['client_name'] = $name;
                     $client_data['type_id'] = 1;
                     $client_data['manager_id'] = $user->id;
@@ -281,8 +272,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     if ($call_type == "client") {
                         //обновление созданного проекта
                         $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
-                        if (!empty($answer)) $client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
-                        else $client_history_model->save($client_id, "Проект № " . $project_id . " " . $result);
+						if (!empty($answer))
+						{
+							$client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
+						}
+						else
+						{
+							$client_history_model->save($client_id, "Проект № " . $project_id . " " . $result);
+						}
                         //добавление звонка
                         if ($call_date != "") {
                             $callback_model = $this->getModel('callback', 'Gm_ceilingModel');
@@ -455,8 +452,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
                 if (!$isDiscountChange)
                 {
-                    throw new Exception($usertype);
-                    $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
+					if($usertype=="managermainpage"){
+						$this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&task=mainpage', false));
+					}
+					else{
+						$this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
+					}
                 }
             }
         }
@@ -1445,7 +1446,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if ($return)
 			{
 				$this->setMessage("Проект отправлен в отказы от производства!");
-				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$type, false));
+				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
 			} else {
 				$this->setMessage("Не удалось отправить проект в отказы от производства!");
 			}
