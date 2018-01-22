@@ -19,6 +19,10 @@ jimport('joomla.event.dispatcher');
  */
 class Gm_ceilingModelTeams extends JModelItem {
 
+	function getData() {
+		
+	}
+
 	function getDatas($dealerId) {
 		try
 		{
