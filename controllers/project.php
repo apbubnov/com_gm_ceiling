@@ -120,16 +120,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 	public function recToMeasurement()
 	{
 		try {
-			$date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt',"qweqweqweqqeqweqweqweqweqweqweqweqweqweqweqweqweqweqweqeqeqwe\n", FILE_APPEND);
             $app = JFactory::getApplication();
 			$user = JFactory::getUser();
 			$user_group = $user->groups;
 			if (in_array("16", $groups)) {
-				$type = "gmmanagermainpage"; 
+				$usertype = "gmmanagermainpage"; 
 			} else {
-				$type = "managermainpage"; 
+				$usertype = "managermainpage"; 
 			}
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
             $jinput = JFactory::getApplication()->input;
@@ -455,7 +452,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 
                 if (!$isDiscountChange)
-                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$type, false));
+                    $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
             }
         }
 		catch(Exception $e)
