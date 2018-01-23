@@ -1021,30 +1021,30 @@
                 	</div>
             	</div>
 			<?php } ?>
-				<!-- пожарная сигнализация -->
-				<div class = "container">
-					<div class="row sm-margin-bottom">
-						<div class="col-sm-4"></div>
-						<div class="col-sm-4">
-							<div class="form-group">
-								<table>
-								<tr>
-									<td>
-										<h3>Пожарная сигнализация</h3>
+			<!-- пожарная сигнализация -->
+			<div class = "container">
+				<div class="row sm-margin-bottom">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<table>
+							<tr>
+								<td>
+									<h3>Пожарная сигнализация</h3>
+								</td>
+								<td>
+									<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
+										
+										Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них</span></a>
 									</td>
-									<td>
-										<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-											
-											Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них</span></a>
-										</td>
-									</tr>
-								</table>
-								<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel">
-							</div>
+								</tr>
+							</table>
+							<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel">
 						</div>
-						<div class="col-sm-4"></div>
 					</div>
+					<div class="col-sm-4"></div>
 				</div>
+			</div>
 			<?php if($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- разделитель -->
 				<div class = "container">
