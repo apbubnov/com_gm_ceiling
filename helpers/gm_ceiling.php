@@ -3872,7 +3872,13 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
         $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
         $html .= '<table border="0" cellspacing="0" width="100%">
-        <tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
+                    <tbody>
+                        <tr>
+                            <th>Название</th>
+                            <th class="center">Площадь, м<sup>2</sup>.</th>
+                            <th class="center">Периметр, м </th>
+                            <th class="center">Стоимость, руб.</th>
+                        </tr>';
         foreach ($calculations as $calc) {
             $html .= '<tr>';
             $html .= '<td>' . $calc->calculation_title . '</td>';
@@ -3883,6 +3889,7 @@ class Gm_ceilingHelpersGm_ceiling
             $sum += $calc->mounting_sum;
         }
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
+        $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<h2>Транспортные расходы: </h2>';
         $html .= '<table border="0" cellspacing="0" width="100%">
         <tbody><tr><th>Вид транспорта</th><th class="center">Кол-во км<sup>2</sup>.</th><th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th></tr>'; 
