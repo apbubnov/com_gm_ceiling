@@ -141,9 +141,10 @@
 				</div>
 			</div>
 		<?php } ?>
+		<!-- характеристики полотна -->
 		<div class="container">
 			<div class="col-sm-4"></div>
-			<div class="row">
+			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
 					<h3>Характеристики полотна</h3>		
 				</div>
@@ -325,7 +326,7 @@
 		<div class="container" id="block_n28">
 			<div class="row">
 				<div class="col-sm-4" style="padding-left: 0px;">
-					<div class="form-group">
+					<div class="form-group" style="margin-bottom: 30px;">
 						<h3>Выберите багет</h3>
 					</div>
 				</div>
@@ -363,7 +364,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" style="text-align:-webkit-center">
-					<table>
+					<table style="margin-bottom: 30px;">
 						<tr>
 							<td>
 								<h3>Декоративная вставка</h3>
@@ -1483,20 +1484,17 @@
 				</div>
 			<?php }?>
 		</div>									
-        <!-- Рассчитать -->
+        <!-- Монтаж -->
 		<div class="container">
-			<div class="row sm-margin-bottom ">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
+					<h4>Монтаж</h4>
 				</div>
-				<div class="col-sm-4">
-					<h3>Монтаж</h3>
-				</div>
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 			</div>
 			<div class="row sm-margin-bottom">
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "need_mount">
 					<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
 					<label for="with_mount">Нужен</label>
@@ -1504,49 +1502,46 @@
 					<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
 					<label for="without">Не нужен</label>
 				</div>
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- высота помещения -->
 		<div class="container">
-			<div class="row sm-margin-bottom ">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
+					<h4>Высота помещения</h4>
 				</div>
-				<div class="col-sm-4">
-					<h3>Высота помещения</h3>
-				</div>
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 			</div>
 			<div class="row sm-margin-bottom">
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "height">
-				<? if ($this->item->height == 0) { ?>
-					<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
-					<label for="max_height">больше 3х метров</label>
-					<br>
-					<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
-					<label for="min_height">меньше 3х метров</label>
-					<?} else { ?>
-					<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
-					<label for="max_height">больше 3х метров</label>
-					<br>
-					<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
-					<label for="min_height">меньше 3х метров</label>
-					<? } ?>
+					<?php if ($this->item->height == 0) { ?>
+						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
+						<label for="max_height">больше 3х метров</label>
+						<br>
+						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
+						<label for="min_height">меньше 3х метров</label>
+					<?php } else { ?>
+						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
+						<label for="max_height">больше 3х метров</label>
+						<br>
+						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
+						<label for="min_height">меньше 3х метров</label>
+					<?php } ?>
 				</div>
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- расчитать -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-md-4 pull-center">
 					<button id="calculate_button" class="btn btn-primary btn-big" type="button">
-					<span class="loading" style="display: none;">
-						Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-					</span>
+						<span class="loading" style="display: none;">
+							Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+						</span>
 						<span class="static">Рассчитать</span>
 					</button>
 				</div>
@@ -1555,9 +1550,8 @@
         <div id="result_block">
 			<div class="container">
 				<div class="row sm-margin-bottom">
-					<div class="col-sm-4">
-					</div>
-                    <? if($this->type === "guest") {?>
+					<div class="col-sm-4"></div>
+                    <?php if($this->type === "guest") { ?>
                         <div class="col-sm-4 total_price center" style="display: none;" id="guest_price">
                             <div class="price_value">
                                 <span id="final_price">0.00</span> руб. - <span style="color:red; " >30% </span>=
@@ -1567,17 +1561,16 @@
                                 Самая низкая цена в Воронеже!
                             </div>                            
                         </div>
-                    <?} else {?>
-                    <div class="col-sm-4 total_price center">
-                        <div class="price_value">
-                            <span id="final_price">0.00</span> руб.
-                        </div>
-                        <div class="price_title">
-                            Самая низкая цена в Воронеже!
-                        </div>
-                    </div>
-                    <? } ?>
-					
+                    <?php } else {?>
+						<div class="col-sm-4 total_price center">
+							<div class="price_value">
+								<span id="final_price">0.00</span> руб.
+							</div>
+							<div class="price_title">
+								Самая низкая цена в Воронеже!
+							</div>
+						</div>
+                    <?php } ?>
 				</div>
 			</div>			
 			<div class="container">
@@ -1597,8 +1590,7 @@
 							<input value="" id="send_email" name="jform[send_email]" class="form-control" placeholder="Введите ваш Email" type="email">
 						</div>
 					</div>
-					<div class="col-sm-4">
-					</div>
+					<div class="col-sm-4"></div>
 				</div>
 			</div>
 			<div class="container">
@@ -1658,8 +1650,8 @@
 				<?php if($this->type === "gmmanager"){?>
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-<!-- 						<a style=id="save_button" type="button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
- -->						<a id="save_button"  class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
+						<!-- <a style=id="save_button" type="button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a> -->
+						<a id="save_button"  class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
 					</div>
 					<div class="col-sm-4"></div>
 				<?php } ?>
@@ -1697,46 +1689,47 @@
 		<input type="hidden" name="option" value="com_gm_ceiling"/>
 		<input type="hidden" name="task" value="calculationform.save" id="jform_task" />
 		<?php echo JHtml::_('form.token'); ?>
-	<!-- ////////////////////////////////кнопка перезвона и два модальных окна Таранцева/////////////////////////////////// -->
-	<div id="popup__toggle">
-		<div class="circlephone" style="transform-origin: center;"></div><div class="circle-fill" style="transform-origin: center;"></div><div class="img-circle" style="transform-origin: center;"><div class="img-circleblock" style="transform-origin: center;"></div></div>
-		<button type="button" id="call-tar" value=""><i class="fa fa-phone fa-phone-tar" aria-hidden="true"></i></button>
-	</div>
-	<button type="button" id="enroll-tar"><i class="fa fa-pencil-square-o fa-pencil-square-o-tar" aria-hidden="true"></i></button>
-	<div id="modal-window-container-tar">
-		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal-window-call-tar">
-			<img src="/images/recall.png" id="image-call-tar" alt="Звонок">
-			<p>Скоро мы вам перезвоним</p>
-			<p><input type="text" id="name-call-tar" placeholder="Имя" required></p>
-			<p><input type="text" id="phone-call-tar" placeholder="Телефон" required></p>
-			<p><button type="button" id="re-call-call-tar" class="btn btn-primary">Заказать обратный звонок</button></p>
+		<!-- кнопка перезвона и два модальных окна Таранцева -->
+		<!-- Закоменчена пока Костя не скажет откомментить -->
+		<!-- <div id="popup__toggle">
+			<div class="circlephone" style="transform-origin: center;"></div><div class="circle-fill" style="transform-origin: center;"></div><div class="img-circle" style="transform-origin: center;"><div class="img-circleblock" style="transform-origin: center;"></div></div>
+			<button type="button" id="call-tar" value=""><i class="fa fa-phone fa-phone-tar" aria-hidden="true"></i></button>
 		</div>
-	</div>
-	<div id="modal-window-container2-tar">
-		<button type="button" id="close2-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal-window-enroll-tar">
-			<img src="/images/enroll.png" id="image-enroll-tar" alt="Звонок">
-			<p>Запишитесь на замер</p>
-			<p><input type="text" id="name-enroll-tar" placeholder="Имя"></p>
-			<p><input type="text" id="phone-enroll-tar" placeholder="Телефон"></p>
-			<p><input type="text" id="adress-enroll-tar" placeholder="Адрес"></p>
-			<p><input type="date" id="date-enroll-tar" placeholder="Дата замера"></p>
-			<select id="time-tar">
-				<option value="9:00">9:00-10:00</option>
-				<option value="10:00">10:00-11:00</option>
-				<option value="11:00">11:00-12:00</option>
-				<option value="12:00">12:00-13:00</option>
-				<option value="13:00">13:00-14:00</option>
-				<option value="14:00">14:00-15:00</option>
-				<option value="15:00">15:00-16:00</option>
-				<option value="16:00">16:00-17:00</option>
-				<option value="17:00">17:00-18:00</option>
-				<option value="18:00">18:00-19:00</option>
-				<option value="19:00">19:00-20:00</option>
-			</select>
-			<p><button type="button" id="re-call-enroll-tar" class="btn btn-primary">Записаться на замер</button></p>
+		<button type="button" id="enroll-tar"><i class="fa fa-pencil-square-o fa-pencil-square-o-tar" aria-hidden="true"></i></button> -->
+		<div id="modal-window-container-tar">
+			<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+			<div id="modal-window-call-tar">
+				<img src="/images/recall.png" id="image-call-tar" alt="Звонок">
+				<p>Скоро мы вам перезвоним</p>
+				<p><input type="text" id="name-call-tar" placeholder="Имя" required></p>
+				<p><input type="text" id="phone-call-tar" placeholder="Телефон" required></p>
+				<p><button type="button" id="re-call-call-tar" class="btn btn-primary">Заказать обратный звонок</button></p>
+			</div>
 		</div>
+		<div id="modal-window-container2-tar">
+			<button type="button" id="close2-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+			<div id="modal-window-enroll-tar">
+				<img src="/images/enroll.png" id="image-enroll-tar" alt="Звонок">
+				<p>Запишитесь на замер</p>
+				<p><input type="text" id="name-enroll-tar" placeholder="Имя"></p>
+				<p><input type="text" id="phone-enroll-tar" placeholder="Телефон"></p>
+				<p><input type="text" id="adress-enroll-tar" placeholder="Адрес"></p>
+				<p><input type="date" id="date-enroll-tar" placeholder="Дата замера"></p>
+				<select id="time-tar">
+					<option value="9:00">9:00-10:00</option>
+					<option value="10:00">10:00-11:00</option>
+					<option value="11:00">11:00-12:00</option>
+					<option value="12:00">12:00-13:00</option>
+					<option value="13:00">13:00-14:00</option>
+					<option value="14:00">14:00-15:00</option>
+					<option value="15:00">15:00-16:00</option>
+					<option value="16:00">16:00-17:00</option>
+					<option value="17:00">17:00-18:00</option>
+					<option value="18:00">18:00-19:00</option>
+					<option value="19:00">19:00-20:00</option>
+				</select>
+				<p><button type="button" id="re-call-enroll-tar" class="btn btn-primary">Записаться на замер</button></p>
+			</div>
 		</div>
 		<!-- /////////////////////////////////////////////////////////////////// -->
 		<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"> Наверх</i></a>
@@ -1744,6 +1737,7 @@
 </div>
 
 <script>
+
 	function submit_form_sketch()
 	{
 		var regexp_d = /^\d+$/;
@@ -1769,6 +1763,7 @@
 		document.getElementById('form_url').submit();
 		
 	}
+
 	/* //////////////////////////////// Убрать банер, при тыке в другое место Таранцева //////////////////////////////// */
 
 	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
@@ -1787,12 +1782,15 @@
 			jQuery("#modal-window-enroll-tar").hide();
 		}
 	});
-	jQuery(document).ready(function(){
+
+	jQuery(document).ready(function() {
+
 		if(jQuery("#jform_n4").val()==0 && jQuery("#jform_n5").val()==0 && jQuery("#jform_n9").val()==0)
 		{
 			jQuery("#sketch_image_block").css("display", "none");
 			jQuery("#data-wrapper").css("display", "none");
 		}
+
 		/*///////////////////////////// Меняющиеся кнопки Таранцева ///////////////////////////////////////*/
 		jQuery("#enroll-tar").mouseover(function() {
 			timerId = setTimeout(function() {
@@ -1807,7 +1805,6 @@
 		//---------------------------------------------------------------------------------------
 		
 		/*////////////////////////всплывающие окна для телефона Таранцева////////////////////////////// */
-
 		jQuery("#phone-call-tar").mask('+7(999)999-99-99');
 		jQuery("#phone-enroll-tar").mask('+7(999)999-99-99');
 
@@ -1883,7 +1880,7 @@
 			jQuery("#phone-call-tar").hide("slow");
 			jQuery("#re-call-call-tar").hide("slow");
 	    });
-////////////////////////////////////////
+		// -------------------------------------
 
 		jQuery("#re-call-enroll-tar").click(function() {
 			var regexp = /^[А-Яа-я\s]+$/;
@@ -1953,7 +1950,6 @@
 		jQuery("#user_phone").mask("+7 (999) 999-99-99");
 		jQuery("#jform_client_contacts-top").mask("+7 (999) 999-99-99");
 		jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
-
 
 		var handle = jQuery( "#custom-handle" );
 		
@@ -2111,13 +2107,11 @@
 		});
 
 		jQuery( "#reserve_button" ).click(function(){
-			
 			if(jQuery( "#jform_client_name").val().length > 0 && jQuery( "#jform_client_contacts").val().length > 0) {
 				jQuery("#form-calculation").submit();
 			}
 		});
 		jQuery( "#reserve_button-top" ).click(function(){
-			
 			if(jQuery( "#jform_client_name-top").val().length > 0 && jQuery( "#jform_client_contacts-top").val().length > 0) {
 				jQuery("#form-calculation").submit();
 			}
@@ -2150,8 +2144,6 @@
 		jQuery( "#jform_n2" ).html( n2_start_option );
 		
 		jQuery( "#jform_n3" ).html( n3_start_option );
-
-		
 
 		jQuery.getJSON( "index.php?option=com_gm_ceiling&task=getTexturesList&jform_n1=28", function( data ) {
             console.log(data);
@@ -2196,7 +2188,7 @@
 			ecolaFlagLoad = true;
 		});
 
-var level = [];
+		var level = [];
     
         jQuery.getJSON("index.php?option=com_gm_ceiling&task=getListProfil", function (data) {
             jQuery.each(data, function (key, val) {
@@ -2260,7 +2252,6 @@ var level = [];
 			jQuery("#add_n15").trigger('click');
 		});
 
-
 		var bypasses = [];
 		jQuery.getJSON("index.php?option=com_gm_ceiling&task=getListBypass",function(data){
 			jQuery.each(data,function(key,val){
@@ -2276,13 +2267,11 @@ var level = [];
 			jQuery.each(data,function(key,val){
 				difusors.push( "<option value='" + val.id + "'>" + val.title + "</option>" );
 			});
-
 			jQuery("#add_n23").trigger('click');		
 		});
 
 		jQuery("#extra_components_button").trigger('click');
 		jQuery("#extra_mounting_button").trigger('click');
-		
 
 		jQuery("#jform_n6_1").change(function(){
 			jQuery("#jform_color_switch-lbl_1").fadeIn();
@@ -2355,21 +2344,17 @@ var level = [];
 		jQuery( "#jform_proizv" ).change(function(){
 			jQuery("#calculate_button").prop("disabled",false);
 			change_flag_auto();
-				jQuery.getJSON( "index.php?option=com_gm_ceiling&task=getCanvasesList&jform_n2=" + jQuery("#jform_n2" ).val()+"&jform_proizv="+jQuery(this ).val(), function( data ) {
-					var items = [];
-					jQuery("#width").val(data);
-					if(data!=""){
-						jQuery("#sketch_switch").prop("disabled",false);
-					}
-					});
-					
-			
+			jQuery.getJSON( "index.php?option=com_gm_ceiling&task=getCanvasesList&jform_n2=" + jQuery("#jform_n2" ).val()+"&jform_proizv="+jQuery(this ).val(), function( data ) {
+				var items = [];
+				jQuery("#width").val(data);
+				if(data!=""){
+					jQuery("#sketch_switch").prop("disabled",false);
+				}
+			});
 		});
 		//Запрос к серверу на расчет потолка
 		jQuery( "#send_to_email" ).click(function(){
-			
 			if(jQuery("#form-calculation").validationEngine('validate')) {
-				
 				jQuery( "input[type=checkbox]").each(function(){
 					if( jQuery( this ).is(':checked') ) {
 						jQuery( this ).val( 1 );
@@ -2377,7 +2362,6 @@ var level = [];
 						jQuery( this ).val( 0 );
 					}
 				});
-				
 				var temp_task = jQuery("#jform_task").val();
 				jQuery("#jform_task").val( "calculate" );
 				data = jQuery( "#form-calculation").serialize();
@@ -2389,9 +2373,7 @@ var level = [];
 					url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
 					data: data,
 					success: function(data){
-
 						jQuery('#send_email_success').slideDown();
-						
 					},
 					dataType: "text",
 					timeout: 10000,
@@ -2416,9 +2398,7 @@ var level = [];
 					url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
 					data: data,
 					success: function(data){
-
 						jQuery('#send_email_success').slideDown();
-						
 					},
 					dataType: "text",
 					timeout: 10000,
@@ -2460,7 +2440,6 @@ var level = [];
 						error: function (data) {
 							console.log(data);
 						}
-
 					});
 				}
                 else{
@@ -2476,12 +2455,10 @@ var level = [];
                             success: function (data) {
                                 jQuery("#walls").val(data);
                                 submit_form_sketch();
-
                             },
                             error: function (data) {
                                 console.log(data);
                             }
-
                         });
                     }
                 }
@@ -2642,8 +2619,6 @@ var level = [];
 		jQuery( ".clear_form_group" ).click(function(){
 			jQuery( this ).closest(".form-group").remove();
 		});
-
-	
 			
 		function change_n13(){
 			change_options(this,"n13_type[]","n13_ring[]");
@@ -2655,7 +2630,6 @@ var level = [];
 			change_options15(this,"n15_type[]","n15_size[]");
 		}
         var change_options = function (obj,classname1,classname2) {
-			
             var select = jQuery(obj);
             var value = select.val();
 			var index = 0;
@@ -2671,11 +2645,9 @@ var level = [];
 				selects[index].empty();
 				for(i=0;i<th_squares.length;i++)
 					selects[index].appendChild(th_squares[i].clone());
-			
 			}
         };
 		 var change_options15 = function (obj,classname1,classname2) {
-			
             var select = jQuery(obj);
             var value = select.val();
 			var index = 0;
@@ -2803,13 +2775,10 @@ var level = [];
 				jQuery( this ).closest(".form-group").remove();
 			});
 		});
-
-
         
         jQuery( "#add_level" ).click(function(){
 			 var element = jQuery(this),
                 block = element.siblings("#level_block_html");
-
             var html = "<div class='form-group'>";
             html+= "<div class='advanced_col1'>";
             html+= "<input name='n29_count[]' class='form-control' value=''  placeholder='м.' type='tel'>";
@@ -2849,7 +2818,6 @@ var level = [];
 			html+= "</select>";
 			html+= "</div>";
 			html+= "<div class='advanced_col3'>";
-
 			html+= "<select id='n22_1' class='form-control n22_module'  name='n22_diam[]'>" 
 			for(i=0;i<rings.length;i++){
 				html+= "<option value = '"+rings[i].value+"'>"+rings[i].text+"</option>";
@@ -2902,124 +2870,124 @@ var level = [];
 			jQuery ( jQuery( this ).data("target") ).slideToggle();
 		});
 		
-		
 		n12_module();
 
-function n12_module() {
-	jQuery(".n12_module").change(function(){
-		var value = Number(jQuery (this).val().replace(/\D+/g,""));
-		
-		if(value < 55) {
-			jQuery (this).val(55);
-		} else if(value > 400) {
-			jQuery (this).val(400);
-		} else {
-			var mod = Math.floor(value / 5);
-			value = mod * 5;
-			jQuery (this).val( value );
+		function n12_module() {
+			jQuery(".n12_module").change(function(){
+				var value = Number(jQuery (this).val().replace(/\D+/g,""));
+				
+				if(value < 55) {
+					jQuery (this).val(55);
+				} else if(value > 400) {
+					jQuery (this).val(400);
+				} else {
+					var mod = Math.floor(value / 5);
+					value = mod * 5;
+					jQuery (this).val( value );
+				}
+			});
+		}	
+		function getSelectIndex(selects,obj){
+			for (key in selects) {
+				if(selects[key]==obj){
+					
+					index = key;
+				}
+				
+			}
+			console.log(index);
+			return index;
 		}
-	});
-}	
-function getSelectIndex(selects,obj){
-	for (key in selects) {
-		if(selects[key]==obj){
-			
-			index = key;
-		}
+
+		<?php
+			session_start();
+			$texture = 0;
+			$color = 0;
+			$manufacturer = 0;
+			$sess = $_SESSION['jform_n4'].' | '.$_SESSION['jform_n5'].' | '.$_SESSION['jform_n9'].' | '.$_SESSION['texture'].' | '.$_SESSION['color'].' | '.
+					$_SESSION['manufacturer'].' | '.$_SESSION['calc_title'].' | '.$_SESSION['data'].' | '.$_SESSION['cut'].' | '.$_SESSION['offcut'].' | '.
+					$_SESSION['width'].' | '.$_SESSION['original'];
+			echo "console.log('$sess');";
+			if (isset($_SESSION['jform_n4'],$_SESSION['jform_n5'],$_SESSION['jform_n9'],$_SESSION['data'],
+				$_SESSION['cut'],$_SESSION['texture'],$_SESSION['color'],$_SESSION['manufacturer'],
+				$_SESSION['width'],$_SESSION['offcut'],$_SESSION['calc_title']))
+			{
+				$n4 = $_SESSION['jform_n4'];
+				$n5 = $_SESSION['jform_n5'];
+				$n9 = $_SESSION['jform_n9'];
+				$data = $_SESSION['data'];
+				$cut = $_SESSION['cut'];
+				$texture = $_SESSION['texture'];
+				$manufacturer = $_SESSION['manufacturer'];
+				$offcut = $_SESSION['offcut'];
+				$color = $_SESSION['color'];
+				$original = $_SESSION['original'];
+				$calc_title = $_SESSION['calc_title'];
+				$width = (string)$_SESSION['width']/100;
+				if(empty(strpos($width,'.'))){
+					$width.='.0';
+				}
+				$model = Gm_ceilingHelpersGm_ceiling::getModel('colors');
+				$imgurl = $model->getColorFile($color)->file;
+				echo 'jQuery("#jform_n4").val("'.$n4.'");'
+				.'jQuery("#jform_n5").val("'.$n5.'");'
+				.'jQuery("#jform_n9").val("'.$n9.'");'
+				.'jQuery("#jform_calculation_title").val("'.$calc_title.'");'
+				.'jQuery("#jform_sketch_name").val("'.$data.'");'
+				.'jQuery("#jform_cut_name").val("'.$cut.'");'
+				.'jQuery("#jform_original_name").val("'.$original.'");'
+				.'jQuery("#sketch_image").prop("src", "/tmp/" + "'.$data.'" + ".png");'
+				.'jQuery("#sketch_image").removeAttr("hidden");'
+				.'jQuery("#sketch_image_block").show();'
+				.'jQuery("#data-wrapper").show();'
+				.'jQuery("#jform_offcut_square").val("'.$offcut.'");';
+				unset($_SESSION['jform_n4'],$_SESSION['jform_n5'],$_SESSION['jform_n9'],$_SESSION['data'],
+				$_SESSION['cut'],$_SESSION['offcut'],$_SESSION['calc_title'],$_SESSION['original'],$_SESSION['color']);
+			}
+			echo 'function change_select_texture() {var lnk=document.getElementById(\'jform_n2\').options;'
+				.'for (var i=0;i<lnk.length;i++) {'
+				.'if (lnk[i].value=="'.$texture.'") {lnk[i].selected=true; jQuery( "#jform_n2" ).change();} }  } ';
+
+			echo 'function change_select_manufacturer() {var lnk=document.getElementById(\'jform_proizv\').options;'
+				.'for (var i=0;i<lnk.length;i++) {'
+				.'if (lnk[i].value=="'.$manufacturer.'") {lnk[i].selected=true;} } '
+				.'jQuery("#sketch_switch").prop("disabled",false);'
+				.'jQuery("#jform_proizv").prop("disabled",false);'
+				.'jQuery("#jform_color").val("'.$color.'");'
+				.'jQuery("#color_img").attr("src","'.$imgurl.'");'
+				.'jQuery("#calculate_button").prop("disabled",false);'
+				.'jQuery("#flag_auto").val(0);'
+				.'jQuery.getJSON( "index.php?option=com_gm_ceiling&task=getCanvasesList&jform_n2=" + jQuery("#jform_n2" ).val()+"&jform_proizv="+jQuery("#jform_proizv").val(), function( data ) {jQuery("#width").val(data);});change_select_n3();}';
+
+			$str = 'function change_select_n3() {';
+			if(!empty($width)){
+				$str.='jQuery("#jform_n3_hidden").val("'.$width.'");';
+			}
+			$str.='jQuery("#jform_n3").html("<option value ='.$width.' selected>'.$width.'</option>")} ';
+			echo $str;
+
+			if(isset($_SESSION['need_calc'])){
+				echo  'console.log("isset");';
+				if($_SESSION['need_calc']==1){
+					echo 'jQuery("#flag_auto").val(0);';
+					echo 'timer = setInterval(calc_click,500);';
+					unset($_SESSION['need_calc']);
+				}
+			}
 		
-	}
-	console.log(index);
-	return index;
-}
-
-<?php
-	session_start();
-	$texture = 0;
-	$color = 0;
-	$manufacturer = 0;
-	$sess = $_SESSION['jform_n4'].' | '.$_SESSION['jform_n5'].' | '.$_SESSION['jform_n9'].' | '.$_SESSION['texture'].' | '.$_SESSION['color'].' | '.
-			$_SESSION['manufacturer'].' | '.$_SESSION['calc_title'].' | '.$_SESSION['data'].' | '.$_SESSION['cut'].' | '.$_SESSION['offcut'].' | '.
-			$_SESSION['width'].' | '.$_SESSION['original'];
-	echo "console.log('$sess');";
-	if (isset($_SESSION['jform_n4'],$_SESSION['jform_n5'],$_SESSION['jform_n9'],$_SESSION['data'],
-		$_SESSION['cut'],$_SESSION['texture'],$_SESSION['color'],$_SESSION['manufacturer'],
-		$_SESSION['width'],$_SESSION['offcut'],$_SESSION['calc_title']))
-	{
-		$n4 = $_SESSION['jform_n4'];
-		$n5 = $_SESSION['jform_n5'];
-		$n9 = $_SESSION['jform_n9'];
-		$data = $_SESSION['data'];
-		$cut = $_SESSION['cut'];
-		$texture = $_SESSION['texture'];
-		$manufacturer = $_SESSION['manufacturer'];
-		$offcut = $_SESSION['offcut'];
-		$color = $_SESSION['color'];
-		$original = $_SESSION['original'];
-		$calc_title = $_SESSION['calc_title'];
-        $width = (string)$_SESSION['width']/100;
-        if(empty(strpos($width,'.'))){
-            $width.='.0';
-        }
-		$model = Gm_ceilingHelpersGm_ceiling::getModel('colors');
-		$imgurl = $model->getColorFile($color)->file;
-		echo 'jQuery("#jform_n4").val("'.$n4.'");'
-		.'jQuery("#jform_n5").val("'.$n5.'");'
-		.'jQuery("#jform_n9").val("'.$n9.'");'
-		.'jQuery("#jform_calculation_title").val("'.$calc_title.'");'
-		.'jQuery("#jform_sketch_name").val("'.$data.'");'
-		.'jQuery("#jform_cut_name").val("'.$cut.'");'
-		.'jQuery("#jform_original_name").val("'.$original.'");'
-		.'jQuery("#sketch_image").prop("src", "/tmp/" + "'.$data.'" + ".png");'
-		.'jQuery("#sketch_image").removeAttr("hidden");'
-		.'jQuery("#sketch_image_block").show();'
-        .'jQuery("#data-wrapper").show();'
-		.'jQuery("#jform_offcut_square").val("'.$offcut.'");';
-		unset($_SESSION['jform_n4'],$_SESSION['jform_n5'],$_SESSION['jform_n9'],$_SESSION['data'],
-		$_SESSION['cut'],$_SESSION['offcut'],$_SESSION['calc_title'],$_SESSION['original'],$_SESSION['color']);
-	}
-	echo 'function change_select_texture() {var lnk=document.getElementById(\'jform_n2\').options;'
-		.'for (var i=0;i<lnk.length;i++) {'
-		.'if (lnk[i].value=="'.$texture.'") {lnk[i].selected=true; jQuery( "#jform_n2" ).change();} }  } ';
-
-	echo 'function change_select_manufacturer() {var lnk=document.getElementById(\'jform_proizv\').options;'
-		.'for (var i=0;i<lnk.length;i++) {'
-		.'if (lnk[i].value=="'.$manufacturer.'") {lnk[i].selected=true;} } '
-		.'jQuery("#sketch_switch").prop("disabled",false);'
-		.'jQuery("#jform_proizv").prop("disabled",false);'
-		.'jQuery("#jform_color").val("'.$color.'");'
-		.'jQuery("#color_img").attr("src","'.$imgurl.'");'
-        .'jQuery("#calculate_button").prop("disabled",false);'
-        .'jQuery("#flag_auto").val(0);'
-		.'jQuery.getJSON( "index.php?option=com_gm_ceiling&task=getCanvasesList&jform_n2=" + jQuery("#jform_n2" ).val()+"&jform_proizv="+jQuery("#jform_proizv").val(), function( data ) {jQuery("#width").val(data);});change_select_n3();}';
-
-    $str = 'function change_select_n3() {';
-    if(!empty($width)){
-        $str.='jQuery("#jform_n3_hidden").val("'.$width.'");';
-    }
-    $str.='jQuery("#jform_n3").html("<option value ='.$width.' selected>'.$width.'</option>")} ';
-	echo $str;
-
-    if(isset($_SESSION['need_calc'])){
-        echo  'console.log("isset");';
-        if($_SESSION['need_calc']==1){
-            echo 'jQuery("#flag_auto").val(0);';
-            echo 'timer = setInterval(calc_click,500);';
-            unset($_SESSION['need_calc']);
-        }
-    }
-   
-?>
+		?>
 	});
-	 function calc_click(){
+
+	function calc_click(){
          if(jQuery("#jform_n2").val()!=""&&jQuery("#jform_proizv").val()!=""){
 			jQuery("#calculate_button").click();
-			
             jQuery('html, body').animate({
                 scrollTop: jQuery("#calculate_button").offset().top
             }, 1000);
             clearInterval(timer);
         }
 	}
+	
     function SELECT_CUSTOM_INIT() {
         var SELECT_CUSTOM = jQuery(".SELECT_CUSTOM");
         SELECT_CUSTOM.find("div").css({"line-height": SELECT_CUSTOM.height() + "px"});

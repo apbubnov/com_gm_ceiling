@@ -3787,7 +3787,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data = array(
                 'id'=> $project_id,
                 'transport'=>$transport_type,
-                '$distance' => $distance,
+                'distance' => $distance,
                 'distance_col' =>$distance_col
             );
             $res = $project_model->transport((object)$data);
@@ -3805,31 +3805,31 @@ class Gm_ceilingHelpersGm_ceiling
         $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
         if($res) {
             if($transport_type == 1) {
-                $transport_sum = self::margin($res->transport * $distance_col, $margin);
+                $transport_sum = margin($res->transport * $distance_col, $margin);
                 $transport_sum_1 = $res->transport * $distance_col;
                 $result = array(
                     'transport' => 'Транспорт по городу',
                     'distance' => '-',
                     'distance_col'=> $distance_col,
                     'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum1 
+                    'mounter_sum' => $transport_sum_1 
                 );
 
             }
             elseif($transport_type == 2) {
                 $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
                 $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                if($transport_sum < self::margin($res->transport, $margin))
+                if($transport_sum < margin($res->transport, $margin))
                   { 
-                      $transport_sum = self::margin($res->transport, $margin);
+                      $transport_sum = margin($res->transport, $margin);
                       $transport_sum_1 = $res->transport;
                   }
                 $result = array(
                     'transport' => 'Выезд за город',
-                    'distance' => '-',
+                    'distance' => $distance,
                     'distance_col'=> $distance_col,
                     'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum1 
+                    'mounter_sum' => $transport_sum_1 
                 );  
             }
             else { 
@@ -3840,12 +3840,12 @@ class Gm_ceilingHelpersGm_ceiling
                     'distance' => '-',
                     'distance_col'=> '-',
                     'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum1 
+                    'mounter_sum' => $transport_sum_1 
                 );
             } 
         }
        if($transport_type == 1) { 
-            $discount = $project_model->getDiscount($data->id);
+            $discount = $project_model->getDiscount($project_id);
             $min = 100;
             foreach($discount as $d) {
                 if($d->discount < $min)
@@ -3866,7 +3866,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
         $calculation_model = self::getModel('calculations');
-        $calculations = $model->getProjectItems($project_id);
+        $calculations = $calculation_model->getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
         $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
@@ -3895,8 +3895,10 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
-        $html = '<h1>Информация</h1>';
+        $html .= '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
+        $filename = md5($data['id'] . "-2") . ".pdf";
+        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         if (isset($project->id)) {
             if ($project->id) {
                 $html .= "<b>Номер договора: </b>" . $project->id . "<br>";
