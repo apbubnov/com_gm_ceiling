@@ -788,7 +788,7 @@
 							<div class="advanced_col5">
 								<label>Диаметр</label>
 							</div>
-							<div class="advanced_col3 center">
+							<div class="advanced_col4 center">
 								<label><i class="fa fa-trash" aria-hidden="true"></i></label>
 							</div>
 							<div class="clr"></div>
@@ -809,7 +809,7 @@
 													<?endforeach;?>
 												</select>
 											</div>
-											<div class="advanced_col3 center">
+											<div class="advanced_col4 center">
 												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
 											</div>
 											<div class="clr"></div>
@@ -824,7 +824,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		
+
 		<!-- расширенная версия -->
 		<div id="extra_section">
 			<div class="container">
@@ -985,7 +985,7 @@
                             	<div class="advanced_col5">
                                 	<label>Тип</label>
                             	</div>
-                            	<div class="advanced_col3 center">
+                            	<div class="advanced_col4 center">
                                 	<label><i class="fa fa-trash" aria-hidden="true"></i></label>
                             	</div>
                             	<div class="clr"></div>
@@ -1009,7 +1009,7 @@
 													<?}; endforeach; ?>
 												</select>
 											</div>
-											<div class="advanced_col3 center">
+											<div class="advanced_col4 center">
 												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
 											</div>
 											<div class="clr"></div>
