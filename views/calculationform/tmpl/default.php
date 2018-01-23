@@ -689,6 +689,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- приобрести карнизы -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -825,6 +826,7 @@
 			</div>
 		</div>
 		<div id="extra_section">
+			<!-- прочий монтаж -->
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4">
@@ -837,6 +839,7 @@
 				</div>
 			</div>
 			<?php if ($type!='guest' && $user->dealer_type!=2) {?>
+				<!-- плитка -->
 				<div class="container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
@@ -861,6 +864,7 @@
 						<div class="col-sm-4">
 					</div>
 				</div>
+				<!-- керамогранит -->
 				<div class="container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>				
@@ -885,6 +889,7 @@
 						<div class="col-sm-4"></div>					
 					</div>
 				</div>
+				<!-- провод -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>				
@@ -909,6 +914,7 @@
 						<div class="col-sm-4">
 					</div>					
 				</div>
+				<!-- закладная брусом -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>				
@@ -933,6 +939,7 @@
 						<div class="col-sm-4"></div>					
 					</div>
 				</div>
+				<!-- парящий потолок -->
 				<div class = "container">
 					<div class="row sm-margin-bottom" id="n30_block">
 						<div class="col-sm-4"></div>
@@ -957,10 +964,11 @@
 						<div class="col-sm-4"></div>
 					</div>
 				</div>
+				<!-- переход уровня -->
             	<div class="container">
-                	<div class="row sm-margin-bottom">
+                	<div class="row">
                     	<div class="col-sm-4"></div>
-                    	<div class="col-sm-4">
+                    	<div class="col-sm-4" style="margin-bottom: 1em;">
 							<table>
 								<tr>
 									<td>Переход уровня</td>
@@ -1016,7 +1024,7 @@
                         	<button id="add_level" class="btn btn-primary" type="button">Добавить</button>
                     	</div>
                 	</div>
-            	</div>
+				</div>
 			<?php } ?>
 			<!-- пожарная сигнализация -->
 			<div class = "container">
@@ -1024,7 +1032,7 @@
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div class="form-group">
-							<table style="width: calc(50% - 173);">
+							<table>
 								<tr>
 									<td>Пожарная сигнализация</td>
 									<td>
@@ -1222,14 +1230,27 @@
 						</div>
 					</div>
 				</div>
-        	<?php }?>
+			<?php }?>
+			<!-- вентиляция -->
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4" style="margin-bottom: 1em;">
+						<table>
+							<tr>
+								<td>Вентиляция</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-sm-4"></div>
+				</div>
+			</div>
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div id="jform_n22_block"> 
-							<h3>Вентиляция</h3>
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
 									<label>Кол-во,шт</label>
 								</div>
@@ -1246,7 +1267,7 @@
 							</div>
 							<div id="jform_n22_block_html" class="hide_label">
 								<?php $n22 = $this->item->n22;
-									if(count($n22) > 0) {
+									if (count($n22) > 0) {
 										foreach($n22 as $ventilation) if ($ventilation->n22_count > 0) { ?>
 											<div class="form-group">
 												<div class="advanced_col1">
@@ -1280,63 +1301,72 @@
 				</div>
 			</div>
 			<?php if($type!='guest' && $user->dealer_type!=2) {?>
+				<!-- диффузор -->
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4" style="margin-bottom: 1em;">
+							<table>
+								<tr>
+									<td>Диффузор</td>
+									<td>
+										<a class="help">
+											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<span class="airhelp">Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br></span>
+										</a>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
 				<div class="container">
 					<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-						<table>
-							<tr>
-								<td>
-									<h3>Диффузор</h3>
-								</td>
-								<td>
-									<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-										<br>Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br>
-										</span></a>
-								</td>
-							</tr>
-						</table>
-						<div id="jform_n23_block" >
-							<div class="form-group">
+						<div id="jform_n23_block">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
 									<label>Кол-во,шт</label>
 								</div>
-								<div class="advanced_col2">
+								<div class="advanced_col5">
 									<label>Размер</label>
 								</div>
-								<div class="advanced_col3 center">
+								<div class="advanced_col4 center">
 									<label><i class="fa fa-trash" aria-hidden="true"></i></label>
 								</div>
 								<div class="clr"></div>
 							</div>
 							<div id="jform_n23_block_html" class="hide_label">
-								<?php $n23 = $this->item->n23;
-									if(count($n23) > 0) {
-										foreach($n23 as $diffuzor) if ($diffuzor->n23_count > 0) { ?>
-											<div class="form-group">
-												<div class="advanced_col1">
-													<input name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
-												</div>
-												<div class="advanced_col2">
-													<select class="form-control" name="n23_size[]" for="jform_n22_type" placeholder="Размер">
+								<?php $n23 = $this->item->n23; ?>
+								<?php if(count($n23) > 0) { ?>
+									<?php foreach($n23 as $diffuzor) if ($diffuzor->n23_count > 0) { ?>
+										<div class="form-group">
+											<div class="advanced_col1">
+												<input name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
+											</div>
+											<div class="advanced_col5">
+												<select class="form-control" name="n23_size[]" for="jform_n22_type" placeholder="Размер">
 													<?foreach ($this->item->n23_all AS $diffuzor_item):?>
 														<option value="<?=$diffuzor_item->id;?>" <?=($diffuzor_item->id == $diffuzor->n23_size)?'selected':'';?>><?=$diffuzor_item->title;?></option>
 													<?endforeach;?>
-													</select>
-												</div>
-												<div class="advanced_col3 center">
-													<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-												</div>
-												<div class="clr"></div>
+												</select>
 											</div>
-										<?php } ?>
+											<div class="advanced_col4 center">
+												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+											</div>
+											<div class="clr"></div>
+										</div>
 									<?php } ?>
+								<?php } ?>
 							</div>
 							<button id="add_n23" class="btn btn-primary" type="button">Добавить</button>
 						</div>
 					</div>
 					<div class="col-sm-4"></div>
 				</div>
+				<!-- другие комплектующие -->
 				<div class="container">
 					<div class="row sm-margin-bottom ">
 						<div class="col-sm-4"></div>
@@ -2831,12 +2861,12 @@ var level = [];
 			html+= "<div class='advanced_col1'>";
 			html+= "<input name='n23_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
 			html+= "</div>";
-			html+= "<div class='advanced_col2'>";
+			html+= "<div class='advanced_col5'>";
 			html+= "<select class='form-control' name='n23_size[]' placeholder='Тип'>";
 			html+= difusors;
 			html+= "</select>";
 			html+= "</div>";
-			html+= "<div class='advanced_col3 center'>";
+			html+= "<div class='advanced_col4 center'>";
 			html+= "<button class='clear_form_group btn btn-danger' type='button'><i class='fa fa-trash' aria-hidden='true'></i></button>";
 			html+= "</div>";
 			html+= "<div class='clr'></div>";
