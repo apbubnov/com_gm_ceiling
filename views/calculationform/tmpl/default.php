@@ -1042,7 +1042,6 @@
 					<div class="col-sm-4"></div>
 				</div>
 			</div>
-
 			<?php if($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- разделитель -->
 				<div class = "container">
