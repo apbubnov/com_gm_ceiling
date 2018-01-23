@@ -206,9 +206,9 @@
     <button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_comm" class = "modal_window">
         <? if (!empty($dop_contacts)) { ?>
-        <div>
+        <div style="margin-top: 10px;">
         <? foreach ($dop_contacts AS $contact) {?>
-            <input type="radio" name='rb_email' onclick='rb_email_click()'><? echo $contact->contact; ?><br>
+            <input type="radio" name='rb_email' value='<? echo $contact->contact; ?>' onclick='rb_email_click()'><? echo $contact->contact; ?><br>
         <? }?>
         </div>
         <? } ?>
@@ -361,6 +361,7 @@
 
     function rb_email_click()
     {
+        console.log(this.value);
         jQuery("#email_comm").val(this.value);
     }
 
