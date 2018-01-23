@@ -539,6 +539,7 @@ $results = $db->loadObjectList();
     <li class="nav-item">
         <a class="nav-link <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" data-toggle="tab" href="#summary" role="tab">Общее</a>
     </li>
+    
     <?php foreach ($calculations as $k => $calculation) { ?>
         <li class="nav-item">
         <?php if($user->dealer_type == 1) { ?>
@@ -556,7 +557,6 @@ $results = $db->loadObjectList();
         </a>
     </li>
 </ul>
-
 
 <!-- Tab panes -->
 <div class="tab-content">
