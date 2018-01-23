@@ -958,7 +958,7 @@
 					</div>
 				</div>
             	<div class="container">
-                	<div class="row sm-margin-bottom">
+                	<div class="row">
                     	<div class="col-sm-4"></div>
                     	<div class="col-sm-4">
 							<table>
@@ -1017,7 +1017,6 @@
                     	</div>
                 	</div>
 				</div>
-				
 			<?php } ?>
 			<!-- пожарная сигнализация -->
 			<div class = "container">
