@@ -3787,7 +3787,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data = array(
                 'id'=> $project_id,
                 'transport'=>$transport_type,
-                '$distance' => $distance,
+                'distance' => $distance,
                 'distance_col' =>$distance_col
             );
             $res = $project_model->transport((object)$data);
@@ -3812,7 +3812,7 @@ class Gm_ceilingHelpersGm_ceiling
                     'distance' => '-',
                     'distance_col'=> $distance_col,
                     'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum1 
+                    'mounter_sum' => $transport_sum_1 
                 );
 
             }
@@ -3826,10 +3826,10 @@ class Gm_ceilingHelpersGm_ceiling
                   }
                 $result = array(
                     'transport' => 'Выезд за город',
-                    'distance' => '-',
+                    'distance' => $distance,
                     'distance_col'=> $distance_col,
                     'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum1 
+                    'mounter_sum' => $transport_sum_1 
                 );  
             }
             else { 
@@ -3840,7 +3840,7 @@ class Gm_ceilingHelpersGm_ceiling
                     'distance' => '-',
                     'distance_col'=> '-',
                     'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum1 
+                    'mounter_sum' => $transport_sum_1 
                 );
             } 
         }
@@ -3899,8 +3899,6 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         $filename = md5($data['id'] . "-2") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
-        exit();
-        
         if (isset($project->id)) {
             if ($project->id) {
                 $html .= "<b>Номер договора: </b>" . $project->id . "<br>";
