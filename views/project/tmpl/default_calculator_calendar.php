@@ -555,7 +555,7 @@ $results = $db->loadObjectList();
 
 <!-- Tab panes -->
 <div class="tab-content">
-<?php if($user->dealer_type == 1 && count($calculations) == 0) continue;?>
+<?php if($user->dealer_type == 1 && count($calculations) <= 0) continue;?>
     <div class="tab-pane active" id="summary" role="tabpanel">
         <table id="table1" class="table table-striped one-touch-view">
             <tr>
