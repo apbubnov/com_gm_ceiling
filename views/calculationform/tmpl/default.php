@@ -781,11 +781,11 @@
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n14_block" >
-						<div class="form-group">
+						<div class="form-group" style="margin-bottom: 0em;">
 							<div class="advanced_col1">
 								<label>Кол-во,шт</label>
 							</div>
-							<div class="advanced_col2">
+							<div class="advanced_col5">
 								<label>Диаметр</label>
 							</div>
 							<div class="advanced_col3 center">
@@ -802,7 +802,7 @@
 											<div class="advanced_col1">
 												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
 											</div>
-											<div class="advanced_col2">
+											<div class="advanced_col5">
 												<select class="form-control" name="n14_type[]" placeholder="Платформа">
 													<?foreach ($this->item->n14_all AS $truba_item):?>
 														<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
@@ -824,9 +824,10 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- расширенная версия -->
 		<div id="extra_section">
 			<div class="container">
-				<div class="row">
+				<div class="row sm-margin-bottom">
 					<div class="col-sm-4">
 					</div>
 					<div class="col-sm-4">
@@ -836,7 +837,7 @@
 					</div>
 				</div>
 			</div>
-			<?php if($type!='guest' && $user->dealer_type!=2) {?>
+			<?php if ($type!='guest' && $user->dealer_type!=2) {?>
 				<div class="container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
@@ -848,8 +849,10 @@
 											<label id="jform_n7-lbl" for="jform_n7" class="">Метраж стен с плиткой</label>
 										</td>
 										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-											Считается дополнительная работа монтажникам по креплению багета в плитку</span></a>
+											<a class="help" >
+												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в плитку</span>
+											</a>
 										</td>
 									</tr>
 								</table>
@@ -870,9 +873,10 @@
 											<label id="jform_n8-lbl" for="jform_n8" class="">Метраж стен с керамогранитом</label>
 										</td>
 										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-											Считается дополнительная работа монтажникам по креплению багета в керамогранит</span></a>
+											<a class="help" >
+												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в керамогранит</span>
+											</a>
 										</td>
 									</tr>
 								</table>
@@ -893,9 +897,10 @@
 											<label id="jform_n19-lbl" for="jform_n19" class="">Провод</label>
 										</td>
 										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-											На 1м провода используется:  <br> Провод ПВС 2 х 0,75  + 2 * Дюбель полим. 6 * 51 + 2 * Саморез ГДК 3,5 * 51 </span></a>
+											<a class="help" >
+												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">На 1м провода используется:  <br> Провод ПВС 2 х 0,75  + 2 * Дюбель полим. 6 * 51 + 2 * Саморез ГДК 3,5 * 51</span>
+											</a>
 										</td>
 									</tr>
 								</table>
@@ -916,9 +921,10 @@
 											<label id="jform_n17-lbl" for="jform_n17" class="">Закладная брусом</label>
 										</td>
 										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-											На 1м  используется:  <br> Брус 40*50  + 3 * Подвес прямой П 60 (0,8) +  6 * Дюбель полим. 6 * 51 + 6 * Саморез ГДК 3,5 * 51 + 6 * Саморез ГДК 3,5 * 41</span></a>
+											<a class="help" >
+												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">На 1м  используется:  <br> Брус 40*50  + 3 * Подвес прямой П 60 (0,8) +  6 * Дюбель полим. 6 * 51 + 6 * Саморез ГДК 3,5 * 51 + 6 * Саморез ГДК 3,5 * 41</span>
+											</a>
 										</td>
 									</tr>
 								</table>
@@ -939,9 +945,10 @@
 											<label id="jform_n30-lbl" for="jform_n30" class="">Парящий потолок</label>
 										</td>
 										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-										На 1м парящего потолка используется:  <br> Багет для парящих пот аллюм + Вставка для парящих потолков </span></a>
+											<a class="help" >
+												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">На 1м парящего потолка используется:  <br> Багет для парящих пот аллюм + Вставка для парящих потолков </span>
+										</a>
 										</td>
 									</tr>
 								</table>
@@ -960,7 +967,6 @@
 									<td>
 										<h4 >Переход уровня</h4>
 									</td>
-									
 								</tr>
 							</table>
                     	</div>
@@ -971,11 +977,11 @@
                 	<div class="row sm-margin-bottom">
                     	<div class="col-sm-4"></div>
                     	<div class="col-sm-4">
-                        	<div class="form-group">
+                        	<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
 									<label>Кол-во,м</label>
 								</div>
-                            	<div class="advanced_col2">
+                            	<div class="advanced_col5">
                                 	<label>Тип</label>
                             	</div>
                             	<div class="advanced_col3 center">
@@ -984,34 +990,33 @@
                             	<div class="clr"></div>
                        		</div>
                         	<div id="level_block_html" class="hide_label">
-                            	<?php $n29 = $this->item->n29;
-                           			$component_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-                             		if(count($n29) > 0) { 
-                                		foreach($n29 as $level) {?>
-                                    		<div class="form-group">
-                                        		<div class="advanced_col1">
-                                            		<input name="n29_count[]"  value="<?=/*$tmp[$item]*/ $level->n29_count; ?>" class="form-control" placeholder="м." type="tel">
-                                        		</div>
-                                        		<div class="advanced_col2">
-                                            		<select name="n29_type[]" id="n29" class="form-control n29_control" placeholder="Тип">
-														<?foreach ($this->item->types[11]->id AS $type1):
-														if($this->item->n2 == 29 && ($type1->id == 12 || $type1->id == 15)) {?>
-                                                    		<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
-                                               			<? } else if($this->item->n2 != 29) { ?>
-															<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
-											    		<?}; endforeach; ?>
-                                            		</select>
-                                        		</div>
-												<div class="advanced_col3 center">
-													<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-												</div>
-                                        		<div class="clr"></div>
-                                    		</div>
-                               			<?php } ?>
-                            		<?php } ?>
+                            	<?php $n29 = $this->item->n29; ?>
+								<?php $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
+								<?php if(count($n29) > 0) { ?>
+									<?php foreach($n29 as $level) {?>
+										<div class="form-group">
+											<div class="advanced_col1">
+												<input name="n29_count[]"  value="<?=/*$tmp[$item]*/ $level->n29_count; ?>" class="form-control" placeholder="м." type="tel">
+											</div>
+											<div class="advanced_col5">
+												<select name="n29_type[]" id="n29" class="form-control n29_control" placeholder="Тип">
+													<?foreach ($this->item->types[11]->id AS $type1):
+													if($this->item->n2 == 29 && ($type1->id == 12 || $type1->id == 15)) {?>
+														<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
+													<? } else if($this->item->n2 != 29) { ?>
+														<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
+													<?}; endforeach; ?>
+												</select>
+											</div>
+											<div class="advanced_col3 center">
+												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+											</div>
+											<div class="clr"></div>
+										</div>
+									<?php } ?>
+								<?php } ?>
                         	</div>
-                        	<button id="add_level" class="btn btn-primary" type="button">Добавить </button>
-
+                        	<button id="add_level" class="btn btn-primary" type="button">Добавить</button>
                     	</div>
                 	</div>
             	</div>
