@@ -1463,12 +1463,22 @@
 					</div>
 				</div>
 				<!-- новый процент скидки -->
-				<div class="container">
+				<div class = "container">
 					<div class="row sm-margin-bottom">
-						<div class="col-md-4 pull-center">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4 pull-center">
 							<h3>Новый процент скидки</h3>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+				<div class = "container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
 							<input name= "jform[discount]" id="new_discount" class="form-control" placeholder="Введите %" type="number" max="100" min="0" type="number" value="<? echo $this->item->discount; ?>" >
 						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 			<?php }?>
