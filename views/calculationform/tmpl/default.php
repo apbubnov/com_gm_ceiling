@@ -505,7 +505,7 @@
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n13_block" >
-						<div class="form-group">
+						<div class="form-group" style="margin-bottom: 0.5em;">
 							<div class="advanced_col1">
 								<label>Кол-во</label>
 							</div>
