@@ -70,11 +70,11 @@
 	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 		<?php if ($this->type === "guest") { ?>
-			<div class="show_before_calculate">
+			<div class="show_before_calculate" style="margin-bottom: 1em;">
 				<h1>Натяжные потолки от производителя без посредников дешевле на 30%</h1>
 			</div>
 			<input type="hidden" name="jform[rek]" value="<?php echo  $rek; ?>" />
-		<?php }?>
+		<?php } ?>
         <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
         <input id="flag_auto" type="hidden" value="0"/>
 		<input type="hidden" name="jform[public]" value="1" />
