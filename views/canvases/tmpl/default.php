@@ -101,7 +101,7 @@ $dealer = JFactory::getUser($user->dealer_id);
                     <? if ($canEdit): ?>
                         <td class="center update_price">
                             <div class="update_price">
-                                <input type="text" class="new_price" value="<?=$catWidth['price'];?>">
+                                <input type="text" class="new_price" value="<?=$catWidth['one_price'];?>">
                                 <button type="submit" onsubmit="saveSum(this);" formaction="javascript:false;" class="save" onclick="saveSum(this);">
                                     <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 </button>
