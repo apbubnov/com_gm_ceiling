@@ -485,7 +485,7 @@
 		</div>
 		<!-- Светильники -->
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row sm">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<table>
