@@ -1035,7 +1035,6 @@
 									</td>
 								</tr>
 							</table>
-							
 							<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel">
 						</div>
 					</div>
