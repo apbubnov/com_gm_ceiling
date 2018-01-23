@@ -208,7 +208,7 @@
         <? if (!empty($dop_contacts)) { ?>
         <div style="margin-top: 10px;">
         <? foreach ($dop_contacts AS $contact) {?>
-            <input type="radio" name='rb_email' value='<? echo $contact->contact; ?>' onclick='rb_email_click()'><? echo $contact->contact; ?><br>
+            <input type="radio" name='rb_email' value='<? echo $contact->contact; ?>' onclick='rb_email_click(this)'><? echo $contact->contact; ?><br>
         <? }?>
         </div>
         <? } ?>
@@ -359,10 +359,10 @@
         });
     });
 
-    function rb_email_click()
+    function rb_email_click(elem)
     {
-        console.log(this.value);
-        jQuery("#email_comm").val(this.value);
+        console.log(elem.value);
+        jQuery("#email_comm").val(elem.value);
     }
 
     jQuery(document).ready(function ()
