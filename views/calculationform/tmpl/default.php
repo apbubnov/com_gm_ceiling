@@ -824,6 +824,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		
 		<!-- расширенная версия -->
 		<div id="extra_section">
 			<div class="container">
