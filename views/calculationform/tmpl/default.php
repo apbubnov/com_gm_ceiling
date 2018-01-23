@@ -693,9 +693,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<h4>
-						Можете приобрести карнизы у нас:
-					</h4>
+					<h4>Можете приобрести карнизы у нас:</h4>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -704,7 +702,7 @@
 			<div class="row sm-margin-bottom">
 		    	<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<div class="form-group">
+					<div class="form-group" style="margin-bottom: 0.5em;">
 						<div class="advanced_col1">
 							<label>Кол-во,шт</label>
 						</div>
@@ -720,37 +718,36 @@
 						<div class="clr"></div>
 					</div>
 					<div id="jform_n15_block_html" class="hide_label">
-						<?php 
-							$n15 = $this->item->n15;
-								if(count($n15) > 0) { 
-									foreach($n15 as $cornice) {?>
-										<div class="form-group">
-											<div class="advanced_col1">
-												<input name="n15_count[]"  value="<?= $cornice->n15_count; ?>" class="form-control" placeholder="шт." type="tel">
-											</div>
-											<div class="advanced_col2">
-												<select name="n15_type[]" id="n15" class="form-control n15_control" placeholder="Тип">
-													<?foreach ($this->item->types[9]->id AS $type1):?>
-														<option value="<?=$type1->id;?>" <?=($type1->id == $cornice->n15_type)?'selected':'';?>><?=$type1->title;?></option>
-													<?endforeach;?>
-												</select>
-											</div>
-											<div class="advanced_col3">
-												<select name="n15_size[]" id="n15_1" class="form-control" placeholder="Диаметр">
-													<?foreach ( $this->item->n15_all AS $cornice_item):?>
-														<option value="<?=$cornice_item->id;?>" <?=($cornice_item->id == $cornice->n15_size)?'selected':'';?>><?=$cornice_item->title;?></option>
-													<?endforeach;?>
-												</select>
-											</div>
-											<div class="advanced_col4 center">
-												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-											</div>
-											<div class="clr"></div>
-										</div>
-									<?php } ?>
+						<?php $n15 = $this->item->n15; ?>
+						<?php if (count($n15) > 0) { ?>
+							<?php foreach ($n15 as $cornice) { ?>
+								<div class="form-group">
+									<div class="advanced_col1">
+										<input name="n15_count[]"  value="<?= $cornice->n15_count; ?>" class="form-control" placeholder="шт." type="tel">
+									</div>
+									<div class="advanced_col2">
+										<select name="n15_type[]" id="n15" class="form-control n15_control" placeholder="Тип">
+											<?foreach ($this->item->types[9]->id AS $type1):?>
+												<option value="<?=$type1->id;?>" <?=($type1->id == $cornice->n15_type)?'selected':'';?>><?=$type1->title;?></option>
+											<?endforeach;?>
+										</select>
+									</div>
+									<div class="advanced_col3">
+										<select name="n15_size[]" id="n15_1" class="form-control" placeholder="Диаметр">
+											<?foreach ( $this->item->n15_all AS $cornice_item):?>
+												<option value="<?=$cornice_item->id;?>" <?=($cornice_item->id == $cornice->n15_size)?'selected':'';?>><?=$cornice_item->title;?></option>
+											<?endforeach;?>
+										</select>
+									</div>
+									<div class="advanced_col4 center">
+										<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+									</div>
+									<div class="clr"></div>
+								</div>
 							<?php } ?>
+						<?php } ?>
 					</div>
-					<button id="add_n15" class="btn btn-primary" type="button">Добавить </button>
+					<button id="add_n15" class="btn btn-primary" type="button">Добавить</button>
 				</div>
 			</div>
 		</div>
