@@ -802,14 +802,14 @@
 											<div class="advanced_col1">
 												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
 											</div>
-											<div class="advanced_col_5">
+											<div class="advanced_col2" style="width: 65%;">
 												<select class="form-control" name="n14_type[]" placeholder="Платформа">
 													<?foreach ($this->item->n14_all AS $truba_item):?>
 														<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
 													<?endforeach;?>
 												</select>
 											</div>
-											<div class="advanced_col4 center">
+											<div class="advanced_col4 center" style="width: 15%;">
 												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
 											</div>
 											<div class="clr"></div>
