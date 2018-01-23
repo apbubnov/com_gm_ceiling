@@ -782,13 +782,13 @@
 				<div class="col-sm-4">
 					<div id="jform_n14_block" >
 						<div class="form-group" style="margin-bottom: 0em;">
-							<div class="advanced_col1_tar">
+							<div class="advanced_col1">
 								<label>Кол-во,шт</label>
 							</div>
-							<div class="advanced_col2_tar">
+							<div class="advanced_col5">
 								<label>Диаметр</label>
 							</div>
-							<div class="advanced_col3_tar center">
+							<div class="advanced_col4 center">
 								<label><i class="fa fa-trash" aria-hidden="true"></i></label>
 							</div>
 							<div class="clr"></div>
@@ -799,17 +799,17 @@
 								<?php foreach ($n14 as $truba) { ?>
 									<?php if ($truba->n14_count > 0) { ?>
 										<div class="form-group">
-											<div class="advanced_col1_tar">
+											<div class="advanced_col1">
 												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
 											</div>
-											<div class="advanced_col2_tar">
+											<div class="advanced_col5">
 												<select class="form-control" name="n14_type[]" placeholder="Платформа">
 													<?foreach ($this->item->n14_all AS $truba_item):?>
 														<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
 													<?endforeach;?>
 												</select>
 											</div>
-											<div class="advanced_col3_tar center">
+											<div class="advanced_col4 center">
 												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
 											</div>
 											<div class="clr"></div>
@@ -2689,12 +2689,12 @@ var level = [];
 			html+= "<div class='advanced_col1'>";
 			html+= "<input name='n14_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
 			html+= "</div>";
-			html+= "<div class='advanced_col2'>";
+			html+= "<div class='advanced_col5'>";
 			html+= "<select class='form-control' name='n14_type[]' placeholder='Платформа'>";
 			html+= bypasses ;
 			html+= "</select>";
 			html+= "</div>";
-			html+= "<div class='advanced_col3 center'>";
+			html+= "<div class='advanced_col4 center'>";
 			html+= "<button class='clear_form_group btn btn-danger' type='button'><i class='fa fa-trash' aria-hidden='true'></i></button>";
 			html+= "</div>";
 			html+= "<div class='clr'></div>";
