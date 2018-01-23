@@ -1505,6 +1505,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- высота помещения -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -1514,34 +1515,33 @@
 				<div class="col-sm-4"></div>
 			</div>
 			<div class="row sm-margin-bottom">
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "height">
-				<? if ($this->item->height == 0) { ?>
-					<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
-					<label for="max_height">больше 3х метров</label>
-					<br>
-					<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
-					<label for="min_height">меньше 3х метров</label>
-					<?} else { ?>
-					<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
-					<label for="max_height">больше 3х метров</label>
-					<br>
-					<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
-					<label for="min_height">меньше 3х метров</label>
-					<? } ?>
+					<?php if ($this->item->height == 0) { ?>
+						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
+						<label for="max_height">больше 3х метров</label>
+						<br>
+						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
+						<label for="min_height">меньше 3х метров</label>
+					<?php } else { ?>
+						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
+						<label for="max_height">больше 3х метров</label>
+						<br>
+						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
+						<label for="min_height">меньше 3х метров</label>
+					<?php } ?>
 				</div>
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- расчитать -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-md-4 pull-center">
 					<button id="calculate_button" class="btn btn-primary btn-big" type="button">
-					<span class="loading" style="display: none;">
-						Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-					</span>
+						<span class="loading" style="display: none;">
+							Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+						</span>
 						<span class="static">Рассчитать</span>
 					</button>
 				</div>
@@ -1550,9 +1550,8 @@
         <div id="result_block">
 			<div class="container">
 				<div class="row sm-margin-bottom">
-					<div class="col-sm-4">
-					</div>
-                    <? if($this->type === "guest") {?>
+					<div class="col-sm-4"></div>
+                    <?php if($this->type === "guest") { ?>
                         <div class="col-sm-4 total_price center" style="display: none;" id="guest_price">
                             <div class="price_value">
                                 <span id="final_price">0.00</span> руб. - <span style="color:red; " >30% </span>=
@@ -1562,17 +1561,16 @@
                                 Самая низкая цена в Воронеже!
                             </div>                            
                         </div>
-                    <?} else {?>
-                    <div class="col-sm-4 total_price center">
-                        <div class="price_value">
-                            <span id="final_price">0.00</span> руб.
-                        </div>
-                        <div class="price_title">
-                            Самая низкая цена в Воронеже!
-                        </div>
-                    </div>
-                    <? } ?>
-					
+                    <?php } else {?>
+						<div class="col-sm-4 total_price center">
+							<div class="price_value">
+								<span id="final_price">0.00</span> руб.
+							</div>
+							<div class="price_title">
+								Самая низкая цена в Воронеже!
+							</div>
+						</div>
+                    <?php } ?>
 				</div>
 			</div>			
 			<div class="container">
@@ -1592,8 +1590,7 @@
 							<input value="" id="send_email" name="jform[send_email]" class="form-control" placeholder="Введите ваш Email" type="email">
 						</div>
 					</div>
-					<div class="col-sm-4">
-					</div>
+					<div class="col-sm-4"></div>
 				</div>
 			</div>
 			<div class="container">
@@ -1653,8 +1650,8 @@
 				<?php if($this->type === "gmmanager"){?>
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-<!-- 						<a style=id="save_button" type="button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
- -->						<a id="save_button"  class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
+						<!-- <a style=id="save_button" type="button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a> -->
+						<a id="save_button"  class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
 					</div>
 					<div class="col-sm-4"></div>
 				<?php } ?>
