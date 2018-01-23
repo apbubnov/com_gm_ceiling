@@ -3866,7 +3866,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
         $calculation_model = self::getModel('calculations');
-        $calculations = $model->getProjectItems($project_id);
+        $calculations = $calculation_model->getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
         $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
