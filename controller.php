@@ -2702,7 +2702,7 @@ class Gm_ceilingController extends JControllerLegacy
             $body .= '<p>Почта: gm-partner@mail.ru</p>';
             $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
             $body .= '</div></td></tr></table>';
-            $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку <a href=\"$site\">".substr($site, 0, 22)."</a>, где Вы можете получить более подробную информацию.</div></body>";
+            $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку <a href=\"$site\">коммерческое предложение</a>, где Вы можете получить более подробную информацию.</div></body>";
             $mailer->setSubject('Коммерческое предложение');
             $mailer->isHtml(true);
             $mailer->Encoding = 'base64';
@@ -2710,7 +2710,12 @@ class Gm_ceilingController extends JControllerLegacy
             $send = $mailer->Send();
             
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-            $result  = $users_model->addCommercialOfferCode($user_id, $code);
+            $result = $users_model->addCommercialOfferCode($user_id, $code);
+
+            $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+            $client_id = JFactory::getUser($user_id)->associated_client;
+            $email_id = $dop_contacts_model->save($client_id, 1, $email);
+
             die(json_encode($result));
         }
         catch (Exception $e) {

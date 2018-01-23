@@ -190,7 +190,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             <div class="item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasureDealer&type=manager&subtype=calendar"
+                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
@@ -210,6 +210,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                     <input id = "emails" name = "emails" value = "" type = "hidden"> 
+                    <input name="without_advt" value="1" type="hidden">
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             <table class="table">
@@ -286,21 +287,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                         <div id="phones-block"></div>
                                     </td>
                                 </tr>
-                                <?php if (count($cl_phones) > 1): ?>
-                                    <tr>
-                                        <th>
-                                            Сделать звонок:
-                                        </th>
-                                        <td>
-                                            <select id="select_phones" class="inputactive">
-                                                <option value='0' disabled selected>Выберите номер для звонка:</option>
-                                                <?php foreach ($cl_phones as $item): ?>
-                                                    <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
                                 <?php if (isset($_SESSION['phones']) && count($_SESSION['phones'] > 1)) {
                                     for ($i = 1; $i < count($_SESSION['phones']); $i++) { ?>
                                         <tr class='dop-phone'>
@@ -336,8 +322,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 </tr>
                                 <? 
                                 
-                                $street = preg_split("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info)[0];
-                                preg_match("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info,$house);
+                                $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
+                                preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
                                 $house = $house[1];
                                 preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
                                 $bdq = $bdq[1];
@@ -349,22 +335,23 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 $floor = $floor[1];
                                 preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
                                 $code = $code[1];
+                                
                                 ?>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                     <td><input name="new_address" id="jform_address" class="inputactive"
                                                value="<?php if (isset($_SESSION['address'])) {
-                                                   echo $_SESSION['address'];
-                                               } else echo $street ?>" placeholder="Адрес"
+                                                   if($_SESSION['address'] != $this->item->project_info){ echo $_SESSION['address'];} else echo $street;
+                                               } else echo $street; ?>" placeholder="Адрес"
                                                type="text" required="required"></td>
                                 </tr>
                                 <tr class="controls">
                                 <td>Дом / Корпус</td>
                                 <td>
-                                    <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
+                                    <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) { if(empty($_SESSION['house'])) { echo $house; } else { echo $_SESSION['house'];}
                                                } else echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" required="required" aria-required="true" type="text">
                                
-                                    <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) {echo $_SESSION['bdq'];
+                                    <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq']))  { if(empty($_SESSION['bdq'])) { echo $bdq; } else { echo $_SESSION['bdq'];}
                                                } else echo $bdq ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
                                </td>
                                 </tr>

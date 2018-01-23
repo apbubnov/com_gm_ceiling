@@ -22,14 +22,14 @@ $dop_num = $dop_num_model->getData($userId)->dop_number;
 /* циферки на кнопки */
 $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
 // в производстве
-$answer1 = $model->getDataByStatus("InProduction", $userId, null);
+$answer1 = $model->getDataByStatus("InProduction");
 // запущенные
-$answer2 = $model->getDataByStatus("Zapushennie", $userId, null);
+$answer2 = $model->getDataByStatus("Zapushennie");
 // заявки с сайта
-$answer3 = $model->getDataByStatus("ZayavkiSSaita", $userId, null);
+$answer3 = $model->getDataByStatus("ZayavkiSSaita");
 // звонки
 $date = date("Y")."-".date("n")."-".date("d");
-$answer4 = $model->getDataByStatus("Zvonki", $userId, $date);
+$answer4 = $model->getDataByStatus("Zvonki", $date);
 // пропущенные
 $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
 $answer6 = $model->getDataByStatus("MissedCalls");
