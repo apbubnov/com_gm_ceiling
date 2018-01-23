@@ -363,8 +363,8 @@
 		<div class="container" id="block_n6">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
-				<div class="col-sm-4" style="text-align:-webkit-center; margin-bottom: 30px;">
-					<table>
+				<div class="col-sm-4" style="text-align:-webkit-center">
+					<table style="margin-bottom: 30px;">
 						<tr>
 							<td>
 								<h3>Декоративная вставка</h3>
@@ -1506,10 +1506,10 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="row sm-margin-bottom ">
+			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<h3>Высота помещения</h3>
+					<h4>Высота помещения</h4>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
