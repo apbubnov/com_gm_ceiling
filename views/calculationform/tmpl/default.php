@@ -1368,10 +1368,14 @@
 				</div>
 				<!-- другие комплектующие -->
 				<div class="container">
-					<div class="row sm-margin-bottom ">
+					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
-						<div class="col-sm-4">
-							<h3>Другие комплектующие</h3>
+						<div class="col-sm-4" style="margin-bottom: 1em;">
+							<table>
+								<tr>
+									<td>Другие комплектующие</td>
+								</tr>
+							</table>
 						</div>
 						<div class="col-sm-4">
 					</div>
@@ -1384,7 +1388,7 @@
 								<label>Название</label>
 								<div id="extra_components_title_container">
 									<?php foreach($extra_components_array as $item) { ?>
-									<div class='form-group'><input name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'><input name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1392,7 +1396,7 @@
 								<label>Стоимость</label>
 								<div id="extra_components_value_container">
 									<?php foreach($extra_components_array as $item) { ?>
-									<div class='form-group'><input name='extra_components_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'><input name='extra_components_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1411,6 +1415,7 @@
 						</div>
 					</div>
 				</div>
+				<!-- другие работы по монтажу -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4">
