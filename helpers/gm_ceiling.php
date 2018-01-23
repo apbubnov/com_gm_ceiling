@@ -4358,7 +4358,6 @@ class Gm_ceilingHelpersGm_ceiling
     
     public static function push($id, $status_id)
     {
-
         $mailer = JFactory::getMailer();
         $em = 'popowa.alinochka@gmail.co';//'kostikkuzmenko@mail.ru';
         $config = JFactory::getConfig();
