@@ -44,7 +44,7 @@ class Gm_ceilingModelClients_dop_contacts extends JModelList
 		$db->setQuery($query);
 		$items = $db->loadObjectList();
 
-		if (count($items) > 0)
+		if (count($items) != 0)
 		{
 			$query = $db->getQuery(true);
 			$query->insert($db->quoteName('#__gm_ceiling_clients_dop_contacts'));
