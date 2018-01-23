@@ -1308,9 +1308,7 @@
 					<div class="col-sm-4">
 						<table>
 							<tr>
-								<td>
-									<h3>Диффузор</h3>
-								</td>
+								<td>Диффузор</td>
 								<td>
 									<a class="help">
 										<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
@@ -1320,7 +1318,7 @@
 							</tr>
 						</table>
 						<div id="jform_n23_block">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
 									<label>Кол-во,шт</label>
 								</div>
@@ -1375,7 +1373,6 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="advanced_col_half">
-								
 								<label>Название</label>
 								<div id="extra_components_title_container">
 									<?php foreach($extra_components_array as $item) { ?>
