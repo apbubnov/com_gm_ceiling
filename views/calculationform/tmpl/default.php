@@ -772,6 +772,14 @@
 							</td>
 						</tr>
 					</table>
+				</div>
+				<div class="col-sm-4"></div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4"></div>
+				<div class="col-sm-4">
 					<div id="jform_n14_block" >
 						<div class="form-group">
 							<div class="advanced_col1">
@@ -786,35 +794,35 @@
 							<div class="clr"></div>
 						</div>
 						<div id="jform_n14_block_html" class="hide_label">
-							<?php
-								$n14 = $this->item->n14; 
-								if(count($n14) > 0) { 
-									foreach($n14 as $truba)
-										if ($truba->n14_count > 0){ 
-							?>
-											<div class="form-group">
-												<div class="advanced_col1">
-													<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
-												</div>
-												<div class="advanced_col2">
-													<select class="form-control" name="n14_type[]" placeholder="Платформа">
-														<?foreach ($this->item->n14_all AS $truba_item):?>
-															<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
-														<?endforeach;?>
-													</select>
-												</div>
-												<div class="advanced_col3 center">
-													<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-												</div>
-												<div class="clr"></div>
+							<?php $n14 = $this->item->n14; ?>
+							<?php if (count($n14) > 0) { ?>
+								<?php foreach ($n14 as $truba) { ?>
+									<?php if ($truba->n14_count > 0) { ?>
+										<div class="form-group">
+											<div class="advanced_col1">
+												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
 											</div>
-										<?php } ?>
+											<div class="advanced_col2">
+												<select class="form-control" name="n14_type[]" placeholder="Платформа">
+													<?foreach ($this->item->n14_all AS $truba_item):?>
+														<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
+													<?endforeach;?>
+												</select>
+											</div>
+											<div class="advanced_col3 center">
+												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+											</div>
+											<div class="clr"></div>
+										</div>
 									<?php } ?>
+								<?php } ?>
+							<?php } ?>
 						</div>
 						<button id="add_n14" class="btn btn-primary" type="button">Добавить</button>
 					</div>
 				</div>
-			<div class="col-sm-4"></div>
+				<div class="col-sm-4"></div>
+			</div>
 		</div>
 		<div id="extra_section">
 			<div class="container">
