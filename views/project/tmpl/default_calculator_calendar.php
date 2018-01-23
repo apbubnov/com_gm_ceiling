@@ -741,7 +741,6 @@ $results = $db->loadObjectList();
             </tr>
             <tr>
                <?
-
             //-------------------------Себестоимость транспорта-------------------------------------
                 if($this->item->transport == 0 ) $sum_transport_1 = 0;
                 if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
