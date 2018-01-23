@@ -63,7 +63,7 @@ class Gm_ceilingModelCallback extends JModelList
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from('`#__gm_ceiling_callback`');
-			$query->where("`date_time`= $date");
+			$query->where("`date_time`<= $date");
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
 			return $item;
