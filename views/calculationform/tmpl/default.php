@@ -1233,18 +1233,18 @@
 			<?php }?>
 			<!-- вентиляция -->
 			<div class="container">
-                	<div class="row">
-                    	<div class="col-sm-4"></div>
-                    	<div class="col-sm-4" style="margin-bottom: 1em;">
-							<table>
-								<tr>
-									<td>Вентиляция</td>
-								</tr>
-							</table>
-                    	</div>
-                    	<div class="col-sm-4"></div>
+				<div class="row">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4" style="margin-bottom: 1em;">
+						<table>
+							<tr>
+								<td>Вентиляция</td>
+							</tr>
+						</table>
 					</div>
+					<div class="col-sm-4"></div>
 				</div>
+			</div>
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
@@ -1303,20 +1303,28 @@
 			<?php if($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- диффузор -->
 				<div class="container">
+					<div class="row">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4" style="margin-bottom: 1em;">
+							<table>
+								<tr>
+									<td>Диффузор</td>
+									<td>
+										<a class="help">
+											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<span class="airhelp">Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br></span>
+										</a>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+				<div class="container">
 					<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-						<table>
-							<tr>
-								<td>Диффузор</td>
-								<td>
-									<a class="help">
-										<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-										<span class="airhelp">Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br></span>
-									</a>
-								</td>
-							</tr>
-						</table>
 						<div id="jform_n23_block">
 							<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
