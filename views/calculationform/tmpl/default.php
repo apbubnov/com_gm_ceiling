@@ -651,9 +651,9 @@
 		</div>
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-4"<!--  style="padding-left: 0px;" -->>
+				<div class="col-sm-4">
 					<div class="form-group">
-						<label id="jform_n27-lbl" for="jform_n27" class="" style="text-align: left;">Введите длину шторного карниза</label>
+						<label id="jform_n27-lbl" for="jform_n27" class="" style="text-align: left !important;">Введите длину шторного карниза</label>
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
 					<div class="form-group">
@@ -677,29 +677,6 @@
 							</p>
 						<? } ?>
 					</div>
-				</div>
-				<div class="col-sm-4"<!--  style="padding-right: 0px;" -->>
-					<!-- <div class="form-group">
-						<? if(!$this->item->n16) {?>
-							<p>
-								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
-								<label for="jform_n16"> Обычный карниз</label>
-							</p>
-							<p>
-								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
-								<label for="jform_n16_1"> Скрытый карниз</label>
-							</p>
-						<? } else { ?>
-							<p>
-								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio">
-								<label for="jform_n16"> Обычный карниз</label>
-							</p>
-							<p>
-								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio" checked="checked">
-								<label for="jform_n16_1"> Скрытый карниз</label>
-							</p>
-						<? } ?>
-					</div> -->
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
