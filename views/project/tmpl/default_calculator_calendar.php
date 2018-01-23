@@ -555,7 +555,7 @@ $results = $db->loadObjectList();
 
 <!-- Tab panes -->
 <div class="tab-content">
-<?php if($user->dealer_type == 1 && count($calculations) <= 0) continue;?>
+<?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
     <div class="tab-pane active" id="summary" role="tabpanel">
         <table id="table1" class="table table-striped one-touch-view">
             <tr>
@@ -1380,6 +1380,7 @@ $results = $db->loadObjectList();
             <?php } ?>
         </table>
     </div>
+        <?php } ?>
 </div>
 <div id="modal-window-container-tar">
     <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
