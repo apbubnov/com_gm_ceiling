@@ -1429,6 +1429,7 @@
 						<div class="col-sm-4"></div>
 					</div>
 				</div>
+				
 				<div class = "container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
