@@ -40,6 +40,7 @@
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
 ?>
+
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
 	<input name="url" id="url" value="" type="hidden">
 	<input name="user_id" id="user_id" value=<?php echo "\"".$user->id."\"";?> type="hidden">
@@ -68,11 +69,11 @@
 <div class="calculation-edit front-end-edit">
 	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-		<?php if($this->type === "guest") { ?>
-		<div class="show_before_calculate">
-			<h1>Натяжные потолки от производителя без посредников дешевле на 30%</h1>
-		</div>
-            <input type="hidden" name="jform[rek]" value="<?php echo  $rek; ?>" />
+		<?php if ($this->type === "guest") { ?>
+			<div class="show_before_calculate">
+				<h1>Натяжные потолки от производителя без посредников дешевле на 30%</h1>
+			</div>
+			<input type="hidden" name="jform[rek]" value="<?php echo  $rek; ?>" />
 		<?php }?>
         <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
         <input id="flag_auto" type="hidden" value="0"/>
@@ -114,7 +115,7 @@
 		<input name="jform[modified_by]" value="<?php echo $this->item->modified_by; ?>" type="hidden">
 		<input name="jform[transport]" value="<?php echo $this->item->transport; ?>" type="hidden">
 		<input id="jform_n1" class="n1" name="jform[n1]" value="28" type="hidden">
-		<?php if($user->dealer_type !=2 ){
+		<?php if ($user->dealer_type !=2 ){
 			$del_flag = 1;
 		} ?>
 		<?php if(!$new || $type === "gmcalculator" || $type === "calculator"||$type === "gmmanager"  ) { ?>
@@ -138,6 +139,7 @@
 					</div>
 					<div class="col-sm-4"></div>
 				</div>
+			</div>
 		<?php } ?>
 		<div class="container">
 			<div class="col-sm-4"></div>
@@ -156,27 +158,27 @@
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n2-lbl" for="jform_n2">
-									Выберите фактуру полотна
-								</label>
+								<label id="jform_n2-lbl" for="jform_n2">Выберите фактуру полотна</label>
 							</td>
 							<td> 
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-								<span class="airhelp"><strong>Выберите фактуру для Вашего будущего потолка</strong>
-									<ul>
-										<li>Матовый больше похож на побелку.</li>
-										<li>Сатин – на, крашенный потолок.</li>
-										<li>Глянец – имеет легкий отблеск.</li>
-									</ul>
-								</span>
+									<span class="airhelp"><strong>Выберите фактуру для Вашего будущего потолка</strong>
+										<ul>
+											<li>Матовый больше похож на побелку.</li>
+											<li>Сатин – на, крашенный потолок.</li>
+											<li>Глянец – имеет легкий отблеск.</li>
+										</ul>
+									</span>
 								</a>
 							</td>
 						</tr>
 					</table>
-					<select id="jform_n2" name="jform[n2]" class="form-control inputbox "><option value="" selected="">- Выберите фактуру -</option></select>
+					<select id="jform_n2" name="jform[n2]" class="form-control inputbox ">
+						<option value="" selected="">- Выберите фактуру -</option>
+					</select>
 					<input id="jform_n2_hidden" class="n2" name="jform[n2_hidden]" value="<?php echo $this->item->n2; ?>" type="hidden">
 				</div>
-				</div>
+			</div>
 			<div class="col-sm-4"></div>
 		</div>
 		<!-- Ширина -->
@@ -195,13 +197,13 @@
 		<div class="container">
 			<div class="col-sm-4"></div>
 			<div class="col-sm-4">
-				<?php  if($this->item->color > 0){  ?> 
-				<?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
-				<?php $color = $color_model->getData($this->item->color); ?>
-				<?php $imgurl = $color->file;?>
+				<?php  if ($this->item->color > 0) {  ?> 
+					<?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
+					<?php $color = $color_model->getData($this->item->color); ?>
+					<?php $imgurl = $color->file;?>
 				<?php } ?>
-				<label id="jform_color_switch-lbl" for="color_switch" style="display: none;">Выберите цвет:</label>
-				<button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px;' src="/<?php if(isset($imgurl)){ echo $imgurl; } ?>" alt="" /></button>
+				<label id="jform_color_switch-lbl" for="color_switch" style="display: none; text-align: left !important;">Выберите цвет:</label>
+				<button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none; margin-bottom: 1.5em;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px;' src="/<?php if(isset($imgurl)){ echo $imgurl; } ?>" alt="" /></button>
 				<input id="jform_color" name="jform[color]" value="<?php echo $this->item->color; ?>" type="hidden">
 			</div>
 			<div class="col-sm-4">
@@ -216,13 +218,10 @@
 						<table>
 							<tr>
 								<td>
-									<label id="jform_proizv-lbl" for="jform_proizv">
-										Выберите производителя
-									</label>
+									<label id="jform_proizv-lbl" for="jform_proizv">Выберите производителя</label>
 								</td>
 								<td>
-									<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">От производителя материала зависит качество потолка и его цена!
-									</span></a>
+									<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">От производителя материала зависит качество потолка и его цена!</span></a>
 								</td>
 							</tr>
 						</table>
@@ -238,15 +237,13 @@
 		</div>
 		<!-- размеры -->
 		<div class="container">
-			<div class="col-sm-4">
-			</div>
+			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
 					<h3>Размеры помещения</h3>
 				</div>
 			</div>
-			<div class="col-sm-4">
-			</div>
+			<div class="col-sm-4"></div>
 		</div>
 		<!-- начертить -->
 		<div class="container">
@@ -256,17 +253,17 @@
 					<button id="sketch_switch" class="btn btn-primary btn-big" type="button">Начертить потолок</button>
 					<div id="sketch_image_block">
 						<?php
-							if($this->item->id > 0)
+							if ($this->item->id > 0)
 							{
 								$filename = "/calculation_images/" . md5("calculation_sketch" . $this->item->id) . ".png";
 						?>
-						<img id="sketch_image" src="<?php echo $filename.'?t='.time(); ?>">
+							<img id="sketch_image" src="<?php echo $filename.'?t='.time(); ?>">
 						<?php 		
 							}
 							else
 							{
 						?>
-						<img id="sketch_image" hidden = true src="/">
+							<img id="sketch_image" hidden = true src="/">
 						<?php 	
 							}
 						?>
@@ -281,12 +278,12 @@
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4 xs-center">
-						<table class="">
+						<table style="width: 100%;">
 							<tr>
-								<td width=15%>
+								<td width=35%>
 									<label id="jform_n4-lbl" for="jform_n4" class="center" > S = </label>
 								</td>
-								<td width=75%>
+								<td width=55%>
 									<input name="jform[n4]" class="form-control-input" id="jform_n4" data-next="#jform_n5" value="<?php echo $this->item->n4;  ?>" placeholder="Площадь комнаты"  readonly  type="tel"> 
 								</td>
 								<td width=10%>
@@ -294,10 +291,10 @@
 								</td>
 							</tr>
 							<tr>
-								<td width=15%>
+								<td width=35%>
 									<label id="jform_n5-lbl" for="jform_n5" class="center" > P = </label>
 								</td>
-								<td width=75%>
+								<td width=55%>
 									<input name="jform[n5]" class="form-control-input" id="jform_n5" data-next="#jform_n9" value="<?php echo $this->item->n5; ?>" placeholder="Периметр комнаты" readonly  type="tel"> 
 								</td>
 								<td width=10%>
@@ -305,10 +302,10 @@
 								</td>
 							</tr>
 							<tr>
-								<td width=15%>
-									<label id="jform_n9-lbl" for="jform_n9" class="center"> Кол-во <br>углов = </label>
+								<td width=35%>
+									<label id="jform_n9-lbl" for="jform_n9" class="center"> Кол-во углов = </label>
 								</td>
-								<td width=75%>
+								<td width=55%>
 									<input name="jform[n9]" id="jform_n9" data-next="#jform_n27" value="<?php echo $this->item->n9; ?>" class="form-control-input" placeholder="Кол-во углов"  readonly  type="tel"> 
 								</td>
 								<td width=10%>
@@ -327,12 +324,11 @@
 			<div class="row">
 				<div class="col-sm-4" style="padding-left: 0px;">
 					<div class="form-group">
-						<h4>Выберите багет</h4>
+						<h3>Выберите багет</h3>
 					</div>
 				</div>
 				<div class="col-sm-4" style="padding-right: 0px;">
 					<div class="form-group">
-
 						<? if ($this->item->n28 == 0) {
 							?>
 							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio"
@@ -377,27 +373,26 @@
 							</td>
 						</tr>
 					</table>
-				<div>
-					<?php
-						if ($this->item->n6 > 0) {
-							$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
-							$color_1 = $color_model_1->getColorId($this->item->n6);
-							$color_image_1 = $color_1[0]->file;
-							$color_id_1 = $color_1->id;
-						}
-					?>
-					<?if($this->item->n6 == 314 ) { ?>
-						<p>
-							<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>
-						</p>
-						<p>
-							<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"><label for="jform_n6_1">Цветная вставка</label>
-						</p>
-						<p>
-							<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>
-						</p>
-						<? } 
-						else {
+					<div>
+						<?php
+							if ($this->item->n6 > 0) {
+								$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
+								$color_1 = $color_model_1->getColorId($this->item->n6);
+								$color_image_1 = $color_1[0]->file;
+								$color_id_1 = $color_1->id;
+							}
+						?>
+						<? if ($this->item->n6 == 314 ) { ?>
+							<p>
+								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>
+							</p>
+							<p>
+								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"><label for="jform_n6_1">Цветная вставка</label>
+							</p>
+							<p>
+								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>
+							</p>
+						<? } else {
 							if ($this->item->n6 == 0 || empty($this->item->n6)) {?>
 							<p>
 								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
@@ -408,8 +403,7 @@
 							<p>
 								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" checked="checked" ><label for="jform_n6_2">Вставка не нужна</label>
 							</p>
-							<? } 
-							else {?>
+							<? } else {?>
 								<p>
 									<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
 								</p>
@@ -420,31 +414,31 @@
 									<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio"><label for="jform_n6_2">Вставка не нужна</label>
 								</p>
 							<? } 
-						}?>
+						} ?>
                     </div>
-                    <div class="col-sm-4"></div>
+                	<div class="col-sm-4"></div>
 				</div>
-				<?if(empty($this->item->n6) || $this->item->n6 == 0 ||$this->item->n6 ==314) {?>
+				<?php if(empty($this->item->n6) || $this->item->n6 == 0 ||$this->item->n6 ==314) { ?>
 					<div class="container">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none;">Выберите цвет:</label>
+							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none; text-align: center;">Выберите цвет:</label>
 							<button id="color_switch_1" class="btn btn-primary btn-width" type="button" style="display: none;">Цвет <img id="color_img_1" class="calculation_color_img" style='width: 50px; height: 30px;'src="<?php if(isset($color_image_1)){ echo $color_image_1; } ?>" alt="" /></button>
 							<input id="jform_color_1" name="jform[n6]" value="<?php echo $this->item->n6;?>" type="hidden">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-				<?} else {?>
+				<? } else { ?>
 					<div class="container">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="">Выберите цвет:</label>
+							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="text-align: center;">Выберите цвет:</label>
 							<button id="color_switch_1" class="btn btn-primary btn-width" type="button" style="">Цвет <img id="color_img_1" class="calculation_color_img" style='width: 50px; height: 30px;'src="<?php if(isset($color_image_1)){ echo $color_image_1; } ?>" alt="" /></button>
 							<input id="jform_color_1" name="jform[n6]" value="<?php echo $this->item->n6;?>" type="hidden">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-				<?}?>
+				<? } ?>
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
@@ -453,7 +447,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table>
+					<table style="margin-left: calc(50% - 86px);">
 						<tr>
 							<td>
 								<h3>Освещение</h3>
@@ -477,23 +471,24 @@
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n12-lbl" for="jform_n12" class=""><h4>Введите кол-во люстр:</h4></label>
+								<label id="jform_n12-lbl" for="jform_n12" class="">Введите кол-во люстр:</label>
 							</td>
 							<td>
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
 							</td>
 						</tr>
 					</table>
+					<input id="jform_n12" data-next="#jform_n13" name="jform[n12]" placeholder ="шт." value="<?php echo $this->item->n12; ?>" class="form-control" type="tel">
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
-			<div class="row sm-margin-bottom">
+			<!-- <div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<input id="jform_n12" data-next="#jform_n13" name="jform[n12]" placeholder ="шт." value="<?php echo $this->item->n12; ?>" class="form-control" type="tel">
 				</div>
 				<div class="col-sm-4"></div>
-			</div>
+			</div> -->
 		</div>
 		<!-- Светильники -->
 		<div class="container">

@@ -569,28 +569,31 @@ class Gm_ceilingModelProject extends JModelItem
 	{
 		try
 		{
+
+			$db = $this->getDbo();
+			$query = $db->getQuery(true);
+			$query->update('`#__gm_ceiling_projects`')
+				->set('project_verdict = ' . $db->quote($data->project_verdict))
+				->set('project_note = ' . $db->quote($data->project_note))
+				->set('gm_calculator_note = ' . $db->quote($data->gm_calculator_note))
+				->set('dealer_calculator_note = ' . $db->quote($data->dealer_calculator_note))
+				->set('gm_manager_note = ' . $db->quote($data->gm_manager_note))
+				->set('dealer_manager_note = ' . $db->quote($data->dealer_manager_note))
+				->set('gm_chief_note = ' . $db->quote($data->gm_chief_note))
+				->set('dealer_chief_note = ' . $db->quote($data->dealer_chief_note))
+				->set('project_sum = ' . $db->quote($data->project_sum))
+				->set('project_mounting_date = ' . $db->quote($data->project_mounting_date))
+				->set('project_status = ' . $db->quote($status));
+			if (empty($data->project_mounter)) $query->set('project_mounter = NULL');
+			else $query->set('project_mounter = ' . $db->quote($data->project_mounter));
 			if ($status == 3) {
-				$table->project_mounting_date = "0000-00-00 00:00:00";
-				$table->project_mounter = NULL;
+				$query->set('project_mounting_date = 0000-00-00 00:00:00');
+				$query->set('project_mounter = NULL');
 			}
-			$table = $this->getTable();
-			$table->load($data->id);
-			$table->project_verdict = $data->project_verdict;
-			$table->project_note = $data->project_note;
-			$table->gm_calculator_note = $data->gm_calculator_note;
-			$table->dealer_calculator_note = $data->dealer_calculator_note;
-			$table->gm_manager_note = $data->gm_manager_note;
-			$table->gm_chief_note = $data->gm_chief_note;
-			$table->dealer_manager_note = $data->dealer_manager_note;
-			$table->dealer_chief_note = $data->dealer_chief_note;
-			$table->project_mounting_date = $data->project_mounting_date;
-
-			$table->project_mounter = $data->project_mounter?$data->project_mounter:NULL;
-
-			$table->project_status = $status;
-			$table->who_mounting = $data->who_mounting?$data->who_mounting:NULL;
-			$table->project_sum = $data->project_sum;
-            $return = $table->store();
+			$query->where('id = ' . $data->id);
+			$db->setQuery($query);
+			$return = $db->execute();
+				
             $model_projectshistory = Gm_ceilingHelpersGm_ceiling::getModel('projectshistory');
             $model_projectshistory->save($data->id,$status);
 			//JFactory::getApplication()->enqueueMessage($return, 'error');
@@ -827,6 +830,14 @@ class Gm_ceilingModelProject extends JModelItem
 	public function update_project_after_call($id,$client_id,$date,$address,$manager_comment,$status,$api_id=null,$manager_id, $gauger,$d_can_m=null,$d_com_m=null,$d_mou_m=null,$gm_can_m=null,$gm_com_m=null,$gm_mou_m=null){
 		try
 		{
+			$who_calculate = 0;
+			$user = JFactory::getUser();
+			$user_group = $user->groups;
+			if (in_array("15", $user_group)||in_array("16", $user_group)||in_array("17", $user_group)
+			||in_array("18", $user_group)||in_array("19", $user_group)||in_array("20", $user_group)||in_array("23", $user_group||
+			$user->dealer_id = 1 )) {
+				$who_calculate = 1;
+			}
 			$table = $this->getTable();
 			if($id > 0) {
 				$table->load($id);
@@ -836,8 +847,9 @@ class Gm_ceilingModelProject extends JModelItem
 				$table->gm_manager_note = $manager_comment;
 				$table->project_status = $status;
 				if(!empty($api_id)) $table->api_phone_id = $api_id;
-	            $table->read_by_manager = $manager_id;
-                $table->who_calculate = 1;
+				$table->read_by_manager = $manager_id;
+				
+                $table->who_calculate = $who_calculate;
                 if(!empty($gauger)){
                     $table->project_calculator = $gauger;
                 }

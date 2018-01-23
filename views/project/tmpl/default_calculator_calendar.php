@@ -345,7 +345,7 @@ $results = $db->loadObjectList();
                         <? 
                                     
                                     $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
-                                    preg_match("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info,$house);
+                                    preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
                                     $house = $house[1];
                                     preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
                                     $bdq = $bdq[1];
@@ -1276,11 +1276,11 @@ $results = $db->loadObjectList();
                             Отказ
                         </a>
                     </td>
-                    <td>
+                    <!--<td>
                         <a class="btn  btn-warning" id="choose_mounter">
                             Выбрать монтажника
                         </a>
-                    </td>
+                    </td>-->
                 </tr>
 
             </table>
