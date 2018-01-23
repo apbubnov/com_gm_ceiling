@@ -101,13 +101,13 @@ $canDelete = $user->dealer_id == 1;
                     <td class="center one-touch"><?= $component['unit']; ?></td>
                     <td class="center one-touch"><?= $option['option_count']; ?></td>
                     <!--<td class="center one-touch"><?= $option['purchasing_price']; ?></td>-->
-                    <td class="center one-touch"><?= $option['price']; ?></td>
-                    <td class="center one-touch"><?= (100 * $option['price'])/(100 - $dealer_info->dealer_components_margin); ?></td>
+                    <td class="center one-touch price"><?= $option['price']; ?></td>
+                    <td class="center one-touch client_price"><?= (100 * $option['price'])/(100 - $dealer_info->dealer_components_margin); ?></td>
                     <? if ($canEdit): ?>
                         <td class="center update_price">
                             <div class="update_price">
                                 <input type="text" class="new_price" value="<?=$option['price'];?>">
-                                <button type="button" class="save" onclick="saveSum(this);">
+                                <button type="submit" onsubmit="saveSum(this);" formaction="javascript:false;" class="save" onclick="saveSum(this);">
                                     <i class="fa fa-floppy-o" aria-hidden="true"></i>
                                 </button>
                             </div>
@@ -172,6 +172,7 @@ $canDelete = $user->dealer_id == 1;
         color: rgb(255, 255, 255);
         border: none;
         margin: 0;
+        cursor: pointer;
     }
 </style>
 
@@ -197,16 +198,32 @@ $canDelete = $user->dealer_id == 1;
 
     function saveSum(e) {
         e = $(e);
-        var id = parseInt(e.closest("tr").find(".id").text());
+        var parent = e.closest("tr"),
+            id = parseInt(parent.find(".id").text()),
+            price = parseInt(parent.find(".new_price").val());
 
         jQuery.ajax({
             type: 'POST',
             url: "/index.php?option=com_gm_ceiling&task=components.setPrice",
-            data: {Type: e.val()},
+            data: {id: id, price: price},
             cache: false,
             async: false,
             success: function (data) {
-                Data.employees = JSON.parse(data);
+                data = JSON.parse(data);
+
+                if (data.status === "success")
+                {
+                    parent.find(".price").text(data.data.price);
+                    parent.find(".client_price").text(data.data.client_price);
+                }
+
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: data.status,
+                    text: data.message
+                });
             },
             dataType: "text",
             timeout: 15000,
