@@ -799,17 +799,17 @@
 								<?php foreach ($n14 as $truba) { ?>
 									<?php if ($truba->n14_count > 0) { ?>
 										<div class="form-group">
-											<div class="">
+											<div class="advanced_col1">
 												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
 											</div>
-											<div class="">
+											<div class="advanced_col5">
 												<select class="form-control" name="n14_type[]" placeholder="Платформа">
 													<?foreach ($this->item->n14_all AS $truba_item):?>
 														<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
 													<?endforeach;?>
 												</select>
 											</div>
-											<div class="">
+											<div class="advanced_col4 center">
 												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
 											</div>
 											<div class="clr"></div>
@@ -824,7 +824,6 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-
 		<!-- расширенная версия -->
 		<div id="extra_section">
 			<div class="container">
@@ -2689,12 +2688,12 @@ var level = [];
 			html+= "<div class='advanced_col1'>";
 			html+= "<input name='n14_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
 			html+= "</div>";
-			html+= "<div class='advanced_col2'>";
+			html+= "<div class='advanced_col5'>";
 			html+= "<select class='form-control' name='n14_type[]' placeholder='Платформа'>";
 			html+= bypasses ;
 			html+= "</select>";
 			html+= "</div>";
-			html+= "<div class='advanced_col3 center'>";
+			html+= "<div class='advanced_col4 center'>";
 			html+= "<button class='clear_form_group btn btn-danger' type='button'><i class='fa fa-trash' aria-hidden='true'></i></button>";
 			html+= "</div>";
 			html+= "<div class='clr'></div>";
@@ -2775,7 +2774,7 @@ var level = [];
             html+= "<div class='advanced_col1'>";
             html+= "<input name='n29_count[]' class='form-control' value=''  placeholder='м.' type='tel'>";
             html+= "</div>";
-            html+= "<div class='advanced_col2'>";
+            html+= "<div class='advanced_col5'>";
             html+= "<select class='form-control' name='n29_type[]' placeholder=''>";
             html+= "<option value='12'>По прямой</option>";
 			if(jQuery("#jform_n2" ).val() != 29) html+= "<option value='13'>По кривой</option>";
@@ -2783,7 +2782,7 @@ var level = [];
             if(jQuery("#jform_n2" ).val() != 29) html+= "<option value='16'>По кривой с нишей</option>";
             html+= "</select>";
             html+= "</div>";
-            html+= "<div class='advanced_col3 center'>";
+            html+= "<div class='advanced_col4 center'>";
             html+= "<button class='clear_form_group btn btn-danger' type='button'><i class='fa fa-trash' aria-hidden='true'></i></button>";
             html+= "</div>";
             html+= "<div class='clr'></div>";
