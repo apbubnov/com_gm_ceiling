@@ -545,9 +545,10 @@ $results = $db->loadObjectList();
                 role="tab"><?php echo $calculation->calculation_title; ?></a>
         </li>
     <?php } ?>
-    <li class="nav-item">
+    <li class="nav-item"> 
         <a class="nav-link"
             href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' . $this->item->id); ?>">
+            Добавить потолок
             <i class="fa fa-plus-square-o" aria-hidden="true"></i>
         </a>
     </li>
