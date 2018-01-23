@@ -660,7 +660,7 @@
 				<div class="col-sm-4">
 					<div class="form-group">
 						<div style="width: 100%; text-align: left;">
-							<label id="jform_n27-lbl" for="jform_n27" class="" >Введите длину шторного карниза</label>
+							<label id="jform_n27-lbl" for="jform_n27" class="" >Введите длину шторного карниза в МЕТРАХ</label>
 						</div>
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
@@ -2240,6 +2240,9 @@ var level = [];
 
 			jQuery("#add_n23").trigger('click');		
 		});
+
+		jQuery("#extra_components_button").trigger('click');
+		jQuery("#extra_mounting_button").trigger('click');
 		
 
 		jQuery("#jform_n6_1").change(function(){
