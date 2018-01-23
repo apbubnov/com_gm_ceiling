@@ -824,7 +824,6 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-
 		<!-- расширенная версия -->
 		<div id="extra_section">
 			<div class="container">
@@ -2775,7 +2774,7 @@ var level = [];
             html+= "<div class='advanced_col1'>";
             html+= "<input name='n29_count[]' class='form-control' value=''  placeholder='м.' type='tel'>";
             html+= "</div>";
-            html+= "<div class='advanced_col2'>";
+            html+= "<div class='advanced_col5'>";
             html+= "<select class='form-control' name='n29_type[]' placeholder=''>";
             html+= "<option value='12'>По прямой</option>";
 			if(jQuery("#jform_n2" ).val() != 29) html+= "<option value='13'>По кривой</option>";
@@ -2783,7 +2782,7 @@ var level = [];
             if(jQuery("#jform_n2" ).val() != 29) html+= "<option value='16'>По кривой с нишей</option>";
             html+= "</select>";
             html+= "</div>";
-            html+= "<div class='advanced_col3 center'>";
+            html+= "<div class='advanced_col4 center'>";
             html+= "<button class='clear_form_group btn btn-danger' type='button'><i class='fa fa-trash' aria-hidden='true'></i></button>";
             html+= "</div>";
             html+= "<div class='clr'></div>";
