@@ -1312,9 +1312,12 @@
 									<h3>Диффузор</h3>
 								</td>
 								<td>
-									<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-										<br>Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br>
-										</span></a>
+									<a class="help">
+										<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+										<span class="airhelp">
+											<br>Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br>
+										</span>
+									</a>
 								</td>
 							</tr>
 						</table>
