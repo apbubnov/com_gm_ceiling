@@ -788,7 +788,7 @@
 							<div class="advanced_col5">
 								<label>Диаметр</label>
 							</div>
-							<div class="advanced_col3 center">
+							<div class="advanced_col4 center">
 								<label><i class="fa fa-trash" aria-hidden="true"></i></label>
 							</div>
 							<div class="clr"></div>
@@ -799,17 +799,17 @@
 								<?php foreach ($n14 as $truba) { ?>
 									<?php if ($truba->n14_count > 0) { ?>
 										<div class="form-group">
-											<div class="advanced_col1">
+											<div class="">
 												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
 											</div>
-											<div class="advanced_col5">
+											<div class="">
 												<select class="form-control" name="n14_type[]" placeholder="Платформа">
 													<?foreach ($this->item->n14_all AS $truba_item):?>
 														<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
 													<?endforeach;?>
 												</select>
 											</div>
-											<div class="advanced_col3 center">
+											<div class="">
 												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
 											</div>
 											<div class="clr"></div>
@@ -824,7 +824,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		
+
 		<!-- расширенная версия -->
 		<div id="extra_section">
 			<div class="container">
@@ -985,7 +985,7 @@
                             	<div class="advanced_col5">
                                 	<label>Тип</label>
                             	</div>
-                            	<div class="advanced_col3 center">
+                            	<div class="advanced_col4 center">
                                 	<label><i class="fa fa-trash" aria-hidden="true"></i></label>
                             	</div>
                             	<div class="clr"></div>
@@ -1001,15 +1001,15 @@
 											</div>
 											<div class="advanced_col5">
 												<select name="n29_type[]" id="n29" class="form-control n29_control" placeholder="Тип">
-													<?foreach ($this->item->types[11]->id AS $type1):
-													if($this->item->n2 == 29 && ($type1->id == 12 || $type1->id == 15)) {?>
-														<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
-													<? } else if($this->item->n2 != 29) { ?>
-														<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
-													<?}; endforeach; ?>
+													<?php foreach ($this->item->types[11]->id AS $type1):
+														if($this->item->n2 == 29 && ($type1->id == 12 || $type1->id == 15)) {?>
+															<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
+														<?php } else if($this->item->n2 != 29) { ?>
+															<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
+													<?php }; endforeach; ?>
 												</select>
 											</div>
-											<div class="advanced_col3 center">
+											<div class="advanced_col4 center">
 												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
 											</div>
 											<div class="clr"></div>
