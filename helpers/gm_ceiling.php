@@ -3845,7 +3845,7 @@ class Gm_ceilingHelpersGm_ceiling
             } 
         }
        if($transport_type == 1) { 
-            $discount = $project_model->getDiscount($data->id);
+            $discount = $project_model->getDiscount($project_id);
             $min = 100;
             foreach($discount as $d) {
                 if($d->discount < $min)
