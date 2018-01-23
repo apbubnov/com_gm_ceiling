@@ -1375,6 +1375,7 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="advanced_col_half">
+								
 								<label>Название</label>
 								<div id="extra_components_title_container">
 									<?php foreach($extra_components_array as $item) { ?>
