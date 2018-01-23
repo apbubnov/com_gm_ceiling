@@ -1026,7 +1026,7 @@
 						<div class="form-group">
 							<table style="width: calc(50% - 173);">
 								<tr>
-									<td>Пожарная сигнализация</h3></td>
+									<td>Пожарная сигнализация</td>
 									<td>
 										<a class="help" >
 											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
