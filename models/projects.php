@@ -275,7 +275,7 @@ class Gm_ceilingModelProjects extends JModelList
             if ($status == "GaugingsGraph") {
                 $groups = $user->groups;
                 if (in_array("12", $groups) || in_array("14", $groups) || in_array("17", $groups)) {
-                    if ($user->groups == 1) {
+                    if ($user->dealer_id == 1) {
                         $who = "1";
                     } else {
                         $who = "0";
@@ -309,7 +309,7 @@ class Gm_ceilingModelProjects extends JModelList
                 $query->select('count(projects.id) as count')
                 ->from('#__gm_ceiling_projects as projects')
                 ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
-                ->where("projects.project_status in ('3', '4') and clients.dealer_id = '$user->dealer_id'");
+                ->where("projects.project_status in ('4') and clients.dealer_id = '$user->dealer_id'");
             } else
             // менеджер (в производстве) 
             if ($status == "InProduction") {
