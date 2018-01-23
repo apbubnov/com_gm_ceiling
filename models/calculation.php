@@ -242,7 +242,8 @@ class Gm_ceilingModelCalculation extends JModelItem
 				$query
 					->select('client.dealer_id')
 					->from('`#__gm_ceiling_clients` as client')
-					->join('LEFT','`#__gm_ceiling_calculations` AS c ON c.client_id = client.id')
+					->join('LEFT','`#__gm_ceiling_projects` AS proj ON proj.client_id = client.id')
+					->join('LEFT','`#__gm_ceiling_calculations` AS c ON c.project_id = proj.id')
 					->where('с.id  = ' . $this->_item->id);
 					print_r((string)$query);exit;
 				$db->setQuery($query);
