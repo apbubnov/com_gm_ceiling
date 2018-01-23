@@ -1506,8 +1506,7 @@
 		</div>
 		<div class="container">
 			<div class="row sm-margin-bottom ">
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<h3>Высота помещения</h3>
 				</div>
