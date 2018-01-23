@@ -143,7 +143,7 @@ if (empty($list['direction']))
 				else
 				{
 					$search = $db->Quote('%' . $db->escape($search, true) . '%');
-					$query->where('( a.client_name LIKE ' . $search . ')');
+					$query->where("a.client_name LIKE $search OR b.phone LIKE $search");
 				}
 			}
 			$query->order('`id` DESC');
