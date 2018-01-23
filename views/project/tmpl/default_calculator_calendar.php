@@ -545,9 +545,10 @@ $results = $db->loadObjectList();
         <?php if($user->dealer_type == 1) { ?>
             <a class="nav-link active" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
                 role="tab"><?php echo $calculation->calculation_title; ?></a>
-         <?}?>
+         <?} else {?>
          <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
                 role="tab"><?php echo $calculation->calculation_title; ?></a>
+         <?}?>
         </li>
     <?php } ?>
     <li class="nav-item"> 
@@ -561,7 +562,7 @@ $results = $db->loadObjectList();
 <!-- Tab panes -->
 <div class="tab-content">
 <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
-    <div class="tab-pane active" id="summary" role="tabpanel">
+    <div class="tab-pane <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" id="summary" role="tabpanel">
         <table id="table1" class="table table-striped one-touch-view">
             <tr>
                 <th class="section_header" id="sh_ceilings">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
@@ -740,7 +741,6 @@ $results = $db->loadObjectList();
             </tr>
             <tr>
                <?
-
             //-------------------------Себестоимость транспорта-------------------------------------
                 if($this->item->transport == 0 ) $sum_transport_1 = 0;
                 if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
@@ -1053,7 +1053,7 @@ $results = $db->loadObjectList();
     <?php foreach ($calculations as $k => $calculation) { ?>
         <?php $mounters = json_decode($calculation->mounting_sum); ?>
         <?php if(!empty($calculation->n2)) $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".png"; ?>
-        <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
+        <div class="tab-pane <?php if($user->dealer_type == 1) echo "active";?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
             <h3><?php echo $calculation->calculation_title; ?></h3>
 
             <a class="btn btn-primary"
