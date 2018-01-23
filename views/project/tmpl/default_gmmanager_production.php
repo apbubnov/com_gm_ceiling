@@ -1741,7 +1741,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             opt.innerHTML = "Выберите клиента";
             document.getElementById("found_clients").appendChild(opt);
             jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=findOldClients",
+                url: "index.php?option=com_gm_ceiling&task=findOldDealers",
                 data: {
                     fio: jQuery("#jform_client_name").val()
                 },
