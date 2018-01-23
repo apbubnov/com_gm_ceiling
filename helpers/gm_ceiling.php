@@ -3900,6 +3900,7 @@ class Gm_ceilingHelpersGm_ceiling
         $filename = md5($data['id'] . "-2") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         exit();
+        
         if (isset($project->id)) {
             if ($project->id) {
                 $html .= "<b>Номер договора: </b>" . $project->id . "<br>";
