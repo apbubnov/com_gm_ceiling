@@ -62,7 +62,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->select('`id`,`name`,`registerDate`,`associated_client`');
 			$query->from('`rgzbn_users`');
 			$query->where('NOT ISNULL(`associated_client`) AND `dealer_type` = 3');
-			$query->order('`id` DESC'); 
+			$query->order('`id` DESC');
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
 			return $item;
