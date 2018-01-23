@@ -785,7 +785,7 @@
 							<div class="advanced_col1">
 								<label>Кол-во,шт</label>
 							</div>
-							<div class="advanced_col5">
+							<div class="advanced_col_5">
 								<label>Диаметр</label>
 							</div>
 							<div class="advanced_col4 center">
@@ -802,7 +802,7 @@
 											<div class="advanced_col1">
 												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
 											</div>
-											<div class="advanced_col5">
+											<div class="advanced_col_5">
 												<select class="form-control" name="n14_type[]" placeholder="Платформа">
 													<?foreach ($this->item->n14_all AS $truba_item):?>
 														<option value="<?=$truba_item->id;?>" <?=($truba_item->id == $truba->n14_size)?'selected':'';?>><?=$truba_item->title;?></option>
