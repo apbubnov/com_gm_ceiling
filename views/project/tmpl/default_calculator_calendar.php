@@ -553,7 +553,6 @@ $results = $db->loadObjectList();
     </li>
 </ul>
 
-
 <!-- Tab panes -->
 <div class="tab-content">
 <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
