@@ -406,11 +406,21 @@ class Gm_ceilingHelpersGm_ceiling
         if($data['n2'] == 29) $data['n1'] = 29; 
 
         //Получаем объект дилера
-        if (empty($data['dealer_id'])) {
-            $dealer = JFactory::getUser(2);
+        if (gettype($data) == "array")
+        {
+            if (empty($data['dealer_id'])) {
+                $dealer = JFactory::getUser(2);
+            } else {
+                $dealer = JFactory::getUser($data['dealer_id']);
+            }
         } else {
-            $dealer = JFactory::getUser($data['dealer_id']);
+            if (empty($data->dealer_id)) {
+                $dealer = JFactory::getUser(2);
+            } else {
+                $dealer = JFactory::getUser($data->dealer_id);
+            }
         }
+        
 
         $dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
         $dealer_marg = $dealer_info->getData();
