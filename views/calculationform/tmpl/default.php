@@ -957,10 +957,11 @@
 						<div class="col-sm-4"></div>
 					</div>
 				</div>
+				<!-- парящий потолок -->
             	<div class="container">
                 	<div class="row">
-                    	<div class="col-sm-4" style="margin-bottom: 1em;"></div>
-                    	<div class="col-sm-4">
+                    	<div class="col-sm-4"></div>
+                    	<div class="col-sm-4" style="margin-bottom: 1em;">
 							<table>
 								<tr>
 									<td>Переход уровня</td>
@@ -1024,7 +1025,7 @@
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div class="form-group">
-							<table style="width: calc(50% - 173);">
+							<table>
 								<tr>
 									<td>Пожарная сигнализация</td>
 									<td>
@@ -1041,6 +1042,7 @@
 					<div class="col-sm-4"></div>
 				</div>
 			</div>
+
 			<?php if($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- разделитель -->
 				<div class = "container">
