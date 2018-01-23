@@ -1368,9 +1368,9 @@
 				</div>
 				<!-- другие комплектующие -->
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row" style="margin-bottom: 1em;">
 						<div class="col-sm-4"></div>
-						<div class="col-sm-4" style="margin-bottom: 1em;">
+						<div class="col-sm-4">
 							<table>
 								<tr>
 									<td>Другие комплектующие</td>
@@ -1417,11 +1417,15 @@
 				</div>
 				<!-- другие работы по монтажу -->
 				<div class = "container">
-					<div class="row sm-margin-bottom">
+					<div class="row" style="margin-bottom: 1em;">
 						<div class="col-sm-4">
 						</div>
 						<div class="col-sm-4">
-							<h3>Другие работы по монтажу</h3>
+							<table>
+								<tr>
+									<td>Другие работы по монтажу</td>
+								</tr>
+							</table>
 						</div>
 						<div class="col-sm-4">
 						</div>
