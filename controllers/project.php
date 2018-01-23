@@ -116,6 +116,45 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	public function recToMeasure()
+    {
+        try {
+            $app = JFactory::getApplication();
+            $user = JFactory::getUser();
+
+            $model = $this->getModel('Project', 'Gm_ceilingModel');
+
+            extract($_POST); // Элементы массива в переменные
+
+            $data = $model->getData($project_id);
+
+            if (empty($new_discount)) $new_discount = $data->project_discount;
+
+            $emails = (empty($email_str))?[]:explode(";", $email_str);
+            array_pop($emails);
+
+            if (isset($data_delete) && isset($idCalcDelete)) {
+                $model_calc = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+                $resultDel = $model_calc->delete($idCalcDelete);
+                if ($resultDel == 1) {
+                    $this->setMessage("Потолок удален");
+                    if(!empty($_SESSION['url'])) $this->setRedirect(JRoute::_($_SESSION['url'], false));
+                    else $this->setRedirect(JRoute::_($_SERVER['HTTP_REFERER'], false));
+                }
+
+            } else {
+
+            }
+        } catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
 	//запись на замер при входящем звонке
 	public function recToMeasurement()
 	{

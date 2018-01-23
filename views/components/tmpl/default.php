@@ -75,7 +75,7 @@ $canDelete = $user->dealer_id == 1;
                 <?= JHtml::_('grid.sort', 'Цена для клиента', 'price', $listDirn, $listOrder); ?>
             </th>
             <? if ($canEdit): ?>
-                <th class="center can">Изменить</th>
+                <th class="center can">Изменить цену для диллера</th>
             <? endif; ?>
         </tr>
         </thead>
@@ -95,7 +95,7 @@ $canDelete = $user->dealer_id == 1;
                 <tr class="type component_option type_<?= $id_option; ?> component_<?= $id_component; ?>"
                     style="display: none;">
                     <td class="center one-touch"></td>
-                    <td class="center one-touch"><?= $option['id']; ?></td>
+                    <td class="center one-touch id"><?= $option['id']; ?></td>
                     <td class="center one-touch"><?= $option['stock']; ?></td>
                     <td class="center one-touch"><?= $option['full_name']; ?></td>
                     <td class="center one-touch"><?= $component['unit']; ?></td>
@@ -104,10 +104,13 @@ $canDelete = $user->dealer_id == 1;
                     <td class="center one-touch"><?= $option['price']; ?></td>
                     <td class="center one-touch"><?= (100 * $option['price'])/(100 - $dealer_info->dealer_components_margin); ?></td>
                     <? if ($canEdit): ?>
-                        <td class="center">
-                            <a href="<? echo JRoute::_('index.php?option=com_gm_ceiling&view=componentform&id=' . $option['id'], false, 2); ?>"
-                               class="btn btn-mini" type="button" id="edit"><i class="fa fa-pencil-square-o"
-                                                                               aria-hidden="true"></i></a>
+                        <td class="center update_price">
+                            <div class="update_price">
+                                <input type="text" class="new_price" value="<?=$option['price'];?>">
+                                <button type="button" class="save" onclick="saveSum(this);">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                </button>
+                            </div>
                         </td>
                     <? endif; ?>
                 </tr>
@@ -144,6 +147,32 @@ $canDelete = $user->dealer_id == 1;
         color: rgb(0, 0, 0);
         font-size: 20px;
     }
+
+    #componentList .update_price {
+        width: auto;
+        min-width: 100px;
+    }
+    #componentList .update_price .new_price {
+        width: calc(100% - 30px);
+        min-width: 50px;
+        height: 30px;
+        float: left;
+        border-radius: 5px 0 0 5px;
+        border: none;
+        box-shadow: inset 0 0 1px 1px rgb(64, 65, 154);
+        padding: 0 5px;
+        margin: 0;
+    }
+    #componentList .update_price .save {
+        width: 30px;
+        height: 30px;
+        float: left;
+        border-radius: 0 5px 5px 0;
+        background-color: rgb(64, 65, 154);
+        color: rgb(255, 255, 255);
+        border: none;
+        margin: 0;
+    }
 </style>
 
 <? if ($canDelete) : ?>
@@ -163,6 +192,35 @@ $canDelete = $user->dealer_id == 1;
 <? endif; ?>
 
 <script>
+
+    var $ = jQuery;
+
+    function saveSum(e) {
+        e = $(e);
+        var id = parseInt(e.closest("tr").find(".id").text());
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=components.setPrice",
+            data: {Type: e.val()},
+            cache: false,
+            async: false,
+            success: function (data) {
+                Data.employees = JSON.parse(data);
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+    }
 
     jQuery(document).ready(function () {
         jQuery("#change_margin").click(function () {
