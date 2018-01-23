@@ -917,7 +917,7 @@ class Gm_ceilingHelpersGm_ceiling
             ->where('a.user_id = ' . $dealer->id);
         $db->setQuery($query);
         $results = $db->loadObject();
-
+print_r($dealer->id); exit;
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
         $guild_data = array();
