@@ -1001,12 +1001,12 @@
 											</div>
 											<div class="advanced_col5">
 												<select name="n29_type[]" id="n29" class="form-control n29_control" placeholder="Тип">
-													<?foreach ($this->item->types[11]->id AS $type1):
-													if($this->item->n2 == 29 && ($type1->id == 12 || $type1->id == 15)) {?>
-														<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
-													<? } else if($this->item->n2 != 29) { ?>
-														<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
-													<?}; endforeach; ?>
+													<?php foreach ($this->item->types[11]->id AS $type1):
+														if($this->item->n2 == 29 && ($type1->id == 12 || $type1->id == 15)) {?>
+															<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
+														<?php } else if($this->item->n2 != 29) { ?>
+															<option value="<?=$type1->id;?>" <?=($type1->id == $level->n29_type)?'selected':'';?>><?=$type1->title;?></option>
+													<?php }; endforeach; ?>
 												</select>
 											</div>
 											<div class="advanced_col4 center">
