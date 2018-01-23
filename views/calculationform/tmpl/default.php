@@ -1233,12 +1233,24 @@
 			<?php }?>
 			<!-- вентиляция -->
 			<div class="container">
+                	<div class="row">
+                    	<div class="col-sm-4"></div>
+                    	<div class="col-sm-4" style="margin-bottom: 1em;">
+							<table>
+								<tr>
+									<td>Вентиляция</td>
+								</tr>
+							</table>
+                    	</div>
+                    	<div class="col-sm-4"></div>
+					</div>
+				</div>
+			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div id="jform_n22_block"> 
-							<p>Вентиляция</p>
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
 									<label>Кол-во,шт</label>
 								</div>
