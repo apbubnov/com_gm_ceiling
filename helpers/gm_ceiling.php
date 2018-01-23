@@ -3805,7 +3805,7 @@ class Gm_ceilingHelpersGm_ceiling
         $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
         if($res) {
             if($transport_type == 1) {
-                $transport_sum = self::margin($res->transport * $distance_col, $margin);
+                $transport_sum = margin($res->transport * $distance_col, $margin);
                 $transport_sum_1 = $res->transport * $distance_col;
                 $result = array(
                     'transport' => 'Транспорт по городу',
@@ -3819,9 +3819,9 @@ class Gm_ceilingHelpersGm_ceiling
             elseif($transport_type == 2) {
                 $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
                 $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                if($transport_sum < self::margin($res->transport, $margin))
+                if($transport_sum < margin($res->transport, $margin))
                   { 
-                      $transport_sum = self::margin($res->transport, $margin);
+                      $transport_sum = margin($res->transport, $margin);
                       $transport_sum_1 = $res->transport;
                   }
                 $result = array(
@@ -3845,7 +3845,7 @@ class Gm_ceilingHelpersGm_ceiling
             } 
         }
        if($transport_type == 1) { 
-            $discount = $project_model->getDiscount($data->id);
+            $discount = $project_model->getDiscount($project_id);
             $min = 100;
             foreach($discount as $d) {
                 if($d->discount < $min)
