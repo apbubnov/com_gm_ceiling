@@ -624,21 +624,22 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table>
+					<table style="margin-left: calc(50% - 124px);">
 						<tr>
 							<td>
 								<h3>Шторный карниз </h3>
 							</td>
 							<td>
-								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+								<a class="help" >
+									<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 									<span class="airhelp">Если его не будет или он будет крепиться к стене просто пропустите этот пункт.
-														<br>Шторный карниз можно крепить на потолок двумя способами:
-														<br> 
-														<ul>
-															<li>Видимый <br> <img src="/images/karniz.png" width="350" height="250"/></li>
-															<li>Скрытый <br> <img src="/images/karniz2.png" width="350" height="250"/></li>
-														</ul>
-									<br>Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз
+										<br>Шторный карниз можно крепить на потолок двумя способами:
+										<br> 
+										<ul>
+											<li>Видимый <br> <img src="/images/karniz.png" width="350" height="250"/></li>
+												<li>Скрытый <br> <img src="/images/karniz2.png" width="350" height="250"/></li>
+											</ul>
+										<br>Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз
 									</span>
 								</a>
 							</td>
@@ -650,17 +651,11 @@
 		</div>
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-4" style="padding-left: 0px;">
+				<div class="col-sm-4"<!--  style="padding-left: 0px;" -->>
 					<div class="form-group">
-						<label id="jform_n27-lbl" for="jform_n27" class="">
-							Введите длину шторного карниза
-						</label>
-						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12"
-								value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м."
-								type="tel">
+						<label id="jform_n27-lbl" for="jform_n27" class="" style="text-align: left;">Введите длину шторного карниза</label>
+						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
-				</div>
-				<div class="col-sm-4" style="padding-right: 0px;">
 					<div class="form-group">
 						<? if(!$this->item->n16) {?>
 							<p>
@@ -682,6 +677,29 @@
 							</p>
 						<? } ?>
 					</div>
+				</div>
+				<div class="col-sm-4"<!--  style="padding-right: 0px;" -->>
+					<!-- <div class="form-group">
+						<? if(!$this->item->n16) {?>
+							<p>
+								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
+								<label for="jform_n16"> Обычный карниз</label>
+							</p>
+							<p>
+								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
+								<label for="jform_n16_1"> Скрытый карниз</label>
+							</p>
+						<? } else { ?>
+							<p>
+								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio">
+								<label for="jform_n16"> Обычный карниз</label>
+							</p>
+							<p>
+								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio" checked="checked">
+								<label for="jform_n16_1"> Скрытый карниз</label>
+							</p>
+						<? } ?>
+					</div> -->
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
