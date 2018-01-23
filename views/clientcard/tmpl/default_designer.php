@@ -72,7 +72,7 @@
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
 <? if (!empty($dop_contacts)) { ?>
 <div>
-<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера : </p>
+<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера: </p>
 </div>
 <div>
 <? foreach ($dop_contacts AS $contact) {?>
