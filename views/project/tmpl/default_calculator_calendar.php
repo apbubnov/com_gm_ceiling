@@ -545,6 +545,8 @@ $results = $db->loadObjectList();
             <a class="nav-link active" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
                 role="tab"><?php echo $calculation->calculation_title; ?></a>
          <?}?>
+         <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
+                role="tab"><?php echo $calculation->calculation_title; ?></a>
         </li>
     <?php } ?>
     <li class="nav-item"> 
