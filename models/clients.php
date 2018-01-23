@@ -143,7 +143,7 @@ if (empty($list['direction']))
 				else
 				{
 					$search = $db->Quote('%' . $db->escape($search, true) . '%');
-					$query->where('( a.client_name LIKE ' . $search . ')');
+					$query->where("(a.client_name LIKE $search OR b.phone LIKE $search)");
 				}
 			}
 			$query->order('`id` DESC');
@@ -297,9 +297,38 @@ if (empty($list['direction']))
 				->select("a.*, GROUP_CONCAT(b.phone SEPARATOR ', ') as client_contacts")
 				->from("`#__gm_ceiling_clients` as `a`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` as `b` ON a.id = b.client_id ')
-				->where("client_name LIKE('%".$client_name."%') AND a.dealer_id = $user->dealer_id")
+				->where("(`a`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND a.dealer_id = $user->dealer_id")
 				->order('`id` DESC')
 				->group('`id`');
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			return $items;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	public function getDealersByClientName($client_name)
+	{
+		try
+		{
+			$user = JFactory::getUser();
+			$db    = JFactory::getDbo();
+			$client_name = $db->escape($client_name);
+			$query = $db->getQuery(true);
+			$query
+				->select("`c`.*, GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`")
+				->from("`#__gm_ceiling_clients` as `c`")
+				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
+				->innerJoin('`rgzbn_users` AS `u` ON `c`.`id` = `u`.`associated_client`')
+				->where("`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%'")
+				->order('`c`.`id` DESC')
+				->group('`c`.`id`');
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;

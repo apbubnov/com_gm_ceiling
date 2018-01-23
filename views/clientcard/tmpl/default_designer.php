@@ -72,13 +72,17 @@
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
 <? if (!empty($dop_contacts)) { ?>
 <div>
-<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера : </p>
+<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера: </p>
 </div>
 <div>
 <? foreach ($dop_contacts AS $contact) {?>
     <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
 </div>
 <? } ?>
+<div>
+    <input type="text" id="new_email" placeholder="Почта" required>
+    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+</div>
 <div class="row">
     <div class="col-sm-12" id = "calls">
         <p class="caption-tar">История отделочника/дизайнера</p>
@@ -205,6 +209,13 @@
 <div id="modal_window_container" class = "modal_window_container">
     <button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_comm" class = "modal_window">
+        <? if (!empty($dop_contacts)) { ?>
+        <div style="margin-top: 10px;">
+        <? foreach ($dop_contacts AS $contact) {?>
+            <input type="radio" name='rb_email' value='<? echo $contact->contact; ?>' onclick='rb_email_click(this)'><? echo $contact->contact; ?><br>
+        <? }?>
+        </div>
+        <? } ?>
         <h6 style = "margin-top:10px">Введите почту</h6>
         <p><input type="text" id="email_comm" placeholder="Почта" required></p>
         <p><button type="button" id="send_comm" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
@@ -352,6 +363,11 @@
         });
     });
 
+    function rb_email_click(elem)
+    {
+        jQuery("#email_comm").val(elem.value);
+    }
+
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
@@ -393,7 +409,34 @@
                 }
             });
         });
-        
+
+        document.getElementById('add_email').onclick = function()
+        {
+            var client_id = <?php echo $client->id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
+                data: {
+                    client_id: client_id,
+                    email: document.getElementById('new_email').value
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
     });
 
 
@@ -427,46 +470,49 @@
         call(jQuery("#select_phones").val());
         add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
     });
+
     jQuery("#broke").click(function(){
         jQuery("#call").show();
             
-    })
+    });
+
     jQuery("#add_call_and_submit").click(function(){
         client_id = <?php echo $this->item->id;?>;
-                jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=changeCallTime",
-                    data: {
-                        id:<?php echo $call_id;?>,
-                        date: jQuery("#call_date").val(),
-                        comment: jQuery("#call_comment").val()
-                    },
-                    dataType: "json",
-                    async: true,
-                    success: function (data) {
-                       add_history(client_id,"Звонок перенесен");
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "success",
-                            text: "Звонок сдвинут"
-                        });
-
-                    },
-                    error: function (data) {
-                        console.log(data);
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка сервера"
-                        });
-                    }
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=changeCallTime",
+            data: {
+                id:<?php echo $call_id;?>,
+                date: jQuery("#call_date").val(),
+                comment: jQuery("#call_comment").val()
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+               add_history(client_id,"Звонок перенесен");
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Звонок сдвинут"
                 });
-    })
+
+            },
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    });
+
     function add_history(id_client, comment)
     {
         jQuery.ajax({

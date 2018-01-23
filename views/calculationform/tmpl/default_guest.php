@@ -7,7 +7,7 @@
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // No direct access
-defined('_JEXEC') or die;
+/* defined('_JEXEC') or die;
 
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.tooltip');
@@ -17,10 +17,11 @@ JHtml::_('behavior.formvalidation');
 $lang = JFactory::getLanguage();
 $lang->load('com_gm_ceiling', JPATH_SITE);
 $doc = JFactory::getDocument();
-$doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
+$doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js'); */
 
 
 ?>
+<!-- 
 <script type="text/javascript" src="/task/task/scriptForSketch/paper-full.js"></script>
 <script type="text/javascript" src="/task/task/scriptForSketch/paper-core.js"></script>
 <script type="text/paperscript" src="/task/task/scriptForSketch/SketchDraw.js" canvas="myCanvas"></script>
@@ -465,13 +466,10 @@ $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
 		<input type="hidden" name="task" value="calculationform.save"/>
 		<?php echo JHtml::_('form.token'); ?>
 	</form>
-</div>
-
-
-
+</div> -->
 
 <script>
-	function get_form(){
+	/* function get_form(){
 		jQuery( "input[type=checkbox]").each(function(){
 			if( jQuery( this ).is(':checked') ) {
 				jQuery( this ).val( 1 );
@@ -559,7 +557,6 @@ $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
 		
 		return form_data;
 	}
-	
 	jQuery( document ).ready(function(){
 			jQuery("#jform_client_contacts-top").mask("+7 (999) 999-99-99");
 	jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
@@ -775,9 +772,8 @@ $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
 			resize_canvas();
 		});
 	});
-
 	function resize_canvas() {
 		jQuery( "#myCanvas" ).prop("width", jQuery(window).width() );
 		jQuery( "#myCanvas" ).prop("height", jQuery(window).height() );
-	}
+	} */
 </script>

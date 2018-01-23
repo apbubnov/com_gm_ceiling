@@ -39,6 +39,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->from('`rgzbn_users` LEFT JOIN `rgzbn_user_usergroup_map` ON `rgzbn_users`.`id`=`rgzbn_user_usergroup_map`.`user_id`');
 			$query->where('`rgzbn_user_usergroup_map`.`group_id`=14 AND
 				NOT ISNULL(`associated_client`) AND `dealer_type` < 2');
+			$query->order('`id` DESC');
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
 			return $item;
@@ -61,6 +62,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->select('`id`,`name`,`registerDate`,`associated_client`');
 			$query->from('`rgzbn_users`');
 			$query->where('NOT ISNULL(`associated_client`) AND `dealer_type` = 3');
+			$query->order('`id` DESC');
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
 			return $item;

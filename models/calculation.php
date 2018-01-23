@@ -236,15 +236,25 @@ class Gm_ceilingModelCalculation extends JModelItem
 
 				}
 				//throw new Exception($this->_item->n13, 1);
-
+				
 				$this->_item->n13 = $this->n13_load($this->_item->id);
+				$query = $db->getQuery(true);
+				$query
+					->select('client.dealer_id')
+					->from('`#__gm_ceiling_clients` as client')
+					->join('LEFT','`#__gm_ceiling_projects` AS proj ON proj.client_id = client.id')
+					->join('LEFT','`#__gm_ceiling_calculations` AS calc ON calc.project_id = proj.id')
+					->where('calc.id  = ' . $this->_item->id);
+				$db->setQuery($query);
+				$this->_item->dealer_id = $db->loadObject()->dealer_id;
 				
 				$this->_item->n14 = $this->n14_load($this->_item->id);
 	            $this->_item->n15 = $this->n15_load($this->_item->id);
 	            $this->_item->n22 = $this->n22_load($this->_item->id);
 	            $this->_item->n23 = $this->n23_load($this->_item->id);
 	            $this->_item->n26 = $this->n26_load($this->_item->id);
-                $this->_item->n29 = $this->n29_load($this->_item->id);
+				$this->_item->n29 = $this->n29_load($this->_item->id);
+				
 
 			return $this->_item;
 		}

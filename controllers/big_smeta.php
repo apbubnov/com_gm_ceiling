@@ -53,7 +53,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
             if(empty($res->user_id)) $res->user_id = 1;
             $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
-           
+            $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             if($res) {
                 if($data->transport == 1) { $transport_sum = $this->margin1($res->transport * $distance_col, $margin);
                 $transport_sum_1 = $res->transport * $distance_col;
@@ -69,7 +69,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
                 }
                 else { $transport_sum = 0; $transport_sum_1 = 0; } 
             }
-           /* if($data->transport == 1) { 
+           if($data->transport == 1) { 
             $discount = $model_project->getDiscount($data->id);
             $min = 100;
             foreach($discount as $d) {
@@ -78,14 +78,12 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             if   ($min != 100)  { $transport_sum = $transport_sum * ((100 - $min)/100);
             $transport_sum_1 = $transport_sum_1 * ((100 - $min)/100);
             }
-            }*/
+            }
            
             $model = $this->getModel();
             if(!empty($POST['include_calculation'])) {
                 
                 $calculation = $model->calculation($POST['include_calculation']);
-                
-                $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
                 $html = ' <h1>Номер договора: ' . $POST['project_id'] . '</h1><br>';
                 $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
                 $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';

@@ -304,6 +304,25 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public function findOldDealers()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $FIO = $jinput->get('fio', '', 'STRING');
+            $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+            $result = $clients_model->getDealersByClientName($FIO);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function register_user()
     {
         try
@@ -2681,8 +2700,41 @@ class Gm_ceilingController extends JControllerLegacy
                 throw new Exception('empty email');
             }
             $code = md5($user_id.'commercial_offer');
+
+            $site = "http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
+            // письмо
+			$mailer = JFactory::getMailer();
+			$config = JFactory::getConfig();
+			$sender = array(
+				$config->get('mailfrom'),
+				$config->get('fromname')
+			);
+			$mailer->setSender($sender);
+            $mailer->addRecipient($email);
+            $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
+            $body .= '<body style="margin: 10px;">';
+            $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
+            $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
+            $body .= '<img src="http://test1.gm-vrn.ru/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
+            $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
+            $body .= '<p>Тел.: +7(473)2122359</p>';
+            $body .= '<p>Почта: gm-partner@mail.ru</p>';
+            $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
+            $body .= '</div></td></tr></table>';
+            $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку <a href=\"$site\">коммерческое предложение</a>, где Вы можете получить более подробную информацию.</div></body>";
+            $mailer->setSubject('Коммерческое предложение');
+            $mailer->isHtml(true);
+            $mailer->Encoding = 'base64';
+			$mailer->setBody($body);
+            $send = $mailer->Send();
+            
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-            $result  = $users_model->addCommercialOfferCode($user_id, $code);
+            $result = $users_model->addCommercialOfferCode($user_id, $code);
+
+            $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+            $client_id = JFactory::getUser($user_id)->associated_client;
+            $email_id = $dop_contacts_model->save($client_id, 1, $email);
+
             die(json_encode($result));
         }
         catch (Exception $e) {
@@ -2970,6 +3022,12 @@ class Gm_ceilingController extends JControllerLegacy
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
+    }
+    public function test_estimate(){
+        $jinput = JFactory::getApplication()->input;
+        $id = $jinput->get('id','','INT');
+        Gm_ceilingHelpersGm_ceiling::create_estimate_mounters($id);
+        die(true);
     }
 }
 

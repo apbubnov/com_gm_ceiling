@@ -25,10 +25,10 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 
 // все замерщики
 $model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
-$AllGaugerGM = $model->FindAllGauger(1);
-$AllGaugerDealer = $model->FindAllGauger($user->dealer_id);
-if (count($AllGaugerDealer) == 0) {
-    array_push($AllGaugerDealer, ["id" => $userId, "name" => $user->name]);
+//$AllGaugerGM = $model->FindAllGauger(1);
+/* $AllGaugerDealer */$AllGauger = $model->FindAllGauger($user->dealer_id);
+if (count($AllGauger) == 0) {
+    array_push($AllGauger, ["id" => $userId, "name" => $user->name]);
 }
 //----------------------------------------------------------------------------------
 
@@ -46,7 +46,6 @@ if (count($AllGaugerDealer) == 0) {
 	<input name="jform[project_calculator]" id="jform_project_calculator" type="hidden" value="">
 	<!-- - - - - - - - - - - - - - - - - - - - - - -->
 	<h2> Добавить замер </h2>
-	
 	<div class="col-md-4"></div>
 	<div class="col-md-4">
 		<p>
@@ -119,21 +118,21 @@ if (count($AllGaugerDealer) == 0) {
 			<input name="jform[project_note]" id="jform_project_note" value="" style="width:100%; margin-bottom:1em;" placeholder="Примечание" type="text">
 		</div>
 	</div>
-	<div class="control-group">
-		<?php if ($user->dealer_id != 1 && $user->dealer_type == 0) { ?>
-			<div class="control-label">
+<!-- 	<div class="control-group">
+		<?php// if ($user->dealer_id != 1) { ?>
+		 	<div class="control-label">
 				<label id="jform_who_calculate-lbl" for="jform_who_calculate" class="required">Выберите замерщика<span class="star">&nbsp;*</span></label>
 			</div>
 			<div class="controls">
 				<p><input name="jform[who_calculate]" id="jform_who_calculate1" type="radio" value="1" checked><label id="jform_who_calculate-lbl" for="jform_who_calculate1" class="required">Замерщик ГМ</label></p>
 				<p><input name="jform[who_calculate]" id="jform_who_calculate2" type="radio" value="0"><label id="jform_who_calculate-lbl" for="jform_who_calculate2" class="required">Замерщик Дилера</label></p>
 			</div>
-		<?php } else if($user->dealer_type == 1){ ?>
+		<?php// } else if ($user->dealer_type == 1) { ?>
 			<input name="jform[who_calculate]" id="jform_who_calculate2" type="hidden" value="0" checked>
-		<?php } else {?>
+		<?php// } else {?>
 			<input name="jform[who_calculate]" id="jform_who_calculate1" type="hidden" value="1" checked>
-		<?php } ?>
-	</div>
+		<?php// } ?>
+	</div> -->
 	<div class="control-group" style="margin-bottom: 1em;">
 		<p>Выберите удобные дату и время замера</p>
 		<div id="calendar-container" style="position: relative;">
@@ -151,31 +150,27 @@ if (count($AllGaugerDealer) == 0) {
 	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-choose-tar">
-			<!-- <div id="div1"> -->
 				<p id="date-modal"></p>
 				<p><strong>Выберите время замера (и замерщика):</strong></p>
-			<!-- </div>
-			<div id="table_wraper"> -->
 				<p>
 					<table id="projects_gaugers"></table>
 				</p>
-			<!-- </div>
-			<div id="div2"> -->
 				<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
-			<!-- </div> -->
 		</div>
 	</div>
 </form>
 
 <script>
 
-	/* jQuery(window).resize(function() {
-		heightAll = jQuery("#modal-window-choose-tar").css("height");
-		height1 = jQuery("#div1").css("height");
-		height2 = jQuery("#div2").css("height");
-		height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
-		jQuery("#table_wraper").css("height", height+"px");
-	}); */
+	/*
+		jQuery(window).resize(function() {
+			heightAll = jQuery("#modal-window-choose-tar").css("height");
+			height1 = jQuery("#div1").css("height");
+			height2 = jQuery("#div2").css("height");
+			height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
+			jQuery("#table_wraper").css("height", height+"px");
+		});
+	*/
 
 	// листание календаря
     month_old = 0;
@@ -195,15 +190,7 @@ if (count($AllGaugerDealer) == 0) {
         }
         month_old = month;
 		year_old = year;
-		if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-			console.log("dealer 1");
-			dealer = 1;
-		}
-		if (jQuery("#jform_who_calculate2").attr("checked") == "checked") {
-			console.log("dealer 123");
-			dealer = <?php echo $user->dealer_id; ?>;
-		}
-		update_calendar(month, year, dealer);
+		update_calendar(month, year);
     });
     jQuery("#calendar-container").on("click", "#button-prev", function () {
         month = <?php echo $month; ?>;
@@ -220,22 +207,15 @@ if (count($AllGaugerDealer) == 0) {
         }
         month_old = month;
         year_old = year;
-        if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-			console.log("dealer 1");
-			update_calendar(month, year, 1);
-		}
-		if (jQuery("#jform_who_calculate2").attr("checked") == "checked") {
-			console.log("dealer 123");
-			update_calendar(month, year, <?php echo $user->dealer_id; ?>);
-		}
+		update_calendar(month, year);
     });
-    function update_calendar(month, year, dealer) {
+    function update_calendar(month, year) {
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
             data: {
                 id: <?php echo $userId; ?>,
-                id_dealer: dealer,
+                id_dealer: <?php echo $user->dealer_id; ?>,
                 flag: 3,
                 month: month,
                 year: year,
@@ -323,27 +303,28 @@ if (count($AllGaugerDealer) == 0) {
 				height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
 				jQuery("#table_wraper").css("height", height+"px");
 			}, 500); */
-			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
+			/* if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
 				var dealer = 1;
 			} else {
-				var dealer = <?php echo $user->dealer_id; ?>;
-			}
+				var dealer = <?php// echo $user->dealer_id; ?>;
+			} */
             jQuery.ajax({
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
                 data: {
                     date: date,
-					dealer: dealer,
+					dealer: <?php echo $user->dealer_id; ?>,
                 },
                 success: function(data) {
 					Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
                     };
-					if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-						AllGauger = <?php echo json_encode($AllGaugerGM); ?>;
+					/* if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
+						AllGauger = <?php// echo json_encode($AllGaugerGM); ?>;
 					} else {
-						AllGauger = <?php echo json_encode($AllGaugerDealer); ?>;
-					}
+						AllGauger = <?php// echo json_encode($AllGaugerDealer); ?>;
+					} */
+					AllGauger = <?php echo json_encode($AllGauger); ?>;
                     data = JSON.parse(data); // замеры
                     AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                     var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
@@ -409,7 +390,7 @@ if (count($AllGaugerDealer) == 0) {
         //------------------------------------------
 
 		// если изменился радиобаттон, менять календарь
-		jQuery("input[name=\"jform[who_calculate]\"]").click( function () {
+		/* jQuery("input[name=\"jform[who_calculate]\"]").click( function () {
 			month = 0;
 			if (month == 0) {
 				if (month_old != 0) {
@@ -426,7 +407,7 @@ if (count($AllGaugerDealer) == 0) {
 			if (jQuery("#jform_who_calculate2").attr("checked") == "checked") {
 				update_calendar(month, year, <?php echo $user->dealer_id; ?>);
 			}
-		});
+		}); */
 		//-------------------------------------------------
 
 		jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
