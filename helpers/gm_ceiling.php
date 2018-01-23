@@ -4379,7 +4379,6 @@ class Gm_ceilingHelpersGm_ceiling
         return 1;
     }
     
-
     public static function saverclient($data, $id)
     {
 
