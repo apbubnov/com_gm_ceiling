@@ -551,6 +551,8 @@ $results = $db->loadObjectList();
         </a>
     </li>
 </ul>
+
+
 <!-- Tab panes -->
 <div class="tab-content">
     <div class="tab-pane active" id="summary" role="tabpanel">
