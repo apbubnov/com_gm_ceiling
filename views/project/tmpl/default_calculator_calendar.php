@@ -1276,11 +1276,11 @@ $results = $db->loadObjectList();
                             Отказ
                         </a>
                     </td>
-                    <td>
+                    <!--<td>
                         <a class="btn  btn-warning" id="choose_mounter">
                             Выбрать монтажника
                         </a>
-                    </td>
+                    </td>-->
                 </tr>
 
             </table>
