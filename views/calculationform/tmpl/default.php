@@ -202,7 +202,9 @@
 					<?php $color = $color_model->getData($this->item->color); ?>
 					<?php $imgurl = $color->file;?>
 				<?php } ?>
-				<label id="jform_color_switch-lbl" for="color_switch" style="display: none; text-align: left !important;">Выберите цвет:</label>
+				<div style="width: 100%; text-align: left;">
+					<label id="jform_color_switch-lbl" for="color_switch" style="display: none; text-align: left !important;">Выберите цвет:</label>
+				</div>
 				<button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none; margin-bottom: 1.5em;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px;' src="/<?php if(isset($imgurl)){ echo $imgurl; } ?>" alt="" /></button>
 				<input id="jform_color" name="jform[color]" value="<?php echo $this->item->color; ?>" type="hidden">
 			</div>
@@ -422,7 +424,9 @@
 					<div class="container">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none; text-align: center;">Выберите цвет:</label>
+							<div style="width: 100%; text-align: left;">
+								<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none; text-align: center;">Выберите цвет:</label>
+							</div>
 							<button id="color_switch_1" class="btn btn-primary btn-width" type="button" style="display: none;">Цвет <img id="color_img_1" class="calculation_color_img" style='width: 50px; height: 30px;'src="<?php if(isset($color_image_1)){ echo $color_image_1; } ?>" alt="" /></button>
 							<input id="jform_color_1" name="jform[n6]" value="<?php echo $this->item->n6;?>" type="hidden">
 						</div>
@@ -432,7 +436,9 @@
 					<div class="container">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="text-align: center;">Выберите цвет:</label>
+							<div style="width: 100%; text-align: left;">
+								<label id="jform_color_switch-lbl_1" for="color_switch_1" style="text-align: center;">Выберите цвет:</label>
+							</div>
 							<button id="color_switch_1" class="btn btn-primary btn-width" type="button" style="">Цвет <img id="color_img_1" class="calculation_color_img" style='width: 50px; height: 30px;'src="<?php if(isset($color_image_1)){ echo $color_image_1; } ?>" alt="" /></button>
 							<input id="jform_color_1" name="jform[n6]" value="<?php echo $this->item->n6;?>" type="hidden">
 						</div>
@@ -505,7 +511,7 @@
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n13_block" >
-						<div class="form-group" style="margin-bottom: 0.5em;">
+						<div class="form-group" style="margin-bottom: 0em;">
 							<div class="advanced_col1">
 								<label>Кол-во</label>
 							</div>
@@ -570,7 +576,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<div class="form-group" style="margin-bottom: 0.5em;">
+					<div class="form-group" style="margin-bottom: 0em;">
 						<div class="advanced_col1">
 							<label>Кол-во,шт</label>
 						</div>
@@ -627,7 +633,7 @@
 					<table style="margin-left: calc(50% - 124px);">
 						<tr>
 							<td>
-								<h3>Шторный карниз </h3>
+								<h3>Шторный карниз</h3>
 							</td>
 							<td>
 								<a class="help" >
@@ -651,9 +657,11 @@
 		</div>
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-4"<!--  style="padding-left: 0px;" -->>
+				<div class="col-sm-4">
 					<div class="form-group">
-						<label id="jform_n27-lbl" for="jform_n27" class="" style="text-align: left;">Введите длину шторного карниза</label>
+						<div style="width: 100%; text-align: left;">
+							<label id="jform_n27-lbl" for="jform_n27" class="" >Введите длину шторного карниза</label>
+						</div>
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
 					<div class="form-group">
@@ -678,29 +686,6 @@
 						<? } ?>
 					</div>
 				</div>
-				<div class="col-sm-4"<!--  style="padding-right: 0px;" -->>
-					<!-- <div class="form-group">
-						<? if(!$this->item->n16) {?>
-							<p>
-								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
-								<label for="jform_n16"> Обычный карниз</label>
-							</p>
-							<p>
-								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
-								<label for="jform_n16_1"> Скрытый карниз</label>
-							</p>
-						<? } else { ?>
-							<p>
-								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio">
-								<label for="jform_n16"> Обычный карниз</label>
-							</p>
-							<p>
-								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio" checked="checked">
-								<label for="jform_n16_1"> Скрытый карниз</label>
-							</p>
-						<? } ?>
-					</div> -->
-				</div>
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
@@ -708,9 +693,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<h4>
-						Можете приобрести карнизы у нас:
-					</h4>
+					<h4>Можете приобрести карнизы у нас:</h4>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -719,7 +702,7 @@
 			<div class="row sm-margin-bottom">
 		    	<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<div class="form-group">
+					<div class="form-group" style="margin-bottom: 0em;">
 						<div class="advanced_col1">
 							<label>Кол-во,шт</label>
 						</div>
@@ -735,37 +718,36 @@
 						<div class="clr"></div>
 					</div>
 					<div id="jform_n15_block_html" class="hide_label">
-						<?php 
-							$n15 = $this->item->n15;
-								if(count($n15) > 0) { 
-									foreach($n15 as $cornice) {?>
-										<div class="form-group">
-											<div class="advanced_col1">
-												<input name="n15_count[]"  value="<?= $cornice->n15_count; ?>" class="form-control" placeholder="шт." type="tel">
-											</div>
-											<div class="advanced_col2">
-												<select name="n15_type[]" id="n15" class="form-control n15_control" placeholder="Тип">
-													<?foreach ($this->item->types[9]->id AS $type1):?>
-														<option value="<?=$type1->id;?>" <?=($type1->id == $cornice->n15_type)?'selected':'';?>><?=$type1->title;?></option>
-													<?endforeach;?>
-												</select>
-											</div>
-											<div class="advanced_col3">
-												<select name="n15_size[]" id="n15_1" class="form-control" placeholder="Диаметр">
-													<?foreach ( $this->item->n15_all AS $cornice_item):?>
-														<option value="<?=$cornice_item->id;?>" <?=($cornice_item->id == $cornice->n15_size)?'selected':'';?>><?=$cornice_item->title;?></option>
-													<?endforeach;?>
-												</select>
-											</div>
-											<div class="advanced_col4 center">
-												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-											</div>
-											<div class="clr"></div>
-										</div>
-									<?php } ?>
+						<?php $n15 = $this->item->n15; ?>
+						<?php if (count($n15) > 0) { ?>
+							<?php foreach ($n15 as $cornice) { ?>
+								<div class="form-group">
+									<div class="advanced_col1">
+										<input name="n15_count[]"  value="<?= $cornice->n15_count; ?>" class="form-control" placeholder="шт." type="tel">
+									</div>
+									<div class="advanced_col2">
+										<select name="n15_type[]" id="n15" class="form-control n15_control" placeholder="Тип">
+											<?foreach ($this->item->types[9]->id AS $type1):?>
+												<option value="<?=$type1->id;?>" <?=($type1->id == $cornice->n15_type)?'selected':'';?>><?=$type1->title;?></option>
+											<?endforeach;?>
+										</select>
+									</div>
+									<div class="advanced_col3">
+										<select name="n15_size[]" id="n15_1" class="form-control" placeholder="Диаметр">
+											<?foreach ( $this->item->n15_all AS $cornice_item):?>
+												<option value="<?=$cornice_item->id;?>" <?=($cornice_item->id == $cornice->n15_size)?'selected':'';?>><?=$cornice_item->title;?></option>
+											<?endforeach;?>
+										</select>
+									</div>
+									<div class="advanced_col4 center">
+										<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+									</div>
+									<div class="clr"></div>
+								</div>
 							<?php } ?>
+						<?php } ?>
 					</div>
-					<button id="add_n15" class="btn btn-primary" type="button">Добавить </button>
+					<button id="add_n15" class="btn btn-primary" type="button">Добавить</button>
 				</div>
 			</div>
 		</div>
@@ -776,12 +758,13 @@
 				<div class="col-sm-4">
 					<table>
 						<tr>
-							<td>
+							<td style="text-align: center;">
 								<h3>Укажите кол-во труб входящих в потолок</h3>
 							</td>
-							<td>
+							<td style="text-align: left;">
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-									<span class="airhelp"><img src="/images/obvod.png" width="380" height="250" align="center"/>
+									<span class="airhelp">
+										<img src="/images/obvod.png" width="380" height="250" align="center"/>
 										<br>На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
 										<img src="/images/obvod2.png" width="380" height="250" align="center"/>
 									</span>
