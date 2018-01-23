@@ -361,7 +361,6 @@
 
     function rb_email_click(elem)
     {
-        console.log(elem.value);
         jQuery("#email_comm").val(elem.value);
     }
 
