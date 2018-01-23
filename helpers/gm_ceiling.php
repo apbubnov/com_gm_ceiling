@@ -4027,7 +4027,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $mailer = JFactory::getMailer();
         $em = /*'kostikkuzmenko@mail.ru';*/
-            'popowa.alinochka@gmail.com';//'al.p.bubnov@gmail.com';
+            'popowa.alinochka';//'al.p.bubnov@gmail.com';
         $em1 = 'g';//'gmvrn1510@gmail.com';
         $config = JFactory::getConfig();
         $sender = array(
@@ -4360,7 +4360,7 @@ class Gm_ceilingHelpersGm_ceiling
     {
 
         $mailer = JFactory::getMailer();
-        $em = 'popowa.alinochka@gmail.com';//'kostikkuzmenko@mail.ru';
+        $em = 'popowa.alinochka@gmail.co';//'kostikkuzmenko@mail.ru';
         $config = JFactory::getConfig();
         $sender = array(
             $config->get('mailfrom'),
