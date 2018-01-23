@@ -1745,6 +1745,7 @@
 		<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"> Наверх</i></a>
 	</form>
 </div>
+</div>
 
 <script>
 
