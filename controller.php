@@ -304,6 +304,25 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public function findOldDealers()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $FIO = $jinput->get('fio', '', 'STRING');
+            $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+            $result = $clients_model->getDealersByClientName($FIO);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function register_user()
     {
         try
@@ -3008,7 +3027,7 @@ class Gm_ceilingController extends JControllerLegacy
         $jinput = JFactory::getApplication()->input;
         $id = $jinput->get('id','','INT');
         Gm_ceilingHelpersGm_ceiling::create_estimate_mounters($id);
-        die("true");
+        die(true);
     }
 }
 

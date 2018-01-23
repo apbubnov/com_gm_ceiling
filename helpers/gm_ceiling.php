@@ -3787,7 +3787,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data = array(
                 'id'=> $project_id,
                 'transport'=>$transport_type,
-                '$distance' => $distance,
+                'distance' => $distance,
                 'distance_col' =>$distance_col
             );
             $res = $project_model->transport((object)$data);
@@ -3805,31 +3805,31 @@ class Gm_ceilingHelpersGm_ceiling
         $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
         if($res) {
             if($transport_type == 1) {
-                $transport_sum = self::margin($res->transport * $distance_col, $margin);
+                $transport_sum = margin($res->transport * $distance_col, $margin);
                 $transport_sum_1 = $res->transport * $distance_col;
                 $result = array(
                     'transport' => 'Транспорт по городу',
                     'distance' => '-',
                     'distance_col'=> $distance_col,
                     'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum1 
+                    'mounter_sum' => $transport_sum_1 
                 );
 
             }
             elseif($transport_type == 2) {
                 $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
                 $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                if($transport_sum < self::margin($res->transport, $margin))
+                if($transport_sum < margin($res->transport, $margin))
                   { 
-                      $transport_sum = self::margin($res->transport, $margin);
+                      $transport_sum = margin($res->transport, $margin);
                       $transport_sum_1 = $res->transport;
                   }
                 $result = array(
                     'transport' => 'Выезд за город',
-                    'distance' => '-',
+                    'distance' => $distance,
                     'distance_col'=> $distance_col,
                     'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum1 
+                    'mounter_sum' => $transport_sum_1 
                 );  
             }
             else { 
@@ -3840,12 +3840,12 @@ class Gm_ceilingHelpersGm_ceiling
                     'distance' => '-',
                     'distance_col'=> '-',
                     'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum1 
+                    'mounter_sum' => $transport_sum_1 
                 );
             } 
         }
        if($transport_type == 1) { 
-            $discount = $project_model->getDiscount($data->id);
+            $discount = $project_model->getDiscount($project_id);
             $min = 100;
             foreach($discount as $d) {
                 if($d->discount < $min)
@@ -3872,7 +3872,13 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
         $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
         $html .= '<table border="0" cellspacing="0" width="100%">
-        <tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
+                    <tbody>
+                        <tr>
+                            <th>Название</th>
+                            <th class="center">Площадь, м<sup>2</sup>.</th>
+                            <th class="center">Периметр, м </th>
+                            <th class="center">Стоимость, руб.</th>
+                        </tr>';
         foreach ($calculations as $calc) {
             $html .= '<tr>';
             $html .= '<td>' . $calc->calculation_title . '</td>';
@@ -3883,6 +3889,7 @@ class Gm_ceilingHelpersGm_ceiling
             $sum += $calc->mounting_sum;
         }
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
+        $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<h2>Транспортные расходы: </h2>';
         $html .= '<table border="0" cellspacing="0" width="100%">
         <tbody><tr><th>Вид транспорта</th><th class="center">Кол-во км<sup>2</sup>.</th><th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th></tr>'; 
@@ -3895,12 +3902,10 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
-        $html = '<h1>Информация</h1>';
+        $html .= '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         $filename = md5($data['id'] . "-2") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
-        exit();
-        
         if (isset($project->id)) {
             if ($project->id) {
                 $html .= "<b>Номер договора: </b>" . $project->id . "<br>";
