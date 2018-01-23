@@ -758,7 +758,7 @@
 				<div class="col-sm-4">
 					<table>
 						<tr>
-							<td style="text-align: right;">
+							<td style="text-align: center;">
 								<h3>Укажите кол-во труб входящих в потолок</h3>
 							</td>
 							<td style="text-align: left;">
