@@ -406,11 +406,21 @@ class Gm_ceilingHelpersGm_ceiling
         if($data['n2'] == 29) $data['n1'] = 29; 
 
         //Получаем объект дилера
-        if (empty($data['dealer_id'])) {
-            $dealer = JFactory::getUser(2);
+        if (gettype($data) == "array")
+        {
+            if (empty($data['dealer_id'])) {
+                $dealer = JFactory::getUser(2);
+            } else {
+                $dealer = JFactory::getUser($data['dealer_id']);
+            }
         } else {
-            $dealer = JFactory::getUser($data['dealer_id']);
+            if (empty($data->dealer_id)) {
+                $dealer = JFactory::getUser(2);
+            } else {
+                $dealer = JFactory::getUser($data->dealer_id);
+            }
         }
+        
 
         $dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
         $dealer_marg = $dealer_info->getData();
@@ -917,7 +927,6 @@ class Gm_ceilingHelpersGm_ceiling
             ->where('a.user_id = ' . $dealer->id);
         $db->setQuery($query);
         $results = $db->loadObject();
-
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
         $guild_data = array();
@@ -4018,7 +4027,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $mailer = JFactory::getMailer();
         $em = /*'kostikkuzmenko@mail.ru';*/
-            'popowa.alinochka@gmail.com';//'al.p.bubnov@gmail.com';
+            'popowa.alinochka';//'al.p.bubnov@gmail.com';
         $em1 = 'g';//'gmvrn1510@gmail.com';
         $config = JFactory::getConfig();
         $sender = array(
@@ -4347,11 +4356,12 @@ class Gm_ceilingHelpersGm_ceiling
         return 1;
     }
 
+    
     public static function push($id, $status_id)
     {
 
         $mailer = JFactory::getMailer();
-        $em = 'popowa.alinochka@gmail.com';//'kostikkuzmenko@mail.ru';
+        $em = 'popowa.alinochka@gmail.co';//'kostikkuzmenko@mail.ru';
         $config = JFactory::getConfig();
         $sender = array(
             $config->get('mailfrom'),

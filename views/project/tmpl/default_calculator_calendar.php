@@ -305,7 +305,9 @@ $results = $db->loadObjectList();
                                 </div>
                             </td>
                         </tr>
-                        <?  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+
+                        <?php   if($user->dealer_type == 0) {
+                        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
                             $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
                         <tr>
                             <th>Дата рождения</th>
@@ -313,7 +315,7 @@ $results = $db->loadObjectList();
                                         value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date"></td>
                             <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
                         </tr>
-                        
+                        <?php } ?>
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
                             <?php $phone = $model->getClientPhones($this->item->id_client); ?>
@@ -464,33 +466,35 @@ $results = $db->loadObjectList();
 
                         </tr>
                     </div>
-                        <tr>
+                        <!--<tr>
                             <th>Дилер</th>
                             <td><?php
-                                $dealer = $client_model->getDealer($this->item->id_client);
-                                echo $dealer; ?>
+                                //$dealer = $client_model->getDealer($this->item->id_client);
+                                //echo $dealer; ?>
                             </td>
 
-                        </tr>
+                        </tr>-->
                 <?php } ?>
             </table>
             </div>
-            <div  class="col-12 col-md-6">
-                <div class="comment">
-                    <label> История клиента: </label>
-                    <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
-                    <table>
-                        <tr>
-                            <td><label> Добавить комментарий: </label></td>
-                        </tr>
-                        <tr>
-                            <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                            <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button></td>
-                        </tr>
-                    </table>
+            <?php if($user->dealer_type == 0) { ?>
+                <div  class="col-12 col-md-6">
+                    <div class="comment">
+                        <label> История клиента: </label>
+                        <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
+                        <table>
+                            <tr>
+                                <td><label> Добавить комментарий: </label></td>
+                            </tr>
+                            <tr>
+                                <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-        </div>
+            <?php } ?>
     </div>
         <table class="table calculation_sum">
             <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
