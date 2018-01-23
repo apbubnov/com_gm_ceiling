@@ -482,25 +482,16 @@
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
-			<!-- <div class="row sm-margin-bottom">
-				<div class="col-sm-4"></div>
-				<div class="col-sm-4">
-					<input id="jform_n12" data-next="#jform_n13" name="jform[n12]" placeholder ="шт." value="<?php echo $this->item->n12; ?>" class="form-control" type="tel">
-				</div>
-				<div class="col-sm-4"></div>
-			</div> -->
 		</div>
 		<!-- Светильники -->
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row sm">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n13-lbl" for="jform_n13" class="">
-									<h4>Введите кол-во светильников:</h4>
-								</label>
+								<label id="jform_n13-lbl" for="jform_n13" class="">Введите кол-во светильников:</label>
 							</td>
 							<td>
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">На упаковке светильника указан диаметр технологического отверстия</span></a>
@@ -514,7 +505,7 @@
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n13_block" >
-						<div class="form-group">
+						<div class="form-group" style="margin-bottom: 0.5em;">
 							<div class="advanced_col1">
 								<label>Кол-во</label>
 							</div>
@@ -570,9 +561,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<h4>
-						Можете приобрести светильники у нас:
-					</h4>
+					<h4>Можете приобрести светильники у нас:</h4>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -581,7 +570,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<div class="form-group">
+					<div class="form-group" style="margin-bottom: 0.5em;">
 						<div class="advanced_col1">
 							<label>Кол-во,шт</label>
 						</div>
@@ -597,40 +586,36 @@
 						<div class="clr"></div>
 					</div>
 					<div id="ecola_block_html" class="hide_label">
-					<?php $n26 = $this->item->n26;?>
-							<?php if(count($n26) > 0) { ?>
-								<?php foreach($n26 as $ecola) {?>
-
-
-						<div class="form-group">
-							<div class="advanced_col1">
-								<input name="ecola_count[]"  value="<?=/*$tmp[$item]*/ $ecola->n26_count; ?>" class="form-control" placeholder="шт." type="tel">
-							</div>
-							<div class="advanced_col2">
-								<select class="form-control" name="light_color[]" placeholder="Светильник">
-								<?foreach ($this->item->n26_all AS $ecola_item):?>
-                                     <option value="<?=$ecola_item->id;?>" <?=($ecola_item->id == $ecola->n26_illuminator)?'selected':'';?>><?=$ecola_item->title;?></option>
-                                 <?endforeach;?>
-								</select>
-							</div>
-							<div class="advanced_col3">
-								
-								<select class="form-control"  name="light_lamp_color[]" placeholder="Лампа">
-								 <?foreach ( $this->item->n26_lamp AS $ecola_lamps):?>
-                                      <option value="<?=$ecola_lamps->id;?>" <?=($ecola_lamps->id == $ecola->n26_lamp)?'selected':'';?>><?=$ecola_lamps->title;?></option>
-                                  <?endforeach;?>
-								</select>
-							</div>
-							<div class="advanced_col4 center">
-								<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-							</div>
-							<div class="clr"></div>
-						</div>
-						<?php } ?>
+						<?php $n26 = $this->item->n26;?>
+						<?php if(count($n26) > 0) { ?>
+							<?php foreach($n26 as $ecola) {?>
+								<div class="form-group">
+									<div class="advanced_col1">
+										<input name="ecola_count[]"  value="<?=/*$tmp[$item]*/ $ecola->n26_count; ?>" class="form-control" placeholder="шт." type="tel">
+									</div>
+									<div class="advanced_col2">
+										<select class="form-control" name="light_color[]" placeholder="Светильник">
+											<?foreach ($this->item->n26_all AS $ecola_item):?>
+												<option value="<?=$ecola_item->id;?>" <?=($ecola_item->id == $ecola->n26_illuminator)?'selected':'';?>><?=$ecola_item->title;?></option>
+											<?endforeach;?>
+										</select>
+									</div>
+									<div class="advanced_col3">
+										<select class="form-control"  name="light_lamp_color[]" placeholder="Лампа">
+											<?foreach ( $this->item->n26_lamp AS $ecola_lamps):?>
+												<option value="<?=$ecola_lamps->id;?>" <?=($ecola_lamps->id == $ecola->n26_lamp)?'selected':'';?>><?=$ecola_lamps->title;?></option>
+											<?endforeach;?>
+										</select>
+									</div>
+									<div class="advanced_col4 center">
+										<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+									</div>
+									<div class="clr"></div>
+								</div>
 							<?php } ?>
+						<?php } ?>
 					</div>
 					<button id="add_ecola" class="btn btn-primary" type="button">Добавить </button>
-					
 				</div>
 			</div>
 		</div>
@@ -639,21 +624,22 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table>
+					<table style="margin-left: calc(50% - 124px);">
 						<tr>
 							<td>
 								<h3>Шторный карниз </h3>
 							</td>
 							<td>
-								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+								<a class="help" >
+									<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 									<span class="airhelp">Если его не будет или он будет крепиться к стене просто пропустите этот пункт.
-														<br>Шторный карниз можно крепить на потолок двумя способами:
-														<br> 
-														<ul>
-															<li>Видимый <br> <img src="/images/karniz.png" width="350" height="250"/></li>
-															<li>Скрытый <br> <img src="/images/karniz2.png" width="350" height="250"/></li>
-														</ul>
-									<br>Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз
+										<br>Шторный карниз можно крепить на потолок двумя способами:
+										<br> 
+										<ul>
+											<li>Видимый <br> <img src="/images/karniz.png" width="350" height="250"/></li>
+												<li>Скрытый <br> <img src="/images/karniz2.png" width="350" height="250"/></li>
+											</ul>
+										<br>Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз
 									</span>
 								</a>
 							</td>
@@ -665,17 +651,11 @@
 		</div>
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-4" style="padding-left: 0px;">
+				<div class="col-sm-4"<!--  style="padding-left: 0px;" -->>
 					<div class="form-group">
-						<label id="jform_n27-lbl" for="jform_n27" class="">
-							Введите длину шторного карниза
-						</label>
-						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12"
-								value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м."
-								type="tel">
+						<label id="jform_n27-lbl" for="jform_n27" class="" style="text-align: left;">Введите длину шторного карниза</label>
+						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
-				</div>
-				<div class="col-sm-4" style="padding-right: 0px;">
 					<div class="form-group">
 						<? if(!$this->item->n16) {?>
 							<p>
@@ -697,6 +677,29 @@
 							</p>
 						<? } ?>
 					</div>
+				</div>
+				<div class="col-sm-4"<!--  style="padding-right: 0px;" -->>
+					<!-- <div class="form-group">
+						<? if(!$this->item->n16) {?>
+							<p>
+								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
+								<label for="jform_n16"> Обычный карниз</label>
+							</p>
+							<p>
+								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
+								<label for="jform_n16_1"> Скрытый карниз</label>
+							</p>
+						<? } else { ?>
+							<p>
+								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio">
+								<label for="jform_n16"> Обычный карниз</label>
+							</p>
+							<p>
+								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio" checked="checked">
+								<label for="jform_n16_1"> Скрытый карниз</label>
+							</p>
+						<? } ?>
+					</div> -->
 				</div>
 				<div class="col-sm-4"></div>
 			</div>

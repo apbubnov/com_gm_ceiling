@@ -36,15 +36,32 @@ class Gm_ceilingModelClients_dop_contacts extends JModelList
 		$values = "$client_id, $type_id, '$contact'";
 
 		$db    = JFactory::getDbo();
+
 		$query = $db->getQuery(true);
-		$query->insert($db->quoteName('#__gm_ceiling_clients_dop_contacts'));
-		$query->columns($db->quoteName($columns));
-		$query->values($values);
-	
+		$query->select('*');
+		$query->from('`#__gm_ceiling_clients_dop_contacts`');
+		$query->where("`client_id` = $client_id AND `contact` = '$contact'");
 		$db->setQuery($query);
-		$db->execute();
-		return $db->insertid();
+		$items = $db->loadObjectList();
+
+		if (count($items) == 0)
+		{
+			$query = $db->getQuery(true);
+			$query->insert($db->quoteName('#__gm_ceiling_clients_dop_contacts'));
+			$query->columns($db->quoteName($columns));
+			$query->values($values);
+		
+			$db->setQuery($query);
+			$db->execute();
+			$result = $db->insertid();
+		}
+		else
+		{
+			$result = $items[0]->id;
+		}
+		return $result;
     }
+
     public function getEmailByClientID($id){
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true);
