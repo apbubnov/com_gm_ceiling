@@ -511,7 +511,7 @@
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n13_block" >
-						<div class="form-group" style="margin-bottom: 0.5em;">
+						<div class="form-group" style="margin-bottom: 0em;">
 							<div class="advanced_col1">
 								<label>Кол-во</label>
 							</div>
@@ -576,7 +576,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<div class="form-group" style="margin-bottom: 0.5em;">
+					<div class="form-group" style="margin-bottom: 0em;">
 						<div class="advanced_col1">
 							<label>Кол-во,шт</label>
 						</div>
@@ -633,7 +633,7 @@
 					<table style="margin-left: calc(50% - 124px);">
 						<tr>
 							<td>
-								<h3>Шторный карниз </h3>
+								<h3>Шторный карниз</h3>
 							</td>
 							<td>
 								<a class="help" >
@@ -702,7 +702,7 @@
 			<div class="row sm-margin-bottom">
 		    	<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<div class="form-group" style="margin-bottom: 0.5em;">
+					<div class="form-group" style="margin-bottom: 0em;">
 						<div class="advanced_col1">
 							<label>Кол-во,шт</label>
 						</div>
@@ -758,12 +758,13 @@
 				<div class="col-sm-4">
 					<table>
 						<tr>
-							<td>
+							<td style="text-align: right;">
 								<h3>Укажите кол-во труб входящих в потолок</h3>
 							</td>
-							<td>
+							<td style="text-align: left;">
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-									<span class="airhelp"><img src="/images/obvod.png" width="380" height="250" align="center"/>
+									<span class="airhelp">
+										<img src="/images/obvod.png" width="380" height="250" align="center"/>
 										<br>На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
 										<img src="/images/obvod2.png" width="380" height="250" align="center"/>
 									</span>
