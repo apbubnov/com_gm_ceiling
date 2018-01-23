@@ -325,7 +325,7 @@
 		<div class="container" id="block_n28">
 			<div class="row">
 				<div class="col-sm-4" style="padding-left: 0px;">
-					<div class="form-group">
+					<div class="form-group" style="margin-bottom: 1rem;">
 						<h3>Выберите багет</h3>
 					</div>
 				</div>
@@ -362,7 +362,7 @@
 		<div class="container" id="block_n6">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
-				<div class="col-sm-4" style="text-align:-webkit-center">
+				<div class="col-sm-4" style="text-align:-webkit-center; margin-bottom: 1rem;">
 					<table>
 						<tr>
 							<td>
@@ -1483,20 +1483,17 @@
 				</div>
 			<?php }?>
 		</div>									
-        <!-- Рассчитать -->
+        <!-- Монтаж -->
 		<div class="container">
-			<div class="row sm-margin-bottom ">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
+					<h4>Монтаж</h4>
 				</div>
-				<div class="col-sm-4">
-					<h3>Монтаж</h3>
-				</div>
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 			</div>
 			<div class="row sm-margin-bottom">
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "need_mount">
 					<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
 					<label for="with_mount">Нужен</label>
@@ -1504,8 +1501,7 @@
 					<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
 					<label for="without">Не нужен</label>
 				</div>
-				<div class="col-sm-4">
-				</div>
+				<div class="col-sm-4"></div>
 			</div>
 		</div>
 		<div class="container">
