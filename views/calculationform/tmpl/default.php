@@ -824,7 +824,6 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		<!-- расширенная версия -->
 		<div id="extra_section">
 			<div class="container">
 				<div class="row sm-margin-bottom">
@@ -964,9 +963,7 @@
                     	<div class="col-sm-4">
 							<table>
 								<tr>
-									<td>
-										<h4 >Переход уровня</h4>
-									</td>
+									<td>Переход уровня</td>
 								</tr>
 							</table>
                     	</div>
@@ -979,7 +976,7 @@
                     	<div class="col-sm-4">
                         	<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
-									<label>Кол-во,м</label>
+									<label>Кол-во, м</label>
 								</div>
                             	<div class="advanced_col5">
                                 	<label>Тип</label>
@@ -1027,15 +1024,16 @@
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div class="form-group">
-							<table>
-							<tr>
-								<td>
-									<h3>Пожарная сигнализация</h3>
-								</td>
-								<td>
-									<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-										
-										Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них</span></a>
+							<table style="width: calc(50% - 173);">
+								<tr>
+									<td>
+										<h3>Пожарная сигнализация</h3>
+									</td>
+									<td>
+										<a class="help" >
+											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<span class="airhelp">Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них</span>
+										</a>
 									</td>
 								</tr>
 							</table>
