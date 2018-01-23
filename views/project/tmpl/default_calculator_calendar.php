@@ -537,11 +537,15 @@ $results = $db->loadObjectList();
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#summary" role="tab">Общее</a>
+        <a class="nav-link <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" data-toggle="tab" href="#summary" role="tab">Общее</a>
     </li>
     <?php foreach ($calculations as $k => $calculation) { ?>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
+        <?php if($user->dealer_type == 1) { ?>
+            <a class="nav-link active" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
+                role="tab"><?php echo $calculation->calculation_title; ?></a>
+         <?}?>
+         <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
                 role="tab"><?php echo $calculation->calculation_title; ?></a>
         </li>
     <?php } ?>
@@ -552,6 +556,7 @@ $results = $db->loadObjectList();
         </a>
     </li>
 </ul>
+
 
 <!-- Tab panes -->
 <div class="tab-content">
