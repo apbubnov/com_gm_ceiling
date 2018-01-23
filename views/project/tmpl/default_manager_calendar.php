@@ -189,8 +189,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         <div class="row">
             <div class="item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
-                <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar"
+                <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
