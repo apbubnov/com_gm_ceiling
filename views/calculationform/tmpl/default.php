@@ -561,9 +561,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<h4>
-						Можете приобрести светильники у нас:
-					</h4>
+					<h4>Можете приобрести светильники у нас:</h4>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -572,7 +570,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<div class="form-group">
+					<div class="form-group" style="margin-bottom: 0.5em;">
 						<div class="advanced_col1">
 							<label>Кол-во,шт</label>
 						</div>
@@ -588,40 +586,36 @@
 						<div class="clr"></div>
 					</div>
 					<div id="ecola_block_html" class="hide_label">
-					<?php $n26 = $this->item->n26;?>
-							<?php if(count($n26) > 0) { ?>
-								<?php foreach($n26 as $ecola) {?>
-
-
-						<div class="form-group">
-							<div class="advanced_col1">
-								<input name="ecola_count[]"  value="<?=/*$tmp[$item]*/ $ecola->n26_count; ?>" class="form-control" placeholder="шт." type="tel">
-							</div>
-							<div class="advanced_col2">
-								<select class="form-control" name="light_color[]" placeholder="Светильник">
-								<?foreach ($this->item->n26_all AS $ecola_item):?>
-                                     <option value="<?=$ecola_item->id;?>" <?=($ecola_item->id == $ecola->n26_illuminator)?'selected':'';?>><?=$ecola_item->title;?></option>
-                                 <?endforeach;?>
-								</select>
-							</div>
-							<div class="advanced_col3">
-								
-								<select class="form-control"  name="light_lamp_color[]" placeholder="Лампа">
-								 <?foreach ( $this->item->n26_lamp AS $ecola_lamps):?>
-                                      <option value="<?=$ecola_lamps->id;?>" <?=($ecola_lamps->id == $ecola->n26_lamp)?'selected':'';?>><?=$ecola_lamps->title;?></option>
-                                  <?endforeach;?>
-								</select>
-							</div>
-							<div class="advanced_col4 center">
-								<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-							</div>
-							<div class="clr"></div>
-						</div>
-						<?php } ?>
+						<?php $n26 = $this->item->n26;?>
+						<?php if(count($n26) > 0) { ?>
+							<?php foreach($n26 as $ecola) {?>
+								<div class="form-group">
+									<div class="advanced_col1">
+										<input name="ecola_count[]"  value="<?=/*$tmp[$item]*/ $ecola->n26_count; ?>" class="form-control" placeholder="шт." type="tel">
+									</div>
+									<div class="advanced_col2">
+										<select class="form-control" name="light_color[]" placeholder="Светильник">
+											<?foreach ($this->item->n26_all AS $ecola_item):?>
+												<option value="<?=$ecola_item->id;?>" <?=($ecola_item->id == $ecola->n26_illuminator)?'selected':'';?>><?=$ecola_item->title;?></option>
+											<?endforeach;?>
+										</select>
+									</div>
+									<div class="advanced_col3">
+										<select class="form-control"  name="light_lamp_color[]" placeholder="Лампа">
+											<?foreach ( $this->item->n26_lamp AS $ecola_lamps):?>
+												<option value="<?=$ecola_lamps->id;?>" <?=($ecola_lamps->id == $ecola->n26_lamp)?'selected':'';?>><?=$ecola_lamps->title;?></option>
+											<?endforeach;?>
+										</select>
+									</div>
+									<div class="advanced_col4 center">
+										<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+									</div>
+									<div class="clr"></div>
+								</div>
 							<?php } ?>
+						<?php } ?>
 					</div>
 					<button id="add_ecola" class="btn btn-primary" type="button">Добавить </button>
-					
 				</div>
 			</div>
 		</div>
