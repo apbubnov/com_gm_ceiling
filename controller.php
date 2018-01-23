@@ -3004,6 +3004,12 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+    public function test_estimate(){
+        $jinput = JFactory::getApplication()->input;
+        $id = $jinput->get('id','','INT');
+        Gm_ceilingHelpersGm_ceiling::create_estimate_mounters($id);
+        die("true");
+    }
 }
 
 ?>

@@ -79,13 +79,17 @@
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
 <? if (!empty($dop_contacts)) { ?>
 <div>
-<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта клиента : </p>
+<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта клиента: </p>
 </div>
 <div>
 <? foreach ($dop_contacts AS $contact) {?>
     <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
 </div>
 <? } ?>
+<div>
+    <input type="text" id="new_email" placeholder="Почта" required>
+    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+</div>
 <div class="row">
     <div class="col-sm-12" id = "calls">
         <p class="caption-tar">История клиента</p>
@@ -295,6 +299,34 @@
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
+
+        document.getElementById('add_email').onclick = function()
+        {
+            var client_id = <?php echo $client->id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
+                data: {
+                    client_id: client_id,
+                    email: document.getElementById('new_email').value
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
     });
 
     jQuery("#back_btn").click(function (){
