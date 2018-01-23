@@ -1043,7 +1043,7 @@ $results = $db->loadObjectList();
 
             }
         } ?>
-        <?php endif;?>
+        
     </div>
     <?php foreach ($calculations as $k => $calculation) { ?>
         <?php $mounters = json_decode($calculation->mounting_sum); ?>
@@ -1380,6 +1380,7 @@ $results = $db->loadObjectList();
             <?php } ?>
         </table>
     </div>
+    <?php endif;?>
 </div>
 <div id="modal-window-container-tar">
     <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
