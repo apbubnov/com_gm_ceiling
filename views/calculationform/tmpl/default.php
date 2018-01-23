@@ -1016,7 +1016,8 @@
                         	<button id="add_level" class="btn btn-primary" type="button">Добавить</button>
                     	</div>
                 	</div>
-            	</div>
+				</div>
+				
 			<?php } ?>
 			<!-- пожарная сигнализация -->
 			<div class = "container">
