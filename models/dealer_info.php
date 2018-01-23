@@ -239,7 +239,7 @@ class Gm_ceilingModelDealer_info extends JModelList
 				$query = $db->getQuery(true);
 				$query->select('mp20')
 				->from('#__gm_ceiling_mount')
-				->where('user_id = 2')
+				->where('user_id = 2');
 				$db->setQuery($query);
 				$mp20 = $db->loadObject()->mp20;
 
