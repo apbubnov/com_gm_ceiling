@@ -689,6 +689,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
+		<!-- приобрести карнизы -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -825,6 +826,7 @@
 			</div>
 		</div>
 		<div id="extra_section">
+			<!-- прочий монтаж -->
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4">
@@ -837,6 +839,7 @@
 				</div>
 			</div>
 			<?php if ($type!='guest' && $user->dealer_type!=2) {?>
+				<!-- плитка -->
 				<div class="container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
@@ -861,6 +864,7 @@
 						<div class="col-sm-4">
 					</div>
 				</div>
+				<!-- керамогранит -->
 				<div class="container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>				
@@ -885,6 +889,7 @@
 						<div class="col-sm-4"></div>					
 					</div>
 				</div>
+				<!-- провод -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>				
@@ -909,6 +914,7 @@
 						<div class="col-sm-4">
 					</div>					
 				</div>
+				<!-- закладная брусом -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>				
@@ -933,6 +939,7 @@
 						<div class="col-sm-4"></div>					
 					</div>
 				</div>
+				<!-- парящий потолок -->
 				<div class = "container">
 					<div class="row sm-margin-bottom" id="n30_block">
 						<div class="col-sm-4"></div>
@@ -957,10 +964,11 @@
 						<div class="col-sm-4"></div>
 					</div>
 				</div>
+				<!-- переход уровня -->
             	<div class="container">
-                	<div class="row sm-margin-bottom">
+                	<div class="row">
                     	<div class="col-sm-4"></div>
-                    	<div class="col-sm-4">
+                    	<div class="col-sm-4" style="margin-bottom: 1em;">
 							<table>
 								<tr>
 									<td>Переход уровня</td>
@@ -1017,7 +1025,6 @@
                     	</div>
                 	</div>
 				</div>
-				
 			<?php } ?>
 			<!-- пожарная сигнализация -->
 			<div class = "container">
@@ -1025,7 +1032,7 @@
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div class="form-group">
-							<table style="width: calc(50% - 173);">
+							<table>
 								<tr>
 									<td>Пожарная сигнализация</td>
 									<td>
@@ -1223,14 +1230,27 @@
 						</div>
 					</div>
 				</div>
-        	<?php }?>
+			<?php }?>
+			<!-- вентиляция -->
+			<div class="container">
+                	<div class="row">
+                    	<div class="col-sm-4"></div>
+                    	<div class="col-sm-4" style="margin-bottom: 1em;">
+							<table>
+								<tr>
+									<td>Вентиляция</td>
+								</tr>
+							</table>
+                    	</div>
+                    	<div class="col-sm-4"></div>
+					</div>
+				</div>
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div id="jform_n22_block"> 
-							<h3>Вентиляция</h3>
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
 									<label>Кол-во,шт</label>
 								</div>
@@ -1247,7 +1267,7 @@
 							</div>
 							<div id="jform_n22_block_html" class="hide_label">
 								<?php $n22 = $this->item->n22;
-									if(count($n22) > 0) {
+									if (count($n22) > 0) {
 										foreach($n22 as $ventilation) if ($ventilation->n22_count > 0) { ?>
 											<div class="form-group">
 												<div class="advanced_col1">
@@ -1281,6 +1301,7 @@
 				</div>
 			</div>
 			<?php if($type!='guest' && $user->dealer_type!=2) {?>
+				<!-- диффузор -->
 				<div class="container">
 					<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
