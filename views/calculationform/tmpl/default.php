@@ -202,7 +202,9 @@
 					<?php $color = $color_model->getData($this->item->color); ?>
 					<?php $imgurl = $color->file;?>
 				<?php } ?>
-				<label id="jform_color_switch-lbl" for="color_switch" style="display: none; text-align: left !important;">Выберите цвет:</label>
+				<div style="width: 100%; text-align: left;">
+					<label id="jform_color_switch-lbl" for="color_switch" style="display: none; text-align: left !important;">Выберите цвет:</label>
+				</div>
 				<button id="color_switch" class="btn btn-primary btn-width" type="button" style="display: none; margin-bottom: 1.5em;">Цвет <img id="color_img" class="calculation_color_img" style='width: 50px; height: 30px;' src="/<?php if(isset($imgurl)){ echo $imgurl; } ?>" alt="" /></button>
 				<input id="jform_color" name="jform[color]" value="<?php echo $this->item->color; ?>" type="hidden">
 			</div>
@@ -422,7 +424,9 @@
 					<div class="container">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none; text-align: center;">Выберите цвет:</label>
+							<div style="width: 100%; text-align: left;">
+								<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none; text-align: center;">Выберите цвет:</label>
+							</div>
 							<button id="color_switch_1" class="btn btn-primary btn-width" type="button" style="display: none;">Цвет <img id="color_img_1" class="calculation_color_img" style='width: 50px; height: 30px;'src="<?php if(isset($color_image_1)){ echo $color_image_1; } ?>" alt="" /></button>
 							<input id="jform_color_1" name="jform[n6]" value="<?php echo $this->item->n6;?>" type="hidden">
 						</div>
@@ -432,7 +436,9 @@
 					<div class="container">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<label id="jform_color_switch-lbl_1" for="color_switch_1" style="text-align: center;">Выберите цвет:</label>
+							<div style="width: 100%; text-align: left;">
+								<label id="jform_color_switch-lbl_1" for="color_switch_1" style="text-align: center;">Выберите цвет:</label>
+							</div>
 							<button id="color_switch_1" class="btn btn-primary btn-width" type="button" style="">Цвет <img id="color_img_1" class="calculation_color_img" style='width: 50px; height: 30px;'src="<?php if(isset($color_image_1)){ echo $color_image_1; } ?>" alt="" /></button>
 							<input id="jform_color_1" name="jform[n6]" value="<?php echo $this->item->n6;?>" type="hidden">
 						</div>
@@ -653,7 +659,9 @@
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="form-group">
-						<label id="jform_n27-lbl" for="jform_n27" class="" style="text-align: left !important;">Введите длину шторного карниза</label>
+						<div style="width: 100%; text-align: left;">
+							<label id="jform_n27-lbl" for="jform_n27" class="" >Введите длину шторного карниза</label>
+						</div>
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
 					<div class="form-group">
