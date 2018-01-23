@@ -417,7 +417,7 @@
                 url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
                 data: {
                     client_id: client_id,
-                    email: document.getElementById('new_email')
+                    email: document.getElementById('new_email').value
                 },
                 dataType: "json",
                 async: false,
