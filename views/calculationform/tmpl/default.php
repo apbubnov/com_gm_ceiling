@@ -785,7 +785,7 @@
 							<div class="advanced_col1">
 								<label>Кол-во,шт</label>
 							</div>
-							<div class="advanced_col_5">
+							<div class="advanced_col5">
 								<label>Диаметр</label>
 							</div>
 							<div class="advanced_col4 center">
