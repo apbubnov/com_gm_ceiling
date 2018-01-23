@@ -237,15 +237,22 @@ class Gm_ceilingModelDealer_info extends JModelList
 			}
 			else {
 				$query = $db->getQuery(true);
+				$query->select('mp20')
+				->from('#__gm_ceiling_mount')
+				->where('user_id = 2')
+				$db->setQuery($query);
+				$mp20 = $db->loadObject()->mp20;
+
+				$query = $db->getQuery(true);
 	        	$query->insert('#__gm_ceiling_mount')
-	            	->columns('`mp1`, `mp2`, `mp3`,`mp4`, `mp5`, `mp6`,`mp7`,`mp8`,`mp9`,`mp10`,`mp11`,`mp12`,`mp13`,`mp14`,`mp15`,`mp16`,`mp17`,`mp18`,`mp19`,`mp22`,`mp23`,`mp24`,`mp25`,`mp26`,`mp27`,`mp30`,`mp31`,`mp32`,`mp33`,`mp34`,`mp36`,`mp37`,`mp38`,`mp40`,`mp41`,`mp42`,`mp43`,`transport`,`distance`,`user_id`')
+	            	->columns('`mp1`, `mp2`, `mp3`,`mp4`, `mp5`, `mp6`,`mp7`,`mp8`,`mp9`,`mp10`,`mp11`,`mp12`,`mp13`,`mp14`,`mp15`,`mp16`,`mp17`,`mp18`,`mp19`,`mp22`,`mp23`,`mp24`,`mp25`,`mp26`,`mp27`,`mp30`,`mp31`,`mp32`,`mp33`,`mp34`,`mp36`,`mp37`,`mp38`,`mp40`,`mp41`,`mp42`,`mp43`,`transport`,`distance`,`user_id`,`mp20`')
 					->values("'".$data['mp1']."', '".$data['mp2']."', '".$data['mp3']."', '".$data['mp4']."', '".$data['mp5']
 					."', '".$data['mp6']."', '".$data['mp7']."', '".$data['mp8']."', '".$data['mp9']."', '".$data['mp10']."', '".$data['mp11']
 					."', '".$data['mp12']."', '".$data['mp13']."', '".$data['mp14']."', '".$data['mp15']."', '".$data['mp16']."', '".$data['mp17']
 					."', '".$data['mp18']."', '".$data['mp19']."', '".$data['mp22']."', '".$data['mp23']."', '".$data['mp24']."', '".$data['mp25']
 					."', '".$data['mp26']."', '".$data['mp27']."', '".$data['mp30']."', '".$data['mp31']."', '".$data['mp32']."', '".$data['mp33']
 					."', '".$data['mp34']."', '".$data['mp36']."', '".$data['mp37']."', '".$data['mp38']."', '".$data['mp40']."', '".$data['mp41']
-					."', '".$data['mp42']."', '".$data['mp43']."', '".$data['transport']."', '".$data['distance']."', '".$id."'");
+					."', '".$data['mp42']."', '".$data['mp43']."', '".$data['transport']."', '".$data['distance']."', '".$id."','".$mp20"'");
 	        $db->setQuery($query);
 	        $db->execute();
 			}
