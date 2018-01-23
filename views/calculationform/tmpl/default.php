@@ -141,9 +141,10 @@
 				</div>
 			</div>
 		<?php } ?>
+		<!-- характеристики полотна -->
 		<div class="container">
 			<div class="col-sm-4"></div>
-			<div class="row">
+			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
 					<h3>Характеристики полотна</h3>		
 				</div>
@@ -325,7 +326,7 @@
 		<div class="container" id="block_n28">
 			<div class="row">
 				<div class="col-sm-4" style="padding-left: 0px;">
-					<div class="form-group" style="margin-bottom: 1rem;">
+					<div class="form-group" style="margin-bottom: 30px;">
 						<h3>Выберите багет</h3>
 					</div>
 				</div>
@@ -362,7 +363,7 @@
 		<div class="container" id="block_n6">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
-				<div class="col-sm-4" style="text-align:-webkit-center; margin-bottom: 1rem;">
+				<div class="col-sm-4" style="text-align:-webkit-center; margin-bottom: 30px;">
 					<table>
 						<tr>
 							<td>
