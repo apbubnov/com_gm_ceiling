@@ -45,11 +45,13 @@
     <p>
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+     <? if ($user->dealer_type != 1):?>
     <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
+    <?endif;?>
 </div>
 
 
@@ -77,13 +79,17 @@
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
 <? if (!empty($dop_contacts)) { ?>
 <div>
-<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта клиента : </p>
+<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта клиента: </p>
 </div>
 <div>
 <? foreach ($dop_contacts AS $contact) {?>
     <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
 </div>
 <? } ?>
+<div>
+    <input type="text" id="new_email" placeholder="Почта" required>
+    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+</div>
 <div class="row">
     <div class="col-sm-12" id = "calls">
         <p class="caption-tar">История клиента</p>
@@ -129,9 +135,9 @@
      
         <?php foreach($projects as $item):?>
 
-            <tr class = "row_project" data-href="<?php echo if($user->dealer_type == 1) { 
-                JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id.'&call_id='.(int) $call_id); }
-                else JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); ?>">
+            <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) { 
+                echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
+                else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
                 <td><?php echo $item->id;?></td>
                 <td>
                     <?php 
@@ -254,7 +260,7 @@
                 var pf = "<?php echo $phonefrom; ?>";
                 var call_id = <?php echo $call_id; ?>;
                 var subtype = "<?php echo $subtype; ?>";
-                if (pt === "" || pf === "")
+               if (pt === "" || pf === "")
                 {
                     if (call_id === 0)
                     {
@@ -269,7 +275,9 @@
                 {
                     url = '/index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=' + subtype + '&id=' + data + '&phoneto=' + pt + '&phonefrom=' + pf;
                 }
-
+                <?php if($user->dealer_type == 1) {?>
+                url = '/index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar'+'&id=' + data;
+                <?}?>
                 location.href =url;
             },
             dataType: "text",
@@ -291,6 +299,34 @@
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
+
+        document.getElementById('add_email').onclick = function()
+        {
+            var client_id = <?php echo $client->id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
+                data: {
+                    client_id: client_id,
+                    email: document.getElementById('new_email').value
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
     });
 
     jQuery("#back_btn").click(function (){

@@ -21,7 +21,7 @@ $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount = $model_mount->getDataAll();
 
 ?>
-
+<?if(!$user->getDealerInfo()->update_check) { $user->setDealerInfo(["update_check" => true]);}?>
 <form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
 	<h2>
 		Редактирование маржинальности и прайса монтажа
@@ -30,26 +30,26 @@ $mount = $model_mount->getDataAll();
 	<div class = "col-md-4">
 	<div class="control-group">
 			<div class="control-label">
-				<label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >Маржинальность на полотна</label>
+				<label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >Укажите, какой процент прибыли от заказа Вы желаете получать (от полотен)</label>
 			</div>
 			<div class="controls">
-				<input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo ($margin->dealer_canvases_margin) ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
+				<input type="text" name="jform[dealer_canvases_margin]" id="jform_dealer_canvases_margin" value=<?php echo ($margin->dealer_canvases_margin)?$margin->dealer_canvases_margin:0 ?>  class="required" style="width:100%;" size="3" required aria-required="true" />
 			</div>
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">Маржинальность на комплектующие</label>
+				<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin"> Укажите, какой процент прибыли от заказа Вы желаете получать (от комплектующих)</label>
 			</div>
 			<div class="controls">
-				<input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo ($margin->dealer_components_margin) ?> class="required"style="width:100%;" size="3" required aria-required="true" />	
+				<input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo ($margin->dealer_components_margin)?$margin->dealer_components_margin:0 ?> class="required"style="width:100%;" size="3" required aria-required="true" />	
 			</div>
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">Маржинальность на монтаж</label>
+				<label id="jform_dealer_mounting_margin-lbl" for="jform_dealer_mounting_margin">Укажите, какой процент прибыли от заказа Вы желаете получать (от монтажа ) </label>
 			</div>
 			<div class="controls">
-				<input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo ($margin->dealer_mounting_margin) ?> class="required" style="width:100%;"size="3" required aria-required="true" />				
+				<input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo ($margin->dealer_mounting_margin)?$margin->dealer_mounting_margin:0 ?> class="required" style="width:100%;"size="3" required aria-required="true" />				
 			</div>
 		</div>
 		<div class="control-group">

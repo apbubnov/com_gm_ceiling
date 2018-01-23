@@ -305,7 +305,9 @@ $results = $db->loadObjectList();
                                 </div>
                             </td>
                         </tr>
-                        <?  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+
+                        <?php   if($user->dealer_type == 0) {
+                        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
                             $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
                         <tr>
                             <th>Дата рождения</th>
@@ -313,7 +315,7 @@ $results = $db->loadObjectList();
                                         value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date"></td>
                             <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
                         </tr>
-                        
+                        <?php } ?>
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
                             <?php $phone = $model->getClientPhones($this->item->id_client); ?>
@@ -344,8 +346,8 @@ $results = $db->loadObjectList();
                         </tr>
                         <? 
                                     
-                                    $street = preg_split("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info)[0];
-                                    preg_match("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info,$house);
+                                    $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
+                                    preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
                                     $house = $house[1];
                                     preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
                                     $bdq = $bdq[1];
@@ -464,33 +466,35 @@ $results = $db->loadObjectList();
 
                         </tr>
                     </div>
-                        <tr>
+                        <!--<tr>
                             <th>Дилер</th>
                             <td><?php
-                                $dealer = $client_model->getDealer($this->item->id_client);
-                                echo $dealer; ?>
+                                //$dealer = $client_model->getDealer($this->item->id_client);
+                                //echo $dealer; ?>
                             </td>
 
-                        </tr>
+                        </tr>-->
                 <?php } ?>
             </table>
             </div>
-            <div  class="col-12 col-md-6">
-                <div class="comment">
-                    <label> История клиента: </label>
-                    <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
-                    <table>
-                        <tr>
-                            <td><label> Добавить комментарий: </label></td>
-                        </tr>
-                        <tr>
-                            <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                            <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button></td>
-                        </tr>
-                    </table>
+            <?php if($user->dealer_type == 0) { ?>
+                <div  class="col-12 col-md-6">
+                    <div class="comment">
+                        <label> История клиента: </label>
+                        <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
+                        <table>
+                            <tr>
+                                <td><label> Добавить комментарий: </label></td>
+                            </tr>
+                            <tr>
+                                <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-        </div>
+            <?php } ?>
     </div>
         <table class="table calculation_sum">
             <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
@@ -524,6 +528,7 @@ $results = $db->loadObjectList();
 </div>
 </div>
 
+
 <?php /*if($canEdit && $this->item->checked_out == 0): ?>
     <a class="btn" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=project.edit&id='.$this->item->id); ?>">Изменить проект</a>
 <?php endif;*/ ?>
@@ -532,25 +537,32 @@ $results = $db->loadObjectList();
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#summary" role="tab">Общее</a>
+        <a class="nav-link <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" data-toggle="tab" href="#summary" role="tab">Общее</a>
     </li>
+    
     <?php foreach ($calculations as $k => $calculation) { ?>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
+        <?php if($user->dealer_type == 1) { ?>
+            <a class="nav-link active" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
                 role="tab"><?php echo $calculation->calculation_title; ?></a>
+         <?} else {?>
+         <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
+                role="tab"><?php echo $calculation->calculation_title; ?></a>
+         <?}?>
         </li>
     <?php } ?>
-    <li class="nav-item">
-        <a class="nav-link"
+    <li class="nav-item"> 
+        <a class="nav-link" style="color:white;"
             href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' . $this->item->id); ?>">
-            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+            Добавить потолок  <i class="fa fa-plus-square-o" aria-hidden="true"></i>
         </a>
     </li>
 </ul>
 
 <!-- Tab panes -->
 <div class="tab-content">
-    <div class="tab-pane active" id="summary" role="tabpanel">
+<?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
+    <div class="tab-pane <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" id="summary" role="tabpanel">
         <table id="table1" class="table table-striped one-touch-view">
             <tr>
                 <th class="section_header" id="sh_ceilings">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
@@ -729,7 +741,6 @@ $results = $db->loadObjectList();
             </tr>
             <tr>
                <?
-
             //-------------------------Себестоимость транспорта-------------------------------------
                 if($this->item->transport == 0 ) $sum_transport_1 = 0;
                 if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
@@ -1037,11 +1048,12 @@ $results = $db->loadObjectList();
 
             }
         } ?>
+        
     </div>
     <?php foreach ($calculations as $k => $calculation) { ?>
         <?php $mounters = json_decode($calculation->mounting_sum); ?>
         <?php if(!empty($calculation->n2)) $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".png"; ?>
-        <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
+        <div class="tab-pane <?php if($user->dealer_type == 1) echo "active";?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
             <h3><?php echo $calculation->calculation_title; ?></h3>
 
             <a class="btn btn-primary"
@@ -1276,11 +1288,11 @@ $results = $db->loadObjectList();
                             Отказ
                         </a>
                     </td>
-                    <td>
+                    <!--<td>
                         <a class="btn  btn-warning" id="choose_mounter">
                             Выбрать монтажника
                         </a>
-                    </td>
+                    </td>-->
                 </tr>
 
             </table>
@@ -1373,6 +1385,7 @@ $results = $db->loadObjectList();
             <?php } ?>
         </table>
     </div>
+        <?php } ?>
 </div>
 <div id="modal-window-container-tar">
     <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>

@@ -63,7 +63,7 @@ $type = $jinput->getString('type', NULL);
 
 	<?php echo $this->form->renderField('client_contacts'); ?>
 
-		<div class="control-group">
+		<div class="control-group" style="margin-top: 15px;">
 			<div class="controls">
 
 				<?php if ($this->canSave): ?>

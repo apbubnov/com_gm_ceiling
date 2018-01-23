@@ -12,7 +12,7 @@ $userId     = $user->id;
 $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
-$brigade_id = $teams_model->getData($dealerId);
+$brigade_id = $teams_model->getDatas($dealerId);
 
 if (!empty($brigade_id)) {
 	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
@@ -207,8 +207,8 @@ if (!empty($brigade_id)) {
                         },
                         success: function (msg) {
                             calendars = '<div class="calendars-brigade"><p class="brigade-name">';
-                            calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
-                            calendars += "<table id=\"name\"><tr><td nowrap><?php echo $names; ?></tr></td></table>";
+                            calendars += '<a href="/index.php?option=com_gm_ceiling&view=team&id=<?php echo $value->id; ?>" class="site-tar"><?php echo $value->name; ?>:</a></p>';
+                            calendars += '<table id="name"><tr><td nowrap><?php echo $names; ?></tr></td></table>';
                             calendars += msg;
                         },
                         dataType: "text",
@@ -359,8 +359,8 @@ if (!empty($brigade_id)) {
                     },
                     success: function (msg) {
                         calendars = '<div class="calendars-brigade"><p class="brigade-name"></p>';
-                        calendars += "<a href=\"/index.php?option=com_gm_ceiling&view=team&id=$value->id\" class=\"site-tar\"><?php echo $value->name; ?>:</a></p>";
-                        calendars += "<table id=\"name\"><tr><td nowrap>"+<?php echo $names; ?>+"</tr></td></table>";
+                        calendars += '<a href="/index.php?option=com_gm_ceiling&view=team&id=<?php echo $value->id; ?>" class="site-tar"><?php echo $value->name; ?>:</a></p>';
+                        calendars += '<table id="name"><tr><td nowrap><?php echo $names; ?></tr></td></table>';
                         calendars += msg;
                     },
                     dataType: "text",

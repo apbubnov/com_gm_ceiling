@@ -19,11 +19,11 @@ $userId     = $user->get('id');
 /* циферки на кнопки */
 $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
 // замеры
-$answer1 = $model->getDataByStatus("GaugingsGraph", $userId, "all");
+$answer1 = $model->getDataByStatus("GaugingsGraph");
 // монтажи
-$answer2 = $model->getDataByStatus("Mountings", $userId, null);
+$answer2 = $model->getDataByStatus("Mountings");
 // завершенные монтажи
-$answer3 = $model->getDataByStatus("ComplitedMountings", $userId, null);
+$answer3 = $model->getDataByStatus("ComplitedMountings");
 //--------------------------------------
 
 ?>
@@ -33,7 +33,7 @@ $answer3 = $model->getDataByStatus("ComplitedMountings", $userId, null);
 <div class="start_page">
 	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		<div class="container-for-circl">
-		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> Замеры</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> Замеры</a>
 			<?php if ($answer1[0]->count != 0) { ?>
 				<div class="circl-digits"><?php echo $answer1[0]->count; ?></div>
 			<?php } ?>
