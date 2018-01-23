@@ -3895,7 +3895,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
-        $html = '<h1>Информация</h1>';
+        $html .= '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         $filename = md5($data['id'] . "-2") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
