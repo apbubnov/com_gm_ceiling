@@ -4355,11 +4355,9 @@ class Gm_ceilingHelpersGm_ceiling
 
         return 1;
     }
-
     
     public static function push($id, $status_id)
     {
-
         $mailer = JFactory::getMailer();
         $em = 'popowa.alinochka@gmail.co';//'kostikkuzmenko@mail.ru';
         $config = JFactory::getConfig();
@@ -4378,7 +4376,7 @@ class Gm_ceilingHelpersGm_ceiling
         $send = $mailer->Send();
         return 1;
     }
-
+    
     public static function saverclient($data, $id)
     {
 

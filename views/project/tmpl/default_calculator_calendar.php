@@ -528,6 +528,7 @@ $results = $db->loadObjectList();
 </div>
 </div>
 
+
 <?php /*if($canEdit && $this->item->checked_out == 0): ?>
     <a class="btn" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=project.edit&id='.$this->item->id); ?>">Изменить проект</a>
 <?php endif;*/ ?>
@@ -544,10 +545,10 @@ $results = $db->loadObjectList();
                 role="tab"><?php echo $calculation->calculation_title; ?></a>
         </li>
     <?php } ?>
-    <li class="nav-item">
-        <a class="nav-link"
+    <li class="nav-item"> 
+        <a class="nav-link" style="color:white;"
             href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' . $this->item->id); ?>">
-            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+            Добавить потолок  <i class="fa fa-plus-square-o" aria-hidden="true"></i>
         </a>
     </li>
 </ul>
@@ -555,6 +556,7 @@ $results = $db->loadObjectList();
 
 <!-- Tab panes -->
 <div class="tab-content">
+<?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
     <div class="tab-pane active" id="summary" role="tabpanel">
         <table id="table1" class="table table-striped one-touch-view">
             <tr>
@@ -1042,6 +1044,7 @@ $results = $db->loadObjectList();
 
             }
         } ?>
+        
     </div>
     <?php foreach ($calculations as $k => $calculation) { ?>
         <?php $mounters = json_decode($calculation->mounting_sum); ?>
@@ -1378,6 +1381,7 @@ $results = $db->loadObjectList();
             <?php } ?>
         </table>
     </div>
+        <?php } ?>
 </div>
 <div id="modal-window-container-tar">
     <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
