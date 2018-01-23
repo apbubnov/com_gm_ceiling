@@ -252,7 +252,7 @@ class Gm_ceilingModelDealer_info extends JModelList
 					."', '".$data['mp18']."', '".$data['mp19']."', '".$data['mp22']."', '".$data['mp23']."', '".$data['mp24']."', '".$data['mp25']
 					."', '".$data['mp26']."', '".$data['mp27']."', '".$data['mp30']."', '".$data['mp31']."', '".$data['mp32']."', '".$data['mp33']
 					."', '".$data['mp34']."', '".$data['mp36']."', '".$data['mp37']."', '".$data['mp38']."', '".$data['mp40']."', '".$data['mp41']
-					."', '".$data['mp42']."', '".$data['mp43']."', '".$data['transport']."', '".$data['distance']."', '".$id."','".$mp20"'");
+					."', '".$data['mp42']."', '".$data['mp43']."', '".$data['transport']."', '".$data['distance']."', '".$id."','".$mp20."'");
 	        $db->setQuery($query);
 	        $db->execute();
 			}
