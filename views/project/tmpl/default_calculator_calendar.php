@@ -555,6 +555,7 @@ $results = $db->loadObjectList();
 
 <!-- Tab panes -->
 <div class="tab-content">
+<?php if($user->dealer_type == 1 && count($calculations) == 0):?>
     <div class="tab-pane active" id="summary" role="tabpanel">
         <table id="table1" class="table table-striped one-touch-view">
             <tr>
@@ -1042,6 +1043,7 @@ $results = $db->loadObjectList();
 
             }
         } ?>
+        <?php endif;?>
     </div>
     <?php foreach ($calculations as $k => $calculation) { ?>
         <?php $mounters = json_decode($calculation->mounting_sum); ?>
