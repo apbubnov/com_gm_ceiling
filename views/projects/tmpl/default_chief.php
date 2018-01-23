@@ -89,7 +89,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
 
                             <td>
-                                <? if ($item->project_status == 10 || ($user->dealer_type && $item->project_status >=5 && $item->project_status <= 11)): ?>
+                                <? if ($item->project_status == 10 ): ?>
 <!--                                --><?// //elseif ($item->project_status == 8): ?><!-- Требует утверждения-->
 <!--                                --><?// //elseif ($item->project_status == 10): ?>
                                     <? //if ($user->dealer_id == $item->brigadir_id): ?>
