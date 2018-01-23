@@ -1377,7 +1377,7 @@
 								</tr>
 							</table>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 				<div class = "container">
@@ -1418,8 +1418,7 @@
 				<!-- другие работы по монтажу -->
 				<div class = "container">
 					<div class="row" style="margin-bottom: 1em;">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<table>
 								<tr>
@@ -1427,20 +1426,18 @@
 								</tr>
 							</table>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 				<div class = "container">
 					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="advanced_col_half">
 								<label>Название</label>
 								<div id="extra_mounting_title_container">
 									<?php foreach($extra_mounting_array as $item) { ?>
-									<div class='form-group'><input name='extra_mounting_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'><input name='extra_mounting_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1448,24 +1445,21 @@
 								<label>Стоимость</label>
 								<div id="extra_mounting_value_container">
 									<?php foreach($extra_mounting_array as $item) { ?>
-									<div class='form-group'><input name='extra_mounting_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'><input name='extra_mounting_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
 									<?php } ?>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
 								<button id="extra_mounting_button" class="btn btn-primary" type="button">Добавить</button>
 							</div>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 				<div class="container">
