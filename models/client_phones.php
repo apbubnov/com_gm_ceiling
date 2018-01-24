@@ -50,17 +50,14 @@ class Gm_ceilingModelClient_phones extends JModelList
 			{
 				if ($item->client_dealer_id == $dealer_id && is_null($item->dealer_type))
 				{
-					throw new Exception('1');
 					return $item;
 				}
 				elseif ($item->client_dealer_id != $dealer_id && $item->dealer_type == 3 && $item->user_dealer_id == $dealer_id)
 				{
-					throw new Exception('2');
 					return $item;
 				}
 				elseif ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 0 || $item->dealer_type == 1) && $item->user_dealer_id == $item->client_dealer_id)
 				{
-					throw new Exception('3');
 					return $item;
 				}
 			}
