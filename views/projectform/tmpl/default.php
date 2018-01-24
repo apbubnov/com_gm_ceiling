@@ -64,7 +64,7 @@
     foreach($calculations as $d) {
         if($d->discount < $min) $min = $d->discount;
     }
-    if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
+    if ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
     if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
         $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
     }
@@ -1471,6 +1471,7 @@
                     },
                     success: function(data) {
                         window.DataOfProject = JSON.parse(data);
+                        window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                         data = JSON.parse(data);
                         console.log(data);
                         jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
@@ -1506,6 +1507,20 @@
                         });
                         table_projects += "</table>";
                         jQuery("#projects_brigade_container").append(table_projects);
+                        // вывод времени бригады
+                        var BusyTimes = [];
+                        Array.from(data).forEach(function(elem) {
+                            if (selectedBrigade == elem.project_mounter) {
+                                BusyTimes.push(elem.project_mounting_date.substr(11));
+                            }
+                        });
+                        FreeTimes = AllTime.diff(BusyTimes);
+                        var select_hours;
+                        FreeTimes.forEach(element => {
+                            select_hours += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
+                        });
+                        jQuery("#hours").empty();
+                        jQuery("#hours").append(select_hours);
                     }
                 });
                 //если монтаж есть, то выдать время, монтажную бригаду и инфу о ней, которые записаны
