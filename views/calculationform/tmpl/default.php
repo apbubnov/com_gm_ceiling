@@ -873,7 +873,7 @@
 									<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel">
 								</div>
 							</div>
-							<div class="col-sm-4">
+							<div class="col-sm-4"></div>
 						</div>
 					</div>
 					<!-- керамогранит -->
