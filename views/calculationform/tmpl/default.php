@@ -2290,7 +2290,7 @@ function submit_form_sketch()
         jQuery( "#components_button_stock" ).click(function(){
             var components_title_stock_container = jQuery( "#components_title_stock_container" ),
                 components_value_stock_container = jQuery( "#components_value_stock_container" );
-            jQuery("<div class='form-group'><input name='components_title_stock[]' value='' id='Type' autocomplete=\"off\"\n" +
+            jQuery("<div class='form-group Area'><input name='components_title_stock[]' value='' id='Type' autocomplete=\"off\"\n" +
                 "        NameDB=\"CONCAT(components.title,' ',options.title)\"\n" +
                 "        onclick=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onkeyup=\"GetList(this, ['Type'], ['Type']);\"\n" +
