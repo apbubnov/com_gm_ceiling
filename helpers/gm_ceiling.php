@@ -3861,18 +3861,30 @@ class Gm_ceilingHelpersGm_ceiling
         return $result;
     }
 
-    public static function create_estimate_mounters($project_id){
+    public static function create_common_estimate_mounters($project_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
         $calculation_model = self::getModel('calculations');
+        //teams getMounters
         $calculations = $calculation_model->getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
         $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
+        $html .= '<h2>Монтажная бригада: ' . JFactory::getUser($project->project_mounter)->name . '</h2>';
+        $html .= '<h2>Состав бригады: ' . $project->project_mounter . '</h2>';
+        $html .= "<h2>Адрес: </h2>" . $project->project_info . "<br>";
+        $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
+        $html .= "<h2>Дата монтажа: </h2>" . $jdate->format('d.m.Y  H:i') . "<br>";
         $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
         $html .= '<table border="0" cellspacing="0" width="100%">
-        <tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
+                    <tbody>
+                        <tr>
+                            <th>Название</th>
+                            <th class="center">Площадь, м<sup>2</sup>.</th>
+                            <th class="center">Периметр, м </th>
+                            <th class="center">Стоимость, руб.</th>
+                        </tr>';
         foreach ($calculations as $calc) {
             $html .= '<tr>';
             $html .= '<td>' . $calc->calculation_title . '</td>';
@@ -3883,9 +3895,15 @@ class Gm_ceilingHelpersGm_ceiling
             $sum += $calc->mounting_sum;
         }
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
+        $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<h2>Транспортные расходы: </h2>';
         $html .= '<table border="0" cellspacing="0" width="100%">
-        <tbody><tr><th>Вид транспорта</th><th class="center">Кол-во км<sup>2</sup>.</th><th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th></tr>'; 
+                    <tbody>
+                        <tr>
+                            <th>Вид транспорта</th>
+                            <th class="center">Кол-во км<sup>2</sup>.</th>
+                            <th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th>
+                        </tr>'; 
         $html .= '<tr>';
         $html .= '<td>' . $transport['transport']. '</td>';
         $html .= '<td class="center">' . $transport['distance'] . '</td>';
@@ -3895,10 +3913,9 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
+        $html .= "<pagebreak />";
         $html .= '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
-        $filename = md5($data['id'] . "-2") . ".pdf";
-        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         if (isset($project->id)) {
             if ($project->id) {
                 $html .= "<b>Номер договора: </b>" . $project->id . "<br>";

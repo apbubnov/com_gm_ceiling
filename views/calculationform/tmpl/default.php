@@ -70,11 +70,11 @@
 	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 		<?php if ($this->type === "guest") { ?>
-			<div class="show_before_calculate">
+			<div class="show_before_calculate" style="margin-bottom: 1em;">
 				<h1>Натяжные потолки от производителя без посредников дешевле на 30%</h1>
 			</div>
 			<input type="hidden" name="jform[rek]" value="<?php echo  $rek; ?>" />
-		<?php }?>
+		<?php } ?>
         <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
         <input id="flag_auto" type="hidden" value="0"/>
 		<input type="hidden" name="jform[public]" value="1" />
@@ -331,15 +331,19 @@
 					</div>
 				</div>
 				<div class="col-sm-4" style="padding-right: 0px;">
-					<div class="form-group">
-						<? if ($this->item->n28 == 0) {
-							?>
-							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio"
-										checked="checked"><label for="jform_n28"> Обычный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1"
-										type="radio"><label for="jform_n28_1"> Потолочный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2"
-										type="radio"><label for="jform_n28_2"> Алюминиевый багет</label></p>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
+						<? if ($this->item->n28 == 0) { ?>
+							<div style="display: inline-block;">
+								<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" checked="checked"><label for="jform_n28"> Обычный багет</label>
+							</div>
+							</br>
+							<div style="display: inline-block;">
+								<input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio"><label for="jform_n28_1"> Потолочный багет</label>
+							</div>
+							</br>
+							<div style="display: inline-block;">
+								<input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio"><label for="jform_n28_2"> Алюминиевый багет</label>
+							</div>
 						<? } elseif ($this->item->n28 == 1) { ?>
 							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">
 								<label for="jform_n28"> Обычный багет</label></p>
@@ -376,7 +380,7 @@
 							</td>
 						</tr>
 					</table>
-					<div>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 72px);">
 						<?php
 							if ($this->item->n6 > 0) {
 								$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -386,36 +390,42 @@
 							}
 						?>
 						<? if ($this->item->n6 == 314 ) { ?>
-							<p>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"><label for="jform_n6_1">Цветная вставка</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>
-							</p>
+							</div>
 						<? } else {
 							if ($this->item->n6 == 0 || empty($this->item->n6)) {?>
-							<p>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"> <label for="jform_n6_1">Цветная вставка</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" checked="checked" ><label for="jform_n6_2">Вставка не нужна</label>
-							</p>
+							</div>
 							<? } else {?>
-								<p>
+								<div style="display: inline-block;">
 									<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
-								</p>
-								<p>
+								</div>
+								<br>
+								<div style="display: inline-block;">
 									<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"  checked="checked">  <label for="jform_n6_1">Цветная вставка</label>
-								</p>
-								<p>
+								</div>
+								<br>
+								<div style="display: inline-block;">
 									<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio"><label for="jform_n6_2">Вставка не нужна</label>
-								</p>
+								</div>
 							<? } 
 						} ?>
                     </div>
@@ -454,7 +464,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table style="margin-left: calc(50% - 86px);">
+					<table style="margin-left: calc(50% - 67px);">
 						<tr>
 							<td>
 								<h3>Освещение</h3>
@@ -631,7 +641,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table style="margin-left: calc(50% - 124px);">
+					<table style="margin-left: calc(50% - 87px);">
 						<tr>
 							<td>
 								<h3>Шторный карниз</h3>
@@ -665,16 +675,17 @@
 						</div>
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
-					<div class="form-group">
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 70px);">
 						<? if(!$this->item->n16) {?>
-							<p>
+							<div style="display: inline-block;">
 								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
 								<label for="jform_n16"> Обычный карниз</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
 								<label for="jform_n16_1"> Скрытый карниз</label>
-							</p>
+							</div>
 						<? } else { ?>
 							<p>
 								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio">
@@ -1496,11 +1507,17 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "need_mount">
-					<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
-					<label for="with_mount">Нужен</label>
-					<br>
-					<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
-					<label for="without">Не нужен</label>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">
+						<div style="display: inline-block;">
+							<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
+							<label for="with_mount">Нужен</label>
+						</div>
+						<br>
+						<div style="display: inline-block;">
+							<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
+							<label for="without">Не нужен</label>
+						</div>
+					</div>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -1517,19 +1534,29 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "height">
-					<?php if ($this->item->height == 0) { ?>
-						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
-						<label for="max_height">больше 3х метров</label>
-						<br>
-						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
-						<label for="min_height">меньше 3х метров</label>
-					<?php } else { ?>
-						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
-						<label for="max_height">больше 3х метров</label>
-						<br>
-						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
-						<label for="min_height">меньше 3х метров</label>
-					<?php } ?>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 75px);">
+						<?php if ($this->item->height == 0) { ?>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
+								<label for="max_height">больше 3х метров</label>
+							</div>
+							<br>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
+								<label for="min_height">меньше 3х метров</label>
+							</div>
+						<?php } else { ?>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
+								<label for="max_height">больше 3х метров</label>
+							</div>
+							<br>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
+								<label for="min_height">меньше 3х метров</label>
+							</div>
+						<?php } ?>
+					</div>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -1614,75 +1641,85 @@
 				</div>
 			</div>
 		</div>
+		<!-- сохранить -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
-				<?php if($this->type === "gmcalculator") { 
-						if($this->item->project_id) { ?>
-						<div class="col-sm-4"></div>
+				<div class="col-sm-4"></div>
+				<?php if ($this->type === "gmcalculator") { ?>
+					<?php if ($this->item->project_id) { ?>
 						<div class="col-sm-4">
 							<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Сохранить</a></button>
 						</div>
-						<div class="col-sm-4"></div>
-					<?php } elseif($project_id) { ?>
-						<div class="col-sm-4"></div>
+					<?php } elseif ($project_id) { ?>
 						<div class="col-sm-4">
 							<a id="save_button"  class="btn btn-primary btn-big "   href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a></button>
 						</div>
-						<div class="col-sm-4"></div>
 					<?php } else { ?>
-						<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
-					<?php } ?>
-				<?php } elseif($this->type === "calculator") { ?>
-					<?php if($this->item->project_id) { ?>
-						<div class="col-sm-4"></div>
-							<div class="col-sm-4">
-								<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Сохранить</a></div>
-							<div class="col-sm-4"></div>
-					<?php } elseif($project_id) { ?>
-						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a></div>
-						<div class="col-sm-4"></div>
-					<?php } else { ?>
-						<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
-						<?php } ?>
-				<?php }?>
-				<?php if($this->type === "gmmanager"){?>
-					<div class="col-sm-4"></div>
-					<div class="col-sm-4">
-						<!-- <a style=id="save_button" type="button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a> -->
-						<a id="save_button"  class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
-					</div>
-					<div class="col-sm-4"></div>
-				<?php } ?>
-				<?php if($this->type === "gmcalculator") { 
-						if($this->item->project_id) { ?>
-							<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Отменить</a>
-						<?php } elseif($project_id) { ?>
-							<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
-						<?php } else { ?>
 							<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
-						<?php } ?>
-				<?php } elseif($this->type === "calculator") { 
-							if($this->item->project_id) { ?>
-								<div class="col-sm-4"></div>
-								<div class="col-sm-4">
-									<a class="btn btn-primary" style="margin-top:15px;" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Отменить</a></div>
-								<div class="col-sm-4"></div>
-						<?php } elseif($project_id) { ?>
-							<div class="col-sm-4"></div>
-							<div class="col-sm-4">
-								<a class="btn btn-primary" style="margin-top:15px;" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
-							</div>
-							<div class="col-sm-4"></div>
-						<?php } else { ?>
+						</div>
+					<?php } ?>
+				<?php } elseif ($this->type === "calculator") { ?>
+					<?php if($this->item->project_id) { ?>
+						<div class="col-sm-4">
+							<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Сохранить</a>
+						</div>
+					<?php } elseif ($project_id) { ?>
+						<div class="col-sm-4">
+							<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a>
+						</div>
+					<?php } else { ?>
+						<div class="col-sm-4">
 							<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
-						<?php } ?>
+						</div>
+					<?php } ?>
+				<?php } ?>
+				<?php if ($this->type === "gmmanager") { ?>
+					<div class="col-sm-4">
+						<a id="save_button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
+					</div>
+				<?php } ?>
+				<div class="col-sm-4"></div>
+			</div>
+		</div>
+		<!-- отменить -->
+		<div class="container">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4"></div>
+				<?php if($this->type === "gmcalculator") { ?>
+					<?php if ($this->item->project_id) { ?>
+						<div class="col-sm-4">
+							<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Отменить</a>
+						</div>
+					<?php } elseif ($project_id) { ?>
+						<div class="col-sm-4">
+							<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
+						</div>
+					<?php } else { ?>
+						<div class="col-sm-4">
+							<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
+						</div>
+					<?php } ?>
+				<?php } elseif ($this->type === "calculator") { ?>
+					<?php if ($this->item->project_id) { ?>
+						<div class="col-sm-4">
+							<a class="btn btn-primary" style="margin-top:15px;" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Отменить</a>
+						</div>
+					<?php } elseif ($project_id) { ?>
+						<div class="col-sm-4">
+							<a class="btn btn-primary" style="margin-top:15px;" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
+						</div>
+					<?php } else { ?>
+						<div class="col-sm-4">
+							<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
+						</div>
+					<?php } ?>
 					<?php } elseif($this->type === "manager") { ?>
-						<a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage">Отменить</a>
-					<?}?>
-					<div class="col-sm-4"></div></div>
-
+						<div class="col-sm-4">
+							<a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage">Отменить</a>
+						</div>
+					<?php } ?>
+				<div class="col-sm-4"></div>
 			</div>
 		</div>		
 		<input type="hidden" id="activate" name="activate" value="0"/>
@@ -1734,6 +1771,7 @@
 		<!-- /////////////////////////////////////////////////////////////////// -->
 		<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"> Наверх</i></a>
 	</form>
+</div>
 </div>
 
 <script>
@@ -2987,7 +3025,7 @@
             clearInterval(timer);
         }
 	}
-	
+
     function SELECT_CUSTOM_INIT() {
         var SELECT_CUSTOM = jQuery(".SELECT_CUSTOM");
         SELECT_CUSTOM.find("div").css({"line-height": SELECT_CUSTOM.height() + "px"});

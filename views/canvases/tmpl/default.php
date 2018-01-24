@@ -68,7 +68,7 @@ $dealer = JFactory::getUser($user->dealer_id);
                 <?= JHtml::_('grid.sort', 'Цена для клиента', 'price', $listDirn, $listOrder); ?>
             </th>
             <? if ($canEdit): ?>
-                <th class="center can">Изменить</th>
+                <th class="center can">Изменить цену для диллера</th>
             <? endif; ?>
         </tr>
         </thead>
@@ -91,19 +91,22 @@ $dealer = JFactory::getUser($user->dealer_id);
                 <tr class="canvases catWidth category_<?= $cIndex; ?>  catWidth_<?= $cIndex.'_' .$wIndex; ?>"
                     category="<?= $cIndex; ?>" catWidth="<?= $cIndex.'_'.$wIndex; ?>" style="cursor: pointer; display: none;">
                     <td class="center one-touch"></td>
-                    <td class="center one-touch"><?= $catWidth['id']; ?></td>
+                    <td class="center one-touch id"><?= $catWidth['id']; ?></td>
                     <td class="center one-touch">Ширина: <?= $catWidth['width']; ?></td>
                     <td class="center one-touch" colspan="2"></td>
                     <td class="center one-touch"><?= $catWidth['lenght']; ?> м²</td>
                     <!--<td class="center one-touch"><?= $catWidth['one_purchasing_price']; ?></td>-->
-                    <td class="center one-touch"><?= $catWidth['one_price']; ?></td>
-                    <td class="center one-touch"><?= $catWidth['one_client_price']; ?></td>
+                    <td class="center one-touch price"><?= $catWidth['one_price']; ?></td>
+                    <td class="center one-touch client_price"><?= $catWidth['one_client_price']; ?></td>
                     <? if ($canEdit): ?>
-                    <td class="center">
-                        <a href="<? echo JRoute::_('index.php?option=com_gm_ceiling&view=canvasform&ID=' . $catWidth['id'], false, 2); ?>"
-                           class="btn btn-mini" type="button" id="edit"><i class="fa fa-pencil-square-o"
-                                                                           aria-hidden="true"></i></a>
-                    </td>
+                        <td class="center update_price">
+                            <div class="update_price">
+                                <input type="text" class="new_price" value="<?=$catWidth['one_price'];?>">
+                                <button type="submit" onsubmit="saveSum(this);" formaction="javascript:false;" class="save" onclick="saveSum(this);">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </td>
                     <? endif; ?>
                 </tr>
             <? endforeach; ?>
@@ -159,9 +162,81 @@ $dealer = JFactory::getUser($user->dealer_id);
         color: rgb(0, 0, 0);
         font-size: 20px;
     }
+
+    #canvasList .update_price {
+        width: auto;
+        min-width: 100px;
+    }
+    #canvasList .update_price .new_price {
+        width: calc(100% - 30px);
+        min-width: 50px;
+        height: 30px;
+        float: left;
+        border-radius: 5px 0 0 5px;
+        border: none;
+        box-shadow: inset 0 0 1px 1px rgb(64, 65, 154);
+        padding: 0 5px;
+        margin: 0;
+    }
+    #canvasList .update_price .save {
+        width: 30px;
+        height: 30px;
+        float: left;
+        border-radius: 0 5px 5px 0;
+        background-color: rgb(64, 65, 154);
+        color: rgb(255, 255, 255);
+        border: none;
+        margin: 0;
+        cursor: pointer;
+    }
 </style>
 
 <script>
+    var $ = jQuery;
+
+    function saveSum(e) {
+        e = $(e);
+        var parent = e.closest("tr"),
+            id = parseInt(parent.find(".id").text()),
+            price = parseInt(parent.find(".new_price").val());
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "/index.php?option=com_gm_ceiling&task=canvases.setPrice",
+            data: {id: id, price: price},
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+
+                if (data.status === "success")
+                {
+                    parent.find(".price").text(data.data.price);
+                    parent.find(".client_price").text(data.data.client_price);
+                }
+
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: data.status,
+                    text: data.message
+                });
+            },
+            dataType: "text",
+            timeout: 15000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+    }
+
     jQuery(document).ready(function () {
 
         jQuery(".catWidth").click(function () {
