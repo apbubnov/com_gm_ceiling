@@ -1,48 +1,48 @@
 <?php
-/**
- * @version    CVS: 1.0.0
- * @package    Com_Gm_ceiling
- * @author     Mikhail  <vms@itctl.ru>
- * @copyright  2016 Mikhail 
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ /**
+	 * @version    CVS: 1.0.0
+	 * @package    Com_Gm_ceiling
+	 * @author     Mikhail  <vms@itctl.ru>
+	 * @copyright  2016 Mikhail 
+	 * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-// No direct access
-defined('_JEXEC') or die;
+	// No direct access
+	defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-//JHtml::_('formbehavior.chosen', 'select');
+	JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+	JHtml::_('bootstrap.tooltip');
+	JHtml::_('behavior.multiselect');
+	//JHtml::_('formbehavior.chosen', 'select');
 
-$user       = JFactory::getUser();
-$userId     = $user->get('id');
-$dealerId   = $user->dealer_id;
+	$user       = JFactory::getUser();
+	$userId     = $user->get('id');
+	$dealerId   = $user->dealer_id;
 
-$model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
-$gaugers_id = $model->getData($user->dealer_id);
+	$model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
+	$gaugers_id = $model->getDatas($user->dealer_id);
 
-// календарь
-$month1 = date("n");
-$year1 = date("Y");
-if ($month1 == 12) {
-    $month2 = 1;
-    $year2 = $year1;
-    $year2++;
-} else {
-    $month2 = $month1;
-    $month2++;
-    $year2 = $year1;
-}
-$FlagCalendar = [4, $dealerId];
-foreach ($gaugers_id as $value) {
-	$calendars .= '<div class="calendars-gaugers"><p class="gaugers-name">';
-	$calendars .= $value->name;
-	$calendars .= "</p>";
-	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
-	$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
-	$calendars .= "</div>";
-}
-//----------------------------------------------------------------------------------------------------------
+	// календарь
+	$month1 = date("n");
+	$year1 = date("Y");
+	if ($month1 == 12) {
+		$month2 = 1;
+		$year2 = $year1;
+		$year2++;
+	} else {
+		$month2 = $month1;
+		$month2++;
+		$year2 = $year1;
+	}
+	$FlagCalendar = [4, $dealerId];
+	foreach ($gaugers_id as $value) {
+		$calendars .= '<div class="calendars-gaugers"><p class="gaugers-name">';
+		$calendars .= $value->name;
+		$calendars .= "</p>";
+		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month1, $year1, $FlagCalendar);
+		$calendars .= Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($value->id, $month2, $year2, $FlagCalendar);
+		$calendars .= "</div>";
+	}
+	//----------------------------------------------------------------------------------------------------------
 
 ?>
 
@@ -584,38 +584,66 @@ foreach ($gaugers_id as $value) {
 			if (time1.substr(0,2) < time2.substr(0,2)) {
 				jQuery.ajax({
 					type: 'POST',
-					url: "/index.php?option=com_gm_ceiling&task=gaugers.SaveDayOff",
+					url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugingForSaveDayOff",
+					dataType: 'json',
 					data: {
-						datetime1: datetime1,
-						datetime2: datetime2,
-						id_gauger: id_gauger
+						date: date,
+						time1: time1,
+						time2: time2,
+						id: id_gauger,
 					},
 					success: function(data) {
-						if (data == "no") {
-							jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
-						} else {
-							if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
-								jQuery("#"+ChoosenDay).attr("class", "day-off");
-							}
-							jQuery("#close-tar").hide();
-							jQuery("#modal-window-container-tar").hide();
-							jQuery("#modal-window-choose-tar").hide();
-							var n = noty({
-								theme: 'relax',
-								layout: 'center',
-								maxVisible: 5,
-								type: "success",
-								text: "Выходной день (время) сохранено успешно."
+						if (data == "ok") {
+							jQuery.ajax({
+								type: 'POST',
+								url: "/index.php?option=com_gm_ceiling&task=gaugers.SaveDayOff",
+								data: {
+									datetime1: datetime1,
+									datetime2: datetime2,
+									id_gauger: id_gauger
+								},
+								success: function(data) {
+									if (data == "no") {
+										jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
+									} else {
+										if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
+											jQuery("#"+ChoosenDay).attr("class", "day-off");
+										}
+										jQuery("#close-tar").hide();
+										jQuery("#modal-window-container-tar").hide();
+										jQuery("#modal-window-choose-tar").hide();
+										var n = noty({
+											theme: 'relax',
+											layout: 'center',
+											maxVisible: 5,
+											type: "success",
+											text: "Выходной день (время) сохранено успешно."
+										});
+									}
+								},
+								error: function (data) {
+									var n = noty({
+										theme: 'relax',
+										layout: 'center',
+										maxVisible: 5,
+										type: "error",
+										text: "Ошибка при попытке сохранить выходные часы. Сервер не отвечает"
+									});
+								}
 							});
+						} else {
+							jQuery("#wrong-window2").text("В данный промежуток времени у бригады есть монтаж");
 						}
 					},
+					dataType: "text",
+					timeout: 10000,
 					error: function (data) {
 						var n = noty({
 							theme: 'relax',
 							layout: 'center',
 							maxVisible: 5,
 							type: "error",
-							text: "Ошибка при попытке сохранить выходные часы. Сервер не отвечает"
+							text: "Ошибка при попытке проверить выходные часы. Сервер не отвечает"
 						});
 					}
 				});
