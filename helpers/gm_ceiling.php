@@ -2760,17 +2760,25 @@ class Gm_ceilingHelpersGm_ceiling
     public static function calculate_mount($del_flag,$calc_id,$data){
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
-        if(!empty($user->dealer_id)){
-            $dealer_id = $user->dealer_id;
+        $calculation_model = self::getModel('calculation');
+       
+        if(empty($calc_id)){
+            $project_id = $data['project_id'];
         }
-        else{
+        else {
+            $calculation_data = $calculation_model->getData($calc_id);
+            $project_id = $calculation_data->project_id;
+        }
+        $project_model = self::getModel('project');
+        $client_id = $project_model->getData($project_id)->id_client;
+        $client_model = self::getModel('client');
+        $dealer_id = $client_model->getClientById($client_id)->dealer_id;
+        if(!empty($dealer_id)){
             $dealer_id = 1;
         }
         $results = $mount_model->getDataAll($dealer_id);
         //Если существующая калькуляция
         if(!empty($calc_id)){
-            $calculation_model = self::getModel('calculation');
-            $calculation_data = $calculation_model->getData($calc_id);
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
             }
