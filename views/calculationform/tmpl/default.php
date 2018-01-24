@@ -873,7 +873,7 @@
 								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel">
 							</div>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 				<!-- керамогранит -->
@@ -923,7 +923,7 @@
 								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel">
 							</div>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-4"></div>
 					</div>					
 				</div>
 				<!-- закладная брусом -->
@@ -1335,48 +1335,49 @@
 				</div>
 				<div class="container">
 					<div class="row sm-margin-bottom">
-					<div class="col-sm-4"></div>
-					<div class="col-sm-4">
-						<div id="jform_n23_block">
-							<div class="form-group" style="margin-bottom: 0em;">
-								<div class="advanced_col1">
-									<label>Кол-во,шт</label>
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div id="jform_n23_block">
+								<div class="form-group" style="margin-bottom: 0em;">
+									<div class="advanced_col1">
+										<label>Кол-во,шт</label>
+									</div>
+									<div class="advanced_col5">
+										<label>Размер</label>
+									</div>
+									<div class="advanced_col4 center">
+										<label><i class="fa fa-trash" aria-hidden="true"></i></label>
+									</div>
+									<div class="clr"></div>
 								</div>
-								<div class="advanced_col5">
-									<label>Размер</label>
-								</div>
-								<div class="advanced_col4 center">
-									<label><i class="fa fa-trash" aria-hidden="true"></i></label>
-								</div>
-								<div class="clr"></div>
-							</div>
-							<div id="jform_n23_block_html" class="hide_label">
-								<?php $n23 = $this->item->n23; ?>
-								<?php if(count($n23) > 0) { ?>
-									<?php foreach($n23 as $diffuzor) if ($diffuzor->n23_count > 0) { ?>
-										<div class="form-group">
-											<div class="advanced_col1">
-												<input name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
+								<div id="jform_n23_block_html" class="hide_label">
+									<?php $n23 = $this->item->n23; ?>
+									<?php if(count($n23) > 0) { ?>
+										<?php foreach($n23 as $diffuzor) if ($diffuzor->n23_count > 0) { ?>
+											<div class="form-group">
+												<div class="advanced_col1">
+													<input name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
+												</div>
+												<div class="advanced_col5">
+													<select class="form-control" name="n23_size[]" for="jform_n22_type" placeholder="Размер">
+														<?foreach ($this->item->n23_all AS $diffuzor_item):?>
+															<option value="<?=$diffuzor_item->id;?>" <?=($diffuzor_item->id == $diffuzor->n23_size)?'selected':'';?>><?=$diffuzor_item->title;?></option>
+														<?endforeach;?>
+													</select>
+												</div>
+												<div class="advanced_col4 center">
+													<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+												</div>
+												<div class="clr"></div>
 											</div>
-											<div class="advanced_col5">
-												<select class="form-control" name="n23_size[]" for="jform_n22_type" placeholder="Размер">
-													<?foreach ($this->item->n23_all AS $diffuzor_item):?>
-														<option value="<?=$diffuzor_item->id;?>" <?=($diffuzor_item->id == $diffuzor->n23_size)?'selected':'';?>><?=$diffuzor_item->title;?></option>
-													<?endforeach;?>
-												</select>
-											</div>
-											<div class="advanced_col4 center">
-												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-											</div>
-											<div class="clr"></div>
-										</div>
+										<?php } ?>
 									<?php } ?>
-								<?php } ?>
+								</div>
+								<button id="add_n23" class="btn btn-primary" type="button">Добавить</button>
 							</div>
-							<button id="add_n23" class="btn btn-primary" type="button">Добавить</button>
 						</div>
+						<div class="col-sm-4"></div>
 					</div>
-					<div class="col-sm-4"></div>
 				</div>
 				<!-- другие комплектующие -->
 				<div class="container">
@@ -1774,6 +1775,7 @@
 </div>
 </div>
 
+
 <script>
 
 	function submit_form_sketch()
@@ -1822,6 +1824,8 @@
 	});
 
 	jQuery(document).ready(function() {
+
+		jQuery("body").addClass("yellow_home");
 
 		if(jQuery("#jform_n4").val()==0 && jQuery("#jform_n5").val()==0 && jQuery("#jform_n9").val()==0)
 		{
