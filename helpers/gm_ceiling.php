@@ -3978,6 +3978,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
             }
             $mounting_data = self::calculate_mount(0,$calc->id,null);
+            throw new Exception(implode('|',$mounting_data));
             if ($calc->mounting_sum != 0) {
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
@@ -4005,14 +4006,14 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_gm_mounting'], 2) . '</th></tr>';
                 } else {
                     foreach ($mounting_data as $key=>$item) {
-                        if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
+                       
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
                             $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
                             $html .= '<td class="center">' . $item['quantity'] . '</td>';
                             $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
                             $html .= '</tr>';
-                        }
+                        
                     }
                     $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_dealer_mounting'], 2) . '</th></tr>';
                 }
