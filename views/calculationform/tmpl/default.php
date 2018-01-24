@@ -1507,7 +1507,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "need_mount">
-					<div class="form-group" style="text-align: left; margin-left: calc(50% - 70px);">
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">
 						<div style="display: inline-block;">
 							<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
 							<label for="with_mount">Нужен</label>
@@ -1534,19 +1534,29 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "height">
-					<?php if ($this->item->height == 0) { ?>
-						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
-						<label for="max_height">больше 3х метров</label>
-						<br>
-						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
-						<label for="min_height">меньше 3х метров</label>
-					<?php } else { ?>
-						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
-						<label for="max_height">больше 3х метров</label>
-						<br>
-						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
-						<label for="min_height">меньше 3х метров</label>
-					<?php } ?>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">
+						<?php if ($this->item->height == 0) { ?>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
+								<label for="max_height">больше 3х метров</label>
+							</div>
+							<br>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
+								<label for="min_height">меньше 3х метров</label>
+							</div>
+						<?php } else { ?>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
+								<label for="max_height">больше 3х метров</label>
+							</div>
+							<br>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
+								<label for="min_height">меньше 3х метров</label>
+							</div>
+						<?php } ?>
+					</div>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
