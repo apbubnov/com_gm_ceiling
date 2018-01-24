@@ -1513,8 +1513,14 @@
                         // вывод времени бригады
                         var BusyTimes = [];
                         Array.from(data).forEach(function(elem) {
-                            if (selectedBrigade == elem.project_mounter) {
+                            if (selectedBrigade == elem.project_mounter /* and elem.project_mounting_day_off == "" */) {
                                 BusyTimes.push(elem.project_mounting_date.substr(11));
+                            } else if (selectedBrigade == elem.project_mounter /* and elem.project_mounting_day_off != "" */) {
+                                AllTime.forEach(element => {
+                                    if (element >= elem.project_mounting_date.substr(11) and element <= elem.project_mounting_day_off.substr(11)) {
+                                        BusyTimes.push(element);
+                                    }
+                                }); 
                             }
                         });
                         FreeTimes = AllTime.diff(BusyTimes);
@@ -1524,6 +1530,7 @@
                         });
                         jQuery("#hours").empty();
                         jQuery("#hours").append(select_hours);
+                        
                     }
                 });
                 //если монтаж есть, то выдать время, монтажную бригаду и инфу о ней, которые записаны
