@@ -385,45 +385,6 @@
                             <input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" <?php if(empty($this->item->n6)) echo "checked=\"checked\""?>>
                             <label for="jform_n6_2">Вставка не нужна</label>
                         </div>
-<!--						--><?// if ($this->item->n6 == 314 ) { ?>
-<!--							<div style="display: inline-block;">-->
-<!--								<input name="radio" id="jform_n6" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'314'?><!--" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>-->
-<!--							</div>-->
-<!--							<br>-->
-<!--							<div style="display: inline-block;">-->
-<!--								<input name="radio" id="jform_n6_1" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:''?><!--" type="radio"><label for="jform_n6_1">Цветная вставка</label>-->
-<!--							</div>-->
-<!--							<br>-->
-<!--							<div style="display: inline-block;">-->
-<!--								<input name="radio" id="jform_n6_2" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'0'?><!--" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>-->
-<!--							</div>-->
-<!--						--><?// } else {
-//							if ($this->item->n6 == 0 || empty($this->item->n6)) {?>
-<!--							<div style="display: inline-block;">-->
-<!--								<input name="radio" id="jform_n6" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'314'?><!--" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>-->
-<!--							</div>-->
-<!--							<br>-->
-<!--							<div style="display: inline-block;">-->
-<!--								<input name="radio" id="jform_n6_1" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:''?><!--" type="radio"> <label for="jform_n6_1">Цветная вставка</label>-->
-<!--							</div>-->
-<!--							<br>-->
-<!--							<div style="display: inline-block;">-->
-<!--								<input name="radio" id="jform_n6_2" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'0'?><!--" type="radio" checked="checked" ><label for="jform_n6_2">Вставка не нужна</label>-->
-<!--							</div>-->
-<!--							--><?// } else {?>
-<!--								<div style="display: inline-block;">-->
-<!--									<input name="radio" id="jform_n6" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'314'?><!--" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>-->
-<!--								</div>-->
-<!--								<br>-->
-<!--								<div style="display: inline-block;">-->
-<!--									<input name="radio" id="jform_n6_1" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:''?><!--" type="radio"  checked="checked">  <label for="jform_n6_1">Цветная вставка</label>-->
-<!--								</div>-->
-<!--								<br>-->
-<!--								<div style="display: inline-block;">-->
-<!--									<input name="radio" id="jform_n6_2" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'0'?><!--" type="radio"><label for="jform_n6_2">Вставка не нужна</label>-->
-<!--								</div>-->
-<!--							--><?// }
-//						} ?>
                     </div>
                 	<div class="col-sm-4"></div>
 				</div>
@@ -672,26 +633,15 @@
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
 					<div class="form-group" style="text-align: left; margin-left: calc(50% - 70px);">
-						<? if(!$this->item->n16) {?>
-							<div style="display: inline-block;">
-								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
-								<label for="jform_n16"> Обычный карниз</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
-								<label for="jform_n16_1"> Скрытый карниз</label>
-							</div>
-						<? } else { ?>
-							<p>
-								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio">
-								<label for="jform_n16"> Обычный карниз</label>
-							</p>
-							<p>
-								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio" checked="checked">
-								<label for="jform_n16_1"> Скрытый карниз</label>
-							</p>
-						<? } ?>
+                        <div style="display: inline-block;">
+                            <input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" <?if(!$this->item->n16) echo "checked=\"checked\""?>>
+                            <label for="jform_n16"> Обычный карниз</label>
+                        </div>
+                        <br>
+                        <div style="display: inline-block;">
+                            <input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio" <?if($this->item->n16) echo "checked=\"checked\""?>>
+                            <label for="jform_n16_1"> Скрытый карниз</label>
+                        </div>
 					</div>
 				</div>
 				<div class="col-sm-4"></div>
@@ -1531,27 +1481,15 @@
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "height">
 					<div class="form-group" style="text-align: left; margin-left: calc(50% - 75px);">
-						<?php if ($this->item->height == 0) { ?>
-							<div style="display: inline-block;">
-								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
-								<label for="max_height">больше 3х метров</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
-								<label for="min_height">меньше 3х метров</label>
-							</div>
-						<?php } else { ?>
-							<div style="display: inline-block;">
-								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
-								<label for="max_height">больше 3х метров</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
-								<label for="min_height">меньше 3х метров</label>
-							</div>
-						<?php } ?>
+                        <div style="display: inline-block;">
+                            <input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" <?if($this->item->height != 0) echo "checked=\"checked\""?>>
+                            <label for="max_height">больше 3х метров</label>
+                        </div>
+                        <br>
+                        <div style="display: inline-block;">
+                            <input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" <?if($this->item->height == 0) echo "checked=\"checked\""?>>
+                            <label for="min_height">меньше 3х метров</label>
+                        </div>
 					</div>
 				</div>
 				<div class="col-sm-4"></div>
