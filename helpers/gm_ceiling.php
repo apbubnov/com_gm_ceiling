@@ -3981,7 +3981,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
             }
 
-            if ($need_mount) {
+            if ($calc->mounting_sum == 0) {
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
@@ -3994,8 +3994,8 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во</th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-                $mounting_data = self::calculate_mount(0,1,$calc->id,null);
-                throw new Exception(implode('|',$mounting_data));
+             //   $mounting_data = self::calculate_mount(0,1,$calc->id,null);
+                
                 if ($project->who_mounting == 1) {
                     foreach ($mounting_data as $item) {
                         $html .= '<tr>';
@@ -4049,7 +4049,7 @@ class Gm_ceilingHelpersGm_ceiling
 
                 $html .= '</tbody></table><p>&nbsp;</p>';
             }
-    }
+        }
         $filename = md5($data['id'] . "-2") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
 
