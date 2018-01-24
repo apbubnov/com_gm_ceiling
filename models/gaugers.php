@@ -351,7 +351,7 @@ class Gm_ceilingModelGaugers extends JModelItem {
 
 			$query->select("count(id) as count")
 				->from("#__gm_ceiling_projects")
-				->where("project_mounter = '$id' and project_mounting_date between '$date1' and '$date2'");
+				->where("project_calculator = '$id' and project_calculation_date between '$date1' and '$date2'");
 			$db->setQuery($query);
 			$items = $db->loadObject();
 			

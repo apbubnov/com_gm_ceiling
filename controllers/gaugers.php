@@ -115,7 +115,7 @@ class Gm_ceilingControllerGaugers extends JControllerForm
 			$datetime1 = $_POST["datetime1"];
 			$datetime2 = $_POST["datetime2"];
 			$id = $_POST["id"];
-			$model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
 			$mounting = $model->GetGaugingForSaveDayOff($id, $datetime1, $datetime2);
 
 			if ($mounting->count == 0) {
