@@ -33,6 +33,7 @@
 	$project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
 	$project = $project_model->getData($project_id);
 	$extra_components_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_components);
+    $components_stock_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->components_stock);
 	$extra_mounting_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_mounting);
 	$calc_id = $jinput->get('id','','INT');
 	$calc_id = empty($calc_id)?0:$calc_id;
@@ -1373,6 +1374,64 @@
 						</div>
 					</div>
 				</div>
+                    <!-- другие комплектующие из склада-->
+                    <div class="container">
+                        <div class="row" style="margin-bottom: 1em;">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <table>
+                                    <tr>
+                                        <td>Другие комплектующие со склада</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-sm-4"></div>
+                        </div>
+                    </div>
+                    <div class = "container">
+                        <div class="row">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-4">
+                                <div class="advanced_col_half">
+                                    <label>Название</label>
+                                    <div id="components_title_stock_container">
+                                        <?php foreach($components_stock_array as $item) { ?>
+                                            <div class='form-group Area Type'>
+                                                <input name='components_title_stock[]' id="Type" value='<?php echo $item['title']; ?>'
+                                                       autocomplete="off"
+                                                       NameDB="CONCAT(components.title,' ',options.title)"
+                                                       onclick="GetList(this, ['Type'], ['Type']);"
+                                                       onkeyup="GetList(this, ['Type'], ['Type']);"
+                                                       onblur="ClearSelect(this)"
+                                                       class='form-control Input Type' type='text'>
+                                                <div class="Selects Type"></div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                                <div class="advanced_col_half">
+                                    <label>Стоимость</label>
+                                    <div id="components_value_stock_container">
+                                        <?php foreach($components_stock_array as $item) { ?>
+                                            <div class='form-group'><input name='components_value_stock[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4"></div>
+                        </div>
+                        <div class="row sm-margin-bottom">
+                            <div class="col-sm-4">
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <button id="components_button_stock" class="btn btn-primary" type="button">Добавить</button>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                            </div>
+                        </div>
+                    </div>
 				<!-- другие работы по монтажу -->
 				<div class = "container">
 					<div class="row" style="margin-bottom: 1em;">
@@ -1709,8 +1768,115 @@
 </div>
 
 <script>
+//для подгрузки компонентов со склада
+    function getList(thisObject, Objects = null) {
+        var input = jQuery(thisObject);
+        var root = input.closest('.List');
+        input.attr('check', 0);
 
-	function submit_form_sketch()
+        var id = input.attr('id');
+
+        var values = [];
+        values.push({name: input.attr('parent') + '.' + input.attr('tname'), value: input.val(), id: id});
+        jQuery.each(Objects, function (key, idObject) {
+            var itemTemp = root.find('#' + idObject);
+            values.push({
+                name: itemTemp.attr('parent') + '.' + itemTemp.attr('tname'),
+                value: itemTemp.val(),
+                id: idObject
+            });
+        });
+
+        var filter = filtres(id, values);
+
+        var items = input.parent().find('.select').filter('.' + input.attr('tname'));
+        var lockSelect = items.parent();
+        var option = jQuery('<div class="add" onclick="selectItem(this)" parent="' + id + '">+ Добавить</div>');
+
+        if (input.is(":focus")) {
+            jQuery.ajax({
+                type: 'POST',
+                url: filter.filter.page,
+                data: filter,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    items.empty();
+                    jQuery.each(data, function (index, item) {
+                        if (item.title != null) {
+                            var itemObj = option.clone().html(item.title).attr({'class': 'option'});
+                            jQuery.each(item, function (index, value) {
+                                itemObj.attr(index, value);
+                            });
+
+                            items.append(itemObj);
+                        }
+                    });
+                    lockSelect.show();
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Сервер не отвечает!"
+                    });
+                }
+            });
+        }
+    }
+    function hideItems(thisObject) {
+        var input = jQuery(thisObject);
+        var select = input.parent().find('.select');
+        var lockSelect = select.parent();
+
+        setTimeout(function () {
+            select.empty();
+            lockSelect.hide();
+
+        }, 200);
+    }
+
+    function selectItem(thisObject) {
+        item = jQuery(thisObject);
+        var select = item.parent();
+        var lockSelect = select.parent();
+
+        var inputDiv = item.closest('.input');
+        var root = inputDiv.closest('.' + inputDiv.attr('top'));
+        var subroot = inputDiv.closest('.' + inputDiv.attr('parent'));
+        var other = inputDiv.find(".other");
+        if (other.attr('class') != root.find('#' + item.attr("parent")).attr('class')) other.hide().val('');
+
+        var iclass = item.attr('class');
+        var id = item.attr('parent');
+
+        if (iclass == 'option') {
+
+            var filter = filtres(item.attr("parent"), [{name: item.attr("parent"), value: ''}]);
+            var objects = filter.filter.objectsId;
+
+            jQuery.each(objects, function (key, val) {
+                subroot.find('#' + val).val(item.attr(key));
+            });
+        }
+        else if (iclass == 'empty') {
+            subroot.find('#' + id).val(item.html());
+        }
+        else if (iclass == 'add') {
+            inputDiv.find(".other").show();
+        }
+
+        subroot.find('#' + id).attr('check', '1');
+
+        select.empty();
+        lockSelect.hide();
+    }
+
+
+function submit_form_sketch()
 	{
 		var regexp_d = /^\d+$/;
 		if (!regexp_d.test(document.getElementById('jform_n2').value)
@@ -1945,6 +2111,14 @@
 			jQuery( "<div class='form-group'><input name='extra_mounting_title[]' value='' class='form-control' type='text'></div>" ).appendTo( extra_mounting_title_container );
 			jQuery( "<div class='form-group'><input name='extra_mounting_value[]' value='' class='form-control' type='tel'></div>" ).appendTo( extra_mounting_value_container );
 		});
+
+        jQuery( "#components_button_stock" ).click(function(){
+            var components_title_stock_container = jQuery( "#components_title_stock_container" ),
+                components_value_stock_container = jQuery( "#components_value_stock_container" );
+            jQuery( "<div class='form-group'><input name='components_title_stock[]' value='' class='form-control' type='text'></div>" ).appendTo( components_title_stock_container );
+            jQuery( "<div class='form-group'><input name='components_value_stock[]' value='' class='form-control' type='tel'></div>" ).appendTo( components_value_stock_container );
+        });
+
 		
 		//Автозамена запятой на точку
 		jQuery( "input[type=tel]" ).on("keyup",function(){
@@ -2244,6 +2418,7 @@
 
 		jQuery("#extra_components_button").trigger('click');
 		jQuery("#extra_mounting_button").trigger('click');
+        jQuery("#components_button_stock").trigger('click');
 
 		jQuery("#jform_n6_1").change(function(){
 			jQuery("#jform_color_switch-lbl_1").fadeIn();
