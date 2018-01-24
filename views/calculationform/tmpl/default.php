@@ -1410,7 +1410,7 @@
                                     </div>
                                 </div>
                                 <div class="advanced_col_half">
-                                    <label>Стоимость</label>
+                                    <label>Количество</label>
                                     <div id="components_value_stock_container">
                                         <?php foreach($components_stock_array as $item) { ?>
                                             <div class='form-group'><input name='components_value_stock[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
