@@ -411,7 +411,7 @@ class Gm_ceilingModelClientForm extends JModelForm
 				$project_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
 	            $result = $project_model->getItemsByPhoneNumber($phone, $user->dealer_id);
 
-	            if (empty($result))
+	            if (!empty($result))
 	            {
 	            	throw new Exception('Клиент с таким номером существует');
 	            }
