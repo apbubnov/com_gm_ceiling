@@ -702,8 +702,6 @@ if (empty($gaugers_id)) {
 		});
 		// -----------------------------------------
 
-		//Вывод замеров у НМС у замерщиков 36
-
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
             var time1 = jQuery("#hours1").val();
@@ -713,38 +711,66 @@ if (empty($gaugers_id)) {
 			if (time1.substr(0,2) < time2.substr(0,2)) {
 				jQuery.ajax({
 					type: 'POST',
-					url: "/index.php?option=com_gm_ceiling&task=gaugers.SaveDayOff",
+					url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugingForSaveDayOff",
+					dataType: 'json',
 					data: {
-						datetime1: datetime1,
-						datetime2: datetime2,
-						id_gauger: id_gauger
+						date: date,
+						time1: time1,
+						time2: time2,
+						id: idBrigade,
 					},
 					success: function(data) {
-						if (data == "no") {
-							jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
-						} else {
-							if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
-								jQuery("#"+ChoosenDay).attr("class", "day-off");
-							}
-							jQuery("#close-tar").hide();
-							jQuery("#modal-window-container-tar").hide();
-							jQuery("#modal-window-choose-tar").hide();
-							var n = noty({
-								theme: 'relax',
-								layout: 'center',
-								maxVisible: 5,
-								type: "success",
-								text: "Выходной день (время) сохранено успешно."
+						if (data == "ok") {
+							jQuery.ajax({
+								type: 'POST',
+								url: "/index.php?option=com_gm_ceiling&task=gaugers.SaveDayOff",
+								data: {
+									datetime1: datetime1,
+									datetime2: datetime2,
+									id_gauger: id_gauger
+								},
+								success: function(data) {
+									if (data == "no") {
+										jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
+									} else {
+										if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
+											jQuery("#"+ChoosenDay).attr("class", "day-off");
+										}
+										jQuery("#close-tar").hide();
+										jQuery("#modal-window-container-tar").hide();
+										jQuery("#modal-window-choose-tar").hide();
+										var n = noty({
+											theme: 'relax',
+											layout: 'center',
+											maxVisible: 5,
+											type: "success",
+											text: "Выходной день (время) сохранено успешно."
+										});
+									}
+								},
+								error: function (data) {
+									var n = noty({
+										theme: 'relax',
+										layout: 'center',
+										maxVisible: 5,
+										type: "error",
+										text: "Ошибка при попытке сохранить выходные часы. Сервер не отвечает"
+									});
+								}
 							});
+						} else {
+							jQuery("#wrong-window2").text("В данный промежуток времени у бригады есть монтаж");
 						}
 					},
+					dataType: "text",
+					timeout: 10000,
 					error: function (data) {
 						var n = noty({
 							theme: 'relax',
 							layout: 'center',
 							maxVisible: 5,
 							type: "error",
-							text: "Ошибка при попытке сохранить выходные часы. Сервер не отвечает"
+							text: "Ошибка при попытке проверить выходные часы. Сервер не отвечает"
 						});
 					}
 				});
