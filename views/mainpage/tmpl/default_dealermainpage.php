@@ -200,6 +200,9 @@ $allMount = $countMounting[0]->count + $answer1[0]->count;
         <?php }?>
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>"><i class="fa fa-plus" aria-hidden="true"></i> Добавить замер</a>
+        </p>
+        <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
         </p>
         <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
