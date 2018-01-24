@@ -3978,7 +3978,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
             }
             $mounting_data = self::calculate_mount(0,$calc->id,null);
-            throw new Exception(implode('|',$mounting_data[0]));
             if ($calc->mounting_sum != 0) {
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
