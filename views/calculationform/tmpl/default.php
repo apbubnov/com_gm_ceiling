@@ -1771,7 +1771,7 @@
 
 <script type="text/javascript">
 //для подгрузки компонентов со склада
-    function getList(thisObject, Objects = null) {
+    function GetList(thisObject, Objects = null) {
         var input = jQuery(thisObject);
         var root = input.closest('.List');
         input.attr('check', 0);
@@ -1875,6 +1875,13 @@
 
         select.empty();
         lockSelect.hide();
+    }
+    function ClearSelect(e) {
+        setTimeout(function () {
+            e = $(e);
+            if (e.attr("clear") != 'false') e.val("");
+            e.siblings(".Selects").empty();
+        }, 200);
     }
 
 
