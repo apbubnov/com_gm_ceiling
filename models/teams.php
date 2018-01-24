@@ -19,9 +19,7 @@ jimport('joomla.event.dispatcher');
  */
 class Gm_ceilingModelTeams extends JModelItem {
 
-	function getData() {
-		
-	}
+	function getData() {}
 
 	function getDatas($dealerId) {
 		try
@@ -376,6 +374,31 @@ class Gm_ceilingModelTeams extends JModelItem {
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	public function GetMountingForSaveDayOff($id, $date1, $date2) {
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+
+			$query->select("count(id) as count")
+				->from("#__gm_ceiling_projects")
+				->where("project_mounter = '$id' and project_mounting_date between '$date1' and '$date2'");
+			$db->setQuery($query);
+			$items = $db->loadObject();
+			
+			return $items;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+
 
 	public function getAllItems() {
 		try
