@@ -331,38 +331,34 @@
 					</div>
 				</div>
 				<div class="col-sm-4" style="padding-right: 0px;">
-					<div class="form-group" style="text-align: left; /*margin-left: calc(50% - px);*/">
-<!--						--><?// if ($this->item->n28 == 0) { ?>
-<!--							<p style="width: auto;">-->
-<!--								<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" checked="checked"><label for="jform_n28"> Обычный багет</label>-->
-<!--							</p>-->
-<!--							<p>-->
-<!--								<input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio"><label for="jform_n28_1"> Потолочный багет</label>-->
-<!--							</p>-->
-<!--							<p>-->
-<!--								<input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio"><label for="jform_n28_2"> Алюминиевый багет</label>-->
-<!--							</p>-->
-<!--						--><?// } elseif ($this->item->n28 == 1) { ?>
-<!--							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">-->
-<!--								<label for="jform_n28"> Обычный багет</label></p>-->
-<!--							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" checked="checked">-->
-<!--								<label for="jform_n28_1"> Потолочный багет</label></p>-->
-<!--							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio">-->
-<!--								<label for="jform_n28_2"> Алюминиевый багет</label></p>-->
-<!--						--><?// } else { ?>
-<!--							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">-->
-<!--								<label for="jform_n28"> Обычный багет</label></p>-->
-<!--							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1"-->
-<!--										type="radio"><label for="jform_n28_1"> Потолочный багет</label></p>-->
-<!--							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2"-->
-<!--										type="radio" checked="checked"><label for="jform_n28_2"> Алюминиевый багет</label></p>-->
-<!--						--><?// } ?>
-                            <p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <? if ($this->item->n28 == 0) echo "checked='checked'" ?>>
-                                <label for="jform_n28"> Обычный багет</label></p>
-                            <p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" <? if ($this->item->n28 == 1) echo "checked='checked'" ?>>
-                                <label for="jform_n28_1"> Потолочный багет</label></p>
-                            <p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio" <? if ($this->item->n28 == 2) echo "checked='checked'" ?>>
-                                <label for="jform_n28_2"> Алюминиевый багет</label></p>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
+						<? if ($this->item->n28 == 0) { ?>
+							<div style="display: inline-block;">
+								<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" checked="checked"><label for="jform_n28"> Обычный багет</label>
+							</div>
+							</br>
+							<div style="display: inline-block;">
+								<input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio"><label for="jform_n28_1"> Потолочный багет</label>
+							</div>
+							</br>
+							<div style="display: inline-block;">
+								<input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio"><label for="jform_n28_2"> Алюминиевый багет</label>
+							</div>
+						<? } elseif ($this->item->n28 == 1) { ?>
+							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">
+								<label for="jform_n28"> Обычный багет</label></p>
+							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" checked="checked">
+								<label for="jform_n28_1"> Потолочный багет</label></p>
+							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio">
+								<label for="jform_n28_2"> Алюминиевый багет</label></p>
+						<? } else { ?>
+							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">
+								<label for="jform_n28"> Обычный багет</label></p>
+							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1"
+										type="radio"><label for="jform_n28_1"> Потолочный багет</label></p>
+							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2"
+										type="radio" checked="checked"><label for="jform_n28_2"> Алюминиевый багет</label></p>
+						<? } ?>
 					</div>
 				</div>
 			</div>
@@ -384,7 +380,7 @@
 							</td>
 						</tr>
 					</table>
-					<div>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 72px);">
 						<?php
 							if ($this->item->n6 > 0) {
 								$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -394,36 +390,42 @@
 							}
 						?>
 						<? if ($this->item->n6 == 314 ) { ?>
-							<p>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"><label for="jform_n6_1">Цветная вставка</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>
-							</p>
+							</div>
 						<? } else {
 							if ($this->item->n6 == 0 || empty($this->item->n6)) {?>
-							<p>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"> <label for="jform_n6_1">Цветная вставка</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" checked="checked" ><label for="jform_n6_2">Вставка не нужна</label>
-							</p>
+							</div>
 							<? } else {?>
-								<p>
+								<div style="display: inline-block;">
 									<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
-								</p>
-								<p>
+								</div>
+								<br>
+								<div style="display: inline-block;">
 									<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"  checked="checked">  <label for="jform_n6_1">Цветная вставка</label>
-								</p>
-								<p>
+								</div>
+								<br>
+								<div style="display: inline-block;">
 									<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio"><label for="jform_n6_2">Вставка не нужна</label>
-								</p>
+								</div>
 							<? } 
 						} ?>
                     </div>
@@ -673,16 +675,17 @@
 						</div>
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
-					<div class="form-group">
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 70px);">
 						<? if(!$this->item->n16) {?>
-							<p>
+							<div style="display: inline-block;">
 								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
 								<label for="jform_n16"> Обычный карниз</label>
-							</p>
-							<p>
+							</div>
+							<br>
+							<div style="display: inline-block;">
 								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
 								<label for="jform_n16_1"> Скрытый карниз</label>
-							</p>
+							</div>
 						<? } else { ?>
 							<p>
 								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio">
@@ -1504,11 +1507,17 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "need_mount">
-					<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
-					<label for="with_mount">Нужен</label>
-					<br>
-					<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
-					<label for="without">Не нужен</label>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">
+						<div style="display: inline-block;">
+							<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
+							<label for="with_mount">Нужен</label>
+						</div>
+						<br>
+						<div style="display: inline-block;">
+							<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
+							<label for="without">Не нужен</label>
+						</div>
+					</div>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -1525,19 +1534,29 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "height">
-					<?php if ($this->item->height == 0) { ?>
-						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
-						<label for="max_height">больше 3х метров</label>
-						<br>
-						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
-						<label for="min_height">меньше 3х метров</label>
-					<?php } else { ?>
-						<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
-						<label for="max_height">больше 3х метров</label>
-						<br>
-						<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
-						<label for="min_height">меньше 3х метров</label>
-					<?php } ?>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 75px);">
+						<?php if ($this->item->height == 0) { ?>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
+								<label for="max_height">больше 3х метров</label>
+							</div>
+							<br>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
+								<label for="min_height">меньше 3х метров</label>
+							</div>
+						<?php } else { ?>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
+								<label for="max_height">больше 3х метров</label>
+							</div>
+							<br>
+							<div style="display: inline-block;">
+								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
+								<label for="min_height">меньше 3х метров</label>
+							</div>
+						<?php } ?>
+					</div>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>

@@ -2690,11 +2690,15 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
-    public function sendCommercialOffer(){
-        try{
-            $jinput = JFactory::getApplication()->input;
-            $user_id = $jinput->get('user_id', null, 'INT');
-            $email = $jinput->get('email', null, 'STRING');
+    public function sendCommercialOffer($user_id = null, $email = null){
+        try
+        {
+            if (is_null($user_id) || is_null($email))
+            {
+                $jinput = JFactory::getApplication()->input;
+                $user_id = $jinput->get('user_id', null, 'INT');
+                $email = $jinput->get('email', null, 'STRING');
+            }
             if (empty($email))
             {
                 throw new Exception('empty email');
@@ -2736,6 +2740,35 @@ class Gm_ceilingController extends JControllerLegacy
             $email_id = $dop_contacts_model->save($client_id, 1, $email);
 
             die(json_encode($result));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function RepeatSendCommercialOffer(){
+        try
+        {
+            $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $items = $users_model->findNotViewCommercialOfferAfterWeek();
+            $count = 0;
+
+            $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+            foreach ($items as $i => $item)
+            {
+                $client_id = JFactory::getUser($item->user_id)->associated_client;
+                $emails = $dop_contacts_model->getEmailByClientID($client_id);
+                foreach ($emails as $j => $email)
+                {
+                    $this->sendCommercialOffer($item->user_id, $email->contact);
+                    $count++;
+                }
+            }
+
+            die(json_encode($count));
         }
         catch (Exception $e) {
             $date = date("d.m.Y H:i:s");

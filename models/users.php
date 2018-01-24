@@ -146,4 +146,27 @@ class Gm_ceilingModelUsers extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	function findNotViewCommercialOfferAfterWeek()
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from('`rgzbn_users_commercial_offer`');
+			$query->where("`change_time` < NOW() - INTERVAL 1 WEEK AND `status` = 0");
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			
+			return $items;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }
