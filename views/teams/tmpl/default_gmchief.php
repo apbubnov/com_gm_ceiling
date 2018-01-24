@@ -718,7 +718,6 @@ foreach ($brigade_id as $value) {
 						});
 					}
 				});
-				
 			} else {
 				jQuery("#wrong-window2").text("Введите корректный промежуток времени");
 			}
