@@ -3861,7 +3861,7 @@ class Gm_ceilingHelpersGm_ceiling
         return $result;
     }
 
-    public static function create_common_estimate_mounters($project_id,){
+    public static function create_common_estimate_mounters($project_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
@@ -3994,7 +3994,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во</th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-                $mounting_data = self::calculate_mount(0,1,$calc->id,null);
+             //   $mounting_data = self::calculate_mount(0,1,$calc->id,null);
                 
                 if ($project->who_mounting == 1) {
                     foreach ($mounting_data as $item) {
@@ -4049,7 +4049,7 @@ class Gm_ceilingHelpersGm_ceiling
 
                 $html .= '</tbody></table><p>&nbsp;</p>';
             }
-    }
+        }
         $filename = md5($data['id'] . "-2") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
 
