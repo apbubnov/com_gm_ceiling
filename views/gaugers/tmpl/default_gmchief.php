@@ -603,7 +603,7 @@
 								},
 								success: function(data) {
 									if (data == "no") {
-										jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
+										jQuery("#wrong-window").text("Не удалось сохранить время. Повторите попытку позже.");
 									} else {
 										if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
 											jQuery("#"+ChoosenDay).attr("class", "day-off");
@@ -631,7 +631,7 @@
 								}
 							});
 						} else {
-							jQuery("#wrong-window2").text("В данный промежуток времени у бригады есть монтаж");
+							jQuery("#wrong-window").text("В данный промежуток времени у бригады есть монтаж");
 						}
 					},
 					dataType: "text",
@@ -654,7 +654,7 @@
 
 		// убрать красный текст ошибки
 		jQuery("#modal-window-1-tar").on("change", "#hours1, #hours2", function() {
-			jQuery("#wrong-window2").empty();
+			jQuery("#wrong-window").empty();
 		});
 
 		// удалить выходной день
@@ -669,7 +669,7 @@
 				},
 				success: function(data) {
 					if (data == "no") {
-						jQuery("#wrong-window2").text("Не удалось удалить время. Повторите попытку позже.");
+						jQuery("#wrong-window").text("Не удалось удалить время. Повторите попытку позже.");
 					} else {
 						if (jQuery("#"+ChoosenDay).attr("class") == "day-off") {
 							jQuery("#"+ChoosenDay).attr("class", "current-month");
