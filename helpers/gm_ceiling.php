@@ -3985,7 +3985,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
-                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calc->id) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch".$calc->id) . ".png" . '" style="width: 100%; max-height: 800px;"/>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -3995,10 +3995,11 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
                 $mounting_data = self::calculate_mount(0,1,$calc->id,null);
+                throw new Exception(implode('|',$mounting_data));
                 if ($project->who_mounting == 1) {
                     foreach ($mounting_data as $item) {
                         $html .= '<tr>';
-                        $html .= '<td>' . $item['title'] . '</td>';
+                        $html .= '<td>' . $item->title . '</td>';
                         $html .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
                         $html .= '<td class="center">' . $item['quantity'] . '</td>';
                         $html .= '<td class="center">' . round($item['gm_salary_total'], 2) . '</td>';
