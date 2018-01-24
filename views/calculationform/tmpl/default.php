@@ -393,9 +393,11 @@
 							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>
 							</div>
+							<br>
 							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"><label for="jform_n6_1">Цветная вставка</label>
 							</div>
+							<br>
 							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>
 							</div>
@@ -404,9 +406,11 @@
 							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
 							</div>
+							<br>
 							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"> <label for="jform_n6_1">Цветная вставка</label>
 							</div>
+							<br>
 							<div style="display: inline-block;">
 								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" checked="checked" ><label for="jform_n6_2">Вставка не нужна</label>
 							</div>
@@ -414,9 +418,11 @@
 								<div style="display: inline-block;">
 									<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
 								</div>
+								<br>
 								<div style="display: inline-block;">
 									<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"  checked="checked">  <label for="jform_n6_1">Цветная вставка</label>
 								</div>
+								<br>
 								<div style="display: inline-block;">
 									<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio"><label for="jform_n6_2">Вставка не нужна</label>
 								</div>
@@ -669,12 +675,13 @@
 						</div>
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
-					<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 70px);">
 						<? if(!$this->item->n16) {?>
 							<div style="display: inline-block;">
 								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
 								<label for="jform_n16"> Обычный карниз</label>
 							</div>
+							<br>
 							<div style="display: inline-block;">
 								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
 								<label for="jform_n16_1"> Скрытый карниз</label>
@@ -1500,11 +1507,17 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "need_mount">
-					<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
-					<label for="with_mount">Нужен</label>
-					<br>
-					<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
-					<label for="without">Не нужен</label>
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 70px);">
+						<div style="display: inline-block;">
+							<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
+							<label for="with_mount">Нужен</label>
+						</div>
+						<br>
+						<div style="display: inline-block;">
+							<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
+							<label for="without">Не нужен</label>
+						</div>
+					</div>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
