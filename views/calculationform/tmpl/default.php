@@ -70,18 +70,17 @@
     .Area {
         display: inline-block;
         float: left;
-        width: 310px;
         height: auto;
         overflow: visible;
         margin: 0 5px;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
         position: relative;
     }
 
     .Area .Input {
         display: inline-block;
         float: left;
-        width: 50%;
+        width: 100%;
         padding-left: 5px;
     }
 
@@ -1457,7 +1456,7 @@
                                     <div id="components_title_stock_container">
                                         <?php foreach($components_stock_array as $item) { ?>
                                             <div class='form-group Area Type'>
-                                                <input name="components_title_stock[]"
+                                                <input
                                                        id="Type" value='<?php echo $item['title']; ?>'
                                                        autocomplete="off"
                                                        NameDB="CONCAT(components.title,' ',options.title)"
@@ -1466,6 +1465,7 @@
                                                        onblur="ClearSelect(this)"
                                                        class='form-control Input Type'
                                                        type='text'>
+                                                <input id="ID" name="components_title_stock[]" hidden>
                                                 <div class="Selects Type"></div>
                                             </div>
                                         <?php } ?>
@@ -1853,6 +1853,7 @@
         var Select = Selects.find(".Select");
 
         filter.select["Type"] = input.attr("NameDB");
+        filter.select["ID"] = "options.id";
         filter.where.like["components.title"] = "'%" + input.val() + "%' || true";
         filter.where.like["options.title"] = "'%" + input.val() + "%'";
         filter.page = "/index.php?option=com_gm_ceiling&task=componentform.getComponents";
@@ -1893,7 +1894,7 @@
 
     function SelectItem(e) {
         e = $(e);
-        var parent = e.closest("form"),
+        var parent = e.closest(".Area"),
             elements = parent.find(".Input");
 
         if (typeof e.attr('error') !== 'undefined' && e.attr('error') !== false)
@@ -1911,6 +1912,10 @@
         }
         else if (e.hasClass("Add")) e.closest(".Area").find(".Input").attr({"clear": "false", "add": "true"});
         else {
+            elements.val(e.attr("Type"));
+            elements.attr({"clear": "false", "add": "false"});
+            parent.find("#ID").val(e.attr("ID"));
+            /*
             $.each(elements, function (i, v) {
                 v = $(v);
                 var id = v.attr('id');
@@ -1922,6 +1927,7 @@
                     }
                 }
             });
+            */
         }
     }
 
@@ -1932,122 +1938,6 @@
             e.siblings(".Selects").empty();
         }, 200);
     }
-/*
-    function GetList(thisObject, Objects = null) {
-        var input = jQuery(thisObject);
-        var root = input.closest('.List');
-        input.attr('check', 0);
-
-        var id = input.attr('id');
-
-        var filter = {
-            select: {
-                Type: input.attr('namedb')
-            },
-            where: {
-                like: {
-                    "components.title": '\'%'+input.val()+'%\'',
-                    "options.title": '\'%'+input.val()+'%\''
-                }
-            },
-            page: 'index.php?option=com_gm_ceiling&task=componentform.getComponents'
-        };
-
-        filter = {filter: filter};
-
-        var items = input.parent().find('.Selects');
-        var lockSelect = items.parent();
-        var option = jQuery('<div class="add" onclick="selectItem(this)" parent="' + id + '">+ Добавить</div>');
-
-        if (input.is(":focus")) {
-            jQuery.ajax({
-                type: 'POST',
-                url: filter.filter.page,
-                data: filter,
-                success: function (data) {
-                    data = JSON.parse(data);
-                    items.empty();
-                    jQuery.each(data, function (index, item) {
-                        if (item.title != null) {
-                            var itemObj = option.clone().html(item.title).attr({'class': 'option'});
-                            jQuery.each(item, function (index, value) {
-                                itemObj.attr(index, value);
-                            });
-
-                            items.append(itemObj);
-                        }
-                    });
-                    lockSelect.show();
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Сервер не отвечает!"
-                    });
-                }
-            });
-        }
-    }
-    function hideItems(thisObject) {
-        var input = jQuery(thisObject);
-        var select = input.parent().find('.select');
-        var lockSelect = select.parent();
-
-        setTimeout(function () {
-            select.empty();
-            lockSelect.hide();
-
-        }, 200);
-    }
-
-    function selectItem(thisObject) {
-        item = jQuery(thisObject);
-        var select = item.parent();
-        var lockSelect = select.parent();
-
-        var inputDiv = item.closest('.input');
-        var root = inputDiv.closest('.' + inputDiv.attr('top'));
-        var subroot = inputDiv.closest('.' + inputDiv.attr('parent'));
-        var other = inputDiv.find(".other");
-        if (other.attr('class') != root.find('#' + item.attr("parent")).attr('class')) other.hide().val('');
-
-        var iclass = item.attr('class');
-        var id = item.attr('parent');
-
-        if (iclass == 'option') {
-
-            var filter = filtres(item.attr("parent"), [{name: item.attr("parent"), value: ''}]);
-            var objects = filter.filter.objectsId;
-
-            jQuery.each(objects, function (key, val) {
-                subroot.find('#' + val).val(item.attr(key));
-            });
-        }
-        else if (iclass == 'empty') {
-            subroot.find('#' + id).val(item.html());
-        }
-        else if (iclass == 'add') {
-            inputDiv.find(".other").show();
-        }
-
-        subroot.find('#' + id).attr('check', '1');
-
-        select.empty();
-        lockSelect.hide();
-    }
-    function ClearSelect(e) {
-        setTimeout(function () {
-            e = jQuery(e);
-            if (e.attr("clear") != 'false') e.val("");
-            e.siblings(".Selects").empty();
-        }, 200);
-    }
-*/
 
 function submit_form_sketch()
 	{
@@ -2294,7 +2184,7 @@ function submit_form_sketch()
                 "        onkeyup=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onblur=\"ClearSelect(this)\"\n" +
                 "    class='form-control Input Type'\n" +
-                "        type='text'> <div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
+                "        type='text'><input id=\"ID\" hidden> <div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
             jQuery( "<div class='form-group'><input name='components_value_stock[]' value='' class='form-control' type='tel'></div>" ).appendTo( components_value_stock_container );
         });
 
