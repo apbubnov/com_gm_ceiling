@@ -2795,7 +2795,7 @@ class Gm_ceilingHelpersGm_ceiling
         $n26 = json_decode($data['n26']);
         $n22 = json_decode($data['n22']);
         $n14 = json_decode($data['n14']);
-        throw new Exception(count($n14));
+        throw new Exception(count($data['n14']));
         $n23 = json_decode($data['n23']);
         $n15 = json_decode($data['n15']);
         $n29 = json_decode($data['n29']);
