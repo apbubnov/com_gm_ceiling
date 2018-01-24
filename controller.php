@@ -2698,7 +2698,13 @@ class Gm_ceilingController extends JControllerLegacy
                 $jinput = JFactory::getApplication()->input;
                 $user_id = $jinput->get('user_id', null, 'INT');
                 $email = $jinput->get('email', null, 'STRING');
+                $die_bool = true;
             }
+            else
+            {
+                $die_bool = false;
+            }
+
             if (empty($email))
             {
                 throw new Exception('empty email');
@@ -2739,7 +2745,14 @@ class Gm_ceilingController extends JControllerLegacy
             $client_id = JFactory::getUser($user_id)->associated_client;
             $email_id = $dop_contacts_model->save($client_id, 1, $email);
 
-            die(json_encode($result));
+            if ($die_bool)
+            {
+                die(json_encode($result));
+            }
+            else
+            {
+                return true;
+            }
         }
         catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
