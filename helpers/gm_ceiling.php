@@ -3768,7 +3768,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $mounting_data['total_gm_mounting'] =  $total_gm_mounting;
         $mounting_data['total_dealer_mounting'] =  $total_dealer_mounting;
-        throw new Exception(implode('|',$mounting_data));
+        throw new Exception(implode('|',$mounting_data[0]));
         return $mounting_data;
        
     }
