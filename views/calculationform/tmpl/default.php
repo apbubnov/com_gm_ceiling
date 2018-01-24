@@ -339,7 +339,7 @@
 							<div>
 								<input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio"><label for="jform_n28_1"> Потолочный багет</label>
 							</div>
-							<div>
+							<div style="display: inline-block;">
 								<input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio"><label for="jform_n28_2"> Алюминиевый багет</label>
 							</div>
 						<? } elseif ($this->item->n28 == 1) { ?>
