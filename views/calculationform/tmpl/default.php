@@ -332,31 +332,37 @@
 				</div>
 				<div class="col-sm-4" style="padding-right: 0px;">
 					<div class="form-group" style="text-align: left; /*margin-left: calc(50% - px);*/">
-						<? if ($this->item->n28 == 0) { ?>
-							<p style="width: auto;">
-								<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" checked="checked"><label for="jform_n28"> Обычный багет</label>
-							</p>
-							<p>
-								<input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio"><label for="jform_n28_1"> Потолочный багет</label>
-							</p>
-							<p>
-								<input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio"><label for="jform_n28_2"> Алюминиевый багет</label>
-							</p>
-						<? } elseif ($this->item->n28 == 1) { ?>
-							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">
-								<label for="jform_n28"> Обычный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" checked="checked">
-								<label for="jform_n28_1"> Потолочный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio">
-								<label for="jform_n28_2"> Алюминиевый багет</label></p>
-						<? } else { ?>
-							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">
-								<label for="jform_n28"> Обычный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1"
-										type="radio"><label for="jform_n28_1"> Потолочный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2"
-										type="radio" checked="checked"><label for="jform_n28_2"> Алюминиевый багет</label></p>
-						<? } ?>
+<!--						--><?// if ($this->item->n28 == 0) { ?>
+<!--							<p style="width: auto;">-->
+<!--								<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" checked="checked"><label for="jform_n28"> Обычный багет</label>-->
+<!--							</p>-->
+<!--							<p>-->
+<!--								<input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio"><label for="jform_n28_1"> Потолочный багет</label>-->
+<!--							</p>-->
+<!--							<p>-->
+<!--								<input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio"><label for="jform_n28_2"> Алюминиевый багет</label>-->
+<!--							</p>-->
+<!--						--><?// } elseif ($this->item->n28 == 1) { ?>
+<!--							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">-->
+<!--								<label for="jform_n28"> Обычный багет</label></p>-->
+<!--							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" checked="checked">-->
+<!--								<label for="jform_n28_1"> Потолочный багет</label></p>-->
+<!--							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio">-->
+<!--								<label for="jform_n28_2"> Алюминиевый багет</label></p>-->
+<!--						--><?// } else { ?>
+<!--							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">-->
+<!--								<label for="jform_n28"> Обычный багет</label></p>-->
+<!--							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1"-->
+<!--										type="radio"><label for="jform_n28_1"> Потолочный багет</label></p>-->
+<!--							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2"-->
+<!--										type="radio" checked="checked"><label for="jform_n28_2"> Алюминиевый багет</label></p>-->
+<!--						--><?// } ?>
+                            <p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <? if ($this->item->n28 == 0) echo "checked='checked'" ?>>
+                                <label for="jform_n28"> Обычный багет</label></p>
+                            <p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" <? if ($this->item->n28 == 1) echo "checked='checked'" ?>>
+                                <label for="jform_n28_1"> Потолочный багет</label></p>
+                            <p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio" <? if ($this->item->n28 == 2) echo "checked='checked'" ?>>
+                                <label for="jform_n28_2"> Алюминиевый багет</label></p>
 					</div>
 				</div>
 			</div>

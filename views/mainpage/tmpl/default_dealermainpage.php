@@ -112,7 +112,7 @@ $allMount = $countMounting[0]->count + $answer1[0]->count;
         <i class="fa fa-cogs" aria-hidden="true"></i>
         <?if(!$dealerInfo->update_check):?>
             <div class="pix"></div>
-            <div class="message">Зайти сюда!</div>
+            <div class="message">Посетите данную страницу для настроек прайса монтажа!</div>
         <?endif;?>
     </button>
     <?php } }?>
