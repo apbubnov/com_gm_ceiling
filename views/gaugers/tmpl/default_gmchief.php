@@ -590,7 +590,7 @@
 						date: date,
 						time1: time1,
 						time2: time2,
-						id: idBrigade,
+						id: id_gauger,
 					},
 					success: function(data) {
 						if (data == "ok") {
