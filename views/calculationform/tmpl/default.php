@@ -41,7 +41,69 @@
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
 ?>
+<style>
+    .Area {
+        display: inline-block;
+        float: left;
+        width: 310px;
+        height: auto;
+        overflow: visible;
+        margin: 0 5px;
+        margin-bottom: 10px;
+        position: relative;
+    }
 
+    .Area .Input {
+        display: inline-block;
+        float: left;
+        width: 100%;
+        height: 30px;
+        padding-left: 5px;
+        border: none;
+    }
+
+    .Area .Selects {
+        display: inline-block;
+        position: relative;
+        float: left;
+        width: 100%;
+        height: 0;
+        z-index: 2;
+    }
+
+    .Area .Selects .Select {
+        position: absolute;
+        top: -1px;
+        left: 0;
+        display: inline-block;
+        float: left;
+        width: 100%;
+        border: 1px solid rgb(169, 169, 169);
+        border-top: 0;
+        height: auto;
+        background-color: rgb(54, 53, 127);
+        color: rgb(255, 255, 255);
+        max-height: 90px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+    .Area .Selects .Select .Item {
+        display: inline-block;
+        float: left;
+        width: 100%;
+        padding-left: 5px;
+        height: auto;
+        line-height: 25px;
+        font-size: 14px;
+        border-top: 1px solid rgb(255, 255, 255);
+        cursor: pointer;
+    }
+
+    .Area .Selects .Select .Item:hover {
+        background-color: rgb(31, 30, 70);
+    }
+</style>
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
 	<input name="url" id="url" value="" type="hidden">
 	<input name="user_id" id="user_id" value=<?php echo "\"".$user->id."\"";?> type="hidden">
@@ -1770,24 +1832,115 @@
 </div>
 
 <script type="text/javascript">
+    var $ = jQuery;
 //для подгрузки компонентов со склада
+    function GetList(e, select, like) {
+        var input = $(e),
+            Selects = input.siblings(".Selects"),
+            ID = input.attr("id"),
+            parent = input.closest(".Form"),
+            filter = {
+                select: {},
+                where: {like: {}},
+                group: [],
+                order: [],
+                page: null
+            },
+            Select = $('<div/>').addClass("Select"),
+            Item = $('<div/>').addClass("Item").attr("onclick", "SelectItem(this);");
+
+        input.attr({"clear": "true", "add": "false"});
+        Selects.empty();
+        Selects.append(Select);
+        var Select = Selects.find(".Select");
+
+        filter.select["Type"] = input.attr("NameDB");
+        filter.where.like["components.title"] = "'%" + input.val() + "%' || true";
+        filter.where.like["options.title"] = "'%" + input.val() + "%'";
+        filter.page = "/index.php?option=com_gm_ceiling&task=componentform.getComponents";
+
+
+        if (input.is(":focus")) {
+            jQuery.ajax({
+                type: 'POST',
+                url: filter.page,
+                data: {filter: filter},
+                success: function (data) {
+                    data = JSON.parse(data);
+
+                    $.each(data, function (i, v) {
+                        var I = Item.clone();
+                        $.each(v, function (id, s) {
+                            if (s === null) s = "Нет";
+                            I.attr(id, s);
+                            if (id == ID) I.html(s);
+                        });
+                        Select.append(I);
+                    });
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: 1500,
+                        type: "error",
+                        text: "Сервер не отвечает!"
+                    });
+                }
+            });
+        }
+    }
+
+    function SelectItem(e) {
+        e = $(e);
+        var parent = e.closest("form"),
+            elements = parent.find(".Input");
+
+        if (typeof e.attr('error') !== 'undefined' && e.attr('error') !== false)
+        {
+            var error = JSON.parse(e.attr('error'));
+            $.each(error, function (i, v) {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: v
+                });
+            });
+        }
+        else if (e.hasClass("Add")) e.closest(".Area").find(".Input").attr({"clear": "false", "add": "true"});
+        else {
+            $.each(elements, function (i, v) {
+                v = $(v);
+                var id = v.attr('id');
+                if (typeof id !== 'undefined' && id !== false) {
+                    var attr = e.attr(id);
+                    if (typeof attr !== 'undefined' && attr !== false) {
+                        v.val(attr);
+                        v.attr({"clear": "false", "add": "false"});
+                    }
+                }
+            });
+        }
+    }
+
+    function ClearSelect(e) {
+        setTimeout(function () {
+            e = $(e);
+            if (e.attr("clear") != 'false') e.val("");
+            e.siblings(".Selects").empty();
+        }, 200);
+    }
+/*
     function GetList(thisObject, Objects = null) {
         var input = jQuery(thisObject);
         var root = input.closest('.List');
         input.attr('check', 0);
 
         var id = input.attr('id');
-
-        /*
-        filter[select][Type]:components.title
-        filter[select][Unit]:components.unit
-        filter[where][like][components.title]:'%%'
-        filter[where][like][options.title]:'%%'
-        filter[where][like][components.unit]:'%%'
-        filter[group][]:components.title
-        filter[order][]:components.title
-        filter[page]:index.php?option=com_gm_ceiling&task=componentform.getComponents
-         */
 
         var filter = {
             select: {
@@ -1804,7 +1957,7 @@
 
         filter = {filter: filter};
 
-        var items = input.parent().find('.select').filter('.' + input.attr('tname'));
+        var items = input.parent().find('.Selects');
         var lockSelect = items.parent();
         var option = jQuery('<div class="add" onclick="selectItem(this)" parent="' + id + '">+ Добавить</div>');
 
@@ -1896,7 +2049,7 @@
             e.siblings(".Selects").empty();
         }, 200);
     }
-
+*/
 
 function submit_form_sketch()
 	{
@@ -2143,7 +2296,7 @@ function submit_form_sketch()
                 "        onkeyup=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onblur=\"ClearSelect(this)\"\n" +
                 "    class='form-control Input Type'\n" +
-                "        type='text'><div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
+                "        type='text'> <div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
             jQuery( "<div class='form-group'><input name='components_value_stock[]' value='' class='form-control' type='tel'></div>" ).appendTo( components_value_stock_container );
         });
 
