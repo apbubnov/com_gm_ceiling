@@ -380,7 +380,7 @@
 							</td>
 						</tr>
 					</table>
-					<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 72px);">
 						<?php
 							if ($this->item->n6 > 0) {
 								$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -669,16 +669,16 @@
 						</div>
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
-					<div class="form-group">
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
 						<? if(!$this->item->n16) {?>
-							<p>
+							<div style="display: inline-block;">
 								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
 								<label for="jform_n16"> Обычный карниз</label>
-							</p>
-							<p>
+							</div>
+							<div style="display: inline-block;">
 								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
 								<label for="jform_n16_1"> Скрытый карниз</label>
-							</p>
+							</div>
 						<? } else { ?>
 							<p>
 								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio">
