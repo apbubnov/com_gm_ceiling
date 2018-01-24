@@ -146,7 +146,7 @@ foreach ($masid as $value) {
 $AllMounters = $model->FindAllMounters($where);
 // ---------------------------------------------------------------------------------
 
-//TODO убрать,сделать через модель
+/* //TODO убрать,сделать через модель
 $db = JFactory::getDbo();
 $query = $db->getQuery(true);
 $query
@@ -159,7 +159,7 @@ $query
     ->from($db->quoteName("#__gm_ceiling_groups"))
     ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
 $db->setQuery($query);
-$results = $db->loadObjectList();
+$results = $db->loadObjectList(); */
 
 ?>
 
