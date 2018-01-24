@@ -1470,6 +1470,9 @@
                         dealer: <?php echo $user->dealer_id; ?>,
                     },
                     success: function(data) {
+                        Array.prototype.diff = function(a) {
+                            return this.filter(function(i) {return a.indexOf(i) < 0;});
+                        };
                         window.DataOfProject = JSON.parse(data);
                         window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                         data = JSON.parse(data);
