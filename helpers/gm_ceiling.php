@@ -2774,9 +2774,6 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
             }
-            $data['n1'] = $calculation_data->n1_id;
-            $data['n2'] = $calculation_data->n2_id;
-            $data['n3'] = $calculation_data->n3_id;
         }
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
@@ -2801,12 +2798,12 @@ class Gm_ceilingHelpersGm_ceiling
             //Обработка 1 угла
             if ($data['n9']) {
                 $guild_data[] = array(
-                    "title" => "Обработка 1 угла",                                                                    //Название
+                    "title" => "Обработка 1 угла",                                                                //Название
                     "quantity" => $data['n9'] - 4,                                                                //Кол-во
                     "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => $results->mp20,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
         }
