@@ -454,7 +454,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table class="table_lighting" >
+					<table class="table_lighting">
 						<tr>
 							<td>
 								<h3>Освещение</h3>
