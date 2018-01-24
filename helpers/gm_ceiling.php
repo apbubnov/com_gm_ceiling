@@ -4028,7 +4028,6 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th>Наименование</th>
                                 <th class="center">Кол-во</th>
                             </tr>';
-
                 if ($project->who_mounting == 1) {
                     foreach ($mounting_data as $key=>$item) {
                         if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
