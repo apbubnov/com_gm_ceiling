@@ -19,7 +19,7 @@ $userId     = $user->get('id');
 $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
-$brigade_id = $teams_model->getData($dealerId);
+$brigade_id = $teams_model->getDatas($dealerId);
 $brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 
 // календарь
@@ -614,7 +614,7 @@ foreach ($brigade_id as $value) {
 		}
 		// -----------------------------------------
 
-		// нажатие на "добавить выходной"
+		// нажатие на "добавить выходной" или "изменить выходной"
 		jQuery("#add_free_day").click (function () {
 			jQuery("#window-with-table").hide();
 			jQuery("#close-modal-window").hide();
@@ -651,7 +651,7 @@ foreach ($brigade_id as $value) {
 			if (time1.substr(0,2) < time2.substr(0,2)) {
 				jQuery.ajax({
 					type: 'POST',
-					url: "/index.php?option=com_gm_ceiling&task=teams.SaveFreeDay",
+					url: "/index.php?option=com_gm_ceiling&task=teams.GetMountingForSaveDayOff",
 					dataType: 'json',
 					data: {
 						date: date,
@@ -660,22 +660,50 @@ foreach ($brigade_id as $value) {
 						id: idBrigade,
 					},
 					success: function(data) {
-						if (data == "no") {
-							jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
-						} else {
-							if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
-								jQuery("#"+ChoosenDay).attr("class", "day-off");
-							}
-							jQuery("#modal-window-container-tar").hide();
-							jQuery("#close-tar").hide();
-							jQuery("#modal-window-1-tar").hide();
-							var n = noty({
-								theme: 'relax',
-								layout: 'center',
-								maxVisible: 5,
-								type: "success",
-								text: "Выходной день (время) сохранено успешно."
+						if (data == "ok") {
+							jQuery.ajax({
+								type: 'POST',
+								url: "/index.php?option=com_gm_ceiling&task=teams.SaveFreeDay",
+								dataType: 'json',
+								data: {
+									date: date,
+									time1: time1,
+									time2: time2,
+									id: idBrigade,
+								},
+								success: function(data) {
+									if (data == "no") {
+										jQuery("#wrong-window2").text("Не удалось сохранить время. Повторите попытку позже.");
+									} else {
+										if (jQuery("#"+ChoosenDay).attr("class") == "current-month") {
+											jQuery("#"+ChoosenDay).attr("class", "day-off");
+										}
+										jQuery("#modal-window-container-tar").hide();
+										jQuery("#close-tar").hide();
+										jQuery("#modal-window-1-tar").hide();
+										var n = noty({
+											theme: 'relax',
+											layout: 'center',
+											maxVisible: 5,
+											type: "success",
+											text: "Выходной день (время) сохранено успешно."
+										});
+									}
+								},
+								dataType: "text",
+								timeout: 10000,
+								error: function (data) {
+									var n = noty({
+										theme: 'relax',
+										layout: 'center',
+										maxVisible: 5,
+										type: "error",
+										text: "Ошибка при попытке сохранить выходные часы. Сервер не отвечает"
+									});
+								}
 							});
+						} else {
+							jQuery("#wrong-window2").text("В данный промежуток времени у бригады есть монтаж");
 						}
 					},
 					dataType: "text",
@@ -686,7 +714,7 @@ foreach ($brigade_id as $value) {
 							layout: 'center',
 							maxVisible: 5,
 							type: "error",
-							text: "Ошибка при попытке сохранить выходные часы. Сервер не отвечает"
+							text: "Ошибка при попытке проверить выходные часы. Сервер не отвечает"
 						});
 					}
 				});

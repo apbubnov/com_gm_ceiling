@@ -37,6 +37,7 @@ if(!empty( $this->item->sb_order_id))
 	$sb_project_id = $this->item->sb_order_id;
 else  $sb_project_id = 0;
 ?>
+
 <input name="url" value="" type="hidden">
 <?=parent::getButtonBack();?>
 <h2 class="center">Просмотр проекта <?php echo $this->item->id?></h2>

@@ -112,7 +112,7 @@ $allMount = $countMounting[0]->count + $answer1[0]->count;
         <i class="fa fa-cogs" aria-hidden="true"></i>
         <?if(!$dealerInfo->update_check):?>
             <div class="pix"></div>
-            <div class="message">Зайти сюда!</div>
+            <div class="message">Посетите данную страницу для настроек прайса монтажа!</div>
         <?endif;?>
     </button>
     <?php } }?>
@@ -199,6 +199,9 @@ $allMount = $countMounting[0]->count + $answer1[0]->count;
             </p>
         <?php }?>
     <?php } elseif ($user->dealer_type == 1) { ?>
+        <p class="center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>"><i class="fa fa-plus" aria-hidden="true"></i> Добавить замер</a>
+        </p>
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
         </p>

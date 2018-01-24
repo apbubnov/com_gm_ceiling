@@ -1,127 +1,125 @@
 <?php
-/**
- * @version    CVS: 0.1.7
- * @package    Com_Gm_ceiling
- * @author     SpectralEye <Xander@spectraleye.ru>
- * @copyright  2016 SpectralEye
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ /**
+     * @version    CVS: 0.1.7
+     * @package    Com_Gm_ceiling
+     * @author     SpectralEye <Xander@spectraleye.ru>
+     * @copyright  2016 SpectralEye
+     * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-// No direct access
-defined('_JEXEC') or die;
+    // No direct access
+    defined('_JEXEC') or die;
 
-JHtml::_('behavior.keepalive');
-//JHtml::_('behavior.tooltip');
-JHtml::_('behavior.formvalidation');
+    JHtml::_('behavior.keepalive');
+    //JHtml::_('behavior.tooltip');
+    JHtml::_('behavior.formvalidation');
 
-// Load admin language file
-$lang = JFactory::getLanguage();
-$lang->load('com_gm_ceiling', JPATH_SITE);
-$doc = JFactory::getDocument();
-$doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
+    // Load admin language file
+    $lang = JFactory::getLanguage();
+    $lang->load('com_gm_ceiling', JPATH_SITE);
+    $doc = JFactory::getDocument();
+    $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
 
-$project_total = 0;
-$project_total_discount = 0;
+    $project_total = 0;
+    $project_total_discount = 0;
 
-$user = JFactory::getUser();
-$userId = $user->get('id');
+    $user = JFactory::getUser();
+    $userId = $user->get('id');
 
-$model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations = $model->getProjectItems($this->item->id);
+    $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+    $calculations = $model->getProjectItems($this->item->id);
 
-// TODO на модель перенести!!!!
-$db = JFactory::getDbo();
-$query = $db->getQuery(true);
-$query
-    ->select(
-        array(
-            '`id`',
-            '`name`',
+    /* // TODO на модель перенести!!!!
+    $db = JFactory::getDbo();
+    $query = $db->getQuery(true);
+    $query
+        ->select(
+            array(
+                '`id`',
+                '`name`',
+            )
         )
-    )
-    ->from($db->quoteName("#__gm_ceiling_groups"))
-    ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
-$db->setQuery($query);
-$results = $db->loadObjectList();
+        ->from($db->quoteName("#__gm_ceiling_groups"))
+        ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
+    $db->setQuery($query);
+    $results = $db->loadObjectList(); */
 
-foreach ($calculations as $calculation) {
-    
-    $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, $this->item->gm_canvases_margin, $this->item->dealer_canvases_margin);
-    $calculation->dealer_components_sum = double_margin($calculation->components_sum, $this->item->gm_components_margin, $this->item->dealer_components_margin);
-    $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-
-    $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-    $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
-    $project_total += $calculation->calculation_total;
-    $project_total_discount += $calculation->calculation_total_discount;
-
-}
-$sum_transport = 0;  $sum_transport_discount = 0;
-$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$mount_transport = $mountModel->getDataAll();
-
-if($this->item->transport == 0 ) $sum_transport = 0;
-if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
-$min = 100;
-foreach($calculations as $d) {
-    if($d->discount < $min) $min = $d->discount;
-}
-if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
-if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
-    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-}
-$project_total_discount_transport = $project_total_discount + $sum_transport;
-
-$project_total = round($project_total, 2);
-$project_total_discount = round($project_total_discount, 2);
-
-$extra_spend_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_spend);
-$penalty_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->penalty);
-$bonus_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->bonus);
-
-// календарь
-$month1 = date("n");
-$year1 = date("Y");
-if ($month1 == 12) {
-    $month2 = 1;
-    $year2 = $year1;
-    $year2++;
-} else {
-    $month2 = $month1;
-    $month2++;
-    $year2 = $year1;
-}
-$FlagCalendar = [2, $user->dealer_id];
-$calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
-$calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
-//----------------------------------------------------------------------------------
-
-// все бригады
-$Allbrigades = $model->FindAllbrigades($user->dealer_id);
-$AllMounters = [];
-if (count($Allbrigades) == 0) {
-    array_push($Allbrigades, ["id"=>$userId, "name"=>$user->get('name')]);
-    array_push($AllMounters, ["id"=>$userId, "name"=>$user->get('name')]);
-} else {
-    // все монтажники
-    $masid = [];
-    foreach ($Allbrigades as $value) {
-        array_push($masid, $value->id);
+    foreach ($calculations as $calculation) {
+        $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, $this->item->gm_canvases_margin, $this->item->dealer_canvases_margin);
+        $calculation->dealer_components_sum = double_margin($calculation->components_sum, $this->item->gm_components_margin, $this->item->dealer_components_margin);
+        $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+        $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
+        $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
+        $project_total += $calculation->calculation_total;
+        $project_total_discount += $calculation->calculation_total_discount;
     }
-    foreach ($masid as $value) {
-        if (strlen($where) == 0) {
-            $where = "'".$value."'";
-        } else {
-            $where .= ", '".$value."'";                
+
+    $sum_transport = 0;  $sum_transport_discount = 0;
+    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+    $mount_transport = $mountModel->getDataAll();
+
+    if($this->item->transport == 0 ) $sum_transport = 0;
+    if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+    if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
+    $min = 100;
+    foreach($calculations as $d) {
+        if($d->discount < $min) $min = $d->discount;
+    }
+    if ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
+    if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
+        $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+    }
+    $project_total_discount_transport = $project_total_discount + $sum_transport;
+
+    $project_total = round($project_total, 2);
+    $project_total_discount = round($project_total_discount, 2);
+
+    $extra_spend_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_spend);
+    $penalty_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->penalty);
+    $bonus_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->bonus);
+
+    // календарь
+    $month1 = date("n");
+    $year1 = date("Y");
+    if ($month1 == 12) {
+        $month2 = 1;
+        $year2 = $year1;
+        $year2++;
+    } else {
+        $month2 = $month1;
+        $month2++;
+        $year2 = $year1;
+    }
+    $FlagCalendar = [2, $user->dealer_id];
+    $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
+    $calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
+    //----------------------------------------------------------------------------------
+
+    // все бригады
+    $Allbrigades = $model->FindAllbrigades($user->dealer_id);
+    $AllMounters = [];
+    if (count($Allbrigades) == 0) {
+        array_push($Allbrigades, ["id"=>$userId, "name"=>$user->get('name')]);
+        array_push($AllMounters, ["id"=>$userId, "name"=>$user->get('name')]);
+    } else {
+        // все монтажники
+        $masid = [];
+        foreach ($Allbrigades as $value) {
+            array_push($masid, $value->id);
         }
+        foreach ($masid as $value) {
+            if (strlen($where) == 0) {
+                $where = "'".$value."'";
+            } else {
+                $where .= ", '".$value."'";                
+            }
+        }
+        $AllMounters = $model->FindAllMounters($where);
     }
-    $AllMounters = $model->FindAllMounters($where);
-}
-//----------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------
 
-$mount_sum = 0;
+    $mount_sum = 0;
 
-echo parent::getPreloader();
+    echo parent::getPreloader();
 
 ?>
 
@@ -1189,21 +1187,7 @@ echo parent::getPreloader();
             <div id="projects_brigade_container"></div>
             <p style="margin-top: 1em;"><strong>Выберите время начала монтажа:</strong></p>
             <p>
-                <select name="hours" id='hours'>
-                    <option value='09:00:00'>09:00</option>
-                    <option value='10:00:00'>10:00</option>
-                    <option value='11:00:00'>11:00</option>
-                    <option value='12:00:00'>12:00</option>
-                    <option value='13:00:00'>13:00</option>
-                    <option value='14:00:00'>14:00</option>
-                    <option value='15:00:00'>15:00</option>
-                    <option value='16:00:00'>16:00</option>
-                    <option value='17:00:00'>17:00</option>
-                    <option value='18:00:00'>18:00</option>
-                    <option value='19:00:00'>19:00</option>
-                    <option value='20:00:00'>20:00</option>
-                    <option value='21:00:00'>21:00</option>
-                </select>
+                <select name="hours" id='hours'></select>
             </p>
             <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
         </div>
@@ -1443,7 +1427,9 @@ echo parent::getPreloader();
         // ----------------------------------------------------------------------
 
         jQuery(document).ready(function () {
+
             trans();
+
             // открытие модального окна с календаря и получение даты и вывода свободных монтажников
             jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change, .full-day", function() {
                 window.idDay = jQuery(this).attr("id");
@@ -1470,10 +1456,14 @@ echo parent::getPreloader();
                         dealer: <?php echo $user->dealer_id; ?>,
                     },
                     success: function(data) {
+                        Array.prototype.diff = function(a) {
+                            return this.filter(function(i) {return a.indexOf(i) < 0;});
+                        };
                         window.DataOfProject = JSON.parse(data);
+                        window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                         data = JSON.parse(data);
-                        console.log(data);
                         jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
+                        // заполнение бригад в селекте
                         jQuery("#mounters").empty();
                         Allbrigades = <?php echo json_encode($Allbrigades); ?>;
                         select_brigade = "";
@@ -1497,7 +1487,7 @@ echo parent::getPreloader();
                         Array.from(data).forEach(function(element) {
                             if (element.project_mounter == selectedBrigade) {
                                 if (element.project_mounting_day_off != "") {
-                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                                 } else {
                                     table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                                 }
@@ -1505,6 +1495,26 @@ echo parent::getPreloader();
                         });
                         table_projects += "</table>";
                         jQuery("#projects_brigade_container").append(table_projects);
+                        // вывод времени бригады
+                        var BusyTimes = [];
+                        Array.from(data).forEach(function(elem) {
+                            if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
+                                BusyTimes.push(elem.project_mounting_date.substr(11));
+                            } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
+                                AllTime.forEach(element => {
+                                    if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                        BusyTimes.push(element);
+                                    }
+                                }); 
+                            }
+                        });
+                        FreeTimes = AllTime.diff(BusyTimes);
+                        var select_hours;
+                        FreeTimes.forEach(element => {
+                            select_hours += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
+                        });
+                        jQuery("#hours").empty();
+                        jQuery("#hours").append(select_hours);
                     }
                 });
                 //если монтаж есть, то выдать время, монтажную бригаду и инфу о ней, которые записаны
@@ -1585,7 +1595,7 @@ echo parent::getPreloader();
                 Array.from(DataOfProject).forEach(function(element) {
                     if (element.project_mounter == id) {
                         if (element.project_mounting_day_off != "") {
-                            table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                            table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                         } else {
                             table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                         }
@@ -1593,6 +1603,26 @@ echo parent::getPreloader();
                 });
                 table_projects2 += "</table>";
                 jQuery("#projects_brigade_container").append(table_projects2);
+                // времена
+                jQuery("#hours").empty();
+                var BusyTimes = [];
+                Array.from(DataOfProject).forEach(function(elem) {
+                    if (id == elem.project_mounter && elem.project_mounting_day_off == "" ) {
+                        BusyTimes.push(elem.project_mounting_date.substr(11));
+                    } else if (id == elem.project_mounter && elem.project_mounting_day_off != "") {
+                        AllTime.forEach(element => {
+                            if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                BusyTimes.push(element);
+                            }
+                        }); 
+                    }
+                });
+                FreeTimes = AllTime.diff(BusyTimes);
+                var select_hours2;
+                FreeTimes.forEach(element => {
+                    select_hours2 += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
+                });
+                jQuery("#hours").append(select_hours2);
             });
             //-------------------------------------------
 

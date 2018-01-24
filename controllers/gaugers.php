@@ -109,4 +109,30 @@ class Gm_ceilingControllerGaugers extends JControllerForm
         }
 	}
 
+	public function GetGaugingForSaveDayOff() {
+		try
+		{
+			$datetime1 = $_POST["datetime1"];
+			$datetime2 = $_POST["datetime2"];
+			$id = $_POST["id"];
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
+			$mounting = $model->GetGaugingForSaveDayOff($id, $datetime1, $datetime2);
+
+			if ($mounting->count == 0) {
+				$ansver = "ok";
+			} else {
+				$ansver = "no";
+			}
+					
+			die($ansver);
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 }
