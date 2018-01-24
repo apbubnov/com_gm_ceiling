@@ -1397,13 +1397,15 @@
                                     <div id="components_title_stock_container">
                                         <?php foreach($components_stock_array as $item) { ?>
                                             <div class='form-group Area Type'>
-                                                <input name='components_title_stock[]' id="Type" value='<?php echo $item['title']; ?>'
+                                                <input name="components_title_stock[]"
+                                                       id="Type" value='<?php echo $item['title']; ?>'
                                                        autocomplete="off"
                                                        NameDB="CONCAT(components.title,' ',options.title)"
                                                        onclick="GetList(this, ['Type'], ['Type']);"
                                                        onkeyup="GetList(this, ['Type'], ['Type']);"
                                                        onblur="ClearSelect(this)"
-                                                       class='form-control Input Type' type='text'>
+                                                       class='form-control Input Type'
+                                                       type='text'>
                                                 <div class="Selects Type"></div>
                                             </div>
                                         <?php } ?>
@@ -1767,7 +1769,7 @@
 </div>
 </div>
 
-<script>
+<script type="text/javascript">
 //для подгрузки компонентов со склада
     function getList(thisObject, Objects = null) {
         var input = jQuery(thisObject);
@@ -2115,7 +2117,13 @@ function submit_form_sketch()
         jQuery( "#components_button_stock" ).click(function(){
             var components_title_stock_container = jQuery( "#components_title_stock_container" ),
                 components_value_stock_container = jQuery( "#components_value_stock_container" );
-            jQuery( "<div class='form-group'><input name='components_title_stock[]' value='' class='form-control' type='text'></div>" ).appendTo( components_title_stock_container );
+            jQuery("<div class='form-group'><input name='components_title_stock[]' value='' id='Type' autocomplete=\"off\"\n" +
+                "        NameDB=\"CONCAT(components.title,' ',options.title)\"\n" +
+                "        onclick=\"GetList(this, ['Type'], ['Type']);\"\n" +
+                "        onkeyup=\"GetList(this, ['Type'], ['Type']);\"\n" +
+                "        onblur=\"ClearSelect(this)\"\n" +
+                "    class='form-control Input Type'\n" +
+                "        type='text'></div>").appendTo(components_title_stock_container);
             jQuery( "<div class='form-group'><input name='components_value_stock[]' value='' class='form-control' type='tel'></div>" ).appendTo( components_value_stock_container );
         });
 
