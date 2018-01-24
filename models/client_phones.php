@@ -29,20 +29,40 @@ class Gm_ceilingModelClient_phones extends JModelList
 	 * @since      1.6
 	 */
 	
-	public function getItemsByPhoneNumber($number)
+	public function getItemsByPhoneNumber($number, $dealer_id)
 	{
 		try
 		{
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select("*")
-				->from("#__gm_ceiling_clients_contacts")
-				->where("phone LIKE(".$db->quote("%".$number."%").")");
+				->select("`a`.*, `b`.`dealer_id` AS `client_dealer_id`, `u`.`dealer_type`, `u`.`dealer_id` AS `user_dealer_id`")
+				->from("`#__gm_ceiling_clients_contacts` AS `a`")
+				->innerJoin('`rgzbn_gm_ceiling_clients` AS `b` ON `a`.`client_id` = `b`.`id`')
+				->leftJoin('`rgzbn_users` AS `u` ON `b`.`id` = `u`.`associated_client`')
+				->where("`a`.`phone` LIKE(".$db->quote("%".$number."%").")")
+				->order('`b`.`dealer_id`');
 			$db->setQuery($query);
 			$db->execute();
-			$items = $db->loadObject();
-			return $items;
+			$items = $db->loadObjectList();
+
+			foreach ($items as $key => $item)
+			{
+				if ($item->client_dealer_id == $dealer_id && is_null($item->dealer_type))
+				{
+					return $item;
+				}
+				elseif ($item->client_dealer_id != $dealer_id && $item->dealer_type == 3 && $item->user_dealer_id == $dealer_id)
+				{
+					return $item;
+				}
+				elseif ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 0 || $item->dealer_type == 1) && $item->user_dealer_id == $item->client_dealer_id)
+				{
+					return $item;
+				}
+			}
+
+			return null;
 		}
 		catch(Exception $e)
         {
