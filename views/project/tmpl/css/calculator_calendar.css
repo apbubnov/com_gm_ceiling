@@ -1,0 +1,31 @@
+.Page, .Page div:not(.col) {
+    display: inline-block;
+    float: left;
+    text-align: left;
+    width: 100%;
+    height: auto;
+}
+
+.Page .Actions div {
+    width: auto;
+}
+
+.Page .Actions button,
+.Page .Actions a {
+    display: inline-block;
+    border-radius: 5px;
+    height: 38px;
+    line-height: 38px;
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    float: left;
+    border: none;
+    padding: 0 15px;
+    margin: 5px 5px 0 0;
+    cursor: pointer;
+}
+
+.Page .Body .Client table {
+    width: 100%;
+    height: auto;
+}

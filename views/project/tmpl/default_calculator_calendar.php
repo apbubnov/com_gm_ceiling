@@ -147,7 +147,7 @@ if (count($Allbrigades) == 0) {
 //----------------------------------------------------------------------------------
 
 //TODO убрать,сделать через модель
-$db = JFactory::getDbo();
+/*$db = JFactory::getDbo();
 $query = $db->getQuery(true);
 $query
     ->select(
@@ -159,9 +159,76 @@ $query
     ->from($db->quoteName("#__gm_ceiling_groups"))
     ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
 $db->setQuery($query);
-$results = $db->loadObjectList();
+$results = $db->loadObjectList();*/
+
+$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+$calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+$birthday = $client_model->getClientBirthday($this->item->id_client);
+$phones = $calc_model->getClientPhones($this->item->id_client);
+$Client = $this->item;
+$Client->birthday = $birthday->birthday;
+$Client->birthday_date = date("d.m.Y г.", strtotime($Client->birthday));
+$Client->phones = [];
+foreach ($phones AS $contact) {
+    $phone = preg_replace("/([+\-\s\(\)]*)/i", "", $contact->client_contacts);
+    $phone = substr($phone, 0, 1)." (".substr($phone, 1, 3).") ".substr($phone, 3, 3) . " " .substr($phone, 5, 2) . " " . substr($phone, 7, 2);
+    $Client->phones[] = $phone;
+}
 
 ?>
+
+<?print_r($Client);?>
+
+<link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/calculator_calendar.css">
+
+/* Правит - @CEH4TOP */
+
+<div class="Page">
+    <div class="TitlePage">
+        <h2 class="center">Просмотр проекта</h2>
+        <h3 class="left">Информация по проекту № <?= $this->item->id ?></h3>
+    </div>
+
+    <div class="Actions">
+        <div class="Back"><?= parent::getButtonBack(); ?></div>
+        <div class="Update">
+            <button class="Update">
+                <?=($this->item->client_id == 1)?"Заполнить данные о клиенте":"Изменить данные";?>
+            </button>
+        </div>
+    </div>
+
+    <div class="Body row">
+        <div class="Client col col-12 col-md-6">
+            <table class="Client" db-id="<?=$Client->id_client;?>">
+                <tbody>
+                <tr>
+                    <th class="ClientName">Клиент:</th>
+                    <td id="ClientName"><?=$Client->client_id;?></td>
+                </tr>
+                <tr>
+                    <th class="ClientBDay">Дата рождения:</th>
+                    <td id="ClientBDay"><?=$Client->birthday_date;?></td>
+                </tr>
+                <tr>
+                    <th class="ClientPhones">Телефоны:</th>
+                    <td id="ClientPhones">
+                        <?
+                        foreach ($Client->phones)
+                        ?>
+                        <?=implode("<br>", $Client->phones)?>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="Messages col col-12 col-md-6">
+
+        </div>
+    </div>
+</div>
+
+/* Не обращайте внимания! */
 
 <style>
     @media screen and (max-width: 500px) {
