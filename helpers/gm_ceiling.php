@@ -3994,7 +3994,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во</th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-             //   $mounting_data = self::calculate_mount(0,1,$calc->id,null);
+                $mounting_data = self::calculate_mount(0,1,$calc->id,null);
                 
                 if ($project->who_mounting == 1) {
                     foreach ($mounting_data as $item) {
