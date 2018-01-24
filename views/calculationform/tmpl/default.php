@@ -332,33 +332,15 @@
 				</div>
 				<div class="col-sm-4" style="padding-right: 0px;">
 					<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
-						<? if ($this->item->n28 == 0) { ?>
-							<div style="display: inline-block;">
-								<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" checked="checked"><label for="jform_n28"> Обычный багет</label>
-							</div>
-							</br>
-							<div style="display: inline-block;">
-								<input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio"><label for="jform_n28_1"> Потолочный багет</label>
-							</div>
-							</br>
-							<div style="display: inline-block;">
-								<input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio"><label for="jform_n28_2"> Алюминиевый багет</label>
-							</div>
-						<? } elseif ($this->item->n28 == 1) { ?>
-							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">
-								<label for="jform_n28"> Обычный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" checked="checked">
-								<label for="jform_n28_1"> Потолочный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio">
-								<label for="jform_n28_2"> Алюминиевый багет</label></p>
-						<? } else { ?>
-							<p><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio">
-								<label for="jform_n28"> Обычный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_1" class="radio" value="1"
-										type="radio"><label for="jform_n28_1"> Потолочный багет</label></p>
-							<p><input name="jform[n28]" id="jform_n28_2" class="radio" value="2"
-										type="radio" checked="checked"><label for="jform_n28_2"> Алюминиевый багет</label></p>
-						<? } ?>
+                        <div style="display: inline-block;"><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <? if ($this->item->n28 == 0) echo "checked='checked'" ?>>
+                            <label for="jform_n28"> Обычный багет</label>
+                        </div>
+                        <div style="display: inline-block;"><input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" <? if ($this->item->n28 == 1) echo "checked='checked'" ?>>
+                            <label for="jform_n28_1"> Потолочный багет</label>
+                        </div>
+                        <div style="display: inline-block;"><input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio" <? if ($this->item->n28 == 2) echo "checked='checked'" ?>>
+                            <label for="jform_n28_2"> Алюминиевый багет</label>
+                        </div>
 					</div>
 				</div>
 			</div>
@@ -389,45 +371,59 @@
 								$color_id_1 = $color_1->id;
 							}
 						?>
-						<? if ($this->item->n6 == 314 ) { ?>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"><label for="jform_n6_1">Цветная вставка</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>
-							</div>
-						<? } else {
-							if ($this->item->n6 == 0 || empty($this->item->n6)) {?>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"> <label for="jform_n6_1">Цветная вставка</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" checked="checked" ><label for="jform_n6_2">Вставка не нужна</label>
-							</div>
-							<? } else {?>
-								<div style="display: inline-block;">
-									<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
-								</div>
-								<br>
-								<div style="display: inline-block;">
-									<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"  checked="checked">  <label for="jform_n6_1">Цветная вставка</label>
-								</div>
-								<br>
-								<div style="display: inline-block;">
-									<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio"><label for="jform_n6_2">Вставка не нужна</label>
-								</div>
-							<? } 
-						} ?>
+                        <div style="display: inline-block;">
+                            <input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" <?php if($this->item->n6 == 314) echo "checked=\"checked\""?>>
+                            <label for="jform_n6">Белая вставка</label>
+                        </div>
+                        <br>
+                        <div style="display: inline-block;">
+                            <input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio" <?php if(!empty($this->item->n6) && $this->item->n6 != 314) echo "checked=\"checked\""?>>
+                            <label for="jform_n6_1">Цветная вставка</label>
+                        </div>
+                        <br>
+                        <div style="display: inline-block;">
+                            <input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" <?php if(empty($this->item->n6)) echo "checked=\"checked\""?>>
+                            <label for="jform_n6_2">Вставка не нужна</label>
+                        </div>
+<!--						--><?// if ($this->item->n6 == 314 ) { ?>
+<!--							<div style="display: inline-block;">-->
+<!--								<input name="radio" id="jform_n6" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'314'?><!--" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>-->
+<!--							</div>-->
+<!--							<br>-->
+<!--							<div style="display: inline-block;">-->
+<!--								<input name="radio" id="jform_n6_1" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:''?><!--" type="radio"><label for="jform_n6_1">Цветная вставка</label>-->
+<!--							</div>-->
+<!--							<br>-->
+<!--							<div style="display: inline-block;">-->
+<!--								<input name="radio" id="jform_n6_2" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'0'?><!--" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>-->
+<!--							</div>-->
+<!--						--><?// } else {
+//							if ($this->item->n6 == 0 || empty($this->item->n6)) {?>
+<!--							<div style="display: inline-block;">-->
+<!--								<input name="radio" id="jform_n6" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'314'?><!--" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>-->
+<!--							</div>-->
+<!--							<br>-->
+<!--							<div style="display: inline-block;">-->
+<!--								<input name="radio" id="jform_n6_1" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:''?><!--" type="radio"> <label for="jform_n6_1">Цветная вставка</label>-->
+<!--							</div>-->
+<!--							<br>-->
+<!--							<div style="display: inline-block;">-->
+<!--								<input name="radio" id="jform_n6_2" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'0'?><!--" type="radio" checked="checked" ><label for="jform_n6_2">Вставка не нужна</label>-->
+<!--							</div>-->
+<!--							--><?// } else {?>
+<!--								<div style="display: inline-block;">-->
+<!--									<input name="radio" id="jform_n6" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'314'?><!--" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>-->
+<!--								</div>-->
+<!--								<br>-->
+<!--								<div style="display: inline-block;">-->
+<!--									<input name="radio" id="jform_n6_1" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:''?><!--" type="radio"  checked="checked">  <label for="jform_n6_1">Цветная вставка</label>-->
+<!--								</div>-->
+<!--								<br>-->
+<!--								<div style="display: inline-block;">-->
+<!--									<input name="radio" id="jform_n6_2" class="radio" value="--><?//=($this->item->n6)?$this->item->n6:'0'?><!--" type="radio"><label for="jform_n6_2">Вставка не нужна</label>-->
+<!--								</div>-->
+<!--							--><?// }
+//						} ?>
                     </div>
                 	<div class="col-sm-4"></div>
 				</div>
