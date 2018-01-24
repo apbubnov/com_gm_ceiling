@@ -631,7 +631,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table style="margin-left: calc(50% - 124px);">
+					<table style="margin-left: calc(50% - 87px);">
 						<tr>
 							<td>
 								<h3>Шторный карниз</h3>
