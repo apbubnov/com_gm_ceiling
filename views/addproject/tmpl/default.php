@@ -397,8 +397,8 @@ if (count($AllGauger) == 0) {
 					month = month_old;
 					year = year_old;
 				} else {
-					month = <?php echo $month; ?>;
-					year = <?php echo $year; ?>;
+					month = <?php// echo $month; ?>;
+					year = <?php// echo $year; ?>;
 				}
 			}
 			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
@@ -459,6 +459,7 @@ if (count($AllGauger) == 0) {
 							jQuery('<option>').val(data[i].id).text(data[i].client_name).appendTo('#clients');
 						}
 						jQuery('#client_id').val(jQuery('#clients option:selected').val());
+                        jQuery('#jform_client_name-lbl').val(jQuery('#clients option:selected').val());
 						console.log(jQuery('#client_id').val());
 					},
 					error: function(data){
@@ -489,23 +490,6 @@ if (count($AllGauger) == 0) {
 		var s = e.get('item').value.replace('Россия, ','');
 		input.val(s);
 		});
-		
-		/*,
-           map,
-            placemark;
-        /*function geocode() {
-            // Забираем запрос из поля ввода.
-            var request = $('#jform_project_info').val();
-            // Геокодируем введённые данные.
-            ymaps.geocode(request).then(function (res) {
-                var obj = res.geoObjects.get(0),
-                    error, hint;
-
-            }, function (e) {
-                console.log(e)
-            })
-
-        }*/
     }
 	// ---------------------------------
 
