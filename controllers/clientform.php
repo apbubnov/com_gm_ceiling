@@ -145,37 +145,40 @@ class Gm_ceilingControllerClientForm extends JControllerForm
 				$id = (int) $app->getUserState('com_gm_ceiling.edit.client.id');
 				$this->setMessage(JText::sprintf('Save failed', $model->getError()), 'warning');
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=clientform&layout=edit&id=' . $id, false));
+
 			}
 			elseif ($return == 'client_found')
 			{	
 				$this->setMessage('Клиент с таким номером существует!');
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=clientform&layout=edit&id=' . $id, false));
 			}
-
-			/*// Check in the profile.
-			if ($return)
+			else
 			{
-				$model->checkin($return);
-			}*/
+				/*// Check in the profile.
+				if ($return)
+				{
+					$model->checkin($return);
+				}*/
 
-			// Clear the profile id from the session.
-			$app->setUserState('com_gm_ceiling.edit.client.id', null);
+				// Clear the profile id from the session.
+				$app->setUserState('com_gm_ceiling.edit.client.id', null);
 
-			$jinput = JFactory::getApplication()->input;
-			$type = $jinput->getString('type', NULL);
-			
-			//KM_CHANGED START
-				$this->setMessage(JText::_('COM_GM_CEILING_ITEM_SAVED_SUCCESSFULLY'));
-				$menu = JFactory::getApplication()->getMenu();
-				$item = $menu->getActive();
+				$jinput = JFactory::getApplication()->input;
+				$type = $jinput->getString('type', NULL);
+				
+				//KM_CHANGED START
+					$this->setMessage(JText::_('COM_GM_CEILING_ITEM_SAVED_SUCCESSFULLY'));
+					$menu = JFactory::getApplication()->getMenu();
+					$item = $menu->getActive();
 
-				$url  = 'index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $return;
+					$url  = 'index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $return;
 
-				$this->setRedirect(JRoute::_($url, false));
-			//KM_CHANGED END
+					$this->setRedirect(JRoute::_($url, false));
+				//KM_CHANGED END
 
-			// Flush the data from the session.
-			$app->setUserState('com_gm_ceiling.edit.client.data', null);
+				// Flush the data from the session.
+				$app->setUserState('com_gm_ceiling.edit.client.data', null);
+			}
 		}
 		catch(Exception $e)
         {
