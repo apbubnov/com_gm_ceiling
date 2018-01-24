@@ -82,9 +82,7 @@
         display: inline-block;
         float: left;
         width: 50%;
-        height: 30px;
         padding-left: 5px;
-        border: none;
     }
 
     .Area .Selects {
