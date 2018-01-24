@@ -92,7 +92,7 @@ $result_users = $users_model->getDesigners();
         });
 
         jQuery("#save_designer").click(function(){
-             jQuery.ajax({
+            jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=dealer.create_designer",
                 data: {
@@ -100,7 +100,7 @@ $result_users = $users_model->getDesigners();
                     phone: document.getElementById('designer_contacts').value
                 },
                 success: function(data){
-                    location.href = location.href;
+                    location.reload();
                 },
                 dataType: "text",
                 async: false,
@@ -116,6 +116,27 @@ $result_users = $users_model->getDesigners();
                     });
                 }                   
             });
+        });
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=RepeatSendCommercialOffer",
+            success: function(data){
+                console.log(data);
+            },
+            dataType: "text",
+            async: false,
+            timeout: 10000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка. Сервер не отвечает"
+                });
+            }                   
         });
     });
 </script>
