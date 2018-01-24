@@ -587,9 +587,8 @@
 					url: "/index.php?option=com_gm_ceiling&task=gaugers.GetGaugingForSaveDayOff",
 					dataType: 'json',
 					data: {
-						date: date,
-						time1: time1,
-						time2: time2,
+						datetime1: datetime1,
+						datetime2: datetime2,
 						id: id_gauger,
 					},
 					success: function(data) {
