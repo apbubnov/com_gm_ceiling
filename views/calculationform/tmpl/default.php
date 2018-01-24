@@ -331,7 +331,7 @@
 					</div>
 				</div>
 				<div class="col-sm-4" style="padding-right: 0px;">
-					<div class="form-group" style="text-align: left; /*margin-left: calc(50% - 81px);*/">
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
 						<? if ($this->item->n28 == 0) { ?>
 							<div style="display: inline-block;">
 								<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" checked="checked"><label for="jform_n28"> Обычный багет</label>
