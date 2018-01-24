@@ -2773,6 +2773,7 @@ class Gm_ceilingHelpersGm_ceiling
         $client_id = $project_model->getData($project_id)->id_client;
         $client_model = self::getModel('client');
         $dealer_id = $client_model->getClientById($client_id)->dealer_id;
+        throw new Exception($dealer_id);
         if(!empty($dealer_id)){
             $dealer_id = 1;
         }
