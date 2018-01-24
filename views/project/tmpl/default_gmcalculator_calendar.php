@@ -1669,7 +1669,6 @@ $results = $db->loadObjectList(); */
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
                     };
-                    console.log(data);
                     // вывод бригад
                     Allbrigades = <?php echo json_encode($Allbrigades); ?>;
                     jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
