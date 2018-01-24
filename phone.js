@@ -96,8 +96,20 @@ function phone(login, pass)
                 }
                 else
                 {
-                    add_history_ph(data.id, "Входящий звонок с " + pf, pt, pf, '/index.php?option=com_gm_ceiling&view=clientcard&id=');
-                    //location.href = '/index.php?option=com_gm_ceiling&view=clientcard&id=' + data.id + '&phoneto=' + pt + '&phonefrom=' + pf;
+                    var loc;
+                    if (data.dealer_type == 3)
+                    {
+                        loc = '/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=';
+                    }
+                    else if (data.dealer_type == 0 || data.dealer_type == 1)
+                    {
+                        loc = '/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=';
+                    }
+                    else
+                    {
+                        loc = '/index.php?option=com_gm_ceiling&view=clientcard&id=';
+                    }
+                    add_history_ph(data.id, "Входящий звонок с " + pf, pt, pf, loc);
                 }
             },
             dataType: "json",

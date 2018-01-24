@@ -809,7 +809,7 @@ class Gm_ceilingController extends JControllerLegacy
             $time = $jinput->get('time', '00:00', 'STRING');
             $date_time = $date . ' ' . $time;
             $model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-            $result = $model->getItemsByPhoneNumber($phones[0]);
+            $result = $model->getItemsByPhoneNumber($phones[0], 1);
             $from_promo_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
             $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
             /*проверка на существование этого клиента*/
@@ -1743,6 +1743,8 @@ class Gm_ceilingController extends JControllerLegacy
     {
         try
         {
+            $user = JFactory::getUser();
+
             $jinput = JFactory::getApplication()->input;
             $number = $jinput->get('phone', '', 'STRING');
             $number = preg_replace('/[\(\)\-\+\s]/', '', $number);
@@ -1751,7 +1753,7 @@ class Gm_ceilingController extends JControllerLegacy
             }
 
             $model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-            $result = $model->getItemsByPhoneNumber($number);
+            $result = $model->getItemsByPhoneNumber($number, $user->dealer_id);
             if (empty($result)) {
                 die($result);
             }
@@ -1773,6 +1775,8 @@ class Gm_ceilingController extends JControllerLegacy
     {
         try
         {
+            $user = JFactory::getUser();
+
             $jinput = JFactory::getApplication()->input;
             $number = $jinput->get('phone', '', 'STRING');
             $number = preg_replace('/[\(\)\-\+\s]/', '', $number);
@@ -1781,7 +1785,7 @@ class Gm_ceilingController extends JControllerLegacy
             }
 
             $model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-            $result = $model->getItemsByPhoneNumber($number);
+            $result = $model->getItemsByPhoneNumber($number, $user->dealer_id);
             if (empty($result)) {
                 die($result);
             }

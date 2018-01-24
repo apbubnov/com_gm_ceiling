@@ -2777,6 +2777,12 @@ class Gm_ceilingHelpersGm_ceiling
             $data['n1'] = $calculation_data->n1_id;
             $data['n2'] = $calculation_data->n2_id;
             $data['n3'] = $calculation_data->n3_id;
+            $n13 = $data['n13'];
+            $n26 = $data['n26'];
+            $n22 = $data['n22'];
+            $n14 = $data['n14'];
+            $n23 = $data['n23'];
+            $n15 = $data['n15'];
         }
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
@@ -2790,23 +2796,25 @@ class Gm_ceilingHelpersGm_ceiling
         $count_profil_2 = 0;
         $count_profil_3 = 0;
         $count_profil_4 = 0;
-        $n13 = json_decode($data['n13']);
-        $n26 = json_decode($data['n26']);
-        $n22 = json_decode($data['n22']);
-        $n14 = json_decode($data['n14']);
-        $n23 = json_decode($data['n23']);
-        $n15 = json_decode($data['n15']);
-        $n29 = json_decode($data['n29']);
+        if(empty($calc_id)){
+            $n13 = json_decode($data['n13']);
+            $n26 = json_decode($data['n26']);
+            $n22 = json_decode($data['n22']);
+            $n14 = json_decode($data['n14']);
+            $n23 = json_decode($data['n23']);
+            $n15 = json_decode($data['n15']);
+            $n29 = json_decode($data['n29']);
+        }
         if ($data['n1'] == 28 && $data['n9'] > 4) {
             //Обработка 1 угла
             if ($data['n9']) {
                 $guild_data[] = array(
-                    "title" => "Обработка 1 угла",                                                                    //Название
+                    "title" => "Обработка 1 угла",                                                                //Название
                     "quantity" => $data['n9'] - 4,                                                                //Кол-во
                     "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => $results->mp20,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
         }
@@ -3768,7 +3776,8 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $mounting_data['total_gm_mounting'] =  $total_gm_mounting;
         $mounting_data['total_dealer_mounting'] =  $total_dealer_mounting;
-            return $mounting_data;
+        
+        return $mounting_data;
        
     }
     /* функция для расчета стоимости траноспорта 
@@ -3991,27 +4000,27 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
                 if ($project->who_mounting == 1) {
-                    foreach ($mounting_data as $key=>$item) {
-                        if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
+                    foreach ($mounting_data as $item) {
+                        
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
                             $html .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
                             $html .= '<td class="center">' . $item['quantity'] . '</td>';
                             $html .= '<td class="center">' . round($item['gm_salary_total'], 2) . '</td>';
                             $html .= '</tr>';
-                        }
+                      
                     }
                     $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_gm_mounting'], 2) . '</th></tr>';
                 } else {
-                    foreach ($mounting_data as $key=>$item) {
-                        if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
+                    foreach ($mounting_data as $item) {
+                       
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
                             $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
                             $html .= '<td class="center">' . $item['quantity'] . '</td>';
                             $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
                             $html .= '</tr>';
-                        }
+                        
                     }
                     $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_dealer_mounting'], 2) . '</th></tr>';
                 }
