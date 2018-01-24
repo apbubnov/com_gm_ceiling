@@ -3866,15 +3866,16 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
         $calculation_model = self::getModel('calculations');
+        //teams getMounters
         $calculations = $calculation_model->getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
         $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
-        $html .= '<h2>Монтажная бригада: ' . $project->project_mounter . '</h2>';
+        $html .= '<h2>Монтажная бригада: ' . JFactory::getUser($project->project_mounter)->name . '</h2>';
         $html .= '<h2>Состав бригады: ' . $project->project_mounter . '</h2>';
         $html .= "<h2>Адрес: </h2>" . $project->project_info . "<br>";
         $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
-        $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
+        $html .= "<h2>Дата монтажа: </h2>" . $jdate->format('d.m.Y  H:i') . "<br>";
         $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
         $html .= '<table border="0" cellspacing="0" width="100%">
                     <tbody>
@@ -3912,6 +3913,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
+        $html .= "<pagebreak />";
         $html .= '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         if (isset($project->id)) {
