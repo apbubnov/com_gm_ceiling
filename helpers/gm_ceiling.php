@@ -2777,7 +2777,6 @@ class Gm_ceilingHelpersGm_ceiling
             $data['n1'] = $calculation_data->n1_id;
             $data['n2'] = $calculation_data->n2_id;
             $data['n3'] = $calculation_data->n3_id;
-            throw new Exception(implode('|',$data));
         }
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
@@ -3769,7 +3768,8 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $mounting_data['total_gm_mounting'] =  $total_gm_mounting;
         $mounting_data['total_dealer_mounting'] =  $total_dealer_mounting;
-            return $mounting_data;
+        throw new Exception(implode('|',$mounting_data));
+        return $mounting_data;
        
     }
     /* функция для расчета стоимости траноспорта 
