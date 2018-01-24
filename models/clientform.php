@@ -413,7 +413,7 @@ class Gm_ceilingModelClientForm extends JModelForm
 
 	            if (!empty($result))
 	            {
-	            	throw new Exception('Клиент с таким номером существует');
+	            	return 'client_found';
 	            }
 			}
 
