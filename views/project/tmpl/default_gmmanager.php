@@ -499,21 +499,7 @@ $AllMounters = $model->FindAllMounters($where);
             <div id="projects_brigade_container"></div>
             <p style="margin-top: 1em;"><strong>Выберите время начала монтажа:</strong></p>
             <p>
-                <select name="hours" id='hours'>
-                    <option value='09:00:00'>09:00</option>
-                    <option value='10:00:00'>10:00</option>
-                    <option value='11:00:00'>11:00</option>
-                    <option value='12:00:00'>12:00</option>
-                    <option value='13:00:00'>13:00</option>
-                    <option value='14:00:00'>14:00</option>
-                    <option value='15:00:00'>15:00</option>
-                    <option value='16:00:00'>16:00</option>
-                    <option value='17:00:00'>17:00</option>
-                    <option value='18:00:00'>18:00</option>
-                    <option value='19:00:00'>19:00</option>
-                    <option value='20:00:00'>20:00</option>
-                    <option value='21:00:00'>21:00</option>
-                </select>
+                <select name="hours" id='hours'></select>
             </p>
             <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
         </div>
@@ -593,6 +579,10 @@ $AllMounters = $model->FindAllMounters($where);
                     success: function(data) {
                         window.DataOfProject = JSON.parse(data);
                         data = JSON.parse(data);
+                        window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                        Array.prototype.diff = function(a) {
+                            return this.filter(function(i) {return a.indexOf(i) < 0;});
+                        };
                         jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
                         jQuery("#mounters").empty();
                         Allbrigades = <?php echo json_encode($Allbrigades); ?>;
@@ -618,7 +608,7 @@ $AllMounters = $model->FindAllMounters($where);
                         Array.from(data).forEach(function(element) {
                             if (element.project_mounter == selectedBrigade) {
                                 if (element.project_mounting_day_off != "") {
-                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                                 } else {
                                     table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                                 }                            
@@ -626,6 +616,26 @@ $AllMounters = $model->FindAllMounters($where);
                         });
                         table_projects += "</table>";
                         jQuery("#projects_brigade_container").append(table_projects);
+                        // вывод времени бригады
+                        var BusyTimes = [];
+                        Array.from(data).forEach(function(elem) {
+                            if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
+                                BusyTimes.push(elem.project_mounting_date.substr(11));
+                            } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
+                                AllTime.forEach(element => {
+                                    if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                        BusyTimes.push(element);
+                                    }
+                                }); 
+                            }
+                        });
+                        FreeTimes = AllTime.diff(BusyTimes);
+                        var select_hours;
+                        FreeTimes.forEach(element => {
+                            select_hours += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
+                        });
+                        jQuery("#hours").empty();
+                        jQuery("#hours").append(select_hours);
                     }
                 });
                 //если замер есть, то выдать время, монтажную бригаду и инфу о ней, которые записаны
@@ -719,7 +729,7 @@ $AllMounters = $model->FindAllMounters($where);
                 Array.from(DataOfProject).forEach(function(element) {
                     if (element.project_mounter == id) {
                         if (element.project_mounting_day_off != "") {
-                            table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                            table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                         } else {
                             table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                         }                   
@@ -727,6 +737,26 @@ $AllMounters = $model->FindAllMounters($where);
                 });
                 table_projects2 += "</table>";
                 jQuery("#projects_brigade_container").append(table_projects2);
+                // времена
+                jQuery("#hours").empty();
+                var BusyTimes = [];
+                Array.from(DataOfProject).forEach(function(elem) {
+                    if (id == elem.project_mounter && elem.project_mounting_day_off == "" ) {
+                        BusyTimes.push(elem.project_mounting_date.substr(11));
+                    } else if (id == elem.project_mounter && elem.project_mounting_day_off != "") {
+                        AllTime.forEach(element => {
+                            if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                BusyTimes.push(element);
+                            }
+                        }); 
+                    }
+                });
+                FreeTimes = AllTime.diff(BusyTimes);
+                var select_hours2;
+                FreeTimes.forEach(element => {
+                    select_hours2 += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
+                });
+                jQuery("#hours").append(select_hours2);
             });
             //-------------------------------------------
 
