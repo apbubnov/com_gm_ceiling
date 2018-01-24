@@ -35,6 +35,7 @@ $project_total = round($project_total, 2);
 $project_total_discount = round($project_total_discount, 2);
 
 ?>
+
 <?=parent::getButtonBack();?>
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
