@@ -75,8 +75,8 @@
 			</div>
 			<input type="hidden" name="jform[rek]" value="<?php echo  $rek; ?>" />
 		<?php } ?>
-        <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
-        <input id="flag_auto" type="hidden" value="0"/>
+		<input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
+		<input id="flag_auto" type="hidden" value="0"/>
 		<input type="hidden" name="jform[public]" value="1" />
 		<input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
 		<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
@@ -428,8 +428,8 @@
 								</div>
 							<? } 
 						} ?>
-                    </div>
-                	<div class="col-sm-4"></div>
+					</div>
+					<div class="col-sm-4"></div>
 				</div>
 				<?php if(empty($this->item->n6) || $this->item->n6 == 0 ||$this->item->n6 ==314) { ?>
 					<div class="container">
@@ -547,17 +547,17 @@
 										</div>
 										<div class="advanced_col2">
 											<select name="n13_type[]" id="n13" class="form-control n13_control" placeholder="Вид">
-                                                <?foreach ($this->item->types[1]->id AS $ring):?>
-                                                    <option value="<?=$ring->id;?>" <?=($ring->id == $lamp->n13_type)?'selected':'';?>><?=$ring->title;?></option>
-                                                <?endforeach;?>
+												<?foreach ($this->item->types[1]->id AS $ring):?>
+													<option value="<?=$ring->id;?>" <?=($ring->id == $lamp->n13_type)?'selected':'';?>><?=$ring->title;?></option>
+												<?endforeach;?>
 											</select>
 										</div>
 										<div class="advanced_col3">
-                                            <select name="n13_ring[]" id="n13_1" class="form-control" placeholder="Диаметр">
-                                                <?foreach ($this->item->types[1]->id[$lamp->n13_type]->options[0]->components_option AS $n13_item):?>
-                                                    <option value="<?=$n13_item->id;?>" <?=($n13_item->id == $lamp->n13_size)?'selected':'';?>><?=$n13_item->title;?></option>
-                                                <?endforeach;?>
-                                            </select>
+											<select name="n13_ring[]" id="n13_1" class="form-control" placeholder="Диаметр">
+												<?foreach ($this->item->types[1]->id[$lamp->n13_type]->options[0]->components_option AS $n13_item):?>
+													<option value="<?=$n13_item->id;?>" <?=($n13_item->id == $lamp->n13_size)?'selected':'';?>><?=$n13_item->title;?></option>
+												<?endforeach;?>
+											</select>
 										</div>
 										<div class="advanced_col4 center">
 											<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -713,7 +713,7 @@
 		</div>
 		<div class="container">
 			<div class="row sm-margin-bottom">
-		    	<div class="col-sm-4"></div>
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div class="form-group" style="margin-bottom: 0em;">
 						<div class="advanced_col1">
@@ -977,37 +977,37 @@
 					</div>
 				</div>
 				<!-- переход уровня -->
-            	<div class="container">
-                	<div class="row">
-                    	<div class="col-sm-4"></div>
-                    	<div class="col-sm-4" style="margin-bottom: 1em;">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4" style="margin-bottom: 1em;">
 							<table>
 								<tr>
 									<td>Переход уровня</td>
 								</tr>
 							</table>
-                    	</div>
-                    	<div class="col-sm-4"></div>
+						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
-            	<div class="container">
-                	<div class="row sm-margin-bottom">
-                    	<div class="col-sm-4"></div>
-                    	<div class="col-sm-4">
-                        	<div class="form-group" style="margin-bottom: 0em;">
+				<div class="container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
 									<label>Кол-во, м</label>
 								</div>
-                            	<div class="advanced_col5">
-                                	<label>Тип</label>
-                            	</div>
-                            	<div class="advanced_col4 center">
-                                	<label><i class="fa fa-trash" aria-hidden="true"></i></label>
-                            	</div>
-                            	<div class="clr"></div>
-                       		</div>
-                        	<div id="level_block_html" class="hide_label">
-                            	<?php $n29 = $this->item->n29; ?>
+								<div class="advanced_col5">
+									<label>Тип</label>
+								</div>
+								<div class="advanced_col4 center">
+									<label><i class="fa fa-trash" aria-hidden="true"></i></label>
+								</div>
+								<div class="clr"></div>
+							</div>
+							<div id="level_block_html" class="hide_label">
+								<?php $n29 = $this->item->n29; ?>
 								<?php $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
 								<?php if(count($n29) > 0) { ?>
 									<?php foreach($n29 as $level) {?>
@@ -1032,10 +1032,10 @@
 										</div>
 									<?php } ?>
 								<?php } ?>
-                        	</div>
-                        	<button id="add_level" class="btn btn-primary" type="button">Добавить</button>
-                    	</div>
-                	</div>
+							</div>
+							<button id="add_level" class="btn btn-primary" type="button">Добавить</button>
+						</div>
+					</div>
 				</div>
 			<?php } ?>
 			<!-- пожарная сигнализация -->
@@ -1495,7 +1495,7 @@
 				</div>
 			<?php }?>
 		</div>									
-        <!-- Монтаж -->
+		<!-- Монтаж -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -1574,21 +1574,21 @@
 				</div>
 			</div>
 		</div>
-        <div id="result_block">
+		<div id="result_block">
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
-                    <?php if($this->type === "guest") { ?>
-                        <div class="col-sm-4 total_price center" style="display: none;" id="guest_price">
-                            <div class="price_value">
-                                <span id="final_price">0.00</span> руб. - <span style="color:red; " >30% </span>=
-                                <span id="discount_price">0.00</span> руб.<br>
-                            </div>
-                            <div class="price_title">
-                                Самая низкая цена в Воронеже!
-                            </div>                            
-                        </div>
-                    <?php } else {?>
+					<?php if($this->type === "guest") { ?>
+						<div class="col-sm-4 total_price center" style="display: none;" id="guest_price">
+							<div class="price_value">
+								<span id="final_price">0.00</span> руб. - <span style="color:red; " >30% </span>=
+								<span id="discount_price">0.00</span> руб.<br>
+							</div>
+							<div class="price_title">
+								Самая низкая цена в Воронеже!
+							</div>                            
+						</div>
+					<?php } else {?>
 						<div class="col-sm-4 total_price center">
 							<div class="price_value">
 								<span id="final_price">0.00</span> руб.
@@ -1597,7 +1597,7 @@
 								Самая низкая цена в Воронеже!
 							</div>
 						</div>
-                    <?php } ?>
+					<?php } ?>
 				</div>
 			</div>			
 			<div class="container">
