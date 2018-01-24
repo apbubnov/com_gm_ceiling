@@ -923,7 +923,7 @@
 									<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel">
 								</div>
 							</div>
-							<div class="col-sm-4">
+							<div class="col-sm-4"></div>
 						</div>					
 					</div>
 					<!-- закладная брусом -->
