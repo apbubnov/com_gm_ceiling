@@ -3774,10 +3774,11 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
             $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
         }
-        $mounting_data['total_gm_mounting'] =  $total_gm_mounting;
-        $mounting_data['total_dealer_mounting'] =  $total_dealer_mounting;
+        $result['mounting_data'] = $mounting_data;
+        $result['total_gm_mounting'] =  $total_gm_mounting;
+        $result['total_dealer_mounting'] =  $total_dealer_mounting;
         
-        return $mounting_data;
+        return $result;
        
     }
     /* функция для расчета стоимости траноспорта 
@@ -3985,7 +3986,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
                 $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
             }
-            $mounting_data = self::calculate_mount(0,$calc->id,null);
+            $data_mount = self::calculate_mount(0,$calc->id,null);
+            $mounting_data = $data_mount['mounting_data'];
             if ($calc->mounting_sum != 0) {
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
@@ -4001,28 +4003,24 @@ class Gm_ceilingHelpersGm_ceiling
                             </tr>';
                 if ($project->who_mounting == 1) {
                     foreach ($mounting_data as $item) {
-                        
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
                             $html .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
                             $html .= '<td class="center">' . $item['quantity'] . '</td>';
                             $html .= '<td class="center">' . round($item['gm_salary_total'], 2) . '</td>';
                             $html .= '</tr>';
-                      
                     }
-                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_gm_mounting'], 2) . '</th></tr>';
+                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($data_mount['total_gm_mounting'], 2) . '</th></tr>';
                 } else {
                     foreach ($mounting_data as $item) {
-                       
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
                             $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
                             $html .= '<td class="center">' . $item['quantity'] . '</td>';
                             $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
                             $html .= '</tr>';
-                        
                     }
-                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_dealer_mounting'], 2) . '</th></tr>';
+                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($data_mount['total_dealer_mounting'], 2) . '</th></tr>';
                 }
 
                 $html .= '</tbody></table><p>&nbsp;</p>';
@@ -4038,22 +4036,18 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во</th>
                             </tr>';
                 if ($project->who_mounting == 1) {
-                    foreach ($mounting_data as $key=>$item) {
-                        if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
+                    foreach ($mounting_data as $item) {
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
                             $html .= '<td class="center">' . $item['quantity'] . '</td>';
                             $html .= '</tr>';
-                        }
                     }
                 } else {
-                    foreach ($mounting_data as $key=>$item) {
-                        if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
+                    foreach ($mounting_data as $item) {
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
                             $html .= '<td class="center">' . $item['quantity'] . '</td>';
                             $html .= '</tr>';
-                        }
                     }
                 }
 
