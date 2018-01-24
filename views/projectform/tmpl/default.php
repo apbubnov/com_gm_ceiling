@@ -1513,14 +1513,14 @@
                         // вывод времени бригады
                         var BusyTimes = [];
                         Array.from(data).forEach(function(elem) {
-                            if (selectedBrigade == elem.project_mounter and elem['project_mounting_day_off'] == "" ) {
+                            if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
                                 BusyTimes.push(elem.project_mounting_date.substr(11));
-                            } else if (selectedBrigade == elem.project_mounter /* and elem.project_mounting_day_off != "" */) {
-                                /* AllTime.forEach(element => {
-                                    if (element >= elem.project_mounting_date.substr(11) and element <= elem.project_mounting_day_off.substr(11)) {
+                            } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
+                                AllTime.forEach(element => {
+                                    if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
                                         BusyTimes.push(element);
                                     }
-                                });  */
+                                }); 
                             }
                         });
                         FreeTimes = AllTime.diff(BusyTimes);
