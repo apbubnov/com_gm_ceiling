@@ -68,14 +68,7 @@
 ?>
 <style>
     .Area {
-        display: inline-block;
-        float: left;
-        width: 310px;
-        height: auto;
-        overflow: visible;
-        margin: 0 5px;
-        margin-bottom: 10px;
-        position: relative;
+        width: 50%;
     }
 
     .Area .Input {
