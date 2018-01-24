@@ -68,7 +68,7 @@ $dealer = JFactory::getUser($user->dealer_id);
                 <?= JHtml::_('grid.sort', 'Цена для клиента', 'price', $listDirn, $listOrder); ?>
             </th>
             <? if ($canEdit): ?>
-                <th class="center can">Изменить цену для диллера</th>
+                <th class="center can">Изменить цену для дилера</th>
             <? endif; ?>
         </tr>
         </thead>
