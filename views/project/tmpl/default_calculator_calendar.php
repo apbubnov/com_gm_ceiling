@@ -1882,7 +1882,7 @@ var $ = jQuery;
                     Array.from(data).forEach(function(element) {
                         if (element.project_mounter == selectedBrigade) {
                             if (element.project_mounting_day_off != "") {
-                                table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                                table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                             } else {
                                 table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                             }                        }
@@ -1894,8 +1894,14 @@ var $ = jQuery;
                     window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                     var BusyTimes = [];
                     Array.from(data).forEach(function(elem) {
-                        if (selectedBrigade == elem.project_mounter) {
+                        if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
                             BusyTimes.push(elem.project_mounting_date.substr(11));
+                        } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
+                            AllTime.forEach(element => {
+                                if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                    BusyTimes.push(element);
+                                }
+                            }); 
                         }
                     });
                     FreeTimes = AllTime.diff(BusyTimes);
@@ -1928,7 +1934,7 @@ var $ = jQuery;
             Array.from(DataOfProject).forEach(function(element) {
                 if (element.project_mounter == id) {
                     if (element.project_mounting_day_off != "") {
-                        table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                        table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                     } else {
                         table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                     }                
@@ -1940,8 +1946,14 @@ var $ = jQuery;
             jQuery("#hours").empty();
             var BusyTimes = [];
             Array.from(DataOfProject).forEach(function(elem) {
-                if (id == elem.project_mounter) {
+                if (id == elem.project_mounter && elem.project_mounting_day_off == "" ) {
                     BusyTimes.push(elem.project_mounting_date.substr(11));
+                } else if (id == elem.project_mounter && elem.project_mounting_day_off != "") {
+                    AllTime.forEach(element => {
+                        if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                            BusyTimes.push(element);
+                        }
+                    }); 
                 }
             });
             FreeTimes = AllTime.diff(BusyTimes);
