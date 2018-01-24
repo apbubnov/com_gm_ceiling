@@ -1778,18 +1778,31 @@
 
         var id = input.attr('id');
 
-        var values = [];
-        values.push({name: input.attr('parent') + '.' + input.attr('tname'), value: input.val(), id: id});
-        jQuery.each(Objects, function (key, idObject) {
-            var itemTemp = root.find('#' + idObject);
-            values.push({
-                name: itemTemp.attr('parent') + '.' + itemTemp.attr('tname'),
-                value: itemTemp.val(),
-                id: idObject
-            });
-        });
+        /*
+        filter[select][Type]:components.title
+        filter[select][Unit]:components.unit
+        filter[where][like][components.title]:'%%'
+        filter[where][like][options.title]:'%%'
+        filter[where][like][components.unit]:'%%'
+        filter[group][]:components.title
+        filter[order][]:components.title
+        filter[page]:index.php?option=com_gm_ceiling&task=componentform.getComponents
+         */
 
-        var filter = filtres(id, values);
+        var filter = {
+            select: {
+                Type: input.attr('namedb')
+            },
+            where: {
+                like: {
+                    "components.title": '\'%'+input.val()+'%\'',
+                    "options.title": '\'%'+input.val()+'%\''
+                }
+            },
+            page: 'index.php?option=com_gm_ceiling&task=componentform.getComponents'
+        };
+
+        filter = {filter: filter};
 
         var items = input.parent().find('.select').filter('.' + input.attr('tname'));
         var lockSelect = items.parent();
@@ -1878,7 +1891,7 @@
     }
     function ClearSelect(e) {
         setTimeout(function () {
-            e = $(e);
+            e = jQuery(e);
             if (e.attr("clear") != 'false') e.val("");
             e.siblings(".Selects").empty();
         }, 200);
@@ -2130,7 +2143,7 @@ function submit_form_sketch()
                 "        onkeyup=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onblur=\"ClearSelect(this)\"\n" +
                 "    class='form-control Input Type'\n" +
-                "        type='text'></div>").appendTo(components_title_stock_container);
+                "        type='text'><div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
             jQuery( "<div class='form-group'><input name='components_value_stock[]' value='' class='form-control' type='tel'></div>" ).appendTo( components_value_stock_container );
         });
 
