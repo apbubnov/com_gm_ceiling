@@ -1534,7 +1534,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "height">
-					<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">
+					<div class="form-group" style="text-align: left; margin-left: calc(50% - 75px);">
 						<?php if ($this->item->height == 0) { ?>
 							<div style="display: inline-block;">
 								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
