@@ -41,6 +41,31 @@
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
 ?>
+
+<form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
+	<input name="url" id="url" value="" type="hidden">
+	<input name="user_id" id="user_id" value=<?php echo "\"".$user->id."\"";?> type="hidden">
+	<input name = "width" id = "width" value = "" type = "hidden">
+	<input name = "texture" id = "texture" value = "" type = "hidden">
+	<input name = "color" id = "color" value = "" type = "hidden">
+	<input name = "manufacturer" id = "manufacturer" value = "" type = "hidden">
+	<input name = "calc_title" id = "calc_title" value="" type = "hidden">
+    <input name = "auto" id = "auto" value="" type = "hidden">
+    <input name = "walls" id = "walls" value="" type= "hidden">
+    <input name = "n4" id = "n4" value ="" type ="hidden">
+    <input name = "n5" id = "n5" value ="" type ="hidden">
+    <input name = "n9" id = "n9" value ="" type ="hidden">
+</form>
+
+<?php
+	if($type === "calculator" || $type === "gmcalculator" || $type === "gmmanager" || $type === "manager" )
+	{
+		echo parent::getButtonBack();
+	}
+	if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php'){
+		echo "<script>BackPage = function() { window.history.go(-3); }</script>";
+	}
+?>
 <style>
     .Area {
         display: inline-block;
@@ -104,31 +129,6 @@
         background-color: rgb(31, 30, 70);
     }
 </style>
-<form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
-	<input name="url" id="url" value="" type="hidden">
-	<input name="user_id" id="user_id" value=<?php echo "\"".$user->id."\"";?> type="hidden">
-	<input name = "width" id = "width" value = "" type = "hidden">
-	<input name = "texture" id = "texture" value = "" type = "hidden">
-	<input name = "color" id = "color" value = "" type = "hidden">
-	<input name = "manufacturer" id = "manufacturer" value = "" type = "hidden">
-	<input name = "calc_title" id = "calc_title" value="" type = "hidden">
-    <input name = "auto" id = "auto" value="" type = "hidden">
-    <input name = "walls" id = "walls" value="" type= "hidden">
-    <input name = "n4" id = "n4" value ="" type ="hidden">
-    <input name = "n5" id = "n5" value ="" type ="hidden">
-    <input name = "n9" id = "n9" value ="" type ="hidden">
-</form>
-
-<?php
-	if($type === "calculator" || $type === "gmcalculator" || $type === "gmmanager" || $type === "manager" )
-	{
-		echo parent::getButtonBack();
-	}
-	if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php'){
-		echo "<script>BackPage = function() { window.history.go(-3); }</script>";
-	}
-?>
-
 <div class="calculation-edit front-end-edit">
 	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
