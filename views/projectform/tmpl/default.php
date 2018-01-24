@@ -1476,7 +1476,6 @@
                         window.DataOfProject = JSON.parse(data);
                         window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                         data = JSON.parse(data);
-                        console.log(data);
                         jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
                         // заполнение бригад в селекте
                         jQuery("#mounters").empty();
@@ -1530,7 +1529,6 @@
                         });
                         jQuery("#hours").empty();
                         jQuery("#hours").append(select_hours);
-                        
                     }
                 });
                 //если монтаж есть, то выдать время, монтажную бригаду и инфу о ней, которые записаны
@@ -1619,6 +1617,26 @@
                 });
                 table_projects2 += "</table>";
                 jQuery("#projects_brigade_container").append(table_projects2);
+                // времена
+                jQuery("#hours").empty();
+                var BusyTimes = [];
+                Array.from(DataOfProject).forEach(function(elem) {
+                    if (id == elem.project_mounter && elem.project_mounting_day_off == "" ) {
+                        BusyTimes.push(elem.project_mounting_date.substr(11));
+                    } else if (id == elem.project_mounter && elem.project_mounting_day_off != "") {
+                        AllTime.forEach(element => {
+                            if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                BusyTimes.push(element);
+                            }
+                        }); 
+                    }
+                });
+                FreeTimes = AllTime.diff(BusyTimes);
+                var select_hours2;
+                FreeTimes.forEach(element => {
+                    select_hours2 += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
+                });
+                jQuery("#hours").append(select_hours2);
             });
             //-------------------------------------------
 
