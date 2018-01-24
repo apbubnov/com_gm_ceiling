@@ -3987,7 +3987,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
             }
             $data_mount = self::calculate_mount(0,$calc->id,null);
-            $mounting_data = $data_mount['mounting_data']
+            $mounting_data = $data_mount['mounting_data'];
             if ($calc->mounting_sum != 0) {
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
@@ -4043,7 +4043,7 @@ class Gm_ceilingHelpersGm_ceiling
                             $html .= '</tr>';
                     }
                 } else {
-                    foreach ($mounting_data as $key=>$item) {
+                    foreach ($mounting_data as $item) {
                             $html .= '<tr>';
                             $html .= '<td>' . $item['title'] . '</td>';
                             $html .= '<td class="center">' . $item['quantity'] . '</td>';
