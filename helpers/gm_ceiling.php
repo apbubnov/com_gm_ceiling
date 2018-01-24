@@ -2774,6 +2774,9 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
             }
+            $data['n1'] = $calculation_data->n1_id;
+            $data['n2'] = $calculation_data->n2_id;
+            $data['n3'] = $calculation_data->n3_id;
             throw new Exception(implode('|',$data));
         }
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
