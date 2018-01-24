@@ -66,7 +66,66 @@
 		echo "<script>BackPage = function() { window.history.go(-3); }</script>";
 	}
 ?>
+<style>
+    .Area {
+        display: inline-block;
+        float: left;
+        height: auto;
+        overflow: visible;
+        margin: 0 5px;
+        margin-bottom: 16px;
+        position: relative;
+    }
 
+    .Area .Input {
+        display: inline-block;
+        float: left;
+        width: 100%;
+        padding-left: 5px;
+    }
+
+    .Area .Selects {
+        display: inline-block;
+        position: relative;
+        float: left;
+        width: 100%;
+        height: 0;
+        z-index: 2;
+    }
+
+    .Area .Selects .Select {
+        position: absolute;
+        top: -1px;
+        left: 0;
+        display: inline-block;
+        float: left;
+        width: 100%;
+        border: 1px solid rgb(169, 169, 169);
+        border-top: 0;
+        height: auto;
+        background-color: rgb(54, 53, 127);
+        color: rgb(255, 255, 255);
+        max-height: 90px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+    .Area .Selects .Select .Item {
+        display: inline-block;
+        float: left;
+        width: 100%;
+        padding-left: 5px;
+        height: auto;
+        line-height: 25px;
+        font-size: 14px;
+        border-top: 1px solid rgb(255, 255, 255);
+        cursor: pointer;
+    }
+
+    .Area .Selects .Select .Item:hover {
+        background-color: rgb(31, 30, 70);
+    }
+</style>
 <div class="calculation-edit front-end-edit">
 	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
@@ -372,47 +431,22 @@
 								$color_id_1 = $color_1->id;
 							}
 						?>
-						<? if ($this->item->n6 == 314 ) { ?>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked"><label for="jform_n6">Белая вставка</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"><label for="jform_n6_1">Цветная вставка</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" > <label for="jform_n6_2">Вставка не нужна</label>
-							</div>
-						<? } else {
-							if ($this->item->n6 == 0 || empty($this->item->n6)) {?>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"> <label for="jform_n6_1">Цветная вставка</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" checked="checked" ><label for="jform_n6_2">Вставка не нужна</label>
-							</div>
-							<? } else {?>
-								<div style="display: inline-block;">
-									<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" checked="checked">  <label for="jform_n6">Белая вставка</label>
-								</div>
-								<br>
-								<div style="display: inline-block;">
-									<input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio"  checked="checked">  <label for="jform_n6_1">Цветная вставка</label>
-								</div>
-								<br>
-								<div style="display: inline-block;">
-									<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio"><label for="jform_n6_2">Вставка не нужна</label>
-								</div>
-							<? } 
-						} ?>
-					</div>
-					<div class="col-sm-4"></div>
+                        <div style="display: inline-block;">
+                            <input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" <?php if($this->item->n6 == 314) echo "checked=\"checked\""?>>
+                            <label for="jform_n6">Белая вставка</label>
+                        </div>
+                        <br>
+                        <div style="display: inline-block;">
+                            <input name="radio" id="jform_n6_1" class="radio" value="<?=($this->item->n6)?$this->item->n6:''?>" type="radio" <?php if(!empty($this->item->n6) && $this->item->n6 != 314) echo "checked=\"checked\""?>>
+                            <label for="jform_n6_1">Цветная вставка</label>
+                        </div>
+                        <br>
+                        <div style="display: inline-block;">
+                            <input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" <?php if(empty($this->item->n6)) echo "checked=\"checked\""?>>
+                            <label for="jform_n6_2">Вставка не нужна</label>
+                        </div>
+                    </div>
+                	<div class="col-sm-4"></div>
 				</div>
 				<?php if(empty($this->item->n6) || $this->item->n6 == 0 ||$this->item->n6 ==314) { ?>
 					<div class="container">
@@ -659,26 +693,15 @@
 						<input name="jform[n27]" id="jform_n27" data-next="#jform_n12" value="<?php echo $this->item->n27; ?>" class="form-control" placeholder="м." type="tel">
 					</div>
 					<div class="form-group" style="text-align: left; margin-left: calc(50% - 70px);">
-						<? if(!$this->item->n16) {?>
-							<div style="display: inline-block;">
-								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" checked="checked">
-								<label for="jform_n16"> Обычный карниз</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio">
-								<label for="jform_n16_1"> Скрытый карниз</label>
-							</div>
-						<? } else { ?>
-							<p>
-								<input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio">
-								<label for="jform_n16"> Обычный карниз</label>
-							</p>
-							<p>
-								<input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio" checked="checked">
-								<label for="jform_n16_1"> Скрытый карниз</label>
-							</p>
-						<? } ?>
+                        <div style="display: inline-block;">
+                            <input name="jform[n16]" id="jform_n16" class="radio" value="0" type="radio" <?if(!$this->item->n16) echo "checked=\"checked\""?>>
+                            <label for="jform_n16"> Обычный карниз</label>
+                        </div>
+                        <br>
+                        <div style="display: inline-block;">
+                            <input name="jform[n16]" id="jform_n16_1" class="radio" value="1" type="radio" <?if($this->item->n16) echo "checked=\"checked\""?>>
+                            <label for="jform_n16_1"> Скрытый карниз</label>
+                        </div>
 					</div>
 				</div>
 				<div class="col-sm-4"></div>
@@ -1432,9 +1455,9 @@
                                 <div class="advanced_col_half">
                                     <label>Название</label>
                                     <div id="components_title_stock_container">
-                                        <?php /*foreach($components_stock_array as $item) { */?>
+                                        <?php foreach($components_stock_array as $item) { ?>
                                             <div class='form-group Area Type'>
-                                                <input name="components_title_stock[]"
+                                                <input
                                                        id="Type" value='<?php echo $item['title']; ?>'
                                                        autocomplete="off"
                                                        NameDB="CONCAT(components.title,' ',options.title)"
@@ -1443,9 +1466,10 @@
                                                        onblur="ClearSelect(this)"
                                                        class='form-control Input Type'
                                                        type='text'>
+                                                <input id="ID" name="components_title_stock[]" hidden>
                                                 <div class="Selects Type"></div>
                                             </div>
-                                        <?php/* } */?>
+                                        <?php } ?>
                                     </div>
                                 </div>
                                 <div class="advanced_col_half">
@@ -1579,27 +1603,15 @@
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" id = "height">
 					<div class="form-group" style="text-align: left; margin-left: calc(50% - 75px);">
-						<?php if ($this->item->height == 0) { ?>
-							<div style="display: inline-block;">
-								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" >
-								<label for="max_height">больше 3х метров</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" checked>
-								<label for="min_height">меньше 3х метров</label>
-							</div>
-						<?php } else { ?>
-							<div style="display: inline-block;">
-								<input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" checked>
-								<label for="max_height">больше 3х метров</label>
-							</div>
-							<br>
-							<div style="display: inline-block;">
-								<input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" >
-								<label for="min_height">меньше 3х метров</label>
-							</div>
-						<?php } ?>
+                        <div style="display: inline-block;">
+                            <input type="radio" name = "jform[height]" id = "max_height" class = "radio" value = "1" <?if($this->item->height != 0) echo "checked=\"checked\""?>>
+                            <label for="max_height">больше 3х метров</label>
+                        </div>
+                        <br>
+                        <div style="display: inline-block;">
+                            <input type="radio" name = "jform[height]" id = "min_height" class = "radio" value = "0" <?if($this->item->height == 0) echo "checked=\"checked\""?>>
+                            <label for="min_height">меньше 3х метров</label>
+                        </div>
 					</div>
 				</div>
 				<div class="col-sm-4"></div>
@@ -1817,7 +1829,107 @@
 	</form>
 </div>
 </div>
-<script>
+<script type="text/javascript">
+    var $ = jQuery;
+//для подгрузки компонентов со склада
+    function GetList(e, select, like) {
+        var input = $(e),
+            Selects = input.siblings(".Selects"),
+            ID = input.attr("id"),
+            parent = input.closest(".Form"),
+            filter = {
+                select: {},
+                where: {like: {}},
+                group: [],
+                order: [],
+                page: null
+            },
+            Select = $('<div/>').addClass("Select"),
+            Item = $('<div/>').addClass("Item").attr("onclick", "SelectItem(this);");
+
+        input.attr({"clear": "true", "add": "false"});
+        Selects.empty();
+        Selects.append(Select);
+        var Select = Selects.find(".Select");
+
+        filter.select["Type"] = input.attr("NameDB");
+        filter.select["ID"] = "options.id";
+        filter.where.like["components.title"] = "'%" + input.val() + "%' || true";
+        filter.where.like["options.title"] = "'%" + input.val() + "%'";
+        filter.page = "/index.php?option=com_gm_ceiling&task=componentform.getComponents";
+
+
+        if (input.is(":focus")) {
+            jQuery.ajax({
+                type: 'POST',
+                url: filter.page,
+                data: {filter: filter},
+                success: function (data) {
+                    data = JSON.parse(data);
+
+                    $.each(data, function (i, v) {
+                        var I = Item.clone();
+                        $.each(v, function (id, s) {
+                            if (s === null) s = "Нет";
+                            I.attr(id, s);
+                            if (id == ID) I.html(s);
+                        });
+                        Select.append(I);
+                    });
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        timeout: 1500,
+                        type: "error",
+                        text: "Сервер не отвечает!"
+                    });
+                }
+            });
+        }
+    }
+
+    function SelectItem(e) {
+        e = $(e);
+        var parent = e.closest(".Area"),
+            elements = parent.find(".Input");
+
+        if (typeof e.attr('error') !== 'undefined' && e.attr('error') !== false)
+        {
+            var error = JSON.parse(e.attr('error'));
+            $.each(error, function (i, v) {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: v
+                });
+            });
+        }
+        else if (e.hasClass("Add")) e.closest(".Area").find(".Input").attr({"clear": "false", "add": "true"});
+        else {
+            elements.val(e.attr("Type"));
+            elements.attr({"clear": "false", "add": "false"});
+            parent.find("#ID").val(e.attr("ID"));
+            /*
+            $.each(elements, function (i, v) {
+                v = $(v);
+                var id = v.attr('id');
+                if (typeof id !== 'undefined' && id !== false) {
+                    var attr = e.attr(id);
+                    if (typeof attr !== 'undefined' && attr !== false) {
+                        v.val(attr);
+                        v.attr({"clear": "false", "add": "false"});
+                    }
+                }
+            });
+            */
+        }
+    }
 
     function ClearSelect(e) {
         setTimeout(function () {
@@ -1826,122 +1938,6 @@
             e.siblings(".Selects").empty();
         }, 200);
     }
-/*
-    function GetList(thisObject, Objects = null) {
-        var input = jQuery(thisObject);
-        var root = input.closest('.List');
-        input.attr('check', 0);
-
-        var id = input.attr('id');
-
-        var filter = {
-            select: {
-                Type: input.attr('namedb')
-            },
-            where: {
-                like: {
-                    "components.title": '\'%'+input.val()+'%\'',
-                    "options.title": '\'%'+input.val()+'%\''
-                }
-            },
-            page: 'index.php?option=com_gm_ceiling&task=componentform.getComponents'
-        };
-
-        filter = {filter: filter};
-
-        var items = input.parent().find('.Selects');
-        var lockSelect = items.parent();
-        var option = jQuery('<div class="add" onclick="selectItem(this)" parent="' + id + '">+ Добавить</div>');
-
-        if (input.is(":focus")) {
-            jQuery.ajax({
-                type: 'POST',
-                url: filter.filter.page,
-                data: filter,
-                success: function (data) {
-                    data = JSON.parse(data);
-                    items.empty();
-                    jQuery.each(data, function (index, item) {
-                        if (item.title != null) {
-                            var itemObj = option.clone().html(item.title).attr({'class': 'option'});
-                            jQuery.each(item, function (index, value) {
-                                itemObj.attr(index, value);
-                            });
-
-                            items.append(itemObj);
-                        }
-                    });
-                    lockSelect.show();
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Сервер не отвечает!"
-                    });
-                }
-            });
-        }
-    }
-    function hideItems(thisObject) {
-        var input = jQuery(thisObject);
-        var select = input.parent().find('.select');
-        var lockSelect = select.parent();
-
-        setTimeout(function () {
-            select.empty();
-            lockSelect.hide();
-
-        }, 200);
-    }
-
-    function selectItem(thisObject) {
-        item = jQuery(thisObject);
-        var select = item.parent();
-        var lockSelect = select.parent();
-
-        var inputDiv = item.closest('.input');
-        var root = inputDiv.closest('.' + inputDiv.attr('top'));
-        var subroot = inputDiv.closest('.' + inputDiv.attr('parent'));
-        var other = inputDiv.find(".other");
-        if (other.attr('class') != root.find('#' + item.attr("parent")).attr('class')) other.hide().val('');
-
-        var iclass = item.attr('class');
-        var id = item.attr('parent');
-
-        if (iclass == 'option') {
-
-            var filter = filtres(item.attr("parent"), [{name: item.attr("parent"), value: ''}]);
-            var objects = filter.filter.objectsId;
-
-            jQuery.each(objects, function (key, val) {
-                subroot.find('#' + val).val(item.attr(key));
-            });
-        }
-        else if (iclass == 'empty') {
-            subroot.find('#' + id).val(item.html());
-        }
-        else if (iclass == 'add') {
-            inputDiv.find(".other").show();
-        }
-
-        subroot.find('#' + id).attr('check', '1');
-
-        select.empty();
-        lockSelect.hide();
-    }
-    function ClearSelect(e) {
-        setTimeout(function () {
-            e = jQuery(e);
-            if (e.attr("clear") != 'false') e.val("");
-            e.siblings(".Selects").empty();
-        }, 200);
-    }
-*/
 
 function submit_form_sketch()
 	{
@@ -2184,13 +2180,13 @@ function submit_form_sketch()
         jQuery( "#components_button_stock" ).click(function(){
             var components_title_stock_container = jQuery( "#components_title_stock_container" ),
                 components_value_stock_container = jQuery( "#components_value_stock_container" );
-            jQuery("<div class='form-group'><input name='components_title_stock[]' value='' id='Type' autocomplete=\"off\"\n" +
+            jQuery("<div class='form-group Area'><input name='components_title_stock[]' value='' id='Type' autocomplete=\"off\"\n" +
                 "        NameDB=\"CONCAT(components.title,' ',options.title)\"\n" +
                 "        onclick=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onkeyup=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onblur=\"ClearSelect(this)\"\n" +
                 "    class='form-control Input Type'\n" +
-                "        type='text'></div>").appendTo(components_title_stock_container);
+                "        type='text'><input id=\"ID\" hidden> <div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
             jQuery( "<div class='form-group'><input name='components_value_stock[]' value='' class='form-control' type='tel'></div>" ).appendTo( components_value_stock_container );
         });
 
