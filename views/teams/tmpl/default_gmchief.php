@@ -19,7 +19,7 @@ $userId     = $user->get('id');
 $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
-$brigade_id = $teams_model->getData($dealerId);
+$brigade_id = $teams_model->getDatas($dealerId);
 $brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
 
 // календарь

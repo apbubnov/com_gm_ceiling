@@ -932,7 +932,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 $day = array(
                     'project_mounter'=>$items3->id_user,
                     'project_mounting_date'=>$items3->date_from,
-                    'project_info'=>NULL,
+                    'project_info'=>"Выходные часы",
                     'n5'=>NULL,
                     'project_mounting_day_off'=>$items3->date_to
                 );
