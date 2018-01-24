@@ -1669,7 +1669,6 @@ $results = $db->loadObjectList(); */
                     Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
                     };
-                    console.log(data);
                     // вывод бригад
                     Allbrigades = <?php echo json_encode($Allbrigades); ?>;
                     jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
@@ -1727,7 +1726,7 @@ $results = $db->loadObjectList(); */
                         Array.from(data).forEach(function(element) {
                             if (element.project_mounter == selectedBrigade) {
                                 if (element.project_mounting_day_off != "") {
-                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                                 } else {
                                     table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                                 }
@@ -1739,8 +1738,14 @@ $results = $db->loadObjectList(); */
                         // вывод времени бригады
                         var BusyTimes = [];
                         Array.from(data).forEach(function(elem) {
-                            if (selectedBrigade == elem.project_mounter) {
+                            if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
                                 BusyTimes.push(elem.project_mounting_date.substr(11));
+                            } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
+                                AllTime.forEach(element => {
+                                    if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                        BusyTimes.push(element);
+                                    }
+                                }); 
                             }
                         });
                         FreeTimes = AllTime.diff(BusyTimes);
@@ -1828,7 +1833,7 @@ $results = $db->loadObjectList(); */
             Array.from(DataOfProject).forEach(function(element) {
                 if (element.project_mounter == id) {
                     if (element.project_mounting_day_off != "") {
-                        table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                        table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                     } else {
                         table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                     }                
@@ -1840,8 +1845,14 @@ $results = $db->loadObjectList(); */
             jQuery("#hours").empty();
             var BusyTimes = [];
             Array.from(DataOfProject).forEach(function(elem) {
-                if (id == elem.project_mounter) {
+                if (id == elem.project_mounter && elem.project_mounting_day_off == "" ) {
                     BusyTimes.push(elem.project_mounting_date.substr(11));
+                } else if (id == elem.project_mounter && elem.project_mounting_day_off != "") {
+                    AllTime.forEach(element => {
+                        if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                            BusyTimes.push(element);
+                        }
+                    }); 
                 }
             });
             FreeTimes = AllTime.diff(BusyTimes);

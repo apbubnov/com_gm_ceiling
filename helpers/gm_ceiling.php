@@ -1947,9 +1947,8 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'];
             $ajax_return['components_sum'] = $components_sum;
             $ajax_return['mounting_sum'] = $total_gm_mounting;
-            $ajax_return['mounting_sum11111'] = self::calculate_mount($del_flag,0,null,$data);
+            $ajax_return['mounting_sum11111'] = self::calculate_mount($del_flag,null,$data);
             $ajax_return['mounting_arr'] = $data;
-            $ajax_return['mounting_arr111'] = self::calculate_mount($del_flag,1,null,$data);
             $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $total_gm_guild;
             $data['components_sum'] = $components_sum;
             $data['mounting_sum'] = $total_gm_mounting;
@@ -2755,11 +2754,10 @@ class Gm_ceilingHelpersGm_ceiling
     }
     /* 	основная функция для расчета стоимости монтажа
         $del_flag 0 - не удалать светильники, трубы и т.д что хранится в др. таблицах
-        $what что вернуть сумму монтажа или массив стоимости каждой работы
 		$calc_id - id калькуляции в БД
 		$data - массив данных для просчета, если новый просчет
 	*/
-    public static function calculate_mount($del_flag,$what,$calc_id,$data){
+    public static function calculate_mount($del_flag,$calc_id,$data){
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
         if(!empty($user->dealer_id)){
@@ -2772,13 +2770,14 @@ class Gm_ceilingHelpersGm_ceiling
         //Если существующая калькуляция
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
-            $calculation_data = $calculation_model->getData($calculation_id);
+            $calculation_data = $calculation_model->getData($calc_id);
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
             }
             $data['n1'] = $calculation_data->n1_id;
             $data['n2'] = $calculation_data->n2_id;
             $data['n3'] = $calculation_data->n3_id;
+            throw new Exception(implode('|',$data));
         }
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
@@ -2803,12 +2802,12 @@ class Gm_ceilingHelpersGm_ceiling
             //Обработка 1 угла
             if ($data['n9']) {
                 $guild_data[] = array(
-                    "title" => "Обработка 1 угла",                                                                    //Название
+                    "title" => "Обработка 1 угла",                                                                //Название
                     "quantity" => $data['n9'] - 4,                                                                //Кол-во
                     "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => $results->mp20,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                    "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                 );
             }
         }
@@ -3768,12 +3767,10 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
             $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
         }
-        if($what == 0){
-            return $total_gm_mounting;
-        }
-        else{
+        $mounting_data['total_gm_mounting'] =  $total_gm_mounting;
+        $mounting_data['total_dealer_mounting'] =  $total_dealer_mounting;
             return $mounting_data;
-        }
+       
     }
     /* функция для расчета стоимости траноспорта 
     $project_id - id проекта
@@ -3980,12 +3977,12 @@ class Gm_ceilingHelpersGm_ceiling
                 $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
                 $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
             }
-
-            if ($need_mount) {
+            $mounting_data = self::calculate_mount(0,$calc->id,null);
+            if ($calc->mounting_sum != 0) {
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
-                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calc->id) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch".$calc->id) . ".png" . '" style="width: 100%; max-height: 800px;"/>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -3994,27 +3991,30 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во</th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-                $mounting_data = self::calculate_mount(0,1,$calc->id,null);
                 if ($project->who_mounting == 1) {
-                    foreach ($mounting_data as $item) {
-                        $html .= '<tr>';
-                        $html .= '<td>' . $item['title'] . '</td>';
-                        $html .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
-                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                        $html .= '<td class="center">' . round($item['gm_salary_total'], 2) . '</td>';
-                        $html .= '</tr>';
+                    foreach ($mounting_data as $key=>$item) {
+                        if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
+                            $html .= '<tr>';
+                            $html .= '<td>' . $item['title'] . '</td>';
+                            $html .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
+                            $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                            $html .= '<td class="center">' . round($item['gm_salary_total'], 2) . '</td>';
+                            $html .= '</tr>';
+                        }
                     }
-                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_gm_mounting, 2) . '</th></tr>';
+                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_gm_mounting'], 2) . '</th></tr>';
                 } else {
-                    foreach ($mounting_data as $item) {
-                        $html .= '<tr>';
-                        $html .= '<td>' . $item['title'] . '</td>';
-                        $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
-                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                        $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
-                        $html .= '</tr>';
+                    foreach ($mounting_data as $key=>$item) {
+                        if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
+                            $html .= '<tr>';
+                            $html .= '<td>' . $item['title'] . '</td>';
+                            $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
+                            $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                            $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
+                            $html .= '</tr>';
+                        }
                     }
-                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_dealer_mounting, 2) . '</th></tr>';
+                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_dealer_mounting'], 2) . '</th></tr>';
                 }
 
                 $html .= '</tbody></table><p>&nbsp;</p>';
@@ -4022,33 +4022,36 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
-                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $ajax_return['id']) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calc->id) . ".png" . '" style="width: 100%; max-height: 800px;"/>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
                                 <th>Наименование</th>
                                 <th class="center">Кол-во</th>
                             </tr>';
-
                 if ($project->who_mounting == 1) {
-                    foreach ($mounting_data as $item) {
-                        $html .= '<tr>';
-                        $html .= '<td>' . $item['title'] . '</td>';
-                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                        $html .= '</tr>';
+                    foreach ($mounting_data as $key=>$item) {
+                        if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
+                            $html .= '<tr>';
+                            $html .= '<td>' . $item['title'] . '</td>';
+                            $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                            $html .= '</tr>';
+                        }
                     }
                 } else {
-                    foreach ($mounting_data as $item) {
-                        $html .= '<tr>';
-                        $html .= '<td>' . $item['title'] . '</td>';
-                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                        $html .= '</tr>';
+                    foreach ($mounting_data as $key=>$item) {
+                        if($key!='total_gm_mounting' && $key!='total_dealer_mounting'){
+                            $html .= '<tr>';
+                            $html .= '<td>' . $item['title'] . '</td>';
+                            $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                            $html .= '</tr>';
+                        }
                     }
                 }
 
                 $html .= '</tbody></table><p>&nbsp;</p>';
             }
-    }
+        }
         $filename = md5($data['id'] . "-2") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
 
