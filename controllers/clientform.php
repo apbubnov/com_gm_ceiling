@@ -148,6 +148,8 @@ class Gm_ceilingControllerClientForm extends JControllerForm
 			}
 			elseif ($return == 'client_found')
 			{
+				throw new Exception("client_found", 1);
+				
 				$this->setMessage('Клиент с таким номером существует!');
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=clientform&layout=edit&id=' . $id, false));
 			}
