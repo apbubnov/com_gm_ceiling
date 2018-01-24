@@ -3861,7 +3861,7 @@ class Gm_ceilingHelpersGm_ceiling
         return $result;
     }
 
-    public static function create_common_estimate_mounters($project_id,$need_mount){
+    public static function create_common_estimate_mounters($project_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
@@ -3980,8 +3980,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
                 $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
             }
-
-            if ($need_mount) {
+            $mounting_data = self::calculate_mount(0,1,$calc->id,null);
+            if ($calc->mounting_sum != 0) {
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
@@ -3994,8 +3994,6 @@ class Gm_ceilingHelpersGm_ceiling
                                 <th class="center">Кол-во</th>
                                 <th class="center">Стоимость, руб.</th>
                             </tr>';
-                $mounting_data = self::calculate_mount(0,1,$calc->id,null);
-                
                 if ($project->who_mounting == 1) {
                     foreach ($mounting_data as $item) {
                         $html .= '<tr>';
@@ -4023,7 +4021,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
-                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $ajax_return['id']) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calc->id) . ".png" . '" style="width: 100%; max-height: 800px;"/>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
