@@ -2772,7 +2772,7 @@ class Gm_ceilingHelpersGm_ceiling
         //Если существующая калькуляция
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
-            $calculation_data = $calculation_model->getData($calculation_id);
+            $calculation_data = $calculation_model->getData($calc_id);
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
             }
