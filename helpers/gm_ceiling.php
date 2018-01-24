@@ -3874,14 +3874,14 @@ class Gm_ceilingHelpersGm_ceiling
         $client_contacts_model = self::getModel('client_phones');
         $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
         for($i=0;$i<count($client_contacts);$i++){
-            $phones .= $client_contacts[$i]->phone . (($i < count($names) - 1) ? " , " : " ");
+            $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
         }
         $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
         $html .= '<h2>Монтажная бригада: ' . $brigade->name . '</h2>';
         $html .= "<h2>Состав монтажной бригады: </h2>";
         for($i=0;$i<count($names);$i++){
-            $brigade_names .= $names[$i]->name . (($k < count($names) - 1) ? " , " : " ");
+            $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
         }
         $html .= $brigade_names;
         $html .= "<br>";
@@ -3926,134 +3926,129 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
         $html .= "<pagebreak />";
-        $html .= '<h1>Информация</h1>';
-        $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
-        if (isset($project->id)) {
-            if ($project->id) {
-                $html .= "<b>Номер договора: </b>" . $project->id . "<br>";
-            }
-        }
-        if (isset($project->client_id)) {
-            if ($project->client_id) {
-                $html .= "<b>Клиент: </b>" . $project->client_id . "<br>";
-            }
-        }
-        if (isset($phones)) {
-            $html .= "<b>Телефон: </b>".$phones . "<br>";
-            
-        }
-        if (isset($project->project_info)) {
-            if ($project->project_info) {
-                $html .= "<b>Адрес: </b>" . $project->project_info . "<br>";
-            }
-        }
-        if (isset($calculation_title)) {
-            if ($calculation_title) {
-                $html .= "<b>Потолок: </b>" . $calculation_title . "<br>";
-            }
-        }
-        if (isset($brigade->name)) {
-            if ($brigade->name) {
-                $html .= "<b>Монтажная бригада: </b>" . $brigade->name . "<br>";
-            }
-        }
-        if (isset($brigade_names)) {
-            $html .= "<b>Состав монтажной бригады: </b>".$brigade_names."<br>";
-        }
-        if (isset($project->gm_calculator_note)) {
-            if ($project->gm_calculator_note) {
-                $html .= "<b>Примечание замерщика ГМ: </b>" . $project->gm_calculator_note . "<br>";
-            }
-        }
-        if (isset($project->dealer_calculator_note)) {
-            if ($project->dealer_calculator_note) {
-                $html .= "<b>Примечание замерщика дилера: </b>" . $project->dealer_calculator_note . "<br>";
-            }
-        }
-        if (isset($project->gm_chief_note)) {
-            if ($project->gm_chief_note) {
-                $html .= "<b>Примечание начальника МС ГМ: </b>" . $project->gm_chief_note . "<br>";
-            }
-        }
-        if (isset($project->dealer_chief_note)) {
-            if ($project->dealer_chief_note) {
-                $html .= "<b>Примечание начальника МС дилера: </b>" . $project->dealer_chief_note . "<br>";
-            }
-        } 
-        if ($project->project_mounting_date != '0000-00-00 00:00:00') {
-            $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
-            $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
-        }
-
-
-        if ($need_mount) {
-            $html .= '<p>&nbsp;</p>
-                    <h1>Наряд монтажной бригаде</h1>
-                    <h2>Дата: ' . date("d.m.Y") . '</h2>
-                    <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $ajax_return['id']) . ".png" . '" style="width: 100%; max-height: 800px;"/>
-                    <table border="0" cellspacing="0" width="100%">
-                    <tbody>
-                        <tr>
-                            <th>Наименование</th>
-                            <th class="center">Цена, руб.</th>
-                            <th class="center">Кол-во</th>
-                            <th class="center">Стоимость, руб.</th>
-                        </tr>';
-
-            if ($project->who_mounting == 1) {
-                foreach ($mounting_data as $item) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . $item['title'] . '</td>';
-                    $html .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
-                    $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                    $html .= '<td class="center">' . round($item['gm_salary_total'], 2) . '</td>';
-                    $html .= '</tr>';
+        foreach($calculations as $calc){
+            $html .= '<h1>Информация</h1>';
+            $html .= "<b>Название: </b>" . $calc->calculation_title . "<br>";
+            if (isset($project->id)) {
+                if ($project->id) {
+                    $html .= "<b>Номер договора: </b>" . $project->id . "<br>";
                 }
-                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_gm_mounting, 2) . '</th></tr>';
+            }
+            if (isset($project->client_id)) {
+                if ($project->client_id) {
+                    $html .= "<b>Клиент: </b>" . $project->client_id . "<br>";
+                }
+            }
+            if (isset($phones)) {
+                $html .= "<b>Телефон: </b>".$phones . "<br>";
+                
+            }
+            if (isset($project->project_info)) {
+                if ($project->project_info) {
+                    $html .= "<b>Адрес: </b>" . $project->project_info . "<br>";
+                }
+            }
+            if (isset($brigade->name)) {
+                if ($brigade->name) {
+                    $html .= "<b>Монтажная бригада: </b>" . $brigade->name . "<br>";
+                }
+            }
+            if (isset($brigade_names)) {
+                $html .= "<b>Состав монтажной бригады: </b>".$brigade_names."<br>";
+            }
+            if (isset($project->gm_calculator_note)) {
+                if ($project->gm_calculator_note) {
+                    $html .= "<b>Примечание замерщика ГМ: </b>" . $project->gm_calculator_note . "<br>";
+                }
+            }
+            if (isset($project->dealer_calculator_note)) {
+                if ($project->dealer_calculator_note) {
+                    $html .= "<b>Примечание замерщика дилера: </b>" . $project->dealer_calculator_note . "<br>";
+                }
+            }
+            if (isset($project->gm_chief_note)) {
+                if ($project->gm_chief_note) {
+                    $html .= "<b>Примечание начальника МС ГМ: </b>" . $project->gm_chief_note . "<br>";
+                }
+            }
+            if (isset($project->dealer_chief_note)) {
+                if ($project->dealer_chief_note) {
+                    $html .= "<b>Примечание начальника МС дилера: </b>" . $project->dealer_chief_note . "<br>";
+                }
+            } 
+            if ($project->project_mounting_date != '0000-00-00 00:00:00') {
+                $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
+                $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
+            }
+
+            if ($need_mount) {
+                $html .= '<p>&nbsp;</p>
+                        <h1>Наряд монтажной бригаде</h1>
+                        <h2>Дата: ' . date("d.m.Y") . '</h2>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calc->id) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <table border="0" cellspacing="0" width="100%">
+                        <tbody>
+                            <tr>
+                                <th>Наименование</th>
+                                <th class="center">Цена, руб.</th>
+                                <th class="center">Кол-во</th>
+                                <th class="center">Стоимость, руб.</th>
+                            </tr>';
+                $mounting_data = self::calculate_mount(0,1,$calc->id,null);
+                if ($project->who_mounting == 1) {
+                    foreach ($mounting_data as $item) {
+                        $html .= '<tr>';
+                        $html .= '<td>' . $item['title'] . '</td>';
+                        $html .= '<td class="center">' . round($item['gm_salary'], 2) . '</td>';
+                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                        $html .= '<td class="center">' . round($item['gm_salary_total'], 2) . '</td>';
+                        $html .= '</tr>';
+                    }
+                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_gm_mounting, 2) . '</th></tr>';
+                } else {
+                    foreach ($mounting_data as $item) {
+                        $html .= '<tr>';
+                        $html .= '<td>' . $item['title'] . '</td>';
+                        $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
+                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                        $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
+                        $html .= '</tr>';
+                    }
+                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_dealer_mounting, 2) . '</th></tr>';
+                }
+
+                $html .= '</tbody></table><p>&nbsp;</p>';
             } else {
-                foreach ($mounting_data as $item) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . $item['title'] . '</td>';
-                    $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
-                    $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                    $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
-                    $html .= '</tr>';
+                $html .= '<p>&nbsp;</p>
+                        <h1>Наряд монтажной бригаде</h1>
+                        <h2>Дата: ' . date("d.m.Y") . '</h2>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $ajax_return['id']) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <table border="0" cellspacing="0" width="100%">
+                        <tbody>
+                            <tr>
+                                <th>Наименование</th>
+                                <th class="center">Кол-во</th>
+                            </tr>';
+
+                if ($project->who_mounting == 1) {
+                    foreach ($mounting_data as $item) {
+                        $html .= '<tr>';
+                        $html .= '<td>' . $item['title'] . '</td>';
+                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                        $html .= '</tr>';
+                    }
+                } else {
+                    foreach ($mounting_data as $item) {
+                        $html .= '<tr>';
+                        $html .= '<td>' . $item['title'] . '</td>';
+                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                        $html .= '</tr>';
+                    }
                 }
-                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_dealer_mounting, 2) . '</th></tr>';
+
+                $html .= '</tbody></table><p>&nbsp;</p>';
             }
-
-            $html .= '</tbody></table><p>&nbsp;</p>';
-        } else {
-            $html .= '<p>&nbsp;</p>
-                    <h1>Наряд монтажной бригаде</h1>
-                    <h2>Дата: ' . date("d.m.Y") . '</h2>
-                    <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $ajax_return['id']) . ".png" . '" style="width: 100%; max-height: 800px;"/>
-                    <table border="0" cellspacing="0" width="100%">
-                    <tbody>
-                        <tr>
-                            <th>Наименование</th>
-                            <th class="center">Кол-во</th>
-                        </tr>';
-
-            if ($project->who_mounting == 1) {
-                foreach ($mounting_data as $item) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . $item['title'] . '</td>';
-                    $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                    $html .= '</tr>';
-                }
-            } else {
-                foreach ($mounting_data as $item) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . $item['title'] . '</td>';
-                    $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                    $html .= '</tr>';
-                }
-            }
-
-            $html .= '</tbody></table><p>&nbsp;</p>';
-        }
-
+    }
         $filename = md5($data['id'] . "-2") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
 
