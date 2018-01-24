@@ -3866,7 +3866,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
         $calculation_model = self::getModel('calculations');
-        $calcultions_model = self::getModel('calculations');
+        $calculations_model = self::getModel('calculations');
         $names = $calculations_model->FindAllMounters($project->project_mounter);
         $calculations = $calculation_model->getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
