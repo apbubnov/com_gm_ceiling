@@ -454,7 +454,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table style="margin-left: calc(50% - 86px);">
+					<table class="table_lighting">
 						<tr>
 							<td>
 								<h3>Освещение</h3>
@@ -1744,6 +1744,7 @@
 		<!-- /////////////////////////////////////////////////////////////////// -->
 		<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"> Наверх</i></a>
 	</form>
+</div>
 </div>
 
 <script>
