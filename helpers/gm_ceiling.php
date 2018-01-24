@@ -2777,6 +2777,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data['n1'] = $calculation_data->n1_id;
             $data['n2'] = $calculation_data->n2_id;
             $data['n3'] = $calculation_data->n3_id;
+            $data['n14'] = $calculation_model->n14_load($calc_id);
         }
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
