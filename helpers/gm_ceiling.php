@@ -3866,13 +3866,25 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
         $calculation_model = self::getModel('calculations');
-        //teams getMounters
+        $calculations_model = self::getModel('calculations');
+        $names = $calculations_model->FindAllMounters($project->project_mounter);
         $calculations = $calculation_model->getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
+        $brigade = JFactory::getUser($project->project_mounter);
+        $client_contacts_model = self::getModel('client_phones');
+        $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
+        for($i=0;$i<count($client_contacts);$i++){
+            $phones .= $client_contacts[$i]->phone . (($i < count($names) - 1) ? " , " : " ");
+        }
         $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
-        $html .= '<h2>Монтажная бригада: ' . JFactory::getUser($project->project_mounter)->name . '</h2>';
-        $html .= '<h2>Состав бригады: ' . $project->project_mounter . '</h2>';
+        $html .= '<h2>Монтажная бригада: ' . $brigade->name . '</h2>';
+        $html .= "<h2>Состав монтажной бригады: </h2>";
+        for($i=0;$i<count($names);$i++){
+            $brigade_names .= $names[$i]->name . (($k < count($names) - 1) ? " , " : " ");
+        }
+        $html .= $brigade_names;
+        $html .= "<br>";
         $html .= "<h2>Адрес: </h2>" . $project->project_info . "<br>";
         $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
         $html .= "<h2>Дата монтажа: </h2>" . $jdate->format('d.m.Y  H:i') . "<br>";
@@ -3926,11 +3938,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= "<b>Клиент: </b>" . $project->client_id . "<br>";
             }
         }
-        if (isset($phone)) {
-            $html .= "<b>Телефон: </b>";
-            foreach ($phone AS $k => $contact) {
-                $html .= $contact->phone . (($k < count($phone) - 1) ? " , " : "<br>");
-            }
+        if (isset($phones)) {
+            $html .= "<b>Телефон: </b>".$phones . "<br>";
+            
         }
         if (isset($project->project_info)) {
             if ($project->project_info) {
@@ -3942,17 +3952,13 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= "<b>Потолок: </b>" . $calculation_title . "<br>";
             }
         }
-        if (isset($mount->name)) {
-            if ($mount->name) {
-                $html .= "<b>Монтажная бригада: </b>" . $mount->name . "<br>";
+        if (isset($brigade->name)) {
+            if ($brigade->name) {
+                $html .= "<b>Монтажная бригада: </b>" . $brigade->name . "<br>";
             }
         }
-        if (isset($mount_name)) {
-            $html .= "<b>Состав монтажной бригады: </b>";
-            foreach ($mount_name AS $k => $value) {
-                $html .= $value->name . (($k < count($mount_name) - 1) ? " , " : " ");
-            }
-            $html .= "<br>";
+        if (isset($brigade_names)) {
+            $html .= "<b>Состав монтажной бригады: </b>".$brigade_names."<br>";
         }
         if (isset($project->gm_calculator_note)) {
             if ($project->gm_calculator_note) {
