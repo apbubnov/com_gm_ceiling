@@ -8,7 +8,6 @@
  */
 // No direct access
 defined('_JEXEC') or die;
-
 $user = JFactory::getUser();
 $userId = $user->get('id');
 $userName = $user->get('username');
@@ -147,7 +146,7 @@ if (count($Allbrigades) == 0) {
 //----------------------------------------------------------------------------------
 
 //TODO убрать,сделать через модель
-$db = JFactory::getDbo();
+/*$db = JFactory::getDbo();
 $query = $db->getQuery(true);
 $query
     ->select(
@@ -159,10 +158,182 @@ $query
     ->from($db->quoteName("#__gm_ceiling_groups"))
     ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
 $db->setQuery($query);
-$results = $db->loadObjectList();
+$results = $db->loadObjectList();*/
 
+$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+$calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+$clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+$birthday = $client_model->getClientBirthday($this->item->id_client);
+$phones = $calc_model->getClientPhones($this->item->id_client);
+$emails = $clients_dop_contacts_model->getContact($this->item->id_client);
+$Client = $this->item;
+$Client->birthday = $birthday->birthday;
+$Client->birthday_date = date("d.m.Y", strtotime($Client->birthday));
+$Client->phones = [];
+foreach ($phones AS $contact) {
+    $phone = preg_replace("/([+\-\s\(\)]*)/i", "", $contact->client_contacts);
+    $phone = "+".substr($phone, 0, 1)." (".substr($phone, 1, 3).") ".substr($phone, 3, 3) . " " .substr($phone, 5, 2) . " " . substr($phone, 7, 2);
+    $Client->phones[] = $phone;
+}
+$Client->emails = [];
+foreach ($emails AS $email) {
+    $Client->emails[] = $email->contact;
+}
+$Client->address = (object) [];
+$Client->address->full = $Client->project_info;
+$Client->address->street = preg_split("/,.дом([\S\s]*)/", $Client->project_info)[0];
+preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $Client->project_info,$house);
+$Client->address->house = $house[1];
+preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $Client->project_info,$bdq);
+$Client->address->bdq = $bdq[1];
+preg_match("/,.квартира:.([\d\s]{1,4}),/", $Client->project_info,$apartment);
+$Client->address->apartment = $apartment[1];
+preg_match("/,.подъезд:.([\d\s]{1,4}),/", $Client->project_info,$porch);
+$Client->address->porch = $porch[1];
+preg_match("/,.этаж:.([\d\s]{1,4})/", $Client->project_info,$floor);
+$Client->address->floor = $floor[1];
+preg_match("/,.код:.([\d\S\s]{1,10})/", $Client->project_info,$code);
+$Client->address->code = $code[1];
+$Client->calc_date = (object) [];
+$Client->calc_date->date = date("d.m.Y", strtotime($Client->project_calculation_date));
+$Client->calc_date->time = date("H:i", strtotime($Client->project_calculation_date));
+$Client->discount = (object) [];
+$Client->discount->min = 0;
+$Client->discount->max = ($calculation_total - $project_total_1) / $calculation_total * 100;
 ?>
+<?/*print_r($Client);*/?>
+<link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/tmpl/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
 
+<div>
+    /* Правит - @CEH4TOP */
+    /* Не обращайте внимания! */
+</div>
+
+<div class="Page">
+    <div class="TitlePage">
+        <h2 class="center">Просмотр проекта</h2>
+        <h3 class="left">Информация по проекту № <?= $this->item->id ?></h3>
+    </div>
+
+    <div class="Actions">
+        <div class="Back"><?= parent::getButtonBack(); ?></div>
+        <div class="Update">
+            <button class="Update">
+                <?=($this->item->client_id == 1)?"Заполнить данные о клиенте":"Изменить данные";?>
+            </button>
+        </div>
+    </div>
+
+    <div class="Body row">
+        <div class="Client col col-12 <?=($user->dealer_type == 0)?"col-md-6":"col-md-12"?>">
+            <table class="Client" db-id="<?=$Client->id_client;?>">
+                <tbody>
+                <tr>
+                    <th class="ClientName">Клиент:</th>
+                    <td id="ClientName"><?=$Client->client_id;?></td>
+                </tr>
+                <tr>
+                    <th class="ClientBDay">Дата рождения:</th>
+                    <td id="ClientBDay"><?=$Client->birthday_date;?></td>
+                </tr>
+                <tr>
+                    <th class="ClientPhones">Телефоны:</th>
+                    <td id="ClientPhones">
+                        <?
+                        foreach ($Client->phones as $Phone)
+                            echo "<a href='tel:$Phone'>$Phone</a>";
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="ClientEmails">Почты:</th>
+                    <td id="ClientEmails">
+                        <?
+                        foreach ($Client->emails as $Email)
+                            echo "<a href='mailto:$Email'>$Email</a>";
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="ClientAddress">Адрес:</th>
+                    <td id="ClientAddress" json="<?=json_encode($Client->address);?>">
+                        <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$Client->address->full;?>"><?=$Client->address->full;?></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="ClientCalcDate">Дата замера:</th>
+                    <td id="ClientCalcDate"><?=$Client->calc_date->date;?></td>
+                </tr>
+                <tr>
+                    <th class="ClientNote">Примечание клиента:</th>
+                    <td id="ClientNote"><?=$Client->project_note;?></td>
+                </tr>
+                <tr>
+                    <th class="ClientCalcTime">Время замера:</th>
+                    <td id="ClientCalcTime"><?=$Client->calc_date->time;?></td>
+                </tr>
+                <?if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
+                    <tr>
+                        <th class="ClientDiscount">Изменить величину скидки:</th>
+                        <td id="ClientDiscount">
+                            <form action="javascript:SendDiscount();">
+                                <input type="number" class="Discount"
+                                       min="<?$Client->discount->min;?>"
+                                       max="<?=$Client->discount->max;?>">
+                                <button type="submit" class="AddDiscount">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <?endif;?>
+                </tbody>
+            </table>
+        </div>
+        <?if($user->dealer_type == 0):?>
+        <div class="Messages col col-12 col-md-6">
+            <div class="Title">История клиента:</div>
+            <div class="Note">
+                <textarea id="Notes" class="Notes" rows="11" readonly></textarea>
+                <form class="Add" action="javascript:SendNote();">
+                    <div class="Title">Добавить комментарий:</div>
+                    <textarea class="Note" placeholder="Введите новое примечание"
+                              onmousemove="ResizeNote();"
+                    ></textarea>
+                    <button type="submit" class="AddNote">
+                        <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <?endif;?>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var $ = jQuery,
+        DATA = {};
+
+    $(document).ready(Init);
+    $(window).resize(Resize);
+
+    function Init() {
+        DATA.Massage = {};
+        DATA.Massage.Note = $(".Page .Body .Messages textarea.Note");
+        DATA.Massage.Add = DATA.Massage.Note.siblings(".AddNote");
+
+
+        Resize();
+    }
+
+    function Resize() {
+        ResizeNote();
+    }
+
+    function ResizeNote() {
+        DATA.Massage.Add.css({"height":DATA.Massage.Note.outerHeight()});
+    }
+</script>
 <style>
     @media screen and (max-width: 500px) {
         #table1 {
@@ -527,8 +698,6 @@ $results = $db->loadObjectList();
     </div>
 </div>
 </div>
-
-
 <?php /*if($canEdit && $this->item->checked_out == 0): ?>
     <a class="btn" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=project.edit&id='.$this->item->id); ?>">Изменить проект</a>
 <?php endif;*/ ?>
@@ -1882,7 +2051,7 @@ var $ = jQuery;
                     Array.from(data).forEach(function(element) {
                         if (element.project_mounter == selectedBrigade) {
                             if (element.project_mounting_day_off != "") {
-                                table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                                table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                             } else {
                                 table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                             }                        }
@@ -1894,8 +2063,14 @@ var $ = jQuery;
                     window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                     var BusyTimes = [];
                     Array.from(data).forEach(function(elem) {
-                        if (selectedBrigade == elem.project_mounter) {
+                        if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
                             BusyTimes.push(elem.project_mounting_date.substr(11));
+                        } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
+                            AllTime.forEach(element => {
+                                if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                    BusyTimes.push(element);
+                                }
+                            }); 
                         }
                     });
                     FreeTimes = AllTime.diff(BusyTimes);
@@ -1928,7 +2103,7 @@ var $ = jQuery;
             Array.from(DataOfProject).forEach(function(element) {
                 if (element.project_mounter == id) {
                     if (element.project_mounting_day_off != "") {
-                        table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">Выходной</td></tr>';
+                        table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
                     } else {
                         table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
                     }                
@@ -1940,8 +2115,14 @@ var $ = jQuery;
             jQuery("#hours").empty();
             var BusyTimes = [];
             Array.from(DataOfProject).forEach(function(elem) {
-                if (id == elem.project_mounter) {
+                if (id == elem.project_mounter && elem.project_mounting_day_off == "" ) {
                     BusyTimes.push(elem.project_mounting_date.substr(11));
+                } else if (id == elem.project_mounter && elem.project_mounting_day_off != "") {
+                    AllTime.forEach(element => {
+                        if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                            BusyTimes.push(element);
+                        }
+                    }); 
                 }
             });
             FreeTimes = AllTime.diff(BusyTimes);

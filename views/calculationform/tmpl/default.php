@@ -135,8 +135,8 @@
 			</div>
 			<input type="hidden" name="jform[rek]" value="<?php echo  $rek; ?>" />
 		<?php } ?>
-        <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
-        <input id="flag_auto" type="hidden" value="0"/>
+		<input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
+		<input id="flag_auto" type="hidden" value="0"/>
 		<input type="hidden" name="jform[public]" value="1" />
 		<input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
 		<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
@@ -564,17 +564,17 @@
 										</div>
 										<div class="advanced_col2">
 											<select name="n13_type[]" id="n13" class="form-control n13_control" placeholder="Вид">
-                                                <?foreach ($this->item->types[1]->id AS $ring):?>
-                                                    <option value="<?=$ring->id;?>" <?=($ring->id == $lamp->n13_type)?'selected':'';?>><?=$ring->title;?></option>
-                                                <?endforeach;?>
+												<?foreach ($this->item->types[1]->id AS $ring):?>
+													<option value="<?=$ring->id;?>" <?=($ring->id == $lamp->n13_type)?'selected':'';?>><?=$ring->title;?></option>
+												<?endforeach;?>
 											</select>
 										</div>
 										<div class="advanced_col3">
-                                            <select name="n13_ring[]" id="n13_1" class="form-control" placeholder="Диаметр">
-                                                <?foreach ($this->item->types[1]->id[$lamp->n13_type]->options[0]->components_option AS $n13_item):?>
-                                                    <option value="<?=$n13_item->id;?>" <?=($n13_item->id == $lamp->n13_size)?'selected':'';?>><?=$n13_item->title;?></option>
-                                                <?endforeach;?>
-                                            </select>
+											<select name="n13_ring[]" id="n13_1" class="form-control" placeholder="Диаметр">
+												<?foreach ($this->item->types[1]->id[$lamp->n13_type]->options[0]->components_option AS $n13_item):?>
+													<option value="<?=$n13_item->id;?>" <?=($n13_item->id == $lamp->n13_size)?'selected':'';?>><?=$n13_item->title;?></option>
+												<?endforeach;?>
+											</select>
 										</div>
 										<div class="advanced_col4 center">
 											<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -719,7 +719,7 @@
 		</div>
 		<div class="container">
 			<div class="row sm-margin-bottom">
-		    	<div class="col-sm-4"></div>
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div class="form-group" style="margin-bottom: 0em;">
 						<div class="advanced_col1">
@@ -879,7 +879,7 @@
 								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel">
 							</div>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 				<!-- керамогранит -->
@@ -929,7 +929,7 @@
 								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel">
 							</div>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-4"></div>
 					</div>					
 				</div>
 				<!-- закладная брусом -->
@@ -983,37 +983,37 @@
 					</div>
 				</div>
 				<!-- переход уровня -->
-            	<div class="container">
-                	<div class="row">
-                    	<div class="col-sm-4"></div>
-                    	<div class="col-sm-4" style="margin-bottom: 1em;">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4" style="margin-bottom: 1em;">
 							<table>
 								<tr>
 									<td>Переход уровня</td>
 								</tr>
 							</table>
-                    	</div>
-                    	<div class="col-sm-4"></div>
+						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
-            	<div class="container">
-                	<div class="row sm-margin-bottom">
-                    	<div class="col-sm-4"></div>
-                    	<div class="col-sm-4">
-                        	<div class="form-group" style="margin-bottom: 0em;">
+				<div class="container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<div class="advanced_col1">
 									<label>Кол-во, м</label>
 								</div>
-                            	<div class="advanced_col5">
-                                	<label>Тип</label>
-                            	</div>
-                            	<div class="advanced_col4 center">
-                                	<label><i class="fa fa-trash" aria-hidden="true"></i></label>
-                            	</div>
-                            	<div class="clr"></div>
-                       		</div>
-                        	<div id="level_block_html" class="hide_label">
-                            	<?php $n29 = $this->item->n29; ?>
+								<div class="advanced_col5">
+									<label>Тип</label>
+								</div>
+								<div class="advanced_col4 center">
+									<label><i class="fa fa-trash" aria-hidden="true"></i></label>
+								</div>
+								<div class="clr"></div>
+							</div>
+							<div id="level_block_html" class="hide_label">
+								<?php $n29 = $this->item->n29; ?>
 								<?php $component_model = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
 								<?php if(count($n29) > 0) { ?>
 									<?php foreach($n29 as $level) {?>
@@ -1038,10 +1038,10 @@
 										</div>
 									<?php } ?>
 								<?php } ?>
-                        	</div>
-                        	<button id="add_level" class="btn btn-primary" type="button">Добавить</button>
-                    	</div>
-                	</div>
+							</div>
+							<button id="add_level" class="btn btn-primary" type="button">Добавить</button>
+						</div>
+					</div>
 				</div>
 			<?php } ?>
 			<!-- пожарная сигнализация -->
@@ -1341,48 +1341,49 @@
 				</div>
 				<div class="container">
 					<div class="row sm-margin-bottom">
-					<div class="col-sm-4"></div>
-					<div class="col-sm-4">
-						<div id="jform_n23_block">
-							<div class="form-group" style="margin-bottom: 0em;">
-								<div class="advanced_col1">
-									<label>Кол-во,шт</label>
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div id="jform_n23_block">
+								<div class="form-group" style="margin-bottom: 0em;">
+									<div class="advanced_col1">
+										<label>Кол-во,шт</label>
+									</div>
+									<div class="advanced_col5">
+										<label>Размер</label>
+									</div>
+									<div class="advanced_col4 center">
+										<label><i class="fa fa-trash" aria-hidden="true"></i></label>
+									</div>
+									<div class="clr"></div>
 								</div>
-								<div class="advanced_col5">
-									<label>Размер</label>
-								</div>
-								<div class="advanced_col4 center">
-									<label><i class="fa fa-trash" aria-hidden="true"></i></label>
-								</div>
-								<div class="clr"></div>
-							</div>
-							<div id="jform_n23_block_html" class="hide_label">
-								<?php $n23 = $this->item->n23; ?>
-								<?php if(count($n23) > 0) { ?>
-									<?php foreach($n23 as $diffuzor) if ($diffuzor->n23_count > 0) { ?>
-										<div class="form-group">
-											<div class="advanced_col1">
-												<input name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
+								<div id="jform_n23_block_html" class="hide_label">
+									<?php $n23 = $this->item->n23; ?>
+									<?php if(count($n23) > 0) { ?>
+										<?php foreach($n23 as $diffuzor) if ($diffuzor->n23_count > 0) { ?>
+											<div class="form-group">
+												<div class="advanced_col1">
+													<input name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
+												</div>
+												<div class="advanced_col5">
+													<select class="form-control" name="n23_size[]" for="jform_n22_type" placeholder="Размер">
+														<?foreach ($this->item->n23_all AS $diffuzor_item):?>
+															<option value="<?=$diffuzor_item->id;?>" <?=($diffuzor_item->id == $diffuzor->n23_size)?'selected':'';?>><?=$diffuzor_item->title;?></option>
+														<?endforeach;?>
+													</select>
+												</div>
+												<div class="advanced_col4 center">
+													<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+												</div>
+												<div class="clr"></div>
 											</div>
-											<div class="advanced_col5">
-												<select class="form-control" name="n23_size[]" for="jform_n22_type" placeholder="Размер">
-													<?foreach ($this->item->n23_all AS $diffuzor_item):?>
-														<option value="<?=$diffuzor_item->id;?>" <?=($diffuzor_item->id == $diffuzor->n23_size)?'selected':'';?>><?=$diffuzor_item->title;?></option>
-													<?endforeach;?>
-												</select>
-											</div>
-											<div class="advanced_col4 center">
-												<button class="clear_form_group btn btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
-											</div>
-											<div class="clr"></div>
-										</div>
+										<?php } ?>
 									<?php } ?>
-								<?php } ?>
+								</div>
+								<button id="add_n23" class="btn btn-primary" type="button">Добавить</button>
 							</div>
-							<button id="add_n23" class="btn btn-primary" type="button">Добавить</button>
 						</div>
+						<div class="col-sm-4"></div>
 					</div>
-					<div class="col-sm-4"></div>
 				</div>
 				<!-- другие комплектующие -->
 				<div class="container">
@@ -1562,7 +1563,7 @@
 				</div>
 			<?php }?>
 		</div>									
-        <!-- Монтаж -->
+		<!-- Монтаж -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
@@ -1629,21 +1630,21 @@
 				</div>
 			</div>
 		</div>
-        <div id="result_block">
+		<div id="result_block">
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
-                    <?php if($this->type === "guest") { ?>
-                        <div class="col-sm-4 total_price center" style="display: none;" id="guest_price">
-                            <div class="price_value">
-                                <span id="final_price">0.00</span> руб. - <span style="color:red; " >30% </span>=
-                                <span id="discount_price">0.00</span> руб.<br>
-                            </div>
-                            <div class="price_title">
-                                Самая низкая цена в Воронеже!
-                            </div>                            
-                        </div>
-                    <?php } else {?>
+					<?php if($this->type === "guest") { ?>
+						<div class="col-sm-4 total_price center" style="display: none;" id="guest_price">
+							<div class="price_value">
+								<span id="final_price">0.00</span> руб. - <span style="color:red; " >30% </span>=
+								<span id="discount_price">0.00</span> руб.<br>
+							</div>
+							<div class="price_title">
+								Самая низкая цена в Воронеже!
+							</div>                            
+						</div>
+					<?php } else {?>
 						<div class="col-sm-4 total_price center">
 							<div class="price_value">
 								<span id="final_price">0.00</span> руб.
@@ -1652,7 +1653,7 @@
 								Самая низкая цена в Воронеже!
 							</div>
 						</div>
-                    <?php } ?>
+					<?php } ?>
 				</div>
 			</div>			
 			<div class="container">
@@ -1828,7 +1829,6 @@
 	</form>
 </div>
 </div>
-
 <script type="text/javascript">
     var $ = jQuery;
 //для подгрузки компонентов со склада
@@ -1985,6 +1985,8 @@ function submit_form_sketch()
 	});
 
 	jQuery(document).ready(function() {
+
+		jQuery("body").addClass("yellow_home");
 
 		if(jQuery("#jform_n4").val()==0 && jQuery("#jform_n5").val()==0 && jQuery("#jform_n9").val()==0)
 		{
