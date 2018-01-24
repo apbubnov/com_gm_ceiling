@@ -3999,7 +3999,7 @@ class Gm_ceilingHelpersGm_ceiling
                         $html .= '<td class="center">' . round($item['gm_salary_total'], 2) . '</td>';
                         $html .= '</tr>';
                     }
-                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_gm_mounting, 2) . '</th></tr>';
+                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_gm_mounting'], 2) . '</th></tr>';
                 } else {
                     foreach ($mounting_data as $item) {
                         $html .= '<tr>';
@@ -4009,7 +4009,7 @@ class Gm_ceilingHelpersGm_ceiling
                         $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
                         $html .= '</tr>';
                     }
-                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_dealer_mounting, 2) . '</th></tr>';
+                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($mounting_data['total_dealer_mounting'], 2) . '</th></tr>';
                 }
 
                 $html .= '</tbody></table><p>&nbsp;</p>';
