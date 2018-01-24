@@ -27,11 +27,12 @@ $current_from = $jdate->format('Y-m-d H:i:s');
 $jdate = new JDate($this->item->project_mounting_to);
 $current_to = $jdate->format('Y-m-d H:i:s');
 
-$calendar = Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->item->project_mounter, $month1, $year1, $current_from, $current_to);
+/* $calendar = Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->item->project_mounter, $month1, $year1, $current_from, $current_to);
 $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->item->project_mounter, $month2, $year2, $current_from, $current_to);
-
+ */
 
 ?>
+
 <?= parent::getButtonBack(); ?>
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
