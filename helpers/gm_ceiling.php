@@ -3866,13 +3866,18 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
         $calculation_model = self::getModel('calculations');
-        //teams getMounters
+        $calcultions_model = self::getModel('calculations');
+        $names = $calculations_model->FindAllMounters($project->project_mounter);
         $calculations = $calculation_model->getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
         $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
         $html .= '<h2>Монтажная бригада: ' . JFactory::getUser($project->project_mounter)->name . '</h2>';
-        $html .= '<h2>Состав бригады: ' . $project->project_mounter . '</h2>';
+        $html .= "<b>Состав монтажной бригады: </b>";
+        foreach ($names AS $k => $value) {
+            $html .= $value->name . (($k < count($names) - 1) ? " , " : " ");
+        }
+        $html .= "<br>";
         $html .= "<h2>Адрес: </h2>" . $project->project_info . "<br>";
         $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
         $html .= "<h2>Дата монтажа: </h2>" . $jdate->format('d.m.Y  H:i') . "<br>";
@@ -3947,10 +3952,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= "<b>Монтажная бригада: </b>" . $mount->name . "<br>";
             }
         }
-        if (isset($mount_name)) {
+        if (isset($names)) {
             $html .= "<b>Состав монтажной бригады: </b>";
-            foreach ($mount_name AS $k => $value) {
-                $html .= $value->name . (($k < count($mount_name) - 1) ? " , " : " ");
+            foreach ($names AS $k => $value) {
+                $html .= $value->name . (($k < count($names) - 1) ? " , " : " ");
             }
             $html .= "<br>";
         }
