@@ -229,10 +229,9 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query2 = $db->getQuery(true);
-            $query3 = $db->getQuery(true);
             $query4 = $db->getQuery(true);
             
-            $query->select('id, project_mounting_date, read_by_mounter, project_status, project_info, gm_chief_note, dealer_chief_note, transport, distance, distance_col')
+            $query->select('id, project_mounting_date, read_by_mounter, project_status, project_info, gm_chief_note, dealer_chief_note')
                 ->from('#__gm_ceiling_projects')
                 ->where("project_mounter = '$id' and project_mounting_date between '$date 00:00:00' and '$date 23:59:59'")
                 ->order('project_mounting_date');
@@ -247,12 +246,6 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $items2 = $db->loadObjectList();
 
             $user = JFactory::getUser();
-
-            $query3->select('transport as transport_mp, distance as distance_mp')
-                ->from('#__gm_ceiling_mount')
-                ->where("user_id = '$user->dealer_id'");
-            $db->setQuery($query3);
-            $items3 = $db->loadObjectList();
             
             foreach ($items as $value) {
                 foreach ($items2 as $val) {
@@ -260,8 +253,11 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                         $value->n5 += $val->n5;
                         $value->mounting_sum += $val->mounting_sum;
                     }
-                }
-                $calc_transport = 0;
+				}
+				$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id);
+				$value->mounting_sum += $transport["mounter_sum"];
+				
+                /* $calc_transport = 0;
                 if ($value->transport == 1) {
                     $calc_transport = $items3[0]->transport_mp * $value->distance_col;
                 } else if ($value->transport == 2) {
@@ -273,7 +269,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                 $value->distance_col = $value->distance_col;
                 $value->distance = $value->distance;
                 $value->distance_mp = $items3[0]->distance_mp;
-                $value->transport = $value->transport;
+                $value->transport = $value->transport; */
             }
 
             $query4->select('date_from, date_to')
@@ -297,13 +293,12 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             for ($i=0; $i < count($items); $i++) {
                 $items[$i]->project_mounting_date = substr($items[$i]->project_mounting_date, 11, 5);
             }
-
             //создание нового массива
             if (!empty($items4)) {
                 $day = array(
                     'id'=>NULL,
                     'project_mounting_date' => substr($items4->date_from, 11, 5) .' - '. substr($items4->date_to, 11, 5),
-                    'project_info' =>'Выходной',
+                    'project_info' =>'Выходные часы',
                     'perimeter' => NULL,
                     'salary' => NULL,
                     'gm_chief_note' => NULL,
