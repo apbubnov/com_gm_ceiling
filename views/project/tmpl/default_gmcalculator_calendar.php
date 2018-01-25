@@ -69,9 +69,9 @@ foreach($calculations as $d) {
 }
 if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
 }
-if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
-    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-}
+//if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
+//    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+//}
 $project_total_discount_transport = $project_total_discount + $sum_transport;
 
 /*if ($user->dealer_type != 2)

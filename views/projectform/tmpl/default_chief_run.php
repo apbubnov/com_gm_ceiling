@@ -87,13 +87,15 @@ $jdate = new JDate($this->item->project_mounting_to);
 $current_to = $jdate->format('Y-m-d H:i:s'); */
 
 echo parent::getPreloader();
+
 ?>
+<?=parent::getButtonBack();?>
     <style>
         #jform_project_mounter-lbl {
             display: none;
         }
     </style>
-    <h2>Просмотр проекта</h2>
+    <h2 class = "center" >Просмотр проекта</h2>
 <?php if ($this->item) { ?>
     <?php if (sizeof($calculations) > 0) { ?>
         <?php echo "<h3>Расчеты для проекта № ". $this->item->id ."</h3>"; ?>

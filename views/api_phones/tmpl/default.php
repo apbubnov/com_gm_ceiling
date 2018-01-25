@@ -13,7 +13,8 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 ?>
-<h3>Номера телефонов</h3>
+<?=parent::getButtonBack();?>
+<h3 class = "center">Номера телефонов</h3>
 <style type="text/css">
     .analitic-table {
         color: #414099;
