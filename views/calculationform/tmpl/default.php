@@ -60,26 +60,27 @@
 <?php
 	if($type === "calculator" || $type === "gmcalculator" || $type === "gmmanager" || $type === "manager" )
 	{
-		echo parent::getButtonBack();
+		echo ('<div style="margin: 0 0 30px 30px;">'.parent::getButtonBack().'</div>');
 	}
 	if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php'){
 		echo "<script>BackPage = function() { window.history.go(-3); }</script>";
 	}
 ?>
+
 <style>
     .Area {
-        display: inline-block;
-        float: left;
+        /* display: inline-block;
+        float: left; */
         height: auto;
         overflow: visible;
-        margin: 0 5px;
-        margin-bottom: 16px;
+        /* margin: 0 5px;
+        margin-bottom: 16px; */
         position: relative;
     }
 
     .Area .Input {
         display: inline-block;
-        float: left;
+        /* float: left; */
         width: 100%;
         padding-left: 5px;
     }
@@ -90,7 +91,7 @@
         float: left;
         width: 100%;
         height: 0;
-        z-index: 2;
+        z-index: 2; 
     }
 
     .Area .Selects .Select {
@@ -103,8 +104,8 @@
         border: 1px solid rgb(169, 169, 169);
         border-top: 0;
         height: auto;
-        background-color: rgb(54, 53, 127);
-        color: rgb(255, 255, 255);
+        background-color: #d3d3f9;
+        color: #414099;
         max-height: 90px;
         overflow-y: scroll;
         overflow-x: hidden;
@@ -118,7 +119,7 @@
         height: auto;
         line-height: 25px;
         font-size: 14px;
-        border-top: 1px solid rgb(255, 255, 255);
+        border-top: 1px solid rgb(169, 169, 169);
         cursor: pointer;
     }
 
@@ -126,6 +127,7 @@
         background-color: rgb(31, 30, 70);
     }
 </style>
+
 <div class="calculation-edit front-end-edit">
 	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
@@ -1407,7 +1409,9 @@
 								<label>Название</label>
 								<div id="extra_components_title_container">
 									<?php foreach($extra_components_array as $item) { ?>
-										<div class='form-group'><input name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'>
+											<input name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'>
+										</div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1415,7 +1419,9 @@
 								<label>Стоимость</label>
 								<div id="extra_components_value_container">
 									<?php foreach($extra_components_array as $item) { ?>
-										<div class='form-group'><input name='extra_components_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'>
+											<input name='extra_components_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'>
+										</div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1423,78 +1429,68 @@
 						<div class="col-sm-4"></div>
 					</div>
 					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
 								<button id="extra_components_button" class="btn btn-primary" type="button">Добавить</button>
 							</div>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
-                    <!-- другие комплектующие из склада-->
-                    <div class="container">
-                        <div class="row" style="margin-bottom: 1em;">
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <table>
-                                    <tr>
-                                        <td>Другие комплектующие со склада</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="col-sm-4"></div>
-                        </div>
-                    </div>
-                    <div class = "container">
-                        <div class="row">
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <div class="advanced_col_half">
-                                    <label>Название</label>
-                                    <div id="components_title_stock_container">
-                                        <?php foreach($components_stock_array as $item) { ?>
-                                            <div class='form-group Area Type'>
-                                                <input
-                                                       id="Type" value='<?php echo $item['title']; ?>'
-                                                       autocomplete="off"
-                                                       NameDB="CONCAT(components.title,' ',options.title)"
-                                                       onclick="GetList(this, ['Type'], ['Type']);"
-                                                       onkeyup="GetList(this, ['Type'], ['Type']);"
-                                                       onblur="ClearSelect(this)"
-                                                       class='form-control Input Type'
-                                                       type='text'>
-                                                <input id="ID" name="components_title_stock[]" hidden>
-                                                <div class="Selects Type"></div>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                                <div class="advanced_col_half">
-                                    <label>Количество</label>
-                                    <div id="components_value_stock_container">
-                                        <?php foreach($components_stock_array as $item) { ?>
-                                            <div class='form-group'><input name='components_value_stock[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4"></div>
-                        </div>
-                        <div class="row sm-margin-bottom">
-                            <div class="col-sm-4">
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <button id="components_button_stock" class="btn btn-primary" type="button">Добавить</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                            </div>
-                        </div>
-                    </div>
+				<!-- другие комплектующие из склада-->
+				<div class="container">
+					<div class="row" style="margin-bottom: 1em;">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<table>
+								<tr>
+									<td>Другие комплектующие со склада</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+				<div class = "container">
+					<div class="row">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="advanced_col_half">
+								<label>Название</label>
+								<div id="components_title_stock_container">
+									<?php foreach($components_stock_array as $item) { ?>
+										<div class='form-group Area Type'>
+											<input id="Type" value='<?php echo $item['title']; ?>' autocomplete="off" NameDB="CONCAT(components.title,' ',options.title)" onclick="GetList(this, ['Type'], ['Type']);" onkeyup="GetList(this, ['Type'], ['Type']);" onblur="ClearSelect(this)" class='form-control Input Type' type='text'>
+											<input id="ID" name="components_title_stock[]" hidden>
+											<div class="Selects Type"></div>
+										</div>
+									<?php } ?>
+								</div>
+							</div>
+							<div class="advanced_col_half">
+								<label>Количество</label>
+								<div id="components_value_stock_container">
+									<?php foreach($components_stock_array as $item) { ?>
+										<div class='form-group'>
+											<input name='components_value_stock[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'>
+										</div>
+									<?php } ?>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<button id="components_button_stock" class="btn btn-primary" type="button">Добавить</button>
+							</div>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
 				<!-- другие работы по монтажу -->
 				<div class = "container">
 					<div class="row" style="margin-bottom: 1em;">
@@ -1829,9 +1825,11 @@
 	</form>
 </div>
 </div>
+
 <script type="text/javascript">
+
     var $ = jQuery;
-//для подгрузки компонентов со склада
+	//для подгрузки компонентов со склада
     function GetList(e, select, like) {
         var input = $(e),
             Selects = input.siblings(".Selects"),
@@ -1939,7 +1937,7 @@
         }, 200);
     }
 
-function submit_form_sketch()
+	function submit_form_sketch()
 	{
 		var regexp_d = /^\d+$/;
 		if (!regexp_d.test(document.getElementById('jform_n2').value)
