@@ -2771,7 +2771,7 @@ class Gm_ceilingHelpersGm_ceiling
             return $return;
     }
     public static function calculate_components($calc_id,$data,$del_flag){
-        $calculations_model = self::getModel('calculations');
+        $calculation_model = self::getModel('calculation');
         $calculation_data = $calculation_model->getData($calc_id);
         if(!empty($calc_id)){
             foreach ($calculation_data as $key => $item) {
