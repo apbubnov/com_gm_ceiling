@@ -69,12 +69,12 @@
 
 <style>
     .Area {
-        display: inline-block;
-        float: left;
+        /* display: inline-block;
+        float: left; */
         height: auto;
         overflow: visible;
-        margin: 0 5px;
-        margin-bottom: 16px;
+        /* margin: 0 5px;
+        margin-bottom: 16px; */
         position: relative;
     }
 
