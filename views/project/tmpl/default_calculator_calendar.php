@@ -11,13 +11,11 @@ defined('_JEXEC') or die;
 $user = JFactory::getUser();
 $userId = $user->get('id');
 $userName = $user->get('username');
-
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
-
 $project_total = 0;
 $project_total_discount = 0;
 $total_square = 0;
@@ -67,9 +65,9 @@ foreach($calculations as $d) {
 }
 if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
 }
-if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
+/*if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
     $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-}
+}*/
 $project_total_discount_transport = $project_total_discount + $sum_transport;
 
 $del_flag = 0;
@@ -159,7 +157,7 @@ $query
     ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
 $db->setQuery($query);
 $results = $db->loadObjectList();*/
-
+if(false):
 /* Клиент */
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -201,8 +199,11 @@ $Client->calc_date->time = date("H:i", strtotime($Client->project_calculation_da
 $Client->discount = (object) [];
 $Client->discount->min = 0;
 $Client->discount->max = ($calculation_total - $project_total_1) / $calculation_total * 100;
+$Project = "Client";
 
 /* Калькуляции */
+$calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+$calculations = $model->getProjectItems($$Project->id);
 $calculationsItog = (object) [];
 
 $calculationsItog->dealer_sum = (object) [];
@@ -219,13 +220,52 @@ $calculationsItog->client_sum->mounting = 0;
 $calculationsItog->client_sum->itog = 0;
 $calculationsItog->dealer_sum->discount = 0;
 
+$calculationsItog->square = 0;
+$calculationsItog->perimeter = 0;
+
+$calculationsItog->discount = $$Project->project_discount;
+
+function discount($sum, $discount = 0) {
+    return ceil($sum * ((100 - $discount) / 100) * 100) / 100;
+}
+function fceil($number, $r = 0) {
+    $k = pow(10, $r);
+    return ceil($number * $k) / $k;
+}
 foreach ($calculations as $key => $calculation)
 {
+    $calculation->square = $calculation->n4;
+    $calculation->perimeter = $calculation->n5;
+
     $calculation->dealer_sum = (object) [];
-    $calculation->dealer_sum->canvases = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
-    $calculation->dealer_sum->components = double_margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/, $this->item->dealer_components_margin);
-    $calculation->dealer_sum->mounting = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
+    $calculation->dealer_sum->canvas = margin($calculation->canvases_sum, $$Project->gm_canvases_margin);
+    $calculation->dealer_sum->components = margin($calculation->components_sum, $$Project->gm_components_margin);
+    $calculation->dealer_sum->mounting = margin($calculation->mounting_sum, $$Project->gm_mounting_margin);
+    $calculation->dealer_sum->itog = $calculation->dealer_sum->canvas + $calculation->dealer_sum->components + $calculation->dealer_sum->mounting;
+
+    $calculationsItog->dealer_sum->canvas += $calculation->dealer_sum->canvases;
+    $calculationsItog->dealer_sum->components += $calculation->dealer_sum->components;
+    $calculationsItog->dealer_sum->mounting += $calculation->dealer_sum->mounting;
+
+    $calculation->client_sum = (object) [];
+    $calculation->client_sum->canvas = double_margin($calculation->canvases_sum, $$Project->gm_canvases_margin, $$Project->dealer_canvases_margin);
+    $calculation->client_sum->components = double_margin($calculation->components_sum, $$Project->gm_components_margin, $$Project->dealer_components_margin);
+    $calculation->client_sum->mounting = double_margin($calculation->mounting_sum, $$Project->gm_mounting_margin, $$Project->dealer_mounting_margin);
+    $calculation->client_sum->itog = $calculation->client_sum->canvas + $calculation->client_sum->components + $calculation->client_sum->mounting;
+
+    $calculationsItog->client_sum->canvas = $calculation->client_sum->canvas;
+    $calculationsItog->client_sum->components = $calculation->client_sum->components;
+    $calculationsItog->client_sum->mounting = $calculation->client_sum->mounting;
+
+    $calculationsItog->square += $calculation->square;
+    $calculationsItog->perimeter += $calculation->perimeter;
+
+    $calculations[$key] = $calculation;
 }
+
+$calculationsItog->dealer_sum->itog = $calculationsItog->dealer_sum->canvas + $calculationsItog->dealer_sum->components + $calculationsItog->dealer_sum->mounting;
+$calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $calculationsItog->client_sum->components + $calculationsItog->client_sum->mounting;
+
 ?>
 <?/*print_r($Client);*/?>
 <link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/tmpl/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
@@ -234,13 +274,11 @@ foreach ($calculations as $key => $calculation)
     /* Правит - @CEH4TOP */
     /* Не обращайте внимания! */
 </div>
-
 <div class="Page">
     <div class="TitlePage">
         <h2 class="center">Просмотр проекта</h2>
         <h3 class="left">Информация по проекту № <?= $this->item->id ?></h3>
     </div>
-
     <div class="Actions">
         <div class="Back"><?= parent::getButtonBack(); ?></div>
         <div class="Update">
@@ -249,7 +287,6 @@ foreach ($calculations as $key => $calculation)
             </button>
         </div>
     </div>
-
     <div class="Body row">
         <div class="Client col col-12 <?=($user->dealer_type == 0)?"col-md-6":"col-md-12"?>">
             <table class="Client" db-id="<?=$Client->id_client;?>">
@@ -336,7 +373,7 @@ foreach ($calculations as $key => $calculation)
         <h3 class="left">Расчеты для проекта</h3>
         <div class="Tabs">
             <div class="Tab Active" id="TabAll"><span>Общее</span></div>
-            <?foreach ($calculations as $k => $calculation):?>
+            <?foreach ($calculations as $calculation):?>
                 <div class="Tab" id="Tab<?=$calculation->id;?>"><span><?=$calculation->calculation_title;?></span></div>
             <?endforeach;?>
             <?if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
@@ -351,20 +388,29 @@ foreach ($calculations as $key => $calculation)
                         <th colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?foreach ($calculations as $calculation):?>
-                        <tr>
-                            <td colspan="4">
-                                <input name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked"> <?=$calculation->calculation_title;?>
-                                <input name='calculation_total[<?=$calculation->id; ?>]' value='<?=$calculation_total; ?>' type='hidden'>
-                                <input name='calculation_total_discount[<?=$calculation->id;?>]' value='<?=$calculation_total_discount; ?>' type='hidden'>
+                        <tr class="BodyTR">
+                            <td class="CheckBox" rowspan="2">
+                                <input name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked"> <span><?=$calculation->calculation_title;?></span>
+                                <input name='calculation_total[<?=$calculation->id; ?>]' value='<?=$calculation->dealer_sum->itog; ?>' type='hidden'>
+                                <input name='calculation_total_discount[<?=$calculation->id;?>]' value='<?=discount($calculation->dealer_sum->itog, $calculationsItog->discount); ?>' type='hidden'>
                                 <input name='total_square[<?=$calculation->id; ?>]' value='<?=$calculation->n4; ?>' type='hidden'>
                                 <input name='total_perimeter[<?=$calculation->id; ?>]' value='<?=$calculation->n5; ?>' type='hidden'>
-                                <input name='calculation_total1[<?=$calculation->id; ?>]' value='<?=$calculation_total_1; ?>' type='hidden'>
+                                <input name='calculation_total1[<?=$calculation->id; ?>]' value='<?=$calculation->dealer_sum->components; ?>' type='hidden'>
                                 <input name='calculation_total2[<?=$calculation->id; ?>]' value='<?=$dealer_gm_mounting_sum_1; ?>' type='hidden'>
                                 <input name='calculation_total3[<?=$calculation->id; ?>]' value='<?=$project_total_1; ?>' type='hidden'>
                                 <input name='canvas[<?=$calculation->id; ?>]' value='<?=$canvas; ?>' type='hidden'>
                             </td>
+                            <td>S / P</td>
+                            <td><?=$calculation->n4;?></td>
+                            <td><?=$calculation->n5;?></td>
+                        </tr>
+                        <tr class="BodyTR">
+                            <td>Итого</td>
+                            <td><?=fceil($calculation->client_sum->itog);?></td>
+                            <td><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></td>
                         </tr>
                     <?endforeach;?>
+                    <tr
                     </tbody>
                 </table>
             </div>
@@ -412,7 +458,7 @@ foreach ($calculations as $key => $calculation)
         }
     }
 </style>
-
+<?endif;?>
 <?= parent::getButtonBack(); ?>
 
 <h2 class="center">Просмотр проекта</h2>
