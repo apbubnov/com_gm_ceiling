@@ -4144,6 +4144,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project = $project_model->getData($project_id);
         $calculation_model = self::getModel('calculation');
         $data = $calculation_model->getData($calc_id);
+        $data = get_object_vars($data);
         $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок № _________</h1>';
         $html .= '<table>';
         $html .= '<tbody>';
