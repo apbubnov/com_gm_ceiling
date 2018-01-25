@@ -1810,7 +1810,9 @@
 			</div>
 		</div>
 		<!-- /////////////////////////////////////////////////////////////////// -->
-		<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"> Наверх</i></a>
+		<div class="top_button_container">
+			<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+		</div>
 	</form>
 </div>
 </div>
