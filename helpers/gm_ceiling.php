@@ -4146,7 +4146,7 @@ class Gm_ceilingHelpersGm_ceiling
         $data = $calculation_model->getData($calc_id);
         $modelCanvases = self::getModel('canvases');
         $canvas = $modelCanvases->getCanvases(array('id_canvas' => $data['n3']))[0];
-        throw new Exception(implode('|', get_object_vars($canvas)));
+        throw new Exception($canvas);
         $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок № _________</h1>';
         $html .= '<table>';
         $html .= '<tbody>';
