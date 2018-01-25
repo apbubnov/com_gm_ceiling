@@ -187,6 +187,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$without_advt = $jinput->get('without_advt', 0, 'INT');
 			$client_form_model = $this->getModel('ClientForm', 'Gm_ceilingModel');
 			$client_model = $this->getModel('client', 'Gm_ceilingModel');
+            $user_model = $this->getModel('users', 'Gm_ceilingModel');
             $emails = [];
             if (!empty($email_str)) {
                 $emails = explode(";", $email_str);
@@ -374,6 +375,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     if (!empty($newFIO)) {
                         if ($newFIO != $data->client_id) {
                             $client_model->updateClient($client_id, $newFIO);
+                            $user_model->updateUserNameByAssociatedClient($client_id, $newFIO);
                             $client_history_model->save($client_id, "Изменено ФИО пользователя");
                         }
                     }
