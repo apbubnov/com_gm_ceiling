@@ -106,7 +106,7 @@
         height: auto;
 		background-color: #ffffff;
         color: #414099;
-        max-height: 90px;
+        max-height: 120px;
         overflow-y: scroll;
         overflow-x: hidden;
     }
