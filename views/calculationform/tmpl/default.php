@@ -59,7 +59,7 @@
 <?php
 	if($type === "calculator" || $type === "gmcalculator" || $type === "gmmanager" || $type === "manager" )
 	{
-		echo parent::getButtonBack();
+		echo ('<div style="margin: 0 0 30px 30px;">'.parent::getButtonBack().'</div>');
 	}
 	if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php'){
 		echo "<script>BackPage = function() { window.history.go(-3); }</script>";
