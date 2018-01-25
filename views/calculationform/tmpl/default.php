@@ -1455,7 +1455,7 @@
 									<?php foreach($components_stock_array as $item) { ?>
 										<div class='form-group Area Type'>
 											<input id="Type" value='<?php echo $item['title']; ?>' autocomplete="off" NameDB="CONCAT(components.title,' ',options.title)" onclick="GetList(this, ['Type'], ['Type']);" onkeyup="GetList(this, ['Type'], ['Type']);" onblur="ClearSelect(this)" class='form-control Input Type' type='text'>
-											<input id="ID" value="" name="components_title_stock[]" hidden>
+											<input id="ID" value="<?php echo $item['id']; ?>" name="components_title_stock[]" hidden>
 											<div class="Selects Type"></div>
 										</div>
 									<?php } ?>

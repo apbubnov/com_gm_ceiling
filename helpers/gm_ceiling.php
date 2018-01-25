@@ -605,11 +605,7 @@ class Gm_ceilingHelpersGm_ceiling
             $n5_count = ceil($data['n5']);
             $component_count[$data['n6']] += $n5_count;
         }
-        //просчет доп компонентов со склада
-        $components_stock = json_decode($data['components_stock']);
-        foreach ($components_stock as $comp_stock) {
-            $component_count[$comp_stock->title] += $comp_stock->value;
-        }
+
         //люстры
         $component_count[$items_5[0]->id] += $data['n12'] * 3;
         $component_count[$items_9[0]->id] += $data['n12'] * 3;
@@ -840,6 +836,13 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[$items_4[0]->id] = ceil($component_count[$items_4[0]->id]);
 
         }
+
+        //просчет доп компонентов со склада
+        $components_stock = json_decode($data['components_stock']);
+        foreach ($components_stock as $comp_stock) {
+            $component_count[$comp_stock->title] += $comp_stock->value;
+        }
+
         //---------------------------------- ВОЗВРАЩАЕМ СТОИМОСТЬ КОМПЛЕКТУЮЩИХ --------------------------------------//
         //Сюда считаем итоговую сумму полотна
         $canvases_data = array();
@@ -4897,10 +4900,11 @@ class Gm_ceilingHelpersGm_ceiling
             $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             foreach ($comp_stock_array as $item) {
                 if (isset($item->title) && isset($item->value)) {
-                    $title = $model->getComponents(["select"=>["FullName"=>"CONCAT(components.title, ' ', options.title)"], "where" => ["=" => ["options_id" => $item->title]]]);
+                    $title = $model->getComponents(["select"=>["FullName"=>"CONCAT(components.title, ' ', options.title)"], "where" => ["=" => ["options.id" => $item->title]]]);
                     $result_array[] = array(
-                        'title' => $title->FullName,
-                        'value' => $item->value
+                        'title' => $title[0]->FullName,
+                        'value' => $item->value,
+                        'id' => $item->title
                     );
                 }
             }

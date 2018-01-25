@@ -1338,7 +1338,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 $query->set('calc.dop_krepezh = ' . $data['dop_krepezh']);
                 $query->set('calc.extra_components = ' . $db->quote($data['extra_components']));
                 $query->set('calc.extra_mounting = ' . $db->quote($data['extra_mounting']));
-                $query->set('calc.extra_mounting = ' . $db->quote($data['components_stock']));
+                $query->set('calc.components_stock = ' . $db->quote($data['components_stock']));
                 if (empty($data['color'])) $query->set('calc.color = NULL');
                 else $query->set('calc.color = ' . $db->quote($data['color']));
                 //$query->set('calc.color = ' . $data['color']);
