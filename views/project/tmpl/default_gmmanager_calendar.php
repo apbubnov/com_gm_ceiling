@@ -1554,7 +1554,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         //--------------------------------------------------------------------------------------------------
 
         // получение значений из селектов
-        jQuery("#save-choise-tar").click(function() {
+		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
             var times = jQuery("input[name='choose_time_gauger']");
             var time = "";
             gauger = "";

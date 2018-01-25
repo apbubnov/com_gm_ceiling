@@ -54,7 +54,7 @@ $mount = array(
       name="adminForm" id="adminForm">
 
 	<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-	<a class ="btn btn-large btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=prices', false, 2); ?>" id ="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
+    <?=parent::getButtonBack();?>
 
 		<table class="table calculation_sum">
 		<?php if($this->item->project_verdict==0 && $user->dealer_type !=2) {?>
