@@ -16,54 +16,6 @@ $api_phone_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $phones = $api_phone_model->getArrayNumbers();
 $items = json_encode($this->item);
 ?>
-<style>
-    /*PRELOADER*/
-    .PRELOADER_GM
-    {
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: inline-block;
-        background-color: rgb(54,53,127);
-        width: 100vw;
-        height: 100vh;
-        line-height: 100vh;
-        text-align: center;
-        z-index: 1000;
-    }
-    .PRELOADER_GM_OPACITY
-    {
-        background-color: rgba(54,53,127,.7);
-    }
-    .PRELOADER_GM .PRELOADER_BLOCK {
-        position: absolute;
-        top: calc(100%/2 - 110px);
-        left: calc(100%/2 - 110px);
-        width: 220px;
-        height: 220px;
-        display: inline-block;
-        transform: rotate(0deg);
-        border: 10px dashed rgb(255,255,255);
-        border-radius: 110px;
-        animation: PRELOADER 4s infinite linear;
-        z-index: 1001;
-    }
-    .PRELOADER_GM .PRELOADER_IMG {
-        position: absolute;
-        top: calc(100%/2 - 100px);
-        left: calc(100%/2 - 100px);
-        width: 200px;
-        height: 200px;
-        vertical-align: middle;
-        text-align: center;
-        transform: rotate(0deg);
-        z-index: 1002;
-    }
-    @keyframes PRELOADER {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(359deg); }
-    }
-</style>
 <form>
     <div id="preloader" class="PRELOADER_GM PRELOADER_GM_OPACITY">
         <div class="PRELOADER_BLOCK"></div>
