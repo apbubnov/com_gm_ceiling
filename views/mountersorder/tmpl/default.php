@@ -90,27 +90,31 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId); */
                 </table>
             </div>
         </div>
-        <?php if (!empty($DataOfProject)) { ?>
-            <?php foreach ($DataOfProject as $value) { ?>
-                <?php if (isset($value->mounting_data)) { ?>
-                    <?php foreach ($value->mounting_data as $val) { ?>
-                        <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
-                            <div class="ceiling"><img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.png" class="image-ceiling"></div>
-                            <div class = "overflow">
+        <?php foreach ($calculation_ids as $value) { ?>
+            <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
+                <div class="ceiling">
+                    <img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.png" class="image-ceiling">
+                </div>
+                <div class = "overflow">
+
+                        <!-- <?php if (!empty($DataOfProject)) { ?>
+                            <?php foreach ($DataOfProject as $val) { ?>
+                                <?php// if (isset($value->mounting_data)) { ?>
+                            <?php// foreach ($value->mounting_data as $val) { ?>
                                 <table id="table-order-<?php echo $value->id; ?>" cols=4 class="table-order">
-                                <tr class="caption">
-                                    <td>Наименование</td>
-                                    <td>Цена, ₽</td>
-                                    <td>Количество</td>
-                                    <td>Стоимость, ₽</td>
-                                </tr>
+                                    <tr class="caption">
+                                        <td>Наименование</td>
+                                        <td>Цена, ₽</td>
+                                        <td>Количество</td>
+                                        <td>Стоимость, ₽</td>
+                                    </tr>
 
                                 </table>
-                            </div>
-                        </div>
-                    <?php } ?>
-                <?php } ?>
-            <?php } ?>
+                            
+                            <?php } ?>
+                        <?php } ?> -->
+                </div>
+            </div>
         <?php } ?>
     </div>
     <div id="buttons-cantainer">
