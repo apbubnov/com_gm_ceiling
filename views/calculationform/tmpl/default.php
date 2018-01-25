@@ -118,7 +118,7 @@
 </style>
 
 <div class="calculation-edit front-end-edit">
-	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right; margin-right: 30px;"><i class="fa fa-lock" aria-hidden="true"></i></a>
+	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right; margin-right: 30px; top: 0;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 		<?php if ($this->type === "guest") { ?>
 			<div class="show_before_calculate" style="margin-bottom: 1em;">
