@@ -182,8 +182,6 @@ class Gm_ceilingHelpersGm_ceiling
         if ($from_db == 1) {
             //Загружаем из БД
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-
-
             $calculation_data = $calculation_model->getData($calculation_id);
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
@@ -917,10 +915,9 @@ class Gm_ceilingHelpersGm_ceiling
         $extra_components = json_decode($data['extra_components']);
         foreach ($extra_components as $extra_component) {
             $component_item = array();
-
             $component_item['title'] = $extra_component->title;                                        //Название комплектующего
             $component_item['unit'] = "шт.";                                                            //В чем измеряется
-            $component_item['id'] = 0;                                                                    //ID
+            $component_item['id'] = 0;                                                                  //ID
             $component_item['quantity'] = 1;
             $component_item['stack'] = 1;
 
@@ -2773,6 +2770,501 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             return $return;
+    }
+    public static function calculate_components($calc_id,$data,$del_flag){
+        if(!empty($calc_id)){
+            foreach ($calculation_data as $key => $item) {
+                $data[$key] = $item;
+            }
+            $data['n1'] = $calculation_data->n1_id;
+            $data['n2'] = $calculation_data->n2_id;
+            $data['n3'] = $calculation_data->n3_id;
+            $n13 = $data['n13'];
+            $n26 = $data['n26'];
+            $n22 = $data['n22'];
+            $n14 = $data['n14'];
+            $n23 = $data['n23'];
+            $n15 = $data['n15'];
+        }
+        $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+        $components_list = $components_model->getFilteredItems();
+
+        foreach ($components_list as $i => $component) {
+            $components[$component->id] = $component;
+        }
+
+        //Получаем прайс-лист полотен
+        $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+        $canvases_list = $canvases_model->getFilteredItemsCanvas();
+        foreach ($canvases_list as $i => $canvas) {
+            $canvases[$canvas->id] = $canvas;
+        }
+
+        $component_count = array();
+        foreach ($components as $key => $value) $component_count[$key] = 0;
+        //периметр ТОЛЬКО ДЛЯ ПВХ
+        $filter = "a.title  LIKE('%3,5 * 51%') AND component.title LIKE('%Саморез%') ";
+        $items_9 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%6 * 51%') AND component.title LIKE('%Дюбель%') ";
+        $items_5 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%ПВХ (2,5 м)%') AND component.title LIKE('%Багет%') ";
+        $items_11 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%потолочный аллюм%') AND component.title LIKE('%Багет%') ";
+        $items_236 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%стеновой аллюм%') AND component.title LIKE('%Багет%') ";
+        $items_239 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%для парящих пот аллюм%') AND component.title LIKE('%Багет%') ";
+        $items_559 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%303 белая%') AND component.title LIKE('%Вставка%') ";
+        $items_vstavka_bel = $components_model->getFilteredItems($filter);
+
+        if ($data['color'] > 0) {
+            $color_model1 = Gm_ceilingHelpersGm_ceiling::getModel('colors');
+            $color1 = $color_model1->getColorTitle($data['color']);
+            $name1 = $color1->title;
+            $filter = "a.title  LIKE('%" . $name1 . "%') AND component.title LIKE('%Вставка%') ";
+            $items_vstavka = $components_model->getFilteredItems($filter);
+            if (empty($items_vstavka[0])) $items_vstavka = $items_vstavka_bel;
+        }
+
+        $filter = "a.title  LIKE('%п/сф 3,5*9,5%') AND component.title LIKE('%Саморез%') ";
+        $items_10 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%тарелка%') AND component.title LIKE('%Платформа под люстру%') ";
+        $items_16 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%6*40%') AND component.title LIKE('%Шуруп-полукольцо%') ";
+        $items_556 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%ПВС 2 х 0,75%') AND component.title LIKE('%Провод%') ";
+        $items_4 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('50') AND component.title LIKE('%Круглое кольцо%') ";
+        $items_58 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%П 60%') AND component.title LIKE('%Подвес прямой %') ";
+        $items_3 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%2,5 мм%') AND component.title LIKE('%Клеммная колодка%') ";
+        $items_2 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%40*50%') AND component.title LIKE('%Брус%') ";
+        $items_1 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%3,5 * 41%') AND component.title LIKE('%Саморез%') ";
+        $items_8 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%4,2 * 102%') AND component.title LIKE('%Саморез%') ";
+        $items_6 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%в разд 303 гриб%') AND component.title LIKE('%Вставка%') ";
+        $items_14 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%для парящих потолков%') AND component.title LIKE('%Вставка%') ";
+        $items_38 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%15 * 12,5 см.%') AND component.title LIKE('%Кронштейн%') ";
+        $items_430 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%разделительный аллюм%') AND component.title LIKE('%Багет%') ";
+        $items_35 = $components_model->getFilteredItems($filter);
+
+        $filter = "component.title LIKE('%Гарпун%') ";
+        $items_360 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%70*100 мм%') AND component.title LIKE('%Платформа для карнизов%') ";
+        $items_495 = $components_model->getFilteredItems($filter);
+
+        $filter = "a.title  LIKE('%Декскор 2,5%') AND component.title LIKE('%Багет%') ";
+        $items_233 = $components_model->getFilteredItems($filter);
+
+        $filter = "component.title LIKE('%Переход уровня%') ";
+        $items_659 = $components_model->getFilteredItems($filter);
+
+        $filter = "component.title LIKE('%Переход уровня с нишей%') ";
+        $items_660 = $components_model->getFilteredItems($filter);
+
+        if ($data['n1'] == 28) {
+            $component_count[$items_9[0]->id] += $data['n5'] * 10;
+            $component_count[$items_5[0]->id] += $data['n5'] * 10;
+            if ($data['n28'] == 0) $component_count[$items_11[0]->id] += $data['n5'];
+            elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n5'];
+            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n5'];
+        }
+        if ($data['n1'] == 29) {
+            $component_count[$items_9[0]->id] += $data['n5'] * 10;
+            $component_count[$items_5[0]->id] += $data['n5'] * 10;
+            $component_count[$items_233[0]->id] += $data['n11'];
+        }
+        // внутренний вырез
+        if ($data['n11'] > 0) {
+            $component_count[$items_1[0]->id] += $data['n11'];
+            if ($data['n1'] == 29) $component_count[$items_233[0]->id] += $data['n11']; 
+            else if ($data['n28'] == 0) $component_count[$items_11[0]->id] += $data['n11'];
+            elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n11'];
+            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n11'];
+            $component_count[$items_430[0]->id] += $data['n11'] * 3;
+            $component_count[$items_8[0]->id] += $data['n11'] * 22;
+            $component_count[$items_5[0]->id] += $data['n11'] * 16;
+            $component_count[$items_360[0]->id] += $data['n11'];
+        }
+        //для Димы
+        if ($data['n31'] > 0) {
+            $component_count[$items_9[0]->id] += $data['n31'] * 10;
+            $component_count[$items_5[0]->id] += $data['n31'] * 10;
+            $n31_count = ceil($data['n31']);
+            if (!empty($data['n6'])) {
+            $component_count[$data['n6']] += $n31_count;
+            } else $component_count[$items_vstavka_bel[0]->id] += $n31_count;
+            if ($data['n28'] == 0) $component_count[$items_11[0]->id] += $data['n31'];
+            elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n31'];
+            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n31'];
+            
+        }
+        if ($data['n1'] == 28 && $data['n6']) {
+            $n5_count = ceil($data['n5']);
+            $component_count[$data['n6']] += $n5_count;
+        }
+
+        //люстры
+        $component_count[$items_5[0]->id] += $data['n12'] * 3;
+        $component_count[$items_9[0]->id] += $data['n12'] * 3;
+        $component_count[$items_10[0]->id] += $data['n12'] * 8;
+        $component_count[$items_16[0]->id] += $data['n12'];
+        $component_count[$items_556[0]->id] += $data['n12'];
+        $component_count[$items_4[0]->id] += $data['n12'] * 0.5;
+        $component_count[$items_58[0]->id] += $data['n12'];
+        $component_count[$items_3[0]->id] += $data['n12'] * 4;
+        if ($data['n12'] > 0) {
+            $component_count[$items_2[0]->id] += 2;
+        }
+//        $kolKP = 0.0;//переменная для просчета, является ли профиль из серии КП
+//        $kolNP = 0.0; //переменная для просчета, является ли профиль из серии НП
+//        $kolSP = 0.0;//переменная для просчета, является ли профиль из серии СП
+        if ($del_flag == 1) {
+            //светильники
+            $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
+            $n13 = json_decode($data['n13']);
+            $n26 = json_decode($data['n26']);
+            $n22 = json_decode($data['n22']);
+            $n14 = json_decode($data['n14']);
+            $n23 = json_decode($data['n23']);
+            $n15 = json_decode($data['n15']);
+            $n29 = json_decode($data['n29']);
+            if (count($n29) > 0) {
+                foreach ($n29 as $profil) {
+                    if ($profil[0] > 0) {
+                        if ($profil[1] == 12 || $profil[1] == 13) {
+                            $component_count[$items_659[0]->id] += $profil[0];
+                        } elseif ($profil[1] == 15 || $profil[1] == 16) {
+                            $component_count[$items_660[0]->id] += $profil[0];
+                        }
+                    }
+                }
+            }
+            $k = 0;
+            if (count($n26) > 0) {
+                foreach ($n26 as $ecola) {
+                    if ($ecola[0] > 0) {
+                        $component_count[$ecola[1]] += $ecola[0];
+                        $component_count[$ecola[2]] += $ecola[0];
+                        $k += $ecola[0];
+                    }
+
+                }
+            }
+            if (count($n13) > 0 && $n13 != 0) {
+                foreach ($n13 as $lamp) {
+                    $fix_components = $calcform_model->components_list_n13_n22($lamp[1], $lamp[2]);
+                    foreach ($fix_components as $comp) $component_count[$comp['id']] += ($comp['count'] * $lamp[0]);
+
+                    if ($lamp[1] == 2 && $lamp[2] == 66) {
+                        $component_count[66] -= $k;
+                        if ($component_count[66] < 0) $component_count[66] = 0;
+                    }
+
+                }
+                $component_count[$items_2[0]->id]++;
+            }
+            //вентиляция
+            if (count($n22) > 0) {
+                foreach ($n22 as $ventilation) {
+                    $ventilation_components = $calcform_model->components_list_n13_n22($ventilation[1], $ventilation[2]);
+                    foreach ($ventilation_components as $comp) $component_count[$comp['id']] += ($comp['count'] * $ventilation[0]);
+                }
+            }
+            if (count($n14) > 0) {
+                foreach ($n14 as $truba) {
+                    if ($truba[0] > 0) $component_count[$truba[1]] += $truba[0];
+                }
+            }
+            if (count($n23) > 0) {
+                foreach ($n23 as $diffuzor) {
+                    if ($diffuzor[0] > 0) $component_count[$diffuzor[1]] += $diffuzor[0];
+                }
+            }
+            if (count($n15) > 0) {
+                foreach ($n15 as $cornice) {
+                    if ($cornice[0] > 0) $component_count[$cornice[2]] += $cornice[0];
+                }
+            }
+        } else {
+            $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
+            $n13 = $data['n13'];
+            $n26 = $data['n26'];
+            $k = 0;
+            if (count($n26) > 0) {
+                foreach ($n26 as $ecola) {
+                    if ($ecola->n26_count > 0) {
+                        $component_count[$ecola->n26_illuminator] += $ecola->n26_count;
+                        $component_count[$ecola->n26_lamp] += $ecola->n26_count;
+                        $k += $ecola->n26_count;
+                    }
+
+                }
+            }
+            if (count($n13) > 0 && $n13 != 0) {
+                foreach ($n13 as $lamp) {
+                    $fix_components = $calcform_model->components_list_n13_n22($lamp->n13_type, $lamp->n13_size);
+                    foreach ($fix_components as $comp) $component_count[$comp['id']] += ($comp['count'] * $lamp->n13_count);
+
+                    if ($lamp->n13_type == 2 && $lamp->n13_size == 66) {
+                        $component_count[66] -= $k;
+                    }
+                    if ($component_count[66] < 0) $component_count[66] = 0;
+                }
+                $component_count[$items_2[0]->id]++;
+
+            }
+            //вентиляция
+            $n22 = $data['n22'];
+            if (count($n22) > 0) {
+                foreach ($n22 as $ventilation) {
+                    $ventilation_components = $calcform_model->components_list_n13_n22($ventilation->n22_type, $ventilation->n22_size);
+
+                    foreach ($ventilation_components as $comp) $component_count[$comp['id']] += ($comp['count'] * $ventilation->n22_count);
+                }
+            }
+            $n14 = $data['n14'];
+            if (count($n14) > 0) {
+                foreach ($n14 as $truba) {
+                    if ($truba->n14_count > 0) $component_count[$truba->n14_size] += $truba->n14_count;
+                }
+            }
+            $n23 = $data['n23'];
+            if (count($n23) > 0) {
+                foreach ($n23 as $diffuzor) {
+                    if ($diffuzor->n23_count > 0) $component_count[$diffuzor->n23_size] += $diffuzor->n23_count;
+                }
+            }
+            $n15 = $data['n15'];
+            if (count($n15) > 0) {
+                foreach ($n15 as $cornice) {
+                    if ($cornice->n15_count > 0) $component_count[$cornice->n15_size] += $cornice->n15_count;
+                }
+            }
+            $n29 = $data['n29'];
+            if (count($n29) > 0) {
+                foreach ($n29 as $profil) {
+                    if ($profil->n29_count > 0) {
+                        if ($profil->n29_type == 12 || $profil->n29_type == 13) {
+                            $component_count[$items_659[0]->id] += $profil->n29_count;
+                        } elseif ($profil->n29_type == 15 || $profil->n29_type == 16) {
+                            $component_count[$items_660[0]->id] += $profil->n29_count;
+                        }
+
+                    }
+                }
+            }
+        }
+        //парящий потолок
+        $component_count[$items_559[0]->id] += $data['n30'];
+        $component_count[$items_38[0]->id] += $data['n30'];
+        //карниз
+        $component_count[$items_1[0]->id] += $data['n27'];
+        $component_count[$items_3[0]->id] += $data['n27'] * 3;
+        $component_count[$items_5[0]->id] += $data['n27'] * 6;
+        $component_count[$items_8[0]->id] += $data['n27'] * 9;
+        $component_count[$items_9[0]->id] += $data['n27'] * 6;
+        //скрытый карниз
+        if ($data['n16']) {
+            $component_count[$items_430[0]->id] += $data['n27'] * 2;
+            $component_count[$items_8[0]->id] += $data['n27'] * 4;
+        }
+        //закладная брусом
+        $component_count[$items_1[0]->id] += $data['n17'];
+        $component_count[$items_3[0]->id] += $data['n17'] * 3;
+        $component_count[$items_5[0]->id] += $data['n17'] * 6;
+        $component_count[$items_9[0]->id] += $data['n17'] * 6;
+        $component_count[$items_8[0]->id] += $data['n17'] * 6;
+        //укрепление стен
+        $component_count[$items_1[0]->id] += $data['n18'];
+        $component_count[$items_6[0]->id] += $data['n18'] * 3;
+        $component_count[$items_5[0]->id] += $data['n18'] * 3;
+        $component_count[$items_430[0]->id] += $data['n18'] * 3;
+        //провод
+        $component_count[$items_4[0]->id] += $data['n19'];
+        $component_count[$items_9[0]->id] += $data['n19'] * 2;
+        $component_count[$items_5[0]->id] += $data['n19'] * 2;
+        //разделитель ТОЛЬКО ДЛЯ ПВХ
+        if ($data['n1'] == 28) {
+            $component_count[$items_1[0]->id] += $data['n20'];
+            $component_count[$items_6[0]->id] += $data['n20'] * 3;
+            $component_count[$items_9[0]->id] += $data['n20'] * 20;
+            $component_count[$items_5[0]->id] += $data['n20'] * 3;
+            $component_count[$items_14[0]->id] += $data['n20'];
+
+            $n20_count = intval($data['n20'] / 2.5);
+            if ((double)($data['n20'] * 10 % 25) > 0) {
+                $n20_count++;
+            }
+            $component_count[$items_35[0]->id] += $n20_count * 2.5;
+        }
+        //Дополнительный крепеж
+        $component_count[$items_9[0]->id] += $data['dop_krepezh'] * 10;
+        if ($data['n1'] == 29) $component_count[$items_233[0]->id] += $data['dop_krepezh'] / 2;
+        else if ($data['n28'] == 0) $component_count[$items_11[0]->id] += $data['dop_krepezh'] / 2;
+        elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['dop_krepezh'] / 2;
+        elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['dop_krepezh'] / 2;
+        //пожарная сигнализация
+        $component_count[$items_9[0]->id] += $data['n21'] * 3;
+        $component_count[$items_10[0]->id] += $data['n21'] * 6;
+        $component_count[$items_495[0]->id] += $data['n21']; 
+        $component_count[$items_58[0]->id] += $data['n21'];
+        $component_count[$items_3[0]->id] += $data['n21'] * 3;
+        $component_count[$items_5[0]->id] += $data['n21'] * 3;
+        if ($data['n21'] > 0) {
+            $component_count[$items_2[0]->id] += $data['n21'] * 2;
+        }
+        //Брус до 0,5 и багет 2.5м считается кусками, которые потребуются выложить весь периметр
+        if ($print_components == 0) {
+            if ($data['n28'] == 0) $component_count[$items_11[0]->id] = self::rounding($component_count[$items_11[0]->id], 2.5);
+            elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] = self::rounding($component_count[$items_236[0]->id], 2.5);
+            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] = self::rounding($component_count[$items_239[0]->id], 2.5);
+            $component_count[$items_559[0]->id] = self::rounding($component_count[$items_559[0]->id], 2.5);
+            $component_count[$items_233[0]->id] = self::rounding($component_count[$items_233[0]->id], 2.5);
+            $component_count[$items_38[0]->id] = self::rounding($component_count[$items_38[0]->id], 0.5);
+            $component_count[$items_1[0]->id] = self::rounding($component_count[$items_1[0]->id], 0.5);
+            $component_count[650] = self::rounding($component_count[650], 2.5);
+            $component_count[651] = self::rounding($component_count[651], 2.5);
+            $component_count[652] = self::rounding($component_count[652], 2.5);
+            $component_count[653] = self::rounding($component_count[653], 2.5);
+            $component_count[654] = self::rounding($component_count[654], 2.5);
+            $component_count[655] = self::rounding($component_count[655], 2.5);
+            $component_count[656] = self::rounding($component_count[656], 2.5);
+            $component_count[$items_4[0]->id] = ceil($component_count[$items_4[0]->id]);
+
+        }
+
+        //просчет доп компонентов со склада
+        $components_stock = json_decode($data['components_stock']);
+        foreach ($components_stock as $comp_stock) {
+            $component_count[$comp_stock->title] += $comp_stock->value;
+        }
+
+        //---------------------------------- ВОЗВРАЩАЕМ СТОИМОСТЬ КОМПЛЕКТУЮЩИХ --------------------------------------//
+        //Сюда считаем итоговую сумму полотна
+        $canvases_data = array();
+        if ($data['n1'] && $data['n2'] && $data['n3']) {
+            $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
+            $canvases_data['quantity'] = $data['n4'];                                                                        //Кол-во
+            $canvases_data['self_price'] = round($canvases[$data['n3']]->price, 2);                                    //Себестоимость
+            $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                            //Кол-во * Себестоимость
+
+            //Стоимость с маржой ГМ (для дилера)
+            $canvases_data['gm_price'] = margin($canvases[$data['n3']]->price, $gm_canvases_margin);
+            //Кол-во * Стоимость с маржой ГМ (для дилера)
+            $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
+
+            //Стоимость с маржой ГМ и дилера (для клиента)
+            $canvases_data['dealer_price'] = double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, $dealer_canvases_margin);
+            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
+
+        }
+        $offcut_square_data = array();
+        if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] != 0) {
+            $offcut_square_data['title'] = "Количество обрезков"; //Название фактуры и полотна
+            $offcut_square_data['quantity'] = $data['offcut_square'];                                                                        //Кол-во
+            $offcut_square_data['self_price'] = round($canvases[$data['n3']]->price / 2.5, 2);                                    //Себестоимость
+            $offcut_square_data['self_total'] = round($data['offcut_square'] * $offcut_square_data['self_price'], 2);                            //Кол-во * Себестоимость
+
+            //Стоимость с маржой ГМ (для дилера)
+            $offcut_square_data['gm_price'] = round(margin($canvases[$data['n3']]->price, $gm_canvases_margin) / 2.5, 2);
+            //Кол-во * Стоимость с маржой ГМ (для дилера)
+            $offcut_square_data['gm_total'] = round($data['offcut_square'] * $offcut_square_data['gm_price'], 2);
+
+            //Стоимость с маржой ГМ и дилера (для клиента)
+            $offcut_square_data['dealer_price'] = round(double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, 50) / 2.5, 2);
+            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
+
+        }
+        //Сюда считаем итоговую сумму компонентов
+        $components_data = array();
+
+        foreach ($component_count as $key => $cost) {
+            $component_item = array();
+
+            $component_item['title'] = $components[$key]->full_name;//. " ".$components[$key]->title ; 								//Название комплектующего
+            $component_item['unit'] = $components[$key]->component_unit;                                //В чем измеряется
+            $component_item['id'] = $components[$key]->id;                                                //ID
+            if ($component_item['unit'] == "шт.") {
+                $component_item['quantity'] = ceil($cost);                                                //Кол-во
+            } else {
+                $component_item['quantity'] = $component_count[$key];
+            }
+            $component_item['stack'] = 0;                                                                //Флаг, складывать ли этот компонент при сложении калькуляций
+
+            $component_item['self_price'] = $components[$key]->price;                            //Себестоимость
+            $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
+
+            //Стоимость с маржой ГМ (для дилера)
+            $component_item['gm_price'] = margin($components[$key]->price, $gm_components_margin);
+            //Кол-во * Стоимость с маржой ГМ (для дилера)
+            $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
+
+            //Стоимость с маржой ГМ и дилера (для клиента)
+            $component_item['dealer_price'] = double_margin($components[$key]->price, $gm_components_margin, $dealer_components_margin);
+            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
+
+            $components_data[] = $component_item;
+
+        }
+        //добавляем щепотку дополнительных комплектующих
+        $extra_components = json_decode($data['extra_components']);
+        foreach ($extra_components as $extra_component) {
+            $component_item = array();
+
+            $component_item['title'] = $extra_component->title;                                        //Название комплектующего
+            $component_item['unit'] = "шт.";                                                            //В чем измеряется
+            $component_item['id'] = 0;                                                                  //ID
+            $component_item['quantity'] = 1;
+            $component_item['stack'] = 1;
+
+            $component_item['self_price'] = $extra_component->value;                                    //Себестоимость
+            $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
+
+            //Стоимость с маржой ГМ (для дилера)
+            $component_item['gm_price'] = margin($component_item['self_price'], $gm_components_margin);
+            //Кол-во * Стоимость с маржой ГМ (для дилера)
+            $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
+
+            //Стоимость с маржой ГМ и дилера (для клиента)
+            $component_item['dealer_price'] = double_margin($component_item['self_price'], $gm_components_margin, $dealer_components_margin);
+            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
+
+            $components_data[] = $component_item;
+        }
+        return $components_data;
     }
     /* 	основная функция для расчета стоимости монтажа
         $del_flag 0 - не удалать светильники, трубы и т.д что хранится в др. таблицах
