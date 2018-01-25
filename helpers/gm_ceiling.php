@@ -6120,6 +6120,9 @@ class Gm_ceilingHelpersGm_ceiling
                                     if ($value[2] == 11) {
                                         $DayMounter[$r] = ["green", $perimeter];
                                     }
+                                    if ($value[2] == 12) {
+                                        $DayMounter[$r] = ["blue", $perimeter];
+                                    }
                                 }
                             } else {
                                 $perimeter = 0;
@@ -6145,6 +6148,8 @@ class Gm_ceilingHelpersGm_ceiling
                         $table .= '<td class="day-underfulfilled" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                     } else if ($DayMounter[$j - $first_day_of_week + 1][0] == "green") {
                         $table .= '<td class="day-complite" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
+                    } else if($DayMounter[$j - $first_day_of_week + 1][0] == "blue") {
+                        $table .= '<td class="old-project" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</br><div class="perimeter">P = ' . ($DayMounter[$j - $first_day_of_week + 1][1]) . 'м</div></td>';
                     } else {
                         if (isset($statusDayOff[$j - $first_day_of_week + 1])) {
                             $table .= '<td class="day-off2" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';
