@@ -876,7 +876,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							
 						}
 						else{
-							throw new Exception($data->id_client);
+							throw new Exception($data->read_by_manager);
 							
 							//$data->id_client,$data->read_by_manager
 							
