@@ -320,6 +320,18 @@ if (count($AllGauger) == 0) {
                                     TableForSelect += '<td>'+elementProject.project_info+'</td>';
                                     emptytd = 1;
                                 }
+								/* if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                                    var gaugersession = jQuery("#jform_project_gauger").val();
+                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                    } else {
+                                        TableForSelect += '<tr><td></td>';
+                                    }
+                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                    TableForSelect += '<td>'+elementProject.project_info+'</td>';
+                                    emptytd = 1;
+                                } */
                             });
                             if (emptytd == 0) {
                                 TableForSelect += '<td></td>';
@@ -360,33 +372,6 @@ if (count($AllGauger) == 0) {
             jQuery("#modal-window-container-tar").hide();
             jQuery("#modal-window-choose-tar").hide();
 		});
-
-        /* jQuery("#save-choise-tar").click(function() {
-			var times = jQuery("input[name='choose_time_gauger']");
-            var time = "";
-            gauger = "";
-            times.each(function(element) {
-                if (jQuery(this).prop("checked") == true) {
-                    time = jQuery(this).val();
-                    gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
-                }
-            });
-			console.log(time);
-			console.log(date);
-			console.log(gauger);
-            jQuery("#jform_project_calculation_daypart").val(time);
-            jQuery("#jform_project_calculation_date").val(date);
-            jQuery("#jform_project_calculator").val(gauger);
-            if (jQuery(".change").length == 0) {
-                jQuery("#"+idDay).attr("class", "change");
-            } else {
-                jQuery(".change").attr("class", "current-month");
-                jQuery("#"+idDay).attr("class", "change");
-            }
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container-tar").hide();
-            jQuery("#modal-window-choose-tar").hide();
-        }); */
         //------------------------------------------
 
         // подсвет сегоднешней даты
