@@ -15,6 +15,7 @@ $userId     = $user->get('id');
 $api_phone_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $phones = $api_phone_model->getArrayNumbers();
 $items = json_encode($this->item);
+echo parent::getPreloader();
 ?>
 <form>
     <a class="btn btn-large btn-primary"
