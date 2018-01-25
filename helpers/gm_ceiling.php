@@ -884,7 +884,6 @@ class Gm_ceilingHelpersGm_ceiling
 
         foreach ($component_count as $key => $cost) {
             $component_item = array();
-
             $component_item['title'] = $components[$key]->full_name;//. " ".$components[$key]->title ; 								//Название комплектующего
             $component_item['unit'] = $components[$key]->component_unit;                                //В чем измеряется
             $component_item['id'] = $components[$key]->id;                                                //ID
@@ -2792,7 +2791,7 @@ class Gm_ceilingHelpersGm_ceiling
         foreach ($components_list as $i => $component) {
             $components[$component->id] = $component;
         }
-
+        throw new Exception($data['n1']);
         //Получаем прайс-лист полотен
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $canvases_list = $canvases_model->getFilteredItemsCanvas();
@@ -2944,9 +2943,9 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['n12'] > 0) {
             $component_count[$items_2[0]->id] += 2;
         }
-//        $kolKP = 0.0;//переменная для просчета, является ли профиль из серии КП
-//        $kolNP = 0.0; //переменная для просчета, является ли профиль из серии НП
-//        $kolSP = 0.0;//переменная для просчета, является ли профиль из серии СП
+        //        $kolKP = 0.0;//переменная для просчета, является ли профиль из серии КП
+        //        $kolNP = 0.0; //переменная для просчета, является ли профиль из серии НП
+        //        $kolSP = 0.0;//переменная для просчета, является ли профиль из серии СП
         if ($del_flag == 1) {
             //светильники
             $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
@@ -3264,7 +3263,7 @@ class Gm_ceilingHelpersGm_ceiling
 
             $components_data[] = $component_item;
         }
-        return $components_data;
+        return $component_count;
     }
     /* 	основная функция для расчета стоимости монтажа
         $del_flag 0 - не удалать светильники, трубы и т.д что хранится в др. таблицах
@@ -4580,6 +4579,75 @@ class Gm_ceilingHelpersGm_ceiling
     }
     /* функция для создания PDF документа с расходкой по проекту */
     public static function create_estimate_of_consumables($project_id){
+        $components_data = array();
+        $calculations_model = self::getModel('calculations');
+        $calculations = $calculations_model->getProjectItems($project_id);
+        foreach($calcultions as $calc){
+            $components_data [] = self::calculate_components($calc->id,null,0);
+        }
+        $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+        $components_list = $components_model->getFilteredItems();
+        foreach ($components_list as $i => $component) {
+            $components[$component->id] = $component;
+        }
+        $component_count = array();
+        foreach ($components as $key => $value) $component_count[$key] = 0;
+
+        $print_data = array();
+        foreach ($component_count as $key => $cost) {
+            $component_item = array();
+
+            $component_item['title'] = $components[$key]->component_title;                                //Название комплектующего
+            $component_item['unit'] = $components[$key]->component_unit;                                //В чем измеряется
+            $component_item['self_total'] = 0;                                                            //В чем измеряется
+            $component_item['id'] = $components[$key]->id;                                                //ID
+            $component_item['quantity'] = 0;
+
+            $print_data[] = $component_item;
+        }
+
+        foreach ($components_data as $component_array) {
+            foreach ($component_array as $key => $component) {
+                if ($component['stack'] == 0) {
+                    $new_component = $component;
+                    $new_component['self_total'] = $print_data[$key]['self_total'] + $new_component['self_total'];
+                    $new_component['quantity'] = $print_data[$key]['quantity'] + $new_component['quantity'];
+                    $print_data[$key] = $new_component;
+                }
+            }
+
+        }
+
+        foreach ($components_data as $component_array) {
+            foreach ($component_array as $key => $component) {
+                if ($component['stack'] == 1) {
+                    $print_data[] = $component;
+                }
+            }
+        }
+
+        $i = 0;
+        foreach ($print_data as $data) {
+            if ($data['title'] == "Багет ПВХ (2,5 м)") $it_11 = $i;
+            if ($data['title'] == "Багет потолочный аллюм") $it_236 = $i;
+            if ($data['title'] == "Багет стеновой аллюм") $it_239 = $i;
+            if ($data['title'] == "Провод ПВС 2 х 0,75 (20 м)") $it_4 = $i;
+            if ($data['title'] == "Брус 40*50") $it_1 = $i;
+            if ($data['title'] == "Багет для парящих пот аллюм") $it_559 = $i;
+            if ($data['title'] == "Вставка для парящих потолков") $it_38 = $i;
+            if ($data['title'] == "Профиль ПП 75") $it_650 = $i;
+            if ($data['title'] == "Профиль ПЛ 75") $it_651 = $i;
+            if ($data['title'] == "Профиль КП 2") $it_652 = $i;
+            if ($data['title'] == "Профиль НП 5") $it_653 = $i;
+            if ($data['title'] == "Профиль БП 40") $it_654 = $i;
+            if ($data['title'] == "Профиль СП 1") $it_655 = $i;
+            if ($data['title'] == "Профиль СП 2") $it_656 = $i;
+
+            $i++;
+        }
+        //tyt
+
+        //---------------------------------- ДЛЯ СКЛАДА РАСХОДКА --------------------------------------//
         $html = '<h1>Расходные материалы</h1>';
 
         if (isset($project_id)) {
@@ -4593,6 +4661,8 @@ class Gm_ceilingHelpersGm_ceiling
 		<h2>Дата: ' . date("d.m.Y") . '</h2>
 		<table border="0" cellspacing="0" width="100%">
 		<tbody><tr><th>Наименование</th><th class="center">Ед. изм.</th><th class="center">Кол-во</th><th class="center">Общая стоимость</th></tr>';
+
+        //throw new Exception(implode("//", $items_11[0]->id) , 1);
         $print_data[$it_11]['quantity'] = self::rounding($print_data[$it_11]['quantity'], 2.5);
         $print_data[$it_236]['quantity'] = self::rounding($print_data[$it_236]['quantity'], 2.5);
         $print_data[$it_239]['quantity'] = self::rounding($print_data[$it_239]['quantity'], 2.5);
@@ -4622,8 +4692,6 @@ class Gm_ceilingHelpersGm_ceiling
         $print_data[$it_655]['self_total'] = $print_data[$it_655]['self_price'] * $print_data[$it_655]['quantity'];
         $print_data[$it_656]['self_total'] = $print_data[$it_656]['self_price'] * $print_data[$it_656]['quantity'];
 
-        
-
         //округляем провод
         $print_data[$it_4]['quantity'] = ceil($print_data[$it_4]['quantity']);
         $print_data[$it_4]['self_total'] = $print_data[$it_4]['self_price'] * $print_data[$it_4]['quantity'];
@@ -4640,7 +4708,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $price_itog += $item['self_total'];
             }
         }
-        //throw new Exception($item[4]['self_total'], 1);
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
 
