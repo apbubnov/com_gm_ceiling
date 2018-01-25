@@ -104,8 +104,8 @@
         border: 1px solid rgb(169, 169, 169);
         border-top: 0;
         height: auto;
-        background-color: rgb(54, 53, 127);
-        color: rgb(255, 255, 255);
+        background-color: #d3d3f9;
+        color: #ffffff;
         max-height: 90px;
         overflow-y: scroll;
         overflow-x: hidden;
