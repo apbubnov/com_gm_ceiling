@@ -4144,9 +4144,6 @@ class Gm_ceilingHelpersGm_ceiling
         $project = $project_model->getData($project_id);
         $calculation_model = self::getModel('calculation');
         $data = $calculation_model->getData($calc_id);
-        $modelCanvases = self::getModel('canvases');
-        $canvas = $modelCanvases->getCanvases(array('id_canvas' => $data['n3']));
-        throw new Exception($canvas);
         $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок № _________</h1>';
         $html .= '<table>';
         $html .= '<tbody>';
@@ -4162,9 +4159,9 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['color'] > 0) {
             $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
             $color = $color_model->getData($data['color']);
-            $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
+            $name = $data['n3'] . ", цвет: " . $color->colors_title;
         } else {
-            $name = $canvases_data['title'];
+            $name = $data['n3'];
         }
         $html .= '<th>Цвет: </th><td colspan="3" >' . $name . '</td>';
         $html .= '</tr>';
