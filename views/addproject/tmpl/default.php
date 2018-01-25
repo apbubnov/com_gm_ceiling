@@ -312,15 +312,15 @@ if (count($AllGauger) == 0) {
                         var t = elementTime.substr(0, 2);
                         t++;
                         Array.from(AllGauger).forEach(function(elementGauger) {
-                            TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+/*                             TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                             TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-                            var emptytd = 0;
+ */                            var emptytd = 0;
                             Array.from(data).forEach(function(elementProject) {
-                                if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                /* if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
                                     TableForSelect += '<td>'+elementProject.project_info+'</td>';
                                     emptytd = 1;
-                                }
-								/* if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                } */
+								if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
                                     var timesession = jQuery("#jform_new_project_calculation_daypart").val();
                                     var gaugersession = jQuery("#jform_project_gauger").val();
                                     if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
@@ -331,10 +331,14 @@ if (count($AllGauger) == 0) {
                                     TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
                                     TableForSelect += '<td>'+elementProject.project_info+'</td>';
                                     emptytd = 1;
-                                } */
+                                }
                             });
                             if (emptytd == 0) {
+								TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+
                                 TableForSelect += '<td></td>';
+
                             }
                             TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
                         });
