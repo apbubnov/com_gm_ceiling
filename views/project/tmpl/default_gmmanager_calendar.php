@@ -1537,16 +1537,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 }
             });
             //если сессия есть, то выдать время, которое записано в сессии
-            if (time != undefined) {
-                setTimeout(function() { 
-                    var times = jQuery("input[name='choose_time_gauger']");
-                    times.each(function(element) {
-                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                            jQuery(this).prop("checked", true);
-                        }
-                    });
-                }, 200);
-            } else if (date == datesession.substr(0, 10)) {
+            if (date == datesession.substr(0, 10)) {
                 var timesession = jQuery("#jform_new_project_calculation_daypart").val();
                 var gaugersession = jQuery("#jform_project_gauger").val();
                 setTimeout(function() { 
@@ -1558,6 +1549,15 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                             }
                         });
                     }
+                }, 200);
+            } else if (time != undefined) {
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    times.each(function(element) {
+                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                            jQuery(this).prop("checked", true);
+                        }
+                    });
                 }, 200);
             }
         });
