@@ -33,7 +33,7 @@
 	$project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
 	$project = $project_model->getData($project_id);
 	$extra_components_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_components);
-    $components_stock_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->components_stock);
+    $components_stock_array = Gm_ceilingHelpersGm_ceiling::decode_stock($this->item->components_stock);
 	$extra_mounting_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_mounting);
 	$calc_id = $jinput->get('id','','INT');
 	$calc_id = empty($calc_id)?0:$calc_id;
@@ -60,39 +60,32 @@
 <?php
 	if($type === "calculator" || $type === "gmcalculator" || $type === "gmmanager" || $type === "manager" )
 	{
-		echo parent::getButtonBack();
+		echo ('<div style="margin: 0 0 30px 30px;">'.parent::getButtonBack().'</div>');
 	}
 	if ($_SERVER['HTTP_REFERER'] == 'http://test1.gm-vrn.ru/sketch/index.php'){
 		echo "<script>BackPage = function() { window.history.go(-3); }</script>";
 	}
 ?>
+
 <style>
     .Area {
-        display: inline-block;
-        float: left;
         height: auto;
         overflow: visible;
-        margin: 0 5px;
-        margin-bottom: 16px;
         position: relative;
     }
-
     .Area .Input {
         display: inline-block;
-        float: left;
         width: 100%;
         padding-left: 5px;
     }
-
     .Area .Selects {
         display: inline-block;
         position: relative;
         float: left;
         width: 100%;
         height: 0;
-        z-index: 2;
+        z-index: 2; 
     }
-
     .Area .Selects .Select {
         position: absolute;
         top: -1px;
@@ -103,37 +96,39 @@
         border: 1px solid rgb(169, 169, 169);
         border-top: 0;
         height: auto;
-        background-color: rgb(54, 53, 127);
-        color: rgb(255, 255, 255);
-        max-height: 90px;
+		background-color: #ffffff;
+        color: #414099;
+        max-height: 120px;
         overflow-y: scroll;
         overflow-x: hidden;
     }
-
     .Area .Selects .Select .Item {
         display: inline-block;
         float: left;
         width: 100%;
-        padding-left: 5px;
+        padding: 10px 5px;
         height: auto;
         line-height: 25px;
         font-size: 14px;
-        border-top: 1px solid rgb(255, 255, 255);
         cursor: pointer;
     }
-
     .Area .Selects .Select .Item:hover {
-        background-color: rgb(31, 30, 70);
+        background-color: #d3d3f9;
     }
 </style>
+
 <div class="calculation-edit front-end-edit">
-	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 		<?php if ($this->type === "guest") { ?>
+			<div style="display: inline-block; width: 100%;">
+				<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right; margin: 0px 30px 0 0;"><i class="fa fa-lock" aria-hidden="true"></i></a>
+			</div>
 			<div class="show_before_calculate" style="margin-bottom: 1em;">
 				<h1>Натяжные потолки от производителя без посредников дешевле на 30%</h1>
 			</div>
 			<input type="hidden" name="jform[rek]" value="<?php echo  $rek; ?>" />
+		<?php } else { ?>
+			<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right; margin: -67px 30px 0 0;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 		<?php } ?>
 		<input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
 		<input id="flag_auto" type="hidden" value="0"/>
@@ -1407,7 +1402,9 @@
 								<label>Название</label>
 								<div id="extra_components_title_container">
 									<?php foreach($extra_components_array as $item) { ?>
-										<div class='form-group'><input name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'>
+											<input name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'>
+										</div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1415,7 +1412,9 @@
 								<label>Стоимость</label>
 								<div id="extra_components_value_container">
 									<?php foreach($extra_components_array as $item) { ?>
-										<div class='form-group'><input name='extra_components_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'>
+											<input name='extra_components_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'>
+										</div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1423,78 +1422,68 @@
 						<div class="col-sm-4"></div>
 					</div>
 					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
 								<button id="extra_components_button" class="btn btn-primary" type="button">Добавить</button>
 							</div>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
-                    <!-- другие комплектующие из склада-->
-                    <div class="container">
-                        <div class="row" style="margin-bottom: 1em;">
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <table>
-                                    <tr>
-                                        <td>Другие комплектующие со склада</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="col-sm-4"></div>
-                        </div>
-                    </div>
-                    <div class = "container">
-                        <div class="row">
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <div class="advanced_col_half">
-                                    <label>Название</label>
-                                    <div id="components_title_stock_container">
-                                        <?php foreach($components_stock_array as $item) { ?>
-                                            <div class='form-group Area Type'>
-                                                <input
-                                                       id="Type" value='<?php echo $item['title']; ?>'
-                                                       autocomplete="off"
-                                                       NameDB="CONCAT(components.title,' ',options.title)"
-                                                       onclick="GetList(this, ['Type'], ['Type']);"
-                                                       onkeyup="GetList(this, ['Type'], ['Type']);"
-                                                       onblur="ClearSelect(this)"
-                                                       class='form-control Input Type'
-                                                       type='text'>
-                                                <input id="ID" name="components_title_stock[]" hidden>
-                                                <div class="Selects Type"></div>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                                <div class="advanced_col_half">
-                                    <label>Количество</label>
-                                    <div id="components_value_stock_container">
-                                        <?php foreach($components_stock_array as $item) { ?>
-                                            <div class='form-group'><input name='components_value_stock[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4"></div>
-                        </div>
-                        <div class="row sm-margin-bottom">
-                            <div class="col-sm-4">
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <button id="components_button_stock" class="btn btn-primary" type="button">Добавить</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                            </div>
-                        </div>
-                    </div>
+				<!-- другие комплектующие из склада-->
+				<div class="container">
+					<div class="row" style="margin-bottom: 1em;">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<table>
+								<tr>
+									<td>Другие комплектующие со склада</td>
+								</tr>
+							</table>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+				<div class = "container">
+					<div class="row">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="advanced_col_half">
+								<label>Название</label>
+								<div id="components_title_stock_container">
+									<?php foreach($components_stock_array as $item) { ?>
+										<div class='form-group Area Type'>
+											<input id="Type" value='<?php echo $item['title']; ?>' autocomplete="off" NameDB="CONCAT(components.title,' ',options.title)" onclick="GetList(this, ['Type'], ['Type']);" onkeyup="GetList(this, ['Type'], ['Type']);" onblur="ClearSelect(this)" class='form-control Input Type' type='text'>
+											<input id="ID" value="<?php echo $item['id']; ?>" name="components_title_stock[]" hidden>
+											<div class="Selects Type"></div>
+										</div>
+									<?php } ?>
+								</div>
+							</div>
+							<div class="advanced_col_half">
+								<label>Количество</label>
+								<div id="components_value_stock_container">
+									<?php foreach($components_stock_array as $item) { ?>
+										<div class='form-group'>
+											<input name='components_value_stock[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'>
+										</div>
+									<?php } ?>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<button id="components_button_stock" class="btn btn-primary" type="button">Добавить</button>
+							</div>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
 				<!-- другие работы по монтажу -->
 				<div class = "container">
 					<div class="row" style="margin-bottom: 1em;">
@@ -1825,13 +1814,17 @@
 			</div>
 		</div>
 		<!-- /////////////////////////////////////////////////////////////////// -->
-		<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"> Наверх</i></a>
+		<div class="top_button_container">
+			<a href="#" title="Вернуться к началу" class="topbutton"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+		</div>
 	</form>
 </div>
 </div>
+
 <script type="text/javascript">
+
     var $ = jQuery;
-//для подгрузки компонентов со склада
+	//для подгрузки компонентов со склада
     function GetList(e, select, like) {
         var input = $(e),
             Selects = input.siblings(".Selects"),
@@ -1939,7 +1932,7 @@
         }, 200);
     }
 
-function submit_form_sketch()
+	function submit_form_sketch()
 	{
 		var regexp_d = /^\d+$/;
 		if (!regexp_d.test(document.getElementById('jform_n2').value)
@@ -2180,13 +2173,13 @@ function submit_form_sketch()
         jQuery( "#components_button_stock" ).click(function(){
             var components_title_stock_container = jQuery( "#components_title_stock_container" ),
                 components_value_stock_container = jQuery( "#components_value_stock_container" );
-            jQuery("<div class='form-group Area'><input name='components_title_stock[]' value='' id='Type' autocomplete=\"off\"\n" +
+            jQuery("<div class='form-group Area'><input value='' id='Type' autocomplete=\"off\"\n" +
                 "        NameDB=\"CONCAT(components.title,' ',options.title)\"\n" +
                 "        onclick=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onkeyup=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onblur=\"ClearSelect(this)\"\n" +
                 "    class='form-control Input Type'\n" +
-                "        type='text'><input id=\"ID\" hidden> <div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
+                "        type='text'><input id=\"ID\" name='components_title_stock[]'  hidden> <div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
             jQuery( "<div class='form-group'><input name='components_value_stock[]' value='' class='form-control' type='tel'></div>" ).appendTo( components_value_stock_container );
         });
 
@@ -2572,69 +2565,83 @@ function submit_form_sketch()
 		});
 		//Запрос к серверу на расчет потолка
 		jQuery( "#send_to_email" ).click(function(){
-			if(jQuery("#form-calculation").validationEngine('validate')) {
-				jQuery( "input[type=checkbox]").each(function(){
-					if( jQuery( this ).is(':checked') ) {
-						jQuery( this ).val( 1 );
-					} else {
-						jQuery( this ).val( 0 );
-					}
+			var reg = /^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/;
+			if(reg.test(jQuery("#send_email").val())){
+				if(jQuery("#form-calculation").validationEngine('validate')) {
+					jQuery( "input[type=checkbox]").each(function(){
+						if( jQuery( this ).is(':checked') ) {
+							jQuery( this ).val( 1 );
+						} else {
+							jQuery( this ).val( 0 );
+						}
+					});
+					var temp_task = jQuery("#jform_task").val();
+					jQuery("#jform_task").val( "calculate" );
+					data = jQuery( "#form-calculation").serialize();
+					jQuery("#jform_task").val( temp_task );
+					<?php if($this->type === "guest") {?>
+					var additional = "new_client=1&del_flag=1&need_mount="+jQuery(".need_mount").val();
+					jQuery.ajax({
+						type: 'POST',
+						url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
+						data: data,
+						success: function(data){
+							jQuery('#send_email_success').slideDown();
+						},
+						dataType: "text",
+						timeout: 10000,
+						error: function(){
+							var n = noty({
+								theme: 'relax',
+								timeout: 2000,
+								layout: 'center',
+								maxVisible: 5,
+								type: "error",
+								text: "Ошибка при попытке рассчитать. Сервер не отвечает"
+							});
+							calculate_button.removeClass("loading");
+							calculate_button.find("span.loading").hide();
+							calculate_button.find("span.static").show();
+						}					
+					});
+					<?} else {?>
+					var additional = "del_flag=1&need_mount="+jQuery(".need_mount").val();
+					jQuery.ajax({
+						type: 'POST',
+						url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
+						data: data,
+						success: function(data){
+							jQuery('#send_email_success').slideDown();
+						},
+						dataType: "text",
+						timeout: 10000,
+						error: function(){
+							var n = noty({
+								theme: 'relax',
+								timeout: 2000,
+								layout: 'center',
+								maxVisible: 5,
+								type: "error",
+								text: "Ошибка при попытке рассчитать. Сервер не отвечает"
+							});
+							calculate_button.removeClass("loading");
+							calculate_button.find("span.loading").hide();
+							calculate_button.find("span.static").show();
+						}					
+					});
+					<?}?>
+				}
+			}
+			else{
+				var n = noty({
+					theme: 'relax',
+					timeout: 2000,
+					layout: 'center',
+					maxVisible: 5,
+					type: "error",
+					text: "Некорректный e-mail"
 				});
-				var temp_task = jQuery("#jform_task").val();
-				jQuery("#jform_task").val( "calculate" );
-				data = jQuery( "#form-calculation").serialize();
-				jQuery("#jform_task").val( temp_task );
-                <?php if($this->type === "guest") {?>
-				var additional = "new_client=1&del_flag=1&need_mount="+jQuery(".need_mount").val();
-                jQuery.ajax({
-					type: 'POST',
-					url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
-					data: data,
-					success: function(data){
-						jQuery('#send_email_success').slideDown();
-					},
-					dataType: "text",
-					timeout: 10000,
-					error: function(){
-						var n = noty({
-							theme: 'relax',
-							timeout: 2000,
-							layout: 'center',
-							maxVisible: 5,
-							type: "error",
-							text: "Ошибка при попытке рассчитать. Сервер не отвечает"
-						});
-						calculate_button.removeClass("loading");
-						calculate_button.find("span.loading").hide();
-						calculate_button.find("span.static").show();
-					}					
-				});
-				<?} else {?>
-                var additional = "del_flag=1&need_mount="+jQuery(".need_mount").val();
-				jQuery.ajax({
-					type: 'POST',
-					url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
-					data: data,
-					success: function(data){
-						jQuery('#send_email_success').slideDown();
-					},
-					dataType: "text",
-					timeout: 10000,
-					error: function(){
-						var n = noty({
-							theme: 'relax',
-							timeout: 2000,
-							layout: 'center',
-							maxVisible: 5,
-							type: "error",
-							text: "Ошибка при попытке рассчитать. Сервер не отвечает"
-						});
-						calculate_button.removeClass("loading");
-						calculate_button.find("span.loading").hide();
-						calculate_button.find("span.static").show();
-					}					
-				});
-                <?}?>
+				jQuery("#send_email").focus();
 			}
 		});
 

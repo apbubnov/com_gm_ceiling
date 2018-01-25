@@ -326,7 +326,36 @@ if (empty($list['direction']))
 				->from("`#__gm_ceiling_clients` as `c`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->innerJoin('`rgzbn_users` AS `u` ON `c`.`id` = `u`.`associated_client`')
-				->where("`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%'")
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1)")
+				->order('`c`.`id` DESC')
+				->group('`c`.`id`');
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			return $items;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	public function getDesignersByClientName($client_name)
+	{
+		try
+		{
+			$user = JFactory::getUser();
+			$db    = JFactory::getDbo();
+			$client_name = $db->escape($client_name);
+			$query = $db->getQuery(true);
+			$query
+				->select("`c`.*, GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`")
+				->from("`#__gm_ceiling_clients` as `c`")
+				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
+				->innerJoin('`rgzbn_users` AS `u` ON `c`.`id` = `u`.`associated_client`')
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND `u`.`dealer_type` = 3")
 				->order('`c`.`id` DESC')
 				->group('`c`.`id`');
 			$db->setQuery($query);

@@ -76,9 +76,9 @@ if($this->item->transport == 1 ) {
     }
     if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
 }
-if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
-    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-}
+//if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
+//    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+//}
 $project_total_discount_transport = $project_total_discount + $sum_transport;
 
 $project_total = $project_total  + $sum_transport;
@@ -1178,7 +1178,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             <p>
                 <table id="projects_gaugers"></table>
             </p>
-            <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
         </div>
     </div>
     <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
@@ -1335,6 +1334,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         
         trans();
 
+        window.time = undefined;
+        window.gauger = undefined;
+
         // открытие модального окна с календаря и получение даты и вывода свободных замерщиков
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -1393,7 +1395,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                             if (emptytd == 0) {
                                 TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                                 TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-
                                 TableForSelect += '<td></td>';
                             }
                             TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
@@ -1418,14 +1419,23 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                         });
                     }
                 }, 200);
+            } else if (time != undefined) {
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    times.each(function(element) {
+                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                            jQuery(this).prop("checked", true);
+                        }
+                    });
+                }, 200);
             }
         });
         //--------------------------------------------------------------------------------------------------
 
         // получение значений из селектов
-        jQuery("#save-choise-tar").click(function() {
+		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
             var times = jQuery("input[name='choose_time_gauger']");
-            var time = "";
+            time = "";
             gauger = "";
             times.each(function(element) {
                 if (jQuery(this).prop("checked") == true) {
