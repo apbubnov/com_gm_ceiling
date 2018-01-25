@@ -168,7 +168,6 @@ if (count($AllGauger) == 0) {
             <p>
                 <table id="projects_gaugers"></table>
             </p>
-            <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
         </div>
     </div>
 </form>
