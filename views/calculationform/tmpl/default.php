@@ -2565,69 +2565,83 @@
 		});
 		//Запрос к серверу на расчет потолка
 		jQuery( "#send_to_email" ).click(function(){
-			if(jQuery("#form-calculation").validationEngine('validate')) {
-				jQuery( "input[type=checkbox]").each(function(){
-					if( jQuery( this ).is(':checked') ) {
-						jQuery( this ).val( 1 );
-					} else {
-						jQuery( this ).val( 0 );
-					}
+			var reg = /^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/;
+			if(reg.test(jQuery("#send_email").val())){
+				if(jQuery("#form-calculation").validationEngine('validate')) {
+					jQuery( "input[type=checkbox]").each(function(){
+						if( jQuery( this ).is(':checked') ) {
+							jQuery( this ).val( 1 );
+						} else {
+							jQuery( this ).val( 0 );
+						}
+					});
+					var temp_task = jQuery("#jform_task").val();
+					jQuery("#jform_task").val( "calculate" );
+					data = jQuery( "#form-calculation").serialize();
+					jQuery("#jform_task").val( temp_task );
+					<?php if($this->type === "guest") {?>
+					var additional = "new_client=1&del_flag=1&need_mount="+jQuery(".need_mount").val();
+					jQuery.ajax({
+						type: 'POST',
+						url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
+						data: data,
+						success: function(data){
+							jQuery('#send_email_success').slideDown();
+						},
+						dataType: "text",
+						timeout: 10000,
+						error: function(){
+							var n = noty({
+								theme: 'relax',
+								timeout: 2000,
+								layout: 'center',
+								maxVisible: 5,
+								type: "error",
+								text: "Ошибка при попытке рассчитать. Сервер не отвечает"
+							});
+							calculate_button.removeClass("loading");
+							calculate_button.find("span.loading").hide();
+							calculate_button.find("span.static").show();
+						}					
+					});
+					<?} else {?>
+					var additional = "del_flag=1&need_mount="+jQuery(".need_mount").val();
+					jQuery.ajax({
+						type: 'POST',
+						url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
+						data: data,
+						success: function(data){
+							jQuery('#send_email_success').slideDown();
+						},
+						dataType: "text",
+						timeout: 10000,
+						error: function(){
+							var n = noty({
+								theme: 'relax',
+								timeout: 2000,
+								layout: 'center',
+								maxVisible: 5,
+								type: "error",
+								text: "Ошибка при попытке рассчитать. Сервер не отвечает"
+							});
+							calculate_button.removeClass("loading");
+							calculate_button.find("span.loading").hide();
+							calculate_button.find("span.static").show();
+						}					
+					});
+					<?}?>
+				}
+			}
+			else{
+				var n = noty({
+					theme: 'relax',
+					timeout: 2000,
+					layout: 'center',
+					maxVisible: 5,
+					type: "error",
+					text: "Некорректный e-mail"
 				});
-				var temp_task = jQuery("#jform_task").val();
-				jQuery("#jform_task").val( "calculate" );
-				data = jQuery( "#form-calculation").serialize();
-				jQuery("#jform_task").val( temp_task );
-                <?php if($this->type === "guest") {?>
-				var additional = "new_client=1&del_flag=1&need_mount="+jQuery(".need_mount").val();
-                jQuery.ajax({
-					type: 'POST',
-					url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
-					data: data,
-					success: function(data){
-						jQuery('#send_email_success').slideDown();
-					},
-					dataType: "text",
-					timeout: 10000,
-					error: function(){
-						var n = noty({
-							theme: 'relax',
-							timeout: 2000,
-							layout: 'center',
-							maxVisible: 5,
-							type: "error",
-							text: "Ошибка при попытке рассчитать. Сервер не отвечает"
-						});
-						calculate_button.removeClass("loading");
-						calculate_button.find("span.loading").hide();
-						calculate_button.find("span.static").show();
-					}					
-				});
-				<?} else {?>
-                var additional = "del_flag=1&need_mount="+jQuery(".need_mount").val();
-				jQuery.ajax({
-					type: 'POST',
-					url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
-					data: data,
-					success: function(data){
-						jQuery('#send_email_success').slideDown();
-					},
-					dataType: "text",
-					timeout: 10000,
-					error: function(){
-						var n = noty({
-							theme: 'relax',
-							timeout: 2000,
-							layout: 'center',
-							maxVisible: 5,
-							type: "error",
-							text: "Ошибка при попытке рассчитать. Сервер не отвечает"
-						});
-						calculate_button.removeClass("loading");
-						calculate_button.find("span.loading").hide();
-						calculate_button.find("span.static").show();
-					}					
-				});
-                <?}?>
+				jQuery("#send_email").focus();
 			}
 		});
 
