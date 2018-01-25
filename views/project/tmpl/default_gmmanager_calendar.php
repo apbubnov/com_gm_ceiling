@@ -275,17 +275,19 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                                id="jform_client_name" value="<?php if (isset($_SESSION['FIO'])) {
                                             echo $_SESSION['FIO'];
                                         } else echo $this->item->client_id; ?>"
-                                               placeholder="ФИО клиента" type="text"></td>
-                                    <?php if($this->item->id_client == "1"){?>
-                                        <td>
-                                            <button id="find_old_client" type="button" class="btn btn-primary"><i
-                                                        class="fa fa-search" aria-hidden="true"></i></button><br>
+                                               placeholder="ФИО клиента" type="text">
+                                        <?php if($this->item->id_client == "1"){ ?>
                                             <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
                                             <label for='radio_clients'>Клиенты</label>
                                             <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
                                             <label for='radio_dealers'>Дилеры</label>
                                             <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
                                             <label for='radio_designers'>Отделочники</label>
+                                        <?php }?>
+                                    </td>
+                                    <?php if($this->item->id_client == "1"){?>
+                                        <td>
+                                            <button id="find_old_client" type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button><br>
                                         </td>
                                     <?php  }?>
                                 </tr>
