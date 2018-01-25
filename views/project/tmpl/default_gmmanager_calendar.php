@@ -286,11 +286,15 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 </tr>
                                 <?php if($this->item->id_client == "1"){ ?>
                                     <tr>
-                                        <td colspan="3">
+                                        <td>
                                             <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
                                             <label for='radio_clients'>Клиенты</label>
+                                        </td>
+                                        <td>
                                             <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
                                             <label for='radio_dealers'>Дилеры</label>
+                                        </td>
+                                        <td>
                                             <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
                                             <label for='radio_designers'>Отделочники</label>
                                         </td>
@@ -2231,7 +2235,13 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             });
         }
 
-        jQuery("#find_old_client").click(function () {
+        jQuery("#find_old_client").click(find_old_client);
+        jQuery("#radio_clients").click(find_old_client);
+        jQuery("#radio_dealers").click(find_old_client);
+        jQuery("#radio_designers").click(find_old_client);
+
+        function find_old_client()
+        {
             jQuery('#found_clients').find('option').remove();
             var opt = document.createElement('option');
             opt.value = 0;
@@ -2265,7 +2275,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     });
                 }
             });
-        });
+        }
 
         jQuery("#found_clients").change(function () {
             var arr = [<?php echo $phonefrom;?>];
