@@ -119,7 +119,7 @@ if (count($AllGauger) == 0) {
 			<input name="jform[project_note]" id="jform_project_note" value="" style="width:100%; margin-bottom:1em;" placeholder="Примечание" type="text">
 		</div>
 	</div>
-<!-- 	<div class="control-group">
+	<!-- <div class="control-group">
 		<?php// if ($user->dealer_id != 1) { ?>
 		 	<div class="control-label">
 				<label id="jform_who_calculate-lbl" for="jform_who_calculate" class="required">Выберите замерщика<span class="star">&nbsp;*</span></label>
@@ -146,7 +146,8 @@ if (count($AllGauger) == 0) {
 			</div>
 		</div>
 	</div>
-	<button id="calculate_button" class="btn btn-primary" style="width:100%;" type="submit">Записать</button>
+	<div>
+		<button id="calculate_button" class="btn btn-primary" style="width:100%;" type="submit">Записать</button>
 	</div>
 	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -156,22 +157,11 @@ if (count($AllGauger) == 0) {
 				<p>
 					<table id="projects_gaugers"></table>
 				</p>
-				<p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
 		</div>
 	</div>
 </form>
 
 <script>
-
-	/*
-		jQuery(window).resize(function() {
-			heightAll = jQuery("#modal-window-choose-tar").css("height");
-			height1 = jQuery("#div1").css("height");
-			height2 = jQuery("#div2").css("height");
-			height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
-			jQuery("#table_wraper").css("height", height+"px");
-		});
-	*/
 
 	// листание календаря
     month_old = 0;
@@ -276,7 +266,11 @@ if (count($AllGauger) == 0) {
     }
     //------------------------------------------
 
-	jQuery( document ).ready(function(){
+	jQuery(document).ready(function() {
+
+		window.time = undefined;
+        window.gauger = undefined;
+
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -297,18 +291,6 @@ if (count($AllGauger) == 0) {
             jQuery("#modal-window-container-tar").show();
 			jQuery("#modal-window-choose-tar").show("slow");
             jQuery("#close-tar").show();
-			/* setTimeout(function () {
-				heightAll = jQuery("#modal-window-choose-tar").css("height");
-				height1 = jQuery("#div1").css("height");
-				height2 = jQuery("#div2").css("height");
-				height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
-				jQuery("#table_wraper").css("height", height+"px");
-			}, 500); */
-			/* if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-				var dealer = 1;
-			} else {
-				var dealer = <?php// echo $user->dealer_id; ?>;
-			} */
             jQuery.ajax({
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
@@ -333,16 +315,24 @@ if (count($AllGauger) == 0) {
                         var t = elementTime.substr(0, 2);
                         t++;
                         Array.from(AllGauger).forEach(function(elementGauger) {
-                            TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                            TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
                             var emptytd = 0;
                             Array.from(data).forEach(function(elementProject) {
-                                if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+								if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                                    var gaugersession = jQuery("#jform_project_gauger").val();
+                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                    } else {
+                                        TableForSelect += '<tr><td></td>';
+                                    }
+                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
                                     TableForSelect += '<td>'+elementProject.project_info+'</td>';
                                     emptytd = 1;
                                 }
                             });
                             if (emptytd == 0) {
+								TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
                                 TableForSelect += '<td></td>';
                             }
                             TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
@@ -353,13 +343,24 @@ if (count($AllGauger) == 0) {
                     jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
                 }
             });
+			//если было выбрано время, то выдать его
+            if (time != undefined) {
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    times.each(function(element) {
+                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                            jQuery(this).prop("checked", true);
+                        }
+                    });
+                }, 200);
+            }
         });
         //--------------------------------------------------------------------------------------------------
 
         // получение значений из селектов
-        jQuery("#save-choise-tar").click(function() {
+		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
 			var times = jQuery("input[name='choose_time_gauger']");
-            var time = "";
+            time = "";
             gauger = "";
             times.each(function(element) {
                 if (jQuery(this).prop("checked") == true) {
@@ -379,7 +380,7 @@ if (count($AllGauger) == 0) {
             jQuery("#close-tar").hide();
             jQuery("#modal-window-container-tar").hide();
             jQuery("#modal-window-choose-tar").hide();
-        });
+		});
         //------------------------------------------
 
         // подсвет сегоднешней даты
