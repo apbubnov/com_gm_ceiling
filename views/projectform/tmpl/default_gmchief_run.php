@@ -93,7 +93,8 @@ echo parent::getPreloader();
             display: none;
         }
     </style>
-    <h2>Просмотр проекта</h2>
+<?=parent::getButtonBack();?>
+    <h2 class = "center">Просмотр проекта</h2>
 <?php if ($this->item) { ?>
     <?php if (sizeof($calculations) > 0) { ?>
         <?php echo "<h3>Расчеты для проекта № ". $this->item->id ."</h3>"; ?>
