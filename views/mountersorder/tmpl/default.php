@@ -65,7 +65,7 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId); */
         <?php if (!empty($calculation_ids)) { ?>
             <?php foreach ($calculation_ids as $value) { ?>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#ceiling<?php echo $value->id; ?>" role="tab">Общее</a>
+                    <a class="nav-link" data-toggle="tab" href="#ceiling<?php echo $value->id; ?>" role="tab"><?php echo $value->calculation_title; ?></a>
                 </li>
             <?php } ?>
         <?php } ?>
