@@ -118,7 +118,7 @@ if (count($AllGauger) == 0) {
 			<input name="jform[project_note]" id="jform_project_note" value="" style="width:100%; margin-bottom:1em;" placeholder="Примечание" type="text">
 		</div>
 	</div>
-<!-- 	<div class="control-group">
+	<!-- <div class="control-group">
 		<?php// if ($user->dealer_id != 1) { ?>
 		 	<div class="control-label">
 				<label id="jform_who_calculate-lbl" for="jform_who_calculate" class="required">Выберите замерщика<span class="star">&nbsp;*</span></label>
@@ -145,7 +145,8 @@ if (count($AllGauger) == 0) {
 			</div>
 		</div>
 	</div>
-	<button id="calculate_button" class="btn btn-primary" style="width:100%;" type="submit">Записать</button>
+	<div>
+		<button id="calculate_button" class="btn btn-primary" style="width:100%;" type="submit">Записать</button>
 	</div>
 	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -161,16 +162,6 @@ if (count($AllGauger) == 0) {
 </form>
 
 <script>
-
-	/*
-		jQuery(window).resize(function() {
-			heightAll = jQuery("#modal-window-choose-tar").css("height");
-			height1 = jQuery("#div1").css("height");
-			height2 = jQuery("#div2").css("height");
-			height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
-			jQuery("#table_wraper").css("height", height+"px");
-		});
-	*/
 
 	// листание календаря
     month_old = 0;
@@ -296,18 +287,6 @@ if (count($AllGauger) == 0) {
             jQuery("#modal-window-container-tar").show();
 			jQuery("#modal-window-choose-tar").show("slow");
             jQuery("#close-tar").show();
-			/* setTimeout(function () {
-				heightAll = jQuery("#modal-window-choose-tar").css("height");
-				height1 = jQuery("#div1").css("height");
-				height2 = jQuery("#div2").css("height");
-				height = heightAll.slice(0, -2) - height1.slice(0, -2) - height2.slice(0, -2);
-				jQuery("#table_wraper").css("height", height+"px");
-			}, 500); */
-			/* if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-				var dealer = 1;
-			} else {
-				var dealer = <?php// echo $user->dealer_id; ?>;
-			} */
             jQuery.ajax({
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
@@ -356,6 +335,34 @@ if (count($AllGauger) == 0) {
         //--------------------------------------------------------------------------------------------------
 
         // получение значений из селектов
+
+		jQuery("input[name='choose_time_gauger']").change(function() {
+			var times = jQuery("input[name='choose_time_gauger']");
+            var time = "";
+            gauger = "";
+            times.each(function(element) {
+                if (jQuery(this).prop("checked") == true) {
+                    time = jQuery(this).val();
+                    gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
+                }
+            });
+			console.log(time);
+			console.log(date);
+			console.log(gauger);
+            jQuery("#jform_project_calculation_daypart").val(time);
+            jQuery("#jform_project_calculation_date").val(date);
+            jQuery("#jform_project_calculator").val(gauger);
+            if (jQuery(".change").length == 0) {
+                jQuery("#"+idDay).attr("class", "change");
+            } else {
+                jQuery(".change").attr("class", "current-month");
+                jQuery("#"+idDay).attr("class", "change");
+            }
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+            jQuery("#modal-window-choose-tar").hide();
+		});
+
         jQuery("#save-choise-tar").click(function() {
 			var times = jQuery("input[name='choose_time_gauger']");
             var time = "";
