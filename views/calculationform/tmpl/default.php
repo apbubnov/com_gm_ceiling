@@ -69,18 +69,18 @@
 
 <style>
     .Area {
-        /* display: inline-block;
+        display: inline-block;
         float: left;
         height: auto;
         overflow: visible;
         margin: 0 5px;
         margin-bottom: 16px;
-        position: relative; */
+        position: relative;
     }
 
     .Area .Input {
         display: inline-block;
-        float: left;
+        /* float: left; */
         width: 100%;
         padding-left: 5px;
     }
