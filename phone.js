@@ -96,6 +96,7 @@ function phone(login, pass)
                 }
                 else
                 {
+                    console.log(data);
                     var loc;
                     if (data.dealer_type == 3)
                     {
