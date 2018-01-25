@@ -4139,12 +4139,12 @@ class Gm_ceilingHelpersGm_ceiling
         return 1;
     }
     
-    public static function create_cut_pdf($proj_id,$calc_id){
+    public static function create_cut_pdf($calc_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-        $project_model = self::getModel('project');
-        $project = $project_model->getData($proj_id);
         $calculation_model = self::getModel('calculation');
         $data = $calculation_model->getData($calc_id);
+        $project_model = self::getModel('project');
+        $project = $project_model->getData($data->project_id);
         $data = get_object_vars($data);
         $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок № _________</h1>';
         $html .= '<table>';
