@@ -69,22 +69,15 @@
 
 <style>
     .Area {
-        /* display: inline-block;
-        float: left; */
         height: auto;
         overflow: visible;
-        /* margin: 0 5px;
-        margin-bottom: 16px; */
         position: relative;
     }
-
     .Area .Input {
         display: inline-block;
-        /* float: left; */
         width: 100%;
         padding-left: 5px;
     }
-
     .Area .Selects {
         display: inline-block;
         position: relative;
@@ -93,7 +86,6 @@
         height: 0;
         z-index: 2; 
     }
-
     .Area .Selects .Select {
         position: absolute;
         top: -1px;
@@ -110,7 +102,6 @@
         overflow-y: scroll;
         overflow-x: hidden;
     }
-
     .Area .Selects .Select .Item {
         display: inline-block;
         float: left;
@@ -119,17 +110,15 @@
         height: auto;
         line-height: 25px;
         font-size: 14px;
-        /* border-top: 1px solid rgb(169, 169, 169); */
         cursor: pointer;
     }
-
     .Area .Selects .Select .Item:hover {
         background-color: #d3d3f9;
     }
 </style>
 
 <div class="calculation-edit front-end-edit">
-	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right;"><i class="fa fa-lock" aria-hidden="true"></i></a>
+	<a href="<?php echo $login_link; ?>" class="btn btn-secondary" style="float: right; margin: -67px 30px 0 0;"><i class="fa fa-lock" aria-hidden="true"></i></a>
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 		<?php if ($this->type === "guest") { ?>
 			<div class="show_before_calculate" style="margin-bottom: 1em;">
