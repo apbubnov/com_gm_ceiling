@@ -3854,11 +3854,11 @@ class Gm_ceilingHelpersGm_ceiling
             elseif($transport_type == 2) {
                 $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
                 $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                if($transport_sum < margin($res->transport, $margin))
+               /*  if($transport_sum < margin($res->transport, $margin))
                   { 
                       $transport_sum = margin($res->transport, $margin);
                       $transport_sum_1 = $res->transport;
-                  }
+                  } */
                 $result = array(
                     'transport' => 'Выезд за город',
                     'distance' => $distance,
@@ -3895,7 +3895,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         return $result;
     }
-
+    /* функуия генерации общего наряда на монтаж */
     public static function create_common_estimate_mounters($project_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
@@ -4159,7 +4159,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         return 1;
     }
-    
+    /* функция генерации pdf раскроя */
     public static function create_cut_pdf($calc_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $calculation_model = self::getModel('calculation');
@@ -4313,7 +4313,7 @@ class Gm_ceilingHelpersGm_ceiling
 
             $i++;
         }
-//tyt
+        //tyt
 
         //---------------------------------- ДЛЯ СКЛАДА РАСХОДКА --------------------------------------//
         $html = '<h1>Расходные материалы</h1>';
