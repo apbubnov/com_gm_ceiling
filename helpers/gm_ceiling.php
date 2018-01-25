@@ -3879,10 +3879,9 @@ class Gm_ceilingHelpersGm_ceiling
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
-        $calculation_model = self::getModel('calculations');
         $calculations_model = self::getModel('calculations');
         $names = $calculations_model->FindAllMounters($project->project_mounter);
-        $calculations = $calculation_model->getProjectItems($project_id);
+        $calculations = $calculations_model->getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
         $brigade = JFactory::getUser($project->project_mounter);
         $client_contacts_model = self::getModel('client_phones');
@@ -4138,6 +4137,95 @@ class Gm_ceilingHelpersGm_ceiling
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
 
         return 1;
+    }
+    
+    public static function create_cut_pdf($project_id,$calc_id){
+        $project_model = self::getModel('project');
+        $project = $project_model->getData($project_id);
+        $calculation_model = self::getModel('calculation');
+        $data = $calculation_model->getData($calc_id);
+        $modelCanvases = self::getModel('canvases');
+        $canvas = $modelCanvases->getCanvases(array('id_canvas' => $data['n3']))[0];
+        throw new Exception(implode('|', $canvas));
+        $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок № _________</h1>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
+        $html .= '<th>Клиент:</th><td >' . $project->client_id . '</td>';
+        $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';               
+        $html .= '</tr>';
+        $html .= '<tr>';
+        if ($data['color'] > 0) {
+            $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+            $color = $color_model->getData($data['color']);
+            $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
+        } else {
+            $name = $canvases_data['title'];
+        }
+        $html .= '<th>Цвет: </th><td colspan="3" >' . $name . '</td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th >Стороны и диагонали: </th><td>' . str_replace(';', '; ', $data['calc_data']) . '</td>';
+        $html .= '</tr>';
+        $html .= ' </tbody>';
+        $html .= '</table>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Площадь:</th><td >' . $data['n4'] . 'м<sup>2</sup></td><th>Обрезки(>50%):</th><td  style = "border-style:hidden">' . $data['offcut_square'] . 'м<sup>2</sup></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Периметр:</th><td >' . $data['n5'] . 'м</td> <th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
+        $html .= '</tr>';
+        $html .= ' </tbody>';
+        $html .= '</table>';
+        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".png" . '" style="width: 100%;"/>';
+        $html .= "<pagebreak />";
+        $html .= $html;
+        $html .= '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Раскрой № _________</h1>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
+        $html .= '<th class ="left">Клиент:</th><td >' . $project->client_id . '</td>';
+        $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Цвет: </th><td colspan="3" >' . $name . '</td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Полотна: </th><td>' . str_replace(';', ";<br>", $data['cut_data']) . '</td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td><th>Обрезки(>50%):</th><td>' . $data['offcut_square'] . 'м<sup>2</sup></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Периметр:</th><td>' . $data['n5'] . 'м</td><th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<center><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".png" . '" style="width: 100%;"/></center>';
+        $filename = md5($data['id'] . 'cutpdf' . -2) . '.pdf';
+        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
     public static function print_components($project_id, $components_data)
