@@ -201,7 +201,7 @@
     });
 
     // открытие модального окна и узнаем какой день нажат
-    jQuery("#calendar-container").on("click", ".current-month", function () {
+    jQuery("#calendar-container").on("click", ".current-month", ".day-off2", function () {
         kind = "empty";        
         var id = jQuery(this).attr("id");
         WhatDay(id);
