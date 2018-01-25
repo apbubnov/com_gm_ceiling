@@ -4139,10 +4139,10 @@ class Gm_ceilingHelpersGm_ceiling
         return 1;
     }
     
-    public static function create_cut_pdf($project_id,$calc_id){
+    public static function create_cut_pdf($proj_id,$calc_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
-        $project = $project_model->getData($project_id);
+        $project = $project_model->getData($proj_id);
         $calculation_model = self::getModel('calculation');
         $data = $calculation_model->getData($calc_id);
         $data = get_object_vars($data);
