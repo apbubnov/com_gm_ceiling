@@ -22,7 +22,6 @@ $project = $_GET['project'];
 $model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
 
 $calculation_ids = $model->GetCalculation($project);
-var_dump($calculation_ids);
 
 if (!empty($calculation_ids)) {
     $index = 0;
@@ -32,8 +31,7 @@ if (!empty($calculation_ids)) {
     }
     $DataOfTransport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project);
 }
-var_dump($DataOfProject);
-var_dump($DataOfTransport);
+var_dump( $DataOfProject);
 
 /* $calc_ids = $mounters_order_model->getDatas($project);
 $mas = [];
