@@ -464,7 +464,7 @@ class Gm_ceilingController extends JControllerLegacy
             $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $model_client->updateClient($client_id,$new_fio);
-            $user_model->updateUserNameByAssociatedClient($client_id, $newFIO);
+            $user_model->updateUserNameByAssociatedClient($client_id, $new_fio);
             $history_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
             $history_model->save($client_id,"Изменено ФИО пользователя");
             die($new_fio);
