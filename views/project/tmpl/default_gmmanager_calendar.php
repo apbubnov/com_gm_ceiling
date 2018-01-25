@@ -287,12 +287,13 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 <?php if($this->item->id_client == "1"){ ?>
                                     <tr>
                                         <td colspan="3">
+                                            Искать:<br>
                                             <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
-                                            <label for='radio_clients'>Клиенты</label>&nbsp;&nbsp;&nbsp;
+                                            <label for='radio_clients'>Клиентов</label>&nbsp;&nbsp;&nbsp;
                                             <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
-                                            <label for='radio_dealers'>Дилеры</label>&nbsp;&nbsp;&nbsp;
+                                            <label for='radio_dealers'>Дилеров</label>&nbsp;&nbsp;&nbsp;
                                             <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
-                                            <label for='radio_designers'>Отделочники</label>
+                                            <label for='radio_designers'>Отделочников</label>
                                         </td>
                                     </tr>
                                 <?php }?>
