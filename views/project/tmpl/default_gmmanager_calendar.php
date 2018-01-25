@@ -76,9 +76,10 @@ if($this->item->transport == 1 ) {
     }
     if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
 }
+/*
 if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
     $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-}
+}*/
 $project_total_discount_transport = $project_total_discount + $sum_transport;
 
 $project_total = $project_total  + $sum_transport;
@@ -285,12 +286,14 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                 </tr>
                                 <?php if($this->item->id_client == "1"){ ?>
                                     <tr>
-                                        <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
-                                        <label for='radio_clients'>Клиенты</label>
-                                        <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
-                                        <label for='radio_dealers'>Дилеры</label>
-                                        <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
-                                        <label for='radio_designers'>Отделочники</label>
+                                        <td colspan="3">
+                                            <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
+                                            <label for='radio_clients'>Клиенты</label>
+                                            <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
+                                            <label for='radio_dealers'>Дилеры</label>
+                                            <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
+                                            <label for='radio_designers'>Отделочники</label>
+                                        </td>
                                     </tr>
                                 <?php }?>
                                 <tr id="search" style="display : none;">
