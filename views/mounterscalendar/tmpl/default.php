@@ -201,7 +201,7 @@
     });
 
     // открытие модального окна и узнаем какой день нажат
-    jQuery("#calendar-container").on("click", ".current-month", ".day-off2", function () {
+    jQuery("#calendar-container").on("click", ".current-month, .day-off2", function () {
         kind = "empty";        
         var id = jQuery(this).attr("id");
         WhatDay(id);
@@ -210,7 +210,7 @@
         jQuery("#close-modal-window").show();
         jQuery("#modal-window-with-table").show();
     });
-    jQuery("#calendar-container").on("click", ".day-not-read, .day-read, .day-in-work, .day-underfulfilled, .day-complite", function () {
+    jQuery("#calendar-container").on("click", ".day-not-read, .day-read, .day-in-work, .day-underfulfilled, .day-complite, .old-project", function () {
         kind = "no-empty";
         id = jQuery(this).attr("id");
         WhatDay(id);
