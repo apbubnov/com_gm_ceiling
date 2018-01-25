@@ -65,9 +65,9 @@ foreach($calculations as $d) {
 }
 if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
 }
-if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
+/*if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
     $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-}
+}*/
 $project_total_discount_transport = $project_total_discount + $sum_transport;
 
 $del_flag = 0;
@@ -157,7 +157,7 @@ $query
     ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
 $db->setQuery($query);
 $results = $db->loadObjectList();*/
-
+if(false):
 /* Клиент */
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -220,6 +220,9 @@ $calculationsItog->client_sum->mounting = 0;
 $calculationsItog->client_sum->itog = 0;
 $calculationsItog->dealer_sum->discount = 0;
 
+$calculationsItog->square = 0;
+$calculationsItog->perimeter = 0;
+
 $calculationsItog->discount = $$Project->project_discount;
 
 function discount($sum, $discount = 0) {
@@ -231,6 +234,9 @@ function fceil($number, $r = 0) {
 }
 foreach ($calculations as $key => $calculation)
 {
+    $calculation->square = $calculation->n4;
+    $calculation->perimeter = $calculation->n5;
+
     $calculation->dealer_sum = (object) [];
     $calculation->dealer_sum->canvas = margin($calculation->canvases_sum, $$Project->gm_canvases_margin);
     $calculation->dealer_sum->components = margin($calculation->components_sum, $$Project->gm_components_margin);
@@ -250,6 +256,9 @@ foreach ($calculations as $key => $calculation)
     $calculationsItog->client_sum->canvas = $calculation->client_sum->canvas;
     $calculationsItog->client_sum->components = $calculation->client_sum->components;
     $calculationsItog->client_sum->mounting = $calculation->client_sum->mounting;
+
+    $calculationsItog->square += $calculation->square;
+    $calculationsItog->perimeter += $calculation->perimeter;
 
     $calculations[$key] = $calculation;
 }
@@ -379,9 +388,9 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                         <th colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?foreach ($calculations as $calculation):?>
-                        <tr>
-                            <td rowspan="2">
-                                <input name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked"> <?=$calculation->calculation_title;?>
+                        <tr class="BodyTR">
+                            <td class="CheckBox" rowspan="2">
+                                <input name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked"> <span><?=$calculation->calculation_title;?></span>
                                 <input name='calculation_total[<?=$calculation->id; ?>]' value='<?=$calculation->dealer_sum->itog; ?>' type='hidden'>
                                 <input name='calculation_total_discount[<?=$calculation->id;?>]' value='<?=discount($calculation->dealer_sum->itog, $calculationsItog->discount); ?>' type='hidden'>
                                 <input name='total_square[<?=$calculation->id; ?>]' value='<?=$calculation->n4; ?>' type='hidden'>
@@ -395,12 +404,13 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                             <td><?=$calculation->n4;?></td>
                             <td><?=$calculation->n5;?></td>
                         </tr>
-                        <tr>
+                        <tr class="BodyTR">
                             <td>Итого</td>
                             <td><?=fceil($calculation->client_sum->itog);?></td>
                             <td><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></td>
                         </tr>
                     <?endforeach;?>
+                    <tr
                     </tbody>
                 </table>
             </div>
@@ -448,7 +458,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         }
     }
 </style>
-
+<?endif;?>
 <?= parent::getButtonBack(); ?>
 
 <h2 class="center">Просмотр проекта</h2>
