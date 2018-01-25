@@ -104,7 +104,7 @@
         border: 1px solid rgb(169, 169, 169);
         border-top: 0;
         height: auto;
-        background-color: #d3d3f9;
+		background-color: #ffffff;
         color: #414099;
         max-height: 90px;
         overflow-y: scroll;
