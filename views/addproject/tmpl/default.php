@@ -38,14 +38,15 @@ if (count($AllGauger) == 0) {
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/addproject/tmpl/css/style.css" type="text/css" />
-
+<?=parent::getButtonBack();?>
 <form id="calculate_form" action="/index.php?option=com_gm_ceiling&task=addproject.save" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 	<!-- Скрытые поля -->
 	<input name="jform[project_calculation_date]" id="jform_project_calculation_date" value="" type="hidden">
 	<input name="jform[project_calculation_daypart]" id="jform_project_calculation_daypart" value="" type="hidden">
 	<input name="jform[project_calculator]" id="jform_project_calculator" type="hidden" value="">
 	<!-- - - - - - - - - - - - - - - - - - - - - - -->
-	<h2> Добавить замер </h2>
+	<h2 class ="center" style="margin-bottom: 15px;"> Добавить замер </h2>
+
 	<div class="col-md-4"></div>
 	<div class="col-md-4">
 		<p>
