@@ -77,8 +77,11 @@ class Gm_ceilingModelClient_history extends JModelList
 			$id_client = $db->escape($id_client, true);
 			$text = $db->escape($text, true);
 
-			$query = $db->getQuery(true);
+			$pattern = "/(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)/i";
+			$replacement = "\$3.\$2.\$1 \$4:\$5";
+			$text = preg_replace($pattern, $replacement, $text);
 
+			$query = $db->getQuery(true);
 			$query->insert('`#__gm_ceiling_client_history`')
 				->columns('`client_id`, `date_time`, `text`')
 				->values("$id_client , NOW(), '$text'");
