@@ -2760,17 +2760,25 @@ class Gm_ceilingHelpersGm_ceiling
     public static function calculate_mount($del_flag,$calc_id,$data){
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
-        if(!empty($user->dealer_id)){
-            $dealer_id = $user->dealer_id;
+        $calculation_model = self::getModel('calculation');
+       
+        if(empty($calc_id)){
+            $project_id = $data['project_id'];
         }
-        else{
+        else {
+            $calculation_data = $calculation_model->getData($calc_id);
+            $project_id = $calculation_data->project_id;
+        }
+        $project_model = self::getModel('project');
+        $client_id = $project_model->getData($project_id)->id_client;
+        $client_model = self::getModel('client');
+        $dealer_id = $client_model->getClientById($client_id)->dealer_id;
+        if(empty($dealer_id)){
             $dealer_id = 1;
         }
         $results = $mount_model->getDataAll($dealer_id);
         //Если существующая калькуляция
         if(!empty($calc_id)){
-            $calculation_model = self::getModel('calculation');
-            $calculation_data = $calculation_model->getData($calc_id);
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
             }
@@ -3871,10 +3879,9 @@ class Gm_ceilingHelpersGm_ceiling
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
-        $calculation_model = self::getModel('calculations');
         $calculations_model = self::getModel('calculations');
         $names = $calculations_model->FindAllMounters($project->project_mounter);
-        $calculations = $calculation_model->getProjectItems($project_id);
+        $calculations = $calculations_model->getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
         $brigade = JFactory::getUser($project->project_mounter);
         $client_contacts_model = self::getModel('client_phones');
@@ -4057,6 +4064,167 @@ class Gm_ceilingHelpersGm_ceiling
         $filename = md5($data['id'] . "-2") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
 
+    }
+    /* функция для создания PDF документа с расходкой по проекту */
+    public static function create_estimate_of_consumables($project_id){
+        $html = '<h1>Расходные материалы</h1>';
+
+        if (isset($project_id)) {
+            if ($project_id) {
+                $html .= "<b>Номер договора:  </b>" . $project_id . "<br>";
+            }
+        }
+
+        $html .= '<p>&nbsp;</p>
+		
+		<h2>Дата: ' . date("d.m.Y") . '</h2>
+		<table border="0" cellspacing="0" width="100%">
+		<tbody><tr><th>Наименование</th><th class="center">Ед. изм.</th><th class="center">Кол-во</th><th class="center">Общая стоимость</th></tr>';
+        $print_data[$it_11]['quantity'] = self::rounding($print_data[$it_11]['quantity'], 2.5);
+        $print_data[$it_236]['quantity'] = self::rounding($print_data[$it_236]['quantity'], 2.5);
+        $print_data[$it_239]['quantity'] = self::rounding($print_data[$it_239]['quantity'], 2.5);
+        $print_data[$it_559]['quantity'] = self::rounding($print_data[$it_559]['quantity'], 2.5);
+        $print_data[$it_38]['quantity'] = self::rounding($print_data[$it_38]['quantity'], 0.5);
+        $print_data[$it_1]['quantity'] = self::rounding($print_data[$it_1]['quantity'], 0.5);
+        $print_data[$it_650]['quantity'] = self::rounding($print_data[$it_650]['quantity'], 2.5);
+        $print_data[$it_651]['quantity'] = self::rounding($print_data[$it_651]['quantity'], 2.5);
+        $print_data[$it_652]['quantity'] = self::rounding($print_data[$it_652]['quantity'], 2.5);
+        $print_data[$it_653]['quantity'] = self::rounding($print_data[$it_653]['quantity'], 2.5);
+        $print_data[$it_654]['quantity'] = self::rounding($print_data[$it_654]['quantity'], 2.5);
+        $print_data[$it_655]['quantity'] = self::rounding($print_data[$it_655]['quantity'], 2.5);
+        $print_data[$it_656]['quantity'] = self::rounding($print_data[$it_656]['quantity'], 2.5);
+
+
+        $print_data[$it_11]['self_total'] = $print_data[$it_11]['self_price'] * $print_data[$it_11]['quantity'];
+        $print_data[$it_236]['self_total'] = $print_data[$it_236]['self_price'] * $print_data[$it_236]['quantity'];
+        $print_data[$it_239]['self_total'] = $print_data[$it_239]['self_price'] * $print_data[$it_239]['quantity'];
+        $print_data[$it_559]['self_total'] = $print_data[$it_559]['self_price'] * $print_data[$it_559]['quantity'];
+        $print_data[$it_38]['self_total'] = $print_data[$it_38]['self_price'] * $print_data[$it_38]['quantity'];
+        $print_data[$it_1]['self_total'] = $print_data[$it_1]['self_price'] * $print_data[$it_1]['quantity'];
+        $print_data[$it_650]['self_total'] = $print_data[$it_650]['self_price'] * $print_data[$it_650]['quantity'];
+        $print_data[$it_651]['self_total'] = $print_data[$it_651]['self_price'] * $print_data[$it_651]['quantity'];
+        $print_data[$it_652]['self_total'] = $print_data[$it_652]['self_price'] * $print_data[$it_652]['quantity'];
+        $print_data[$it_653]['self_total'] = $print_data[$it_653]['self_price'] * $print_data[$it_653]['quantity'];
+        $print_data[$it_654]['self_total'] = $print_data[$it_654]['self_price'] * $print_data[$it_654]['quantity'];
+        $print_data[$it_655]['self_total'] = $print_data[$it_655]['self_price'] * $print_data[$it_655]['quantity'];
+        $print_data[$it_656]['self_total'] = $print_data[$it_656]['self_price'] * $print_data[$it_656]['quantity'];
+
+        
+
+        //округляем провод
+        $print_data[$it_4]['quantity'] = ceil($print_data[$it_4]['quantity']);
+        $print_data[$it_4]['self_total'] = $print_data[$it_4]['self_price'] * $print_data[$it_4]['quantity'];
+        //print_r($print_data); exit;
+        $price_itog = 0;
+        foreach ($print_data as $key => $item) {
+            if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
+                $html .= '<tr>';
+                $html .= '<td>' . $item['title'] . '</td>';
+                $html .= '<td class="center">' . $item['unit'] . '</td>';
+                $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                $html .= '<td class="center">' . round($item['self_total'], 2) . '</td>';
+                $html .= '</tr>';
+                $price_itog += $item['self_total'];
+            }
+        }
+        //throw new Exception($item[4]['self_total'], 1);
+        $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
+        $html .= '</tbody></table><p>&nbsp;</p>';
+
+        $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+
+        $filename = md5($project_id . "-8") . ".pdf";
+        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+
+        return 1;
+    }
+    
+    public static function create_cut_pdf($calc_id){
+        $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+        $calculation_model = self::getModel('calculation');
+        $data = $calculation_model->getData($calc_id);
+        $project_model = self::getModel('project');
+        $project = $project_model->getData($data->project_id);
+        $data = get_object_vars($data);
+        $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок № _________</h1>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
+        $html .= '<th>Клиент:</th><td >' . $project->client_id . '</td>';
+        $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';               
+        $html .= '</tr>';
+        $html .= '<tr>';
+        if ($data['color'] > 0) {
+            $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+            $color = $color_model->getData($data['color']);
+            $name = $data['n3'] . ", цвет: " . $color->colors_title;
+        } else {
+            $name = $data['n3'];
+        }
+        $html .= '<th>Цвет: </th><td colspan="3" >' . $name . '</td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th >Стороны и диагонали: </th><td>' . str_replace(';', '; ', $data['calc_data']) . '</td>';
+        $html .= '</tr>';
+        $html .= ' </tbody>';
+        $html .= '</table>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Площадь:</th><td >' . $data['n4'] . 'м<sup>2</sup></td><th>Обрезки(>50%):</th><td  style = "border-style:hidden">' . $data['offcut_square'] . 'м<sup>2</sup></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Периметр:</th><td >' . $data['n5'] . 'м</td> <th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
+        $html .= '</tr>';
+        $html .= ' </tbody>';
+        $html .= '</table>';
+        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".png" . '" style="width: 100%;"/>';
+        $html .= "<pagebreak />";
+        $html .= $html;
+        $html .= '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Раскрой № _________</h1>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
+        $html .= '<th class ="left">Клиент:</th><td >' . $project->client_id . '</td>';
+        $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Цвет: </th><td colspan="3" >' . $name . '</td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Полотна: </th><td>' . str_replace(';', ";<br>", $data['cut_data']) . '</td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<table>';
+        $html .= '<tbody>';
+        $html .= '<tr>';
+        $html .= '<th>Площадь:</th><td>' . $data['n4'] . 'м<sup>2</sup></td><th>Обрезки(>50%):</th><td>' . $data['offcut_square'] . 'м<sup>2</sup></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Периметр:</th><td>' . $data['n5'] . 'м</td><th>Кол-во углов:</th><td>' . $data['n9'] . '</td>';
+        $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<center><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".png" . '" style="width: 100%;"/></center>';
+        $filename = md5($data['id'] . 'cutpdf' . -2) . '.pdf';
+        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
     public static function print_components($project_id, $components_data)

@@ -397,8 +397,8 @@ if (count($AllGauger) == 0) {
 					month = month_old;
 					year = year_old;
 				} else {
-					month = <?php echo $month; ?>;
-					year = <?php echo $year; ?>;
+					month = <?php// echo $month; ?>;
+					year = <?php// echo $year; ?>;
 				}
 			}
 			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
@@ -452,11 +452,13 @@ if (count($AllGauger) == 0) {
 					dataType: "json",
 					async:true,
 					success: function(data){
+					    data = JSON.parse(date);
 						console.log(data);
 						jQuery('#clients').find('option').remove();
 						for(var i = 0; i < data.length; i++)
 						{
 							jQuery('<option>').val(data[i].id).text(data[i].client_name).appendTo('#clients');
+                            jQuery('<option>').attr("tel", data[i].client_contacts);
 						}
 						jQuery('#client_id').val(jQuery('#clients option:selected').val());
 						console.log(jQuery('#client_id').val());
@@ -475,7 +477,17 @@ if (count($AllGauger) == 0) {
 			jQuery('#select_clients').show();
 		});	
 	});
+    jQuery(function(){
+        jQuery('#clients').change(function(){
+            var client_id = jQuery('#clients :selected').text();
+            var client_contacts = jQuery('#clients :selected').attr("tel");
+            jQuery('#jform_client_fio-find').val(client_id);
+           // jQuery('#jform_client_contacts').val(client_contacts);
 
+
+
+        })
+    });
 	// Подсказки по городам
     ymaps.ready(init);
 
@@ -489,23 +501,6 @@ if (count($AllGauger) == 0) {
 		var s = e.get('item').value.replace('Россия, ','');
 		input.val(s);
 		});
-		
-		/*,
-           map,
-            placemark;
-        /*function geocode() {
-            // Забираем запрос из поля ввода.
-            var request = $('#jform_project_info').val();
-            // Геокодируем введённые данные.
-            ymaps.geocode(request).then(function (res) {
-                var obj = res.geoObjects.get(0),
-                    error, hint;
-
-            }, function (e) {
-                console.log(e)
-            })
-
-        }*/
     }
 	// ---------------------------------
 
