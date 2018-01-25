@@ -69,29 +69,29 @@
 
 <style>
     .Area {
-        display: inline-block;
+        /* display: inline-block;
         float: left;
         height: auto;
         overflow: visible;
         margin: 0 5px;
         margin-bottom: 16px;
-        position: relative;
+        position: relative; */
     }
 
     .Area .Input {
-        display: inline-block;
+        /* display: inline-block;
         float: left;
         width: 100%;
-        padding-left: 5px;
+        padding-left: 5px; */
     }
 
     .Area .Selects {
-        display: inline-block;
+        /* display: inline-block;
         position: relative;
         float: left;
         width: 100%;
         height: 0;
-        z-index: 2;
+        z-index: 2; */
     }
 
     .Area .Selects .Select {
