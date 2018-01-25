@@ -57,6 +57,7 @@ $_SESSION['dop_num'] = $dop_num;
         var str;
         var calendar_elem_value = document.getElementById('calendar').value;
         table_body_elem.innerHTML = "";
+        console.log(arr_calls);
         for (var i = 0; i < arr_calls.length; i++)
         {
             if (arr_calls[i].date_time <= calendar_elem_value && (user_id == arr_calls[i].manager_id || arr_calls[i].manager_id == 1))
