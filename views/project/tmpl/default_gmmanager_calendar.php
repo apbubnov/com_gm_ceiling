@@ -276,14 +276,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                             echo $_SESSION['FIO'];
                                         } else echo $this->item->client_id; ?>"
                                                placeholder="ФИО клиента" type="text">
-                                        <?php if($this->item->id_client == "1"){ ?>
-                                            <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
-                                            <label for='radio_clients'>Клиенты</label>
-                                            <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
-                                            <label for='radio_dealers'>Дилеры</label>
-                                            <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
-                                            <label for='radio_designers'>Отделочники</label>
-                                        <?php }?>
                                     </td>
                                     <?php if($this->item->id_client == "1"){?>
                                         <td>
@@ -291,6 +283,16 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                         </td>
                                     <?php  }?>
                                 </tr>
+                                <?php if($this->item->id_client == "1"){ ?>
+                                    <tr>
+                                        <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
+                                        <label for='radio_clients'>Клиенты</label>
+                                        <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
+                                        <label for='radio_dealers'>Дилеры</label>
+                                        <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
+                                        <label for='radio_designers'>Отделочники</label>
+                                    </tr>
+                                <?php }?>
                                 <tr id="search" style="display : none;">
                                     <th>
                                         Выберите клиента из списка:
