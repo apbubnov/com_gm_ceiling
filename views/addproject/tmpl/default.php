@@ -267,7 +267,11 @@ if (count($AllGauger) == 0) {
     }
     //------------------------------------------
 
-	jQuery( document ).ready(function(){
+	jQuery(document).ready(function() {
+
+		window.time = undefined;
+        window.gauger = undefined;
+
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -340,14 +344,24 @@ if (count($AllGauger) == 0) {
                     jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
                 }
             });
+			//если было выбрано время, то выдать его
+            if (time != undefined) {
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    times.each(function(element) {
+                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                            jQuery(this).prop("checked", true);
+                        }
+                    });
+                }, 200);
+            }
         });
         //--------------------------------------------------------------------------------------------------
 
         // получение значений из селектов
-
 		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
 			var times = jQuery("input[name='choose_time_gauger']");
-            var time = "";
+            time = "";
             gauger = "";
             times.each(function(element) {
                 if (jQuery(this).prop("checked") == true) {
