@@ -2791,7 +2791,7 @@ class Gm_ceilingHelpersGm_ceiling
         foreach ($components_list as $i => $component) {
             $components[$component->id] = $component;
         }
-        throw new Exceprion($data['n1']);
+        throw new Exception($data['n1']);
         //Получаем прайс-лист полотен
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $canvases_list = $canvases_model->getFilteredItemsCanvas();
