@@ -3263,7 +3263,7 @@ class Gm_ceilingHelpersGm_ceiling
 
             $components_data[] = $component_item;
         }
-        return $components_count;
+        return $component_count;
     }
     /* 	основная функция для расчета стоимости монтажа
         $del_flag 0 - не удалать светильники, трубы и т.д что хранится в др. таблицах
