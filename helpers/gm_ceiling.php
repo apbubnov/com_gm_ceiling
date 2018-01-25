@@ -5629,7 +5629,7 @@ class Gm_ceilingHelpersGm_ceiling
                                         $DayMounter[$r] = ["green", $perimeter];
                                     }
                                     if ($value[2] == 12) {
-                                        $DayMounters[$r] = ["blue", $perimeter];
+                                        $DayMounter[$r] = ["blue", $perimeter];
                                     }
                                 }
                             } else {
