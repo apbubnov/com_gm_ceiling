@@ -876,6 +876,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							
 						}
 						else{
+							throw new Exception($data->id_client);
+							
+							//$data->id_client,$data->read_by_manager
 							
 							$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
 							$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
