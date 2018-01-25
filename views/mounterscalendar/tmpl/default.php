@@ -74,12 +74,12 @@
                 <td class="left">Монтаж выполнен</td>
             </tr>
             <tr>
-                <td></td>
-                <td></td>
-                <td>
+                <td class="right"></td>
+                <td class="left"></td>
+                <td class="right">
                     <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/9e9e9e.png" alt="Серый">
                 </td>
-                <td>Заказ закрыт</td>
+                <td class="left">Заказ закрыт</td>
             </tr>
         </table>
     </div>
