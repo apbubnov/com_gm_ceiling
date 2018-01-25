@@ -115,16 +115,16 @@
         display: inline-block;
         float: left;
         width: 100%;
-        padding-left: 5px;
+        padding: 10px 5px;
         height: auto;
         line-height: 25px;
         font-size: 14px;
-        border-top: 1px solid rgb(169, 169, 169);
+        /* border-top: 1px solid rgb(169, 169, 169); */
         cursor: pointer;
     }
 
     .Area .Selects .Select .Item:hover {
-        background-color: rgb(31, 30, 70);
+        background-color: #d3d3f9;
     }
 </style>
 
