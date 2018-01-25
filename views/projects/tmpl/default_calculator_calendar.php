@@ -171,7 +171,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             if (screen.width <= '1024') {
                 jQuery('#projectList').hide();
                 jQuery('#projectListMobil').show();
-                jQuery('#projectListMobil').css('font-size', '11px');
+                jQuery('#projectListMobil').css('font-size', '10px');
                 jQuery('.container').css('padding-left', '0');
             }
             else {
