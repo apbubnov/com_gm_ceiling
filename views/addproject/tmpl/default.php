@@ -79,7 +79,7 @@ if (count($AllGauger) == 0) {
 			<label id="jform_client_contacts-lbl" for="jform_client_contacts" class="required">Телефоны клиента<span class="star">&nbsp;*</span></label>
 		</div>
 		<div class="controls">
-			<input name="jform[client_contacts]" id="jform_client_contacts" value="" class="required" style="width:100%; margin-bottom:1em;" placeholder="Телефоны клиента" required="required" aria-required="true" type="text">
+			<input name="jform[client_contacts]" id="jform_client_contacts" value="" class="required" style="width:100%; margin-bottom:1em;" placeholder="Телефоны клиента" required="required" type="text">
 		</div>
 	</div>
 	<input name="jform[client_id]" id="client_id" type="hidden" value="0">
@@ -428,14 +428,16 @@ if (count($AllGauger) == 0) {
 				jQuery('#jform_client_name').hide();
 				jQuery('#jform_client_contacts-lbl').hide();
 				jQuery('#jform_client_contacts').hide();
+                jQuery('#jform_client_contacts').removeAttr("required");
 			}
-			else{ 
+			else {
 				document.getElementById("choose_cleint_btn").innerHTML = 'Выбрать существующего клиента';
 				jQuery('#choose_fields').hide();
 				jQuery('#jform_client_name-lbl').show();
 				jQuery('#jform_client_name').show();
 				jQuery('#jform_client_contacts-lbl').show();
 				jQuery('#jform_client_contacts').show();
+
 			}
 			if(jQuery('#new_client').css('display') != 'none')
 				jQuery('#new_client').hide();
@@ -452,15 +454,16 @@ if (count($AllGauger) == 0) {
 					dataType: "json",
 					async:true,
 					success: function(data){
-					    data = JSON.parse(date);
+					    //data = JSON.parse(date);
 						console.log(data);
 						jQuery('#clients').find('option').remove();
 						for(var i = 0; i < data.length; i++)
 						{
 							jQuery('<option>').val(data[i].id).text(data[i].client_name).appendTo('#clients');
-                            jQuery('<option>').attr("tel", data[i].client_contacts);
+                            jQuery('<option>').attr("phone",data[i].client_contacts);
 						}
 						jQuery('#client_id').val(jQuery('#clients option:selected').val());
+                        jQuery('#jform_client_contacts').val(jQuery('#clients option:selected').attr("phone"));
 						console.log(jQuery('#client_id').val());
 					},
 					error: function(data){
@@ -480,9 +483,9 @@ if (count($AllGauger) == 0) {
     jQuery(function(){
         jQuery('#clients').change(function(){
             var client_id = jQuery('#clients :selected').text();
-            var client_contacts = jQuery('#clients :selected').attr("tel");
+            var client_contacts = jQuery('#clients :selected').attr("phone");
             jQuery('#jform_client_fio-find').val(client_id);
-           // jQuery('#jform_client_contacts').val(client_contacts);
+            jQuery('#jform_client_contacts').val(client_contacts);
 
 
 
