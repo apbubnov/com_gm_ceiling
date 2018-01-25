@@ -310,6 +310,9 @@
                             if (element.project_status == 10 ) {
                                 status = "Ожидание монтажа";
                             }
+                            if (element.project_status == 12 ) {
+                                status = "Заказ закрыт";
+                            }
                             if (element.project_status == 16 ) {
                                 status = "Монтаж";
                             }
