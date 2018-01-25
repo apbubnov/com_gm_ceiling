@@ -1,28 +1,28 @@
 <?php
-/**
- * @version    CVS: 0.1.7
- * @package    Com_Gm_ceiling
- * @author     SpectralEye <Xander@spectraleye.ru>
- * @copyright  2016 SpectralEye
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ /**
+     * @version    CVS: 0.1.7
+     * @package    Com_Gm_ceiling
+     * @author     SpectralEye <Xander@spectraleye.ru>
+     * @copyright  2016 SpectralEye
+     * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-// No direct access
-defined('_JEXEC') or die;
+    // No direct access
+    defined('_JEXEC') or die;
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-//JHtml::_('formbehavior.chosen', 'select');
+    JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+    JHtml::_('bootstrap.tooltip');
+    JHtml::_('behavior.multiselect');
+    //JHtml::_('formbehavior.chosen', 'select');
 
-$user       = JFactory::getUser();
-$userId     = $user->get('id');
-$dealerId   = $user->dealer_id;
+    $user       = JFactory::getUser();
+    $userId     = $user->get('id');
+    $dealerId   = $user->dealer_id;
 
-// календарь
-$month = date("n");
-$year = date("Y");
-$FlagCalendar = [5, $dealerId];
-$calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
+    // календарь
+    $month = date("n");
+    $year = date("Y");
+    $FlagCalendar = [5, $dealerId];
+    $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
 
 ?>
 
@@ -44,22 +44,42 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
     <div id="legenda-container" class="tar-color-414099">
         <table id="legenda">
             <tr>
-                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/ff3d3d.png" alt="Красный"></td>
+                <td class="right">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/ff3d3d.png" alt="Красный">
+                </td>
                 <td class="left">Новый монтаж. Не просмотрен</td>
-                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/414099.png" alt="Синий"></td>
+                <td class="right">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/414099.png" alt="Синий">
+                </td>
                 <td class="left">Монтаж в работе</td>
             </tr>
             <tr>
-                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/fff23d.png" alt="Желтый"></td>
+                <td class="right">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/fff23d.png" alt="Желтый">
+                </td>
                 <td class="left">Новый монтаж. Просмотрен</td>
-                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/461f08.png" alt="Коричневый"></td>
+                <td class="right">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/461f08.png" alt="Коричневый">
+                </td>
                 <td class="left">Монтаж недовыполнен</td>
             </tr>
             <tr>
-                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/9e9e9e.png" alt="Серый"></td>
+                <td class="right">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/d3d3f9.png" alt="Голубой">
+                </td>
                 <td class="left">Выходные часы</td>
-                <td class="right"><img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/1ffe4e.png" alt="Зеленый"></td>
+                <td class="right">
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/1ffe4e.png" alt="Зеленый">
+                </td>
                 <td class="left">Монтаж выполнен</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    <img class="legenda_modal" src="components/com_gm_ceiling/views/mounterscalendar/tmpl/images/9e9e9e.png" alt="Серый">
+                </td>
+                <td>Заказ закрыт</td>
             </tr>
         </table>
     </div>
