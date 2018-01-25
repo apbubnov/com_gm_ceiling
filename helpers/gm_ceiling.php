@@ -167,7 +167,6 @@ class Gm_ceilingHelpersGm_ceiling
         foreach ($components_list as $i => $component) {
             $components[$component->id] = $component;
         }
-        //	print_r($components); exit;
         //throw new components($del_flag, 1);
 
         //Получаем прайс-лист полотен
@@ -258,7 +257,6 @@ class Gm_ceilingHelpersGm_ceiling
             $data = $data['jform'];
 
             $data['n3'] = ($_SESSION['n3']) ? ($_SESSION['n3']) : $data['n3'];
-            //print_r($data); exit;
             if($data['n2'] == 0) { $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;}
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
@@ -367,6 +365,22 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $data['n29'] = json_encode($n29);
             }
+
+            //Получаем массив из переменной дополнительных комплектующих со склада
+            $components_title_stock = $jinput->get('components_title_stock', '-', 'ARRAY');
+            $components_value_stock = $jinput->get('components_value_stock', '-', 'ARRAY');
+            $components_stock = array();
+            if ($components_title_stock !== '-') {
+                foreach ($components_title_stock as $key => $title) {
+                    if (!empty($title) && $components_value_stock[$key]) {
+                        $components_stock[] = array(
+                            'title' => $title,
+                            'value' => $components_value_stock[$key]
+                        );
+                    }
+                }
+            }
+            $data['components_stock'] = json_encode($components_stock, JSON_FORCE_OBJECT);
 
             //Получаем массив из переменной дополнительных комплектующих
             $extra_components_title = $jinput->get('extra_components_title', '-', 'ARRAY');
@@ -590,6 +604,11 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['n1'] == 28 && $data['n6']) {
             $n5_count = ceil($data['n5']);
             $component_count[$data['n6']] += $n5_count;
+        }
+        //просчет доп компонентов со склада
+        $components_stock = json_decode($data['components_stock']);
+        foreach ($components_stock as $comp_stock) {
+            $component_count[$comp_stock->title] += $comp_stock->value;
         }
         //люстры
         $component_count[$items_5[0]->id] += $data['n12'] * 3;
@@ -3751,7 +3770,6 @@ class Gm_ceilingHelpersGm_ceiling
         $components_sum = 0;
         $gm_components_sum = 0;
         $dealer_components_sum = 0;
-        //print_r($components_data); exit;
         foreach ($components_data as $component_item) {
             $components_sum += $component_item['self_total'];
             $gm_components_sum += $component_item['gm_total'];
@@ -4114,7 +4132,7 @@ class Gm_ceilingHelpersGm_ceiling
         //округляем провод
         $print_data[$it_4]['quantity'] = ceil($print_data[$it_4]['quantity']);
         $print_data[$it_4]['self_total'] = $print_data[$it_4]['self_price'] * $print_data[$it_4]['quantity'];
-        //print_r($print_data); exit;
+
         $price_itog = 0;
         foreach ($print_data as $key => $item) {
             if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
@@ -4308,7 +4326,7 @@ class Gm_ceilingHelpersGm_ceiling
 		<h2>Дата: ' . date("d.m.Y") . '</h2>
 		<table border="0" cellspacing="0" width="100%">
 		<tbody><tr><th>Наименование</th><th class="center">Ед. изм.</th><th class="center">Кол-во</th><th class="center">Общая стоимость</th></tr>';
-        //print_r($print_data[10], 1); exit;
+
         //throw new Exception(implode("//", $items_11[0]->id) , 1);
         $print_data[$it_11]['quantity'] = self::rounding($print_data[$it_11]['quantity'], 2.5);
         $print_data[$it_236]['quantity'] = self::rounding($print_data[$it_236]['quantity'], 2.5);
@@ -4374,7 +4392,7 @@ class Gm_ceilingHelpersGm_ceiling
         //округляем провод
         $print_data[$it_4]['quantity'] = ceil($print_data[$it_4]['quantity']);
         $print_data[$it_4]['self_total'] = $print_data[$it_4]['self_price'] * $print_data[$it_4]['quantity'];
-        //print_r($print_data); exit;
+
         $price_itog = 0;
         foreach ($print_data as $key => $item) {
             if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
@@ -4496,7 +4514,7 @@ class Gm_ceilingHelpersGm_ceiling
 				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 22';
             $db->setQuery($q);
             $users = $db->loadObjectList();
-            //print_r($users); exit;
+
 
 
             foreach ($users as $user) {
@@ -4552,7 +4570,7 @@ class Gm_ceilingHelpersGm_ceiling
 
             $db->setQuery($q);
             $users = $db->loadObjectList();
-            //print_r($users); exit;
+
 
             foreach ($users as $user) {
 
@@ -4584,7 +4602,7 @@ class Gm_ceilingHelpersGm_ceiling
 				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
             $db->setQuery($q);
             $users = $db->loadObjectList();
-            //print_r($users); exit;
+
 
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
@@ -4617,7 +4635,7 @@ class Gm_ceilingHelpersGm_ceiling
 
             $db->setQuery($q);
             $users = $db->loadObjectList();
-            //print_r($users); exit;
+
 
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
@@ -4655,7 +4673,7 @@ class Gm_ceilingHelpersGm_ceiling
 				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
             $db->setQuery($q);
             $users = $db->loadObjectList();
-            //print_r($users); exit;
+
 
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
@@ -4696,12 +4714,10 @@ class Gm_ceilingHelpersGm_ceiling
 				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
             $db->setQuery($q);
             $users = $db->loadObjectList();
-            //print_r($users); exit;
 
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
             }
-            //print_r($data); exit;
             $dopinfo = $client->getInfo($data->client_id);
             $body = "Здравствуйте. Новый договор " . $data->id . " отправлен в производство, а неотмеченные Вами потолки перемещены в отказы под номером " . $data->refuse_id . "!\n\n";
             $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
@@ -4717,7 +4733,6 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Новый договор в производстве');
             $mailer->setBody($body);
         } elseif ($type == 7) {
-            // print_r($data); exit;
             //Уведомление о назначении договора на монтаж нужной бригаде
             $db = JFactory::getDBO();
             if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->project_mounter);
@@ -4866,6 +4881,25 @@ class Gm_ceilingHelpersGm_ceiling
                 if (isset($item->title) && isset($item->value)) {
                     $result_array[] = array(
                         'title' => $item->title,
+                        'value' => $item->value
+                    );
+                }
+            }
+        }
+        return $result_array;
+    }
+    public static function decode_stock($components)
+    {
+
+        $comp_stock_array = json_decode($components);
+        $result_array = array();
+        if (count($comp_stock_array) > 0) {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            foreach ($comp_stock_array as $item) {
+                if (isset($item->title) && isset($item->value)) {
+                    $title = $model->getComponents(["select"=>["FullName"=>"CONCAT(components.title, ' ', options.title)"], "where" => ["=" => ["options_id" => $item->title]]]);
+                    $result_array[] = array(
+                        'title' => $title->FullName,
                         'value' => $item->value
                     );
                 }
@@ -5025,7 +5059,6 @@ class Gm_ceilingHelpersGm_ceiling
 
             //$calendar.= '<td class="b-calendar__day'.$class;
             $mount = Gm_ceilingController:: get_calendar(1);
-            // print_r($mount); exit;
             $today1 = date("d");
             $today2 = date("m");
             $today3 = date("Y");
@@ -5212,7 +5245,6 @@ class Gm_ceilingHelpersGm_ceiling
             //            $current_from_y = date_format($current_from_date,'Y');
 
             $zamer = Gm_ceilingController:: get_calendar2(1);
-            // print_r($mount); exit;
             $today1 = date("d");
             $today2 = date("m");
             $today3 = date("Y");

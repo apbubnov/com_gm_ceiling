@@ -33,7 +33,7 @@
 	$project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
 	$project = $project_model->getData($project_id);
 	$extra_components_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_components);
-    $components_stock_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->components_stock);
+    $components_stock_array = Gm_ceilingHelpersGm_ceiling::decode_stock($this->item->components_stock);
 	$extra_mounting_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_mounting);
 	$calc_id = $jinput->get('id','','INT');
 	$calc_id = empty($calc_id)?0:$calc_id;
@@ -1455,7 +1455,7 @@
 									<?php foreach($components_stock_array as $item) { ?>
 										<div class='form-group Area Type'>
 											<input id="Type" value='<?php echo $item['title']; ?>' autocomplete="off" NameDB="CONCAT(components.title,' ',options.title)" onclick="GetList(this, ['Type'], ['Type']);" onkeyup="GetList(this, ['Type'], ['Type']);" onblur="ClearSelect(this)" class='form-control Input Type' type='text'>
-											<input id="ID" name="components_title_stock[]" hidden>
+											<input id="ID" value="" name="components_title_stock[]" hidden>
 											<div class="Selects Type"></div>
 										</div>
 									<?php } ?>
@@ -2173,13 +2173,13 @@
         jQuery( "#components_button_stock" ).click(function(){
             var components_title_stock_container = jQuery( "#components_title_stock_container" ),
                 components_value_stock_container = jQuery( "#components_value_stock_container" );
-            jQuery("<div class='form-group Area'><input name='components_title_stock[]' value='' id='Type' autocomplete=\"off\"\n" +
+            jQuery("<div class='form-group Area'><input value='' id='Type' autocomplete=\"off\"\n" +
                 "        NameDB=\"CONCAT(components.title,' ',options.title)\"\n" +
                 "        onclick=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onkeyup=\"GetList(this, ['Type'], ['Type']);\"\n" +
                 "        onblur=\"ClearSelect(this)\"\n" +
                 "    class='form-control Input Type'\n" +
-                "        type='text'><input id=\"ID\" hidden> <div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
+                "        type='text'><input id=\"ID\" name='components_title_stock[]'  hidden> <div class='Selects Type'></div></div>").appendTo(components_title_stock_container);
             jQuery( "<div class='form-group'><input name='components_value_stock[]' value='' class='form-control' type='tel'></div>" ).appendTo( components_value_stock_container );
         });
 
