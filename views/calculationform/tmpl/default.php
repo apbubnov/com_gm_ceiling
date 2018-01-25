@@ -101,11 +101,11 @@
         display: inline-block;
         float: left;
         width: 100%;
-        border: 1px solid rgb(169, 169, 169);
+        border: 1px solid #414099;
         border-top: 0;
         height: auto;
         background-color: #d3d3f9;
-        color: #ffffff;
+        color: #414099;
         max-height: 90px;
         overflow-y: scroll;
         overflow-x: hidden;
