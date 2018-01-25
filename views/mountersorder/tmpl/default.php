@@ -92,20 +92,24 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId); */
         </div>
         <?php if (!empty($DataOfProject)) { ?>
             <?php foreach ($DataOfProject as $value) { ?>
-                <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
-                    <div class="ceiling"><img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.png" class="image-ceiling"></div>
-                    <div class = "overflow">
-                        <table id="table-order-<?php echo $value->id; ?>" cols=4 class="table-order">
-                        <tr class="caption">
-                            <td>Наименование</td>
-                            <td>Цена, ₽</td>
-                            <td>Количество</td>
-                            <td>Стоимость, ₽</td>
-                        </tr>
+                <?php if (isset($value->mounting_data)) { ?>
+                    <?php foreach ($value->mounting_data as $val) { ?>
+                        <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
+                            <div class="ceiling"><img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.png" class="image-ceiling"></div>
+                            <div class = "overflow">
+                                <table id="table-order-<?php echo $value->id; ?>" cols=4 class="table-order">
+                                <tr class="caption">
+                                    <td>Наименование</td>
+                                    <td>Цена, ₽</td>
+                                    <td>Количество</td>
+                                    <td>Стоимость, ₽</td>
+                                </tr>
 
-                        </table>
-                    </div>
-                </div>
+                                </table>
+                            </div>
+                        </div>
+                    <?php } ?>
+                <?php } ?>
             <?php } ?>
         <?php } ?>
     </div>
