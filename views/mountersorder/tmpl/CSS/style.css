@@ -33,14 +33,14 @@ div {
     overflow-x: auto;
 }
 
-#ceiling {
+.ceiling {
     display: inline-block;
     float: left;
     width: 100%;
 }
 
 @media screen and (min-width: 768px) {
-    #ceiling {
+    .ceiling {
         display: inline-block;
         float: left;
         width: 70%;
@@ -48,7 +48,7 @@ div {
     }
 }
 
-#image-ceiling {
+.image-ceiling {
     width: 100%;
 }
 

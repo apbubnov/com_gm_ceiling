@@ -21,17 +21,19 @@ jimport('joomla.event.dispatcher');
  */
 class Gm_ceilingModelMountersorder extends JModelItem {
 
-	function getData($id) {
+	function getData() {}
+
+	public function GetCalculation($project) {
 		try
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			
-			$query->select('calculations.id as calculation_id') // id калькуляции (потолках)
+			$query->select('calculations.id, calculations.calculation_title') // id калькуляций
 				->from('#__gm_ceiling_projects as projects')
 				->innerJoin('#__gm_ceiling_calculations as calculations ON calculations.project_id = projects.id')
-				->where("projects.id = '$id'")
-				->orderby('calculations.id');
+				->where("projects.id = '$project'")
+				->order('calculations.id');
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();
@@ -46,7 +48,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
         }
 	}
 
-	function GetNPack1($masidcalc) {
+	/* function GetNPack1($masidcalc) {
 		try
 		{
 			$db = JFactory::getDbo();
@@ -324,7 +326,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-	}
+	} */
 
 	function GetDates($id) {
 		try

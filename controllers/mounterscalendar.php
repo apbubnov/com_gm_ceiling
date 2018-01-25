@@ -73,7 +73,7 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 		}
 	}
 
-	// Переход на модель
+	// получить все монтажи и выходные дни
 	public function GetDataOfMounting() {
 		try
 		{

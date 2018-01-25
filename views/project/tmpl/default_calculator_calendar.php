@@ -492,6 +492,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         DATA.Massage.Add.css({"height":DATA.Massage.Note.outerHeight()});
     }
 </script>
+<?endif;?>
 <style>
     @media screen and (max-width: 500px) {
         #table1 {
