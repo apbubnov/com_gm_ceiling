@@ -15,9 +15,12 @@ $userId     = $user->get('id');
 $api_phone_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 $phones = $api_phone_model->getArrayNumbers();
 $items = json_encode($this->item);
-echo parent::getPreloader();
 ?>
 <form>
+    <div id="preloader" class="PRELOADER_GM PRELOADER_GM_OPACITY">
+        <div class="PRELOADER_BLOCK"></div>
+        <img src="images/GM_R_HD.png" class="PRELOADER_IMG">
+    </div>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
@@ -174,7 +177,7 @@ echo parent::getPreloader();
                     jQuery("#callbacksList").hide();
                     jQuery("#empty").show();
                 }
-               
+               jQuery("#preloader").hide();
             },
             dataType: "json",
             timeout: 10000,
