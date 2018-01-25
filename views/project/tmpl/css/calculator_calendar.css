@@ -146,6 +146,24 @@ h1, h2, h3, h4, h5, h6 {
     background-color: rgb(255, 255, 255);
 }
 
+.Page .Navigation .WindowTabs .WindowTab {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.Page .Navigation .WindowTabs .WindowTab .Information {
+    width: 100%;
+}
+
+.Page .Navigation .WindowTabs .WindowTab .HeaderTR {
+    background-color: rgba(202, 202, 226, 0.35);
+}
+.Page .Navigation .WindowTabs .WindowTab table td,
+.Page .Navigation .WindowTabs .WindowTab table th {
+    padding: 15px;
+    min-height: 40px;
+}
+
 @media (max-width: 767px) {
     .bd-content {
         padding: 0;
