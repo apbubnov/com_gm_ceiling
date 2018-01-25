@@ -65,9 +65,9 @@ $items = json_encode($this->item);
     }
 </style>
 <form>
-    <div id="preloader"  class="PRELOADER_GM PRELOADER_GM_OPACITY">
+    <div id="preloader" class="PRELOADER_GM PRELOADER_GM_OPACITY">
         <div class="PRELOADER_BLOCK"></div>
-        <img src="imges/GM_R_HD.png" class="PRELOADER_IMG">
+        <img src="images/GM_R_HD.png" class="PRELOADER_IMG">
     </div>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
