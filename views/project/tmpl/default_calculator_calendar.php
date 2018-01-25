@@ -160,6 +160,7 @@ $query
 $db->setQuery($query);
 $results = $db->loadObjectList();*/
 
+/* Клиент */
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
@@ -200,6 +201,31 @@ $Client->calc_date->time = date("H:i", strtotime($Client->project_calculation_da
 $Client->discount = (object) [];
 $Client->discount->min = 0;
 $Client->discount->max = ($calculation_total - $project_total_1) / $calculation_total * 100;
+
+/* Калькуляции */
+$calculationsItog = (object) [];
+
+$calculationsItog->dealer_sum = (object) [];
+$calculationsItog->dealer_sum->canvas = 0;
+$calculationsItog->dealer_sum->components = 0;
+$calculationsItog->dealer_sum->mounting = 0;
+$calculationsItog->dealer_sum->itog = 0;
+$calculationsItog->dealer_sum->discount = 0;
+
+$calculationsItog->client_sum = (object) [];
+$calculationsItog->client_sum->canvas = 0;
+$calculationsItog->client_sum->components = 0;
+$calculationsItog->client_sum->mounting = 0;
+$calculationsItog->client_sum->itog = 0;
+$calculationsItog->dealer_sum->discount = 0;
+
+foreach ($calculations as $key => $calculation)
+{
+    $calculation->dealer_sum = (object) [];
+    $calculation->dealer_sum->canvases = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
+    $calculation->dealer_sum->components = double_margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/, $this->item->dealer_components_margin);
+    $calculation->dealer_sum->mounting = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
+}
 ?>
 <?/*print_r($Client);*/?>
 <link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/tmpl/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
@@ -297,16 +323,57 @@ $Client->discount->max = ($calculation_total - $project_total_1) / $calculation_
                 <textarea id="Notes" class="Notes" rows="11" readonly></textarea>
                 <form class="Add" action="javascript:SendNote();">
                     <div class="Title">Добавить комментарий:</div>
-                    <textarea class="Note" placeholder="Введите новое примечание"
-                              onmousemove="ResizeNote();"
-                    ></textarea>
-                    <button type="submit" class="AddNote">
+                    <textarea class="Note" placeholder="Введите новое примечание" onmousemove="ResizeNote();"></textarea>
+                    <button type="submit" class="AddNote" onmousemove="ResizeNote();">
                         <i class="fa fa-paper-plane" aria-hidden="true"></i>
                     </button>
                 </form>
             </div>
         </div>
         <?endif;?>
+    </div>
+    <div class="Navigation">
+        <h3 class="left">Расчеты для проекта</h3>
+        <div class="Tabs">
+            <div class="Tab Active" id="TabAll"><span>Общее</span></div>
+            <?foreach ($calculations as $k => $calculation):?>
+                <div class="Tab" id="Tab<?=$calculation->id;?>"><span><?=$calculation->calculation_title;?></span></div>
+            <?endforeach;?>
+            <?if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
+                <div class="Tab" id="TabAdd"><span>Добавить потолок</span> <i class="fa fa-plus-square-o" aria-hidden="true"></i></div>
+            <?endif;?>
+        </div>
+        <div class="WindowTabs">
+            <div class="WindowTab" id="WindowTabAll">
+                <table class="Information">
+                    <tbody>
+                    <tr class="HeaderTR">
+                        <th colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                    </tr>
+                    <?foreach ($calculations as $calculation):?>
+                        <tr>
+                            <td colspan="4">
+                                <input name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked"> <?=$calculation->calculation_title;?>
+                                <input name='calculation_total[<?=$calculation->id; ?>]' value='<?=$calculation_total; ?>' type='hidden'>
+                                <input name='calculation_total_discount[<?=$calculation->id;?>]' value='<?=$calculation_total_discount; ?>' type='hidden'>
+                                <input name='total_square[<?=$calculation->id; ?>]' value='<?=$calculation->n4; ?>' type='hidden'>
+                                <input name='total_perimeter[<?=$calculation->id; ?>]' value='<?=$calculation->n5; ?>' type='hidden'>
+                                <input name='calculation_total1[<?=$calculation->id; ?>]' value='<?=$calculation_total_1; ?>' type='hidden'>
+                                <input name='calculation_total2[<?=$calculation->id; ?>]' value='<?=$dealer_gm_mounting_sum_1; ?>' type='hidden'>
+                                <input name='calculation_total3[<?=$calculation->id; ?>]' value='<?=$project_total_1; ?>' type='hidden'>
+                                <input name='canvas[<?=$calculation->id; ?>]' value='<?=$canvas; ?>' type='hidden'>
+                            </td>
+                        </tr>
+                    <?endforeach;?>
+                    </tbody>
+                </table>
+            </div>
+            <?foreach ($calculations as $k => $calculation):?>
+                <div class="WindowTab" id="WindowTab<?=$calculation->id;?>">
+
+                </div>
+            <?endforeach;?>
+        </div>
     </div>
 </div>
 
