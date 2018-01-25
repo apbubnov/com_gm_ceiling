@@ -347,9 +347,6 @@ if (count($AllGauger) == 0) {
                     gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
                 }
             });
-			console.log(time);
-			console.log(date);
-			console.log(gauger);
             jQuery("#jform_project_calculation_daypart").val(time);
             jQuery("#jform_project_calculation_date").val(date);
             jQuery("#jform_project_calculator").val(gauger);
@@ -364,7 +361,7 @@ if (count($AllGauger) == 0) {
             jQuery("#modal-window-choose-tar").hide();
 		});
 
-        jQuery("#save-choise-tar").click(function() {
+        /* jQuery("#save-choise-tar").click(function() {
 			var times = jQuery("input[name='choose_time_gauger']");
             var time = "";
             gauger = "";
@@ -389,7 +386,7 @@ if (count($AllGauger) == 0) {
             jQuery("#close-tar").hide();
             jQuery("#modal-window-container-tar").hide();
             jQuery("#modal-window-choose-tar").hide();
-        });
+        }); */
         //------------------------------------------
 
         // подсвет сегоднешней даты
