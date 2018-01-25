@@ -76,9 +76,10 @@ if($this->item->transport == 1 ) {
     }
     if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
 }
+/*
 if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
     $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-}
+}*/
 $project_total_discount_transport = $project_total_discount + $sum_transport;
 
 $project_total = $project_total  + $sum_transport;
@@ -275,26 +276,27 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                                id="jform_client_name" value="<?php if (isset($_SESSION['FIO'])) {
                                             echo $_SESSION['FIO'];
                                         } else echo $this->item->client_id; ?>"
-                                               placeholder="ФИО клиента" type="text"></td>
+                                               placeholder="ФИО клиента" type="text">
+                                    </td>
                                     <?php if($this->item->id_client == "1"){?>
                                         <td>
-                                            <button id="find_old_client" type="button" class="btn btn-primary"><i
-                                                        class="fa fa-search" aria-hidden="true"></i></button>
+                                            <button id="find_old_client" type="button" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button><br>
                                         </td>
                                     <?php  }?>
                                 </tr>
-                                <tr>
-                                    <th>
-                                        Пол клиента
-                                    </th>
-                                    <td>
-                                    
-                                        <input id='male' type='radio' class = "radio" name='slider-sex' value='0' <?php if($client_sex == "0") echo "checked";?>>
-                                        <label  for='male'>Mужской</label>
-                                        <input id='female' type='radio' class = "radio" name='slider-sex' value='1'  <?php if($client_sex == "1") echo "checked";?> >
-                                        <label for='female'>Женский</label>
-                                    </td>
-                                </tr>
+                                <?php if($this->item->id_client == "1"){ ?>
+                                    <tr>
+                                        <td colspan="3">
+                                            <label><b>Искать:</b></label><br>
+                                            <input id='radio_clients' type='radio' class = "radio" name='slider-search' value='clients'>
+                                            <label for='radio_clients'>Клиентов</label>&nbsp;&nbsp;&nbsp;
+                                            <input id='radio_dealers' type='radio' class = "radio" name='slider-search' value='dealers'>
+                                            <label for='radio_dealers'>Дилеров</label>&nbsp;&nbsp;&nbsp;
+                                            <input id='radio_designers' type='radio' class = "radio" name='slider-search' value='designers'>
+                                            <label for='radio_designers'>Отделочников</label>
+                                        </td>
+                                    </tr>
+                                <?php }?>
                                 <tr id="search" style="display : none;">
                                     <th>
                                         Выберите клиента из списка:
@@ -302,6 +304,17 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                     <td>
                                         <select id="found_clients" class="inputactive">
                                         </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Пол клиента
+                                    </th>
+                                    <td>
+                                        <input id='male' type='radio' class = "radio" name='slider-sex' value='0' <?php if($client_sex == "0") echo "checked";?>>
+                                        <label  for='male'>Mужской</label>
+                                        <input id='female' type='radio' class = "radio" name='slider-sex' value='1'  <?php if($client_sex == "1") echo "checked";?> >
+                                        <label for='female'>Женский</label>
                                     </td>
                                 </tr>
                                 <?  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
@@ -973,7 +986,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                         </tr>
                     <?php } ?>
                 <? } ?>
-                <!-------------------------------- Общая смета для клиента ------------------------------------------>
+                <!-- Общая смета для клиента -->
 
                 <tr>
                     <td><b>Отправить общую смету <b></td>
@@ -1537,16 +1550,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 }
             });
             //если сессия есть, то выдать время, которое записано в сессии
-            if (time != undefined) {
-                setTimeout(function() { 
-                    var times = jQuery("input[name='choose_time_gauger']");
-                    times.each(function(element) {
-                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                            jQuery(this).prop("checked", true);
-                        }
-                    });
-                }, 200);
-            } else if (date == datesession.substr(0, 10)) {
+            if (date == datesession.substr(0, 10)) {
                 var timesession = jQuery("#jform_new_project_calculation_daypart").val();
                 var gaugersession = jQuery("#jform_project_gauger").val();
                 setTimeout(function() { 
@@ -1558,6 +1562,15 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                             }
                         });
                     }
+                }, 200);
+            } else if (time != undefined) {
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    times.each(function(element) {
+                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                            jQuery(this).prop("checked", true);
+                        }
+                    });
                 }, 200);
             }
         });
@@ -2219,7 +2232,13 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             });
         }
 
-        jQuery("#find_old_client").click(function () {
+        jQuery("#find_old_client").click(find_old_client);
+        jQuery("#radio_clients").click(find_old_client);
+        jQuery("#radio_dealers").click(find_old_client);
+        jQuery("#radio_designers").click(find_old_client);
+
+        function find_old_client()
+        {
             jQuery('#found_clients').find('option').remove();
             var opt = document.createElement('option');
             opt.value = 0;
@@ -2228,7 +2247,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=findOldClients",
                 data: {
-                    fio: jQuery("#jform_client_name").val()
+                    fio: jQuery("#jform_client_name").val(),
+                    flag: jQuery('input:radio[name=slider-search]:checked').val()
                 },
                 dataType: "json",
                 async: true,
@@ -2252,7 +2272,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     });
                 }
             });
-        });
+        }
 
         jQuery("#found_clients").change(function () {
             var arr = [<?php echo $phonefrom;?>];
@@ -2267,7 +2287,20 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    location.href = '/index.php?option=com_gm_ceiling&view=clientcard&id='+jQuery("#found_clients").val();
+                    var who = jQuery('input:radio[name=slider-search]:checked').val();
+                    var type;
+                    if (who == 'clients')
+                    {  
+                        location.href = '/index.php?option=com_gm_ceiling&view=clientcard&id='+jQuery("#found_clients").val();
+                    }
+                    else if (who == 'dealers')
+                    {
+                        location.href = '/index.php?option=com_gm_ceiling&view=clientcard&type=production&id='+jQuery("#found_clients").val();
+                    }
+                    else if (who == 'designers')
+                    {
+                        location.href = '/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='+jQuery("#found_clients").val();
+                    }
                 },
                 error: function (data) {
                     var n = noty({

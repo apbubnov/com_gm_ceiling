@@ -251,7 +251,6 @@ class Gm_ceilingController extends JControllerLegacy
         {
             try
             {
-                
                 $jinput = JFactory::getApplication()->input;
                 $id = $jinput->get('id', '', 'INT');
                 $phones = $jinput->get('phones', '', 'ARRAY');
@@ -291,8 +290,21 @@ class Gm_ceilingController extends JControllerLegacy
         {
             $jinput = JFactory::getApplication()->input;
             $FIO = $jinput->get('fio', '', 'STRING');
+            $flag = $jinput->get('flag', 'clients', 'STRING');
             $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-            $result = $clients_model->getItemsByClientName($FIO);
+            if ($flag == 'clients')
+            {
+                $result = $clients_model->getItemsByClientName($FIO);
+            }
+            elseif ($flag == 'dealers')
+            {
+                $result = $clients_model->getDealersByClientName($FIO);
+            }
+            elseif ($flag == 'designers')
+            {
+                $result = $clients_model->getDesignersByClientName($FIO);
+            }
+
             die(json_encode($result));
         }
         catch(Exception $e)
