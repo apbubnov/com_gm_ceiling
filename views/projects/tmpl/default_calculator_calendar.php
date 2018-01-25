@@ -103,6 +103,49 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         </tbody>
     </table>
 
+    <table class="table table-striped one-touch-view" id="projectListMobil" style="display: none;">
+        <thead>
+        <tr>
+            <th class='center'>
+                <?= JHtml::_('grid.sort', '№', 'a.id', $listDirn, $listOrder); ?>
+            </th>
+            <th class='center'>
+                <?= JHtml::_('grid.sort', 'Дата/Время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
+            </th>
+            <th class='center'>
+                <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+            </th>
+            <th class='center'>
+                <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <? foreach ($this->items as $i => $item) : ?>
+
+            <?
+            if (in_array("21", $groups) && $item->project_calculator != $userId) continue;
+            //else if (in_array("14", $groups) && $item->dealer_id != $userId ) continue;
+            else if (in_array("12", $groups) && $item->who_calculate != 0) continue;
+            ?>
+
+            <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id); ?>">
+                <td class="center one-touch"><?= $item->id; ?></td>
+                <td class="center one-touch">
+                    <? if ($item->calculation_date == "00.00.0000"): ?>-
+                    <? else: ?><?= $item->calculation_date; ?>
+                    <? endif; ?>
+                    <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
+                    <? else: ?><?= $item->calculation_time; ?>
+                    <? endif; ?>
+                </td>
+                <td class="center one-touch"><?= $item->address; ?></td>
+                <td class="center one-touch"><?= $item->client_contacts; ?></td>
+            </tr>
+        <? endforeach; ?>
+        </tbody>
+    </table>
+
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="boxchecked" value="0"/>
     <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
@@ -123,5 +166,23 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 return false;
             }
         }
+        var $ = jQuery;
+        $(window).resize(function(){
+            if (screen.width <= '1024') {
+                jQuery('#projectList').hide();
+                jQuery('#projectListMobil').show();
+                jQuery('#projectListMobil').css('font-size', '11px');
+                jQuery('.container').css('padding-left', '0');
+            }
+            else {
+                jQuery('#projectList').show();
+                jQuery('#projectListMobil').hide();
+            }
+        });
+
+        // вызовем событие resize
+        $(window).resize();
+
+
     </script>
 <? endif; ?>
