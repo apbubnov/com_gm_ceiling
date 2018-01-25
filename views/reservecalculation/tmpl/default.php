@@ -294,6 +294,9 @@ if (count($AllGauger) == 0) {
 
     jQuery(document).ready(function () {
 
+        window.time = undefined;
+        window.gauger = undefined;
+
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -338,16 +341,24 @@ if (count($AllGauger) == 0) {
                         var t = elementTime.substr(0, 2);
                         t++;
                         Array.from(AllGauger).forEach(function(elementGauger) {
-                            TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                            TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
                             var emptytd = 0;
                             Array.from(data).forEach(function(elementProject) {
                                 if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                                    var gaugersession = jQuery("#jform_project_gauger").val();
+                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                    } else {
+                                        TableForSelect += '<tr><td></td>';
+                                    }
+                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
                                     TableForSelect += '<td>'+elementProject.project_info+'</td>';
                                     emptytd = 1;
                                 }
                             });
                             if (emptytd == 0) {
+                                TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
                                 TableForSelect += '<td></td>';
                             }
                             TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
@@ -358,13 +369,24 @@ if (count($AllGauger) == 0) {
                     jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
                 }
             });
+            //если было выбрано время, то выдать его
+            if (time != undefined) {
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    times.each(function(element) {
+                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                            jQuery(this).prop("checked", true);
+                        }
+                    });
+                }, 200);
+            }
         });
         //--------------------------------------------------------------------------------------------------
-
+        
         // получение значений из селектов
-        jQuery("#save-choise-tar").click(function() {
+		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
             var times = jQuery("input[name='choose_time_gauger']");
-            var time = "";
+            time = "";
             gauger = "";
             times.each(function(element) {
                 if (jQuery(this).prop("checked") == true) {

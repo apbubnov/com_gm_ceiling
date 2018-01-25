@@ -1524,7 +1524,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                             if (emptytd == 0) {
                                 TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                                 TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-
                                 TableForSelect += '<td></td>';
                             }
                             TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
@@ -1554,7 +1553,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         //--------------------------------------------------------------------------------------------------
 
         // получение значений из селектов
-        jQuery("#save-choise-tar").click(function() {
+		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
             var times = jQuery("input[name='choose_time_gauger']");
             var time = "";
             gauger = "";
