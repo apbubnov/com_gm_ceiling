@@ -337,7 +337,7 @@ if (count($AllGauger) == 0) {
 
         // получение значений из селектов
 
-		jQuery("input[name='choose_time_gauger']").on("change", function() {
+		jQuery("input:radio[name='choose_time_gauger']").on("change", function() {
 			var times = jQuery("input[name='choose_time_gauger']");
             var time = "";
             gauger = "";
