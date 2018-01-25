@@ -158,6 +158,7 @@ $query
 $db->setQuery($query);
 $results = $db->loadObjectList();*/
 if(false):
+
 /* Клиент */
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -400,17 +401,24 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                                 <input name='calculation_total3[<?=$calculation->id; ?>]' value='<?=$project_total_1; ?>' type='hidden'>
                                 <input name='canvas[<?=$calculation->id; ?>]' value='<?=$canvas; ?>' type='hidden'>
                             </td>
-                            <td>S / P</td>
-                            <td><?=$calculation->n4;?></td>
-                            <td><?=$calculation->n5;?></td>
+                            <td>S / P:</td>
+                            <td><span><?=$calculation->square;?></span> м<sup>2</sup></td>
+                            <td><span><?=$calculation->perimeter;?></span> м</td>
                         </tr>
                         <tr class="BodyTR">
-                            <td>Итого</td>
-                            <td><?=fceil($calculation->client_sum->itog);?></td>
-                            <td><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></td>
+                            <td>Итого<?=($calculation->discount > 0)?" / -$calculation->discount%":"";?>:</td>
+                            <td><span><?=fceil($calculation->client_sum->itog);?></span> руб.</td>
+                            <td>
+                                <?if($calculation->discount > 0):?>
+                                <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.</td>
+                                <?endif;?>
                         </tr>
                     <?endforeach;?>
-                    <tr
+                    <tr class="TR">
+                        <th colspan="2">Общая S / общий P:</th>
+                        <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup></td>
+                        <td><span><?=$calculationsItog->perimeter;?></span> м</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -447,6 +455,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         DATA.Massage.Add.css({"height":DATA.Massage.Note.outerHeight()});
     }
 </script>
+<?endif;?>
 <style>
     @media screen and (max-width: 500px) {
         #table1 {
@@ -458,7 +467,6 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         }
     }
 </style>
-<?endif;?>
 <?= parent::getButtonBack(); ?>
 
 <h2 class="center">Просмотр проекта</h2>
