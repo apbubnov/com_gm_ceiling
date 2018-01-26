@@ -125,7 +125,7 @@ $rest = -($total_sum) - $contributed;
             <div class="message">Посетите данную страницу для настроек прайса монтажа!</div>
         <?endif;?>
     </button>
-    <?php } ?>
+
         <button class="btn btn-primary btn-done" type="button"> Счет </button>
         <div id="modal_window_container" class="modal_window_container">
             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar"
@@ -138,6 +138,7 @@ $rest = -($total_sum) - $contributed;
                 <p>На счете: <?php echo $rest?-$rest:0;?></p>
             </div>
         </div>
+        <?php } ?>
   <?  }?>
 </div>
 
