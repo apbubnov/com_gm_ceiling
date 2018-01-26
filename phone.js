@@ -32,7 +32,7 @@ function phone(login, pass)
                     phone : callInfo.From
                 },
                 success: function(data){
-                    console.log(data);
+                    //console.log(data);
                     if (data !== null)
                     {
                         var reg_proj_id;
