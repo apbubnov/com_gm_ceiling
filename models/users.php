@@ -65,8 +65,8 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
 			$query->where('`dealer_type` = 3');
-			$query->order('`id` DESC');
 			$query->group('`id`');
+			$query->order('`id` DESC');
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
 			return $item;
