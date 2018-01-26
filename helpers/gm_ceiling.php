@@ -4874,7 +4874,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($data->project_id);
         $canvases_data = self::calculate_canvases($calc_id);
-        $offcut_square_data =self::calculte_offcut($calc_id;)
+        $offcut_square_data =self::calculte_offcut($calc_id);
         $html = '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         if (isset($project->id)) {
