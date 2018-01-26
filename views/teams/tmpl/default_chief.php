@@ -208,7 +208,7 @@ if (!empty($brigade_id)) {
                         url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                         data: {
                             id: <?php echo $value->id; ?>,
-                            id_dealer: <?php if () { echo $userId;} else { echo $dealerId; } ?>,
+                            id_dealer: <?php if ($user->dealer_id) { echo $userId;} else { echo $dealerId; } ?>,
                             flag: 1,
                             month: month1,
                             year: year1,
@@ -237,7 +237,7 @@ if (!empty($brigade_id)) {
                         url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                         data: {
                             id: <?php echo $value->id; ?>,
-                            id_dealer: <?php if () { echo $userId;} else { echo $dealerId; } ?>,
+                            id_dealer: <?php if ($user->dealer_id) { echo $userId;} else { echo $dealerId; } ?>,
                             flag: 1,
                             month: month2,
                             year: year2,
