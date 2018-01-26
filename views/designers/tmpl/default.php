@@ -159,7 +159,7 @@ $result_users = $users_model->getDesigners();
                         html = '';
                     }
                 },
-                dataType: "text",
+                dataType: "json",
                 async: false,
                 timeout: 20000,
                 error: function(data){
