@@ -60,7 +60,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created');
-			$query->from('`#__users`');
+			$query->from('`#__users` AS `u`');
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
 			$query->where('`dealer_type` = 3');
 			$query->order('`id` DESC');
