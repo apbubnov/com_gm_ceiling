@@ -4693,7 +4693,7 @@ class Gm_ceilingHelpersGm_ceiling
         for($i=0;$i<count($client_contacts);$i++){
             $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
         }
-        $html = create_single_mounter_estimate_html($calc_id);
+        $html = self::create_single_mounter_estimate_html($calc_id);
         $filename = md5($data['id'] . "-2") . ".pdf";
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         self::save_pdf($html, $sheets_dir . $filename, "A4");
