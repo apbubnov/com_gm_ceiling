@@ -19,6 +19,10 @@ h1, h2, h3, h4, h5, h6 {
     width: auto;
 }
 
+.Page button {
+    background-color: rgb(64, 65 ,154);
+}
+
 .Page .Actions button,
 .Page .Actions a {
     display: inline-block;
@@ -158,8 +162,11 @@ h1, h2, h3, h4, h5, h6 {
 .Page .Navigation .WindowTabs .WindowTab .HeaderTR {
     background-color: rgba(202, 202, 226, 0.35);
 }
-.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(4n),
-.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(4n + 1) {
+.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 2),
+.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 3),
+.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 4),
+.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 5),
+.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 6) {
     background-color: rgba(108, 105, 255, 0.23);
 }
 .Page .Navigation .WindowTabs .WindowTab input[type='radio'],
@@ -209,7 +216,7 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 1;
 }
 
-.Page .Navigation .WindowTabs .WindowTab .BodyTR span {
+.Page .Navigation .WindowTabs .WindowTab .BodyTR input ~ span {
     width: auto;
     height: 20px;
     line-height: 20px;
@@ -231,9 +238,12 @@ h1, h2, h3, h4, h5, h6 {
     float: left;
 }
 .Page .Navigation .WindowTabs .WindowTab .Transports .Block {
-    display: none;
     margin-left: 10px;
     width: auto;
+    background-color: rgb(64,65,154);
+    border-radius: 5px;
+    overflow: hidden;
+    display: none;
 }
 .Page .Navigation .WindowTabs .WindowTab .Transports .RadioT:checked ~ .Block {
     display: inline-block;
@@ -243,11 +253,9 @@ h1, h2, h3, h4, h5, h6 {
     height: 30px;
     line-height: 30px;
     border: 1px solid rgb(64,65,154);
-    background-color: rgb(64,65,154);
     color: rgb(255,255,255);
     float: left;
     padding: 0 15px;
-    border-radius: 5px 0 0 5px;
 }
 .Page .Navigation .WindowTabs .WindowTab .Transports .Block .Input {
     width: auto;
@@ -261,15 +269,12 @@ h1, h2, h3, h4, h5, h6 {
     width: 30px;
     height: 30px;
     border: 1px solid rgb(64,65,154);
-    background-color: rgb(64,65,154);
     color: rgb(255,255,255);
     float: left;
-    border-radius: 0 5px 5px 0;
 }
 
-.NoRadius {
-    border-radius: 0 !important;
-}
+.Mobile {display: none !important;}
+.Desktop {display: inline-block !important;}
 
 @media (max-width: 767px) {
     .bd-content {
@@ -313,4 +318,18 @@ h1, h2, h3, h4, h5, h6 {
         border-bottom: 1px;
         top: 0;
     }
+
+    .Page .Navigation .WindowTabs .WindowTab .Transports .Block {
+        margin-left: 0;
+        width: 100% !important;
+    }
+
+    .Page .Navigation .WindowTabs .WindowTab .Transports .Block .Name,
+    .Page .Navigation .WindowTabs .WindowTab .Transports .Block .Input,
+    .Page .Navigation .WindowTabs .WindowTab .Transports .Block .Button {
+        width: 100%;
+    }
+
+    .Mobile {display: inline-block !important;}
+    .Desktop {display: none !important;}
 }
