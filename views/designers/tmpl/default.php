@@ -19,7 +19,7 @@ $result_users = $users_model->getDesigners();
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Отделочники/Дизайнеры</h2>
-    <div style="width: 100%; text-align: left;">
+    <div style="width: 48%; text-align: left;">
         <button type="button" id="new_designer" class="btn btn-primary">Создать Отделочника/дизайнера</button>
     </div>
     <br>

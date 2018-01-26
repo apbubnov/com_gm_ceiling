@@ -289,7 +289,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $client_data['type_id'] = 1;
                     $client_data['manager_id'] = $user->id;
                     $client_data['dealer_id'] = $user->dealer_id;
-                    $client_data['created'] = date("Y-m-d");
                     $client_data['sex'] = $sex;
                     $client_id = $client_form_model->save($client_data);
                     //обновление email
