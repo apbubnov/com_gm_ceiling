@@ -89,14 +89,13 @@ function phone(login, pass)
                 phone : callInfo.From
             },
             success: function(data){
-                console.log(data);
+                //console.log(data);
                 if (data === null)
                 {
                     create_empty_project(pt, pf);
                 }
                 else
                 {
-                    console.log(data);
                     var loc;
                     if (data.dealer_type == 3)
                     {
