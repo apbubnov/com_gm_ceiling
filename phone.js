@@ -109,7 +109,7 @@ function phone(login, pass)
                     {
                         loc = '/index.php?option=com_gm_ceiling&view=clientcard&id=';
                     }
-                    //add_history_ph(data.id, "Входящий звонок с " + pf, pt, pf, loc);
+                    add_history_ph(data.id, "Входящий звонок с " + pf, pt, pf, loc);
                 }
             },
             dataType: "json",
@@ -136,7 +136,6 @@ function phone(login, pass)
             url: "index.php?option=com_gm_ceiling&task=create_empty_project",
             data: {
                 client_id: 1
-            
             },
             success: function(data){
                 data = JSON.parse(data);

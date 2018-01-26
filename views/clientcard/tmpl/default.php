@@ -77,10 +77,10 @@
 </div>
 <? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
-<? if (!empty($dop_contacts)) { ?>
 <div>
 <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта клиента: </p>
 </div>
+<? if (!empty($dop_contacts)) { ?>
 <div>
 <? foreach ($dop_contacts AS $contact) {?>
     <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
