@@ -383,61 +383,31 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         </div>
         <div class="WindowTabs Desktop">
             <div class="WindowTab" id="WindowTabAll">
-                <div class="Information Block">
-                    <div class="Title">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></div>
-                    <? foreach ($calculations as $calculation):?>
-                        <div class="Calculate">
-                            <div class="Name">
-                                <input class="CalcCheckBox" name='include_calculation[]'
-                                       value='<?= $calculation->id; ?>'
-                                       type='checkbox' checked="checked">
-                                <span><?= $calculation->calculation_title; ?></span>
-                            </div>
-                            <table class="Calculate">
-                                <thead>
-                                    <th>Площадь:</th>
-                                    <th>Периметр:</th>
-                                    <th>Итого:</th>
-                                    <th>
-                                        <? if ($calculation->discount > 0): ?>
-                                            Итого -<?= $calculation->discount; ?>%:
-                                        <? endif; ?>
-                                    </th>
-                                </thead>
-                                <tbody>
-                                    <td><span><?= $calculation->square; ?></span> м<sup>2</sup></td>
-                                    <td><span><?= $calculation->perimeter; ?></span> м</td>
-                                    <td><span><?= fceil($calculation->client_sum->itog); ?></span> руб.</td>
-                                    <td>
-                                        <? if ($calculation->discount > 0): ?>
-                                            <span><?= fceil(discount($calculation->client_sum->itog, $calculation->discount)); ?></span> руб.
-                                        <? endif; ?>
-                                    </td>
-                                </tbody>
-                            </table>
-                        </div>
-                    <? endforeach; ?>
-                </div>
                     <table class="Information">
                     <tbody>
-                    <tr class="HeaderTR">
-                        <th colspan="2">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                    <tr class="CalcTitle TableTitle">
+                        <th colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?foreach ($calculations as $calculation):?>
-                        <tr class="BodyTR Calculate">
-                            <td class="CheckBox" colspan="2">
+                        <tr class="Calculate">
+                            <td class="CheckBox" colspan="4">
                                 <input class="CalcCheckBox" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
                                 <span><?=$calculation->calculation_title;?></span>
                             </td>
                         </tr>
-                        <tr class="BodyTR Calculate">
-                            <td>S / P:</td>
-                            <td><span><?=$calculation->square;?></span> м<sup>2</sup> / <span><?=$calculation->perimeter;?></span> м</td>
+                        <tr class="Calculate">
+                            <td>Площадь:</td>
+                            <td><span><?=$calculation->square;?></span> м<sup>2</sup></td>
+                            <td>Периметр:</td>
+                            <td><span><?=$calculation->perimeter;?></span> м</td>
                         </tr>
-                        <tr class="BodyTR Calculate">
-                            <td>Итого<?=($calculation->discount > 0)?" / -$calculation->discount%":"";?>:</td>
+                        <tr class="Calculate">
+                            <td>Итого:</td>
                             <td>
-                                <span><?=fceil($calculation->client_sum->itog);?></span> руб. /
+                                <span><?=fceil($calculation->client_sum->itog);?></span> руб.
+                            </td>
+                            <td><?if($calculation->discount > 0):?>Итого -<?=$calculation->discount;?>%:<?endif;?></td>
+                            <td>
                                 <?if($calculation->discount > 0):?>
                                     <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.
                                 <?endif;?>
@@ -445,14 +415,16 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                         </tr>
                     <?endforeach;?>
                     <tr class="TR">
-                        <th>Общая S / общий P:</th>
-                        <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup> / <span><?=$calculationsItog->perimeter;?></span> м</td>
+                        <th>Общая площадь:</th>
+                        <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup></td>
+                        <th>Общий периметр:</th>
+                        <td><span><?=$calculationsItog->perimeter;?></span> м</td>
                     </tr>
-                    <tr class="HeaderTR">
-                        <th colspan="2">Транспортные расходы:</th>
+                    <tr class="TransportTH TableTitle">
+                        <th colspan="4">Транспортные расходы:</th>
                     </tr>
-                    <tr class="BodyTR">
-                        <td colspan="2">
+                    <tr class="TransportTR">
+                        <td colspan="4">
                             <form action="javascript:SendTransport();" class="Transports">
                                 <div class="Transport In">
                                     <input name="transport" class="RadioT" id="transport" value="1" type="radio" <?=($$Project->transport == 1 )?"checked":"";?>>

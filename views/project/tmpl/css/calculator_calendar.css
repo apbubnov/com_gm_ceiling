@@ -158,49 +158,30 @@ h1, h2, h3, h4, h5, h6 {
     overflow-x: auto;
     overflow-y: hidden;
 }
-.Page .Navigation .WindowTabs .WindowTab .Block:not(:last-child) {
-    width: auto;
-    border-bottom: 1px solid rgb(64, 65, 154);
-}
 
-.Page .Navigation .WindowTabs .WindowTab .Block table {
+.Page .Navigation .WindowTabs .WindowTab table {
     width: 100%;
 }
 
-.Page .Navigation .WindowTabs .WindowTab .Block table td,
-.Page .Navigation .WindowTabs .WindowTab .Block table th {
-    text-align: center;
-    padding: 0 15px;
-}
-
-.Page .Navigation .WindowTabs .WindowTab .Information .Title {
+.Page .Navigation .WindowTabs .WindowTab .TableTitle {
     background-color: rgb(64, 65, 154);
-    color: rgb(255, 255, 255);
-    height: 40px;
-    line-height: 40px;
-    padding: 0 15px;
+    color: rgb(255,255,255);
     cursor: pointer;
 }
 
-.Page .Navigation .WindowTabs .WindowTab .Information .Calculate .Name {
-    height: 60px;
-    line-height: 30px;
-    padding: 15px;
-    cursor: pointer;
-    background-color: rgba(64, 65, 154, .3);
+.Page .Navigation .WindowTabs .WindowTab .Calculate:nth-child(3n + 1) {
+    border-bottom: 1px solid rgb(64, 65, 154);
 }
 
-.Page .Navigation .WindowTabs .WindowTab .HeaderTR {
-    background-color: rgba(202, 202, 226, 0.35);
-    cursor: pointer;
+.Page .Navigation .WindowTabs .WindowTab .Calculate:nth-child(3n - 1) {
+    //border-left: 50px solid rgb(64, 65, 154);
+    border-bottom: 1px dotted rgb(64, 65, 154);
 }
-.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 2),
-.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 3),
-.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 4),
-.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 5),
-.Page .Navigation .WindowTabs .WindowTab .BodyTR:nth-child(10n + 6) {
-    background-color: rgba(108, 105, 255, 0.23);
+
+.Page .Navigation .WindowTabs .WindowTab .Calculate .CheckBox span {
+    vertical-align: middle;
 }
+
 .Page .Navigation .WindowTabs .WindowTab input[type='radio'],
 .Page .Navigation .WindowTabs .WindowTab input[type='checkbox'] {
     position: relative;
@@ -248,7 +229,7 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 1;
 }
 
-.Page .Navigation .WindowTabs .WindowTab .BodyTR input ~ span {
+.Page .Navigation .WindowTabs .WindowTab .TransportTR input ~ span {
     width: auto;
     height: 20px;
     line-height: 20px;
@@ -358,41 +339,14 @@ h1, h2, h3, h4, h5, h6 {
         width: 100%;
     }
 
-    table, thead, tbody, th, td, tr {
-        display: block;
+    .Page .Navigation .WindowTabs .WindowTab table td,
+    .Page .Navigation .WindowTabs .WindowTab table th {
+        display: inline-block;
+        width: 50%;
     }
 
-
-    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
+    .Page .Navigation .WindowTabs .WindowTab table td[colspan="4"],
+    .Page .Navigation .WindowTabs .WindowTab table th[colspan="4"] {
+        width: 100%;
     }
-
-    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate tr {
-        border: 1px solid #ccc;
-    }
-
-    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td {
-        border: none;
-        border-bottom: 1px solid #eee;
-        position: relative;
-        padding-left: 50%;
-    }
-
-    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:before {
-        /* Now like a table header */
-        position: absolute;
-        /* Top/left values mimic padding */
-        top: 6px;
-        left: 6px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-    }
-
-    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:nth-of-type(1):before { content: "Площадь:"; }
-    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:nth-of-type(2):before { content: "Периметр:"; }
-    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:nth-of-type(3):before { content: "Итого:"; }
-    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:nth-of-type(4):before { content: "Итого:"; }
 }
