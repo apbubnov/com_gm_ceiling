@@ -44,7 +44,15 @@ $result_users = $users_model->getDesigners();
 		               <?php echo $value->name; ?>
 		            </td>
 		            <td>
-		               <?php echo $value->registerDate; ?>
+		               <?php
+                            if($value->created == "0000-00-00 00:00:00") {
+                                echo "-";
+                            } else {
+                                $jdate = new JDate($value->created);
+                                $created = $jdate->format("d.m.Y H:m");
+                                echo $created;
+                            }
+                       ?>
 		            </td>
 		        </tr>
         	<?php

@@ -76,11 +76,11 @@ $type = $jinput->getString('type', NULL);
 			<tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
 				<td class="one-touch">
 					<?php
-						if($item->created == "0000-00-00") {
+						if($item->created == "0000-00-00 00:00:00") {
 							echo "-";
 						} else {
 							$jdate = new JDate($item->created);
-							$created = $jdate->format("d.m.Y");
+							$created = $jdate->format("d.m.Y H:m");
 							echo $created;
 						}
 					?>
