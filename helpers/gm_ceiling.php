@@ -4821,7 +4821,7 @@ class Gm_ceilingHelpersGm_ceiling
         $filename = md5($data['id'] . 'cutpdf' . -2) . '.pdf';
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
-    /*функция генерации pdf для менеджера  */
+    /*функция генерации pdf для менеджера */
     public static function create_manager_estimate($calc_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $calculation_model = self::getModel('calculation');
