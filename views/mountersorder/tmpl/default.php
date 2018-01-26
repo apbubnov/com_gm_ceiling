@@ -57,10 +57,24 @@ if (!empty($calculation_ids)) {
                         <td>Количество</td>
                         <td>Стоимость, ₽</td>
                     </tr>
-                    <?php if (!empty($DataOfProject)) { ?>
-                        <?php foreach ($DataOfProject["mounting_data"] as $value) { ?>
-                            
-                            
+                    <?php if (!empty($calculation_ids)) { ?>
+                        <!-- только пвх -->
+                        <?php foreach ($calculation_ids as $value) { ?>
+                            <?php if ($value->n1 == 28) { ?>
+                                <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
+
+                            <?php }?>
+                        <?php } ?>
+                        <!-- только ткань -->
+                        <?php foreach ($calculation_ids as $value) { ?>
+                            <?php if ($value->n1 == 29) { ?>
+                                <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
+
+                            <?php }?>
+                        <?php } ?>
+                        <!-- общее -->
+                        <?php foreach ($calculation_ids as $value) { ?>
+                                <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
                         <?php } ?>
                     <?php } ?>
                     <tr class="caption">
