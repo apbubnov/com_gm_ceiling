@@ -60,7 +60,7 @@ class Gm_ceilingModelUsers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`');
+			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`');
 			$query->from('`#__users` AS `u`');
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
