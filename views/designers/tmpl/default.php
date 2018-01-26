@@ -145,11 +145,18 @@ $result_users = $users_model->getDesigners();
                     flag: 'designers'
                 },
                 success: function(data){
+                    console.log(data);
                     var tbody = document.getElementById('tbody_designers');
                     tbody.innerHTML = '';
+                    var html = '';
                     for(var i in data)
                     {
-                        tbody.innerHTML = '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
+                        html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
+                        html += '<td>' + data[i].client_name + '</td>';
+                        html += '<td>' + data[i].client_contacts + '</td>';
+                        html += '<td>' + data[i].created + '</td></tr>';
+                        tbody.innerHTML = html;
+                        html = '';
                     }
                 },
                 dataType: "text",
