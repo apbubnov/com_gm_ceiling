@@ -83,7 +83,6 @@ if (!empty($calculation_ids)) {
                             <td>Стоимость, ₽</td>
                         </tr>
                         <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
-                        <?php var_dump($DataOfProject); ?>
                         <?php if (!empty($DataOfProject)) { ?>
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <tr>
@@ -115,9 +114,15 @@ if (!empty($calculation_ids)) {
                             <?php } ?> 
                             <tr class="caption">
                                 <td colspan=3 style="text-align: right;">Итого, ₽:</td>
-                                <td>
-                                    <?php echo $DataOfProject["total_gm_mounting"]; ?>
-                                </td>
+                                <?php if ($user->dealer_id == 1) { ?>
+                                    <td>
+                                        <?php echo $DataOfProject["total_gm_mounting"]; ?>
+                                    </td>
+                                <?php } else { ?>
+                                    <td>
+                                        <?php echo $DataOfProject["total_dealer_mounting"]; ?>
+                                    </td>
+                                <?php } ?>
                             </tr>
                         <?php } ?>
                     </table>
