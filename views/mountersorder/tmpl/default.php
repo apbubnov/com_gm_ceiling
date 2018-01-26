@@ -66,97 +66,97 @@ if (!empty($calculation_ids)) {
                                 <?php if ($value->n1 == 28) { ?>
                                     <?php
                                         if ($val["title"] == "Периметр") { 
-                                            if (!in_array("Периметр", $PVH)) {
-                                                array_push($PVH, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Периметр", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $PVH["gm_salary"] += $val["gm_salary"];
-                                                $PVH["dealer_salary"] += $val["dealer_salary"];
-                                                $PVH["quantity"] += $val["quantity"];
-                                                $PVH["gm_salary_total"] += $val["gm_salary_total"];
-                                                $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $PVH[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $PVH[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Внутренний вырез для ПВХ") { 
-                                            if (!in_array("Внутренний вырез для ПВХ", $PVH)) {
-                                                array_push($PVH, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Внутренний вырез для ПВХ", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $PVH["gm_salary"] += $val["gm_salary"];
-                                                $PVH["dealer_salary"] += $val["dealer_salary"];
-                                                $PVH["quantity"] += $val["quantity"];
-                                                $PVH["gm_salary_total"] += $val["gm_salary_total"];
-                                                $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $PVH[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $PVH[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Установка люстр") { 
-                                            if (!in_array("Установка люстр", $PVH)) {
-                                                array_push($PVH, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Установка люстр", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $PVH["gm_salary"] += $val["gm_salary"];
-                                                $PVH["dealer_salary"] += $val["dealer_salary"];
-                                                $PVH["quantity"] += $val["quantity"];
-                                                $PVH["gm_salary_total"] += $val["gm_salary_total"];
-                                                $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $PVH[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $PVH[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Закладная брусом") { 
-                                            if (!in_array("Закладная брусом", $PVH)) {
-                                                array_push($PVH, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Закладная брусом", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $PVH["gm_salary"] += $val["gm_salary"];
-                                                $PVH["dealer_salary"] += $val["dealer_salary"];
-                                                $PVH["quantity"] += $val["quantity"];
-                                                $PVH["gm_salary_total"] += $val["gm_salary_total"];
-                                                $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $PVH[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $PVH[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Пожарная сигнализация") { 
-                                            if (!in_array("Пожарная сигнализация", $PVH)) {
-                                                array_push($PVH, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Пожарная сигнализация", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $PVH["gm_salary"] += $val["gm_salary"];
-                                                $PVH["dealer_salary"] += $val["dealer_salary"];
-                                                $PVH["quantity"] += $val["quantity"];
-                                                $PVH["gm_salary_total"] += $val["gm_salary_total"];
-                                                $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $PVH[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $PVH[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Шторный карниз") { 
-                                            if (!in_array("Шторный карниз", $PVH)) {
-                                                array_push($PVH, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Шторный карниз", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $PVH["gm_salary"] += $val["gm_salary"];
-                                                $PVH["dealer_salary"] += $val["dealer_salary"];
-                                                $PVH["quantity"] += $val["quantity"];
-                                                $PVH["gm_salary_total"] += $val["gm_salary_total"];
-                                                $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $PVH[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $PVH[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Установка светильников") { 
-                                            if (!in_array("Установка светильников", $PVH)) {
-                                                array_push($PVH, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Установка светильников", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $PVH["gm_salary"] += $val["gm_salary"];
-                                                $PVH["dealer_salary"] += $val["dealer_salary"];
-                                                $PVH["quantity"] += $val["quantity"];
-                                                $PVH["gm_salary_total"] += $val["gm_salary_total"];
-                                                $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $PVH[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $PVH[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Обвод трубы") { 
-                                            if (!in_array("Обвод трубы", $PVH)) {
-                                                array_push($PVH, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Обвод трубы", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $PVH["gm_salary"] += $val["gm_salary"];
-                                                $PVH["dealer_salary"] += $val["dealer_salary"];
-                                                $PVH["quantity"] += $val["quantity"];
-                                                $PVH["gm_salary_total"] += $val["gm_salary_total"];
-                                                $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $PVH[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $PVH[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Установка вентиляции") { 
-                                            if (!in_array("Установка вентиляции", $PVH)) {
-                                                array_push($PVH, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Установка вентиляции", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $PVH["gm_salary"] += $val["gm_salary"];
-                                                $PVH["dealer_salary"] += $val["dealer_salary"];
-                                                $PVH["quantity"] += $val["quantity"];
-                                                $PVH["gm_salary_total"] += $val["gm_salary_total"];
-                                                $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $PVH[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $PVH[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else {
-                                            if (!in_array($val["title"], $rest)) { 
+                                            if (!array_key_exists($val["title"], $rest)) { 
                                                 $rest[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
                                                 $rest[$val["title"]]["gm_salary"] += $val["gm_salary"];
@@ -171,104 +171,104 @@ if (!empty($calculation_ids)) {
                                 <?php } else if ($value->n1 == 29) { ?>
                                     <?php
                                         if ($val["title"] == "Периметр") { 
-                                            if (!in_array("Периметр", $cloth)) {
-                                                array_push($cloth, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Периметр", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $cloth["gm_salary"] += $val["gm_salary"];
-                                                $cloth["dealer_salary"] += $val["dealer_salary"];
-                                                $cloth["quantity"] += $val["quantity"];
-                                                $cloth["gm_salary_total"] += $val["gm_salary_total"];
-                                                $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $cloth[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $cloth[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Внутренний вырез") { 
-                                            if (!in_array("Внутренний вырез", $cloth)) {
-                                                array_push($cloth, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Внутренний вырез", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $cloth["gm_salary"] += $val["gm_salary"];
-                                                $cloth["dealer_salary"] += $val["dealer_salary"];
-                                                $cloth["quantity"] += $val["quantity"];
-                                                $cloth["gm_salary_total"] += $val["gm_salary_total"];
-                                                $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $cloth[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $cloth[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Установка люстр") { 
-                                            if (!in_array("Установка люстр", $cloth)) {
-                                                array_push($cloth, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Установка люстр", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $cloth["gm_salary"] += $val["gm_salary"];
-                                                $cloth["dealer_salary"] += $val["dealer_salary"];
-                                                $cloth["quantity"] += $val["quantity"];
-                                                $cloth["gm_salary_total"] += $val["gm_salary_total"];
-                                                $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $cloth[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $cloth[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Закладная брусом") { 
-                                            if (!in_array("Закладная брусом", $cloth)) {
-                                                array_push($cloth, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Закладная брусом", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $cloth["gm_salary"] += $val["gm_salary"];
-                                                $cloth["dealer_salary"] += $val["dealer_salary"];
-                                                $cloth["quantity"] += $val["quantity"];
-                                                $cloth["gm_salary_total"] += $val["gm_salary_total"];
-                                                $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $cloth[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $cloth[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Пожарная сигнализация") { 
-                                            if (!in_array("Пожарная сигнализация", $cloth)) {
-                                                array_push($cloth, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Пожарная сигнализация", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $cloth["gm_salary"] += $val["gm_salary"];
-                                                $cloth["dealer_salary"] += $val["dealer_salary"];
-                                                $cloth["quantity"] += $val["quantity"];
-                                                $cloth["gm_salary_total"] += $val["gm_salary_total"];
-                                                $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $cloth[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $cloth[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Шторный карниз") { 
-                                            if (!in_array("Шторный карниз", $cloth)) {
-                                                array_push($cloth, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Шторный карниз", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $cloth["gm_salary"] += $val["gm_salary"];
-                                                $cloth["dealer_salary"] += $val["dealer_salary"];
-                                                $cloth["quantity"] += $val["quantity"];
-                                                $cloth["gm_salary_total"] += $val["gm_salary_total"];
-                                                $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $cloth[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $cloth[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Установка светильников") { 
-                                            if (!in_array("Установка светильников", $cloth)) {
-                                                array_push($cloth, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Установка светильников", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $cloth["gm_salary"] += $val["gm_salary"];
-                                                $cloth["dealer_salary"] += $val["dealer_salary"];
-                                                $cloth["quantity"] += $val["quantity"];
-                                                $cloth["gm_salary_total"] += $val["gm_salary_total"];
-                                                $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $cloth[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $cloth[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Обвод трубы") { 
-                                            if (!in_array("Обвод трубы", $cloth)) {
-                                                array_push($cloth, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Обвод трубы", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $cloth["gm_salary"] += $val["gm_salary"];
-                                                $cloth["dealer_salary"] += $val["dealer_salary"];
-                                                $cloth["quantity"] += $val["quantity"];
-                                                $cloth["gm_salary_total"] += $val["gm_salary_total"];
-                                                $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $cloth[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $cloth[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else if ($val["title"] == "Установка вентиляции") { 
-                                            if (!in_array("Установка вентиляции", $cloth)) {
-                                                array_push($cloth, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                            if (!array_key_exists("Установка вентиляции", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $cloth["gm_salary"] += $val["gm_salary"];
-                                                $cloth["dealer_salary"] += $val["dealer_salary"];
-                                                $cloth["quantity"] += $val["quantity"];
-                                                $cloth["gm_salary_total"] += $val["gm_salary_total"];
-                                                $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $cloth[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $cloth[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else {
-                                            if (!in_array($val["title"], $rest)) { 
+                                            if (!array_key_exists($val["title"], $rest)) { 
                                                 $rest[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {                                                
-                                                /* $rest[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $rest[$val["title"]]["gm_salary"] += $val["gm_salary"];
                                                 $rest[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
                                                 $rest[$val["title"]]["quantity"] += $val["quantity"];
                                                 $rest[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
-                                                $rest[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"]; */
+                                                $rest[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         }
                                     ?>
