@@ -84,9 +84,7 @@ if (!empty($calculation_ids)) {
                         </tr>
                         <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
                         <?php var_dump($DataOfProject); ?>
-
-                        <?php if (in_array("mounting_data", $DataOfProject)) { ?>
-                            <?php $calculate_sum = 0; ?>
+                        <?php if (!empty($DataOfProject)) { ?>
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <tr>
                                     <td class="left">
@@ -107,23 +105,21 @@ if (!empty($calculation_ids)) {
                                     <?php if ($user->dealer_id == 1) { ?>
                                         <td>
                                             <?php echo $val["gm_salary_total"]; ?>
-                                            <?php $calculate_sum += $val["gm_salary_total"]; ?>
                                         </td>
                                     <?php } else { ?>
                                         <td>
                                             <?php echo $val["dealer_salary_total"]; ?>
-                                            <?php $calculate_sum += $val["gm_salary_total"]; ?>
                                         </td>
                                     <?php } ?>
                                 </tr>
                             <?php } ?> 
+                            <tr class="caption">
+                                <td colspan=3 style="text-align: right;">Итого, ₽:</td>
+                                <td>
+                                    <?php echo $DataOfProject["total_gm_mounting"]; ?>
+                                </td>
+                            </tr>
                         <?php } ?>
-                        <tr class="caption">
-                            <td colspan=3 style="text-align: right;">Итого, ₽:</td>
-                            <td>
-                                <?php echo $calculate_sum; ?>
-                            </td>
-                        </tr>
                     </table>
                 </div>
             </div>
