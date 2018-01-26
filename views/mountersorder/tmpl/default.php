@@ -303,12 +303,10 @@ if (!empty($calculation_ids)) {
                                         } else {
                                             if (!in_array($val["title"], $rest)) { 
                                                 $rest[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
-                                            } else {
-                                                throw new Exception($val["title"]);
-                                                
+                                            } else {                                                
                                                 $rest[$val["title"]]["gm_salary"] += $val["gm_salary"];
                                                 $rest[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
-                                                $rest[$val["title"]]["quantity"] += $val["quantity"];
+                                                $rest[$val["title"]]["quantity"] = $rest[$val["title"]]["quantity"] + $val["quantity"];
                                                 $rest[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
                                                 $rest[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
