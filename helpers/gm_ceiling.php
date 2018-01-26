@@ -4548,7 +4548,17 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p><br>';
         $html .= "<pagebreak />";
         foreach($calculations as $calc){
-            $html .= '<h1>Информация</h1>';
+            $html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
+        }
+        $filename = md5($data['id'] . "-2") . ".pdf";
+        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+    }
+    public static function create_single_mounter_estimate_html($calc_id,$phones,$brigade,$brigade_names){
+        $calculation_model = self::getModel('calculation');
+        $calc = $calculation_model->getData($calc_id);
+        $project_model = self::getModel('project');
+        $project = $project_model->getData($calc->project_id);
+        $html .= '<h1>Информация</h1>';
             $html .= "<b>Название: </b>" . $calc->calculation_title . "<br>";
             if (isset($project->id)) {
                 if ($project->id) {
@@ -4668,10 +4678,25 @@ class Gm_ceilingHelpersGm_ceiling
 
                 $html .= '</tbody></table><p>&nbsp;</p>';
             }
+            return $html;
+    }
+    public static function create_single_mount_estimate($calc_id){
+        $calculation_model = self::getModel('calculation');
+        $calc = $calculation_model->getData($calc_id);
+        $project_model = self::getModel('project');
+        $project = $project_model->getData($calc->project_id);
+        $calculations_model = self::getModel('calculations');
+        $names = $calculations_model->FindAllMounters($project->project_mounter);
+        $brigade = JFactory::getUser($project->project_mounter);
+        $client_contacts_model = self::getModel('client_phones');
+        $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
+        for($i=0;$i<count($client_contacts);$i++){
+            $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
         }
+        $html = self::create_single_mounter_estimate_html($calc_id);
         $filename = md5($data['id'] . "-2") . ".pdf";
-        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
-
+        $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+        self::save_pdf($html, $sheets_dir . $filename, "A4");
     }
     /* функция для создания PDF документа с расходкой по проекту */
     public static function create_estimate_of_consumables($project_id){
