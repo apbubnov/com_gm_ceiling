@@ -3279,7 +3279,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         return $canvases_data;
     }
-    public static function calculte_offcut($calc_id=null,$data = null){
+    public static function calculate_offcut($calc_id=null,$data = null){
         if(!empty($calc_id)){
             $calc_model = self::getModel('calculation');
             $data = get_object_vars($calc_model->getData($calc_id));
@@ -3311,14 +3311,14 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] != 0) {
             $offcut_square_data['title'] = "Количество обрезков"; //Название фактуры и полотна
             $offcut_square_data['quantity'] = $data['offcut_square'];                                                                        //Кол-во
-            $offcut_square_data['self_price'] = round($canvases[$data['n3']]->price / 2.5, 2);                                    //Себестоимость
+            $offcut_square_data['self_price'] = round($canvases[$data['n3_id']]->price / 2.5, 2);                                    //Себестоимость
             $offcut_square_data['self_total'] = round($data['offcut_square'] * $offcut_square_data['self_price'], 2);                            //Кол-во * Себестоимость
             //Стоимость с маржой ГМ (для дилера)
-            $offcut_square_data['gm_price'] = round(margin($canvases[$data['n3']]->price, $gm_canvases_margin) / 2.5, 2);
+            $offcut_square_data['gm_price'] = round(margin($canvases[$data['n3_id']]->price, $gm_canvases_margin) / 2.5, 2);
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $offcut_square_data['gm_total'] = round($data['offcut_square'] * $offcut_square_data['gm_price'], 2);
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $offcut_square_data['dealer_price'] = round(double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, 50) / 2.5, 2);
+            $offcut_square_data['dealer_price'] = round(double_margin($canvases[$data['n3_id']]->price, $gm_canvases_margin, 50) / 2.5, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
         }
@@ -4923,7 +4923,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($data->project_id);
         $canvases_data = self::calculate_canvases($calc_id);
-        $offcut_square_data =self::calculte_offcut($calc_id);
+        $offcut_square_data =self::calculate_offcut($calc_id);
         $guild_data = self::calculate_guild_jobs($calc_id);
         $html = '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
