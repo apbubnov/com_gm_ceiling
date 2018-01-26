@@ -118,6 +118,7 @@ $allMount = $countMounting[0]->count + $answer1[0]->count;
     <?php } }?>
 </div>
 
+
 <div class="start_page">
     <?php if ($userId == 1 || $userId == 2): ?>
         <h3>Гильдия мастеров</h3>

@@ -3238,4 +3238,7 @@
         element.find(".OPTIONS_CUSTOM").hide();
         element.val(true);
     }
+    document.getElementById('new_discount').addEventListener('mousewheel', function(e){
+        e.preventDefault();
+    });
 </script>
