@@ -267,6 +267,7 @@ $calculationsItog->dealer_sum->itog = $calculationsItog->dealer_sum->canvas + $c
 $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $calculationsItog->client_sum->components + $calculationsItog->client_sum->mounting;
 
 ?>
+<?=parent::getPreloader();?>
 <?/*print_r($Client);*/?>
 <link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/tmpl/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
 
@@ -390,7 +391,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                     <?foreach ($calculations as $calculation):?>
                         <tr class="BodyTR Calculate">
                             <td class="CheckBox" rowspan="2">
-                                <input name='include_calculation[]' value='<?=$calculation->id;?>' class="CalcCheckbox" type='checkbox' checked="checked">
+                                <input class="CalcCheckBox" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
                                 <span><?=$calculation->calculation_title;?></span>
                             </td>
                             <td>S / P:</td>
@@ -469,7 +470,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                     <?foreach ($calculations as $calculation):?>
                         <tr class="BodyTR Calculate">
                             <td class="CheckBox" colspan="2">
-                                <input name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
+                                <input class="CalcCheckBox" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
                                 <span><?=$calculation->calculation_title;?></span>
                             </td>
                         </tr>
@@ -570,20 +571,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         DATA.Page.Navigation = DATA.Page.find(".Navigation");
         DATA.Page.Navigation.BodyTR = DATA.Page.Navigation.find(".BodyTR");
 
-        var checkboxs = $("input").filter("[type='checkbox']");
-        $.each(checkboxs, function (index, value) {
-            value = $(value);
-            value.change(function () {
-               var val = $(this).val(),
-                   el = $(value.attr("class")).filter("[valuer=" + val + "]");
-                console.log(val);
-                console.log(value.attr("class"));
-               console.log($(this));
-               console.log(el);
-               if ($(this).checked) el.checked = true;
-               else el.checked = false;
-            });
-        });
+
 
         Resize();
     }
@@ -604,6 +592,31 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
 
     function ResizeNote() {
         DATA.Massage.Add.css({"height":DATA.Massage.Note.outerHeight()});
+    }
+    
+    function TwoWorlds() {
+        var types = [];
+        $.each(types, function (i, v) {
+            var checkboxs = $("input").filter("[type='" + v + "']");
+            $.each(checkboxs, function (index, value) {
+                value = $(value);
+                value.change(function () {
+                    if (v === "checkbox" || v === "radio")
+                    {
+                        var val = $(this).val(),
+                            vclass = "." + value.attr("class").replace(" ", " .");
+                        el = $(vclass).filter("[value='"+val+"']");
+                        el.prop("checked", $(this).prop("checked"));
+                    }
+                    else
+                    {
+                        var vclass = "." + value.attr("class").replace(" ", " ."),
+
+                        el = $(vclass).filter("[value='"+val+"']");
+                    }
+                });
+            });
+        });
     }
 </script>
 <?endif;?>
