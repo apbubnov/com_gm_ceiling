@@ -4865,9 +4865,9 @@ class Gm_ceilingHelpersGm_ceiling
             if ($data['color'] > 0) {
                 $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
                 $color = $color_model->getData($data['color']);
-                $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
+                $name = $data['n3'] . ", цвет: " . $color->colors_title;
             } else {
-                $name = $canvases_data['title'];
+                $name = $data['n3'];
             }
             $html .= '<tr>';
             $html .= '<td>' . $name . '</td>';
