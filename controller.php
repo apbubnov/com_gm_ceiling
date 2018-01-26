@@ -3106,7 +3106,7 @@ class Gm_ceilingController extends JControllerLegacy
     public function test_estimate(){
         $jinput = JFactory::getApplication()->input;
         $id = $jinput->get('id','','INT');
-        $result = Gm_ceilingHelpersGm_ceiling::calculate_components($id,null,0);
+        $result = Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($id);
         die(json_encode($result));
     }
 }
