@@ -68,7 +68,7 @@ if (!empty($calculation_ids)) {
                     </tr>
                     <?php if (!empty($DataOfTransport)) { ?>
                         <tr class="caption">
-                            <td colspan="4" style="text-align: center;">Транспортные расходы</td>
+                            <td colspan="4" style="text-align: center; background-color: #ffffff;">Транспортные расходы</td>
                         </tr>
                         <tr class="caption">
                             <td>Вид транспорта</td>
