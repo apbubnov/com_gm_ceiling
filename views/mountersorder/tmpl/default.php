@@ -186,8 +186,6 @@ if (!empty($calculation_ids)) {
                                                 $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else {
-                                            var_dump($rest);
-                                            echo $val["title"];
                                             if (!in_array($val["title"], $rest)) { 
                                                 array_push($rest, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
                                             } else {
@@ -303,6 +301,8 @@ if (!empty($calculation_ids)) {
                                                 $cloth["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else {
+                                            var_dump($rest);
+                                            echo $val["title"];
                                             if (!in_array($val["title"], $rest)) { 
                                                 array_push($rest, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
                                             } else {
