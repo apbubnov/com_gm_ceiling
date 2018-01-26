@@ -2771,6 +2771,7 @@ class Gm_ceilingHelpersGm_ceiling
             return $return;
     }
     public static function calculate_components($calc_id,$data,$del_flag){
+
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
             $calculation_data = $calculation_model->getData($calc_id);
@@ -2891,6 +2892,7 @@ class Gm_ceilingHelpersGm_ceiling
         $items_660 = $components_model->getFilteredItems($filter);
 
         if ($data['n1'] == 28) {
+
             $component_count[$items_9[0]->id] += $data['n5'] * 10;
             $component_count[$items_5[0]->id] += $data['n5'] * 10;
             if ($data['n28'] == 0) $component_count[$items_11[0]->id] += $data['n5'];
@@ -3143,7 +3145,7 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[$items_2[0]->id] += $data['n21'] * 2;
         }
         //Брус до 0,5 и багет 2.5м считается кусками, которые потребуются выложить весь периметр
-        if ($print_components == 0) {
+
             if ($data['n28'] == 0) $component_count[$items_11[0]->id] = self::rounding($component_count[$items_11[0]->id], 2.5);
             elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] = self::rounding($component_count[$items_236[0]->id], 2.5);
             elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] = self::rounding($component_count[$items_239[0]->id], 2.5);
@@ -3160,7 +3162,7 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[656] = self::rounding($component_count[656], 2.5);
             $component_count[$items_4[0]->id] = ceil($component_count[$items_4[0]->id]);
 
-        }
+       
 
         //просчет доп компонентов со склада
         $components_stock = json_decode($data['components_stock']);
@@ -3264,7 +3266,7 @@ class Gm_ceilingHelpersGm_ceiling
 
             $components_data[] = $component_item;
         }
-        return $component_count;
+        return $components_data;
     }
     /* 	основная функция для расчета стоимости монтажа
         $del_flag 0 - не удалать светильники, трубы и т.д что хранится в др. таблицах
@@ -4583,7 +4585,8 @@ class Gm_ceilingHelpersGm_ceiling
         $components_data = array();
         $calculations_model = self::getModel('calculations');
         $calculations = $calculations_model->getProjectItems($project_id);
-        foreach($calcultions as $calc){
+        foreach($calculations as $calc){
+        	$str.=$calc->id.';';
             $components_data [] = self::calculate_components($calc->id,null,0);
         }
         $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');

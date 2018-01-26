@@ -157,8 +157,7 @@ $query
     ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
 $db->setQuery($query);
 $results = $db->loadObjectList();*/
-if(false):
-
+if(true):
 /* Клиент */
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -411,13 +410,51 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                             <td>
                                 <?if($calculation->discount > 0):?>
                                 <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.</td>
-                                <?endif;?>
+                            <?endif;?>
                         </tr>
                     <?endforeach;?>
                     <tr class="TR">
                         <th colspan="2">Общая S / общий P:</th>
                         <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup></td>
                         <td><span><?=$calculationsItog->perimeter;?></span> м</td>
+                    </tr>
+                    <tr class="HeaderTR">
+                        <th colspan="4">Транспортные расходы:</th>
+                    </tr>
+                    <tr class="BodyTR">
+                        <td colspan="4">
+                            <div class="Transports">
+                                <div class="Transport In">
+                                    <input name="transport" class="RadioT" id="transport" value="1" type="radio" <?=($$Project->transport == 1 )?"checked":"";?>>
+                                    <span>Транспорт по городу</span>
+                                    <div class="Block">
+                                        <div class="Name">Количество выездов:</div>
+                                        <input class="Input" type="number" min="1" max="999" name="jform[distance_col_1]" id="distance_col_1" value="<?=$$Project->distance_col;?>" placeholder="раз">
+                                        <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                                <div class="Transport Out">
+                                    <input name="transport" class="RadioT" id="transport" value="2" type="radio" <?=($$Project->transport == 2 )?"checked":"";?>>
+                                    <span>Выезд за город</span>
+                                    <div class="Block">
+                                        <div class="Name">Кол-во, км:</div>
+                                        <input class="Input" type="number" min="1" max="999" name="jform[distance]" id="distance" value="<?=$$Project->distance; ?>" placeholder="км.">
+                                        <div class="Name NoRadius">Кол-во выездов:</div>
+                                        <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col; ?>" placeholder="раз">
+                                        <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                                <div class="Transport Empty">
+                                    <div class="Title">
+                                        <input name="transport" class="RadioT" id="transport" value="0" type="radio" <?=($$Project->transport == 0 )?"checked":"";?>>
+                                        <span>Без транспорта</span>
+                                    </div>
+                                    <div class="Block">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -467,6 +504,8 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         }
     }
 </style>
+<?endif;?>
+<?if(true):?>
 <?= parent::getButtonBack(); ?>
 
 <h2 class="center">Просмотр проекта</h2>
@@ -3002,3 +3041,4 @@ var $ = jQuery;
             jQuery("#update_discount").click();
     }
 </script>
+<?endif;?>
