@@ -83,7 +83,7 @@ if (!empty($calculation_ids)) {
                             <td>Стоимость, ₽</td>
                         </tr>
                         <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
-                        <?php var_dump(DataOfProject); ?>
+                        <?php var_dump($DataOfProject); ?>
 
                         <?php if (in_array("mounting_data", $DataOfProject)) { ?>
                             <?php $calculate_sum = 0; ?>
