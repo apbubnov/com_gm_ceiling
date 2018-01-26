@@ -979,6 +979,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $query = $db->getQuery(true);
 	        $query->update('`#__gm_ceiling_projects` AS projects')
 	            ->set('projects.project_status = 1')
+                ->set('projects.project_verdict = 0')
 	            ->where('projects.id = ' . $id);
 	        $db->setQuery($query);
 	        $return = $db->execute();

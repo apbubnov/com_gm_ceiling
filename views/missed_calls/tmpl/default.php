@@ -73,7 +73,7 @@ $items = json_encode($this->item);
                 client = data;
             },
             dataType: "json",
-            timeout: 10000,
+            timeout: 20000,
             error: function(data){
                 console.log(data);
                 var n = noty({
@@ -180,7 +180,7 @@ $items = json_encode($this->item);
                jQuery("#preloader").hide();
             },
             dataType: "json",
-            timeout: 10000,
+            timeout: 30000,
             error: function(data){
                 console.log(data);
                 var n = noty({
@@ -226,7 +226,7 @@ $items = json_encode($this->item);
                 },
                 dataType: "text",
                 async: false,
-                timeout: 10000,
+                timeout: 20000,
                 error: function(data){
                     var n = noty({
                         timeout: 2000,
@@ -261,7 +261,7 @@ $items = json_encode($this->item);
                         },
                         dataType: "text",
                         async: false,
-                        timeout: 10000,
+                        timeout: 20000,
                         error: function(data){
                             var n = noty({
                                 timeout: 2000,

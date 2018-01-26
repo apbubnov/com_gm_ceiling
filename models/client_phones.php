@@ -36,7 +36,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select("`a`.*, `b`.`dealer_id` AS `client_dealer_id`, `u`.`dealer_type`, `u`.`dealer_id` AS `user_dealer_id`")
+				->select("`b`.`id`, `b`.`client_name`, `b`.`dealer_id` AS `client_dealer_id`, `a`.`phone`, `u`.`dealer_type`, `u`.`dealer_id` AS `user_dealer_id`")
 				->from("`#__gm_ceiling_clients_contacts` AS `a`")
 				->innerJoin('`rgzbn_gm_ceiling_clients` AS `b` ON `a`.`client_id` = `b`.`id`')
 				->leftJoin('`rgzbn_users` AS `u` ON `b`.`id` = `u`.`associated_client`')
@@ -61,7 +61,6 @@ class Gm_ceilingModelClient_phones extends JModelList
 					return $item;
 				}
 			}
-
 			return null;
 		}
 		catch(Exception $e)
@@ -106,7 +105,18 @@ class Gm_ceilingModelClient_phones extends JModelList
 			foreach($phones as $phone)
 			{
 	            if(!empty($phone))
-				    array_push($values ,array($client_id.",'".preg_replace('/[\(\)\-\s]/', '', $phone)."'"));
+	            {
+	            	$phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+					if (strlen($phone) != 11)
+					{
+		            	throw new Exception('Invalid phone number');
+		            }
+		            if (mb_substr($phone, 0, 1) != '7')
+		            {
+		                $phone = substr_replace($phone, '7', 0, 1);
+		            }
+				    array_push($values ,array($client_id.",'".$phone."'"));
+	            }
 			}
 
 			$db    = JFactory::getDbo();
@@ -120,6 +130,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 		
 			$db->setQuery($query);
 			$db->execute();
+			return true;
 		}
 		catch(Exception $e)
         {

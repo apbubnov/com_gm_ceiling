@@ -462,7 +462,9 @@ class Gm_ceilingController extends JControllerLegacy
             $client_id = $jinput->get('client_id', '', 'INT');
             $new_fio = $jinput->get('fio', '', 'STRING');
             $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $model_client->updateClient($client_id,$new_fio);
+            $user_model->updateUserNameByAssociatedClient($client_id, $new_fio);
             $history_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
             $history_model->save($client_id,"Изменено ФИО пользователя");
             die($new_fio);
@@ -1769,10 +1771,8 @@ class Gm_ceilingController extends JControllerLegacy
             if (empty($result)) {
                 die($result);
             }
-            $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-            $result_client = $model_client->getClientById($result->client_id);
-
-            die(json_encode($result_client));
+            
+            die(json_encode($result));
         }
         catch(Exception $e)
         {
@@ -3106,8 +3106,8 @@ class Gm_ceilingController extends JControllerLegacy
     public function test_estimate(){
         $jinput = JFactory::getApplication()->input;
         $id = $jinput->get('id','','INT');
-        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($id);
-        die(true);
+        $result = Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($id);
+        die(json_encode($result));
     }
 }
 

@@ -119,7 +119,7 @@ $answer7 = array_diff($missAnswer1, $missAnswer2);
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=missed_calls', false); ?>"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Пропущенные</a>
-				<?php if ($answer7 != 0) { ?>
+				<?php if (count($answer7) != 0) { ?>
 					<div class="circl-digits"><?php echo count($answer7); ?></div>
 				<?php } ?>
 			</div>
