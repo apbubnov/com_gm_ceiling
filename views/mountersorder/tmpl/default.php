@@ -60,7 +60,7 @@ if (!empty($calculation_ids)) {
                     <?php if (!empty($DataOfProject)) { ?>
                         <?php foreach ($DataOfProject["mounting_data"] as $value) { ?>
                             
-                            <!-- а -->
+                            
                         <?php } ?>
                     <?php } ?>
                     <tr class="caption">
