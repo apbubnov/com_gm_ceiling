@@ -3279,7 +3279,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         return $canvases_data;
     }
-    public static function calculte_offcut($calc_id=null,$data = null){
+    public static function calculate_offcut($calc_id=null,$data = null){
         if(!empty($calc_id)){
             $calc_model = self::getModel('calculation');
             $data = get_object_vars($calc_model->getData($calc_id));
@@ -3307,6 +3307,11 @@ class Gm_ceilingHelpersGm_ceiling
             $dealer_mounting_margin = $dealer_marg->dealer_mounting_margin;
             //Маржа дилера на монтажные работы
         }
+        $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+        $canvases_list = $canvases_model->getFilteredItemsCanvas();
+        foreach ($canvases_list as $i => $canvas) {
+            $canvases[$canvas->id] = $canvas;
+        }
         $offcut_square_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] != 0) {
             $offcut_square_data['title'] = "Количество обрезков"; //Название фактуры и полотна
@@ -3333,6 +3338,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data['n3'] = $data['n3_id'];
             $project_model = self::getModel('project');
             $client_id = $project_model->getData($data['project_id'])->id_client;
+            $mount_model = self::getModel('mount');
             if(!empty($client_id)){
                 $client_model = self::getModel('client');
                 $dealer_id = $client_model->getClientById($client_id)->dealer_id;
@@ -4922,7 +4928,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($data->project_id);
         $canvases_data = self::calculate_canvases($calc_id);
-        $offcut_square_data =self::calculte_offcut($calc_id);
+        $offcut_square_data =self::calculate_offcut($calc_id);
         $guild_data = self::calculate_guild_jobs($calc_id);
         $html = '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
