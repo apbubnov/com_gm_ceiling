@@ -75,6 +75,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 		{
 			$app = JFactory::getApplication();
 	        $jinput = $app->input;
+            $user = JFactory::getUser();
 	        $name = $jinput->get('fio', null, 'STRING');
 	        $phone = $jinput->get('phone', null, 'STRING');
 			//Создание клиента
@@ -107,6 +108,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 	        $jinput = $app->input;
 	        $name = $jinput->get('fio', null, 'STRING');
 	        $phone = $jinput->get('phone', null, 'STRING');
+            $user = JFactory::getUser();
 			//Создание клиента
 			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
 			$client_data['client_name'] = $name;
@@ -128,4 +130,26 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+    public function add_in_table_recoil_map_project()
+    {
+        try
+        {
+            $app = JFactory::getApplication();
+            $jinput = $app->input;
+            $id = $jinput->get('id', null, 'int');
+            $sum = $jinput->get('sum', null, 'STRING');
+
+            $recoil_map_model =Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+            $result = $recoil_map_model->save($id, NULL, $sum);
+            die($result);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }
