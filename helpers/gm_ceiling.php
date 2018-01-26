@@ -3324,6 +3324,41 @@ class Gm_ceilingHelpersGm_ceiling
         }
         return $offcut_square_data;
     }
+    public static function calculate_guild_jobs($calc_id){
+        if(!empty($calc_id)){
+            $calc_model = self::getModel('calculation');
+            $data = get_object_vars($calc_model->getData($calc_id));
+            $data['n1'] = $data['n1_id']; 
+            $data['n2'] = $data['n2_id'];
+            $data['n3'] = $data['n3_id'];
+        }
+        $guild_data = array();
+        if ($data['n1'] == 28 && $data['n9'] > 4) {
+            //Обработка 1 угла
+            if ($data['n9']) {
+                $guild_data[] = array(
+                    "title" => "Обработка 1 угла",                                                                //Название
+                    "quantity" => $data['n9'] - 4,                                                                //Кол-во
+                    "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+        }
+        if ( $data['n31'] > 0) {  
+            //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
+            $guild_data[] = array(
+                "title" => "Внутренний вырез(в цеху)",                                                                    //Название
+                "quantity" => $data['n31'],                                                                //Кол-во
+                "gm_salary" => $results->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['n31'] * $results->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $results->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['n31'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
+        }
+        return $guild_data;
+    }
     /* 	основная функция для расчета стоимости монтажа
         $del_flag 0 - не удалать светильники, трубы и т.д что хранится в др. таблицах
 		$calc_id - id калькуляции в БД
@@ -4875,6 +4910,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project = $project_model->getData($data->project_id);
         $canvases_data = self::calculate_canvases($calc_id);
         $offcut_square_data =self::calculte_offcut($calc_id);
+        $guild_data = self::calculate_guild_jobs($calc_id);
         $html = '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         if (isset($project->id)) {
