@@ -14,6 +14,9 @@ $userId     = $user->get('id');
 
 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
 $result_users = $users_model->getDealers();
+$sum = 0;
+$recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+
 ?>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
@@ -32,21 +35,44 @@ $result_users = $users_model->getDealers();
             <th>
                Дата регистрации
             </th>
+            <th>
+                Взнос
+            </th>
         </tr>
         </thead>
         <tbody>
         	<?php
         		foreach ($result_users as $key => $value)
         		{
+                    $data = $recoil_map_model->getData($value->id);
+                    foreach ($data as $item)
+                    {
+                        $sum +=  $item->sum;
+                    }
         	?>
-                <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
-		            <td>
+                <tr class="row<?php echo $i % 2; ?>" >
+		            <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
 		               <?php echo $value->name; ?>
 		            </td>
-		            <td>
+		            <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
 		               <?php echo $value->registerDate; ?>
 		            </td>
+                    <td data-href="">
+                        <button class="btn btn-primary btn-done" user_id="<?= $value->id; ?>" type="button" > Внести сумму </button>
+                        <div id="modal_window_container<?= $value->id; ?>" class="modal_window_container">
+                            <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+                            </button>
+                            <div id="modal_window_del<?= $value->id; ?>" class="modal_window">
+                                <p><strong>Взнос задолжности. Дилер: <?php echo $value->name; ?> </strong></p>
+                                <p>На счете : <?=$sum;?> руб.</p>
+                                <p>Сумма взноса:</p>
+                                <p><input type="text" id="pay_sum<?= $value->id; ?>" value=" <?=($sum<0)?abs($sum):0;?>"> </p>
+                                <p><button type="submit" id="save_pay" class="btn btn-primary save_pay" user_id="<?= $value->id; ?>">ОК</button></p>
+                            </div>
+                        </div>
+                    </td>
 		        </tr>
+
         	<?php
         		}
         	?>
@@ -63,15 +89,27 @@ $result_users = $users_model->getDealers();
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
     </div>
+
+<!--    <div id="modal-window-container">-->
+<!--        <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>-->
+<!--        <div id="modal-window-1-tar" >-->
+<!--            <p><strong>Взнос задолжности</strong></p>-->
+<!--            <p>Сумма взноса:</p>-->
+<!--            <p><input type="text" id="pay_sum"></p>-->
+<!--            <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
 <script>
     jQuery(document).ready(function()
     {
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
-        jQuery('body').on('click', 'tr', function(e)
+        jQuery('body').on('click', 'td', function(e)
         {
             if(jQuery(this).data('href')!=""){
                 document.location.href = jQuery(this).data('href');
-            } 
+            }
         });
 
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
@@ -116,5 +154,62 @@ $result_users = $users_model->getDealers();
                 }                   
             });
         });
+
+        //для внесения денег
+        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+            var user_id = jQuery(this).attr("user_id");
+            var div = jQuery(".modal_window"); // тут указываем ID элемента
+            if (!div.is(e.target) // если клик был не по нашему блоку
+                && div.has(e.target).length === 0) { // и не по его дочерним элементам
+                jQuery(".close_btn").hide();
+                jQuery(".modal_window_container").hide();
+                jQuery(".modal_window").hide();
+            }
+        });
+
+        jQuery(".btn-done").click(function(){
+            var user_id = jQuery(this).attr("user_id");
+            jQuery(".close_btn").show();
+            jQuery("#modal_window_container" + user_id).show();
+            jQuery("#modal_window_del" + user_id).show("slow");
+        });
+
+        jQuery(".save_pay").click(function(){
+            var user_id = jQuery(this).attr("user_id");
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
+                data: {
+                    id: user_id,
+                    sum: document.getElementById('pay_sum'+user_id).value
+                },
+                success: function(data){
+                    var n = noty({
+                        timeout: 5000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Сумма успешно добавлена"
+                    });
+                    setInterval(function() { location.reload();}, 1500);
+                },
+                dataType: "text",
+                async: false,
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }
+            });
+        });
+
+
     });
 </script>
