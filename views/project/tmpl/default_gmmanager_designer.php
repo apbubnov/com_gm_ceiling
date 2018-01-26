@@ -342,7 +342,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                          foreach ($email as $value) {?>
                                     <tr>
                                         <th>e-mail</th>
-                                        <td><input name="new_email[]" id="jform_email" class="inputhidden"
+                                        <td><input name="email[]" id="email" class="inputhidden"
                                                 value="<?php echo $value->contact;?>" placeholder="e-mail"
                                                 type="text">
                                         </td>

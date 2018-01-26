@@ -16,12 +16,24 @@ JHtml::_('formbehavior.chosen', 'select');
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
-$dealerId   = $user->dealer_id;
 
 $project = $_GET['project'];
 
-$mounters_order_model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
-$calc_ids = $mounters_order_model->getData($project);
+$model = Gm_ceilingHelpersGm_ceiling::getModel('mountersorder');
+
+$calculation_ids = $model->GetCalculation($project);
+
+if (!empty($calculation_ids)) {
+    $index = 0;
+    foreach ($calculation_ids as $value) {
+        $DataOfProject[$index] = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, 1, $value->id, null);
+        $index++;
+    }
+    $DataOfTransport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project);
+}
+var_dump( $DataOfProject);
+
+/* $calc_ids = $mounters_order_model->getDatas($project);
 $mas = [];
 foreach ($calc_ids as $value) {
     array_push($mas, $value->calculation_id);
@@ -34,7 +46,7 @@ $data_of_n_pack5 = $mounters_order_model->GetNPack5($mas);
 $data_of_n_pack6 = $mounters_order_model->GetNPack6($project);
 $data_of_n_pack7 = $mounters_order_model->GetNPack7($mas);
 
-$data_of_mp = $mounters_order_model->GetMp($dealerId);
+$data_of_mp = $mounters_order_model->GetMp($dealerId); */
 
 ?>
 
@@ -44,11 +56,17 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId);
 
 <div id="content-tar">
     <h2 class="center tar-color-414099">Просмотр проекта №<?php echo $project; ?></h2>
-
     <ul class="nav nav-tabs" role="tablist" id="tabs">
         <li class="nav-item">
             <a class="nav-link active" data-toggle="tab" href="#summary" role="tab">Общее</a>
         </li>
+        <?php if (!empty($calculation_ids)) { ?>
+            <?php foreach ($calculation_ids as $value) { ?>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#ceiling<?php echo $value->id; ?>" role="tab"><?php echo $value->calculation_title; ?></a>
+                </li>
+            <?php } ?>
+        <?php } ?>
     </ul>
     <div class="tab-content" id="content-tabs">
         <div id="summary" class="content-tab tab-pane active" role="tabpanel">
@@ -60,6 +78,11 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId);
                         <td>Количество</td>
                         <td>Стоимость, ₽</td>
                     </tr>
+                    <?php if (!empty($DataOfProject)) { ?>
+                        <?php foreach ($DataOfProject as $value) { ?>
+                            
+                        <?php } ?>
+                    <?php } ?>
                     <tr id="before-insert" class="caption">
                         <td colspan=3 style="text-align: right;">Итого, ₽:</td>
                         <td id="sum-all"></td>
@@ -67,6 +90,32 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId);
                 </table>
             </div>
         </div>
+        <?php foreach ($calculation_ids as $value) { ?>
+            <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
+                <div class="ceiling">
+                    <img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.png" class="image-ceiling">
+                </div>
+                <div class = "overflow">
+
+                        <!-- <?php if (!empty($DataOfProject)) { ?>
+                            <?php foreach ($DataOfProject as $val) { ?>
+                                <?php// if (isset($value->mounting_data)) { ?>
+                            <?php// foreach ($value->mounting_data as $val) { ?>
+                                <table id="table-order-<?php echo $value->id; ?>" cols=4 class="table-order">
+                                    <tr class="caption">
+                                        <td>Наименование</td>
+                                        <td>Цена, ₽</td>
+                                        <td>Количество</td>
+                                        <td>Стоимость, ₽</td>
+                                    </tr>
+
+                                </table>
+                            
+                            <?php } ?>
+                        <?php } ?> -->
+                </div>
+            </div>
+        <?php } ?>
     </div>
     <div id="buttons-cantainer">
         <button id="begin" class="btn"><i class="fa fa-play fa-tar" aria-hidden="true"></i> Монтаж начат</button>
@@ -89,14 +138,19 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId);
 </div>
 
 <script>
-    DealerID = <?php echo $dealerId; ?>;
-
-    arr = [];
-    mas = [];
 
     // создание и заполнение вкладок
+
+
+
+    /* arr = [];
+    mas = []; */
+
+    
+
+
     function AddTab(DataOfMount) {
-        // вкладки потолков
+        /* // вкладки потолков
         // из объекта с объектами создаем массив с объектами
         var array = jQuery.map(DataOfMount, function(value, index) {
             arr[index] = value;
@@ -581,7 +635,7 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId);
             jQuery("#sum-all").text("1500");
         } else {
             jQuery("#sum-all").text(sumAll);
-        }
+        } */
     }
 
     //получение значений из url с помощью js
@@ -627,7 +681,7 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId);
 
     jQuery(document).ready( function() {
 
-    // передача значений n и mp на контроллер
+    /* // передача значений n и mp на контроллер
     // отправка ajax для просчета на контроллер
     jQuery.ajax( {
         type: "POST",
@@ -647,7 +701,7 @@ $data_of_mp = $mounters_order_model->GetMp($dealerId);
             DataOfMount = msg;
             AddTab(DataOfMount);
         }
-    });
+    }); */
 
     //отправка ajax для проверки дат начала конца монтажа и статуса
     jQuery.ajax( {
