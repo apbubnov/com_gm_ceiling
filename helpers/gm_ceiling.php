@@ -4860,7 +4860,6 @@ class Gm_ceilingHelpersGm_ceiling
                 <h1>Для менеджера</h1>
                 <table border="0" cellspacing="0" width="100%">
                 <tbody><tr><th>Наименование</th><th class="center">Себестоимость</th><th class="center">Кол-во</th><th>Итого</th></tr>';
-
         if ($data['n1'] && $data['n2'] && $data['n3']) {
             if ($data['color'] > 0) {
                 $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
