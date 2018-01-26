@@ -348,6 +348,7 @@ if (!empty($calculation_ids)) {
                             <?php } ?>
                         </tr>
                     <?php } ?>
+                    <?php var_dump($rest); ?>
                     <?php foreach ($rest as $val) { ?>
                         <tr>
                             <td class="left"><?php echo $val["title"]; ?></td>
