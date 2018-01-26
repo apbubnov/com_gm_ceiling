@@ -155,9 +155,9 @@ $result_users = $users_model->getDesigners();
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].created + '</td></tr>';
-                        tbody.innerHTML = html;
-                        html = '';
                     }
+                    tbody.innerHTML = html;
+                    html = '';
                 },
                 dataType: "json",
                 async: false,
