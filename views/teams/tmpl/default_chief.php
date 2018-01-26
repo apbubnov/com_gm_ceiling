@@ -12,7 +12,11 @@ $userId     = $user->id;
 $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
-$brigade_id = $teams_model->getDatas($dealerId);
+if ($dealerId == 1) {
+	$brigade_id = $teams_model->getDatas($userId );
+} else {
+	$brigade_id = $teams_model->getDatas($dealerId);
+}
 
 if (!empty($brigade_id)) {
 	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
