@@ -30,6 +30,9 @@ $result_users = $users_model->getDesigners();
                Имя
             </th>
             <th>
+               Телефоны
+            </th>
+            <th>
                Дата регистрации
             </th>
         </tr>
@@ -43,6 +46,9 @@ $result_users = $users_model->getDesigners();
 		            <td>
 		               <?php echo $value->name; ?>
 		            </td>
+                    <td>
+                       <?php echo $value->client_contacts; ?>
+                    </td>
 		            <td>
 		               <?php
                             if($value->created == "0000-00-00 00:00:00") {
