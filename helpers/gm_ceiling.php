@@ -4930,6 +4930,13 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data = self::calculate_canvases($calc_id);
         $offcut_square_data =self::calculate_offcut($calc_id);
         $guild_data = self::calculate_guild_jobs($calc_id);
+        foreach ($guild_data as $guild) {
+            $total_gm_guild += $guild['gm_salary_total'];
+            $total_dealer_guild += $guild['dealer_salary_total'];
+            $total_with_gm_margin_guild += $guild['total_with_gm_margin'];
+            $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
+            $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
+        }
         $html = '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         if (isset($project->id)) {
@@ -5003,7 +5010,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td></td>';
             $html .= '</tr>';
         }
-        $price_itog = $canvases_d2ata['self_total'] + $offcut_square_data['self_total'] + $total_gm_guild;
+        $price_itog = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $total_gm_guild;
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
