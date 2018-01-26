@@ -394,7 +394,7 @@ if (!empty($calculation_ids)) {
                         </tr>
                     <?php } ?>
                 </table>
-                <?php// var_dump($rest); ?>
+                <?php var_dump($rest); ?>
             </div>
         </div>
         <?php foreach ($calculation_ids as $value) { ?>
@@ -480,7 +480,7 @@ if (!empty($calculation_ids)) {
 
 <script>
 
-    var url_proj = <?php// echo $project; ?>;
+    var url_proj = <?php echo $project; ?>;
 
     // функция получения текущего времени
     var date;
