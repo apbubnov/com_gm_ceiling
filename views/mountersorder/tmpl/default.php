@@ -312,6 +312,7 @@ if (!empty($calculation_ids)) {
                                             }
                                         }
                                     ?>
+                                <?php } ?>
                             <?php } ?>
                         <?php } ?>
                     <?php } ?>
@@ -478,7 +479,7 @@ if (!empty($calculation_ids)) {
 
 <script>
 
-    var url_proj = <?php echo $project; ?>;
+    var url_proj = <?php// echo $project; ?>;
 
     // функция получения текущего времени
     var date;
