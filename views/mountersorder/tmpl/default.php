@@ -84,9 +84,9 @@ if (!empty($calculation_ids)) {
                         </tr>
                         <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, 1, $value->id, null); ?>
                         <?php var_dump($DataOfProject["mounting_data"]) ?>
-                        <?php if (isset($DataOfProject->mounting_data)) { ?>
+                        <?php if (isset($DataOfProject["mounting_data"]) { ?>
                             <?php $calculate_sum = 0;?>
-                            <?php foreach ($DataOfProject->mounting_data as $val) { ?>
+                            <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <tr>
                                     <td class="left">
                                         <?php echo $val->title; ?>
