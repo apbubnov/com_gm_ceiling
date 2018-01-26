@@ -41,7 +41,7 @@ $result_users = $users_model->getDesigners();
             </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="tbody_designers">
         	<?php
         		foreach ($result_users as $key => $value)
         		{
@@ -145,7 +145,12 @@ $result_users = $users_model->getDesigners();
                     flag: 'designers'
                 },
                 success: function(data){
-                    console.log(data);
+                    var tbody = document.getElementById('tbody_designers');
+                    tbody.innerHTML = '';
+                    for(var i in data)
+                    {
+                        tbody.innerHTML = '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
+                    }
                 },
                 dataType: "text",
                 async: false,
