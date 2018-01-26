@@ -63,7 +63,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`');
 			$query->from('`#__users` AS `u`');
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
-			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
+			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
 			$query->where('`dealer_type` = 3');
 			$query->order('`id` DESC');
 			$query->group('`id`');
