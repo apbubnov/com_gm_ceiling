@@ -137,20 +137,20 @@ class Gm_ceilingModelProject extends JModelItem
 						$query
 							->select('`#__gm_ceiling_clients_2460720`.`id`')
 							->select('`#__gm_ceiling_clients_2460720`.`client_name`')
-							//->select('`#__gm_ceiling_clients_2460720`.`client_contacts`')
+							->select('`#__gm_ceiling_clients_2460720`.`dealer_id`')
 							->from($db->quoteName('#__gm_ceiling_clients', '#__gm_ceiling_clients_2460720'))
 							->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
 						$db->setQuery($query);
 						$results = $db->loadObject();
 						if ($results) {
 							$textValue[] = $results->client_name;
-							//$textValue2[] = $results->client_contacts;
+							$textValue2[] = $results->dealer_id;
 							$textValue3[] = $results->id;
 						}
 					}
 
 				$this->_item->client_id = !empty($textValue) ? implode(', ', $textValue) : $this->_item->client_id;
-				$this->_item->client_contacts = !empty($textValue2) ? implode(', ', $textValue2) : $this->_item->client_contacts;
+				$this->_item->dealer_id = !empty($textValue2) ? implode(', ', $textValue2) : $this->_item->dealer_id;
 				$this->_item->id_client =! empty($textValue3) ? implode(', ',$textValue3) : $this->_item->client_id;
 				}
 
