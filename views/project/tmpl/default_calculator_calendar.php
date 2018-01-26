@@ -378,91 +378,47 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                 <div class="Tab" id="Tab<?=$calculation->id;?>"><span><?=$calculation->calculation_title;?></span></div>
             <?endforeach;?>
             <?if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
-                <div class="Tab" id="TabAdd"><span>Добавить потолок</span> <i class="fa fa-plus-square-o" aria-hidden="true"></i></div>
+                <div class="Tab" id="TabAdd"><span>Добавить потолок</span> <i class="fa fa-plus-square-o" aria-hidden="true"></i></div>
             <?endif;?>
         </div>
         <div class="WindowTabs Desktop">
             <div class="WindowTab" id="WindowTabAll">
-                <table class="Information">
-                    <tbody>
-                    <tr class="HeaderTR">
-                        <th colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
-                    </tr>
-                    <?foreach ($calculations as $calculation):?>
-                        <tr class="BodyTR Calculate">
-                            <td class="CheckBox" rowspan="2">
-                                <input class="CalcCheckBox" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
-                                <span><?=$calculation->calculation_title;?></span>
-                            </td>
-                            <td>S / P:</td>
-                            <td><span><?=$calculation->square;?></span> м<sup>2</sup></td>
-                            <td><span><?=$calculation->perimeter;?></span> м</td>
-                        </tr>
-                        <tr class="BodyTR Calculate">
-                            <td>Итого<?=($calculation->discount > 0)?" / -$calculation->discount%":"";?>:</td>
-                            <td><span><?=fceil($calculation->client_sum->itog);?></span> руб.</td>
-                            <td>
-                                <?if($calculation->discount > 0):?>
-                                <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.
-                                <?endif;?>
-                            </td>
-                        </tr>
-                    <?endforeach;?>
-                    <tr class="TR">
-                        <th colspan="2">Общая S / общий P:</th>
-                        <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup></td>
-                        <td><span><?=$calculationsItog->perimeter;?></span> м</td>
-                    </tr>
-                    <tr class="HeaderTR">
-                        <th colspan="4">Транспортные расходы:</th>
-                    </tr>
-                    <tr class="BodyTR">
-                        <td colspan="4">
-                            <form action="javascript:SendTransport();" class="Transports">
-                                <div class="Transport In">
-                                    <input name="transport" class="RadioT" id="transport" value="1" type="radio" <?=($$Project->transport == 1 )?"checked":"";?>>
-                                    <span>Транспорт по городу</span>
-                                    <div class="Block">
-                                        <div class="Name">Количество выездов:</div>
-                                        <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col;?>" placeholder="раз">
-                                        <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                                    </div>
-                                </div>
-                                <div class="Transport Out">
-                                    <input name="transport" class="RadioT" id="transport" value="2" type="radio" <?=($$Project->transport == 2 )?"checked":"";?>>
-                                    <span>Выезд за город</span>
-                                    <div class="Block">
-                                        <div class="Name">Кол-во, км:</div>
-                                        <input class="Input" type="number" min="1" max="999" name="jform[distance]" id="distance" value="<?=$$Project->distance; ?>" placeholder="км.">
-                                        <div class="Name">Кол-во выездов:</div>
-                                        <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col; ?>" placeholder="раз">
-                                        <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                                    </div>
-                                </div>
-                                <div class="Transport Empty">
-                                    <div class="Title">
-                                        <input name="transport" class="RadioT" id="transport" value="0" type="radio" <?=($$Project->transport == 0 )?"checked":"";?>>
-                                        <span>Без транспорта</span>
-                                    </div>
-                                    <div class="Block">
-
-                                    </div>
-                                </div>
-                            </form>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <?foreach ($calculations as $k => $calculation):?>
-                <div class="WindowTab" id="WindowTab<?=$calculation->id;?>">
-
+                <div class="Information Block">
+                    <div class="Title">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></div>
+                    <? foreach ($calculations as $calculation):?>
+                        <div class="Calculate">
+                            <div class="Name">
+                                <input class="CalcCheckBox" name='include_calculation[]'
+                                       value='<?= $calculation->id; ?>'
+                                       type='checkbox' checked="checked">
+                                <span><?= $calculation->calculation_title; ?></span>
+                            </div>
+                            <table class="Calculate">
+                                <thead>
+                                    <th>Площадь:</th>
+                                    <th>Периметр:</th>
+                                    <th>Итого:</th>
+                                    <th>
+                                        <? if ($calculation->discount > 0): ?>
+                                            Итого -<?= $calculation->discount; ?>%:
+                                        <? endif; ?>
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <td><span><?= $calculation->square; ?></span> м<sup>2</sup></td>
+                                    <td><span><?= $calculation->perimeter; ?></span> м</td>
+                                    <td><span><?= fceil($calculation->client_sum->itog); ?></span> руб.</td>
+                                    <td>
+                                        <? if ($calculation->discount > 0): ?>
+                                            <span><?= fceil(discount($calculation->client_sum->itog, $calculation->discount)); ?></span> руб.
+                                        <? endif; ?>
+                                    </td>
+                                </tbody>
+                            </table>
+                        </div>
+                    <? endforeach; ?>
                 </div>
-            <?endforeach;?>
-        </div>
-        <div class="WindowTabs Mobile">
-            <div class="WindowTab" id="WindowTabAll">
-                <table class="Information">
+                    <table class="Information">
                     <tbody>
                     <tr class="HeaderTR">
                         <th colspan="2">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
@@ -475,33 +431,22 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                             </td>
                         </tr>
                         <tr class="BodyTR Calculate">
-                            <td>S:</td>
-                            <td><span><?=$calculation->square;?></span> м<sup>2</sup></td>
+                            <td>S / P:</td>
+                            <td><span><?=$calculation->square;?></span> м<sup>2</sup> / <span><?=$calculation->perimeter;?></span> м</td>
                         </tr>
                         <tr class="BodyTR Calculate">
-                            <td>P:</td>
-                            <td><span><?=$calculation->perimeter;?></span> м</td>
-                        </tr>
-                        <tr class="BodyTR Calculate">
-                            <td>Итого:</td>
-                            <td><span><?=fceil($calculation->client_sum->itog);?></span> руб.</td>
-                        </tr>
-                        <?if($calculation->discount > 0):?>
-                        <tr class="BodyTR Calculate">
-                            <td>Итого -<?=$calculation->discount;?>%:</td>
+                            <td>Итого<?=($calculation->discount > 0)?" / -$calculation->discount%":"";?>:</td>
                             <td>
-                                <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.
+                                <span><?=fceil($calculation->client_sum->itog);?></span> руб. /
+                                <?if($calculation->discount > 0):?>
+                                    <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.
+                                <?endif;?>
                             </td>
                         </tr>
-                        <?endif;?>
                     <?endforeach;?>
                     <tr class="TR">
-                        <th>Общая S:</th>
-                        <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup></td>
-                    </tr>
-                    <tr class="TR">
-                        <th>Общий P:</th>
-                        <td><span><?=$calculationsItog->perimeter;?></span> м</td>
+                        <th>Общая S / общий P:</th>
+                        <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup> / <span><?=$calculationsItog->perimeter;?></span> м</td>
                     </tr>
                     <tr class="HeaderTR">
                         <th colspan="2">Транспортные расходы:</th>
@@ -592,31 +537,6 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
 
     function ResizeNote() {
         DATA.Massage.Add.css({"height":DATA.Massage.Note.outerHeight()});
-    }
-    
-    function TwoWorlds() {
-        var types = [];
-        $.each(types, function (i, v) {
-            var checkboxs = $("input").filter("[type='" + v + "']");
-            $.each(checkboxs, function (index, value) {
-                value = $(value);
-                value.change(function () {
-                    if (v === "checkbox" || v === "radio")
-                    {
-                        var val = $(this).val(),
-                            vclass = "." + value.attr("class").replace(" ", " .");
-                        el = $(vclass).filter("[value='"+val+"']");
-                        el.prop("checked", $(this).prop("checked"));
-                    }
-                    else
-                    {
-                        var vclass = "." + value.attr("class").replace(" ", " ."),
-
-                        el = $(vclass).filter("[value='"+val+"']");
-                    }
-                });
-            });
-        });
     }
 </script>
 <?endif;?>

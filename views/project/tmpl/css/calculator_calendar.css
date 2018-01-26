@@ -130,18 +130,21 @@ h1, h2, h3, h4, h5, h6 {
     height: 40px;
     line-height: 40px;
     padding: 0 15px;
-    background-color: rgb(64,65,154);
-    color: rgb(255,255,255);
+    background-color: rgb(255,255,255);
+    color: rgb(64,65,154);
     border-radius: 0 7px 0 0;
+    border: 1px solid rgb(64, 65, 154);
     cursor: pointer;
+}
+.Page .Navigation .Tabs .Tab:not(.Active) i {
+    color: rgb(64,65,154) !important;
 }
 .Page .Navigation .Tabs .Tab:not(:first-child) {
     margin-left: 5px;
 }
 .Page .Navigation .Tabs .Tab.Active {
-    background-color: rgb(255,255,255);
-    color: rgb(64,65,154);
-    border: 1px solid rgb(64, 65, 154);
+    background-color: rgb(64,65,154);
+    color: rgb(255,255,255);
     border-bottom: 0;
 }
 .Page .Navigation .WindowTabs {
@@ -155,8 +158,36 @@ h1, h2, h3, h4, h5, h6 {
     overflow-x: auto;
     overflow-y: hidden;
 }
-.Page .Navigation .WindowTabs .WindowTab .Information {
+.Page .Navigation .WindowTabs .WindowTab .Block:not(:last-child) {
+    width: auto;
+    border-bottom: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Navigation .WindowTabs .WindowTab .Block table {
     width: 100%;
+}
+
+.Page .Navigation .WindowTabs .WindowTab .Block table td,
+.Page .Navigation .WindowTabs .WindowTab .Block table th {
+    text-align: center;
+    padding: 0 15px;
+}
+
+.Page .Navigation .WindowTabs .WindowTab .Information .Title {
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    height: 40px;
+    line-height: 40px;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+.Page .Navigation .WindowTabs .WindowTab .Information .Calculate .Name {
+    height: 60px;
+    line-height: 30px;
+    padding: 15px;
+    cursor: pointer;
+    background-color: rgba(64, 65, 154, .3);
 }
 
 .Page .Navigation .WindowTabs .WindowTab .HeaderTR {
@@ -273,10 +304,6 @@ h1, h2, h3, h4, h5, h6 {
     color: rgb(255,255,255);
     float: left;
 }
-
-.Mobile {display: none !important;}
-.Desktop {display: inline-block !important;}
-
 @media (max-width: 767px) {
     .bd-content {
         padding: 0;
@@ -331,6 +358,41 @@ h1, h2, h3, h4, h5, h6 {
         width: 100%;
     }
 
-    .Mobile {display: inline-block !important;}
-    .Desktop {display: none !important;}
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+
+    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate tr {
+        border: 1px solid #ccc;
+    }
+
+    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+    }
+
+    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:nth-of-type(1):before { content: "Площадь:"; }
+    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:nth-of-type(2):before { content: "Периметр:"; }
+    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:nth-of-type(3):before { content: "Итого:"; }
+    .Page .Navigation .WindowTabs .WindowTab .Block .Calculate td:nth-of-type(4):before { content: "Итого:"; }
 }
