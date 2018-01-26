@@ -13,7 +13,7 @@ $dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
 if ($dealerId == 1) {
-	$brigade_id = $teams_model->getDatas($userId );
+	$brigade_id = $teams_model->getDatas($userId);
 } else {
 	$brigade_id = $teams_model->getDatas($dealerId);
 }
@@ -34,7 +34,11 @@ if ($month1 == 12) {
     $month2++;
     $year2 = $year1;
 }
-$FlagCalendar = [1, $dealerId];
+if ($dealerId == 1) {
+	$FlagCalendar = [1, $userId];
+} else {
+	$FlagCalendar = [1, $dealerId];
+}
 
 if (!empty($brigade_id)) {
 	foreach ($brigade_id as $value) {        
@@ -204,7 +208,7 @@ if (!empty($brigade_id)) {
                         url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                         data: {
                             id: <?php echo $value->id; ?>,
-                            id_dealer: <?php echo $dealerId; ?>,
+                            id_dealer: <?php if () { echo $userId;} else { echo $dealerId; } ?>,
                             flag: 1,
                             month: month1,
                             year: year1,
@@ -233,7 +237,7 @@ if (!empty($brigade_id)) {
                         url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                         data: {
                             id: <?php echo $value->id; ?>,
-                            id_dealer: <?php echo $dealerId; ?>,
+                            id_dealer: <?php if () { echo $userId;} else { echo $dealerId; } ?>,
                             flag: 1,
                             month: month2,
                             year: year2,
