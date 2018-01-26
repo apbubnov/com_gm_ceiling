@@ -4823,6 +4823,7 @@ class Gm_ceilingHelpersGm_ceiling
     }
 
     public static function create_manager_estimate($calc_id){
+        $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $calculation_model = self::getModel('calculation');
         $data = get_object_vars($calculation_model->getData($calc_id));
         $project_model = self::getModel('project');
