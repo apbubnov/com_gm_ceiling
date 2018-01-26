@@ -1771,10 +1771,8 @@ class Gm_ceilingController extends JControllerLegacy
             if (empty($result)) {
                 die($result);
             }
-            $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-            $result_client = $model_client->getClientById($result->client_id);
-
-            die(json_encode($result_client));
+            
+            die(json_encode($result));
         }
         catch(Exception $e)
         {

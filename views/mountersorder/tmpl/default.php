@@ -312,6 +312,7 @@ if (!empty($calculation_ids)) {
                                             }
                                         }
                                     ?>
+                                <?php } ?>
                             <?php } ?>
                         <?php } ?>
                     <?php } ?>
@@ -393,6 +394,8 @@ if (!empty($calculation_ids)) {
                         </tr>
                     <?php } ?>
                 </table>
+                <?php var_dump($rest); ?>
+                
             </div>
         </div>
         <?php foreach ($calculation_ids as $value) { ?>
