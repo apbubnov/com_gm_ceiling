@@ -182,174 +182,161 @@ if (!empty($calculation_ids)) {
 
     function AddTab(DataOfMount) {
         /*        
-        // вкладка общее
-        tabAll = '';
-        if (n5 !=0) {
-            tabAll += '<tr><td>Периметр</td>';
-            tabAll += '<td>'+n5price+'</td>';
-            tabAll += '<td>'+(+n5).toFixed(2)+'</td>';
-            tabAll += '<td>'+(+n5 * +n5price).toFixed(2)+'</td></tr>';
-        }
-        if (n6 !=0) {
-            tabAll += '<tr><td>Вставка</td>';
-            tabAll += '<td>'+n6price+'</td>';
-            tabAll += '<td>'+(+n6).toFixed(2)+'</td>';
-            tabAll += '<td>'+(+n6 * +n6price).toFixed(2)+'</td></tr>';
-        }
-        if (n7 !=0) {
-            tabAll += '<tr><td>Крепление в плитку</td>';
-            tabAll += '<td>'+n7price+'</td>';
-            tabAll += '<td>'+n7+'</td>';
-            tabAll += '<td>'+(+n7 * +n7price).toFixed(2)+'</td></tr>';
-        }
-        if (n8 !=0) {
-            tabAll += '<tr><td>Крепление в керамогранит</td>';
-            tabAll += '<td>'+n8price+'</td>';
-            tabAll += '<td>'+n8+'</td>';
-            tabAll += '<td>'+(+n8 * +n8price).toFixed(2)+'</td></tr>';
-        }
-        if (n9 !=0) {
-            tabAll += '<tr><td>Обработка угла</td>';
-            tabAll += '<td>'+n9price+'</td>';
-            tabAll += '<td>'+n9+'</td>';
-            tabAll += '<td>'+(+n9 * +n9price).toFixed(2)+'</td></tr>';
-        }
-        if (n11 !=0) {
-            tabAll += '<tr><td>Крепление в керамогранит</td>';
-            tabAll += '<td>'+n11price+'</td>';
-            tabAll += '<td>'+n11+'</td>';
-            tabAll += '<td>'+(+n11 * +n11price).toFixed(2)+'</td></tr>';
-        }
-        if (n12 !=0) {
-            tabAll += '<tr><td>Установка люстр</td>';
-            tabAll += '<td>'+n12price+'</td>';
-            tabAll += '<td>'+n12+'</td>';
-            tabAll += '<td>'+(+n12 * +n12price).toFixed(2)+'</td></tr>';
-        }
-        if (n13 !=0) {
-            tabAll += '<tr><td>Установка светильников</td>';
-            tabAll += '<td>'+n13price+'</td>';
-            tabAll += '<td>'+n13+'</td>';
-            tabAll += '<td>'+(+n13 * +n13price).toFixed(2)+'</td></tr>';
-        }
-        if (n14 !=0) {
-            tabAll += '<tr><td>Обвод труб</td>';
-            tabAll += '<td>'+n14price+'</td>';
-            tabAll += '<td>'+n14+'</td>';
-            tabAll += '<td>'+(+n14 * +n14price).toFixed(2)+'</td></tr>';
-        }
-        if (n17 !=0) {
-            tabAll += '<tr><td>Закладная брусом</td>';
-            tabAll += '<td>'+n17price+'</td>';
-            tabAll += '<td>'+(+n17).toFixed(2)+'</td>';
-            tabAll += '<td>'+(+n17 * +n17price).toFixed(2)+'</td></tr>';
-        }
-        if (n18 !=0) {
-            tabAll += '<tr><td>Укрепление стен</td>';
-            tabAll += '<td>'+n18price+'</td>';
-            tabAll += '<td>'+n18+'</td>';
-            tabAll += '<td>'+(+n18 * +n18price).toFixed(2)+'</td></tr>';
-        }
-        if (n20 !=0) {
-            tabAll += '<tr><td>Разделитель стен</td>';
-            tabAll += '<td>'+n20price+'</td>';
-            tabAll += '<td>'+n20+'</td>';
-            tabAll += '<td>'+(+n20 * +n20price).toFixed(2)+'</td></tr>';
-        }
-        if (n21 !=0) {
-            tabAll += '<tr><td>Пожарные сигнализации</td>';
-            tabAll += '<td>'+n21price+'</td>';
-            tabAll += '<td>'+n21+'</td>';
-            tabAll += '<td>'+(+n21 * +n21price).toFixed(2)+'</td></tr>';
-        }
-        if (n22_56 !=0) {
-            tabAll += '<tr><td>Вентиляции</td>';
-            tabAll += '<td>'+n22_56price+'</td>';
-            tabAll += '<td>'+n22_56+'</td>';
-            tabAll += '<td>'+(+n22_56 * +n22_56price).toFixed(2)+'</td></tr>';
-        }
-        if (n22_78 !=0) {
-            tabAll += '<tr><td>Электровытяжки</td>';
-            tabAll += '<td>'+n22_78price+'</td>';
-            tabAll += '<td>'+n22_78+'</td>';
-            tabAll += '<td>'+(+n22_78 * +n22_78price).toFixed(2)+'</td></tr>';
-        }
-        if (n23 !=0) {
-            tabAll += '<tr><td>Установка диффузоров</td>';
-            tabAll += '<td>'+n23price+'</td>';
-            tabAll += '<td>'+n23+'</td>';
-            tabAll += '<td>'+(+n23 * +n23price).toFixed(2)+'</td></tr>';
-        }
-        if (n24 !=0) {
-            tabAll += '<tr><td>Сложность доступа</td>';
-            tabAll += '<td>'+n24price+'</td>';
-            tabAll += '<td>'+n24+'</td>';
-            tabAll += '<td>'+(+n24 * +n24price).toFixed(2)+'</td></tr>';
-        }
-        if (n27 !=0) {
-            tabAll += '<tr><td>Шторных карнизов</td>';
-            tabAll += '<td>'+n27price+'</td>';
-            tabAll += '<td>'+(+n27).toFixed(2)+'</td>';
-            tabAll += '<td>'+(+n27 * +n27price).toFixed(2)+'</td></tr>';
-        }
-        if (n29_23 !=0) {
-            tabAll += '<tr><td>Переход уровня по прямой</td>';
-            tabAll += '<td>'+n29price_23+'</td>';
-            tabAll += '<td>'+(+n29_23)+'</td>';
-            tabAll += '<td>'+(+n29_23 * +n29price_23).toFixed(2)+'</td></tr>';
-        }
-        if (n29_24 !=0) {
-            tabAll += '<tr><td>Переход уровня по кривой</td>';
-            tabAll += '<td>'+n29price_24+'</td>';
-            tabAll += '<td>'+(+n29_24)+'</td>';
-            tabAll += '<td>'+(+n29_24 * +n29price_24).toFixed(2)+'</td></tr>';
-        }
-        if (n29_25 !=0) {
-            tabAll += '<tr><td>Переход уровня по прямой с нишей</td>';
-            tabAll += '<td>'+n29price_25+'</td>';
-            tabAll += '<td>'+(+n29_25)+'</td>';
-            tabAll += '<td>'+(+n29_25 * +n29price_25).toFixed(2)+'</td></tr>';
-        }
-        if (n29_26 !=0) {
-            tabAll += '<tr><td>Переход уровня по кривой с нишей</td>';
-            tabAll += '<td>'+n29price_26+'</td>';
-            tabAll += '<td>'+(+n29_26)+'</td>';
-            tabAll += '<td>'+(+n29_26 * +n29price_26).toFixed(2)+'</td></tr>';
-        }
-        if (n30 !=0) {
-            tabAll += '<tr><td>Парящий потолок</td>';
-            tabAll += '<td>'+n30price+'</td>';
-            tabAll += '<td>'+(+n30).toFixed(2)+'</td>';
-            tabAll += '<td>'+(+n30 * +n30price).toFixed(2)+'</td></tr>';
-        }
-        if (dop_krepezh !=0) {
-            tabAll += '<tr><td>Дополнительный крепеж</td>';
-            tabAll += '<td>'+dop_krepezhprice+'</td>';
-            tabAll += '<td>'+dop_krepezh+'</td>';
-            tabAll += '<td>'+(+dop_krepezh * +dop_krepezhprice).toFixed(2)+'</td></tr>';
-        }
-        if (mas_extra_mounting != undefined) {
-            for (var i=0; i<mas_extra_mounting.length; i++) {
-                tabAll += '<tr><td>'+mas_extra_mounting[i].title+'</td>';
-                tabAll += '<td>'+mas_extra_mounting[i].value+'</td>';
-                tabAll += '<td>1</td>';
-                tabAll += '<td>'+mas_extra_mounting[i].value+'</td></tr>';       
+            // вкладка общее
+            tabAll = '';
+            if (n5 !=0) {
+                tabAll += '<tr><td>Периметр</td>';
+                tabAll += '<td>'+n5price+'</td>';
+                tabAll += '<td>'+(+n5).toFixed(2)+'</td>';
+                tabAll += '<td>'+(+n5 * +n5price).toFixed(2)+'</td></tr>';
             }
-        }
-        if (arr["transport"] !=0) {
-            tabAll += '<tr id="caption" class="caption"><td colspan="4" style="text-align: center;">Транспорт</td></tr>';
-            tabAll += '<tr><td></td>';
-            tabAll += '<td>'+arr["transport_price"]+'</td>';
-            tabAll += '<td>'+arr["transport_count"]+'</td>';
-            tabAll += '<td>'+arr["transport_sum"]+'</td></tr>';
-            sumAll += arr["transport_sum"];
-        }
-        jQuery("#before-insert").before(tabAll);
-        if (sumAll < 1500) {
-            jQuery("#sum-all").text("1500");
-        } else {
-            jQuery("#sum-all").text(sumAll);
-        } */
+            if (n6 !=0) {
+                tabAll += '<tr><td>Вставка</td>';
+                tabAll += '<td>'+n6price+'</td>';
+                tabAll += '<td>'+(+n6).toFixed(2)+'</td>';
+                tabAll += '<td>'+(+n6 * +n6price).toFixed(2)+'</td></tr>';
+            }
+            if (n7 !=0) {
+                tabAll += '<tr><td>Крепление в плитку</td>';
+                tabAll += '<td>'+n7price+'</td>';
+                tabAll += '<td>'+n7+'</td>';
+                tabAll += '<td>'+(+n7 * +n7price).toFixed(2)+'</td></tr>';
+            }
+            if (n8 !=0) {
+                tabAll += '<tr><td>Крепление в керамогранит</td>';
+                tabAll += '<td>'+n8price+'</td>';
+                tabAll += '<td>'+n8+'</td>';
+                tabAll += '<td>'+(+n8 * +n8price).toFixed(2)+'</td></tr>';
+            }
+            if (n9 !=0) {
+                tabAll += '<tr><td>Обработка угла</td>';
+                tabAll += '<td>'+n9price+'</td>';
+                tabAll += '<td>'+n9+'</td>';
+                tabAll += '<td>'+(+n9 * +n9price).toFixed(2)+'</td></tr>';
+            }
+            if (n11 !=0) {
+                tabAll += '<tr><td>Крепление в керамогранит</td>';
+                tabAll += '<td>'+n11price+'</td>';
+                tabAll += '<td>'+n11+'</td>';
+                tabAll += '<td>'+(+n11 * +n11price).toFixed(2)+'</td></tr>';
+            }
+            if (n12 !=0) {
+                tabAll += '<tr><td>Установка люстр</td>';
+                tabAll += '<td>'+n12price+'</td>';
+                tabAll += '<td>'+n12+'</td>';
+                tabAll += '<td>'+(+n12 * +n12price).toFixed(2)+'</td></tr>';
+            }
+            if (n13 !=0) {
+                tabAll += '<tr><td>Установка светильников</td>';
+                tabAll += '<td>'+n13price+'</td>';
+                tabAll += '<td>'+n13+'</td>';
+                tabAll += '<td>'+(+n13 * +n13price).toFixed(2)+'</td></tr>';
+            }
+            if (n14 !=0) {
+                tabAll += '<tr><td>Обвод труб</td>';
+                tabAll += '<td>'+n14price+'</td>';
+                tabAll += '<td>'+n14+'</td>';
+                tabAll += '<td>'+(+n14 * +n14price).toFixed(2)+'</td></tr>';
+            }
+            if (n17 !=0) {
+                tabAll += '<tr><td>Закладная брусом</td>';
+                tabAll += '<td>'+n17price+'</td>';
+                tabAll += '<td>'+(+n17).toFixed(2)+'</td>';
+                tabAll += '<td>'+(+n17 * +n17price).toFixed(2)+'</td></tr>';
+            }
+            if (n18 !=0) {
+                tabAll += '<tr><td>Укрепление стен</td>';
+                tabAll += '<td>'+n18price+'</td>';
+                tabAll += '<td>'+n18+'</td>';
+                tabAll += '<td>'+(+n18 * +n18price).toFixed(2)+'</td></tr>';
+            }
+            if (n20 !=0) {
+                tabAll += '<tr><td>Разделитель стен</td>';
+                tabAll += '<td>'+n20price+'</td>';
+                tabAll += '<td>'+n20+'</td>';
+                tabAll += '<td>'+(+n20 * +n20price).toFixed(2)+'</td></tr>';
+            }
+            if (n21 !=0) {
+                tabAll += '<tr><td>Пожарные сигнализации</td>';
+                tabAll += '<td>'+n21price+'</td>';
+                tabAll += '<td>'+n21+'</td>';
+                tabAll += '<td>'+(+n21 * +n21price).toFixed(2)+'</td></tr>';
+            }
+            if (n22_56 !=0) {
+                tabAll += '<tr><td>Вентиляции</td>';
+                tabAll += '<td>'+n22_56price+'</td>';
+                tabAll += '<td>'+n22_56+'</td>';
+                tabAll += '<td>'+(+n22_56 * +n22_56price).toFixed(2)+'</td></tr>';
+            }
+            if (n22_78 !=0) {
+                tabAll += '<tr><td>Электровытяжки</td>';
+                tabAll += '<td>'+n22_78price+'</td>';
+                tabAll += '<td>'+n22_78+'</td>';
+                tabAll += '<td>'+(+n22_78 * +n22_78price).toFixed(2)+'</td></tr>';
+            }
+            if (n23 !=0) {
+                tabAll += '<tr><td>Установка диффузоров</td>';
+                tabAll += '<td>'+n23price+'</td>';
+                tabAll += '<td>'+n23+'</td>';
+                tabAll += '<td>'+(+n23 * +n23price).toFixed(2)+'</td></tr>';
+            }
+            if (n24 !=0) {
+                tabAll += '<tr><td>Сложность доступа</td>';
+                tabAll += '<td>'+n24price+'</td>';
+                tabAll += '<td>'+n24+'</td>';
+                tabAll += '<td>'+(+n24 * +n24price).toFixed(2)+'</td></tr>';
+            }
+            if (n27 !=0) {
+                tabAll += '<tr><td>Шторных карнизов</td>';
+                tabAll += '<td>'+n27price+'</td>';
+                tabAll += '<td>'+(+n27).toFixed(2)+'</td>';
+                tabAll += '<td>'+(+n27 * +n27price).toFixed(2)+'</td></tr>';
+            }
+            if (n29_23 !=0) {
+                tabAll += '<tr><td>Переход уровня по прямой</td>';
+                tabAll += '<td>'+n29price_23+'</td>';
+                tabAll += '<td>'+(+n29_23)+'</td>';
+                tabAll += '<td>'+(+n29_23 * +n29price_23).toFixed(2)+'</td></tr>';
+            }
+            if (n29_24 !=0) {
+                tabAll += '<tr><td>Переход уровня по кривой</td>';
+                tabAll += '<td>'+n29price_24+'</td>';
+                tabAll += '<td>'+(+n29_24)+'</td>';
+                tabAll += '<td>'+(+n29_24 * +n29price_24).toFixed(2)+'</td></tr>';
+            }
+            if (n29_25 !=0) {
+                tabAll += '<tr><td>Переход уровня по прямой с нишей</td>';
+                tabAll += '<td>'+n29price_25+'</td>';
+                tabAll += '<td>'+(+n29_25)+'</td>';
+                tabAll += '<td>'+(+n29_25 * +n29price_25).toFixed(2)+'</td></tr>';
+            }
+            if (n29_26 !=0) {
+                tabAll += '<tr><td>Переход уровня по кривой с нишей</td>';
+                tabAll += '<td>'+n29price_26+'</td>';
+                tabAll += '<td>'+(+n29_26)+'</td>';
+                tabAll += '<td>'+(+n29_26 * +n29price_26).toFixed(2)+'</td></tr>';
+            }
+            if (n30 !=0) {
+                tabAll += '<tr><td>Парящий потолок</td>';
+                tabAll += '<td>'+n30price+'</td>';
+                tabAll += '<td>'+(+n30).toFixed(2)+'</td>';
+                tabAll += '<td>'+(+n30 * +n30price).toFixed(2)+'</td></tr>';
+            }
+            if (dop_krepezh !=0) {
+                tabAll += '<tr><td>Дополнительный крепеж</td>';
+                tabAll += '<td>'+dop_krepezhprice+'</td>';
+                tabAll += '<td>'+dop_krepezh+'</td>';
+                tabAll += '<td>'+(+dop_krepezh * +dop_krepezhprice).toFixed(2)+'</td></tr>';
+            }
+            if (mas_extra_mounting != undefined) {
+                for (var i=0; i<mas_extra_mounting.length; i++) {
+                    tabAll += '<tr><td>'+mas_extra_mounting[i].title+'</td>';
+                    tabAll += '<td>'+mas_extra_mounting[i].value+'</td>';
+                    tabAll += '<td>1</td>';
+                    tabAll += '<td>'+mas_extra_mounting[i].value+'</td></tr>';       
+                }
+            }
+        */
     }
 
 
