@@ -55,7 +55,15 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 		               <?php echo $value->name; ?>
 		            </td>
 		            <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
-		               <?php echo $value->registerDate; ?>
+		               <?php
+                            if($value->created == "0000-00-00 00:00:00") {
+                                echo "-";
+                            } else {
+                                $jdate = new JDate($value->created);
+                                $created = $jdate->format("d.m.Y H:i");
+                                echo $created;
+                            }
+                       ?>
 		            </td>
                     <td data-href="">
                         <button class="btn btn-primary btn-done" user_id="<?= $value->id; ?>" type="button" > Внести сумму </button>
