@@ -383,25 +383,24 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         </div>
         <div class="WindowTabs Desktop">
             <div class="WindowTab" id="WindowTabAll">
-                    <table class="Information">
-                    <tbody>
-                    <tr class="CalcTitle TableTitle">
+                <table class="Information">
+                    <tr class="CalcTitle TableTitle Activation" child="Calculate">
                         <th colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?foreach ($calculations as $calculation):?>
-                        <tr class="Calculate">
+                        <tr class="Calculate" style="display: none;">
                             <td class="CheckBox" colspan="4">
                                 <input class="CalcCheckBox" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
                                 <span><?=$calculation->calculation_title;?></span>
                             </td>
                         </tr>
-                        <tr class="Calculate">
+                        <tr class="Calculate" style="display: none;">
                             <td>Площадь:</td>
                             <td><span><?=$calculation->square;?></span> м<sup>2</sup></td>
                             <td>Периметр:</td>
                             <td><span><?=$calculation->perimeter;?></span> м</td>
                         </tr>
-                        <tr class="Calculate">
+                        <tr class="Calculate" style="display: none;">
                             <td>Итого:</td>
                             <td>
                                 <span><?=fceil($calculation->client_sum->itog);?></span> руб.
@@ -420,10 +419,10 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                         <th>Общий периметр:</th>
                         <td><span><?=$calculationsItog->perimeter;?></span> м</td>
                     </tr>
-                    <tr class="TransportTH TableTitle">
-                        <th colspan="4">Транспортные расходы:</th>
+                    <tr class="TransportTH TableTitle Activation" child="TransportTR">
+                        <th colspan="4">Транспортные расходы  <i class="fa fa-sort-desc" aria-hidden="true"></th>
                     </tr>
-                    <tr class="TransportTR">
+                    <tr class="TransportTR" style="display: none;">
                         <td colspan="4">
                             <form action="javascript:SendTransport();" class="Transports">
                                 <div class="Transport In">
@@ -458,7 +457,6 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                             </form>
                         </td>
                     </tr>
-                    </tbody>
                 </table>
             </div>
             <?foreach ($calculations as $k => $calculation):?>
@@ -486,9 +484,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
 
         DATA.Page = $(".Page");
         DATA.Page.Navigation = DATA.Page.find(".Navigation");
-        DATA.Page.Navigation.BodyTR = DATA.Page.Navigation.find(".BodyTR");
-
-
+        DATA.Page.Navigation.Activation = DATA.Page.Navigation.find(".Activation");
 
         Resize();
     }

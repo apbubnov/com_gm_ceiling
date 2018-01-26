@@ -167,6 +167,7 @@ h1, h2, h3, h4, h5, h6 {
     background-color: rgb(64, 65, 154);
     color: rgb(255,255,255);
     cursor: pointer;
+    border-bottom: 1px solid rgb(255, 255, 255);
 }
 
 .Page .Navigation .WindowTabs .WindowTab .Calculate:nth-child(3n + 1) {
@@ -285,6 +286,7 @@ h1, h2, h3, h4, h5, h6 {
     color: rgb(255,255,255);
     float: left;
 }
+
 @media (max-width: 767px) {
     .bd-content {
         padding: 0;
