@@ -276,6 +276,7 @@ if (!empty($calculation_ids)) {
                             <?php } ?>
                         <?php } ?>
                     <?php } ?>
+                    <?php $AllSum = 0;?>
                     <?php foreach ($PVH as $val) { ?>
                         <tr>
                             <td class="left"><?php echo $val["title"]; ?> (ПВХ)</td>
@@ -287,8 +288,10 @@ if (!empty($calculation_ids)) {
                             <td><?php echo $val["quantity"]; ?></td>
                             <?php if ($user->dealer_id == 1) { ?>
                                 <td><?php echo $val["gm_salary_total"]; ?></td>
+                                <?php $AllSum += $val["gm_salary_total"]; ?>
                             <?php } else { ?>
                                 <td><?php echo $val["dealer_salary_total"]; ?></td>
+                                <?php $AllSum += $val["gm_salary_total"]; ?>
                             <?php } ?>
                         </tr>
                     <?php } ?>
@@ -303,8 +306,10 @@ if (!empty($calculation_ids)) {
                             <td><?php echo $val["quantity"]; ?></td>
                             <?php if ($user->dealer_id == 1) { ?>
                                 <td><?php echo $val["gm_salary_total"]; ?></td>
+                                <?php $AllSum += $val["gm_salary_total"]; ?>
                             <?php } else { ?>
                                 <td><?php echo $val["dealer_salary_total"]; ?></td>
+                                <?php $AllSum += $val["gm_salary_total"]; ?>
                             <?php } ?>
                         </tr>
                     <?php } ?>
@@ -319,14 +324,16 @@ if (!empty($calculation_ids)) {
                             <td><?php echo $val["quantity"]; ?></td>
                             <?php if ($user->dealer_id == 1) { ?>
                                 <td><?php echo $val["gm_salary_total"]; ?></td>
+                                <?php $AllSum += $val["gm_salary_total"]; ?>
                             <?php } else { ?>
                                 <td><?php echo $val["dealer_salary_total"]; ?></td>
+                                <?php $AllSum += $val["gm_salary_total"]; ?>
                             <?php } ?>
                         </tr>
                     <?php } ?>
                     <tr class="caption">
                         <td colspan=3 style="text-align: right;">Итого, ₽:</td>
-                        <td id="sum-all"></td>
+                        <td id="sum-all"><?php echo $AllSum; ?></td>
                     </tr>
                     <?php if (!empty($DataOfTransport)) { ?>
                         <tr class="caption">
