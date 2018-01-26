@@ -3331,6 +3331,19 @@ class Gm_ceilingHelpersGm_ceiling
             $data['n1'] = $data['n1_id']; 
             $data['n2'] = $data['n2_id'];
             $data['n3'] = $data['n3_id'];
+            $project_model = self::getModel('project');
+            $client_id = $project_model->getData($data['project_id'])->id_client;
+            if(!empty($client_id)){
+                $client_model = self::getModel('client');
+                $dealer_id = $client_model->getClientById($client_id)->dealer_id;
+                if(empty($dealer_id)){
+                    $dealer_id = 1;
+                }
+            }
+            else{
+                $dealer_id = 1;
+            }
+            $results = $mount_model->getDataAll($dealer_id);
         }
         $guild_data = array();
         if ($data['n1'] == 28 && $data['n9'] > 4) {
