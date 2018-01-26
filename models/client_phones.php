@@ -105,7 +105,18 @@ class Gm_ceilingModelClient_phones extends JModelList
 			foreach($phones as $phone)
 			{
 	            if(!empty($phone))
-				    array_push($values ,array($client_id.",'".preg_replace('/[\(\)\-\s]/', '', $phone)."'"));
+	            {
+	            	$phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+					if (strlen($phone) != 11)
+					{
+		            	throw new Exception('Invalid phone number');
+		            }
+		            if (mb_substr($phone, 0, 1) != '7')
+		            {
+		                $phone = substr_replace($phone, '7', 0, 1);
+		            }
+				    array_push($values ,array($client_id.",'".$phone."'"));
+	            }
 			}
 
 			$db    = JFactory::getDbo();
@@ -119,6 +130,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 		
 			$db->setQuery($query);
 			$db->execute();
+			return true;
 		}
 		catch(Exception $e)
         {

@@ -70,10 +70,10 @@
 </div>
 <? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
-<? if (!empty($dop_contacts)) { ?>
 <div>
 <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера : </p>
 </div>
+<? if (!empty($dop_contacts)) { ?>
 <div>
 <? foreach ($dop_contacts AS $contact) {?>
     <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
@@ -82,6 +82,15 @@
 <div>
     <input type="text" id="new_email" placeholder="Почта" required>
     <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+</div>
+<div>
+<?php foreach($client_phones as $item) { ?>
+        <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $item->phone; ?></p>
+    <?php } ?>
+</div>
+<div>
+    <input type="text" id="new_phone" placeholder="Телефон" required>
+    <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
 </div>
 <div class="row">
     <div class="col-sm-12" id = "calls">
@@ -372,6 +381,7 @@
     {
         document.getElementById('calls-tar').scrollTop = 9999;
         jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
+        jQuery('#new_phone').mask('+7(999) 999-9999');
 
         jQuery("#send_comm").click(function(){
             var user_id = <?php echo $client->dealer_id; ?>;
@@ -418,6 +428,34 @@
                 data: {
                     client_id: client_id,
                     email: document.getElementById('new_email').value
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
+
+        document.getElementById('add_phone').onclick = function()
+        {
+            var client_id = <?php echo $client->id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.addPhone",
+                data: {
+                    client_id: client_id,
+                    phone: document.getElementById('new_phone').value
                 },
                 dataType: "json",
                 async: false,
