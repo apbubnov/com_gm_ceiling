@@ -70,27 +70,36 @@
 </div>
 <? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
-<div>
-<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера : </p>
+<div style="width: 100%;">
+<div style="display: inline-block; width: 50%;">
+    <div>
+    <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера: </p>
+    </div>
+    <? if (!empty($dop_contacts)) { ?>
+    <div>
+    <? foreach ($dop_contacts AS $contact) {?>
+        <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
+    </div>
+    <? } ?>
+    <div>
+        <input type="text" id="new_email" placeholder="Почта" required>
+        <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+    </div>
 </div>
-<? if (!empty($dop_contacts)) { ?>
-<div>
-<? foreach ($dop_contacts AS $contact) {?>
-    <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
+<div style="display: inline-block; width: 50%;">
+    <div>
+    <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Телефоны отделочника/дизайнера: </p>
+    </div>
+    <div>
+    <?php foreach($client_phones as $item) { ?>
+            <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $item->phone; ?></p>
+        <?php } ?>
+    </div>
+    <div>
+        <input type="text" id="new_phone" placeholder="Телефон" required>
+        <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
+    </div>
 </div>
-<? } ?>
-<div>
-    <input type="text" id="new_email" placeholder="Почта" required>
-    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
-</div>
-<div>
-<?php foreach($client_phones as $item) { ?>
-        <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $item->phone; ?></p>
-    <?php } ?>
-</div>
-<div>
-    <input type="text" id="new_phone" placeholder="Телефон" required>
-    <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
 </div>
 <div class="row">
     <div class="col-sm-12" id = "calls">
