@@ -186,16 +186,14 @@ if (!empty($calculation_ids)) {
                                                 $PVH["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         } else {
-                                            var_dump($rest);
-                                            echo $val["title"];
                                             if (!in_array($val["title"], $rest)) { 
-                                                array_push($rest, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                                $rest[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $rest["gm_salary"] += $val["gm_salary"];
-                                                $rest["dealer_salary"] += $val["dealer_salary"];
-                                                $rest["quantity"] += $val["quantity"];
-                                                $rest["gm_salary_total"] += $val["gm_salary_total"];
-                                                $rest["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                $rest[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $rest[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $rest[$val["title"]]["quantity"] += $val["quantity"];
+                                                $rest[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $rest[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         }
                                     ?>
@@ -304,13 +302,15 @@ if (!empty($calculation_ids)) {
                                             }
                                         } else {
                                             if (!in_array($val["title"], $rest)) { 
-                                                array_push($rest, ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]]);
+                                                $rest[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
-                                                $rest["gm_salary"] += $val["gm_salary"];
-                                                $rest["dealer_salary"] += $val["dealer_salary"];
-                                                $rest["quantity"] += $val["quantity"];
-                                                $rest["gm_salary_total"] += $val["gm_salary_total"];
-                                                $rest["dealer_salary_total"] += $val["dealer_salary_total"];
+                                                throw new Exception($val["title"]);
+                                                
+                                                $rest[$val["title"]]["gm_salary"] += $val["gm_salary"];
+                                                $rest[$val["title"]]["dealer_salary"] += $val["dealer_salary"];
+                                                $rest[$val["title"]]["quantity"] += $val["quantity"];
+                                                $rest[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $rest[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
                                         }
                                     ?>
@@ -396,7 +396,6 @@ if (!empty($calculation_ids)) {
                         </tr>
                     <?php } ?>
                 </table>
-                <?php var_dump($rest); ?>
             </div>
         </div>
         <?php foreach ($calculation_ids as $value) { ?>
