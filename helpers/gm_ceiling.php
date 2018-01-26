@@ -3333,6 +3333,7 @@ class Gm_ceilingHelpersGm_ceiling
             $data['n3'] = $data['n3_id'];
             $project_model = self::getModel('project');
             $client_id = $project_model->getData($data['project_id'])->id_client;
+            $mount_model = self::getModel('mount');
             if(!empty($client_id)){
                 $client_model = self::getModel('client');
                 $dealer_id = $client_model->getClientById($client_id)->dealer_id;
