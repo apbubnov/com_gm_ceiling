@@ -49,7 +49,7 @@ $result_users = $users_model->getDesigners();
                                 echo "-";
                             } else {
                                 $jdate = new JDate($value->created);
-                                $created = $jdate->format("d.m.Y H:m");
+                                $created = $jdate->format("d.m.Y H:i");
                                 echo $created;
                             }
                        ?>
