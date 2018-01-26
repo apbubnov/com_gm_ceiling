@@ -61,7 +61,6 @@ class Gm_ceilingModelClient_phones extends JModelList
 					return $item;
 				}
 			}
-
 			return null;
 		}
 		catch(Exception $e)
