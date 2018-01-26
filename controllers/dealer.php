@@ -82,7 +82,6 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
 			$client_data['client_name'] = $name;
 			$client_data['manager_id'] = $user->id;
-			$client_data['created'] = date("Y-m-d");
 			$client_data['client_contacts'] = $phone;
 			$client_id = $clientform_model->save($client_data);
 			//создание user'а
@@ -113,7 +112,6 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
 			$client_data['client_name'] = $name;
 			$client_data['manager_id'] = $user->id;
-			$client_data['created'] = date("Y-m-d");
 			$client_data['client_contacts'] = $phone;
 			$client_id = $clientform_model->save($client_data);
 			//создание user'а
