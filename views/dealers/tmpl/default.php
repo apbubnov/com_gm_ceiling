@@ -33,6 +33,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                Имя
             </th>
             <th>
+               Телефоны
+            </th>
+            <th>
                Дата регистрации
             </th>
             <th>
@@ -54,6 +57,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 		            <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
 		               <?php echo $value->name; ?>
 		            </td>
+                    <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+                       <?php echo $value->client_contacts; ?>
+                    </td>
 		            <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
 		               <?php
                             if($value->created == "0000-00-00 00:00:00") {
