@@ -109,7 +109,7 @@ function phone(login, pass)
                     {
                         loc = '/index.php?option=com_gm_ceiling&view=clientcard&id=';
                     }
-                    add_history_ph(data.id, "Входящий звонок с " + pf, pt, pf, loc);
+                    //add_history_ph(data.id, "Входящий звонок с " + pf, pt, pf, loc);
                 }
             },
             dataType: "json",
