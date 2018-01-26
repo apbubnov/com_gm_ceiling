@@ -57,10 +57,50 @@ if (!empty($calculation_ids)) {
                         <td>Количество</td>
                         <td>Стоимость, ₽</td>
                     </tr>
-                    <?php if (!empty($DataOfProject)) { ?>
-                        <?php foreach ($DataOfProject["mounting_data"] as $value) { ?>
-                            
-                            
+                    <?php if (!empty($calculation_ids)) { ?>
+                        <!-- только пвх -->
+                        <?php foreach ($calculation_ids as $value) { ?>
+                            <?php if ($value->n1 == 28) { ?>
+                                <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
+                                <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
+                                    <?php if (
+                                                in_array("Периметр", $val) || in_array("Вставка", $val) 
+                                                || in_array("Внутренний вырез для ПВХ", $val) 
+                                                || in_array("Установка люстр", $val) 
+                                                || in_array("Закладная брусом", $val) 
+                                                || in_array("Разделитель", $val) 
+                                                || in_array("Пожарная сигнализация", $val) 
+                                                || in_array("Шторный карниз", $val) 
+                                                || in_array("Парящий потолок", $val) 
+                                    ) { ?>
+                                        <tr>
+                                            <td class="left"><?php echo $val["title"]; ?> (ПВХ)</td>
+                                            <?php if ($user->dealer_id == 1) { ?>
+                                                <td><?php echo $val["gm_salary"]; ?></td>
+                                            <?php } else { ?>
+                                                <td><?php echo $val["dealer_salary"]; ?></td>
+                                            <?php } ?>
+                                            <td><?php echo $val["quantity"]; ?></td>
+                                            <?php if ($user->dealer_id == 1) { ?>
+                                                <td><?php echo $val["gm_salary_total"]; ?></td>
+                                            <?php } else { ?>
+                                                <td><?php echo $val["dealer_salary_total"]; ?></td>
+                                            <?php } ?>
+                                        </tr>
+                                    <?php } ?>
+                                <?php } ?>
+                            <?php }?>
+                        <?php } ?>
+                        <!-- только ткань -->
+                        <?php foreach ($calculation_ids as $value) { ?>
+                            <?php if ($value->n1 == 29) { ?>
+                                <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
+
+                            <?php }?>
+                        <?php } ?>
+                        <!-- общее -->
+                        <?php foreach ($calculation_ids as $value) { ?>
+                                <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
                         <?php } ?>
                     <?php } ?>
                     <tr class="caption">

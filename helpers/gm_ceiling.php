@@ -3262,18 +3262,18 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
-            $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
+            $canvases_data['title'] = $canvases[$data['n3_id']]->texture_title . ", " . $canvases[$data['n3_id']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
             $canvases_data['quantity'] = $data['n4'];                                                                        //Кол-во
-            $canvases_data['self_price'] = round($canvases[$data['n3']]->price, 2);                                    //Себестоимость
+            $canvases_data['self_price'] = round($canvases[$data['n3_id']]->price, 2);                                    //Себестоимость
             $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                            //Кол-во * Себестоимость
 
             //Стоимость с маржой ГМ (для дилера)
-            $canvases_data['gm_price'] = margin($canvases[$data['n3']]->price, $gm_canvases_margin);
+            $canvases_data['gm_price'] = margin($canvases[$data['n3_id']]->price, $gm_canvases_margin);
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
 
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $canvases_data['dealer_price'] = double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, $dealer_canvases_margin);
+            $canvases_data['dealer_price'] = double_margin($canvases[$data['n3_id']]->price, $gm_canvases_margin, $dealer_canvases_margin);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
         }
@@ -4821,7 +4821,7 @@ class Gm_ceilingHelpersGm_ceiling
         $filename = md5($data['id'] . 'cutpdf' . -2) . '.pdf';
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
-
+    /*функция генерации pdf для менеджера */
     public static function create_manager_estimate($calc_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $calculation_model = self::getModel('calculation');
@@ -4860,14 +4860,13 @@ class Gm_ceilingHelpersGm_ceiling
                 <h1>Для менеджера</h1>
                 <table border="0" cellspacing="0" width="100%">
                 <tbody><tr><th>Наименование</th><th class="center">Себестоимость</th><th class="center">Кол-во</th><th>Итого</th></tr>';
-
         if ($data['n1'] && $data['n2'] && $data['n3']) {
             if ($data['color'] > 0) {
                 $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
                 $color = $color_model->getData($data['color']);
-                $name = $data['n3'] . ", цвет: " . $color->colors_title;
+                $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
             } else {
-                $name = $data['n3'];
+                $name = $canvases_data['title'];
             }
             $html .= '<tr>';
             $html .= '<td>' . $name . '</td>';
