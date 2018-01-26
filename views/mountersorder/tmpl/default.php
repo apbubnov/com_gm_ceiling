@@ -58,11 +58,15 @@ if (!empty($calculation_ids)) {
                         <td>Стоимость, ₽</td>
                     </tr>
                     <?php if (!empty($calculation_ids)) { ?>
-                        <!-- только пвх -->
+                        <?php $PVH = []; $cloth = []; ?>
                         <?php foreach ($calculation_ids as $value) { ?>
-                            <?php if ($value->n1 == 28) { ?>
-                                <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
-                                <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
+                            <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
+                            <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
+                                <!-- только пвх -->
+                                <?php if ($value->n1 == 28) { ?>
+                                    <?php if (in_array("Периметр", $val)) { ?>
+
+                                    <?php } ?>
                                     <?php if (
                                                 in_array("Периметр", $val)
                                                 || in_array("Вставка", $val) 
@@ -89,6 +93,10 @@ if (!empty($calculation_ids)) {
                                             <?php } ?>
                                         </tr>
                                     <?php } ?>
+                                <?php } else if ($value->n1 == 29) { ?>
+
+                                <?php } else { ?>
+
                                 <?php } ?>
                             <?php }?>
                         <?php } ?>
@@ -127,6 +135,30 @@ if (!empty($calculation_ids)) {
                         <!-- общее -->
                         <?php foreach ($calculation_ids as $value) { ?>
                                 <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
+                                <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
+                                    <?php if (
+                                                in_array("Крепление в плитку", $val)
+                                                || in_array("Крепление в керамогранит", $val) 
+                                                || in_array("Укрепление стены", $val) 
+                                                || in_array("Сложность доступа", $val) 
+                                                || in_array("Дополнительный крепеж", $val) 
+                                    ) { ?>
+                                        <tr>
+                                            <td class="left"><?php echo $val["title"]; ?></td>
+                                            <?php if ($user->dealer_id == 1) { ?>
+                                                <td><?php echo $val["gm_salary"]; ?></td>
+                                            <?php } else { ?>
+                                                <td><?php echo $val["dealer_salary"]; ?></td>
+                                            <?php } ?>
+                                            <td><?php echo $val["quantity"]; ?></td>
+                                            <?php if ($user->dealer_id == 1) { ?>
+                                                <td><?php echo $val["gm_salary_total"]; ?></td>
+                                            <?php } else { ?>
+                                                <td><?php echo $val["dealer_salary_total"]; ?></td>
+                                            <?php } ?>
+                                        </tr>
+                                    <?php } ?>
+                                <?php } ?>
                         <?php } ?>
                     <?php } ?>
                     <tr class="caption">
@@ -176,6 +208,7 @@ if (!empty($calculation_ids)) {
                         </tr>
                         <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
                         <?php if (!empty($DataOfProject)) { ?>
+                            <?php var_dump($DataOfProject) ?>
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <tr>
                                     <td class="left">
