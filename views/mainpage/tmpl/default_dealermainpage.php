@@ -58,6 +58,16 @@ $countMounting = $model->getDataByStatus("Mountings");
 $answer1 = $model->getDataByStatus("UnComplitedMountings");
 $allMount = $countMounting[0]->count + $answer1[0]->count;
 //--------------------------------------
+$recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+$data = $recoil_map_model->getData($userId);
+$total_sum = 0;// общая сумма потолка
+$contributed = 0;//Внесенная сумма
+$rest = 0;//Сумма долга или Остаток
+foreach ($data as $item) {
+    if($item->sum < 0) $total_sum+=$item->sum;
+    else $contributed+=$item->sum;
+}
+$rest = -($total_sum) - $contributed;
 
 ?>
 
@@ -115,7 +125,20 @@ $allMount = $countMounting[0]->count + $answer1[0]->count;
             <div class="message">Посетите данную страницу для настроек прайса монтажа!</div>
         <?endif;?>
     </button>
-    <?php } }?>
+    <?php } ?>
+        <button class="btn btn-primary btn-done" type="button"> Счет </button>
+        <div id="modal_window_container" class="modal_window_container">
+            <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar"
+                                                                  aria-hidden="true"></i>
+            </button>
+            <div id="modal_window_del" class="modal_window">
+                <p>Общая сумма за комплектующие и материалы: <?php echo $total_sum?-$total_sum:0;?></p>
+                <p>Внесенная сумма: <?php echo $contributed?$contributed:0;?></p>
+                <p>Сумма долга: <?php echo ($rest>0)?$rest:0;?></p>
+                <p>На счете: <?php echo $rest?-$rest:0;?></p>
+            </div>
+        </div>
+  <?  }?>
 </div>
 
 
@@ -350,4 +373,19 @@ $allMount = $countMounting[0]->count + $answer1[0]->count;
         });
     });
 
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery(".modal_window"); // тут указываем ID элемента
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery(".close_btn").hide();
+            jQuery(".modal_window_container").hide();
+            jQuery(".modal_window").hide();
+        }
+    });
+
+    jQuery(".btn-done").click(function(){
+        jQuery(".close_btn").show();
+        jQuery("#modal_window_container").show();
+        jQuery("#modal_window_del").show("slow");
+    });
 </script>
