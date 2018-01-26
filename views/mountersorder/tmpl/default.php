@@ -58,14 +58,26 @@ if (!empty($calculation_ids)) {
                         <td>Стоимость, ₽</td>
                     </tr>
                     <?php if (!empty($DataOfProject)) { ?>
-                        <?php foreach ($DataOfProject as $value) { ?>
+                        <?php foreach ($DataOfProject["mounting_data"] as $value) { ?>
                             
                         <?php } ?>
                     <?php } ?>
-                    <tr id="before-insert" class="caption">
+                    <tr class="caption">
                         <td colspan=3 style="text-align: right;">Итого, ₽:</td>
                         <td id="sum-all"></td>
                     </tr>
+                    <?php if (!empty($DataOfTransport)) { ?>
+                    <?php var_dump($DataOfTransport); ?>
+                        <tr class="caption">
+                            <td colspan="4" style="text-align: center;">Транспорт</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>'+arr["transport_price"]+'</td>
+                            <td>'+arr["transport_count"]+'</td>
+                            <td>'+arr["transport_sum"]+'</td>
+                        </tr>
+                    <?php } ?>
                 </table>
             </div>
         </div>
