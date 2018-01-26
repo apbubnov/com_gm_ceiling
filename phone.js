@@ -136,7 +136,6 @@ function phone(login, pass)
             url: "index.php?option=com_gm_ceiling&task=create_empty_project",
             data: {
                 client_id: 1
-            
             },
             success: function(data){
                 data = JSON.parse(data);
