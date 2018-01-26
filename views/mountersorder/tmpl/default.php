@@ -89,29 +89,29 @@ if (!empty($calculation_ids)) {
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <tr>
                                     <td class="left">
-                                        <?php echo $val->title; ?>
+                                        <?php echo $val["title"]; ?>
                                     </td>
                                     <?php if ($user->dealer_id == 1) { ?>
                                         <td>
-                                            <?php echo $val->gm_salary; ?>
+                                            <?php echo $val["gm_salary"]; ?>
                                         </td>
                                     <?php } else { ?>
                                         <td>
-                                            <?php echo $val->dealer_salary; ?>
+                                            <?php echo $val["dealer_salary"]; ?>
                                         </td>
                                     <?php } ?>
                                     <td>
-                                        <?php echo $val->quantity; ?>
+                                        <?php echo $val["quantity"]; ?>
                                     </td>
                                     <?php if ($user->dealer_id == 1) { ?>
                                         <td>
-                                            <?php echo $val->gm_salary_total; ?>
-                                            <?php $calculate_sum += $val->gm_salary_total; ?>
+                                            <?php echo $val["gm_salary_total"]; ?>
+                                            <?php $calculate_sum += $val["gm_salary_total"]; ?>
                                         </td>
                                     <?php } else { ?>
                                         <td>
-                                            <?php echo $val->dealer_salary_total; ?>
-                                            <?php $calculate_sum += $val->gm_salary_total; ?>
+                                            <?php echo $val["dealer_salary_total"]; ?>
+                                            <?php $calculate_sum += $val["gm_salary_total"]; ?>
                                         </td>
                                     <?php } ?>
                                 </tr>
