@@ -410,7 +410,6 @@ if (!empty($calculation_ids)) {
                         </tr>
                         <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
                         <?php if (!empty($DataOfProject)) { ?>
-                            <?php var_dump($DataOfProject) ?>
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <tr>
                                     <td class="left">
