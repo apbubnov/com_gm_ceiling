@@ -82,36 +82,36 @@ if (!empty($calculation_ids)) {
                             <td>Количество</td>
                             <td>Стоимость, ₽</td>
                         </tr>
-                        <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, 1, $value->id, null); ?>
-                        <?php var_dump($DataOfProject) ?>
-                        <?php if (isset($DataOfProject->mounting_data)) { ?>
-                            <?php $calculate_sum = 0;?>
-                            <?php foreach ($DataOfProject->mounting_data as $val) { ?>
+                        <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
+                        <?php if (in_array("mounting_data", $DataOfProject)) { ?>
+                            <?php $calculate_sum = 0; ?>
+                            <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
+                                <?php var_dump($val); ?>
                                 <tr>
                                     <td class="left">
-                                        <?php echo $val->title; ?>
+                                        <?php echo $val["title"]; ?>
                                     </td>
                                     <?php if ($user->dealer_id == 1) { ?>
                                         <td>
-                                            <?php echo $val->gm_salary; ?>
+                                            <?php echo $val["gm_salary"]; ?>
                                         </td>
                                     <?php } else { ?>
                                         <td>
-                                            <?php echo $val->dealer_salary; ?>
+                                            <?php echo $val["dealer_salary"]; ?>
                                         </td>
                                     <?php } ?>
                                     <td>
-                                        <?php echo $val->quantity; ?>
+                                        <?php echo $val["quantity"]; ?>
                                     </td>
                                     <?php if ($user->dealer_id == 1) { ?>
                                         <td>
-                                            <?php echo $val->gm_salary_total; ?>
-                                            <?php $calculate_sum += $val->gm_salary_total; ?>
+                                            <?php echo $val["gm_salary_total"]; ?>
+                                            <?php $calculate_sum += $val["gm_salary_total"]; ?>
                                         </td>
                                     <?php } else { ?>
                                         <td>
-                                            <?php echo $val->dealer_salary_total; ?>
-                                            <?php $calculate_sum += $val->gm_salary_total; ?>
+                                            <?php echo $val["dealer_salary_total"]; ?>
+                                            <?php $calculate_sum += $val["gm_salary_total"]; ?>
                                         </td>
                                     <?php } ?>
                                 </tr>
