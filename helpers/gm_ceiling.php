@@ -3253,7 +3253,7 @@ class Gm_ceilingHelpersGm_ceiling
     }
     public static function calculate_canvases($calc_id){
         $calculation_model = self::getModel('calculation');
-        $data = $calculation_model->getData($calc_id);
+        $data = get_object_vars($calculation_model->getData($calc_id));
         //Получаем прайс-лист полотен
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $canvases_list = $canvases_model->getFilteredItemsCanvas();
@@ -4828,6 +4828,8 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($data->project_id);
         $canvases_data = self::calculate_canvases($calc_id);
+        throw new Exception("Error Processing Request", 1);
+        
         $html = '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         if (isset($project->id)) {
