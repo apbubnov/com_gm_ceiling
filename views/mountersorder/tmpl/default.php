@@ -395,6 +395,7 @@ if (!empty($calculation_ids)) {
                     <?php } ?>
                 </table>
                 <?php var_dump($rest); ?>
+                
             </div>
         </div>
         <?php foreach ($calculation_ids as $value) { ?>
