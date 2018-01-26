@@ -4909,7 +4909,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".png" . '" style="width: 100%; max-height: 530px;"/> <br>';
         $filename = md5($data['id'] . "-4") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
-
+        return 1;
     }
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
     public static function print_components($project_id, $components_data)
