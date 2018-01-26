@@ -333,7 +333,7 @@ if (!empty($calculation_ids)) {
                     <?php } ?>
                     <tr class="caption">
                         <td colspan=3 style="text-align: right;">Итого, ₽:</td>
-                        <td id="sum-all"><?php $AllSum; ?></td>
+                        <td id="sum-all"><?php echo $AllSum; ?></td>
                     </tr>
                     <?php if (!empty($DataOfTransport)) { ?>
                         <tr class="caption">
