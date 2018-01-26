@@ -19,8 +19,12 @@ $result_users = $users_model->getDesigners();
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Отделочники/Дизайнеры</h2>
-    <div style="width: 48%; text-align: left;">
+    <div style="display:inline-block; width: 48%; text-align: left;">
         <button type="button" id="new_designer" class="btn btn-primary">Создать Отделочника/дизайнера</button>
+    </div>
+    <div style="display:inline-block; width: 48%; text-align: left;">
+        <input type="text" id="name_find_designer">
+        <button type="button" id="find_designer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
     <br>
     <table class="table table-striped one-touch-view" id="callbacksList">
@@ -119,6 +123,33 @@ $result_users = $users_model->getDesigners();
                 dataType: "text",
                 async: false,
                 timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });
+        });
+
+        jQuery("#find_designer").click(function(){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=findOldClients",
+                data: {
+                    fio: document.getElementById('name_find_designer').value,
+                    flag: 'designers'
+                },
+                success: function(data){
+                    console.log(data);
+                },
+                dataType: "text",
+                async: false,
+                timeout: 20000,
                 error: function(data){
                     var n = noty({
                         timeout: 2000,
