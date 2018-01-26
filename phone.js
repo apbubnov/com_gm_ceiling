@@ -89,7 +89,7 @@ function phone(login, pass)
                 phone : callInfo.From
             },
             success: function(data){
-                //console.log(data);
+                console.log(data);
                 if (data === null)
                 {
                     create_empty_project(pt, pf);
@@ -109,7 +109,7 @@ function phone(login, pass)
                     {
                         loc = '/index.php?option=com_gm_ceiling&view=clientcard&id=';
                     }
-                    add_history_ph(data.id, "Входящий звонок с " + pf, pt, pf, loc);
+                    //add_history_ph(data.id, "Входящий звонок с " + pf, pt, pf, loc);
                 }
             },
             dataType: "json",
