@@ -390,7 +390,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                     <?foreach ($calculations as $calculation):?>
                         <tr class="BodyTR Calculate">
                             <td class="CheckBox" rowspan="2">
-                                <input name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
+                                <input name='include_calculation[]' value='<?=$calculation->id;?>' class="CalcCheckbox" type='checkbox' checked="checked">
                                 <span><?=$calculation->calculation_title;?></span>
                             </td>
                             <td>S / P:</td>
@@ -570,6 +570,20 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         DATA.Page.Navigation = DATA.Page.find(".Navigation");
         DATA.Page.Navigation.BodyTR = DATA.Page.Navigation.find(".BodyTR");
 
+        var checkboxs = $("input").filter("[type='checkbox']");
+        $.each(checkboxs, function (index, value) {
+            value = $(value);
+            value.change(function () {
+               var val = $(this).val(),
+                   el = $(value.attr("class")).filter("[valuer=" + val + "]");
+                console.log(val);
+                console.log(value.attr("class"));
+               console.log($(this));
+               console.log(el);
+               if ($(this).checked) el.checked = true;
+               else el.checked = false;
+            });
+        });
 
         Resize();
     }
@@ -593,6 +607,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
     }
 </script>
 <?endif;?>
+<?if(true):?>
 <style>
     @media screen and (max-width: 500px) {
         #table1 {
@@ -604,8 +619,6 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
         }
     }
 </style>
-<?endif;?>
-<?if(true):?>
 <?= parent::getButtonBack(); ?>
 
 <h2 class="center">Просмотр проекта</h2>
