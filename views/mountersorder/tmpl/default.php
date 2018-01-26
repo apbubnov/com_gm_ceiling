@@ -67,15 +67,28 @@ if (!empty($calculation_ids)) {
                         <td id="sum-all"></td>
                     </tr>
                     <?php if (!empty($DataOfTransport)) { ?>
-                    <?php var_dump($DataOfTransport); ?>
                         <tr class="caption">
-                            <td colspan="4" style="text-align: center;">Транспорт</td>
+                            <td colspan="4" style="text-align: center;">Транспортные расходы</td>
+                        </tr>
+                        <tr class="caption">
+                            <td>Вид транспорта</td>
+                            <td>Кол-во км</td>
+                            <td>Кол-во выездов</td>
+                            <td>Стоимость, ₽</td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td>'+arr["transport_price"]+'</td>
-                            <td>'+arr["transport_count"]+'</td>
-                            <td>'+arr["transport_sum"]+'</td>
+                            <td>
+                                <?php echo $DataOfTransport["transport"]; ?>
+                            </td>
+                            <td>
+                                <?php echo $DataOfTransport["distance"]; ?>
+                            </td>
+                            <td>
+                                <?php echo $DataOfTransport["distance_col"]; ?>
+                            </td>
+                            <td>
+                                <?php echo $DataOfTransport["mounter_sum"]; ?>
+                            </td>
                         </tr>
                     <?php } ?>
                 </table>
