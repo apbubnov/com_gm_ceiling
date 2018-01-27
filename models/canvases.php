@@ -587,8 +587,6 @@ if (empty($list['direction']))
     public function saveCuts($id,$data) {
         try
         {
-            throw new Exception($data);
-            
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->delete("`#__gm_ceiling_cuttings`")
