@@ -263,7 +263,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $name = $jinput->get('new_client_name', '', 'STRING');
                 $phones = $jinput->get('new_client_contacts', array(), 'ARRAY');
                 foreach ($phones as $key => $value) {
-                    $phones[$key] = preg_replace('/[\(\)\-\s]/', '', $value);
+                    $phones[$key] = preg_replace('/[\(\)\-\+\s]/', '', $value);
                 }
 
                 $street = $jinput->get('new_address', '', 'STRING');
@@ -287,9 +287,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if ($client_id == 1 && $isDiscountChange == 0) {
                     $client_found_bool = false;
                     foreach($phones as $phone)
-                    {
-                        throw new Exception($phone);
-                        
+                    {   
                         $old_client = $cl_phones_model->getItemsByPhoneNumber($phone, $user->dealer_id);
                         if (!empty($old_client))
                         {
