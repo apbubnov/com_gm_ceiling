@@ -1455,6 +1455,8 @@ class Gm_ceilingController extends JControllerLegacy
             $user_id = $jinput->get('id', '0', 'int');
             $arr_points = $jinput->get('arr_points', '', 'array');
             $offcut_square = $jinput->get('square_obrezkov', '', 'FLOAT');
+            $cuts = $jinput->get('cuts', '', 'string');
+            throw new Exception($cuts);
             
             for ($i = 0; $i < count($arr_points); $i++)
             {
