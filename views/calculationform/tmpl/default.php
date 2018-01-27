@@ -3163,7 +3163,7 @@
 				.'jQuery("#jform_sketch_name").val("'.$data.'");'
 				.'jQuery("#jform_cut_name").val("'.$cut.'");'
 				.'jQuery("#jform_original_name").val("'.$original.'");'
-				.'jQuery("#jform_cuts").val("'.$cuts.'");'
+				.'jQuery("#jform_cuts").val(\''.$cuts.'\');'
 				.'jQuery("#sketch_image").prop("src", "/tmp/" + "'.$data.'" + ".png");'
 				.'jQuery("#sketch_image").removeAttr("hidden");'
 				.'jQuery("#sketch_image_block").show();'
