@@ -292,10 +292,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $old_client = $cl_phones_model->getItemsByPhoneNumber($phone, $user->dealer_id);
                         if (!empty($old_client))
                         {
-                            if ($status == 20)
-                            {
-                                $del_phone = $phone;
-                            }
+                            $del_phone = $phone;
                             unset($phones[$key]);
                             $client_found_bool = true;
                             break;
