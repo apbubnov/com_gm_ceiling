@@ -292,6 +292,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $old_client = $cl_phones_model->getItemsByPhoneNumber($phone, $user->dealer_id);
                         if (!empty($old_client))
                         {
+                            if ($status == 20)
+                            {
+                                $del_phone = $phone;
+                            }
                             unset($phones[$key]);
                             $client_found_bool = true;
                             break;
@@ -365,8 +369,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         } else {
                             $email = "$client_id@$client_id";
                         }
+                        if (empty($phones))
+                        {
+                            $reg_phone = $del_phone;
+                        }
+                        else
+                        {
+                            $reg_phone = preg_replace('/[\(\)\-\+\s]/', '', array_shift($phones));
+                        }
                         //зарегать как user
-                        $userID = Gm_ceilingHelpersGm_ceiling::registerUser($name, preg_replace('/[\(\)\-\s]/', '', array_shift($phones)), $email, $client_id);
+                        $userID = Gm_ceilingHelpersGm_ceiling::registerUser($name, $reg_phone, $email, $client_id);
 
                         $client_model->updateClient($client_id, null, $userID);
 
