@@ -288,6 +288,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $client_found_bool = false;
                     foreach($phones as $phone)
                     {
+                        throw new Exception($phone);
+                        
                         $old_client = $cl_phones_model->getItemsByPhoneNumber($phone, $user->dealer_id);
                         if (!empty($old_client))
                         {
