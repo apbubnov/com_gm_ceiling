@@ -285,12 +285,36 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 
                 if ($client_id == 1 && $isDiscountChange == 0) {
-                    $client_data['client_name'] = $name;
-                    $client_data['type_id'] = 1;
-                    $client_data['manager_id'] = $user->id;
-                    $client_data['dealer_id'] = $user->dealer_id;
-                    $client_data['sex'] = $sex;
-                    $client_id = $client_form_model->save($client_data);
+                    $client_found_bool = false;
+                    foreach($phones as $phone)
+                    {
+                        $old_client = $cl_phones_model->getItemsByPhoneNumber($phone, $user->dealer_id);
+                        if (!empty($old_client))
+                        {
+                            $client_found_bool = true;
+                            break;
+                        }
+                    }
+                    if ($client_found_bool)
+                    {
+                        $client_id = $old_client->id;
+                        if ($old_client->client_name == 'Безымянный' || $old_client->client_name == '')
+                        {
+                            $client_model->updateClient($client_id, $name, $user->dealer_id);
+                            $client_model->updateClientManager($client_id, $user->id);
+                            $client_model->updateClientSex($client_id, $sex);
+                        }
+                    }
+                    else
+                    {
+                        $client_data['client_name'] = $name;
+                        $client_data['type_id'] = 1;
+                        $client_data['manager_id'] = $user->id;
+                        $client_data['dealer_id'] = $user->dealer_id;
+                        $client_data['sex'] = $sex;
+                        $client_id = $client_form_model->save($client_data);
+                    }
+                    
                     //обновление email
                     $dop_contacts = $this->getModel('clients_dop_contacts', 'Gm_ceilingModel');
                     $dop_contacts->update_client_id($emails, $client_id);
