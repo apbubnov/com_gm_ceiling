@@ -3170,7 +3170,7 @@
 				.'jQuery("#data-wrapper").show();'
 				.'jQuery("#jform_offcut_square").val("'.$offcut.'");';
 				unset($_SESSION['jform_n4'],$_SESSION['jform_n5'],$_SESSION['jform_n9'],$_SESSION['data'],
-				$_SESSION['cut'],$_SESSION['offcut'],$_SESSION['calc_title'],$_SESSION['original'],$_SESSION['color']);
+				$_SESSION['cut'],$_SESSION['offcut'],$_SESSION['calc_title'],$_SESSION['original'],$_SESSION['color'],$_SESSION['cuts']);
 			}
 			echo 'function change_select_texture() {var lnk=document.getElementById(\'jform_n2\').options;'
 				.'for (var i=0;i<lnk.length;i++) {'

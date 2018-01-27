@@ -2023,8 +2023,11 @@ class Gm_ceilingHelpersGm_ceiling
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png")) {
                     rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".png");
                 }
-                $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');
-                $canvases_model->saveCuts($ajax_return['id'],$cuts);
+                if (!empty($cuts))
+                {
+                    $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');
+                    $canvases_model->saveCuts($ajax_return['id'],$cuts);
+                }
             }
             if ($new_client == 1) {
                 $clients = $calculation_model->add_client($data);
