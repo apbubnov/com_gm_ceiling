@@ -2636,6 +2636,7 @@ class Gm_ceilingController extends JControllerLegacy
             $arr_points = $jinput->get('koordinats_poloten', '', 'array');
             $calc_id = $jinput->get('calc_id', '', 'INT');
             $width = $jinput->get('width', '', 'INT');
+            $cuts = $jinput->get('cuts', '', 'string');
             $width = (string)$width/100;
             if(empty(strpos($width,'.'))){
                 $width.='.0';
@@ -2662,6 +2663,12 @@ class Gm_ceilingController extends JControllerLegacy
 
             $filename = md5('cut_sketch' . $calc_id);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png", $data);
+
+            if (!empty($cuts))
+            {
+                $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');
+                $canvases_model->saveCuts($calc_id,$cuts);
+            }
             die(true);
 
         } catch (Exception $e) {
