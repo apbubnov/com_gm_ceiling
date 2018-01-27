@@ -287,11 +287,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if ($client_id == 1 && $isDiscountChange == 0)
                 {
                     $client_found_bool = false;
-                    foreach($phones as $phone)
-                    {   
+                    foreach($phones as $key => $phone)
+                    {
                         $old_client = $cl_phones_model->getItemsByPhoneNumber($phone, $user->dealer_id);
                         if (!empty($old_client))
                         {
+                            unset($phones[$key]);
                             $client_found_bool = true;
                             break;
                         }
