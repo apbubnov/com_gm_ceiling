@@ -326,7 +326,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $rec_model->save($recoil, $project_id, 0);
                     }
                     //добавление его номеров телефонов в бд
-                    $cl_phones_model->save($client_id, $phones);
+                    if (!empty($phones))
+                    {
+                        $cl_phones_model->save($client_id, $phones);
+                    }
                     //обновление комментов к клиенту
                     if (count($comments_id) != 0) {
                         $client_history_model->updateClientId($client_id, $comments_id);
