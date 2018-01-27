@@ -246,6 +246,7 @@ class Gm_ceilingHelpersGm_ceiling
                     'offcut_square' => 'float',
                     'discount' => 'int',
                     'original_name' => 'string',
+                    'cuts' => 'string',
                     'rek' => 'int'
                 )
             ));
@@ -1994,6 +1995,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $tmp_filename = $data['sketch_name'];
                 $tmp_cut_filename = $data['cut_name'];
                 $tmp_original_filename = $data['original_name'];
+                $cuts = $data['cuts'];
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
                    // $data['calc_image'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png");
                 }
@@ -2020,8 +2022,9 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png")) {
                     rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".png");
-
                 }
+                $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');
+                $canvases_model->saveCuts($ajax_return['id'],$cuts);
             }
             if ($new_client == 1) {
                 $clients = $calculation_model->add_client($data);
