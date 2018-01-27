@@ -162,6 +162,7 @@
 		<input id="jform_sketch_name" type="hidden" name="jform[sketch_name]" value="" />
 		<input id="jform_cut_name" type="hidden" name="jform[cut_name]" value="" />
 		<input id="jform_original_name" type="hidden" name="jform[original_name]" value="" />
+		<input id="jform_cuts" type="hidden" name="jform[cuts]" value="" />
 		<input id="jform_components_sum" type="hidden" name="jform[components_sum]" value="" />
 		<input id="jform_canvases_sum" type="hidden" name="jform[canvases_sum]" value="" />
 		<input id="jform_gm_mounting_sum" type="hidden" name="jform[gm_mounting_sum]" value="" />
@@ -3131,7 +3132,7 @@
 			$manufacturer = 0;
 			$sess = $_SESSION['jform_n4'].' | '.$_SESSION['jform_n5'].' | '.$_SESSION['jform_n9'].' | '.$_SESSION['texture'].' | '.$_SESSION['color'].' | '.
 					$_SESSION['manufacturer'].' | '.$_SESSION['calc_title'].' | '.$_SESSION['data'].' | '.$_SESSION['cut'].' | '.$_SESSION['offcut'].' | '.
-					$_SESSION['width'].' | '.$_SESSION['original'];
+					$_SESSION['width'].' | '.$_SESSION['original'].' | '.$_SESSION['cuts'];
 			echo "console.log('$sess');";
 			if (isset($_SESSION['jform_n4'],$_SESSION['jform_n5'],$_SESSION['jform_n9'],$_SESSION['data'],
 				$_SESSION['cut'],$_SESSION['texture'],$_SESSION['color'],$_SESSION['manufacturer'],
@@ -3152,6 +3153,7 @@
 				if(empty(strpos($width,'.'))){
 					$width.='.0';
 				}
+				$cuts = $_SESSION['cuts'];
 				$model = Gm_ceilingHelpersGm_ceiling::getModel('colors');
 				$imgurl = $model->getColorFile($color)->file;
 				echo 'jQuery("#jform_n4").val("'.$n4.'");'
@@ -3161,6 +3163,7 @@
 				.'jQuery("#jform_sketch_name").val("'.$data.'");'
 				.'jQuery("#jform_cut_name").val("'.$cut.'");'
 				.'jQuery("#jform_original_name").val("'.$original.'");'
+				.'jQuery("#jform_cuts").val("'.$cuts.'");'
 				.'jQuery("#sketch_image").prop("src", "/tmp/" + "'.$data.'" + ".png");'
 				.'jQuery("#sketch_image").removeAttr("hidden");'
 				.'jQuery("#sketch_image_block").show();'

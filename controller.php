@@ -1456,7 +1456,6 @@ class Gm_ceilingController extends JControllerLegacy
             $arr_points = $jinput->get('arr_points', '', 'array');
             $offcut_square = $jinput->get('square_obrezkov', '', 'FLOAT');
             $cuts = $jinput->get('cuts', '', 'string');
-            throw new Exception($cuts);
             
             for ($i = 0; $i < count($arr_points); $i++)
             {
@@ -1483,7 +1482,7 @@ class Gm_ceilingController extends JControllerLegacy
             $_SESSION['cut'] = $filename;
             $_SESSION['width'] = $jinput->get('width', '0', 'INT');
             $_SESSION['offcut'] = $offcut_square;
-            //throw new Exception($_SESSION['cut'].' | '.$_SESSION['width'].' | '.$_SESSION['offcut']);
+            $_SESSION['cuts'] = $cuts;
 
             die($filename);
         }
