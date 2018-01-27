@@ -284,7 +284,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $manager_comment = $jinput->get('gmmanager_note', '', 'STRING');
 
 
-                if ($client_id == 1 && $isDiscountChange == 0) {
+                if ($client_id == 1 && $isDiscountChange == 0)
+                {
                     $client_found_bool = false;
                     foreach($phones as $phone)
                     {   
@@ -378,10 +379,29 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
                         $status = 20;
                     }
+                    if ($client_found_bool)
+                    {
+                        if ($status == 0)
+                        {
+                            $model->delete($project_id);
+                        }
+                        else
+                        {
+                            $client_projects = $model->getProjectsByClientID($client_id);
+                            foreach ($client_projects as $key => $project)
+                            {
+                                if ($project->project_status == 0) {
+                                    $model->delete($project->id);
+                                }
+                            }
+                        }
+                    }
                     if ($call_type == "client") {
                         $this->setMessage("Клиент создан и $result!");
                     }
-                } elseif ($client_id != 1 && $isDiscountChange == 0) {
+                }
+                elseif ($client_id != 1 && $isDiscountChange == 0)
+                {
                     $new_phones = [];
                     $change_phones = [];
                     $newFIO = $jinput->get('new_client_name', '', 'STRING');
