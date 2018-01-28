@@ -3111,11 +3111,109 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+
     public function test_estimate(){
-        $jinput = JFactory::getApplication()->input;
-        $id = $jinput->get('id','','INT');
-        $result = Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($id);
-        die(json_encode($result));
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id','','INT');
+            $result = Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($id);
+            die(json_encode($result));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function printInProductionOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            // в производстве
+            $answer1 = $model->getDataByStatus("InProduction");
+            die(json_encode($answer1));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    public function printZapushennieOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            //запущенные
+            $answer2 = $model->getDataByStatus("Zapushennie");
+            die(json_encode($answer2));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    public function printZayavkiSSaitaOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            // заявки с сайта
+            $answer3 = $model->getDataByStatus("ZayavkiSSaita");
+            die(json_encode($answer3));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    public function printZvonkiOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            // звонки
+            $date = date("Y")."-".date("n")."-".date("d");
+            $answer4 = $model->getDataByStatus("Zvonki", $date);
+            die(json_encode($answer4));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    public function printMissedCallsOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $date = date("Y")."-".date("n")."-".date("d");
+            // пропущенные
+            $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
+            $answer6 = $model->getDataByStatus("MissedCalls");
+            $missAnswer1 = [];
+            $missAnswer2 = [];
+            foreach ($answer5 as $value) {
+                array_push($missAnswer1, $value->id);
+            }
+            foreach ($answer6 as $value) {
+                array_push($missAnswer2, $value->call_id);
+            }
+            $answer7 = array_diff($missAnswer1, $missAnswer2);
+            die(json_encode($answer7));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
 }
 

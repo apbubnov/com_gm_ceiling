@@ -15,36 +15,12 @@ JHtml::_('behavior.multiselect');
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
-
+$user_group = $user->groups;
 $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
 $dop_num = $dop_num_model->getData($userId)->dop_number;
-
-/* циферки на кнопки */
-$model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-// в производстве
-$answer1 = $model->getDataByStatus("InProduction");
-// запущенные
-$answer2 = $model->getDataByStatus("Zapushennie");
-// заявки с сайта
-$answer3 = $model->getDataByStatus("ZayavkiSSaita");
-// звонки
-$date = date("Y")."-".date("n")."-".date("d");
-$answer4 = $model->getDataByStatus("Zvonki", $date);
-// пропущенные
-$answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
-$answer6 = $model->getDataByStatus("MissedCalls");
-$missAnswer1 = [];
-$missAnswer2 = [];
-foreach ($answer5 as $value) {
-	array_push($missAnswer1, $value->id);
-}
-foreach ($answer6 as $value) {
-	array_push($missAnswer2, $value->call_id);
-}
-$answer7 = array_diff($missAnswer1, $missAnswer2);
-//--------------------------------------
+$_SESSION['user_group'] = $user_group;
+$_SESSION['dop_num'] = $dop_num;
 ?>
-
 <style>
 	.columns-tar {
 		display: inline-block;
@@ -80,48 +56,46 @@ $answer7 = array_diff($missAnswer1, $missAnswer2);
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fa fa-usd" aria-hidden="true"></i> Касса</a>
 		</p>
 		<!-- <p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=clientorders', false); ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Клиентские заказы</a>
+			<a class="btn btn-large btn-primary" href="<?php //echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=clientorders', false); ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Клиентские заказы</a>
 		</p> -->
 	</div>
 	<div class="columns-tar">
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> В производстве </a>
-				<?php if ($answer1[0]->count != 0) { ?>
-					<div class="circl-digits"><?php echo $answer1[0]->count; ?></div>
-				<?php } ?>
+				<?php //if ($answer1[0]->count != 0) { ?>
+					<div class="circl-digits" id="InProductionDiv"><?php //echo $answer1[0]->count; ?></div>
+				<?php //} ?>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects', false); ?>"><i class="fa fa-cogs" aria-hidden="true"></i> Запущенные </a>
-				<?php if ($answer2[0]->count != 0) { ?>
-					<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
-				<?php } ?>
+				<?php //if ($answer2[0]->count != 0) { ?>
+					<div class="circl-digits" id="ZapushennieDiv"><?php //echo $answer2[0]->count; ?></div>
+				<?php //} ?>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=requestfrompromo', false); ?>"><i class="fa fa-bookmark" aria-hidden="true"></i></i> Заявки с сайта </a>
-				<?php if ($answer3[0]->count != 0) { ?>
-					<div class="circl-digits"><?php echo $answer3[0]->count; ?></div>
-				<?php } ?>
+				<?php //if ($answer3[0]->count != 0) { ?>
+					<div class="circl-digits" id="ZayavkiSSaitaDiv"><?php //echo $answer3[0]->count; ?></div>
+				<?php //} ?>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки </a>
-				<?php if ($answer4[0]->count != 0) { ?>
-					<div class="circl-digits"><?php echo $answer4[0]->count; ?></div>
-				<?php } ?>
+				<?php //if ($answer4[0]->count != 0) { ?>
+					<div class="circl-digits" id="ZvonkiDiv"><?php //echo $answer4[0]->count; ?></div>
+				<?php //} ?>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=missed_calls', false); ?>"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Пропущенные</a>
-				<?php if (count($answer7) != 0) { ?>
-					<div class="circl-digits"><?php echo count($answer7); ?></div>
-				<?php } ?>
+					<div class="circl-digits" id="MissedCallsDiv"></div>
 			</div>
 		</div>
 	</div>
@@ -144,13 +118,31 @@ $answer7 = array_diff($missAnswer1, $missAnswer2);
 	</div>
 </div>
 
-<?php
-    $user       = JFactory::getUser();
-    $userId     = $user->get('id');
-    $user_group = $user->groups;
-    $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
-    $dop_num = $dop_num_model->getData($userId)->dop_number;
-    $_SESSION['user_group'] = $user_group;
-    $_SESSION['dop_num'] = $dop_num;
-?>
-
+<script type="text/javascript">
+	jQuery('document').ready(function(){
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=printMissedCallsOnGmMainPage",
+            async: true,
+            success: function(data){
+                if (data !== null)
+                {
+                	document.getElementById('MissedCallsDiv').innerHTML = data.length;
+                }
+            },
+            dataType: "json",
+            timeout: 30000,
+            error: function(data){
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Сервер не отвечает."
+                });
+            }                   
+        });
+	});
+</script>
