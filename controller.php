@@ -3134,7 +3134,7 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
-    /* public function printZapushennieOnGmMainPage(){
+    public function printZapushennieOnGmMainPage(){
         try
         {
             $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
@@ -3205,7 +3205,7 @@ class Gm_ceilingController extends JControllerLegacy
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    } */
+    }
 }
 
 ?>
