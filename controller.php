@@ -3113,19 +3113,10 @@ class Gm_ceilingController extends JControllerLegacy
     }
 
     public function test_estimate(){
-        try
-        {
-            $jinput = JFactory::getApplication()->input;
-            $id = $jinput->get('id','','INT');
-            $result = Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($id,null,0);
-            die(json_encode($result));
-        }
-        catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
-        }
+        $jinput = JFactory::getApplication()->input;
+        $id = $jinput->get('id','','INT');
+        $result = Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($id,null,0);
+        die(json_encode($result));
     }
 
     public function printInProductionOnGmMainPage(){
@@ -3143,7 +3134,7 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
-    public function printZapushennieOnGmMainPage(){
+    /* public function printZapushennieOnGmMainPage(){
         try
         {
             $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
@@ -3214,7 +3205,7 @@ class Gm_ceilingController extends JControllerLegacy
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }
+    } */
 }
 
 ?>
