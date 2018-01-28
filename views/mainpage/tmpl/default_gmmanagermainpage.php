@@ -125,6 +125,7 @@ $_SESSION['dop_num'] = $dop_num;
             url: "index.php?option=com_gm_ceiling&task=printMissedCallsOnGmMainPage",
             async: true,
             success: function(data){
+            	console.log(data);
                 if (data !== null)
                 {
                 	document.getElementById('MissedCallsDiv').innerHTML = data.length;
