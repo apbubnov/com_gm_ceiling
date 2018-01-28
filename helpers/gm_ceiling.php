@@ -3487,12 +3487,18 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $project_model = self::getModel('project');
         $client_id = $project_model->getData($project_id)->id_client;
-        $client_model = self::getModel('client');
-        $dealer_id = $client_model->getClientById($client_id)->dealer_id;
-        if(empty($dealer_id)){
-            $dealer_id = 1;
+        if(!empty($client_id)){
+            $client_model = self::getModel('client');
+            $dealer_id = $client_model->getClientById($client_id)->dealer_id;
+            if(empty($dealer_id)){
+                $dealer_id = 1;
+            }
+        }
+        else{
+            $dealer_id = 1;   
         }
         $results = $mount_model->getDataAll($dealer_id);
+        
         //Если существующая калькуляция
         if(!empty($calc_id)){
             foreach ($calculation_data as $key => $item) {
@@ -4519,6 +4525,7 @@ class Gm_ceilingHelpersGm_ceiling
                 'distance' => $distance,
                 'distance_col' =>$distance_col
             );
+            //TODO:спросить много ли где использвется эта фугкция и убрать доп запросы внутри, все можно получить через другие модели
             $res = $project_model->transport((object)$data);
         }
         else{
@@ -4526,6 +4533,19 @@ class Gm_ceilingHelpersGm_ceiling
             $transport_type = $project->transport;
             $distance = $project->distance;
             $distance_col = $project->distance_col;
+            $client_id = $project->id_client;
+            if(!empty($client_id)){
+                $client_model = self::getModel('client');
+                $dealer_id = $client_model->getClientById($client_id)->dealer_id;
+                if(empty($dealer_id)){
+                    $dealer_id = 1;
+                }
+            }
+            else{
+                 $dealer_id = 1;
+            }
+            $mount_model = self::getModel('mount');
+            $res = $mount_model->getDataAll($dealer_id);
         }
         $dealer_info_model = self::getModel('Dealer_info');
         if(empty($res->user_id)) {
