@@ -2783,14 +2783,14 @@ class Gm_ceilingHelpersGm_ceiling
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
     public static function create_client_single_estimate_html($calc_id=null,$data=null,$need_mount){
-        /* $user = JFactory::getUser();
+        $user = JFactory::getUser();
         $dealer = JFactory::getUser($user->dealer_id);
         $canvases_data = self::calculate_canvases($calc_id);
         $offcut_square_data = self::calculate_offcut($calc_id);
         $components_data = self::calculate_components($calc_id,null,0);
         if(!empty($calc_id)){
             $calculation_model = self::getModel($calc_id);
-            $data = get_object_vars($calculation_model->getData($calc_id);
+            $data = get_object_vars($calculation_model->getData($calc_id));
         }
         $components_sum = 0;
         $gm_components_sum = 0;
@@ -2884,7 +2884,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. - ' . $data['discount'] . '% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
             else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб.</div>';
 
-           return $html; */
+           return $html; 
     }
 
     public static function create_client_common_estimate(){
