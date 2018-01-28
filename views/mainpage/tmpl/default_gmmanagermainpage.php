@@ -120,15 +120,42 @@ $_SESSION['dop_num'] = $dop_num;
 
 <script type="text/javascript">
 	jQuery('document').ready(function(){
+		jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=printZvonkiOnGmMainPage",
+            async: true,
+            success: function(data){
+            	console.log(data);
+                if (data != null)
+                {
+                	if (data[0].count != 0)
+                	{
+                		document.getElementById('ZvonkiDiv').innerHTML = data[0].count;
+                	}
+                }
+            },
+            dataType: "json",
+            timeout: 30000,
+            error: function(data){
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Сервер не отвечает."
+                });
+            }                   
+        });
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=printMissedCallsOnGmMainPage",
             async: true,
             success: function(data){
-            	console.log(data);
                 if (data != 0)
                 {
-                	document.getElementById('MissedCallsDiv').innerHTML = data.length;
+                	document.getElementById('MissedCallsDiv').innerHTML = data;
                 }
             },
             dataType: "json",
