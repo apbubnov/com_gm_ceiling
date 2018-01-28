@@ -118,7 +118,6 @@ $_SESSION['dop_num'] = $dop_num;
             url: "index.php?option=com_gm_ceiling&task=printInProductionOnGmMainPage",
             async: true,
             success: function(data){
-            	console.log(data);
                 if (data != null)
                 {
                 	if (data[0].count != 0)
@@ -148,7 +147,6 @@ $_SESSION['dop_num'] = $dop_num;
             url: "index.php?option=com_gm_ceiling&task=printZapushennieOnGmMainPage",
             async: true,
             success: function(data){
-            	console.log(data);
                 if (data != null)
                 {
                 	if (data[0].count != 0)
@@ -161,7 +159,6 @@ $_SESSION['dop_num'] = $dop_num;
             dataType: "json",
             timeout: 30000,
             error: function(data){
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -178,7 +175,6 @@ $_SESSION['dop_num'] = $dop_num;
             url: "index.php?option=com_gm_ceiling&task=printZayavkiSSaitaOnGmMainPage",
             async: true,
             success: function(data){
-            	console.log(data);
                 if (data != null)
                 {
                 	if (data[0].count != 0)
@@ -208,7 +204,6 @@ $_SESSION['dop_num'] = $dop_num;
             url: "index.php?option=com_gm_ceiling&task=printZvonkiOnGmMainPage",
             async: true,
             success: function(data){
-            	console.log(data);
                 if (data != null)
                 {
                 	if (data[0].count != 0)
