@@ -3113,12 +3113,6 @@ class Gm_ceilingController extends JControllerLegacy
     }
 
     public function test_estimate(){
-<<<<<<< HEAD
-        $jinput = JFactory::getApplication()->input;
-        $id = $jinput->get('id','','INT');
-        $result = Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($id);
-        die(json_encode($result));
-=======
         try
         {
             $jinput = JFactory::getApplication()->input;
@@ -3220,7 +3214,6 @@ class Gm_ceilingController extends JControllerLegacy
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
->>>>>>> cadf3ac642a7636fa5845e8cfcbf1ee3979ffcfb
     }
 }
 
