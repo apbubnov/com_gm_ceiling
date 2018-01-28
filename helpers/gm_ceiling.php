@@ -3473,7 +3473,7 @@ class Gm_ceilingHelpersGm_ceiling
 		$calc_id - id калькуляции в БД
 		$data - массив данных для просчета, если новый просчет
 	*/
-    public static function calculate_mount($del_flag,$calc_id,$data){
+    public static function calculate_mount($del_flag,$calc_id,$data=null){
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
         $calculation_model = self::getModel('calculation');
@@ -3513,6 +3513,7 @@ class Gm_ceilingHelpersGm_ceiling
             $n14 = $data['n14'];
             $n23 = $data['n23'];
             $n15 = $data['n15'];
+            $n29 = $data['n29'];
         }
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
