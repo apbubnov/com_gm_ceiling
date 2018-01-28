@@ -126,7 +126,7 @@ $_SESSION['dop_num'] = $dop_num;
             async: true,
             success: function(data){
             	console.log(data);
-                if (data !== null)
+                if (data != 0)
                 {
                 	document.getElementById('MissedCallsDiv').innerHTML = data.length;
                 }

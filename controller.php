@@ -3206,7 +3206,7 @@ class Gm_ceilingController extends JControllerLegacy
                 array_push($missAnswer2, $value->call_id);
             }
             $answer7 = array_diff($missAnswer1, $missAnswer2);
-            die(json_encode($answer7));
+            die(json_encode(count($answer7)));
         }
         catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
