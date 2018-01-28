@@ -3117,7 +3117,7 @@ class Gm_ceilingController extends JControllerLegacy
         {
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->get('id','','INT');
-            $result = Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($id);
+            $result = Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($id,null,0);
             die(json_encode($result));
         }
         catch (Exception $e) {
