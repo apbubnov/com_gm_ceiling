@@ -3113,11 +3113,11 @@ class Gm_ceilingController extends JControllerLegacy
     }
 
     public function test_estimate(){
-       /*  try
+        try
         {
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->get('id','','INT');
-            $result = Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($id,null,0);
+            $result = Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($id,null,0);
             die(json_encode($result));
         }
         catch (Exception $e) {
@@ -3125,7 +3125,7 @@ class Gm_ceilingController extends JControllerLegacy
             $files = "components/com_gm_ceiling/";
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
-        } */
+        }
     }
 
     public function printInProductionOnGmMainPage(){
