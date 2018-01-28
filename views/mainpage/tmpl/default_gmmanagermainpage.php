@@ -63,31 +63,31 @@ $_SESSION['dop_num'] = $dop_num;
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> В производстве </a>
-					<div class="circl-digits" id="InProductionDiv"></div>
+					<div class="circl-digits" id="InProductionDiv" style="display: none;"></div>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects', false); ?>"><i class="fa fa-cogs" aria-hidden="true"></i> Запущенные </a>
-					<div class="circl-digits" id="ZapushennieDiv"></div>
+					<div class="circl-digits" id="ZapushennieDiv" style="display: none;"></div>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=requestfrompromo', false); ?>"><i class="fa fa-bookmark" aria-hidden="true"></i></i> Заявки с сайта </a>
-					<div class="circl-digits" id="ZayavkiSSaitaDiv"></div>
+					<div class="circl-digits" id="ZayavkiSSaitaDiv" style="display: none;"></div>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки </a>
-					<div class="circl-digits" id="ZvonkiDiv"></div>
+					<div class="circl-digits" id="ZvonkiDiv" style="display: none;"></div>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=missed_calls', false); ?>"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Пропущенные</a>
-					<div class="circl-digits" id="MissedCallsDiv"></div>
+					<div class="circl-digits" id="MissedCallsDiv" style="display: none;"></div>
 			</div>
 		</div>
 	</div>
@@ -124,6 +124,7 @@ $_SESSION['dop_num'] = $dop_num;
                 	if (data[0].count != 0)
                 	{
                 		document.getElementById('InProductionDiv').innerHTML = data[0].count;
+                		document.getElementById('InProductionDiv').style.display = 'block';
                 	}
                 }
             },
@@ -153,6 +154,7 @@ $_SESSION['dop_num'] = $dop_num;
                 	if (data[0].count != 0)
                 	{
                 		document.getElementById('ZapushennieDiv').innerHTML = data[0].count;
+                		document.getElementById('ZapushennieDiv').style.display = 'block';
                 	}
                 }
             },
@@ -182,6 +184,7 @@ $_SESSION['dop_num'] = $dop_num;
                 	if (data[0].count != 0)
                 	{
                 		document.getElementById('ZayavkiSSaitaDiv').innerHTML = data[0].count;
+                		document.getElementById('ZayavkiSSaitaDiv').style.display = 'block';
                 	}
                 }
             },
@@ -211,6 +214,7 @@ $_SESSION['dop_num'] = $dop_num;
                 	if (data[0].count != 0)
                 	{
                 		document.getElementById('ZvonkiDiv').innerHTML = data[0].count;
+                		document.getElementById('ZvonkiDiv').style.display = 'block';
                 	}
                 }
             },
@@ -237,6 +241,7 @@ $_SESSION['dop_num'] = $dop_num;
                 if (data != 0)
                 {
                 	document.getElementById('MissedCallsDiv').innerHTML = data;
+                	document.getElementById('MissedCallsDiv').style.display = 'block';
                 }
             },
             dataType: "json",
