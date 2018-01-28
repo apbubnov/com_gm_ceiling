@@ -2803,7 +2803,7 @@ class Gm_ceilingHelpersGm_ceiling
         $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
-        $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
+        $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>". '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calc->id) . ".png/>;'
         $html .= "<b>Дилер: </b>" . $dealer->name . "<br>";
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>
 			      <h2>Общее: ' . $new_total . ' руб.</h2>';
