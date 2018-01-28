@@ -63,33 +63,25 @@ $_SESSION['dop_num'] = $dop_num;
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> В производстве </a>
-				<?php //if ($answer1[0]->count != 0) { ?>
-					<div class="circl-digits" id="InProductionDiv"><?php //echo $answer1[0]->count; ?></div>
-				<?php //} ?>
+					<div class="circl-digits" id="InProductionDiv"></div>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects', false); ?>"><i class="fa fa-cogs" aria-hidden="true"></i> Запущенные </a>
-				<?php //if ($answer2[0]->count != 0) { ?>
-					<div class="circl-digits" id="ZapushennieDiv"><?php //echo $answer2[0]->count; ?></div>
-				<?php //} ?>
+					<div class="circl-digits" id="ZapushennieDiv"></div>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=requestfrompromo', false); ?>"><i class="fa fa-bookmark" aria-hidden="true"></i></i> Заявки с сайта </a>
-				<?php //if ($answer3[0]->count != 0) { ?>
-					<div class="circl-digits" id="ZayavkiSSaitaDiv"><?php //echo $answer3[0]->count; ?></div>
-				<?php //} ?>
+					<div class="circl-digits" id="ZayavkiSSaitaDiv"></div>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
 				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=callback', false); ?>"><i class="fa fa-phone-square" aria-hidden="true"></i> Звонки </a>
-				<?php //if ($answer4[0]->count != 0) { ?>
-					<div class="circl-digits" id="ZvonkiDiv"><?php //echo $answer4[0]->count; ?></div>
-				<?php //} ?>
+					<div class="circl-digits" id="ZvonkiDiv"></div>
 			</div>
 		</div>
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
@@ -120,6 +112,94 @@ $_SESSION['dop_num'] = $dop_num;
 
 <script type="text/javascript">
 	jQuery('document').ready(function(){
+		//в производстве
+		jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=printInProductionOnGmMainPage",
+            async: true,
+            success: function(data){
+            	console.log(data);
+                if (data != null)
+                {
+                	if (data[0].count != 0)
+                	{
+                		document.getElementById('InProductionDiv').innerHTML = data[0].count;
+                	}
+                }
+            },
+            dataType: "json",
+            timeout: 30000,
+            error: function(data){
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Сервер не отвечает."
+                });
+            }                   
+        });
+		//запущенные
+		jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=printZapushennieOnGmMainPage",
+            async: true,
+            success: function(data){
+            	console.log(data);
+                if (data != null)
+                {
+                	if (data[0].count != 0)
+                	{
+                		document.getElementById('ZapushennieDiv').innerHTML = data[0].count;
+                	}
+                }
+            },
+            dataType: "json",
+            timeout: 30000,
+            error: function(data){
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Сервер не отвечает."
+                });
+            }                   
+        });
+		//заявки с сайта
+		jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=printZayavkiSSaitaOnGmMainPage",
+            async: true,
+            success: function(data){
+            	console.log(data);
+                if (data != null)
+                {
+                	if (data[0].count != 0)
+                	{
+                		document.getElementById('ZayavkiSSaitaDiv').innerHTML = data[0].count;
+                	}
+                }
+            },
+            dataType: "json",
+            timeout: 30000,
+            error: function(data){
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Сервер не отвечает."
+                });
+            }                   
+        });
+		//звонки
 		jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=printZvonkiOnGmMainPage",
@@ -148,6 +228,7 @@ $_SESSION['dop_num'] = $dop_num;
                 });
             }                   
         });
+        //пропущенные
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=printMissedCallsOnGmMainPage",
