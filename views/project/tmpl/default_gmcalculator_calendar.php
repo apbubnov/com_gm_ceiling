@@ -353,11 +353,10 @@
                                             <?php echo $this->item->project_note; ?>
                                         </td>
                                     </tr>
-                                    <tr style="text-align: center;">
-                                        <td colspan=2>
+                                    <tr>
+                                        <td colspan=3 style="text-align: center;">
                                             <button type="submit" id="accept_changes" class="btn btn btn-success" style="display: none;">Изменить</button>
                                         </td>
-                                        
                                     </tr>
                                 </table>
                             </div>
