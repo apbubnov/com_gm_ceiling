@@ -174,7 +174,7 @@
                                 <tr>
                                     <td>
                                         <a class="btn btn-primary" id="change_data">
-                                            <?php if ($this->item->client_id == 1) { echo "Заполнить данные о клиенте"; else echo "Изменить данные" } ?>
+                                            <?php if ($this->item->client_id == 1) { echo "Заполнить данные о клиенте" } else { echo "Изменить данные" } ?>
                                         </a>
                                     </td>
                                 </tr>
