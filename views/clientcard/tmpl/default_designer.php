@@ -37,6 +37,7 @@
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
     <p>
+    <button class="btn btn-primary" type="button" id="btn_refuse">Отказ от сотрудничества</button>
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
@@ -470,6 +471,33 @@
                 async: false,
                 success: function(data) {
                     location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
+
+        document.getElementById('btn_refuse').onclick = function()
+        {
+            var user_id = <?php echo $dealer->id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=userRefuseToCooperate",
+                data: {
+                    user_id: user_id,
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    location.href = '/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage';
                 },
                 error: function(data) {
                     console.log(data);
