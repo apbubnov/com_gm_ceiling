@@ -48,7 +48,7 @@ $_SESSION['dop_num'] = $dop_num;
 <script>
     var del_click_bool = false;
 
-    var arr_calls = JSON.parse("<?php echo json_encode($this->item); ?>");
+    var arr_calls = JSON.parse('<?php echo json_encode($this->item); ?>');
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
 
