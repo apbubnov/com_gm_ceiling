@@ -1802,11 +1802,9 @@ class Gm_ceilingController extends JControllerLegacy
             if (empty($result)) {
                 die($result);
             }
-            $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-            $result_client = $model_client->getClientById($result->client_id);
 
             $model_project = Gm_ceilingHelpersGm_ceiling::getModel('project');
-            $result_project = $model_project->getProjectsByClientID($result_client->id);
+            $result_project = $model_project->getProjectsByClientID($result->id);
             
             die(json_encode($result_project));
         }
@@ -3115,7 +3113,7 @@ class Gm_ceilingController extends JControllerLegacy
     public function test_estimate(){
         $jinput = JFactory::getApplication()->input;
         $id = $jinput->get('id','','INT');
-        $result = Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($id,null,0);
+        $result = Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($id,null,1);
         die(json_encode($result));
     }
 
