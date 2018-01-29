@@ -2788,6 +2788,8 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data = self::calculate_canvases($calc_id);
         $offcut_square_data = self::calculate_offcut($calc_id);
         $components_data = self::calculate_components($calc_id,null,0);
+        $guild_data = self::calculate_guild_jobs($calc_id);
+        $mounting_data = self::calculate_mount(0,$cacl_id);
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
@@ -2800,6 +2802,7 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_components_sum += $component_item['gm_total'];
             $dealer_components_sum += $component_item['dealer_total'];
         }
+
         $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
