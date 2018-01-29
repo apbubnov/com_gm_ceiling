@@ -358,29 +358,31 @@
                                     </tr>
                                 </table>
                             </div>
+                            <?php if ($user->dealer_type == 0) { ?>
+                                <div  class="col-12 col-md-6">
+                                    <div class="comment" >
+                                        <label>История клиента:</label>
+                                        <textarea id="comments" class="input-comment" rows=11 readonly></textarea>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <label>Добавить комментарий:</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width = 100%>
+                                                    <textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            <?php } ?>
                         </div>
                     <?php } ?>
-                    <div  class="col-12 col-md-6">
-                        <div class="comment" >
-                            <label>История клиента:</label>
-                            <textarea id="comments" class="input-comment" rows=11 readonly></textarea>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <label>Добавить комментарий:</label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td width = 100%>
-                                        <textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
                     <!-- 
                         <table class="table calculation_sum">
                             <?php// if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
