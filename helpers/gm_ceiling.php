@@ -2816,16 +2816,16 @@ class Gm_ceilingHelpersGm_ceiling
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
         $html .= '<div width = 100%>';
-        $html .= '<div class = "div">';
-        $html .= '<p>'. $dealer->name . '</p>';
+        $html .= '<div width = 33% style = "display: inline-block;" >';
+        $html .= '<p><b>Дилер: </b>' . $dealer->name . '</p>';
         $html .= '<p><h2>Дата: ' . date("d.m.Y") . '</h2></p>';
         $html .= '<p><h2>Общее: ' . $new_total . ' руб.</h2></p>';
         $thml .= '</div>';
-        $html .= '<div class = "div">';
-        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="100" height="100"/></td>';    
+        $html .= '<div width = 33% style = "display: inline-block;" >';
+        $html .= '<newcolumn /> <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td>';    
         $thml .= '</div>';  
-        $html .= '<div class = "div">';
-        //$html .= $data['calc_data'];    
+        $html .= '<div width = 33% style = "display: inline-block;" >';
+        $html .= '<newcolumn />'.$data['calc_data'];    
         $thml .= '</div>';
         $html .= '</div>';
         if ($data['discount'] != 0){
