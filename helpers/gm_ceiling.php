@@ -2824,7 +2824,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<p><b>Дилер: </b>' . $dealer->name . '</p>';
         $html .= '<p><h2>Дата: ' . date("d.m.Y") . '</h2></p>';
         $html .= '<p><h2>Общее: ' . $new_total . ' руб.</h2></p>';
-        $thml .= '</span>';
+        $thml .= '';
         $html .= '<span width = 33% style = "display: inline-block;" >';
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td>';    
         $thml .= '</span>';  
