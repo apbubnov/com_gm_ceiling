@@ -2816,14 +2816,17 @@ class Gm_ceilingHelpersGm_ceiling
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
         $html .= '<div width = 100%>';
-        $html .= '<div width = 50% style = "display: inline-block;" >';
+        $html .= '<div width = 33% style = "display: inline-block;" >';
         $html .= '<p><b>Дилер: </b>' . $dealer->name . '</p>';
         $html .= '<p><h2>Дата: ' . date("d.m.Y") . '</h2></p>';
         $html .= '<p><h2>Общее: ' . $new_total . ' руб.</h2></p>';
         $thml .= '</div>';
-        $html .= '<div width = 50% style = "display: inline-block;" >';
+        $html .= '<div width = 33% style = "display: inline-block;" >';
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td>';    
-        $thml .= '</div>';    
+        $thml .= '</div>';  
+        $html .= '<div width = 33% style = "display: inline-block;" >';
+        $html .= $data['calc_data'];    
+        $thml .= '</div>';
         $html .= '</div>';
         if ($data['discount'] != 0){
             $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
