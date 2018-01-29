@@ -62,7 +62,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         <div id="modal_window_container<?= $value->id; ?>" class="modal_window_container">
                             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
                             </button>
-                            <div id="modal_window_del<?= $value->id; ?>" class="modal_window">
+                            <div id="modal_window_acct<?= $value->id; ?>" class="modal_window">
                                 <p><strong>Взнос задолжности. Дилер: <?php echo $value->name; ?> </strong></p>
                                 <p>На счете : <?=$sum;?> руб.</p>
                                 <p>Сумма взноса:</p>
@@ -171,7 +171,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             var user_id = jQuery(this).attr("user_id");
             jQuery(".close_btn").show();
             jQuery("#modal_window_container" + user_id).show();
-            jQuery("#modal_window_del" + user_id).show("slow");
+            jQuery("#modal_window_acct" + user_id).show("slow");
         });
 
         jQuery(".save_pay").click(function(){
