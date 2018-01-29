@@ -2815,7 +2815,6 @@ class Gm_ceilingHelpersGm_ceiling
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
-        $html .= '<div width = 100%>';
         $html .= '<div style="float: right; width: 33%;">';
         $html .= '<p><b>Дилер: </b>' . $dealer->name . '</p>';
         $html .= '<p><h2>Дата: ' . date("d.m.Y") . '</h2></p>';
@@ -2827,7 +2826,6 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<div style="float: left; width: 33%;">';
         $html .= $data['calc_data'];    
         $thml .= '</div>';
-        $html .= '</div>';
         $html .= '<div style="clear: both; margin: 0pt; padding: 0pt; "></div>';
         if ($data['discount'] != 0){
             $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
