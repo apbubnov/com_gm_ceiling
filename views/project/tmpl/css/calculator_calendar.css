@@ -91,6 +91,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .Page .Body .Messages .Title {
     font-weight: bold;
+    padding-left: 10px;
 }
 
 .Page .Body .Messages textarea {
@@ -122,69 +123,68 @@ h1, h2, h3, h4, h5, h6 {
 
 .Page .Navigation .Tabs {
     position: relative;
-    top: 1px;
 }
-
 .Page .Navigation .Tabs .Tab {
+    display: none;
+}
+.Page .Navigation .Tabs .TabLabel {
     width: auto;
     height: 40px;
     line-height: 40px;
-    padding: 0 15px;
+    padding: 0 10px;
+    margin: 0 0 -1px 0;
     background-color: rgb(255,255,255);
     color: rgb(64,65,154);
     border-radius: 0 7px 0 0;
     border: 1px solid rgb(64, 65, 154);
     cursor: pointer;
 }
-.Page .Navigation .Tabs .Tab:not(.Active) i {
+.Page .Navigation .Tabs .Tab:not(:checked) + .TabLabel i {
     color: rgb(64,65,154) !important;
 }
 .Page .Navigation .Tabs .Tab:not(:first-child) {
     margin-left: 5px;
 }
-.Page .Navigation .Tabs .Tab.Active {
+.Page .Navigation .Tabs .Tab:checked + .TabLabel {
     background-color: rgb(64,65,154);
     color: rgb(255,255,255);
-    border-bottom: 0;
 }
-.Page .Navigation .WindowTabs {
+.Page .Navigation .Tabs .Tab:checked + .TabLabel:before {
+    content: "▸ ";
+}
+.Page .Navigation .Tabs .Tab:checked + .TabLabel:after {
+    content: " ◂";
+}
+.Page .Navigation .WindowTab {
+    display: none;
     min-height: 100px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
     border: 1px solid rgb(64, 65, 154);
     background-color: rgb(255, 255, 255);
 }
 
-.Page .Navigation .WindowTabs .WindowTab {
-    max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-.Page .Navigation .WindowTabs .WindowTab table {
+.Page .Navigation .WindowTab table {
     width: 100%;
 }
 
-.Page .Navigation .WindowTabs .WindowTab .TableTitle {
+.Page .Navigation .WindowTab .TableTitle {
     background-color: rgb(64, 65, 154);
     color: rgb(255,255,255);
     cursor: pointer;
-    border-bottom: 1px solid rgb(255, 255, 255);
 }
 
-.Page .Navigation .WindowTabs .WindowTab .Calculate:nth-child(3n + 1) {
+.Page .Navigation .WindowTab .Calculate:nth-child(3n + 1) {
     border-bottom: 1px solid rgb(64, 65, 154);
 }
 
-.Page .Navigation .WindowTabs .WindowTab .Calculate:nth-child(3n - 1) {
-    //border-left: 50px solid rgb(64, 65, 154);
+.Page .Navigation .WindowTab .Calculate:nth-child(3n - 1) {
     border-bottom: 1px dotted rgb(64, 65, 154);
 }
 
-.Page .Navigation .WindowTabs .WindowTab .Calculate .CheckBox span {
-    vertical-align: middle;
-}
-
-.Page .Navigation .WindowTabs .WindowTab input[type='radio'],
-.Page .Navigation .WindowTabs .WindowTab input[type='checkbox'] {
+.Page .Navigation .WindowTab input[type='radio'],
+.Page .Navigation .WindowTab input[type='checkbox'] {
     position: relative;
     width: 10px;
     height: 10px;
@@ -193,8 +193,8 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     float: left;
 }
-.Page .Navigation .WindowTabs .WindowTab input[type='radio']:before,
-.Page .Navigation .WindowTabs .WindowTab input[type='checkbox']:before {
+.Page .Navigation .WindowTab input[type='radio']:before,
+.Page .Navigation .WindowTab input[type='checkbox']:before {
     content: '';
     position: absolute;
     top: -5px;
@@ -205,11 +205,11 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 50%;
     background: #FFF;
 }
-.Page .Navigation .WindowTabs .WindowTab input[type='checkbox']:before {
+.Page .Navigation .WindowTab input[type='checkbox']:before {
     border-radius: 3px;
 }
-.Page .Navigation .WindowTabs .WindowTab input[type='radio']:after,
-.Page .Navigation .WindowTabs .WindowTab input[type='checkbox']:after {
+.Page .Navigation .WindowTab input[type='radio']:after,
+.Page .Navigation .WindowTab input[type='checkbox']:after {
     content: '';
     position: absolute;
     top: 0;
@@ -222,15 +222,15 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 0;
     transition: all .2s;
 }
-.Page .Navigation .WindowTabs .WindowTab input[type='checkbox']:after {
+.Page .Navigation .WindowTab input[type='checkbox']:after {
      border-radius: 3px;
 }
-.Page .Navigation .WindowTabs .WindowTab input[type='radio']:checked:after,
-.Page .Navigation .WindowTabs .WindowTab input[type='checkbox']:checked:after {
+.Page .Navigation .WindowTab input[type='radio']:checked:after,
+.Page .Navigation .WindowTab input[type='checkbox']:checked:after {
     opacity: 1;
 }
 
-.Page .Navigation .WindowTabs .WindowTab .TransportTR input ~ span {
+.Page .Navigation .WindowTab input + label {
     width: auto;
     height: 20px;
     line-height: 20px;
@@ -238,31 +238,37 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 16px;
     vertical-align: middle;
     float: left;
+    cursor: pointer;
 }
 
-.Page .Navigation .WindowTabs .WindowTab table td,
-.Page .Navigation .WindowTabs .WindowTab table th {
-    padding: 15px;
+.Page .Navigation .WindowTab table td,
+.Page .Navigation .WindowTab table th {
+    padding: 10px;
     min-height: 40px;
     white-space:nowrap;
 }
-.Page .Navigation .WindowTabs .WindowTab .Transports .In .Title,
-.Page .Navigation .WindowTabs .WindowTab .Transports .In .Block {
+.Page .Navigation .WindowTab .TransportTR {
+    border-bottom: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Navigation .WindowTab .Transports .Title,
+.Page .Navigation .WindowTab .Transports .Block {
     width: auto;
     float: left;
 }
-.Page .Navigation .WindowTabs .WindowTab .Transports .Block {
-    margin-left: 10px;
+.Page .Navigation .WindowTab .Transports .Block {
+    margin: 0 10px;
     width: auto;
     background-color: rgb(64,65,154);
     border-radius: 5px;
     overflow: hidden;
     display: none;
+    float: right;
 }
-.Page .Navigation .WindowTabs .WindowTab .Transports .RadioT:checked ~ .Block {
+.Page .Navigation .WindowTab .Transports .RadioT:checked ~ .Block {
     display: inline-block;
 }
-.Page .Navigation .WindowTabs .WindowTab .Transports .Block .Name {
+.Page .Navigation .WindowTab .Transports .Block .Name {
     width: auto;
     height: 30px;
     line-height: 30px;
@@ -271,7 +277,7 @@ h1, h2, h3, h4, h5, h6 {
     float: left;
     padding: 0 15px;
 }
-.Page .Navigation .WindowTabs .WindowTab .Transports .Block .Input {
+.Page .Navigation .WindowTab .Transports .Block .Input {
     width: auto;
     height: 30px;
     border: 1px solid rgb(64,65,154);
@@ -279,12 +285,22 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 15px;
     border-radius: 0;
 }
-.Page .Navigation .WindowTabs .WindowTab .Transports .Block .Button {
+.Page .Navigation .WindowTab .Transports .Block .Button {
     width: 30px;
     height: 30px;
     border: 1px solid rgb(64,65,154);
     color: rgb(255,255,255);
     float: left;
+}
+
+i.fa-sort-desc {
+    position: relative;
+    top: -3px;
+}
+
+i.fa-sort-asc {
+    position: relative;
+    top: 4px;
 }
 
 @media (max-width: 767px) {
@@ -318,37 +334,36 @@ h1, h2, h3, h4, h5, h6 {
         font-size: 14px !important;
     }
 
-    .Page .Navigation .Tabs .Tab {
+    .Page .Navigation .Tabs .TabLabel {
         width: 100%;
         border-radius: 0;
         float: left;
-        margin: 0 !important;
+        margin: 0 0 -1px 0;
     }
 
-    .Page .Navigation .Tabs .Tab.Active {
-        border-bottom: 1px;
-        top: 0;
+    .Page .Navigation .Tabs .WindowTab {
+        margin: 0 0 -1px 0;
     }
 
-    .Page .Navigation .WindowTabs .WindowTab .Transports .Block {
-        margin-left: 0;
+    .Page .Navigation .WindowTab .Transports .Block {
+        margin: 5px 0;
         width: 100% !important;
     }
 
-    .Page .Navigation .WindowTabs .WindowTab .Transports .Block .Name,
-    .Page .Navigation .WindowTabs .WindowTab .Transports .Block .Input,
-    .Page .Navigation .WindowTabs .WindowTab .Transports .Block .Button {
+    .Page .Navigation .WindowTab .Transports .Block .Name,
+    .Page .Navigation .WindowTab .Transports .Block .Input,
+    .Page .Navigation .WindowTab .Transports .Block .Button {
         width: 100%;
     }
 
-    .Page .Navigation .WindowTabs .WindowTab table td,
-    .Page .Navigation .WindowTabs .WindowTab table th {
+    .Page .Navigation .WindowTab table td,
+    .Page .Navigation .WindowTab table th {
         display: inline-block;
         width: 50%;
     }
 
-    .Page .Navigation .WindowTabs .WindowTab table td[colspan="4"],
-    .Page .Navigation .WindowTabs .WindowTab table th[colspan="4"] {
+    .Page .Navigation .WindowTab table td[colspan="4"],
+    .Page .Navigation .WindowTab table th[colspan="4"] {
         width: 100%;
     }
 }

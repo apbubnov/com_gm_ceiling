@@ -157,7 +157,8 @@ $query
     ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
 $db->setQuery($query);
 $results = $db->loadObjectList();*/
-if(true):
+if(false):
+/***************************************************************************************************************************************************************************************************************************************************/
 /* Клиент */
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -218,7 +219,7 @@ $calculationsItog->client_sum->canvas = 0;
 $calculationsItog->client_sum->components = 0;
 $calculationsItog->client_sum->mounting = 0;
 $calculationsItog->client_sum->itog = 0;
-$calculationsItog->dealer_sum->discount = 0;
+$calculationsItog->client_sum->discount = 0;
 
 $calculationsItog->square = 0;
 $calculationsItog->perimeter = 0;
@@ -243,6 +244,9 @@ foreach ($calculations as $key => $calculation)
     $calculation->dealer_sum->mounting = margin($calculation->mounting_sum, $$Project->gm_mounting_margin);
     $calculation->dealer_sum->itog = $calculation->dealer_sum->canvas + $calculation->dealer_sum->components + $calculation->dealer_sum->mounting;
 
+    $calculationsItog->dealer_sum->itog += $calculation->dealer_sum->itog;
+    $calculationsItog->dealer_sum->discount += discount($calculation->dealer_sum->itog, $calculation->discount);
+
     $calculationsItog->dealer_sum->canvas += $calculation->dealer_sum->canvases;
     $calculationsItog->dealer_sum->components += $calculation->dealer_sum->components;
     $calculationsItog->dealer_sum->mounting += $calculation->dealer_sum->mounting;
@@ -253,6 +257,9 @@ foreach ($calculations as $key => $calculation)
     $calculation->client_sum->mounting = double_margin($calculation->mounting_sum, $$Project->gm_mounting_margin, $$Project->dealer_mounting_margin);
     $calculation->client_sum->itog = $calculation->client_sum->canvas + $calculation->client_sum->components + $calculation->client_sum->mounting;
 
+    $calculationsItog->client_sum->itog += $calculation->client_sum->itog;
+    $calculationsItog->client_sum->discount += discount($calculation->client_sum->itog, $calculation->discount);
+
     $calculationsItog->client_sum->canvas = $calculation->client_sum->canvas;
     $calculationsItog->client_sum->components = $calculation->client_sum->components;
     $calculationsItog->client_sum->mounting = $calculation->client_sum->mounting;
@@ -262,9 +269,12 @@ foreach ($calculations as $key => $calculation)
 
     $calculations[$key] = $calculation;
 }
-
-$calculationsItog->dealer_sum->itog = $calculationsItog->dealer_sum->canvas + $calculationsItog->dealer_sum->components + $calculationsItog->dealer_sum->mounting;
-$calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $calculationsItog->client_sum->components + $calculationsItog->client_sum->mounting;
+$calculationsItog->discount = 100 - floor((100 * $calculationsItog->client_sum->discount) / $calculationsItog->client_sum->itog);
+$calculationsItog->dealer_sum->CanvasAndComponents = $calculationsItog->dealer_sum->canvas + $calculationsItog->dealer_sum->components;
+/* Транспорт */
+$mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+$Transport = $mount_model->getDataAll();
+$Transport->itog_sum = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
 
 ?>
 <?=parent::getPreloader();?>
@@ -294,7 +304,7 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                 <tbody>
                 <tr>
                     <th class="ClientName">Клиент:</th>
-                    <td id="ClientName"><?=$Client->client_id;?></td>
+                    <td id="ClientName"><a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$Client->id_client;?>"><?=$Client->client_id;?></a></td>
                 </tr>
                 <tr>
                     <th class="ClientBDay">Дата рождения:</th>
@@ -373,34 +383,45 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
     <div class="Navigation">
         <h3 class="left">Расчеты для проекта</h3>
         <div class="Tabs">
-            <div class="Tab Active" id="TabAll"><span>Общее</span></div>
+            <style>
+                .Page .Navigation .Tabs #TabAll:checked ~ #WindowTabAll,
+                <?foreach ($calculations as $calculation):?>
+                .Page .Navigation .Tabs #Tab<?=$calculation->id;?>:checked ~ #WindowTab<?=$calculation->id;?>,
+                <?endforeach;?>
+                .Page .Navigation .Tabs #TabAdd:checked ~ #WindowTabAdd {
+                    display: inline-block;
+                }
+            </style>
+            <input name="Tab" class="Tab" id="TabAll" type="radio" checked>
+            <label for="TabAll" class="TabLabel"><span>Общее</span></label>
             <?foreach ($calculations as $calculation):?>
-                <div class="Tab" id="Tab<?=$calculation->id;?>"><span><?=$calculation->calculation_title;?></span></div>
+                <input name="Tab" class="Tab" id="Tab<?=$calculation->id;?>"  type="radio">
+                <label for="Tab<?=$calculation->id;?>" class="TabLabel"><span><?=$calculation->calculation_title;?></span></label>
             <?endforeach;?>
             <?if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
-                <div class="Tab" id="TabAdd"><span>Добавить потолок</span> <i class="fa fa-plus-square-o" aria-hidden="true"></i></div>
+                <input name="Tab" class="Tab" id="TabAdd" type="radio">
+                <label for="TabAdd" class="TabLabel"><span>Добавить потолок</span> <i class="fa fa-plus-square-o" aria-hidden="true"></i></label>
             <?endif;?>
-        </div>
-        <div class="WindowTabs Desktop">
             <div class="WindowTab" id="WindowTabAll">
-                <table class="Information">
-                    <tr class="CalcTitle TableTitle Activation" child="Calculate">
-                        <th colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                    <table class="Information">
+                    <tbody>
+                    <tr class="CalcTitle TableTitle" data-child="Calculate" data-show="false">
+                        <td colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></td>
                     </tr>
                     <?foreach ($calculations as $calculation):?>
-                        <tr class="Calculate" style="display: none;">
+                        <tr class="Calculate">
                             <td class="CheckBox" colspan="4">
-                                <input class="CalcCheckBox" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
-                                <span><?=$calculation->calculation_title;?></span>
+                                <input class="CalcCheckBox" id="CalcCheckBox<?=$calculation->id;?>" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
+                                <label for="CalcCheckBox<?=$calculation->id;?>"><?=$calculation->calculation_title;?></label>
                             </td>
                         </tr>
-                        <tr class="Calculate" style="display: none;">
+                        <tr class="Calculate">
                             <td>Площадь:</td>
                             <td><span><?=$calculation->square;?></span> м<sup>2</sup></td>
                             <td>Периметр:</td>
                             <td><span><?=$calculation->perimeter;?></span> м</td>
                         </tr>
-                        <tr class="Calculate" style="display: none;">
+                        <tr class="Calculate">
                             <td>Итого:</td>
                             <td>
                                 <span><?=fceil($calculation->client_sum->itog);?></span> руб.
@@ -419,15 +440,15 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                         <th>Общий периметр:</th>
                         <td><span><?=$calculationsItog->perimeter;?></span> м</td>
                     </tr>
-                    <tr class="TransportTH TableTitle Activation" child="TransportTR">
-                        <th colspan="4">Транспортные расходы  <i class="fa fa-sort-desc" aria-hidden="true"></th>
+                    <tr class="TransportTH TableTitle" data-child="TransportTR" data-show="true">
+                        <td colspan="4">Транспортные расходы <i class="fa fa-sort-desc" aria-hidden="true"></i></td>
                     </tr>
-                    <tr class="TransportTR" style="display: none;">
+                    <tr class="TransportTR">
                         <td colspan="4">
                             <form action="javascript:SendTransport();" class="Transports">
                                 <div class="Transport In">
-                                    <input name="transport" class="RadioT" id="transport" value="1" type="radio" <?=($$Project->transport == 1 )?"checked":"";?>>
-                                    <span>Транспорт по городу</span>
+                                    <input name="transport" class="RadioT" id="transport_1" value="1" type="radio" <?=($$Project->transport == 1 )?"checked":"";?>>
+                                    <label for="transport_1">Транспорт по городу</label>
                                     <div class="Block">
                                         <div class="Name">Количество выездов:</div>
                                         <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col;?>" placeholder="раз">
@@ -435,8 +456,8 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                                     </div>
                                 </div>
                                 <div class="Transport Out">
-                                    <input name="transport" class="RadioT" id="transport" value="2" type="radio" <?=($$Project->transport == 2 )?"checked":"";?>>
-                                    <span>Выезд за город</span>
+                                    <input name="transport" class="RadioT" id="transport_2" value="2" type="radio" <?=($$Project->transport == 2 )?"checked":"";?>>
+                                    <label for="transport_2">Выезд за город</label>
                                     <div class="Block">
                                         <div class="Name">Кол-во, км:</div>
                                         <input class="Input" type="number" min="1" max="999" name="jform[distance]" id="distance" value="<?=$$Project->distance; ?>" placeholder="км.">
@@ -447,16 +468,30 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
                                 </div>
                                 <div class="Transport Empty">
                                     <div class="Title">
-                                        <input name="transport" class="RadioT" id="transport" value="0" type="radio" <?=($$Project->transport == 0 )?"checked":"";?>>
-                                        <span>Без транспорта</span>
+                                        <input name="transport" class="RadioT" id="transport_0" value="0" type="radio" <?=($$Project->transport == 0 )?"checked":"";?>>
+                                        <label for="transport_0">Без транспорта</label>
                                     </div>
-                                    <div class="Block">
-
-                                    </div>
+                                    <div class="Block"></div>
                                 </div>
                             </form>
                         </td>
                     </tr>
+                    <tr class="TR">
+                        <th>Услуги транспорта:</th>
+                        <td><span><?=$Transport->itog_sum;?></span> руб.</td>
+                    </tr>
+                    <tr class="TR">
+                        <th>Итого:</th>
+                        <td><span><?=$calculationsItog->client_sum->itog;?></span> руб.</td>
+                        <th>Итого -<?=$calculationsItog->discount;?>%:</th>
+                        <td><span><?=$calculationsItog->client_sum->discount;?></span> руб.</td>
+                    </tr>
+                    <tr class="TR">
+                        <td><span><?=ceil($calculationsItog->dealer_sum->CanvasAndComponents);?></span></td>
+                        <td><span><?=ceil($calculationsItog->dealer_sum->mounting);?></span></td>
+                        <td colspan="2"><span><?=ceil($calculationsItog->dealer_sum->itog);?></span></td>
+                    </tr>
+                    </tbody>
                 </table>
             </div>
             <?foreach ($calculations as $k => $calculation):?>
@@ -464,6 +499,9 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
 
                 </div>
             <?endforeach;?>
+            <div class="WindowTab" id="WindowTabAdd">
+
+            </div>
         </div>
     </div>
 </div>
@@ -484,8 +522,13 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
 
         DATA.Page = $(".Page");
         DATA.Page.Navigation = DATA.Page.find(".Navigation");
-        DATA.Page.Navigation.Activation = DATA.Page.Navigation.find(".Activation");
+        DATA.Page.Navigation.Tabs = DATA.Page.Navigation.find(".Tabs");
+        DATA.Page.Navigation.Tab = DATA.Page.Navigation.Tabs.find(".Tab");
+        DATA.Page.Navigation.TabLabel = DATA.Page.Navigation.Tabs.find(".TabLabel");
+        DATA.Page.Navigation.WindowTab = DATA.Page.Navigation.Tabs.find(".WindowTab");
+        DATA.Page.Navigation.WindowTab.Table = DATA.Page.Navigation.WindowTab.find("table");
 
+        AddActions();
         Resize();
     }
 
@@ -497,14 +540,39 @@ $calculationsItog->client_sum->itog = $calculationsItog->client_sum->canvas + $c
     }
 
     function MobileWindow() {
+        $.each(DATA.Page.Navigation.TabLabel, function (index, value) {
+            var WindowTab = DATA.Page.Navigation.WindowTab[index];
+            $(WindowTab).insertAfter($(value));
+        });
     }
 
     function DesktopWindow() {
-
+        $.each(DATA.Page.Navigation.WindowTab, function (index, value) {
+            DATA.Page.Navigation.Tabs.append($(value));
+        });
     }
 
     function ResizeNote() {
         DATA.Massage.Add.css({"height":DATA.Massage.Note.outerHeight()});
+    }
+
+    function AddActions() {
+        var tr = DATA.Page.Navigation.WindowTab.Table.find("tr");
+        $.each(tr, function (index, value) { if (value.dataset.child) { value.onclick = Trigger; $(value).click().click(); } });
+    }
+
+    function Trigger() {
+        var _this = $(this),
+            show = !(this.dataset.show === "true"),
+            child = "." + this.dataset.child;
+        if (show) {
+            _this.siblings(child).show();
+            _this.find("i").removeClass("fa-sort-desc").addClass("fa-sort-asc");
+        } else {
+            _this.siblings(child).hide();
+            _this.find("i").removeClass("fa-sort-asc").addClass("fa-sort-desc");
+        }
+        this.dataset.show = show;
     }
 </script>
 <?endif;?>
