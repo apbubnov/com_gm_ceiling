@@ -200,9 +200,9 @@ class Gm_ceilingModelDealer_info extends JModelList
 			$db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
             $query->update('`#__gm_ceiling_dealer_info`')
-				->set('dealer_canvases_margin = ' . $db->quote($data['dealer_canvases_margin']))
-				->set('dealer_components_margin = ' . $db->quote($data['dealer_components_margin']))
-				->set('dealer_mounting_margin = ' . $db->quote($data['dealer_mounting_margin']))
+				->set('`dealer_canvases_margin` = ' . $db->quote($data['dealer_canvases_margin']))
+				->set('`dealer_components_margin` = ' . $db->quote($data['dealer_components_margin']))
+				->set('`dealer_mounting_margin` = ' . $db->quote($data['dealer_mounting_margin']))
 				->where('dealer_id = ' . $id);
             $db->setQuery($query);
 			$db->execute();
@@ -210,12 +210,12 @@ class Gm_ceilingModelDealer_info extends JModelList
 			unset($data['dealer_canvases_margin'],$data['dealer_components_margin'],$data['dealer_mounting_margin']);
 
 			$query = $db->getQuery(true);
-			$query->select('id');
-			$query->from('#__gm_ceiling_mount');
+			$query->select('`id`');
+			$query->from('`#__gm_ceiling_mount`');
 			$query->where("`user_id` = $id");
 			$db->setQuery($query);
 			$result = $db->loadResult();
-			if(!empty($result->id)) {
+			if(!empty($result)) {
 				$query = $db->getQuery(true);
 				$query->update('`#__gm_ceiling_mount`')
 					->where('user_id = ' . $id);
