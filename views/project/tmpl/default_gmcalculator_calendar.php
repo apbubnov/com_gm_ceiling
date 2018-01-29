@@ -1483,6 +1483,28 @@
 
     jQuery(document).ready(function () {
 
+        // открытие модального окна с календаря замерщиков
+        jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
+            window.idDay = jQuery(this).attr("id");
+            reg1 = "D(.*)D";
+            reg2 = "M(.*)M";
+            reg3 = "Y(.*)Y";
+            var d = idDay.match(reg1)[1];
+            var m = idDay.match(reg2)[1];
+            if (d.length == 1) {
+                d = "0"+d;
+            }
+            if (m.length == 1) {
+                m = "0"+m;
+            }
+            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
+            jQuery("#modal-window-container2-tar").show();
+			jQuery("#modal-window-2-tar").show("slow");
+            jQuery("#close2-tar").show();
+
+        });
+        //------------------------------------
+
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         show_comments();
         trans();
