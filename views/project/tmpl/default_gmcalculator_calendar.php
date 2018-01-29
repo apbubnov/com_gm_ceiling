@@ -383,30 +383,6 @@
                             <?php } ?>
                         </div>
                     <?php } ?>
-                    <!-- 
-                        <table class="table calculation_sum">
-                            <?php// if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
-                            <tr>
-                                <td style=" padding-left:0;">
-                                    <a class="btn btn-primary" id="change_discount">Изменить величину скидки</a>
-                                </td>
-                            </tr>
-                            <?php// } ?>
-                            <?php// $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100; ?>
-                            <tbody class="new_discount" style="display: none">
-                                <tr>
-                                    <td>
-                                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
-                                        <input name="new_discount" id="jform_new_discount" value="" onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки" max='<?php// echo round($skidka, 0); ?>' type="number">
-                                        <input name="isDiscountChange" value="0" type="hidden">
-                                    </td>
-                                    <td>
-                                        <button id="update_discount" class="btn btn btn-primary">Ок</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    -->
                 <?php } ?>
             </form>
         </div>
@@ -475,7 +451,7 @@
                     $total_square += $calculation->n4;
                     $total_perimeter += $calculation->n5;
                     $canvas = $dealer_canvases_sum;
-
+                }
                     // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
                     $sum_transport = 0;  $sum_transport_discount = 0;
                     $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
@@ -1264,7 +1240,6 @@
     </div>
 </div>
 <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
-</form>
 </div>
 <div id="modal_window_container" class = "modal_window_container">
 		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
