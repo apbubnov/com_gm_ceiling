@@ -2789,7 +2789,7 @@ class Gm_ceilingHelpersGm_ceiling
         $offcut_square_data = self::calculate_offcut($calc_id);
         $components_data = self::calculate_components($calc_id,null,0);
         $guild_data = self::calculate_guild_jobs($calc_id);
-        $result = self::calculate_mount(0,$calc_id,null);
+        $result = self::calculate_mount(0,$calc_id);
         $mounting_data = $result->mounting_data;
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
