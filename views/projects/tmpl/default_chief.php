@@ -27,7 +27,7 @@ $canChange = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
 ?>
-<?=parent::getButtonBack();?>
+<?= parent::getButtonBack(); ?>
 <? if ($user->dealer_type != 2): ?><h2 class="center">Монтажи</h2><? else: ?><h2 class="center">Заказы</h2><? endif; ?>
 
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>" method="post"
@@ -45,22 +45,16 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 <thead>
                 <tr>
                     <th class='center'>
-                        <?//= //JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
+                        <? //= //JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
                         <?= JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
-                        <?= JHtml::_('grid.sort', 'Дата монтажа', 'mounting_date', $listDirn, $listOrder); ?>
-                    </th>
-                    <th class='center'>
-                        <?= JHtml::_('grid.sort', 'Время монтажа', 'mounting_time', $listDirn, $listOrder); ?>
+                        <?= JHtml::_('grid.sort', 'Дата и время монтажа', 'mounting_date', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
                         <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
-                    </th>
-                    <th class='center'>
-                        <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
                         <?= JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
@@ -74,6 +68,9 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <th class="center">
                         <?= JHtml::_('grid.sort', 'Бригада', 'group_name', $listDirn, $listOrder); ?>
                     </th>
+                    <th class="center">
+                        Примечание
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -82,48 +79,48 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
                     if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
                         $canEdit = JFactory::getUser()->id == $item->created_by;
-                        if($user->dealer_type == 1 && empty($item->project_mounter)) continue;
+                    if ($user->dealer_type == 1 && empty($item->project_mounter)) continue;
                     ?>
 
                     <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
-                        <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
+                    <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
 
-                            <td>
-                                <? if ($item->project_status == 10 ): ?>
-<!--                                --><?// //elseif ($item->project_status == 8): ?><!-- Требует утверждения-->
-<!--                                --><?// //elseif ($item->project_status == 10): ?>
-                                    <? //if ($user->dealer_id == $item->brigadir_id): ?>
-                                        <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>"
-                                                type="button">Выполнено
-                                        </button>
-<!--                                    --><?// //else: ?><!--Запущен. Монтаж ГМ--><? //endif; ?>
-<!--                                --><?// //else: ?><!--Требует утверждения--><? endif; ?>
-                            </td>
-                            <td class="center one-touch">
-                                <?= $item->id; ?>
-                            </td>
-                            <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
-                            <td class="center one-touch">
-                                <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
-                                <? else: ?><?= $jdate->format('d.m.Y'); ?>
-                                <? endif; ?>
-                            </td>
-                            <td class="center one-touch">
-                                <? if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
-                                <? else: ?>
-                                    <?php echo $jdate->format('H:i'); ?>
-                                <? endif; ?>
-                            </td>
-                            <td class="center one-touch"><?= $item->address; ?></td>
-                            <td class="center one-touch"><?= $item->client_contacts; ?></td>
-                            <td class="center one-touch"><?= $item->client_name; ?></td>
-                            <td class="center one-touch"><?= $item->dealer_name; ?></td>
-                            <td class="center one-touch"><?= round($item->quadrature, 2); ?></td>
-                            <? if ($item->project_mounter) {$mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
-                            $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
-                            <td class="center one-touch"><?= $mounter->name; ?></td>
-                        </tr>
-                    <? endif; ?>
+                        <td>
+                            <? if ($item->project_status == 10): ?>
+                                <!--                                --><? // //elseif ($item->project_status == 8): ?><!-- Требует утверждения-->
+                                <!--                                --><? // //elseif ($item->project_status == 10): ?>
+                                <? //if ($user->dealer_id == $item->brigadir_id): ?>
+                                <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>"
+                                        type="button">Выполнено
+                                </button>
+                                <!--                                    --><? // //else: ?><!--Запущен. Монтаж ГМ--><? //endif; ?>
+                                <!--                                --><? // //else: ?><!--Требует утверждения--><? endif; ?>
+                        </td>
+                        <td class="center one-touch">
+                            <?= $item->id; ?>
+                        </td>
+                        <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
+                        <td class="center one-touch">
+                            <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
+                            <? else: ?><?= $jdate->format('d.m.Y'); ?>
+                            <? endif; ?>
+                            <? if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
+                            <? else: ?>
+                                <?php echo $jdate->format('H:i'); ?>
+                            <? endif; ?>
+                        </td>
+                        <td class="center one-touch"><?= $item->address; ?></td>
+                        <td class="center one-touch"><?= $item->client_contacts; ?> <br> <?= $item->client_name; ?></td>
+                        <td class="center one-touch"><?= $item->dealer_name; ?></td>
+                        <td class="center one-touch"><?= round($item->quadrature, 2); ?></td>
+                        <? if ($item->project_mounter) {
+                            $mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
+                            $mounter = $mounters_model->getEmailMount($item->project_mounter);
+                        } ?>
+                        <td class="center one-touch"><?= $mounter->name; ?></td>
+                        <td><?= ($item->dealer_chief_note)?$item->dealer_chief_note:$item->gm_chief_note ;  ?></td>
+                    </tr>
+                <? endif; ?>
                 <? endforeach; ?>
                 </tbody>
             <? else: ?>
@@ -152,11 +149,108 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
                         <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id=' . $item->id); ?>">
                             <td class="center one-touch"><?= $item->id; ?></td>
-                            <td class="center one-touch"><?=round($item->project_margin_sum,2);?></td>
-                            <td class="center one-touch"><?=$item->count_ceilings;?></td>
-                            <td class="center one-touch"><?=$item->status;?></td>
+                            <td class="center one-touch"><?= round($item->project_margin_sum, 2); ?></td>
+                            <td class="center one-touch"><?= $item->count_ceilings; ?></td>
+                            <td class="center one-touch"><?= $item->status; ?></td>
                             <td class="center one-touch">
-                                <? if ($item->project_status == 0 || $item->project_status == 1 || $item->status == 4 )   { ?>
+                                <? if ($item->project_status == 0 || $item->project_status == 1 || $item->status == 4) { ?>
+                                    <a class="btn btn-large btn-primary"
+                                       href="<?= JRoute::_('/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id, false); ?>">Дооформить</a>
+                                <? } elseif ($item->project_status == 13) {
+                                    ?>
+                                    Для оплаты кликните по заказу, на открывшейся странице нажмите "Оплатить"
+                                <? } ?>
+                            </td>
+                        </tr>
+                    <? endif ?>
+                <? endforeach; ?>
+                </tbody>
+            <? endif; ?>
+        </table>
+
+        <table class="table table-striped one-touch-view" id="projectListMobil">
+            <? if ($user->dealer_type != 2): ?>
+                <thead>
+                <tr>
+                    <th class='center'>
+                        <? //= //JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?= JHtml::_('grid.sort', '№', 'id', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?= JHtml::_('grid.sort', 'Время монтажа', 'mounting_date', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <? foreach ($this->items as $i => $item) :
+                    $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
+                    if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
+                        $canEdit = JFactory::getUser()->id == $item->created_by;
+                    if ($user->dealer_type == 1 && empty($item->project_mounter)) continue;
+                    ?>
+
+                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
+                    <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
+
+                        <td>
+                            <? if ($item->project_status == 10): ?>
+                                <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>"
+                                        type="button">Выполнено
+                                </button>
+                            <? endif; ?>
+                        </td>
+                        <td class="center one-touch">
+                            <?= $item->id; ?>
+                        </td>
+                        <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
+                        <td class="center one-touch">
+                            <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
+                            <? else: ?><?= $jdate->format('d.m'); ?>
+                            <? endif; ?>
+                            <? if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
+                            <? else: ?>
+                                <?php echo $jdate->format('H:i'); ?>
+                            <? endif; ?>
+                        </td>
+                        <td class="center one-touch"><?= $item->address; ?></td>
+
+                    </tr>
+                <? endif; ?>
+                <? endforeach; ?>
+                </tbody>
+            <? else: ?>
+                <thead>
+                <tr>
+                    <th class='center'>
+                        <?= JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?= JHtml::_('grid.sort', 'Сумма заказа', 'project_margin_sum', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?= JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?= JHtml::_('grid.sort', 'Информация', 'project_status', $listDirn, $listOrder); ?>
+                    </th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <? foreach ($this->items as $i => $item) : ?>
+                    <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
+                        <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id=' . $item->id); ?>">
+                            <td class="center one-touch"><?= $item->id; ?></td>
+                            <td class="center one-touch"><?= round($item->project_margin_sum, 2); ?></td>
+                            <td class="center one-touch"><?= $item->status; ?></td>
+                            <td class="center one-touch">
+                                <? if ($item->project_status == 0 || $item->project_status == 1 || $item->status == 4) { ?>
                                     <a class="btn btn-large btn-primary"
                                        href="<?= JRoute::_('/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=' . $item->id, false); ?>">Дооформить</a>
                                 <? } elseif ($item->project_status == 13) {
@@ -188,42 +282,43 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
     jQuery(document).ready(function () {
 
-        
 
-        jQuery(".btn-done").click(function(){
-			var button = jQuery( this );
-			
-			noty({
-				layout	: 'center',
-				type	: 'warning',
-				modal	: true,
-				text	: 'Вы уверены, что хотите отметить договор выполненным?',
-				killer	: true,
-				buttons	: [
-					{addClass: 'btn btn-success', text: 'Выполнен', onClick: function($noty) {
-							jQuery.get(
-							  "/index.php?option=com_gm_ceiling&task=project.done",
-							  {
-								project_id: button.data("project_id"),
-                                check: 1
-							  },
-							  function(data){
-								  if(data == "Договор закрыт!") {
-									  button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
-								  }
-							  }
-							);
-							$noty.close();
-						}
-					},
-					{addClass: 'btn', text: 'Отмена', onClick: function($noty) {
-							$noty.close();
-						}
-					}
-				]
-			});
+        jQuery(".btn-done").click(function () {
+            var button = jQuery(this);
 
-		});
+            noty({
+                layout: 'center',
+                type: 'warning',
+                modal: true,
+                text: 'Вы уверены, что хотите отметить договор выполненным?',
+                killer: true,
+                buttons: [
+                    {
+                        addClass: 'btn btn-success', text: 'Выполнен', onClick: function ($noty) {
+                            jQuery.get(
+                                "/index.php?option=com_gm_ceiling&task=project.done",
+                                {
+                                    project_id: button.data("project_id"),
+                                    check: 1
+                                },
+                                function (data) {
+                                    if (data == "Договор закрыт!") {
+                                        button.closest("td").html("<i class='fa fa-check' aria-hidden='true'></i> Выполнено");
+                                    }
+                                }
+                            );
+                            $noty.close();
+                        }
+                    },
+                    {
+                        addClass: 'btn', text: 'Отмена', onClick: function ($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
+            });
+
+        });
 
         jQuery('.delete-button').click(deleteItem);
 
@@ -238,4 +333,23 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             return false;
         }
     }
+
+    var $ = jQuery;
+    $(window).resize(function(){
+        if (screen.width <= '1024') {
+            jQuery('#projectList').hide();
+            jQuery('#projectListMobil').show();
+            jQuery('#projectListMobil').css('font-size', '10px');
+            jQuery('.container').css('padding-left', '0');
+            jQuery('.btn-done').css('font-size', '10px');
+            jQuery('.btn-done').css('padding', '5px');
+        }
+        else {
+            jQuery('#projectList').show();
+            jQuery('#projectListMobil').hide();
+        }
+    });
+
+    // вызовем событие resize
+    $(window).resize();
 </script>
