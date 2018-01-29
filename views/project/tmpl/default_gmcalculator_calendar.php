@@ -1378,7 +1378,7 @@
         }
         month_old = month;
         year_old = year;
-        update_calendar(month, year);
+        update_calendar_gauger(month, year);
     });
     jQuery("#button-prev-gauger").click(function () {
         month = <?php echo $month1; ?>;
@@ -1395,9 +1395,9 @@
         }
         month_old = month;
         year_old = year;
-        update_calendar(month, year);
+        update_calendar_gauger(month, year);
     });
-    function update_calendar(month, year) {
+    function update_calendar_gauger(month, year) {
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
