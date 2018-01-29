@@ -2811,18 +2811,24 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_components_sum += $component_item['gm_total'];
             $dealer_components_sum += $component_item['dealer_total'];
         }
+        $calc_data = explode(';', $data['calc_data']);
         $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
-        
+        $html .= '<columns column-count="3"/>';
         $html .= '<p>'. $dealer->name;
         $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2></p>';
         $html .= '<p><h2>Общее: ' . $new_total . ' руб.</h2></p>';
-        $html .= '<columns column-count="2"/>';
+        $html .= '<columnbreak />';   
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td>'; 
         $html .= '<columnbreak />';   
-        $html .= explode(';', $data['calc_data']);
+        for($i = 0;$i<count($calc_data);$i++){
+            $html .= $calc_data[$i];
+            if($i%3 ==0){
+                $html .= '<br>';
+            }
+        }
         $html .= '<columns column-count="1" vAlign="J"/>';      
         if ($data['discount'] != 0){
             $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
