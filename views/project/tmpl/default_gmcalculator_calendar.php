@@ -447,7 +447,7 @@
                     $total_square += $calculation->n4;
                     $total_perimeter += $calculation->n5;
                     $canvas = $dealer_canvases_sum;
-                }
+                
                     // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
                     $sum_transport = 0;  $sum_transport_discount = 0;
                     $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
@@ -472,42 +472,43 @@
                     $project_total += $calculation_total;
                     $project_total_discount += $calculation_total_discount;
                     $JS_Calcs_Sum[] = round($calculation_total, 0);
-            ?>
-            <tr class="section_ceilings">
-                <td class="include_calculation">
-                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
-                    <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
-                    <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
-                    <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
-                    <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>
-                    <input name='calculation_total1[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_1; ?>' type='hidden'>
-                    <input name='calculation_total2[<?php echo $calculation->id; ?>]' value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
-                    <input name='calculation_total3[<?php echo $calculation->id; ?>]' value='<?php echo $project_total_1; ?>' type='hidden'>
-                    <input name='canvas[<?php echo $calculation->id; ?>]' value='<?php echo $canvas; ?>' type='hidden'>
-                    <?php echo $calculation->calculation_title; ?>
-                </td>
-            </tr>
-            <tr class="section_ceilings" id="">
-                <td>S/P :</td>
-                <td>
-                    <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
-                </td>
-                <td></td>
-            </tr>
-            <tr class="section_ceilings">
-                <?php if ($calculation->discount != 0) { ?>
-                    <td>Цена / -<? echo $calculation->discount ?>% :</td>
-                    <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб. /</td>
-                    <td id="calculation_total_discount"> <?php echo round($calculation_total_discount, 0); ?>
-                        руб.
+                ?>
+                <tr class="section_ceilings">
+                    <td class="include_calculation">
+                        <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
+                        <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
+                        <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
+                        <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
+                        <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>
+                        <input name='calculation_total1[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_1; ?>' type='hidden'>
+                        <input name='calculation_total2[<?php echo $calculation->id; ?>]' value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
+                        <input name='calculation_total3[<?php echo $calculation->id; ?>]' value='<?php echo $project_total_1; ?>' type='hidden'>
+                        <input name='canvas[<?php echo $calculation->id; ?>]' value='<?php echo $canvas; ?>' type='hidden'>
+                        <?php echo $calculation->calculation_title; ?>
                     </td>
-                <?php } else { ?>
-                    <td>Итого</td>
-                    <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб.</td>
+                </tr>
+                <tr class="section_ceilings" id="">
+                    <td>S/P :</td>
+                    <td>
+                        <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
+                    </td>
                     <td></td>
-                <?php } ?>
-            </tr>
-            <?php if($calculation->discount > 0) $kol++; } ?>
+                </tr>
+                <tr class="section_ceilings">
+                    <?php if ($calculation->discount != 0) { ?>
+                        <td>Цена / -<? echo $calculation->discount ?>% :</td>
+                        <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб. /</td>
+                        <td id="calculation_total_discount"> <?php echo round($calculation_total_discount, 0); ?>
+                            руб.
+                        </td>
+                    <?php } else { ?>
+                        <td>Итого</td>
+                        <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб.</td>
+                        <td></td>
+                    <?php } ?>
+                </tr>
+                <?php if($calculation->discount > 0) $kol++; ?>
+            <?php }?>
             <tr>
                 <th>Общая S/общий P :</th>
                 <th id="total_square">
