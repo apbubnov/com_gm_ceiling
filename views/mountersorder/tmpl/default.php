@@ -137,6 +137,22 @@ if (!empty($calculation_ids)) {
                                                 $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
                                                 $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
                                             }
+                                        } else if ($val["title"] == "Переход уровня по прямой") { 
+                                            if (!array_key_exists("Переход уровня по прямой", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
+                                            } else {
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
+                                            }
+                                        } else if ($val["title"] == "Переход уровня по прямой с нишей") { 
+                                            if (!array_key_exists("Переход уровня по прямой с нишей", $PVH)) {
+                                                $PVH[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
+                                            } else {
+                                                $PVH[$val["title"]]["quantity"] += $val["quantity"];
+                                                $PVH[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $PVH[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
+                                            }
                                         } else {
                                             if (!array_key_exists($val["title"], $rest)) { 
                                                 $rest[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
@@ -218,6 +234,22 @@ if (!empty($calculation_ids)) {
                                             }
                                         } else if ($val["title"] == "Установка вентиляции") { 
                                             if (!array_key_exists("Установка вентиляции", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
+                                            } else {
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
+                                            }
+                                        } else if ($val["title"] == "Переход уровня по прямой") { 
+                                            if (!array_key_exists("Переход уровня по прямой", $cloth)) {
+                                                $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
+                                            } else {
+                                                $cloth[$val["title"]]["quantity"] += $val["quantity"];
+                                                $cloth[$val["title"]]["gm_salary_total"] += $val["gm_salary_total"];
+                                                $cloth[$val["title"]]["dealer_salary_total"] += $val["dealer_salary_total"];
+                                            }
+                                        } else if ($val["title"] == "Переход уровня по прямой с нишей") { 
+                                            if (!array_key_exists("Переход уровня по прямой с нишей", $cloth)) {
                                                 $cloth[$val["title"]] = ["title"=>$val["title"], "gm_salary"=>$val["gm_salary"], "dealer_salary"=>$val["dealer_salary"], "quantity"=>$val["quantity"], "gm_salary_total"=>$val["gm_salary_total"], "dealer_salary_total"=>$val["dealer_salary_total"]];
                                             } else {
                                                 $cloth[$val["title"]]["quantity"] += $val["quantity"];
