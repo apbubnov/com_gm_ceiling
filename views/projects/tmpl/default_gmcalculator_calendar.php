@@ -217,6 +217,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
         else {
             jQuery('#projectList').show();
             jQuery('#projectListMobil').hide();
+            jQuery('#projectListMobil').css('display', 'none');
         }
     });
 
