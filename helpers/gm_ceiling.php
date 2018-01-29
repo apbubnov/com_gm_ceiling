@@ -2806,23 +2806,14 @@ class Gm_ceilingHelpersGm_ceiling
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
-        $html .= '<table border="0" cellspacing="0" width="100%">';
+        $html .= '<b>Дилер: </b>' . $dealer->name . '<br>';
+        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="128" height="128"/></td>';
+        $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
+        $html .= '<h2>Общее: ' . $new_total . ' руб.</h2>';
         
-        $html .= ' <tbody> <tr>';
-        $html .= '<td><b>Дилер: </b>' . $dealer->name . '<br></td><td rowspan = 3><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" style = "height = 200px;"/></td>';
-        $html .= '</tr>';
-        $html .= '<tr>'; 
-        $html .= '<td><h2>Дата: ' . date("d.m.Y") . '</h2></td>';
-        $html .= '</tr>';
-        $html .= '<tr>'; 
-        $html .= '<td><h2>Общее: ' . $new_total . ' руб.</h2></td>';
-        $html .= '</tr>';
         if ($data['discount'] != 0){
-            $html .= '<tr>'; 
-            $html .= '<td><h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2></td>';
-            $html .= '</tr>';
+            $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
         }
-        $html .= '</tbody></table>';
         $html .= '<table border="0" cellspacing="0" width="100%">
                     <tbody>
                         <tr>
