@@ -412,12 +412,7 @@
         </div>
     </div>
 </div>
-
-<?php /*if($canEdit && $this->item->checked_out == 0): ?>
-    <a class="btn" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=project.edit&id='.$this->item->id); ?>">Изменить проект</a>
-<?php endif;*/ ?>
-
-<?php echo "<h3>Расчеты для проекта</h3>"; ?>
+<h3>Расчеты для проекта</h3>
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
