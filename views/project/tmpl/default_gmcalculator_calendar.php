@@ -352,7 +352,9 @@
                                         <td>
                                             <?php echo $this->item->project_note; ?>
                                         </td>
-                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan=2>
                                             <button type="submit" id="accept_changes" class="btn btn btn-success" style="display: none;">Изменить</button>
                                         </td>
                                     </tr>
