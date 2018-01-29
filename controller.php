@@ -2337,7 +2337,7 @@ class Gm_ceilingController extends JControllerLegacy
             $project_calculation_date = $project_calc_date." ".$new_project_calculation_daypart;
             $model = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $model->updateClientNew($id, $fio, $phone,$adress, $project_calculation_date );
-            $this->setRedirect(JRoute::_('http://test1.gm-vrn.ru/components/com_gm_ceiling/views/saverclient/default.php?complite=1&id='.$id, false));
+            $this->setRedirect(JRoute::_('http://test1.gm-vrn.ru/components/com_gm_ceiling/views/saverclient/default_1.php?complite=1&id='.$id, false));
             return 1;
         }
         catch(Exception $e)
