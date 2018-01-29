@@ -302,7 +302,17 @@
                                                 <label id="jform_project_mounting_date-lbl" for="jform_project_new_calc_date">
                                                     Новая дата<span class="star">&nbsp;*</span>
                                                 </label>
-                                                <?php
+                                                <div id="calendar-container">
+                                                    <div class="btn-small-l">
+                                                        <button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                                    </div>
+                                                    <?php echo $calendar; ?>
+                                                    <div class="btn-small-r">
+                                                        <button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
+
+                                                <!-- <?php
                                                     $date_time = $this->item->project_calculation_date;
                                                     $date_arr = date_parse($date_time);
                                                     $date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
@@ -324,7 +334,7 @@
                                                     <option value="18:00">18:00-19:00</option>
                                                     <option value="19:00">19:00-20:00</option>
                                                     <option value="20:00">20:00-21:00</option>
-                                                </select>
+                                                </select> -->
                                             </div>
                                         </td>
                                     </tr>
@@ -355,7 +365,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan=3 style="text-align: center;">
-                                            <button type="submit" id="accept_changes" class="btn btn btn-success" style="display: none;">Изменить</button>
+                                            <button type="submit" id="accept_changes" class="btn btn btn-success" style="display: none;">Сохранить изменения</button>
                                         </td>
                                     </tr>
                                 </table>
