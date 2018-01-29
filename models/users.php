@@ -231,7 +231,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->update("`#__users`");
-			$query->set("`refused _to_cooperate` = 1");
+			$query->set("`refused_to_cooperate` = 1");
 			$query->where("`id` = $id");
 			
 			$db->setQuery($query);

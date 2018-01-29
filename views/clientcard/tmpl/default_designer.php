@@ -497,7 +497,15 @@
                 dataType: "json",
                 async: false,
                 success: function(data) {
-                    location.href = '/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage';
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Переведен в отказ от сотрудничества"
+                    });
+                    setTimeout(function(){location.href = '/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage';}, 1000);
                 },
                 error: function(data) {
                     console.log(data);
@@ -607,10 +615,7 @@
                     type: "success",
                     text: "Добавленна запись в историю клиента"
                 });
-                var pt = "<?php echo $phoneto; ?>";
-                var pf = "<?php echo $phonefrom; ?>";
-                var call_id = <?php echo $call_id; ?>;
-                setTimeout(function(){location.href = location.href;}, 1000);
+                setTimeout(function(){location.reload();}, 1000);
             },
             error: function (data) {
                 console.log(data);
