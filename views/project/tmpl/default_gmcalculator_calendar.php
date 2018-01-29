@@ -604,19 +604,22 @@
                                     $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
                                 </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
                             <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
-                <?php } ?>
-                <?php else { ?>
+                <?php } else { ?>
                     <th>Итого</th>
                     <th id="project_total">
                         <span class="sum">
                         <?php
                             if ($this->item->new_project_sum == 0) {
-                                if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
-                                elseif($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                                if ($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0) {
+                                    $project_total = 2500;
+                                } elseif ($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0) {
+                                    $project_total = 3500;
+                                }
                                 echo round($project_total, 2);
                             } else {
                                 echo round($this->item->new_project_sum, 2);
-                        } ?>
+                            }
+                        ?>
                 <?php } ?>
                 </span>
                 <span class="dop" style="font-size: 9px;">
