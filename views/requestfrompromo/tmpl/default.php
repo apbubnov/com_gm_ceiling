@@ -47,13 +47,13 @@ $_SESSION['dop_num'] = $dop_num;
                 {
                     $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.$item->client_id, false);
                 }
+                elseif (is_null($item->dealer_type))
+                {
+                    $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.$item->client_id, false);
+                }
                 elseif ($item->dealer_type == 0 || $item->dealer_type == 1)
                 {
                     $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.$item->client_id, false);
-                }
-                else
-                {
-                    $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.$item->client_id, false);
                 }
         ?>
            
