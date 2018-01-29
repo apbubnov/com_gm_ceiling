@@ -156,9 +156,10 @@
 
 <?php if ($this->item) : ?>
     <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-    <?php $calculations = $model->getProjectItems($this->item->id);
-            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-            $phones = $client_model->getItemsByClientId($this->item->id_client);
+    <?php
+        $calculations = $model->getProjectItems($this->item->id);
+        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+        $phones = $client_model->getItemsByClientId($this->item->id_client);
     ?>
 
 <div class="container">
@@ -172,9 +173,9 @@
                             <table>
                                 <tr>
                                     <td>
-
-                                        <a class="btn btn-primary"
-                                            id="change_data"><?php if ($this->item->client_id == 1) echo "Заполнить данные о клиенте"; else echo "Изменить данные" ?></a>
+                                        <a class="btn btn-primary" id="change_data">
+                                            <?php if ($this->item->client_id == 1) { echo "Заполнить данные о клиенте"; else echo "Изменить данные" } ?>
+                                        </a>
                                     </td>
                                 </tr>
                             </table>
@@ -204,11 +205,12 @@
                                         <td><?php echo $this->item->client_id; ?></td>
                                         <td>
                                             <div class="FIO" style="display: none;">
-                                                <input class = "inputactive" name="new_client_name" id="jform_client_name" value="<?php  echo $this->item->client_id;?>" placeholder="Новое ФИО клиента" type="text">
+                                                <input class = "inputactive" name="new_client_name" id="jform_client_name" value="<?php echo $this->item->client_id; ?>" placeholder="Новое ФИО клиента" type="text">
                                             </div>
                                         </td>
                                     </tr>
-                                    <?php  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+                                    <?php 
+                                        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
                                         $birthday = $client_model->getClientBirthday($this->item->id_client);
                                     ?>
                                     <tr>
@@ -393,7 +395,7 @@
                                 <tr>
                                     <td>
                                         <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
-                                        <input name="new_discount" id="jform_new_discount" value="" onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки" max='<?=// round($skidka, 0); ?>' type="number">
+                                        <input name="new_discount" id="jform_new_discount" value="" onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки" max='<?php// echo round($skidka, 0); ?>' type="number">
                                         <input name="isDiscountChange" value="0" type="hidden">
                                     </td>
                                     <td>
