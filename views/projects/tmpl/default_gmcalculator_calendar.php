@@ -145,7 +145,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                 <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
+                <?php echo JHtml::_('grid.sort',  'Примечание менеджера', 'a.gm_manager_note', $listDirn, $listOrder); ?>
             </th>
         </tr>
         </thead>
@@ -176,8 +176,8 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     <td class="center one-touch">
                         <?php echo $this->escape($item->project_info); ?>
                     </td>
-                    <td class="center one-touch">
-                        <?php echo $item->client_contacts; ?>
+                    <td>
+                        <?php echo $item->gm_manager_note; ?>
                     </td>
                 </tr>
             <?php } ?>

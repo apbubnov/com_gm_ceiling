@@ -126,7 +126,7 @@ $rest = -($total_sum) - $contributed;
         <?endif;?>
     </button>
 
-        <button class="btn btn-primary btn-acct" type="button"> Счет </button>
+        <a class="btn btn-primary btn-acct" > <?=$rest?-$rest:0;?> руб. </a>
         <div id="modal_window_container" class="modal_window_container" >
             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar"
                                                                   aria-hidden="true"></i>
