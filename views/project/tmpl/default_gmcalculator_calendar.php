@@ -354,7 +354,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan=2>
+                                        <td colspan=3 style="text-align: center;">
                                             <button type="submit" id="accept_changes" class="btn btn btn-success" style="display: none;">Изменить</button>
                                         </td>
                                     </tr>
