@@ -313,11 +313,11 @@
                                                 </label>
                                                 <div id="calendar-container">
                                                     <div class="btn-small-l">
-                                                        <button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                                        <button id="button-prev-gauger" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                                                     </div>
                                                     <?php echo $calendar; ?>
                                                     <div class="btn-small-r">
-                                                        <button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                                        <button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                                     </div>
                                                 </div>
 
@@ -1177,6 +1177,16 @@
         <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
     </div>
 </div>
+<div id="modal-window-container2-tar">
+    <button id="close2-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal-window-2-tar">
+        <p id="date-modal"></p>
+        <p><strong>Выберите время замера:</strong></p>
+        <p>
+            <table id="projects_gaugers"></table>
+        </p>
+    </div>
+</div>
 <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
 </div>
 <div id="modal_window_container" class = "modal_window_container">
@@ -1216,7 +1226,7 @@
         jQuery("#modal_window_container, #modal_window_container *").hide();
     }
 
-    // листание календаря
+    // листание календаря монтажников
     month_old1 = 0;
     year_old1 = 0;
     month_old2 = 0;
@@ -1350,6 +1360,10 @@
     }
     //----------------------------------------
 
+    // листание календаря замерщиков
+
+    //----------------------------------------
+
     //скрыть модальное окно
     jQuery(document).mouseup(function (e) {
 		var div1 = jQuery("#modal-window-choose-tar");
@@ -1366,6 +1380,13 @@
             jQuery("#modal_window_container").hide();
             jQuery("#modal_window_del").hide();
         }
+        var div2 = jQuery("#modal-window-2-tar");
+		if (!div2.is(e.target)
+		    && div2.has(e.target).length === 0) {
+			jQuery("#close2-tar").hide();
+			jQuery("#modal-window-container2-tar").hide();
+			jQuery("#modal-window-2-tar").hide();
+		}
     });
     //--------------------------------------------------
 
