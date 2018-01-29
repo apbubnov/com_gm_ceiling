@@ -2815,16 +2815,16 @@ class Gm_ceilingHelpersGm_ceiling
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
-        $html .= '<columns column-count="3"/>';
+        $html .= '<columns column-count="3" vAlign="J"/>';
         $html .= '<p><b>Дилер: </b>' . $dealer->name . '</p>';
         $html .= '<p><h2>Дата: ' . date("d.m.Y") . '</h2></p>';
         $html .= '<p><h2>Общее: ' . $new_total . ' руб.</h2></p>';
         $html .= '<columnbreak />';
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td>'; 
         $html .= '<columnbreak />';   
-        // $html .= $data['calc_data'];
-        //  $html .= '<columnbreak />';
-          $html .= '<columns column-count="1" vAlign="J"/>';      
+        $html .= str_replace(';', '; ', $data['calc_data']);
+        $html .= '<columnbreak />';
+        $html .= '<columns column-count="1" vAlign="J"/>';      
         if ($data['discount'] != 0){
             $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
         }
