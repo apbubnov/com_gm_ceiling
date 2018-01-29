@@ -2819,7 +2819,7 @@ class Gm_ceilingHelpersGm_ceiling
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
-        $html .= '<table>';
+        $html .= '<table style = "border:0">';
         $html .= '<tr>';
         $html .= '<td>' . $dealer->name . '</td><td rowspan = "3"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td><td rowspan = "3">'.str_replace(';','; ',$data['calc_data']).'</td>';
         $html .= '</tr>';
