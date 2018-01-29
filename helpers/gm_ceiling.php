@@ -2821,7 +2821,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
         $html .= '<table>';
         $html .= '<tr>';
-        $html .= '<td>' . $dealer->name . '</td><td rowspan = "3"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td><td rowspan = "3">'.$data['calc_data'].'</td>';
+        $html .= '<td>' . $dealer->name . '</td><td rowspan = "3"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td><td rowspan = "3">'.str_replace(';','; ',$data['calc_data']).'</td>';
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<td><h2>Дата: ' . date("d.m.Y") . '</h2></td>';
