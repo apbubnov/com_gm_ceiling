@@ -199,4 +199,28 @@ class Gm_ceilingModelUsers extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	function getUserByAssociatedClient($associated_client)
+	{
+		try
+		{
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from("`#__users`");
+			$query->where("`associated_client` = $associated_client");
+			
+			$db->setQuery($query);
+			$item = $db->loadObject();
+			
+			return $item;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }

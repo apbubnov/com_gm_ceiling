@@ -48,7 +48,7 @@ $_SESSION['dop_num'] = $dop_num;
 <script>
     var del_click_bool = false;
 
-    var arr_calls = <?php echo json_encode($this->item); ?>;
+    var arr_calls = JSON.parse("<?php echo json_encode($this->item); ?>");
     var table_body_elem = document.getElementById('table_body');
     var user_id = <?php echo $userId; ?>;
 
@@ -62,7 +62,18 @@ $_SESSION['dop_num'] = $dop_num;
             if ((arr_calls[i].date_time < calendar_elem_value || arr_calls[i].date_time.indexOf(calendar_elem_value) + 1) && (user_id == arr_calls[i].manager_id || arr_calls[i].manager_id == 1))
             {
                 str = '';
-                str += '<tr data-href="index.php?option=com_gm_ceiling&view=clientcard&id='+(arr_calls[i].client_id-0)+'&call_id='+(arr_calls[i].id-0)+'">';
+                if (arr_calls[i].dealer_type == 3)
+                {
+                    str += '<tr data-href="index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='+(arr_calls[i].client_id-0)+'&call_id='+(arr_calls[i].id-0)+'">';
+                }
+                else if (arr_calls[i].dealer_type == 0 || arr_calls[i].dealer_type == 1)
+                {
+                    str += '<tr data-href="index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='+(arr_calls[i].client_id-0)+'&call_id='+(arr_calls[i].id-0)+'">';
+                }
+                else
+                {
+                    str += '<tr data-href="index.php?option=com_gm_ceiling&view=clientcard&id='+(arr_calls[i].client_id-0)+'&call_id='+(arr_calls[i].id-0)+'">';
+                }
                 str += '<td>'+arr_calls[i].client_name+'</td>';
                 str += '<td>'+arr_calls[i].date_time+'</td>';
                 str += '<td>'+arr_calls[i].comment+'</td>';
@@ -90,6 +101,7 @@ $_SESSION['dop_num'] = $dop_num;
             del_click_bool = false;
         });
     });
+
     function del_call(id)
     {
         del_click_bool = true;
