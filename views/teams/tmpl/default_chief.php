@@ -9,10 +9,13 @@ JHtml::_('behavior.multiselect');
 
 $user       = JFactory::getUser();
 $userId     = $user->id;
-$dealerId   = $user->dealer_id;
 
 $teams_model = Gm_ceilingHelpersGm_ceiling::getModel('teams');
-$brigade_id = $teams_model->getDatas($dealerId);
+if ($user->dealer_id == 1) {
+	$brigade_id = $teams_model->getDatas($userId);
+} else {
+	$brigade_id = $teams_model->getDatas($user->dealer_id);
+}
 
 if (!empty($brigade_id)) {
 	$brigade_mounter = $teams_model->getMounterBrigade($brigade_id);
@@ -30,7 +33,11 @@ if ($month1 == 12) {
     $month2++;
     $year2 = $year1;
 }
-$FlagCalendar = [1, $dealerId];
+if ($user->dealer_id == 1) {
+	$FlagCalendar = [1, $userId];
+} else {
+	$FlagCalendar = [1, $user->dealer_id];
+}
 
 if (!empty($brigade_id)) {
 	foreach ($brigade_id as $value) {        
@@ -200,7 +207,7 @@ if (!empty($brigade_id)) {
                         url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                         data: {
                             id: <?php echo $value->id; ?>,
-                            id_dealer: <?php echo $dealerId; ?>,
+                            id_dealer: <?php if ($user->dealer_id == 1) { echo $userId;} else { echo $user->dealer_id; } ?>,
                             flag: 1,
                             month: month1,
                             year: year1,
@@ -229,7 +236,7 @@ if (!empty($brigade_id)) {
                         url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                         data: {
                             id: <?php echo $value->id; ?>,
-                            id_dealer: <?php echo $dealerId; ?>,
+                            id_dealer: <?php if ($user->dealer_id) { echo $userId;} else { echo $user->dealer_id; } ?>,
                             flag: 1,
                             month: month2,
                             year: year2,
@@ -261,7 +268,7 @@ if (!empty($brigade_id)) {
 					url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 					data: {
 						id: <?php echo $userId; ?>,
-						id_dealer: <?php echo $dealerId; ?>,
+						id_dealer: <?php if ($user->dealer_id == 1) { echo $userId;} else { echo $user->dealer_id; } ?>,
 						flag: 1,
 						month: month1,
 						year: year1,
@@ -288,7 +295,7 @@ if (!empty($brigade_id)) {
 					url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
 					data: {
 						id: <?php echo $userId; ?>,
-						id_dealer: <?php echo $dealerId; ?>,
+						id_dealer: <?php if ($user->dealer_id == 1) { echo $userId;} else { echo $user->dealer_id; } ?>,
 						flag: 1,
 						month: month2,
 						year: year2,
@@ -351,7 +358,7 @@ if (!empty($brigade_id)) {
                     url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                     data: {
                         id: <?php echo $value->id; ?>,
-                        id_dealer: <?php echo $dealerId; ?>,
+                        id_dealer: <?php if ($user->dealer_id == 1) { echo $userId;} else { echo $user->dealer_id; } ?>,
                         flag: 1,
                         month: month1,
                         year: year1,
@@ -380,7 +387,7 @@ if (!empty($brigade_id)) {
                     url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                     data: {
                         id: <?php echo $value->id; ?>,
-                        id_dealer: <?php echo $dealerId; ?>,
+                        id_dealer: <?php if ($user->dealer_id == 1) { echo $userId;} else { echo $user->dealer_id; } ?>,
                         flag: 1,
                         month: month2,
                         year: year2,
@@ -412,7 +419,7 @@ if (!empty($brigade_id)) {
                     url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                     data: {
                         id: <?php echo $userId; ?>,
-                        id_dealer: <?php echo $dealerId; ?>,
+                        id_dealer: <?php if ($user->dealer_id == 1) { echo $userId;} else { echo $user->dealer_id; } ?>,
                         flag: 1,
                         month: month1,
                         year: year1,
@@ -439,7 +446,7 @@ if (!empty($brigade_id)) {
                     url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
                     data: {
                         id: <?php echo $userId; ?>,
-                        id_dealer: <?php echo $dealerId; ?>,
+                        id_dealer: <?php if ($user->dealer_id == 1) { echo $userId;} else { echo $user->dealer_id; } ?>,
                         flag: 1,
                         month: month2,
                         year: year2,

@@ -99,8 +99,6 @@ class Gm_ceilingControllerClientForm extends JControllerForm
 
 			// Validate the posted data.
 			$data = $model->validate($form, $data);
-			
-			$data['created'] = date("Y-m-d");
 
 			// Check for errors.
 			if ($data === false)

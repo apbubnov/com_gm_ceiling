@@ -128,7 +128,20 @@ class Gm_ceilingHelpersGm_ceiling
         if (!$user->save()) return false;
         JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
         $margin_model = self::getModel('Dealer_info');
-        $margin_model->save(0,0,0,0,0,0,$userID,0);
+        $mount_model = self::getModel('mount');
+        if ($type == 3)
+        {
+            $gm_margin = $margin_model->getDataById(1);
+            $margin_model->save($gm_margin->dealer_canvases_margin,$gm_margin->dealer_components_margin,$gm_margin->dealer_mounting_margin,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
+            $gm_mount = $mount_model->getDataAll(1);
+            $gm_mount->user_id = $userID;
+            $mount_model->insert($gm_mount);
+        }
+        else
+        {
+            $margin_model->save(0,0,0,0,0,0,$userID,0);
+        }
+        
         return $userID;
 
         //header('location: /index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage');
@@ -246,6 +259,7 @@ class Gm_ceilingHelpersGm_ceiling
                     'offcut_square' => 'float',
                     'discount' => 'int',
                     'original_name' => 'string',
+                    'cuts' => 'string',
                     'rek' => 'int'
                 )
             ));
@@ -1994,6 +2008,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $tmp_filename = $data['sketch_name'];
                 $tmp_cut_filename = $data['cut_name'];
                 $tmp_original_filename = $data['original_name'];
+                $cuts = $data['cuts'];
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
                    // $data['calc_image'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png");
                 }
@@ -2020,7 +2035,11 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png")) {
                     rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".png");
-
+                }
+                if (!empty($cuts))
+                {
+                    $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');
+                    $canvases_model->saveCuts($ajax_return['id'],$cuts);
                 }
             }
             if ($new_client == 1) {
@@ -2770,7 +2789,131 @@ class Gm_ceilingHelpersGm_ceiling
 
             return $return;
     }
-    public static function calculate_components($calc_id,$data,$del_flag){
+    public static function create_client_single_estimate($calc_id=null,$data=null,$need_mount){
+        $html = self::create_client_single_estimate_html($calc_id,$data,$need_mount);
+        $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+        $filename = md5($data['id'] . "-0-0") . ".pdf";
+        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+    }
+    public static function create_client_single_estimate_html($calc_id=null,$data=null,$need_mount){
+        $user = JFactory::getUser();
+        $dealer = JFactory::getUser($user->dealer_id);
+        $canvases_data = self::calculate_canvases($calc_id);
+        $offcut_square_data = self::calculate_offcut($calc_id);
+        $components_data = self::calculate_components($calc_id,null,0);
+        $guild_data = self::calculate_guild_jobs($calc_id);
+        $mounting_data = self::calculate_mount(0,$calc_id,null);
+        if(!empty($calc_id)){
+            $calculation_model = self::getModel('calculation');
+            $data = get_object_vars($calculation_model->getData($calc_id));
+        }
+        $components_sum = 0;
+        $gm_components_sum = 0;
+        $dealer_components_sum = 0;
+        foreach ($components_data as $component_item) {
+            $components_sum += $component_item['self_total'];
+            $gm_components_sum += $component_item['gm_total'];
+            $dealer_components_sum += $component_item['dealer_total'];
+        }
+        $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
+        $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
+        $html = '<h1>Смета по материалам и комплектующим</h1>';
+        $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
+        $html .= '<table>';
+        $html .= '<tr>';
+        $html .= '<td>' . $dealer->name . '</td><td rowspan = "3"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td><td rowspan = "3">'.$data['calc_data'].'</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<td><h2>Дата: ' . date("d.m.Y") . '</h2></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<td><h2>Общее: ' . $new_total . ' руб.</h2></td>';
+        $thml .= '</tr>';
+        $html .= '</table>';
+        if ($data['discount'] != 0){
+            $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
+        }
+        $html .= '<table border="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <th>Наименование</th>
+                            <th class="center">Цена, руб.</th>
+                            <th class="center">Кол-во</th>
+                            <th class="center">Стоимость, руб.</th></tr>';
+        if ($data['n1'] && $data['n2'] && $data['n3']) {
+            if ($data['color'] > 0) {
+                $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+                $color = $color_model->getData($data['color']);
+                $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
+            } else {
+                $name = $canvases_data['title'];
+                }
+            $html .= '<tr>';
+            $html .= '<td>' . $name . '</td>';
+            $html .= '<td class="center">' . round($canvases_data['dealer_price'], 2) . '</td>';
+            $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
+            $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
+            $html .= '</tr>';
+        }
+        if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] > 0) {
+            $name = $offcut_square_data['title'];
+            $html .= '<tr>';
+            $html .= '<td>' . $name . '</td>';
+            $html .= '<td class="center">' . round($offcut_square_data['dealer_price'], 2) . '</td>';
+            $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
+            $html .= '<td class="center">' . $offcut_square_data['dealer_total'] . '</td>';
+            $html .= '</tr>';
+        }
+        foreach ($components_data as $key => $item) {
+                if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $item['title'] . '</td>';
+                    $html .= '<td class="center">' . round($item['dealer_price'], 2) . '</td>';
+                    $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                    $html .= '<td class="center">' . $item['dealer_total'] . '</td>';
+                    $html .= '</tr>';
+                }
+            }
+            foreach ($guild_data as $item) {
+                $html .= '<tr>';
+                $html .= '<td>' . $item['title'] . '</td>';
+                $html .= '<td class="center">' . round($item['gm_salary'] * 2, 2) . '</td>';
+                $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                $html .= '<td class="center">' . $item['gm_salary_total'] * 2 . '</td>';
+                $html .= '</tr>';
+
+            }
+            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild, 2) . '</th></tr>';
+            $html .= '</tbody></table><p>&nbsp;</p>';
+            if ($need_mount) {
+                $html .= '<h1>Смета по монтажным работам</h1>
+                        <h2>Дата: ' . date("d.m.Y") . '</h2>
+                        <table border="0" cellspacing="0" width="100%">
+                        <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
+                foreach ($mounting_data['mounting_data'] as $item) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $item['title'] . '</td>';
+                    $html .= '<td class="center">' . round($item['price_with_gm_dealer_margin'], 2) . '</td>';
+                    $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                    $html .= '<td class="center">' . $item['total_with_gm_dealer_margin'] . '</td>';
+                    $html .= '</tr>';
+                    
+                }
+
+                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_with_gm_dealer_margin, 2) . '</th></tr>';
+                $html .= '</tbody></table><p>&nbsp;</p>';
+            }
+            if ($data['discount'] != 0)
+                $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. - ' . $data['discount'] . '% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
+            else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб.</div>';
+
+           return $html; 
+    }
+
+    public static function create_client_common_estimate($project_id){
+
+    }
+    public static function calculate_components($calc_id,$data=null,$del_flag=0){
 
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
@@ -3366,7 +3509,7 @@ class Gm_ceilingHelpersGm_ceiling
 		$calc_id - id калькуляции в БД
 		$data - массив данных для просчета, если новый просчет
 	*/
-    public static function calculate_mount($del_flag,$calc_id,$data){
+    public static function calculate_mount($del_flag,$calc_id,$data=null){
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
         $calculation_model = self::getModel('calculation');
@@ -3380,12 +3523,18 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $project_model = self::getModel('project');
         $client_id = $project_model->getData($project_id)->id_client;
-        $client_model = self::getModel('client');
-        $dealer_id = $client_model->getClientById($client_id)->dealer_id;
-        if(empty($dealer_id)){
-            $dealer_id = 1;
+        if(!empty($client_id)){
+            $client_model = self::getModel('client');
+            $dealer_id = $client_model->getClientById($client_id)->dealer_id;
+            if(empty($dealer_id)){
+                $dealer_id = 1;
+            }
+        }
+        else{
+            $dealer_id = 1;   
         }
         $results = $mount_model->getDataAll($dealer_id);
+        
         //Если существующая калькуляция
         if(!empty($calc_id)){
             foreach ($calculation_data as $key => $item) {
@@ -3400,6 +3549,7 @@ class Gm_ceilingHelpersGm_ceiling
             $n14 = $data['n14'];
             $n23 = $data['n23'];
             $n15 = $data['n15'];
+            $n29 = $data['n29'];
         }
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
@@ -4412,6 +4562,7 @@ class Gm_ceilingHelpersGm_ceiling
                 'distance' => $distance,
                 'distance_col' =>$distance_col
             );
+            //TODO:спросить много ли где использвется эта фугкция и убрать доп запросы внутри, все можно получить через другие модели
             $res = $project_model->transport((object)$data);
         }
         else{
@@ -4419,6 +4570,19 @@ class Gm_ceilingHelpersGm_ceiling
             $transport_type = $project->transport;
             $distance = $project->distance;
             $distance_col = $project->distance_col;
+            $client_id = $project->id_client;
+            if(!empty($client_id)){
+                $client_model = self::getModel('client');
+                $dealer_id = $client_model->getClientById($client_id)->dealer_id;
+                if(empty($dealer_id)){
+                    $dealer_id = 1;
+                }
+            }
+            else{
+                 $dealer_id = 1;
+            }
+            $mount_model = self::getModel('mount');
+            $res = $mount_model->getDataAll($dealer_id);
         }
         $dealer_info_model = self::getModel('Dealer_info');
         if(empty($res->user_id)) {
@@ -5028,6 +5192,7 @@ class Gm_ceilingHelpersGm_ceiling
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         return 1;
     }
+
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
     public static function print_components($project_id, $components_data)
     {

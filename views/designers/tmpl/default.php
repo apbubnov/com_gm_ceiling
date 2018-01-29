@@ -19,8 +19,12 @@ $result_users = $users_model->getDesigners();
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Отделочники/Дизайнеры</h2>
-    <div style="width: 100%; text-align: left;">
+    <div style="display:inline-block; width: 48%; text-align: left;">
         <button type="button" id="new_designer" class="btn btn-primary">Создать Отделочника/дизайнера</button>
+    </div>
+    <div style="display:inline-block; width: 48%; text-align: left;">
+        <input type="text" id="name_find_designer">
+        <button type="button" id="find_designer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
     <br>
     <table class="table table-striped one-touch-view" id="callbacksList">
@@ -30,11 +34,14 @@ $result_users = $users_model->getDesigners();
                Имя
             </th>
             <th>
+               Телефоны
+            </th>
+            <th>
                Дата регистрации
             </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="tbody_designers">
         	<?php
         		foreach ($result_users as $key => $value)
         		{
@@ -43,8 +50,19 @@ $result_users = $users_model->getDesigners();
 		            <td>
 		               <?php echo $value->name; ?>
 		            </td>
+                    <td>
+                       <?php echo $value->client_contacts; ?>
+                    </td>
 		            <td>
-		               <?php echo $value->registerDate; ?>
+		               <?php
+                            if($value->created == "0000-00-00 00:00:00") {
+                                echo "-";
+                            } else {
+                                $jdate = new JDate($value->created);
+                                $created = $jdate->format("d.m.Y H:i");
+                                echo $created;
+                            }
+                       ?>
 		            </td>
 		        </tr>
         	<?php
@@ -105,6 +123,45 @@ $result_users = $users_model->getDesigners();
                 dataType: "text",
                 async: false,
                 timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });
+        });
+
+        jQuery("#find_designer").click(function(){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=findOldClients",
+                data: {
+                    fio: document.getElementById('name_find_designer').value,
+                    flag: 'designers'
+                },
+                success: function(data){
+                    console.log(data);
+                    var tbody = document.getElementById('tbody_designers');
+                    tbody.innerHTML = '';
+                    var html = '';
+                    for(var i in data)
+                    {
+                        html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
+                        html += '<td>' + data[i].client_name + '</td>';
+                        html += '<td>' + data[i].client_contacts + '</td>';
+                        html += '<td>' + data[i].created + '</td></tr>';
+                    }
+                    tbody.innerHTML = html;
+                    html = '';
+                },
+                dataType: "json",
+                async: false,
+                timeout: 20000,
                 error: function(data){
                     var n = noty({
                         timeout: 2000,

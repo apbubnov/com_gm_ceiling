@@ -70,8 +70,8 @@
 </div>
 <? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
-<div style="width: 100%;">
-<div style="display: inline-block; width: 50%;">
+<div style="width: 98%;">
+<div style="display: inline-block; width: 48%;">
     <div>
     <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера: </p>
     </div>
@@ -86,13 +86,13 @@
         <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
     </div>
 </div>
-<div style="display: inline-block; width: 50%;">
+<div style="display: inline-block; width: 48%;">
     <div>
-    <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Телефоны отделочника/дизайнера: </p>
+    <p class = "caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны отделочника/дизайнера: </p>
     </div>
     <div>
     <?php foreach($client_phones as $item) { ?>
-            <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $item->phone; ?></p>
+            <p  style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></p>
         <?php } ?>
     </div>
     <div>

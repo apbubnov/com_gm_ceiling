@@ -263,7 +263,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $name = $jinput->get('new_client_name', '', 'STRING');
                 $phones = $jinput->get('new_client_contacts', array(), 'ARRAY');
                 foreach ($phones as $key => $value) {
-                    $phones[$key] = preg_replace('/[\(\)\-\s]/', '', $value);
+                    $phones[$key] = preg_replace('/[\(\)\-\+\s]/', '', $value);
                 }
 
                 $street = $jinput->get('new_address', '', 'STRING');
@@ -284,14 +284,40 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $manager_comment = $jinput->get('gmmanager_note', '', 'STRING');
 
 
-                if ($client_id == 1 && $isDiscountChange == 0) {
-                    $client_data['client_name'] = $name;
-                    $client_data['type_id'] = 1;
-                    $client_data['manager_id'] = $user->id;
-                    $client_data['dealer_id'] = $user->dealer_id;
-                    $client_data['created'] = date("Y-m-d");
-                    $client_data['sex'] = $sex;
-                    $client_id = $client_form_model->save($client_data);
+                if ($client_id == 1 && $isDiscountChange == 0)
+                {
+                    $client_found_bool = false;
+                    foreach($phones as $key => $phone)
+                    {
+                        $old_client = $cl_phones_model->getItemsByPhoneNumber($phone, $user->dealer_id);
+                        if (!empty($old_client))
+                        {
+                            $del_phone = $phone;
+                            unset($phones[$key]);
+                            $client_found_bool = true;
+                            break;
+                        }
+                    }
+                    if ($client_found_bool)
+                    {
+                        $client_id = $old_client->id;
+                        if ($old_client->client_name == 'Безымянный' || $old_client->client_name == '')
+                        {
+                            $client_model->updateClient($client_id, $name, $user->dealer_id);
+                            $client_model->updateClientManager($client_id, $user->id);
+                            $client_model->updateClientSex($client_id, $sex);
+                        }
+                    }
+                    else
+                    {
+                        $client_data['client_name'] = $name;
+                        $client_data['type_id'] = 1;
+                        $client_data['manager_id'] = $user->id;
+                        $client_data['dealer_id'] = $user->dealer_id;
+                        $client_data['sex'] = $sex;
+                        $client_id = $client_form_model->save($client_data);
+                    }
+                    
                     //обновление email
                     $dop_contacts = $this->getModel('clients_dop_contacts', 'Gm_ceilingModel');
                     $dop_contacts->update_client_id($emails, $client_id);
@@ -301,7 +327,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $rec_model->save($recoil, $project_id, 0);
                     }
                     //добавление его номеров телефонов в бд
-                    $cl_phones_model->save($client_id, $phones);
+                    if (!empty($phones))
+                    {
+                        $cl_phones_model->save($client_id, $phones);
+                    }
                     //обновление комментов к клиенту
                     if (count($comments_id) != 0) {
                         $client_history_model->updateClientId($client_id, $comments_id);
@@ -337,8 +366,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         } else {
                             $email = "$client_id@$client_id";
                         }
+                        if (empty($phones))
+                        {
+                            $reg_phone = $del_phone;
+                        }
+                        else
+                        {
+                            $reg_phone = preg_replace('/[\(\)\-\+\s]/', '', array_shift($phones));
+                        }
                         //зарегать как user
-                        $userID = Gm_ceilingHelpersGm_ceiling::registerUser($name, preg_replace('/[\(\)\-\s]/', '', array_shift($phones)), $email, $client_id);
+                        $userID = Gm_ceilingHelpersGm_ceiling::registerUser($name, $reg_phone, $email, $client_id);
 
                         $client_model->updateClient($client_id, null, $userID);
 
@@ -355,10 +392,29 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
                         $status = 20;
                     }
+                    if ($client_found_bool)
+                    {
+                        if ($status == 0)
+                        {
+                            $model->delete($project_id);
+                        }
+                        else
+                        {
+                            $client_projects = $model->getProjectsByClientID($client_id);
+                            foreach ($client_projects as $key => $project)
+                            {
+                                if ($project->project_status == 0) {
+                                    $model->delete($project->id);
+                                }
+                            }
+                        }
+                    }
                     if ($call_type == "client") {
                         $this->setMessage("Клиент создан и $result!");
                     }
-                } elseif ($client_id != 1 && $isDiscountChange == 0) {
+                }
+                elseif ($client_id != 1 && $isDiscountChange == 0)
+                {
                     $new_phones = [];
                     $change_phones = [];
                     $newFIO = $jinput->get('new_client_name', '', 'STRING');
@@ -1106,6 +1162,19 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $quickly = $jinput->get('quick',0,'INT');
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
             $data = $model->approvemanager($id,$ready_date_time,$quickly);
+            $res = $model->getData($id);
+            $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $calculations = $calc_model->new_getProjectItems($id);
+            $material_sum = 0;
+
+            foreach ($calculations as $calculation) {
+                $material_sum += $calculation->components_sum + $calculation->canvases_sum;
+            }
+            if(empty($material_sum)) $material_sum = 0;
+            else $material_sum = -($material_sum);
+            $recoil_map_model =Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+            if($res->dealer_id != 1 || $res->dealer_id != 2 )
+                $recoil_map_model->save($res->dealer_id, $id, $material_sum);
 			if ($data === false)
 			{
 				$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
@@ -1297,7 +1366,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			//Gm_ceilingHelpersGm_ceiling::notify($data, 2);
 			Gm_ceilingHelpersGm_ceiling::notify($data, 3);
 			// Check for errors.
-			
+
 
 			if ($return === false)
 			{

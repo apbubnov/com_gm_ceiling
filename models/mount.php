@@ -61,8 +61,6 @@ class Gm_ceilingModelMount extends JModelList
 			$dealerId = $user->dealer_id;
 			$db    = $this->getDbo();
 			$query = $db->getQuery(true);
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
 			$query->select('mp1,mp2,mp3,mp4,mp5,mp6,mp7,mp8,mp9,mp10,mp11,mp12,mp13,mp14,mp15,mp16,mp17,mp18,mp19,transport,user_id, distance');
 			$query->from('#__gm_ceiling_mount');
 			$query->where("`user_id` = $dealerId");
@@ -89,14 +87,53 @@ class Gm_ceilingModelMount extends JModelList
 			}
 	        $db    = $this->getDbo();
 	        $query = $db->getQuery(true);
-	        $db = JFactory::getDbo();
-	        $query = $db->getQuery(true);
 	        $query->select('*');
-	        $query->from('#__gm_ceiling_mount');
+	        $query->from('`#__gm_ceiling_mount`');
 	        $query->where("`user_id` = $dealerId");
 	        $db->setQuery($query);
 	        $item = $db->loadObject();
 	        return $item;
+	    }
+	    catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+	function insert($data)
+    {
+    	try
+    	{
+	        $db    = $this->getDbo();
+
+	        unset($data->id);
+
+	       	$col = '';
+			$val = '';
+			foreach ($data as $key => $value)
+			{
+				$col .= "`$key`,";
+				$val .= "'$value',";
+			}
+			$col = substr($col, 0, -1);
+			$val = substr($val, 0, -1);
+
+			$query = $db->getQuery(true);
+	        $query->delete('`#__gm_ceiling_mount`');
+	        $query->where("`user_id` = $data->user_id");
+	        $db->setQuery($query);
+	        $db->execute();
+
+	        $query = $db->getQuery(true);
+	        $query->insert('`#__gm_ceiling_mount`');
+	        $query->columns($col);
+	        $query->values($val);
+	        $db->setQuery($query);
+	        $db->execute();
+	        return true;
 	    }
 	    catch(Exception $e)
         {

@@ -394,6 +394,8 @@ class Gm_ceilingModelClientForm extends JModelForm
 				$data['manager_id'] = $user->id;
 			}
 			
+			$data['created'] = date("Y-m-d H:i:s");
+
 			if(!empty($data['client_contacts']))
 			{
 				$db = JFactory::getDbo();

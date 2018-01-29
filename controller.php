@@ -1455,6 +1455,7 @@ class Gm_ceilingController extends JControllerLegacy
             $user_id = $jinput->get('id', '0', 'int');
             $arr_points = $jinput->get('arr_points', '', 'array');
             $offcut_square = $jinput->get('square_obrezkov', '', 'FLOAT');
+            $cuts = $jinput->get('cuts', '', 'string');
             
             for ($i = 0; $i < count($arr_points); $i++)
             {
@@ -1481,7 +1482,7 @@ class Gm_ceilingController extends JControllerLegacy
             $_SESSION['cut'] = $filename;
             $_SESSION['width'] = $jinput->get('width', '0', 'INT');
             $_SESSION['offcut'] = $offcut_square;
-            //throw new Exception($_SESSION['cut'].' | '.$_SESSION['width'].' | '.$_SESSION['offcut']);
+            $_SESSION['cuts'] = $cuts;
 
             die($filename);
         }
@@ -1801,11 +1802,9 @@ class Gm_ceilingController extends JControllerLegacy
             if (empty($result)) {
                 die($result);
             }
-            $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
-            $result_client = $model_client->getClientById($result->client_id);
 
             $model_project = Gm_ceilingHelpersGm_ceiling::getModel('project');
-            $result_project = $model_project->getProjectsByClientID($result_client->id);
+            $result_project = $model_project->getProjectsByClientID($result->id);
             
             die(json_encode($result_project));
         }
@@ -2635,6 +2634,7 @@ class Gm_ceilingController extends JControllerLegacy
             $arr_points = $jinput->get('koordinats_poloten', '', 'array');
             $calc_id = $jinput->get('calc_id', '', 'INT');
             $width = $jinput->get('width', '', 'INT');
+            $cuts = $jinput->get('cuts', '', 'string');
             $width = (string)$width/100;
             if(empty(strpos($width,'.'))){
                 $width.='.0';
@@ -2661,6 +2661,12 @@ class Gm_ceilingController extends JControllerLegacy
 
             $filename = md5('cut_sketch' . $calc_id);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png", $data);
+
+            if (!empty($cuts))
+            {
+                $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');
+                $canvases_model->saveCuts($calc_id,$cuts);
+            }
             die(true);
 
         } catch (Exception $e) {
@@ -2741,11 +2747,12 @@ class Gm_ceilingController extends JControllerLegacy
     			);
     			$mailer->setSender($sender);
                 $mailer->addRecipient($email);
+                $server_name = $_SERVER['SERVER_NAME'];
                 $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
                 $body .= '<body style="margin: 10px;">';
                 $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
                 $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
-                $body .= '<img src="http://test1.gm-vrn.ru/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
+                $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
                 $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
                 $body .= '<p>Тел.: +7(473)2122359</p>';
                 $body .= '<p>Почта: gm-partner@mail.ru</p>';
@@ -3103,11 +3110,100 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+
     public function test_estimate(){
         $jinput = JFactory::getApplication()->input;
         $id = $jinput->get('id','','INT');
-        $result = Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($id);
+        $result = Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($id,null,1);
         die(json_encode($result));
+    }
+
+    public function printInProductionOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            // в производстве
+            $answer1 = $model->getDataByStatus("InProduction");
+            die(json_encode($answer1));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    public function printZapushennieOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            //запущенные
+            $answer2 = $model->getDataByStatus("Zapushennie");
+            die(json_encode($answer2));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    public function printZayavkiSSaitaOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            // заявки с сайта
+            $answer3 = $model->getDataByStatus("ZayavkiSSaita");
+            die(json_encode($answer3));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    public function printZvonkiOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            // звонки
+            $date = date("Y")."-".date("n")."-".date("d");
+            $answer4 = $model->getDataByStatus("Zvonki", $date);
+            die(json_encode($answer4));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    public function printMissedCallsOnGmMainPage(){
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $date = date("Y")."-".date("n")."-".date("d");
+            // пропущенные
+            $answer5 = Gm_ceilingController::missedCalls($date, "missed", 1);
+            $answer6 = $model->getDataByStatus("MissedCalls");
+            $missAnswer1 = [];
+            $missAnswer2 = [];
+            foreach ($answer5 as $value) {
+                array_push($missAnswer1, $value->id);
+            }
+            foreach ($answer6 as $value) {
+                array_push($missAnswer2, $value->call_id);
+            }
+            $answer7 = array_diff($missAnswer1, $missAnswer2);
+            die(json_encode(count($answer7)));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
 }
 

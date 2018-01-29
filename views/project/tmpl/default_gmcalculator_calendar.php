@@ -1,165 +1,158 @@
 <?php
-/**
- * @version    CVS: 0.1.7
- * @package    Com_Gm_ceiling
- * @author     SpectralEye <Xander@spectraleye.ru>
- * @copyright  2016 SpectralEye
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ /**
+     * @version    CVS: 0.1.7
+     * @package    Com_Gm_ceiling
+     * @author     SpectralEye <Xander@spectraleye.ru>
+     * @copyright  2016 SpectralEye
+     * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-// No direct access
-defined('_JEXEC') or die;
+    // No direct access
+    defined('_JEXEC') or die;
 
-$user = JFactory::getUser();
-$userId = $user->get('id');
+    $user = JFactory::getUser();
+    $userId = $user->get('id');
 
-$canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
+    $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 
-if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
-    $canEdit = JFactory::getUser()->id == $this->item->created_by;
-}
-
-$project_total = 0;
-$project_total_discount = 0;
-$total_square = 0;
-$total_perimeter = 0;
-$model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations = $model->getProjectItems($this->item->id);
-
-foreach ($calculations as $calculation) {
-
-    $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
-    $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
-    $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-
-    $calculation->dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-    $calculation->dealer_components_sum_1 = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
-    $calculation->dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-
-    $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-    //$calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $this->item->project_discount) / 100);
-    $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
-    $project_total += $calculation->calculation_total;
-    $project_total_discount += $calculation->calculation_total_discount;
-
-    if ($user->dealer_type != 2) {
-        $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-        $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
-        $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
-        $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
-        $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
-        $calculation_total_11 += $calculation_total_1;
-        $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
+    if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
+        $canEdit = JFactory::getUser()->id == $this->item->created_by;
     }
-    $project_total_11 += $project_total_1;
 
-    $calculation_total = $calculation->calculation_total;
+    $project_total = 0;
+    $project_total_discount = 0;
+    $total_square = 0;
+    $total_perimeter = 0;
+    $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+    $calculations = $model->getProjectItems($this->item->id);
 
-}
-$sum_transport = 0;  $sum_transport_discount = 0;
-$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$mount_transport = $mountModel->getDataAll();
+    foreach ($calculations as $calculation) {
 
-if($this->item->transport == 0 ) $sum_transport = 0;
-if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
-if($this->item->transport == 1 ) {
-$min = 100;
-foreach($calculations as $d) {
-    if($d->discount < $min) $min = $d->discount;
-}
-if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
-}
-//if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
-//    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-//}
-$project_total_discount_transport = $project_total_discount + $sum_transport;
+        $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
+        $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
+        $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
 
-/*if ($user->dealer_type != 2)
-    $need_mount = 1;
-else $need_mount = 0;*/
+        $calculation->dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
+        $calculation->dealer_components_sum_1 = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
+        $calculation->dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+
+        $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
+        //$calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $this->item->project_discount) / 100);
+        $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
+        $project_total += $calculation->calculation_total;
+        $project_total_discount += $calculation->calculation_total_discount;
+
+        if ($user->dealer_type != 2) {
+            $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
+            $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
+            $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
+            $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
+            $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
+            $calculation_total_11 += $calculation_total_1;
+            $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
+        }
+        $project_total_11 += $project_total_1;
+
+        $calculation_total = $calculation->calculation_total;
+    }
+    $sum_transport = 0;  $sum_transport_discount = 0;
+    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+    $mount_transport = $mountModel->getDataAll();
+
+    if($this->item->transport == 0 ) $sum_transport = 0;
+    if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+    if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
+    if($this->item->transport == 1 ) {
+    $min = 100;
+    foreach($calculations as $d) {
+        if($d->discount < $min) $min = $d->discount;
+    }
+    if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
+    }
+    //if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
+    //    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+    //}
+    $project_total_discount_transport = $project_total_discount + $sum_transport;
+
+    /*if ($user->dealer_type != 2)
+        $need_mount = 1;
+    else $need_mount = 0;*/
     $del_flag = 0;
-$project_total = $project_total  + $sum_transport;
-$project_total_discount = $project_total_discount  + $sum_transport;
+    $project_total = $project_total  + $sum_transport;
+    $project_total_discount = $project_total_discount  + $sum_transport;
     $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     $calculations1 = $calculationsModel->getProjectItems($this->item->id);
     $components_data = array();
     $project_sum = 0;
     $counter = 0;
-foreach ($calculations1 as $calculation) {
-    $counter++;
-    $from_db = 1;
-    $save = 1;
-    $ajax = 0;
-    $pdf = 1;
-    $print_components = 0;
-    if($calculation->mounting_sum == 0) $need_mount = 0;
-    else $need_mount = 1;
-    Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-    $from_db = 1;
-    $save = 0;
-    $ajax = 0;
-    $pdf = 0;
-    $print_components = 1;
-    $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-    $project_sum += margin($calculation->components_sum, $this->item->gm_components_margin);
-    $project_sum += margin($calculation->canvases_sum, $this->item->gm_canvases_margin);
-    $project_sum += margin($calculation->mounting_sum, $this->item->gm_mounting_margin);
-    if ($counter == count($calculations1)) {
-        $flag_last = 1;
-         Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
+    foreach ($calculations1 as $calculation) {
+        $counter++;
+        $from_db = 1;
+        $save = 1;
+        $ajax = 0;
+        $pdf = 1;
+        $print_components = 0;
+        if($calculation->mounting_sum == 0) $need_mount = 0;
+        else $need_mount = 1;
+        Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
+        $from_db = 1;
+        $save = 0;
+        $ajax = 0;
+        $pdf = 0;
+        $print_components = 1;
+        $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
+        $project_sum += margin($calculation->components_sum, $this->item->gm_components_margin);
+        $project_sum += margin($calculation->canvases_sum, $this->item->gm_canvases_margin);
+        $project_sum += margin($calculation->mounting_sum, $this->item->gm_mounting_margin);
+        if ($counter == count($calculations1)) {
+            $flag_last = 1;
+            Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
 
+        }
+        //Gm_ceilingHelpersGm_ceiling::print_components($data->id, $components_data);
     }
-    //Gm_ceilingHelpersGm_ceiling::print_components($data->id, $components_data);
-}
 
-// календарь
-$month1 = date("n");
-$year1 = date("Y");
-if ($month1 == 12) {
-    $month2 = 1;
-    $year2 = $year1;
-    $year2++;
-} else {
-    $month2 = $month1;
-    $month2++;
-    $year2 = $year1;
-}
-$FlagCalendar = [2, $user->dealer_id];
-$calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
-$calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
-//----------------------------------------------------------------------------------
-
-// все бригады
-$Allbrigades = $model->FindAllbrigades($user->dealer_id);
-// все монтажники
-$masid = [];
-foreach ($Allbrigades as $value) {
-    array_push($masid, $value->id);
-}
-foreach ($masid as $value) {
-    if (strlen($where) == 0) {
-        $where = "'".$value."'";
+    // календарь
+    $month1 = date("n");
+    $year1 = date("Y");
+    if ($month1 == 12) {
+        $month2 = 1;
+        $year2 = $year1;
+        $year2++;
     } else {
-        $where .= ", '".$value."'";
+        $month2 = $month1;
+        $month2++;
+        $year2 = $year1;
     }
-}
-$AllMounters = $model->FindAllMounters($where);
-// ---------------------------------------------------------------------------------
+    $FlagCalendar = [2, $user->dealer_id];
+    $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
+    $calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
+    //----------------------------------------------------------------------------------
 
-/* //TODO убрать,сделать через модель
-$db = JFactory::getDbo();
-$query = $db->getQuery(true);
-$query
-    ->select(
-        array(
-            '`id`',
-            '`name`',
-        )
-    )
-    ->from($db->quoteName("#__gm_ceiling_groups"))
-    ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
-$db->setQuery($query);
-$results = $db->loadObjectList(); */
+    // все бригады
+    $Allbrigades = $model->FindAllbrigades($user->dealer_id);
+    // все монтажники
+    $masid = [];
+    foreach ($Allbrigades as $value) {
+        array_push($masid, $value->id);
+    }
+    foreach ($masid as $value) {
+        if (strlen($where) == 0) {
+            $where = "'".$value."'";
+        } else {
+            $where .= ", '".$value."'";
+        }
+    }
+    $AllMounters = $model->FindAllMounters($where);
+    // ---------------------------------------------------------------------------------
+
+    // календарь
+    $FlagCalendar = [3, $user->dealer_id];
+    $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
+    //----------------------------------------------------------------------------------
+
+    // все замерщики
+    $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
+    //----------------------------------------------------------------------------------
 
 ?>
 
@@ -169,268 +162,254 @@ $results = $db->loadObjectList(); */
 <?=parent::getButtonBack();?>
 
 <h2 class="center">Просмотр проекта</h2>
+
 <?php if ($this->item) : ?>
-    <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-    <?php $calculations = $model->getProjectItems($this->item->id);
-            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-            $phones = $client_model->getItemsByClientId($this->item->id_client);
-    ?>
+<?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
+<?php
+    $calculations = $model->getProjectItems($this->item->id);
+    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+    $phones = $client_model->getItemsByClientId($this->item->id_client);
+?>
 
 <div class="container">
     <div class="row">
         <div class="col-12 item_fields">
             <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
             <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data" >
-                <?php if ($this->type === "gmcalculator" && $this->subtype === "calendar"){ ?>
-                <?php if ($this->item->project_verdict == 0) { ?>
-                    <?php if ($user->dealer_type != 2) { ?>
-                        <table>
-                            <tr>
-                                <td>
-
-                                    <a class="btn btn-primary"
-                                        id="change_data"><?php if ($this->item->client_id == 1) echo "Заполнить данные о клиенте"; else echo "Изменить данные" ?></a>
-                                </td>
-                            </tr>
-                        </table>
-                    <?php } ?>
-                <?php } ?>
-                <div class="project_activation" style="display: none;">
-                    <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
-                    <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
-                    <input name="type" value="gmcalculator" type="hidden">
-                    <input name="subtype" value="calendar" type="hidden">
-                    <input id="project_verdict" name="project_verdict" value="0" type="hidden">
-                    <input name="data_change" value="0" type="hidden">
-                     <input name="data_delete" value="0" type="hidden">
-                    <input id="mounting_date" name="mounting_date" type='hidden'>
-                    <input id = "jform_project_mounting_date" name="jform_project_mounting_date" value="<?php echo $this->item->project_mounting_date; ?>" type='hidden'>
-                    <input name="project_mounter" id = "project_mounter" value="<?php echo $this->item->project_mounter; ?>" type='hidden'>
-                    <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
-                    <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
-                    <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
-                </div>
-                <?php if ($user->dealer_type != 2) { ?>
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <table class="table" >
-                            <tr>
-                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                                <td><?php echo $this->item->client_id; ?></td>
-                                <td>
-                                    <div class="FIO" style="display: none;">
-                                        <input class = "inputactive" name="new_client_name" id="jform_client_name" value="<?php  echo $this->item->client_id;?>" placeholder="Новое ФИО клиента" type="text">
-                                    </div>
-                                </td>
-                            </tr>
-                            <?  $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
-                                 $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
-                            <tr>
-                                <th>Дата рождения</th>
-                                <td><input name="new_birthday" id="jform_birthday" class="inputactive"
-                                            value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date"></td>
-                                <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
-                            </tr>
-                            <tr>
-                                <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                                <td><?php foreach ($phones AS $contact) { echo $contact->phone; echo "<br>"; }?></td>
-                            </tr>
-                            <tr>
-                            <th>Почта</th>
-                            <td><?php
-                                $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-                                $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
-                                foreach ($contact_email AS $contact) { echo $contact->contact; echo "<br>"; }?>
-                            </td>
-                            </tr>
-                            <? 
-                                        
-                            $street = preg_split("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info)[0];
-                            preg_match("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info,$house);
-                            $house = $house[1];
-                            preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
-                            $bdq = $bdq[1];
-                            preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info,$apartment);
-                            $apartment = $apartment[1];
-                            preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info,$porch);
-                            $porch = $porch[1];
-                            preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
-                            $floor = $floor[1];
-                            preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
-                            $code = $code[1];
-                            ?>
-                            <tr>
-                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                                <td><?php echo $this->item->project_info; ?></td>
-                                <td >
-                                    <div class="Address" style="display: none; position:relative;">
-                                        <label id="jform_address_lbl" for="jform_address">Адрес<span
-                                                    class="star">&nbsp;*</span></label>
-                                        <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица"
-                                                type="text">
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="Address" style="display: none;">
-                                        <td>Дом  </td><td>Корпус</td>
-                                        <td>
-                                            <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
-                                                    } else echo $house ?>"class="inputactive"  style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" aria-required="true" type="text">
-                                    
-                                            <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) {echo $_SESSION['bdq'];
-                                                    } else echo $bdq ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
+                <?php if ($this->type === "gmcalculator" && $this->subtype === "calendar") { ?>
+                    <?php if ($this->item->project_verdict == 0) { ?>
+                        <?php if ($user->dealer_type != 2) { ?>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a class="btn btn-primary" id="change_data">
+                                            <?php if ($this->item->client_id == 1) { echo "Заполнить данные о клиенте"; } else { echo "Изменить данные"; } ?>
+                                        </a>
                                     </td>
-                                        </tr>
-                                        <tr class="Address" style="display: none;">
-                                        <td>Квартира  </td><td>Подъезд</td>
+                                </tr>
+                            </table>
+                        <?php } ?>
+                    <?php } ?>
+                    <div class="project_activation" style="display: none;">
+                        <input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
+                        <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
+                        <input name="type" value="gmcalculator" type="hidden">
+                        <input name="subtype" value="calendar" type="hidden">
+                        <input id="project_verdict" name="project_verdict" value="0" type="hidden">
+                        <input name="data_change" value="0" type="hidden">
+                        <input name="data_delete" value="0" type="hidden">
+                        <input id="mounting_date" name="mounting_date" type='hidden'>
+                        <input id = "jform_project_mounting_date" name="jform_project_mounting_date" value="<?php echo $this->item->project_mounting_date; ?>" type='hidden'>
+                        <input name="project_mounter" id = "project_mounter" value="<?php echo $this->item->project_mounter; ?>" type='hidden'>
+                        <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
+                        <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
+                        <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
+                    </div>
+                    <?php if ($user->dealer_type != 2) { ?>
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <table class="table" >
+                                    <tr>
+                                        <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
+                                        <td><?php echo $this->item->client_id; ?></td>
                                         <td>
-                                            <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment'];
-                                                    } else echo $apartment ?>" class="inputactive" style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;" placeholder="Квартира"  aria-required="true" type="text">
-                                    
-                                            <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch'];
-                                                    } else echo $porch ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
+                                            <div class="FIO" style="display: none;">
+                                                <input class = "inputactive" name="new_client_name" id="jform_client_name" value="<?php echo $this->item->client_id; ?>" placeholder="Новое ФИО клиента" type="text">
+                                            </div>
                                         </td>
-                                        </tr>
-                                        <tr class="Address" style="display: none;">
-                                        <td> Этаж  </td><td>Код домофона</td>
+                                    </tr>
+                                    <?php 
+                                        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+                                        $birthday = $client_model->getClientBirthday($this->item->id_client);
+                                    ?>
+                                    <tr>
+                                        <th>Дата рождения</th>
                                         <td>
-                                            <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor'];
-                                                    } else echo $floor ?>" class="inputactive" style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;" placeholder="Этаж" aria-required="true" type="text">
-                                    
+                                            <input name="new_birthday" id="jform_birthday" class="inputactive" value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date">
+                                        </td>
+                                        <td>
+                                            <button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
+                                        <td><?php foreach ($phones AS $contact) { echo $contact->phone; echo "<br>"; }?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Почта</th>
+                                        <td>
+                                            <?php
+                                                $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+                                                $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
+                                                foreach ($contact_email AS $contact) { echo $contact->contact; echo "<br>"; }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                    <?php   
+                                        $street = preg_split("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info)[0];
+                                        preg_match("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info,$house);
+                                        $house = $house[1];
+                                        preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
+                                        $bdq = $bdq[1];
+                                        preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info,$apartment);
+                                        $apartment = $apartment[1];
+                                        preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info,$porch);
+                                        $porch = $porch[1];
+                                        preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
+                                        $floor = $floor[1];
+                                        preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
+                                        $code = $code[1];
+                                    ?>
+                                    <tr>
+                                        <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
+                                        <td><?php echo $this->item->project_info; ?></td>
+                                        <td>
+                                            <div class="Address" style="display: none; position:relative;">
+                                                <label id="jform_address_lbl" for="jform_address">
+                                                    Адрес<span class="star">&nbsp;*</span>
+                                                </label>
+                                                <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="Address" style="display: none;">
+                                        <td>Дом</td>
+                                        <td>Корпус</td>
+                                        <td>
+                                            <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house']; } else echo $house ?>"class="inputactive"  style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" aria-required="true" type="text">
+                                            <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) {echo $_SESSION['bdq']; } else echo $bdq ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
+                                        </td>
+                                    </tr>
+                                    <tr class="Address" style="display: none;">
+                                        <td>Квартира</td>
+                                        <td>Подъезд</td>
+                                        <td>
+                                            <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $apartment ?>" class="inputactive" style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;" placeholder="Квартира"  aria-required="true" type="text">
+                                            <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $porch ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
+                                        </td>
+                                    </tr>
+                                    <tr class="Address" style="display: none;">
+                                        <td>Этаж</td>
+                                        <td>Код домофона</td>
+                                        <td>
+                                            <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $floor ?>" class="inputactive" style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;" placeholder="Этаж" aria-required="true" type="text">
                                             <input name="new_code" id="jform_code"  value="<?php echo $code;?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код" aria-required="true" type="text">
                                         </td>
-                                        </tr>
-                            <tr>
-                            <tr>
-                                <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                                <td>
-                                    <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                        -
-                                    <?php } else { ?>
-                                        <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                        <?php echo $jdate->format('d.m.Y'); ?>
-                                    <?php } ?>
-                                </td>
-                                <td>
-                                    <div class="Date" style="display: none;">
-                                        <label id="jform_project_mounting_date-lbl" for="jform_project_new_calc_date">Новая
-                                            дата<span class="star">&nbsp;*</span></label>
-                                            <?php
-                                                $date_time = $this->item->project_calculation_date;
-                                                $date_arr = date_parse($date_time);
-                                                $date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
-                                                $time = $date_arr['hour'].':00';?>
-                                        <input type = "date" name = "project_new_calc_date" id = "jform_project_new_calc_date" class = "inputactive" value = "<?php echo $date?>">
-                                        <label id="jform_project_calculation_daypart-lbl"
-                                                for="jform_new_project_calculation_daypart">Новое время замера</label>
-                                        <select id="jform_new_project_calculation_daypart"
-                                                name="new_project_calculation_daypart" class="inputactive"
-                                                disabled="true">
-                                            <option value="00:00" selected="">- Выберите время замера -</option>
-                                            <option value="09:00">9:00-10:00</option>
-                                            <option value="10:00">10:00-11:00</option>
-                                            <option value="11:00">11:00-12:00</option>
-                                            <option value="12:00">12:00-13:00</option>
-                                            <option value="13:00">13:00-14:00</option>
-                                            <option value="14:00">14:00-15:00</option>
-                                            <option value="15:00">15:00-16:00</option>
-                                            <option value="16:00">16:00-17:00</option>
-                                            <option value="17:00">17:00-18:00</option>
-                                            <option value="18:00">18:00-19:00</option>
-                                            <option value="19:00">19:00-20:00</option>
-                                            <option value="20:00">20:00-21:00</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Примечание клиента</th>
-                                <td>
-                                    <?php echo $this->item->project_note; ?>
-                                </td>
-                                <td>
-                                    <button type="submit" id="accept_changes" class="btn btn btn-success"
-                                            style="display: none;">
-                                        Изменить
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
-                                    <td>
-                                    <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                        -
-                                    <?php } else { ?>
-                                        <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                        <?php echo $jdate->format('H:i'); ?>
-                                    <?php } ?>
-                                </td>
+                                    </tr>
+                                    <tr>
+                                        <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
+                                        <td>
+                                            <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                                                -
+                                            <?php } else { ?>
+                                                <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
+                                                <?php echo $jdate->format('d.m.Y'); ?>
+                                            <?php } ?>
+                                        </td>
+                                        <td>
+                                            <div class="Date" style="display: none;">
+                                                <label id="jform_project_mounting_date-lbl" for="jform_project_new_calc_date">
+                                                    Новая дата<span class="star">&nbsp;*</span>
+                                                </label>
+                                                <div id="calendar-container">
+                                                    <div class="btn-small-l">
+                                                        <button id="button-prev-gauger" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                                    </div>
+                                                    <?php echo $calendar; ?>
+                                                    <div class="btn-small-r">
+                                                        <button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
 
-                            </tr>
+                                                <!-- <?php
+                                                    $date_time = $this->item->project_calculation_date;
+                                                    $date_arr = date_parse($date_time);
+                                                    $date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
+                                                    $time = $date_arr['hour'].':00';
+                                                ?>
+                                                <input type = "date" name = "project_new_calc_date" id = "jform_project_new_calc_date" class = "inputactive" value = "<?php echo $date?>">
+                                                <label id="jform_project_calculation_daypart-lbl" for="jform_new_project_calculation_daypart">Новое время замера</label>
+                                                <select id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" class="inputactive" disabled="true">
+                                                    <option value="00:00" selected="">- Выберите время замера -</option>
+                                                    <option value="09:00">9:00-10:00</option>
+                                                    <option value="10:00">10:00-11:00</option>
+                                                    <option value="11:00">11:00-12:00</option>
+                                                    <option value="12:00">12:00-13:00</option>
+                                                    <option value="13:00">13:00-14:00</option>
+                                                    <option value="14:00">14:00-15:00</option>
+                                                    <option value="15:00">15:00-16:00</option>
+                                                    <option value="16:00">16:00-17:00</option>
+                                                    <option value="17:00">17:00-18:00</option>
+                                                    <option value="18:00">18:00-19:00</option>
+                                                    <option value="19:00">19:00-20:00</option>
+                                                    <option value="20:00">20:00-21:00</option>
+                                                </select> -->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
+                                        <td>
+                                            <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                                                -
+                                            <?php } else { ?>
+                                                <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
+                                                <?php echo $jdate->format('H:i'); ?>
+                                            <?php } ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Дилер</th>
+                                        <td><?php
+                                                $dealer = $client_model->getDealer($this->item->id_client);
+                                                echo $dealer;
+                                            ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Примечание клиента</th>
+                                        <td>
+                                            <?php echo $this->item->project_note; ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan=3 style="text-align: center;">
+                                            <button type="submit" id="accept_changes" class="btn btn btn-success" style="display: none;">Сохранить изменения</button>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
-                            <tr>
-                                <th>Дилер</th>
-                                <td><?php
-                                    $dealer = $client_model->getDealer($this->item->id_client);
-                                    echo $dealer; ?>
-                                </td>
-                            </tr>
+                            <?php if ($user->dealer_type == 0) { ?>
+                                <div  class="col-12 col-md-6">
+                                    <div class="comment" >
+                                        <label>История клиента:</label>
+                                        <textarea id="comments" class="input-comment" rows=11 readonly></textarea>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <label>Добавить комментарий:</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width = 100%>
+                                                    <textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
                 <?php } ?>
-                </table>
-                </div>
-            <div  class="col-12 col-md-6">
-                <div class="comment" >
-                    <label> История клиента: </label>
-                    <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
-                    <table>
-                        <tr>
-                            <td><label> Добавить комментарий: </label></td>
-                        </tr>
-                        <tr>
-                            <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                            <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+            </form>
         </div>
-        <!--<table class="table calculation_sum">
-            <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
-                <tr>
-                    <td style=" padding-left:0;"><a class="btn btn-primary" id="change_discount">Изменить величину
-                            скидки</a></td>
-                </tr>
-            <?php } ?>
-            <?php $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100; ?>
-            <tbody class="new_discount" style="display: none">
-            <tr>
-                <td>
-                    <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
-                    <input name="new_discount" id="jform_new_discount" value=""
-                            onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки"
-                            max='<?= round($skidka, 0); ?>' type="number">
-                    <input name="isDiscountChange" value="0" type="hidden">
-                </td>
-                <td>
-                    <button id="update_discount" class="btn btn btn-primary">
-                        Ок
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>-->
-        <?php } ?>
-        <!--</form>-->
     </div>
 </div>
-</div>
-
-<?php /*if($canEdit && $this->item->checked_out == 0): ?>
-    <a class="btn" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=project.edit&id='.$this->item->id); ?>">Изменить проект</a>
-<?php endif;*/ ?>
-
-<?php echo "<h3>Расчеты для проекта</h3>"; ?>
+<h3>Расчеты для проекта</h3>
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
@@ -438,18 +417,15 @@ $results = $db->loadObjectList(); */
     </li>
     <?php foreach ($calculations as $k => $calculation) { ?>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
-                role="tab"><?php echo $calculation->calculation_title; ?></a>
+            <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>" role="tab"><?php echo $calculation->calculation_title; ?></a>
         </li>
     <?php } ?>
     <li class="nav-item">
-        <a class="nav-link"
-            href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=gmcalculator&subtype=calendar&id=0&project_id=' . $this->item->id); ?>">
+        <a class="nav-link" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=gmcalculator&subtype=calendar&id=0&project_id=' . $this->item->id); ?>">
             <i class="fa fa-plus-square-o" aria-hidden="true"></i>
         </a>
     </li>
 </ul>
-
 <!-- Tab panes -->
 <div class="tab-content">
     <div class="tab-pane active" id="summary" role="tabpanel">
@@ -472,14 +448,11 @@ $results = $db->loadObjectList(); */
                 $sum_transport_discount_total = 0;
                 $sum_transport_total = 0;
                 $JS_Calcs_Sum = array();
-
                 foreach ($calculations as $calculation) {
                     $dealer_canvases_sum = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
                     $dealer_components_sum = double_margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/, $this->item->dealer_components_margin);
                     $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-
                     //$calculation_total_discount = $calculation_total * ((100 - $this->item->project_discount) / 100);
-
                     if ($user->dealer_type != 2) {
                         $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
                         $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
@@ -494,7 +467,6 @@ $results = $db->loadObjectList(); */
                     $total_square += $calculation->n4;
                     $total_perimeter += $calculation->n5;
                     $canvas = $dealer_canvases_sum;
-
                     // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
                     $sum_transport = 0;  $sum_transport_discount = 0;
                     $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
@@ -514,58 +486,48 @@ $results = $db->loadObjectList(); */
                         $sum_transport_discount_total = $sum_transport_discount;
                     }
                     */
-
                     $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
                     $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
                     $project_total += $calculation_total;
                     $project_total_discount += $calculation_total_discount;
                     $JS_Calcs_Sum[] = round($calculation_total, 0);
-            ?>
-            <tr class="section_ceilings">
-                <td class="include_calculation">
-                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox'
-                            checked="checked">
-                    <input name='calculation_total[<?php echo $calculation->id; ?>]'
-                            value='<?php echo $calculation_total; ?>' type='hidden'>
-                    <input name='calculation_total_discount[<?php echo $calculation->id; ?>]'
-                            value='<?php echo $calculation_total_discount; ?>' type='hidden'>
-                    <input name='total_square[<?php echo $calculation->id; ?>]'
-                            value='<?php echo $calculation->n4; ?>' type='hidden'>
-                    <input name='total_perimeter[<?php echo $calculation->id; ?>]'
-                            value='<?php echo $calculation->n5; ?>' type='hidden'>
-                    <input name='calculation_total1[<?php echo $calculation->id; ?>]'
-                            value='<?php echo $calculation_total_1; ?>' type='hidden'>
-                    <input name='calculation_total2[<?php echo $calculation->id; ?>]'
-                            value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
-                    <input name='calculation_total3[<?php echo $calculation->id; ?>]'
-                            value='<?php echo $project_total_1; ?>' type='hidden'>
-                    <input name='canvas[<?php echo $calculation->id; ?>]'
-                                value='<?php echo $canvas; ?>' type='hidden'>
-                    <?php echo $calculation->calculation_title; ?>
-                </td>
-            </tr>
-            <tr class="section_ceilings" id="">
-                <td>S/P :</td>
-                <td>
-                    <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
-                </td>
-                <td></td>
-            </tr>
-            <tr class="section_ceilings">
-                <?php if ($calculation->discount != 0) { ?>
-                    <td>Цена / -<? echo $calculation->discount ?>% :</td>
-                    <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб. /</td>
-                    <td id="calculation_total_discount"> <?php echo round($calculation_total_discount, 0); ?>
-                        руб.
+                ?>
+                <tr class="section_ceilings">
+                    <td class="include_calculation">
+                        <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
+                        <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
+                        <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
+                        <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
+                        <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>
+                        <input name='calculation_total1[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_1; ?>' type='hidden'>
+                        <input name='calculation_total2[<?php echo $calculation->id; ?>]' value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
+                        <input name='calculation_total3[<?php echo $calculation->id; ?>]' value='<?php echo $project_total_1; ?>' type='hidden'>
+                        <input name='canvas[<?php echo $calculation->id; ?>]' value='<?php echo $canvas; ?>' type='hidden'>
+                        <?php echo $calculation->calculation_title; ?>
                     </td>
-                <?php } else { ?>
-                    <td>Итого</td>
-                    <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб.</td>
+                </tr>
+                <tr class="section_ceilings" id="">
+                    <td>S/P :</td>
+                    <td>
+                        <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
+                    </td>
                     <td></td>
-                <?php } ?>
-
-            </tr>
-            <?php if($calculation->discount > 0) $kol++;} ?>
+                </tr>
+                <tr class="section_ceilings">
+                    <?php if ($calculation->discount != 0) { ?>
+                        <td>Цена / -<? echo $calculation->discount ?>% :</td>
+                        <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб. /</td>
+                        <td id="calculation_total_discount"> <?php echo round($calculation_total_discount, 0); ?>
+                            руб.
+                        </td>
+                    <?php } else { ?>
+                        <td>Итого</td>
+                        <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб.</td>
+                        <td></td>
+                    <?php } ?>
+                </tr>
+                <?php if($calculation->discount > 0) $kol++; ?>
+            <?php }?>
             <tr>
                 <th>Общая S/общий P :</th>
                 <th id="total_square">
@@ -576,15 +538,12 @@ $results = $db->loadObjectList(); */
                 </th>
             </tr>
             <tr>
-                <th>
-                    Транспортные расходы
-                </th>
+                <th>Транспортные расходы</th>
                 <th></th>
                 <th></th>
             </tr>
             <tr>
                 <td style="width: 45%;">
-
                     <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
                     <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
                         <div class="col-sm-4">
@@ -594,9 +553,7 @@ $results = $db->loadObjectList(); */
                                 </div>
                                 <div class="advanced_col2" style="width: 20%;"></div>
                             </div>
-
                             <div class="form-group">
-
                                 <div class="advanced_col1" style="width: 35%;">
                                     <input name="jform[distance_col_1]" id="distance_col_1" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
                                 </div>
@@ -604,12 +561,9 @@ $results = $db->loadObjectList(); */
                                     <button type="button" id="click_transport_1" class="btn btn-primary">Ок</button>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                     <p><input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?if( $this->item->transport == 2) echo "checked"?>><label for = "distanceId">Выезд за город</label></p>
-
                     <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist" >
                         <div class="col-sm-4">
                             <div class="form-group">
@@ -621,7 +575,6 @@ $results = $db->loadObjectList(); */
                                 </div>
                                 <div class="advanced_col3" style="width: 20%;"></div>
                             </div>
-
                             <div class="form-group">
                                 <div class="advanced_col1" style="width: 35%;">
                                     <input name="jform[distance]" id="distance" style="width: 100%;" value="<?php echo $this->item->distance; ?>" class="form-control" placeholder="км." type="tel">
@@ -633,9 +586,7 @@ $results = $db->loadObjectList(); */
                                     <button type="button" id="click_transport" class="btn btn-primary">Ок</button>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                     <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
                 </td>
@@ -643,16 +594,14 @@ $results = $db->loadObjectList(); */
                 <th></th>
             </tr>
             <tr>
-                <?
-
-
-                //-------------------------Себестоимость транспорта-------------------------------------
-                if($this->item->transport == 0 ) $sum_transport_1 = 0;
-                if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
-                if($this->item->transport == 2 ) $sum_transport_1 = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
-                $project_total_11 = $project_total_11 + $sum_transport_1;
-                $project_total = $project_total + $sum_transport;
-                $project_total_discount = $project_total_discount + $sum_transport;
+                <?php
+                    //-------------------------Себестоимость транспорта-------------------------------------
+                    if($this->item->transport == 0 ) $sum_transport_1 = 0;
+                    if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
+                    if($this->item->transport == 2 ) $sum_transport_1 = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
+                    $project_total_11 = $project_total_11 + $sum_transport_1;
+                    $project_total = $project_total + $sum_transport;
+                    $project_total_discount = $project_total_discount + $sum_transport;
                 ?>
                 <th> Транспорт</th>
                 <td id="transport_sum"> <?=$sum_transport;?> руб. </td>
@@ -660,72 +609,74 @@ $results = $db->loadObjectList(); */
                 <td></td>
             </tr>
             <tr>
-
                 <?php if ($kol > 0) { ?>
-                    <th>Итого/ - %:
-                    </th>
+                    <th>Итого/ - %:</th>
                     <th id="project_total"><span class="sum"><?php echo round($project_total, 0); ?></span> руб. /</th>
                     <th id="project_total_discount">
                         <span class="sum">
-                     <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                    if($dealer_canvases_sum == 0 && $project_total_discount < 2500) $project_total_discount = 2500;
-                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) { $project_total_discount = 2500; echo round($project_total_discount, 0);  ?> руб.</th> <?}
-                    elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
-                        </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
-                    <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
-
-                <?php }
-                else { ?>
-                <th>Итого</th>
-                <th id="project_total">
-                <span class="sum">
-                    <?php
-                    if ($this->item->new_project_sum == 0) {
-                        if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
-                        elseif($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
-                        
-                        echo round($project_total, 2);
-                    } else {
-                        echo round($this->item->new_project_sum, 2);
-                    }
-                } ?>
-            </span>
-            <span class="dop" style="font-size: 9px;">
-            <? if ($project_total <= 2500 && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
-                     * минимальная сумма заказа 2500р.
-                <? elseif ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
-                     * минимальная сумма заказа 3500р.<?endif;?>
-                     
+                            <?php
+                                //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                if ($dealer_canvases_sum == 0 && $project_total_discount < 2500) {
+                                    $project_total_discount = 2500;
+                                } elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) {
+                                    $project_total_discount = 2500;
+                                    echo round($project_total_discount, 0);  ?> руб.</th> <?
+                                } elseif ($project_total_discount < 3500 && $project_total_discount > 0) {
+                                    $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
+                                </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
+                            <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
+                <?php } else { ?>
+                    <th>Итого</th>
+                    <th id="project_total">
+                        <span class="sum">
+                        <?php
+                            if ($this->item->new_project_sum == 0) {
+                                if ($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0) {
+                                    $project_total = 2500;
+                                } elseif ($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0) {
+                                    $project_total = 3500;
+                                }
+                                echo round($project_total, 2);
+                            } else {
+                                echo round($this->item->new_project_sum, 2);
+                            }
+                        ?>
+                <?php } ?>
+                </span>
+                <span class="dop" style="font-size: 9px;">
+                <? if ($project_total <= 2500 && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
+                        * минимальная сумма заказа 2500р.
+                    <? elseif ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
+                        * минимальная сумма заказа 3500р.<?endif;?>
                       </span>
                 </th>
             </tr>
             <?php if ($user->dealer_type != 2) { ?>
                 <tr>
-                <td></td>
-                <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
-                <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
-                <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
-                </tr><? } ?>
+                    <td></td>
+                    <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
+                    <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
+                    <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
+                </tr>
+            <? } ?>
             <tr>
-                <th class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
-                                                                        aria-hidden="true"></i></th>
+                <th class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
             </tr>
             <?php foreach ($calculations as $calculation) { ?>
-            <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                <td><?php echo $calculation->calculation_title; ?></td>
-                <td>
-                    <?php
-                    $path = "/costsheets/" . md5($calculation->id . "-0-0") . ".pdf";
-
-                    $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-0-0") . ".pdf", "id" => $calculation->id);
-                    ?>
-                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                    <?php } else { ?>
-                        -
-                    <?php } ?>
-                </td>
-                <?php }
+                <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
+                    <td><?php echo $calculation->calculation_title; ?></td>
+                    <td>
+                        <?php
+                        $path = "/costsheets/" . md5($calculation->id . "-0-0") . ".pdf";
+                        $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-0-0") . ".pdf", "id" => $calculation->id);
+                        ?>
+                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                        <?php } else { ?>
+                            -
+                        <?php } ?>
+                    </td>
+            <?php }
                 $json = json_encode($pdf_names); ?>
             </tr>
             <?php if (count($calculations) > 0) { ?>
@@ -735,25 +686,27 @@ $results = $db->loadObjectList(); */
                 <tr class="section_estimate" style="display:none;">
                     <td>
                         <div class="email-all" style="float: left;">
-                            <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;"
-                                placeholder="Адрес эл.почты" type="text">
-                                <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
-                                    <option value="<?=$em->contact;?>"> <?}?>
-                                </datalist>
+                            <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
+                            <datalist id="email">
+                                <? foreach ($contact_email AS $em) {?>
+                                    <option value="<?=$em->contact;?>">
+                                <?}?>
+                            </datalist>
                         </div>
                         <div class="file_data">
                             <div class="file_upload">
                                 <input type="file" class="dopfile" name="dopfile" id="dopfile">
                             </div>
                             <div class="file_name"></div>
-                            <script>jQuery(function () {
+                            <script>
+                                jQuery(function () {
                                     jQuery("div.file_name").html("Файл не выбран");
                                     jQuery("div.file_upload input.dopfile").change(function () {
                                         var filename = jQuery(this).val().replace(/.*\\/, "");
                                         jQuery("div.file_name").html((filename != "") ? filename : "Файл не выбран");
                                     });
-                                });</script>
+                                });
+                            </script>
                         </div>
                     </td>
                     <td>
@@ -765,7 +718,6 @@ $results = $db->loadObjectList(); */
                 <tr>
                     <th id="sh_mount"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                 </tr>
-
                 <?php foreach ($calculations as $calculation) { ?>
                     <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                     <td><?php echo $calculation->calculation_title; ?></td>
@@ -778,7 +730,6 @@ $results = $db->loadObjectList(); */
                             После договора
                         <?php } ?>
                     </td>
-
                 <?php }
                 $json1 = json_encode($pdf_names_mount); ?>
                 </tr>
@@ -789,22 +740,22 @@ $results = $db->loadObjectList(); */
                     <tr class="section_mount" style="display:none;">
                         <td>
                             <div class="email-all" style="float: left;">
-                                <input name="all-email" id="all-email2" class="form-control" style="width:200px;"
-                                        value="" placeholder="Адрес эл.почты" type="text">
-
+                                <input name="all-email" id="all-email2" class="form-control" style="width:200px;" value="" placeholder="Адрес эл.почты" type="text">
                             </div>
                             <div class="file_data">
                                 <div class="file_upload">
                                     <input type="file" class="dopfile1" name="dopfile1" id="dopfile1">
                                 </div>
                                 <div class="file_name1"></div>
-                                <script>jQuery(function () {
+                                <script>
+                                    jQuery(function () {
                                         jQuery("div.file_name1").html("Файл не выбран");
                                         jQuery("div.file_upload input.dopfile1").change(function () {
                                             var filename = jQuery(this).val().replace(/.*\\/, "");
                                             jQuery("div.file_name1").html((filename != "") ? filename : "Файл не выбран");
                                         });
-                                    });</script>
+                                    });
+                                </script>
                             </div>
                         </td>
                         <td>
@@ -818,7 +769,7 @@ $results = $db->loadObjectList(); */
                 <td><b>Отправить общую смету <b></td>
                 <td>
                     <?php
-                    $path = "/costsheets/" . md5($this->item->id . "-9") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                        $path = "/costsheets/" . md5($this->item->id . "-9") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                     <?php } else { ?>
                         -
@@ -828,45 +779,44 @@ $results = $db->loadObjectList(); */
                 </td>
                 <td></td>
             </tr>
-            <?  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                <tr >
+            <? if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                <tr>
                     <td>
                         <div class="email-all" style="float: left;">
-                            <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;"
-                                placeholder="Адрес эл.почты" type="text">
-                                <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
-                                    <option value="<?=$em->contact;?>"> <?}?>
-                                </datalist>
+                            <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
+                            <datalist id="email">
+                                <? foreach ($contact_email AS $em) {?>
+                                    <option value="<?=$em->contact;?>">
+                                <?}?>
+                            </datalist>
                         </div>
                         <div class="file_data">
                             <div class="file_upload">
                                 <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
                             </div>
                             <div class="file_name2"></div>
-                            <script>jQuery(function () {
+                            <script>
+                                jQuery(function () {
                                     jQuery("div.file_name2").html("Файл не выбран");
                                     jQuery("div.file_upload input.dopfile2").change(function () {
                                         var filename = jQuery(this).val().replace(/.*\\/, "");
                                         jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
                                     });
-                                });</script>
+                                });
+                            </script>
                         </div>
                     </td>
                     <td>
-
                         <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
                     </td>
-                    <td>
-
-                    </td>
+                    <td></td>
                 </tr>
                 <!-- общий наряд на монтаж-->
                 <tr>
                     <td><b>Общий наряд на монтаж <b></td>
                     <td>
                         <?php
-                        $path = "/costsheets/" . md5($this->item->id . "-10") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                            $path = "/costsheets/" . md5($this->item->id . "-10") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                         <?php } else { ?>
                             -
@@ -880,50 +830,39 @@ $results = $db->loadObjectList(); */
                     <td>
                         <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                     </td>
-                    <td></td><td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             <? }?>
         </table>
-
-
         <?php if ($user->dealer_type == 2) { ?>
-            <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
-                формирование заказа
-            </button>
+            <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить формирование заказа</button>
             <?php if ($this->item->project_status == 7) {
                 // регистрационная информация (логин, пароль #1)
                 // registration info (login, password #1)
                 $mrh_login = "demo";
                 $mrh_pass1 = "password_1";
-
                 // номер заказа
                 // number of order
                 $inv_id = 0;
-
                 // описание заказа
                 // order description
                 $inv_desc = "Оплата заказа в Тестовом магазине ROBOKASSA";
-
                 // сумма заказа
                 // sum of order
                 $out_summ = $project_total_discount;;
-
                 // тип товара
                 // code of goods
                 $shp_item = 1;
-
                 // язык
                 // language
                 $culture = "ru";
-
                 // кодировка
                 // encoding
                 $encoding = "utf-8";
-
                 // формирование подписи
                 // generate signature
                 $crc = md5("$mrh_login:$out_summ:$inv_id:$mrh_pass1:shp_Item=$shp_item");
-
                 // HTML-страница с кассой
                 // ROBOKASSA HTML-page
                 print "<html><script language=JavaScript " .
@@ -931,7 +870,6 @@ $results = $db->loadObjectList(); */
                     "MerchantLogin=$mrh_login&OutSum=$out_summ&InvoiceID=$inv_id" .
                     "&Description=$inv_desc&SignatureValue=$crc&shp_Item=$shp_item" .
                     "&Culture=$culture&Encoding=$encoding'></script></html>";
-
             }
         } ?>
     </div>
@@ -940,19 +878,16 @@ $results = $db->loadObjectList(); */
         <?php if(!empty($calculation->n2)) $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".png"; ?>
         <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
             <h3><?php echo $calculation->calculation_title; ?></h3>
-
-            <a class="btn btn-primary"
-                href="index.php?option=com_gm_ceiling&view=calculationform&type=gmcalculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить
-                расчет</a>
+            <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=gmcalculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить расчет</a>
             <? if (!empty($filename)):?>
-            <div class="sketch_image_block">
-                <h3 class="section_header">
-                    Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                </h3>
-                <div class="section_content">
-                    <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+                <div class="sketch_image_block">
+                    <h3 class="section_header">
+                        Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                    </h3>
+                    <div class="section_content">
+                        <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+                    </div>
                 </div>
-            </div>
             <? endif; ?>
             <div class="row-fluid">
                 <div class="span6">
@@ -967,13 +902,11 @@ $results = $db->loadObjectList(); */
                     <div>
                         Производитель, ширина: <?php echo $calculation->n3; ?>
                     </div>
-
                     <?php if ($calculation->color > 0) { ?>
                         <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
                         <?php $color = $color_model->getData($calculation->color); ?>
                         <div>
-                            Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
-                                                                    alt=""/>
+                            Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>" alt=""/>
                         </div>
                     <?php } ?>
                     <h4>Размеры помещения</h4>
@@ -987,28 +920,25 @@ $results = $db->loadObjectList(); */
                         <div>
                             <h4> Вставка</h4>
                         </div>
-                        <? if ($calculation->n6 == 314) {?>
-                        <div> Белая </div>
-                    <?php } else  {?>
-                        <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
-                        <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
-                        <div>
-                            Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>"
-                                                                    alt=""/>
-                        </div>
-                    <?php }?>
+                        <? if ($calculation->n6 == 314) { ?>
+                            <div> Белая </div>
+                        <?php } else  {?>
+                            <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
+                            <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
+                            <div>
+                                Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>" alt=""/>
+                            </div>
+                        <?php }?>
                     <?} endif; ?>
                     <?php if ($calculation->n16) { ?>
                         <div>
                             Скрытый карниз: <?php echo $calculation->n16; ?>
                         </div>
                     <?php } ?>
-
                     <?php if ($calculation->n12) { ?>
                         <h4>Установка люстры</h4>
                         <?php echo $calculation->n12; ?> шт.
                     <?php } ?>
-
                     <?php if ($calculation->n13) { ?>
                         <h4>Установка светильников</h4>
                         <?php foreach ($calculation->n13 as $key => $n13_item) {
@@ -1016,7 +946,6 @@ $results = $db->loadObjectList(); */
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n14) { ?>
                         <h4>Обвод трубы</h4>
                         <?php foreach ($calculation->n14 as $key => $n14_item) {
@@ -1024,7 +953,6 @@ $results = $db->loadObjectList(); */
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n15) { ?>
                         <h4>Шторный карниз Гильдии мастеров</h4>
                         <?php foreach ($calculation->n15 as $key => $n15_item) {
@@ -1038,7 +966,6 @@ $results = $db->loadObjectList(); */
                         <? if (!$calculation->n16) echo "Обычный карниз"; ?>
                         <?php echo $calculation->n27; ?> м.
                     <?php } ?>
-
                     <?php if ($calculation->n26) { ?>
                         <h4>Светильники Эcola</h4>
                         <?php foreach ($calculation->n26 as $key => $n26_item) {
@@ -1046,7 +973,6 @@ $results = $db->loadObjectList(); */
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n22) { ?>
                         <h4>Вентиляция</h4>
                         <?php foreach ($calculation->n22 as $key => $n22_item) {
@@ -1054,7 +980,6 @@ $results = $db->loadObjectList(); */
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n23) { ?>
                         <h4>Диффузор</h4>
                         <?php foreach ($calculation->n23 as $key => $n23_item) {
@@ -1062,7 +987,6 @@ $results = $db->loadObjectList(); */
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n29) { ?>
                         <h4>Переход уровня</h4>
                         <?php foreach ($calculation->n29 as $key => $n29_item) {
@@ -1116,19 +1040,16 @@ $results = $db->loadObjectList(); */
                             Пожарная сигнализация, м: <?php echo $calculation->n21; ?>
                         </div>
                     <?php } ?>
-
                     <?php if ($calculation->dop_krepezh> 0) { ?>
                         <div>
                             Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
                         </div>
                     <?php } ?>
-
                     <?php if ($calculation->n24> 0) { ?>
                         <div>
                             Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
                         </div>
                     <?php } ?>
-
                     <?php if ($calculation->n30> 0) { ?>
                         <div>
                             Парящий потолок, м: <?php echo $calculation->n30; ?>
@@ -1150,118 +1071,92 @@ $results = $db->loadObjectList(); */
                     <?php } ?>
                 </div>
                 <button class="btn  btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this)"> Удалить потолок </button>
-                   <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
-                <div class="span6">
-
-                </div>
+                <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
+                <div class="span6"></div>
             </div>
         </div>
     <?php } ?>
     <?php if ($this->item->project_verdict == 0) { ?>
         <?php if ($user->dealer_type != 2) { ?>
             <table>
-
                 <tr>
                     <td>
-                        <a class="btn  btn-success" id="accept_project">
-                            Договор
-                        </a>
+                        <a class="btn  btn-success" id="accept_project">Договор</a>
                     </td>
                     <td>
-                        <a class="btn  btn-danger" id="refuse_project">
-                            Отказ
-                        </a>
+                        <a class="btn  btn-danger" id="refuse_project">Отказ</a>
                     </td>
-
                 </tr>
             </table>
         <?php } ?>
     <?php } ?>
-    <!--<form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">-->
-    <!--<div class="project_activation" style="display: none;">
-                        <input name="project_id" value="<?php //echo $this->item->id; ?>" type="hidden">
-                        <input name="type" value="calculator" type="hidden">
-                        <input name="subtype" value="calendar" type="hidden">
-                        <input id="project_verdict" name="project_verdict" value="0" type="hidden">
-                        <input name="data_change" value="0" type="hidden">
-                        <input id = "mounting_date" name="mounting_date" type='hidden'>
-                        <input id = "jform_project_mounting_from" name="jform_project_mounting_from" value="" type='hidden'>
-                        <input id ="jform_project_mounting_to" name="jform_project_mounting_to" value="" type='hidden'>
-                        <input  id ="project_sum" name="project_sum" value="<?php// echo $project_total_discount ?>" type="hidden">
-                </div>-->
     <div class="project_activation" style="display: none;" id="project_activation">
         <?php if ($user->dealer_type != 2) { ?>
-        <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">
-            Примечание к договору
-        </label>
-        <div class="controls">
-            <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору"
-                        aria-invalid="false"></textarea>
-        </div>
-        <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
-        </button>
-        <table id="mounter_wraper" style="display: none;">
-            <tr>
-                <td colspan=4>
-                    <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                </td>
-                <td>
-                    <div id="calendar1">
-                        <?php echo $calendar1; ?>
-                    </div>
-                </td>
-                <td>
-                    <div id="calendar2">
-                        <?php echo $calendar2; ?>
-                    </div>
-                </td>
-                <td>
-                    <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                </td>
-            </tr>
-            <tr>
-                <td colspan=4>
-                    <label id="jform_chief_note-lbl" for="jform_chief_note" class="">
-                        Примечание к монтажу
-                    </label>
-                    <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false">
-                        <?php echo $this->item->gm_chief_note; ?>
-                    </textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button class="validate btn btn-primary" id="save" type="button">Сохранить и запустить <br> в производство</button>
-                </td>
-                <td colspan=3 style="text-align: left;">
-                    <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
-                </td>
-            </tr>
-            <tr>
-                <td colspan = 3 id = "new_call" style = "display:none;" >
-                    <label>Введите дату и время звонка</label>
-                    <input type  = "date" class = "" name ="calldate_without_mounter" id  = "calldate_without_mounter" >
-                    <select name = "calltime_without_mounter" class = "" id = "calltime_without_mounter" >
-                        <option value="9:00">9:00</option>
-                        <option value="10:00">10:00</option>
-                        <option value="11:00">11:00</option>
-                        <option value="12:00">12:00</option>
-                        <option value="13:00">13:00</option>
-                        <option value="14:00">14:00</option>
-                        <option value="15:00">15:00</option>
-                        <option value="16:00">16:00</option>
-                        <option value="17:00">17:00</option>
-                    </select>
-                    <button class = "btn btn-primary" id = "ok_btn" type = "button"><i class="fa fa-check" aria-hidden="true"></i></button>
-                </td>
-            </tr>
-            <?php } ?>
-        </table>
+            <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">Примечание к договору</label>
+            <div class="controls">
+                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
+            </div>
+            <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
+            <table id="mounter_wraper" style="display: none;">
+                <tr>
+                    <td colspan=4>
+                        <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                    </td>
+                    <td>
+                        <div id="calendar1">
+                            <?php echo $calendar1; ?>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="calendar2">
+                            <?php echo $calendar2; ?>
+                        </div>
+                    </td>
+                    <td>
+                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=4>
+                        <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label>
+                        <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false">
+                            <?php echo $this->item->gm_chief_note; ?>
+                        </textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="validate btn btn-primary" id="save" type="button">Сохранить и запустить <br> в производство</button>
+                    </td>
+                    <td colspan=3 style="text-align: left;">
+                        <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan = 3 id = "new_call" style = "display:none;" >
+                        <label>Введите дату и время звонка</label>
+                        <input type  = "date" class = "" name ="calldate_without_mounter" id  = "calldate_without_mounter" >
+                        <select name = "calltime_without_mounter" class = "" id = "calltime_without_mounter" >
+                            <option value="9:00">9:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="12:00">12:00</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                        </select>
+                        <button class = "btn btn-primary" id = "ok_btn" type = "button"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            </table>
+        <?php } ?>
     </div>
 </div>
 <div id="modal-window-container-tar">
@@ -1282,31 +1177,32 @@ $results = $db->loadObjectList(); */
         <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
     </div>
 </div>
-<input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
-</form>
+<div id="modal-window-container2-tar">
+    <button id="close2-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal-window-2-tar">
+        <p id="date-modal"></p>
+        <p><strong>Выберите время замера:</strong></p>
+        <p>
+            <table id="projects_gaugers"></table>
+        </p>
+    </div>
 </div>
-
+<input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
+</div>
 <div id="modal_window_container" class = "modal_window_container">
-		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+	<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_del" class = "modal_window">
-			<h6 style = "margin-top:10px">Вы действительно хотите удалить?</h6>
-			<p><button type="button" id="ok" class="btn btn-primary">Да</button>  <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button></p>
+		<h6 style = "margin-top:10px">Вы действительно хотите удалить?</h6>
+		<p>
+            <button type="button" id="ok" class="btn btn-primary">Да</button>
+            <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
+        </p>
 	</div>
 </div>
 
 <script type="text/javascript">
 
     var $ = jQuery;
-
-    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal_window_del"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
-            jQuery("#modal_window_del").hide();
-        }
-    });
 
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
@@ -1330,7 +1226,7 @@ $results = $db->loadObjectList(); */
         jQuery("#modal_window_container, #modal_window_container *").hide();
     }
 
-    // листание календаря
+    // листание календаря монтажников
     month_old1 = 0;
     year_old1 = 0;
     month_old2 = 0;
@@ -1464,14 +1360,101 @@ $results = $db->loadObjectList(); */
     }
     //----------------------------------------
 
+    // листание календаря замерщиков
+    month_old = 0;
+    year_old = 0;
+    jQuery("#calendar-container").on("click", "#button-next-gauger", function () {
+        month = <?php echo $month1; ?>;
+        year = <?php echo $year1; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 12) {
+            month = 1;
+            year++;
+        } else {
+            month++;
+        }
+        month_old = month;
+        year_old = year;
+        update_calendar_gauger(month, year);
+    });
+    jQuery("#calendar-container").on("click", "#button-prev-gauger", function () {
+        month = <?php echo $month1; ?>;
+        year = <?php echo $year1; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 1) {
+            month = 12;
+            year--;
+        } else {
+            month--;
+        }
+        month_old = month;
+        year_old = year;
+        update_calendar_gauger(month, year);
+    });
+    function update_calendar_gauger(month, year) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+            data: {
+                id: <?php echo $userId; ?>,
+                id_dealer: <?php echo $user->dealer_id; ?>,
+                flag: 3,
+                month: month,
+                year: year,
+            },
+            success: function (msg) {
+                jQuery("#calendar-container").empty();
+                msg += '<div class="btn-small-l"><button id="button-prev-gauger" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
+                jQuery("#calendar-container").append(msg);
+                Today(day, NowMonth, NowYear);
+                /* var datesession = jQuery("#jform_project_new_calc_date").val();
+                if (datesession != undefined) {
+                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("class", "change");
+                } */
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+                });
+            }
+        });
+    }
+    //----------------------------------------
+
     //скрыть модальное окно
     jQuery(document).mouseup(function (e) {
-		var div = jQuery("#modal-window-choose-tar");
-		if (!div.is(e.target)
-		    && div.has(e.target).length === 0) {
+		var div1 = jQuery("#modal-window-choose-tar");
+		if (!div1.is(e.target)
+		    && div1.has(e.target).length === 0) {
 			jQuery("#close-tar").hide();
 			jQuery("#modal-window-container-tar").hide();
 			jQuery("#modal-window-choose-tar").hide();
+		}
+        var div = jQuery("#modal_window_del"); // тут указываем ID элемента
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_del").hide();
+        }
+        var div2 = jQuery("#modal-window-2-tar");
+		if (!div2.is(e.target)
+		    && div2.has(e.target).length === 0) {
+			jQuery("#close2-tar").hide();
+			jQuery("#modal-window-container2-tar").hide();
+			jQuery("#modal-window-2-tar").hide();
 		}
     });
     //--------------------------------------------------
@@ -1499,6 +1482,28 @@ $results = $db->loadObjectList(); */
     //------------------------------------------
 
     jQuery(document).ready(function () {
+
+        // открытие модального окна с календаря замерщиков
+        jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
+            window.idDay = jQuery(this).attr("id");
+            reg1 = "D(.*)D";
+            reg2 = "M(.*)M";
+            reg3 = "Y(.*)Y";
+            var d = idDay.match(reg1)[1];
+            var m = idDay.match(reg2)[1];
+            if (d.length == 1) {
+                d = "0"+d;
+            }
+            if (m.length == 1) {
+                m = "0"+m;
+            }
+            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
+            jQuery("#modal-window-container2-tar").show();
+			jQuery("#modal-window-2-tar").show("slow");
+            jQuery("#close2-tar").show();
+
+        });
+        //------------------------------------
 
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         show_comments();
@@ -2354,14 +2359,15 @@ $results = $db->loadObjectList(); */
         return true;
     }
 
-    var time = <?php if(isset( $_SESSION['time'])){echo "\"".$_SESSION['time']."\"";} else echo "\"".$time."\"";?>;
+// ругается когда вставила календарь!!!
+    /* var time = <?php if(isset( $_SESSION['time'])){echo "\"".$_SESSION['time']."\"";} else echo "\"".$time."\"";?>;
     var lnk=document.getElementById('jform_new_project_calculation_daypart').options;
     for (var i=0;i<lnk.length;i++) {
         if (lnk[i].value==time) {
             document.getElementById('jform_new_project_calculation_daypart').disabled = false;
             lnk[i].selected=true;
         }
-    }
+    } */
 
     function trans()
     {
@@ -2558,6 +2564,11 @@ $results = $db->loadObjectList(); */
 
     }
 
+    function PressEnter(your_text, your_event) {
+        if (your_text != "" && your_event.keyCode == 13)
+            jQuery("#update_discount").click();
+    }
+
 </script>
 
 <?php
@@ -2565,10 +2576,3 @@ else:
     echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
 endif;
 ?>
-
-<script language="JavaScript">
-    function PressEnter(your_text, your_event) {
-        if (your_text != "" && your_event.keyCode == 13)
-            jQuery("#update_discount").click();
-    }
-</script>

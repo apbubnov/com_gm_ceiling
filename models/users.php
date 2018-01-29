@@ -35,10 +35,13 @@ class Gm_ceilingModelUsers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('`id`,`name`,`registerDate`,`associated_client`');
-			$query->from('`rgzbn_users` LEFT JOIN `rgzbn_user_usergroup_map` ON `rgzbn_users`.`id`=`rgzbn_user_usergroup_map`.`user_id`');
-			$query->where('`rgzbn_user_usergroup_map`.`group_id`=14 AND
-				NOT ISNULL(`associated_client`) AND `dealer_type` < 2');
+			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`');
+			$query->from('`#__users` AS `u`');
+			$query->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`rgzbn_user_usergroup_map`.`user_id`');
+			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
+			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
+			$query->where('`#__user_usergroup_map`.`group_id`=14 AND `dealer_type` < 2');
+			$query->group('`id`');
 			$query->order('`id` DESC');
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
@@ -59,9 +62,12 @@ class Gm_ceilingModelUsers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('`id`,`name`,`registerDate`,`associated_client`');
-			$query->from('`rgzbn_users`');
-			$query->where('NOT ISNULL(`associated_client`) AND `dealer_type` = 3');
+			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`');
+			$query->from('`#__users` AS `u`');
+			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
+			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
+			$query->where('`dealer_type` = 3');
+			$query->group('`id`');
 			$query->order('`id` DESC');
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
