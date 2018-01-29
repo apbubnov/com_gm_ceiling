@@ -2802,15 +2802,13 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_components_sum += $component_item['gm_total'];
             $dealer_components_sum += $component_item['dealer_total'];
         }
-
         $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
-    
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
-        $html .= '<table>';
+        $html .= '<table border="0" cellspacing="0" width="100%>';
         $html .= '<tr>';
-        $html .= '<td><b>Дилер: </b>' . $dealer->name . '<br></td><td rowspan = 3><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png"/></td>';
+        $html .= '<td><b>Дилер: </b>' . $dealer->name . '<br></td><td rowspan = 3><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" style = "height = 200px;"/></td>';
         $html .= '</tr>';
         $html .= '<tr>'; 
         $html .= '<td><h2>Дата: ' . date("d.m.Y") . '</h2></td>';
