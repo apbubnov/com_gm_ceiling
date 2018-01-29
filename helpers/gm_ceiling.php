@@ -2821,13 +2821,14 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<p><h2>Дата: ' . date("d.m.Y") . '</h2></p>';
         $html .= '<p><h2>Общее: ' . $new_total . ' руб.</h2></p>';
         $thml .= '</div>';
-        $html .= '<div width = 33% style = "display: inline-block;" >';
+        $html .= '<div width = 33% >';
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td>';    
         $thml .= '</div>';  
         $html .= '<div style="float: left; width: 33%;">';
         $html .= $data['calc_data'];    
         $thml .= '</div>';
         $html .= '</div>';
+        $html .= '<div style="clear: both; margin: 0pt; padding: 0pt; "></div>';
         if ($data['discount'] != 0){
             $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
         }
