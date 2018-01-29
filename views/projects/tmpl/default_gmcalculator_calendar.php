@@ -132,7 +132,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		</tbody>
 	</table>
 
-    <table class="table table-striped one-touch-view" id="projectListMobil">
+    <table class="table table-striped one-touch-view" id="projectListMobil" style="display: none;">
         <thead>
         <tr>
             <th class='center'>
@@ -193,11 +193,14 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 	<?php echo JHtml::_('form.token'); ?>
 </form>
 
-<?php if($canDelete) : ?>
+
 <script type="text/javascript">
+
+    var $ = jQuery;
 
 	jQuery(document).ready(function () {
 		jQuery('.delete-button').click(deleteItem);
+		Resize();
 	});
 
 	function deleteItem() {
@@ -206,9 +209,10 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 			return false;
 		}
 	}
-    var $ = jQuery;
-    $(window).resize(function(){
-        if (screen.width <= '1024') {
+    $(window).resize(Resize);
+
+    function Resize() {
+        if ($(window).width() <= '1024') {
             jQuery('#projectList').hide();
             jQuery('#projectListMobil').show();
             jQuery('#projectListMobil').css('font-size', '10px');
@@ -219,9 +223,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
             jQuery('#projectListMobil').hide();
             jQuery('#projectListMobil').css('display', 'none');
         }
-    });
+
+    }
 
     // вызовем событие resize
     $(window).resize();
 </script>
-<?php endif; ?>

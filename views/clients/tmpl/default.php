@@ -112,5 +112,17 @@ $type = $jinput->getString('type', NULL);
 			return false;
 		}
 	}
+
+    var $ = jQuery;
+    $(window).resize(function(){
+        if (screen.width <= '1024') {
+            jQuery('#clientList').css('font-size', '10px');
+        }
+        else {
+        }
+    });
+
+    // вызовем событие resize
+    $(window).resize();
 </script>
 
