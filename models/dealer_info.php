@@ -204,9 +204,11 @@ class Gm_ceilingModelDealer_info extends JModelList
 				->set('dealer_components_margin = ' . $db->quote($data['dealer_components_margin']))
 				->set('dealer_mounting_margin = ' . $db->quote($data['dealer_mounting_margin']))
 				->where('dealer_id = ' . $id);
-                $db->setQuery($query);
-				$db->execute();
+            $db->setQuery($query);
+			$db->execute();
 			
+			unset($data['dealer_canvases_margin'],$data['dealer_components_margin'],$data['dealer_mounting_margin']);
+
 			$query = $db->getQuery(true);
 			$query->select('id');
 			$query->from('#__gm_ceiling_mount');
@@ -223,9 +225,8 @@ class Gm_ceilingModelDealer_info extends JModelList
 					$query->set("$key = '$value'");
 				}
 
-					$db->setQuery($query);
-
-					$db->execute();	
+				$db->setQuery($query);
+				$db->execute();	
 			}
 			else {
 				$query = $db->getQuery(true);
@@ -242,8 +243,8 @@ class Gm_ceilingModelDealer_info extends JModelList
 					$col .= "`$key`,";
 					$val .= "'$value',";
 				}
-				$col = substr($col, 0, -1);
-				$val = substr($val, 0, -1);
+				$col .= '`user_id`,`mp20`';
+				$val .= "$id, '$mp20'";
 
 				$query = $db->getQuery(true);
 	        	$query->insert('`#__gm_ceiling_mount`')
