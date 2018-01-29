@@ -28,6 +28,8 @@
 
 <link rel="stylesheet" href="components/com_gm_ceiling/views/gaugerform/tmpl/css/style.css" type="text/css" />
 
+<?=parent::getButtonBack();?>
+
 <form id = "gauger_form" enctype="multipart/form-data" action="/index.php?option=com_gm_ceiling&task=gaugerform.RegisterGauger" method="post">
 	<div id="content-tar">
 		<p><h3> Добавление замерщика</h3></p>
