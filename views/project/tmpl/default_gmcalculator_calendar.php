@@ -1364,8 +1364,8 @@
     month_old = 0;
     year_old = 0;
     jQuery("#button-next-gauger").click(function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
+        month = <?php echo $month1; ?>;
+        year = <?php echo $year1; ?>;
         if (month_old != 0) {
             month = month_old;
             year = year_old;
@@ -1381,8 +1381,8 @@
         update_calendar(month, year);
     });
     jQuery("#button-prev-gauger").click(function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
+        month = <?php echo $month1; ?>;
+        year = <?php echo $year1; ?>;
         if (month_old != 0) {
             month = month_old;
             year = year_old;
