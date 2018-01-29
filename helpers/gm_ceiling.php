@@ -2876,8 +2876,7 @@ class Gm_ceilingHelpersGm_ceiling
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
-                        throw new Exception(count($mounting_data->mounting_data));
-                foreach ($mounting_data->mounting_data as $item) {
+                foreach ($mounting_data['mounting_data'] as $item) {
                     $html .= '<tr>';
                     $html .= '<td>' . $item['title'] . '</td>';
                     $html .= '<td class="center">' . round($item['price_with_gm_dealer_margin'], 2) . '</td>';
