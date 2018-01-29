@@ -2789,8 +2789,7 @@ class Gm_ceilingHelpersGm_ceiling
         $offcut_square_data = self::calculate_offcut($calc_id);
         $components_data = self::calculate_components($calc_id,null,0);
         $guild_data = self::calculate_guild_jobs($calc_id);
-        $result = self::calculate_mount(0,$calc_id,null);
-        $mounting_data = $result->mounting_data;
+        $mounting_data = self::calculate_mount(0,$calc_id,null);
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
@@ -2877,8 +2876,7 @@ class Gm_ceilingHelpersGm_ceiling
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
-
-                foreach ($mounting_data as $item) {
+                foreach ($mounting_data['mounting_data'] as $item) {
                     $html .= '<tr>';
                     $html .= '<td>' . $item['title'] . '</td>';
                     $html .= '<td class="center">' . round($item['price_with_gm_dealer_margin'], 2) . '</td>';
