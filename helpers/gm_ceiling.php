@@ -2810,12 +2810,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
         $html .= '<table>';
         $html .= '<tr>';
-        $html .= '<td rowspan = 4><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png"/></td>';
-        $html .= '</tr>';
-        $html .= '<tr>';
-        $html .= '<td>';
-        $html .= "<b>Дилер: </b>" . $dealer->name . "<br>";
-        $html .= '</td>';
+        $html .= '<td><b>Дилер: </b>' . $dealer->name . '<br></td><td rowspan = 3><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png"/></td>';
         $html .= '</tr>';
         $html .= '<tr>'; 
         $html .= '<td><h2>Дата: ' . date("d.m.Y") . '</h2></td>';
@@ -2828,6 +2823,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td><h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2></td>';
             $html .= '</tr>';
         }
+        $html .= '</table>';
         $html .= '<table border="0" cellspacing="0" width="100%">
                     <tbody>
                         <tr>
