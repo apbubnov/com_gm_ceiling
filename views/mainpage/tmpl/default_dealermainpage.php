@@ -125,19 +125,20 @@ $rest = -($total_sum) - $contributed;
             <div class="message">Посетите данную страницу для настроек прайса монтажа!</div>
         <?endif;?>
     </button>
-    <?php } ?>
-        <button class="btn btn-primary btn-done" type="button"> Счет </button>
-        <div id="modal_window_container" class="modal_window_container">
+
+        <button class="btn btn-primary btn-acct" type="button"> Счет </button>
+        <div id="modal_window_container" class="modal_window_container" >
             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar"
                                                                   aria-hidden="true"></i>
             </button>
-            <div id="modal_window_del" class="modal_window">
+            <div id="modal_window_acct" class="modal_window" style="padding-top: 2em; border: 2px solid #414099;">
                 <p>Общая сумма за комплектующие и материалы: <?php echo $total_sum?-$total_sum:0;?></p>
                 <p>Внесенная сумма: <?php echo $contributed?$contributed:0;?></p>
                 <p>Сумма долга: <?php echo ($rest>0)?$rest:0;?></p>
                 <p>На счете: <?php echo $rest?-$rest:0;?></p>
             </div>
         </div>
+        <?php } ?>
   <?  }?>
 </div>
 
@@ -383,9 +384,9 @@ $rest = -($total_sum) - $contributed;
         }
     });
 
-    jQuery(".btn-done").click(function(){
+    jQuery(".btn-acct").click(function(){
         jQuery(".close_btn").show();
         jQuery("#modal_window_container").show();
-        jQuery("#modal_window_del").show("slow");
+        jQuery("#modal_window_acct").show("slow");
     });
 </script>
