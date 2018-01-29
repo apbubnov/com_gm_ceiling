@@ -150,7 +150,7 @@ $rest = -($total_sum) - $contributed;
         <h3>Дилер</h3>
     <?php endif; ?>
     <?php if ($user->dealer_type == 0) { ?>
-        <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-warning" href="<?php
                 if ($userId == 1 || $userId == 2)
@@ -167,7 +167,7 @@ $rest = -($total_sum) - $contributed;
                 <?php } ?>
             </div>
         </div>
-        <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-success" href="<?php
                 if ($userId == 1 || $userId == 2) {
@@ -184,7 +184,7 @@ $rest = -($total_sum) - $contributed;
                 <?php } ?>
             </div>
         </div>
-        <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-primary" href="<?php
                 if ($userId == 1 || $userId == 2)
@@ -230,7 +230,7 @@ $rest = -($total_sum) - $contributed;
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=clients&type=manager', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Клиенты</a>
         </p>
-        <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
                 <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Замеры</a>
                 <?php if ($sumcalculator[0]->count != 0) { ?>
@@ -238,7 +238,7 @@ $rest = -($total_sum) - $contributed;
                 <?php } ?>
             </div>
         </div>
-        <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+        <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
             <div class="container-for-circl">
                 <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false); ?>"><i class="fa fa-gavel" aria-hidden="true"></i> Монтажи</a>
                 <?php if ($allMount != 0) { ?>
