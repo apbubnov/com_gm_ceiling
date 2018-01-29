@@ -128,10 +128,14 @@ class Gm_ceilingHelpersGm_ceiling
         if (!$user->save()) return false;
         JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
         $margin_model = self::getModel('Dealer_info');
+        $mount_model = self::getModel('mount');
         if ($type == 3)
         {
             $gm_margin = $margin_model->getDataById(1);
             $margin_model->save($gm_margin->dealer_canvases_margin,$gm_margin->dealer_components_margin,$gm_margin->dealer_mounting_margin,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
+            $gm_mount = $mount_model->getDataAll(1);
+            $gm_mount->user_id = $userID;
+            $mount_model->insert($gm_mount);
         }
         else
         {
@@ -2816,19 +2820,18 @@ class Gm_ceilingHelpersGm_ceiling
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
         $html .= '<div width = 100%>';
-        $html .= '<div style="float: right; width: 33%;">';
+        $html .= '<span width = 33% >';
         $html .= '<p><b>Дилер: </b>' . $dealer->name . '</p>';
         $html .= '<p><h2>Дата: ' . date("d.m.Y") . '</h2></p>';
         $html .= '<p><h2>Общее: ' . $new_total . ' руб.</h2></p>';
-        $thml .= '</div>';
-        $html .= '<div width = 33% >';
+        $thml .= '</span>';
+        $html .= '<span width = 33% style = "display: inline-block;" >';
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td>';    
-        $thml .= '</div>';  
-        $html .= '<div style="float: left; width: 33%;">';
+        $thml .= '</span>';  
+        $html .= '<span width = 33% style = "display: inline-block;" >';
         $html .= $data['calc_data'];    
-        $thml .= '</div>';
+        $thml .= '</span>';
         $html .= '</div>';
-        $html .= '<div style="clear: both; margin: 0pt; padding: 0pt; "></div>';
         if ($data['discount'] != 0){
             $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
         }
