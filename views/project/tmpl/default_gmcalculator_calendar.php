@@ -427,7 +427,6 @@
                 $sum_transport_discount_total = 0;
                 $sum_transport_total = 0;
                 $JS_Calcs_Sum = array();
-
                 foreach ($calculations as $calculation) {
                     $dealer_canvases_sum = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
                     $dealer_components_sum = double_margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/, $this->item->dealer_components_margin);
@@ -447,7 +446,6 @@
                     $total_square += $calculation->n4;
                     $total_perimeter += $calculation->n5;
                     $canvas = $dealer_canvases_sum;
-                
                     // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
                     $sum_transport = 0;  $sum_transport_discount = 0;
                     $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
@@ -519,9 +517,7 @@
                 </th>
             </tr>
             <tr>
-                <th>
-                    Транспортные расходы
-                </th>
+                <th>Транспортные расходы</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -597,28 +593,31 @@
                     <th id="project_total"><span class="sum"><?php echo round($project_total, 0); ?></span> руб. /</th>
                     <th id="project_total_discount">
                         <span class="sum">
-                    <?php
-                        //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                        if($dealer_canvases_sum == 0 && $project_total_discount < 2500) $project_total_discount = 2500;
-                        elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) { $project_total_discount = 2500; echo round($project_total_discount, 0);  ?> руб.</th> <?}
-                        elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
-                        </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
-                    <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
-                <?php }
-                else { ?>
-                <th>Итого</th>
-                <th id="project_total">
-                    <span class="sum">
-                    <?php
-                        if ($this->item->new_project_sum == 0) {
-                            if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
-                            elseif($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
-                            
-                            echo round($project_total, 2);
-                        } else {
-                            echo round($this->item->new_project_sum, 2);
-                        }
-                    } ?>
+                            <?php
+                                //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                if ($dealer_canvases_sum == 0 && $project_total_discount < 2500) {
+                                    $project_total_discount = 2500;
+                                } elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) {
+                                    $project_total_discount = 2500;
+                                    echo round($project_total_discount, 0);  ?> руб.</th> <?
+                                } elseif ($project_total_discount < 3500 && $project_total_discount > 0) {
+                                    $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
+                                </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
+                            <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
+                <?php } ?>
+                <?php else { ?>
+                    <th>Итого</th>
+                    <th id="project_total">
+                        <span class="sum">
+                        <?php
+                            if ($this->item->new_project_sum == 0) {
+                                if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
+                                elseif($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                                echo round($project_total, 2);
+                            } else {
+                                echo round($this->item->new_project_sum, 2);
+                        } ?>
+                <?php } ?>
                 </span>
                 <span class="dop" style="font-size: 9px;">
                 <? if ($project_total <= 2500 && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
@@ -645,7 +644,6 @@
                     <td>
                         <?php
                         $path = "/costsheets/" . md5($calculation->id . "-0-0") . ".pdf";
-
                         $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-0-0") . ".pdf", "id" => $calculation->id);
                         ?>
                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
@@ -664,25 +662,27 @@
                 <tr class="section_estimate" style="display:none;">
                     <td>
                         <div class="email-all" style="float: left;">
-                            <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;"
-                                placeholder="Адрес эл.почты" type="text">
-                                <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
-                                    <option value="<?=$em->contact;?>"> <?}?>
-                                </datalist>
+                            <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
+                            <datalist id="email">
+                                <? foreach ($contact_email AS $em) {?>
+                                    <option value="<?=$em->contact;?>">
+                                <?}?>
+                            </datalist>
                         </div>
                         <div class="file_data">
                             <div class="file_upload">
                                 <input type="file" class="dopfile" name="dopfile" id="dopfile">
                             </div>
                             <div class="file_name"></div>
-                            <script>jQuery(function () {
+                            <script>
+                                jQuery(function () {
                                     jQuery("div.file_name").html("Файл не выбран");
                                     jQuery("div.file_upload input.dopfile").change(function () {
                                         var filename = jQuery(this).val().replace(/.*\\/, "");
                                         jQuery("div.file_name").html((filename != "") ? filename : "Файл не выбран");
                                     });
-                                });</script>
+                                });
+                            </script>
                         </div>
                     </td>
                     <td>
@@ -694,7 +694,6 @@
                 <tr>
                     <th id="sh_mount"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                 </tr>
-
                 <?php foreach ($calculations as $calculation) { ?>
                     <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                     <td><?php echo $calculation->calculation_title; ?></td>
@@ -707,7 +706,6 @@
                             После договора
                         <?php } ?>
                     </td>
-
                 <?php }
                 $json1 = json_encode($pdf_names_mount); ?>
                 </tr>
@@ -718,22 +716,22 @@
                     <tr class="section_mount" style="display:none;">
                         <td>
                             <div class="email-all" style="float: left;">
-                                <input name="all-email" id="all-email2" class="form-control" style="width:200px;"
-                                        value="" placeholder="Адрес эл.почты" type="text">
-
+                                <input name="all-email" id="all-email2" class="form-control" style="width:200px;" value="" placeholder="Адрес эл.почты" type="text">
                             </div>
                             <div class="file_data">
                                 <div class="file_upload">
                                     <input type="file" class="dopfile1" name="dopfile1" id="dopfile1">
                                 </div>
                                 <div class="file_name1"></div>
-                                <script>jQuery(function () {
+                                <script>
+                                    jQuery(function () {
                                         jQuery("div.file_name1").html("Файл не выбран");
                                         jQuery("div.file_upload input.dopfile1").change(function () {
                                             var filename = jQuery(this).val().replace(/.*\\/, "");
                                             jQuery("div.file_name1").html((filename != "") ? filename : "Файл не выбран");
                                         });
-                                    });</script>
+                                    });
+                                </script>
                             </div>
                         </td>
                         <td>
@@ -747,7 +745,7 @@
                 <td><b>Отправить общую смету <b></td>
                 <td>
                     <?php
-                    $path = "/costsheets/" . md5($this->item->id . "-9") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                        $path = "/costsheets/" . md5($this->item->id . "-9") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                     <?php } else { ?>
                         -
@@ -757,45 +755,44 @@
                 </td>
                 <td></td>
             </tr>
-            <?  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                <tr >
+            <? if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                <tr>
                     <td>
                         <div class="email-all" style="float: left;">
-                            <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;"
-                                placeholder="Адрес эл.почты" type="text">
-                                <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
-                                    <option value="<?=$em->contact;?>"> <?}?>
-                                </datalist>
+                            <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
+                            <datalist id="email">
+                                <? foreach ($contact_email AS $em) {?>
+                                    <option value="<?=$em->contact;?>">
+                                <?}?>
+                            </datalist>
                         </div>
                         <div class="file_data">
                             <div class="file_upload">
                                 <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
                             </div>
                             <div class="file_name2"></div>
-                            <script>jQuery(function () {
+                            <script>
+                                jQuery(function () {
                                     jQuery("div.file_name2").html("Файл не выбран");
                                     jQuery("div.file_upload input.dopfile2").change(function () {
                                         var filename = jQuery(this).val().replace(/.*\\/, "");
                                         jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
                                     });
-                                });</script>
+                                });
+                            </script>
                         </div>
                     </td>
                     <td>
-
                         <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
                     </td>
-                    <td>
-
-                    </td>
+                    <td></td>
                 </tr>
                 <!-- общий наряд на монтаж-->
                 <tr>
                     <td><b>Общий наряд на монтаж <b></td>
                     <td>
                         <?php
-                        $path = "/costsheets/" . md5($this->item->id . "-10") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                            $path = "/costsheets/" . md5($this->item->id . "-10") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                         <?php } else { ?>
                             -
@@ -809,48 +806,39 @@
                     <td>
                         <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                     </td>
-                    <td></td><td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             <? }?>
         </table>
         <?php if ($user->dealer_type == 2) { ?>
-            <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
-                формирование заказа
-            </button>
+            <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить формирование заказа</button>
             <?php if ($this->item->project_status == 7) {
                 // регистрационная информация (логин, пароль #1)
                 // registration info (login, password #1)
                 $mrh_login = "demo";
                 $mrh_pass1 = "password_1";
-
                 // номер заказа
                 // number of order
                 $inv_id = 0;
-
                 // описание заказа
                 // order description
                 $inv_desc = "Оплата заказа в Тестовом магазине ROBOKASSA";
-
                 // сумма заказа
                 // sum of order
                 $out_summ = $project_total_discount;;
-
                 // тип товара
                 // code of goods
                 $shp_item = 1;
-
                 // язык
                 // language
                 $culture = "ru";
-
                 // кодировка
                 // encoding
                 $encoding = "utf-8";
-
                 // формирование подписи
                 // generate signature
                 $crc = md5("$mrh_login:$out_summ:$inv_id:$mrh_pass1:shp_Item=$shp_item");
-
                 // HTML-страница с кассой
                 // ROBOKASSA HTML-page
                 print "<html><script language=JavaScript " .
@@ -858,7 +846,6 @@
                     "MerchantLogin=$mrh_login&OutSum=$out_summ&InvoiceID=$inv_id" .
                     "&Description=$inv_desc&SignatureValue=$crc&shp_Item=$shp_item" .
                     "&Culture=$culture&Encoding=$encoding'></script></html>";
-
             }
         } ?>
     </div>
@@ -867,19 +854,16 @@
         <?php if(!empty($calculation->n2)) $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".png"; ?>
         <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
             <h3><?php echo $calculation->calculation_title; ?></h3>
-
-            <a class="btn btn-primary"
-                href="index.php?option=com_gm_ceiling&view=calculationform&type=gmcalculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить
-                расчет</a>
+            <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=gmcalculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить расчет</a>
             <? if (!empty($filename)):?>
-            <div class="sketch_image_block">
-                <h3 class="section_header">
-                    Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                </h3>
-                <div class="section_content">
-                    <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+                <div class="sketch_image_block">
+                    <h3 class="section_header">
+                        Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                    </h3>
+                    <div class="section_content">
+                        <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+                    </div>
                 </div>
-            </div>
             <? endif; ?>
             <div class="row-fluid">
                 <div class="span6">
@@ -894,13 +878,11 @@
                     <div>
                         Производитель, ширина: <?php echo $calculation->n3; ?>
                     </div>
-
                     <?php if ($calculation->color > 0) { ?>
                         <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
                         <?php $color = $color_model->getData($calculation->color); ?>
                         <div>
-                            Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
-                                                                    alt=""/>
+                            Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>" alt=""/>
                         </div>
                     <?php } ?>
                     <h4>Размеры помещения</h4>
@@ -914,28 +896,25 @@
                         <div>
                             <h4> Вставка</h4>
                         </div>
-                        <? if ($calculation->n6 == 314) {?>
-                        <div> Белая </div>
-                    <?php } else  {?>
-                        <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
-                        <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
-                        <div>
-                            Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>"
-                                                                    alt=""/>
-                        </div>
-                    <?php }?>
+                        <? if ($calculation->n6 == 314) { ?>
+                            <div> Белая </div>
+                        <?php } else  {?>
+                            <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
+                            <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
+                            <div>
+                                Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>" alt=""/>
+                            </div>
+                        <?php }?>
                     <?} endif; ?>
                     <?php if ($calculation->n16) { ?>
                         <div>
                             Скрытый карниз: <?php echo $calculation->n16; ?>
                         </div>
                     <?php } ?>
-
                     <?php if ($calculation->n12) { ?>
                         <h4>Установка люстры</h4>
                         <?php echo $calculation->n12; ?> шт.
                     <?php } ?>
-
                     <?php if ($calculation->n13) { ?>
                         <h4>Установка светильников</h4>
                         <?php foreach ($calculation->n13 as $key => $n13_item) {
@@ -943,7 +922,6 @@
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n14) { ?>
                         <h4>Обвод трубы</h4>
                         <?php foreach ($calculation->n14 as $key => $n14_item) {
@@ -951,7 +929,6 @@
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n15) { ?>
                         <h4>Шторный карниз Гильдии мастеров</h4>
                         <?php foreach ($calculation->n15 as $key => $n15_item) {
@@ -965,7 +942,6 @@
                         <? if (!$calculation->n16) echo "Обычный карниз"; ?>
                         <?php echo $calculation->n27; ?> м.
                     <?php } ?>
-
                     <?php if ($calculation->n26) { ?>
                         <h4>Светильники Эcola</h4>
                         <?php foreach ($calculation->n26 as $key => $n26_item) {
@@ -973,7 +949,6 @@
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n22) { ?>
                         <h4>Вентиляция</h4>
                         <?php foreach ($calculation->n22 as $key => $n22_item) {
@@ -981,7 +956,6 @@
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n23) { ?>
                         <h4>Диффузор</h4>
                         <?php foreach ($calculation->n23 as $key => $n23_item) {
@@ -989,7 +963,6 @@
                             ?>
                         <?php }
                     } ?>
-
                     <?php if ($calculation->n29) { ?>
                         <h4>Переход уровня</h4>
                         <?php foreach ($calculation->n29 as $key => $n29_item) {
@@ -1043,19 +1016,16 @@
                             Пожарная сигнализация, м: <?php echo $calculation->n21; ?>
                         </div>
                     <?php } ?>
-
                     <?php if ($calculation->dop_krepezh> 0) { ?>
                         <div>
                             Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
                         </div>
                     <?php } ?>
-
                     <?php if ($calculation->n24> 0) { ?>
                         <div>
                             Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
                         </div>
                     <?php } ?>
-
                     <?php if ($calculation->n30> 0) { ?>
                         <div>
                             Парящий потолок, м: <?php echo $calculation->n30; ?>
@@ -1077,118 +1047,92 @@
                     <?php } ?>
                 </div>
                 <button class="btn  btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this)"> Удалить потолок </button>
-                   <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
-                <div class="span6">
-
-                </div>
+                <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
+                <div class="span6"></div>
             </div>
         </div>
     <?php } ?>
     <?php if ($this->item->project_verdict == 0) { ?>
         <?php if ($user->dealer_type != 2) { ?>
             <table>
-
                 <tr>
                     <td>
-                        <a class="btn  btn-success" id="accept_project">
-                            Договор
-                        </a>
+                        <a class="btn  btn-success" id="accept_project">Договор</a>
                     </td>
                     <td>
-                        <a class="btn  btn-danger" id="refuse_project">
-                            Отказ
-                        </a>
+                        <a class="btn  btn-danger" id="refuse_project">Отказ</a>
                     </td>
-
                 </tr>
             </table>
         <?php } ?>
     <?php } ?>
-    <!--<form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">-->
-    <!--<div class="project_activation" style="display: none;">
-                        <input name="project_id" value="<?php //echo $this->item->id; ?>" type="hidden">
-                        <input name="type" value="calculator" type="hidden">
-                        <input name="subtype" value="calendar" type="hidden">
-                        <input id="project_verdict" name="project_verdict" value="0" type="hidden">
-                        <input name="data_change" value="0" type="hidden">
-                        <input id = "mounting_date" name="mounting_date" type='hidden'>
-                        <input id = "jform_project_mounting_from" name="jform_project_mounting_from" value="" type='hidden'>
-                        <input id ="jform_project_mounting_to" name="jform_project_mounting_to" value="" type='hidden'>
-                        <input  id ="project_sum" name="project_sum" value="<?php// echo $project_total_discount ?>" type="hidden">
-                </div>-->
     <div class="project_activation" style="display: none;" id="project_activation">
         <?php if ($user->dealer_type != 2) { ?>
-        <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">
-            Примечание к договору
-        </label>
-        <div class="controls">
-            <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору"
-                        aria-invalid="false"></textarea>
-        </div>
-        <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
-        </button>
-        <table id="mounter_wraper" style="display: none;">
-            <tr>
-                <td colspan=4>
-                    <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                </td>
-                <td>
-                    <div id="calendar1">
-                        <?php echo $calendar1; ?>
-                    </div>
-                </td>
-                <td>
-                    <div id="calendar2">
-                        <?php echo $calendar2; ?>
-                    </div>
-                </td>
-                <td>
-                    <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                </td>
-            </tr>
-            <tr>
-                <td colspan=4>
-                    <label id="jform_chief_note-lbl" for="jform_chief_note" class="">
-                        Примечание к монтажу
-                    </label>
-                    <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false">
-                        <?php echo $this->item->gm_chief_note; ?>
-                    </textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button class="validate btn btn-primary" id="save" type="button">Сохранить и запустить <br> в производство</button>
-                </td>
-                <td colspan=3 style="text-align: left;">
-                    <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
-                </td>
-            </tr>
-            <tr>
-                <td colspan = 3 id = "new_call" style = "display:none;" >
-                    <label>Введите дату и время звонка</label>
-                    <input type  = "date" class = "" name ="calldate_without_mounter" id  = "calldate_without_mounter" >
-                    <select name = "calltime_without_mounter" class = "" id = "calltime_without_mounter" >
-                        <option value="9:00">9:00</option>
-                        <option value="10:00">10:00</option>
-                        <option value="11:00">11:00</option>
-                        <option value="12:00">12:00</option>
-                        <option value="13:00">13:00</option>
-                        <option value="14:00">14:00</option>
-                        <option value="15:00">15:00</option>
-                        <option value="16:00">16:00</option>
-                        <option value="17:00">17:00</option>
-                    </select>
-                    <button class = "btn btn-primary" id = "ok_btn" type = "button"><i class="fa fa-check" aria-hidden="true"></i></button>
-                </td>
-            </tr>
-            <?php } ?>
-        </table>
+            <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">Примечание к договору</label>
+            <div class="controls">
+                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
+            </div>
+            <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
+            <table id="mounter_wraper" style="display: none;">
+                <tr>
+                    <td colspan=4>
+                        <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                    </td>
+                    <td>
+                        <div id="calendar1">
+                            <?php echo $calendar1; ?>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="calendar2">
+                            <?php echo $calendar2; ?>
+                        </div>
+                    </td>
+                    <td>
+                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=4>
+                        <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label>
+                        <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false">
+                            <?php echo $this->item->gm_chief_note; ?>
+                        </textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="validate btn btn-primary" id="save" type="button">Сохранить и запустить <br> в производство</button>
+                    </td>
+                    <td colspan=3 style="text-align: left;">
+                        <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan = 3 id = "new_call" style = "display:none;" >
+                        <label>Введите дату и время звонка</label>
+                        <input type  = "date" class = "" name ="calldate_without_mounter" id  = "calldate_without_mounter" >
+                        <select name = "calltime_without_mounter" class = "" id = "calltime_without_mounter" >
+                            <option value="9:00">9:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="12:00">12:00</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                        </select>
+                        <button class = "btn btn-primary" id = "ok_btn" type = "button"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+            </table>
+        <?php } ?>
     </div>
 </div>
 <div id="modal-window-container-tar">
@@ -1212,10 +1156,13 @@
 <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
 </div>
 <div id="modal_window_container" class = "modal_window_container">
-		<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+	<button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_del" class = "modal_window">
-			<h6 style = "margin-top:10px">Вы действительно хотите удалить?</h6>
-			<p><button type="button" id="ok" class="btn btn-primary">Да</button>  <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button></p>
+		<h6 style = "margin-top:10px">Вы действительно хотите удалить?</h6>
+		<p>
+            <button type="button" id="ok" class="btn btn-primary">Да</button>
+            <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
+        </p>
 	</div>
 </div>
 
