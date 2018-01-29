@@ -128,7 +128,16 @@ class Gm_ceilingHelpersGm_ceiling
         if (!$user->save()) return false;
         JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
         $margin_model = self::getModel('Dealer_info');
-        $margin_model->save(0,0,0,0,0,0,$userID,0);
+        if ($type == 3)
+        {
+            $gm_margin = $margin_model->getDataById(1);
+            $margin_model->save($gm_margin->dealer_canvases_margin,$gm_margin->dealer_components_margin,$gm_margin->dealer_mounting_margin,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
+        }
+        else
+        {
+            $margin_model->save(0,0,0,0,0,0,$userID,0);
+        }
+        
         return $userID;
 
         //header('location: /index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage');
