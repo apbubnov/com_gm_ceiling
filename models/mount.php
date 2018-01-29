@@ -109,6 +109,8 @@ class Gm_ceilingModelMount extends JModelList
     	{
 	        $db    = $this->getDbo();
 
+	        unset($data->id);
+
 	       	$col = '';
 			$val = '';
 			foreach ($data as $key => $value)
