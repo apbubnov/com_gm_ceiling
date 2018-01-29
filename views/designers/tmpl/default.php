@@ -45,27 +45,30 @@ $result_users = $users_model->getDesigners();
         	<?php
         		foreach ($result_users as $key => $value)
         		{
+                    if ($value->refused_to_cooperate == 0)
+                    {
         	?>
-                <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.(int) $value->associated_client); ?>">
-		            <td>
-		               <?php echo $value->name; ?>
-		            </td>
-                    <td>
-                       <?php echo $value->client_contacts; ?>
-                    </td>
-		            <td>
-		               <?php
-                            if($value->created == "0000-00-00 00:00:00") {
-                                echo "-";
-                            } else {
-                                $jdate = new JDate($value->created);
-                                $created = $jdate->format("d.m.Y H:i");
-                                echo $created;
-                            }
-                       ?>
-		            </td>
-		        </tr>
+                    <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.(int) $value->associated_client); ?>">
+    		            <td>
+    		               <?php echo $value->name; ?>
+    		            </td>
+                        <td>
+                           <?php echo $value->client_contacts; ?>
+                        </td>
+    		            <td>
+    		               <?php
+                                if($value->created == "0000-00-00 00:00:00") {
+                                    echo "-";
+                                } else {
+                                    $jdate = new JDate($value->created);
+                                    $created = $jdate->format("d.m.Y H:i");
+                                    echo $created;
+                                }
+                           ?>
+    		            </td>
+    		        </tr>
         	<?php
+                    }
         		}
         	?>
         </tbody>
