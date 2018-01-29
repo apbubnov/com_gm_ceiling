@@ -1361,7 +1361,76 @@
     //----------------------------------------
 
     // листание календаря замерщиков
-
+    month_old = 0;
+    year_old = 0;
+    jQuery("#button-next-gauger").click(function () {
+        month = <?php echo $month; ?>;
+        year = <?php echo $year; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 12) {
+            month = 1;
+            year++;
+        } else {
+            month++;
+        }
+        month_old = month;
+        year_old = year;
+        update_calendar(month, year);
+    });
+    jQuery("#button-prev-gauger").click(function () {
+        month = <?php echo $month; ?>;
+        year = <?php echo $year; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 1) {
+            month = 12;
+            year--;
+        } else {
+            month--;
+        }
+        month_old = month;
+        year_old = year;
+        update_calendar(month, year);
+    });
+    function update_calendar(month, year) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+            data: {
+                id: <?php echo $userId; ?>,
+                id_dealer: <?php echo $user->dealer_id; ?>,
+                flag: 3,
+                month: month,
+                year: year,
+            },
+            success: function (msg) {
+                jQuery("#calendar-container").empty();
+                msg += '<div class="btn-small-l"><button id="button-prev-gauger" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
+                jQuery("#calendar-container").append(msg);
+                Today(day, NowMonth, NowYear);
+                /* var datesession = jQuery("#jform_project_new_calc_date").val();
+                if (datesession != undefined) {
+                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("class", "change");
+                } */
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+                });
+            }
+        });
+    }
     //----------------------------------------
 
     //скрыть модальное окно
