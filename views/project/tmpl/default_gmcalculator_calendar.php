@@ -145,6 +145,15 @@
     $AllMounters = $model->FindAllMounters($where);
     // ---------------------------------------------------------------------------------
 
+    // календарь
+    $FlagCalendar = [3, $user->dealer_id];
+    $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
+    //----------------------------------------------------------------------------------
+
+    // все замерщики
+    $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
+    //----------------------------------------------------------------------------------
+
 ?>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
