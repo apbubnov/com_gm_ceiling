@@ -2810,7 +2810,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
         $html .= '<table>';
         $html .= '<tr>';
-        $html .= '<td rowspan = 4><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png"/></td>'
+        $html .= '<td rowspan = 4><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png"/></td>';
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<td>';
