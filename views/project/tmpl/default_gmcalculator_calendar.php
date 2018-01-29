@@ -2337,14 +2337,15 @@
         return true;
     }
 
-    var time = <?php if(isset( $_SESSION['time'])){echo "\"".$_SESSION['time']."\"";} else echo "\"".$time."\"";?>;
+// ругается когда вставила календарь!!!
+    /* var time = <?php if(isset( $_SESSION['time'])){echo "\"".$_SESSION['time']."\"";} else echo "\"".$time."\"";?>;
     var lnk=document.getElementById('jform_new_project_calculation_daypart').options;
     for (var i=0;i<lnk.length;i++) {
         if (lnk[i].value==time) {
             document.getElementById('jform_new_project_calculation_daypart').disabled = false;
             lnk[i].selected=true;
         }
-    }
+    } */
 
     function trans()
     {
