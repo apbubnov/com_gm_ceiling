@@ -103,6 +103,56 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		</tbody>
 	</table>
 
+    <table class="table table-striped one-touch-view" id="projectListMobil">
+        <thead>
+        <tr>
+            <th class='center'>
+                <?php echo JHtml::_('grid.sort',  '№', 'a.id', $listDirn, $listOrder); ?>
+            </th>
+            <th class='center'>
+                <?php echo JHtml::_('grid.sort',  'Дата(время) замера', 'a.project_mounting_date', $listDirn, $listOrder); ?>
+            </th>
+            <th class='center'>
+                <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+            </th>
+            <th class='center'>
+                Статус
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <?php foreach ($this->items as $i => $item) :
+            if (in_array("22", $groups) && $item->project_calculator != $userId) continue;
+            else if (in_array("17", $groups) && $item->who_calculate != 1) continue;
+            if($item->project_status!=2) {?>
+                <?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
+                <?php $dealer = JFactory::getUser($item->dealer_id); ?>
+                <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
+                    <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
+                <?php endif; ?>
+
+                <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=project&id='.(int) $item->id); ?>">
+                    <td class="center one-touch">
+                        <?php echo $item->id; ?>
+                    </td>
+                    <td class="center one-touch">
+                        <? if ($item->calculation_date == "00.00.0000"): ?>-
+                        <? else: ?><?= $item->calculation_date; ?>
+                        <? endif; ?>
+                        <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
+                        <? else: ?><?= $item->calculation_time; ?>
+                        <? endif; ?>
+                    </td>
+                    <td class="center one-touch">
+                        <?php echo $this->escape($item->project_info); ?>
+                    </td>
+                    <td class="center one-touch"><?= $item->status; ?></td>
+                </tr>
+            <?php } endforeach; ?>
+        </tbody>
+    </table>
+
 	<input type="hidden" name="task" value=""/>
 	<input type="hidden" name="boxchecked" value="0"/>
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
@@ -125,3 +175,22 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 	}
 </script>
 <?php endif; ?>
+<script type="text/javascript">
+    var $ = jQuery;
+    $(window).resize(function(){
+        if (screen.width <= '1024') {
+            jQuery('#projectList').hide();
+            jQuery('#projectListMobil').show();
+            jQuery('#projectListMobil').css('font-size', '10px');
+            jQuery('.container').css('padding-left', '0');
+        }
+        else {
+            jQuery('#projectList').show();
+            jQuery('#projectListMobil').hide();
+        }
+    });
+
+    // вызовем событие resize
+    $(window).resize();
+
+</script>
