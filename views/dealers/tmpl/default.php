@@ -203,8 +203,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             var target = event.target;
             console.log(event.target.tagName);
             // цикл двигается вверх от target к родителям до table
-            while (target.tagName != 'table') {
-                if (target.tagName == 'tr') {// нашли элемент, который нас интересует!
+            while (target.tagName != 'TABLE') {
+                if (target.tagName == 'TR') {// нашли элемент, который нас интересует!
                     if(jQuery(target).data('href') != undefined){
                         document.location.href = jQuery(target).data('href');
                     }
