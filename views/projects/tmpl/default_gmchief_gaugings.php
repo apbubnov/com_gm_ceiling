@@ -66,7 +66,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					<?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
 				</th>
 				<th class='center'>
-					Примечание менеджера
+                    <?php echo JHtml::_('grid.sort',  'Примечание менеджера', 'a.gm_manager_note', $listDirn, $listOrder); ?>
 				</th>
                 <th class='center'>
 					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
