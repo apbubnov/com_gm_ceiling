@@ -144,7 +144,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         });
 
         jQuery("#new_dealer").click(function(){
-            sum_click_bool = true;
             jQuery("#close4-tar").show();
             jQuery("#modal-window-container").show();
             jQuery("#modal-window-1-tar").show("slow");
@@ -204,6 +203,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         });
 
         jQuery(".btn-done").click(function(){
+            sum_click_bool = true;
             var user_id = jQuery(this).attr("user_id");
             jQuery(".close_btn").show();
             jQuery("#modal_window_container" + user_id).show();
