@@ -31,11 +31,19 @@ $answer3 = $model->getDataByStatus("UnComplitedMountings");
 <h2 class="center">Монтажи</h2>
 <? if ($user->dealer_type == 0) { ?>
 	<div class="start_page">
+		<!-- <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+			<div class="container-for-circl">
+				<a class="btn btn-large btn-primary" href="<?php// echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> Замеры</a>
+				<?php// if ($answer1[0]->count != 0) { ?>
+					<div class="circl-digits"><?php// echo $answer1[0]->count; ?></div>
+				<?php// } ?>
+			</div>
+		</div> -->
 		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 			<div class="container-for-circl">
-				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> Замеры</a>
+				<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> График замеров</a>
 				<?php if ($answer1[0]->count != 0) { ?>
-					<div class="circl-digits"><?php echo $answer1[0]->count; ?></div>
+					<div class="circl-digits"><? echo $answer1[0]->count; ?></div>
 				<?php } ?>
 			</div>
 		</div>
