@@ -620,8 +620,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
     jQuery(document).ready(function () {
 
         $("#modal_window_container #ok").click(function() { click_ok(this); });
-        
-        trans();
 
         window.time = undefined;
         window.gauger = undefined;
