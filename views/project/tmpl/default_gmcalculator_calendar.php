@@ -1495,7 +1495,6 @@
                     };
                     AllGauger = <?php echo json_encode($AllGauger); ?>;
                     data = JSON.parse(data); // замеры
-                    console.log(data);
                     AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                     var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
                     AllTime.forEach( elementTime => {
@@ -1505,9 +1504,7 @@
                             var emptytd = 0;
                             Array.from(data).forEach(function(elementProject) {
                                 if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                    var timesession_gauger = jQuery("#jform_new_project_calculation_daypart").val();
-                                    var gaugersession_gauger = jQuery("#jform_project_gauger").val();
-                                    if (elementProject.project_calculator == gaugersession_gauger && elementProject.project_calculation_date.substr(11) == timesession_gauger) {
+                                    if (elementProject.project_calculator == gauger_gauger && elementProject.project_calculation_date.substr(11) == time_gauger) {
                                         TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                                     } else {
                                         TableForSelect += '<tr><td></td>';

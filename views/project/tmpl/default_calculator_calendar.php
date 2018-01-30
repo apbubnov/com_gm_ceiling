@@ -952,15 +952,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         <a class="nav-link <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" data-toggle="tab" href="#summary" role="tab">Общее</a>
     </li>
     
-    <?php foreach ($calculations as $k => $calculation) { ?>
+    <?php $first = true; foreach ($calculations as $k => $calculation) { ?>
         <li class="nav-item">
-        <?php if($user->dealer_type == 1) { ?>
-            <a class="nav-link active" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
+        <a class="nav-link <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
                 role="tab"><?php echo $calculation->calculation_title; ?></a>
-         <?} else {?>
-         <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>"
-                role="tab"><?php echo $calculation->calculation_title; ?></a>
-         <?}?>
         </li>
     <?php } ?>
     <li class="nav-item"> 
@@ -1462,10 +1457,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         } ?>
         
     </div>
-    <?php foreach ($calculations as $k => $calculation) { ?>
+    <?php $first = true; foreach ($calculations as $k => $calculation) { ?>
         <?php $mounters = json_decode($calculation->mounting_sum); ?>
         <?php if(!empty($calculation->n2)) $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".png"; ?>
-        <div class="tab-pane <?php if($user->dealer_type == 1) echo "active";?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
+        <div class="tab-pane <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
             <h3><?php echo $calculation->calculation_title; ?></h3>
 
             <a class="btn btn-primary"
