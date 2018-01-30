@@ -22,8 +22,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Дилеры</h2>
-    <div style="width: 100%; text-align: left;">
+    <div style="display:inline-block; width: 48%; text-align: left;">
         <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
+    </div>
+    <div style="display:inline-block; width: 48%; text-align: left;">
+        <input type="text" id="name_find_dealer">
+        <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
     <br>
     <table class="table table-striped one-touch-view" id="callbacksList">
@@ -238,6 +242,43 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             });
         });
 
-
+        jQuery("#find_dealer").click(function(){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=findOldClients",
+                data: {
+                    fio: document.getElementById('name_find_dealer').value,
+                    flag: 'dealers'
+                },
+                success: function(data){
+                    console.log(data);
+                    var tbody = document.getElementById('tbody_designers');
+                    tbody.innerHTML = '';
+                    var html = '';
+                    for(var i in data)
+                    {
+                        html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
+                        html += '<td>' + data[i].client_name + '</td>';
+                        html += '<td>' + data[i].client_contacts + '</td>';
+                        html += '<td>' + data[i].created + '</td></tr>';
+                    }
+                    tbody.innerHTML = html;
+                    html = '';
+                },
+                dataType: "json",
+                async: false,
+                timeout: 20000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });
+        });
     });
 </script>
