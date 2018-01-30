@@ -81,12 +81,13 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         <? else: ?><?= $jdate->format('d.m.Y H:i'); ?>
                         <? endif; ?>
                     </td>
-                    <? if ($item->project_calculator) {$mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
-                        $mounter = $mounters_model->getEmailMount($item->project_calculator);}?>
+                    <? if ($item->project_calculator) {
+                        $mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
+                        $mounter = $mounters_model->getEmailMount($item->project_calculator);
+                    } ?>
                         <td class="center one-touch">
                             <?= $mounter->name; ?>
                         </td>
-                    <?php endif; ?>
 					<td class="center one-touch">
 						<?php echo $this->escape($item->project_info); ?>
 					</td>
@@ -100,7 +101,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						<?php echo $item->client_name; ?>
 					</td>
 				</tr>
-				
 			<?php endforeach; ?>
 		</tbody>
 
