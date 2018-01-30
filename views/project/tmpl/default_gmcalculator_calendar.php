@@ -1806,6 +1806,7 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
+                    console.log(data);
                     jQuery("#new_gauger").val(data.name);
                 },
                 error: function (data) {
