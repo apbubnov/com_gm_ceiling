@@ -82,7 +82,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
            
             $model = $this->getModel();
             if(!empty($POST['include_calculation'])) {
-                
+
                 $calculation = $model->calculation($POST['include_calculation']);
                 $html = ' <h1>Номер договора: ' . $POST['project_id'] . '</h1><br>';
                 $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
@@ -137,13 +137,15 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
 
             $array_html = array();
             $array_html[] = $html;
+            if(!empty($POST['include_calculation'])) {
+                foreach ($POST['include_calculation'] as $calc) {
 
-            foreach ($POST['include_calculation'] as $calc) {
-
-               $patch = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($calc . "-0-0") . ".pdf";
-               $array_html[] = $patch;
+                    $patch = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($calc . "-0-0") . ".pdf";
+                    $array_html[] = $patch;
+                }
             }
-            //print_r($components_data); exit;
+
+
             $filename = md5($POST['project_id'] . "-9") . ".pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($array_html, $sheets_dir . $filename, "A4");
 
