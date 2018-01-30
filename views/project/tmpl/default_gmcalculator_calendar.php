@@ -1395,9 +1395,9 @@
                 msg += '<div class="btn-small-l"><button id="button-prev-gauger" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
                 jQuery("#calendar-container").append(msg);
                 Today(day, NowMonth, NowYear);
-                var datesession = jQuery("#jform_project_new_calc_date").val();
-                if (datesession != undefined) {
-                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("class", "change");
+                var datesession_gauger = jQuery("#jform_project_new_calc_date").val();
+                if (datesession_gauger != undefined) {
+                    jQuery("#current-monthD"+datesession_gauger.substr(8, 2)+"DM"+datesession_gauger.substr(5, 2)+"MY"+datesession_gauger.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
                 }
             },
             dataType: "text",
@@ -1465,8 +1465,16 @@
 
     jQuery(document).ready(function () {
 
-        window.time = undefined;
-        window.gauger = undefined;
+        //если сессия есть, то выдать дату, которая записана в сессии замерщиков
+        var datesession_gauger = jQuery("#jform_project_new_calc_date").val();  
+        if (datesession_gauger != undefined) {
+            jQuery("#current-monthD"+datesession_gauger.substr(8, 2)+"DM"+datesession_gauger.substr(5, 2)+"MY"+datesession_gauger.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+        }
+        //-----------------------------------------------------------
+
+
+        window.time_gauger = undefined;
+        window.gauger_gauger = undefined;
 
         // открытие модального окна с календаря замерщиков
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
@@ -1509,9 +1517,9 @@
                             var emptytd = 0;
                             Array.from(data).forEach(function(elementProject) {
                                 if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
-                                    var gaugersession = jQuery("#jform_project_gauger").val();
-                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                    var timesession_gauger = jQuery("#jform_new_project_calculation_daypart").val();
+                                    var gaugersession_gauger = jQuery("#jform_project_gauger").val();
+                                    if (elementProject.project_calculator == gaugersession_gauger && elementProject.project_calculation_date.substr(11) == timesession_gauger) {
                                         TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                                     } else {
                                         TableForSelect += '<tr><td></td>';
