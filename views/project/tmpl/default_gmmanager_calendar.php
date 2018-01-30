@@ -538,7 +538,6 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
                         <label ><b>Предоставление личного кабиента</b></label>
                         <br>
                         <div class="radio-group">
@@ -547,6 +546,7 @@
                             <input id='yes' class='' type='radio' name='client_lk' value='1' <?php if($lk) echo checked ?>>
                             <label class='' for='yes'>Предоставить</label>
                         </div>
+                    </div>
             </div>
             <table class="table calculation_sum">
                 <?php if ($this->item->project_verdict == 0) { ?>
