@@ -186,6 +186,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             var div = jQuery(".modal_window"); // тут указываем ID элемента
             if (!div.is(e.target) // если клик был не по нашему блоку
                 && div.has(e.target).length === 0) { // и не по его дочерним элементам
+                    console.log('mouseup');
                     jQuery(".close_btn").hide();
                     jQuery(".modal_window_container").hide();
                     jQuery(".modal_window").hide();
@@ -204,7 +205,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             var target = event.target;
             console.log(event.target.tagName);
             // цикл двигается вверх от target к родителям до table
-            while (target.tagName != 'TABLE') {
+            while (target.tagName != 'body') {
                 if (target.tagName == 'TR') {// нашли элемент, который нас интересует!
                     if(jQuery(target).data('href') != undefined){
                         document.location.href = jQuery(target).data('href');
