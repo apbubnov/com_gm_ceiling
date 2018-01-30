@@ -93,7 +93,7 @@
 
 <div style="display: inline-block; width: 48%;">
     <div>
-        <p class = "caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны отделочника/дизайнера: </p>
+        <p class = "caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны клиента: </p>
     </div>
     <div>
         <?php foreach($client_phones as $item) { ?>
