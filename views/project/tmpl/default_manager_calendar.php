@@ -714,9 +714,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                 <span class="sum">
                     <?php
                     if ($this->item->new_project_sum == 0) {
-                        if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
+                        if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; }
                         elseif($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
-                        
+
                         echo round($project_total, 2);
                     } else {
                         echo round($this->item->new_project_sum, 2);
@@ -728,7 +728,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                      * минимальная сумма заказа 2500р.
                 <? elseif ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
                      * минимальная сумма заказа 3500р.<?endif;?>
-                     
+
                       </span>
                 </th>
             </tr>
