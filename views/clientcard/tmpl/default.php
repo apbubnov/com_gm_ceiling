@@ -79,8 +79,8 @@
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
 <div class="container">
     <div class="row">
-        <div class="col">
-            <div style="display: inline-block; width: 48%;">
+        <div class="col-sm-6">
+            <div style="display: inline-block;">
                 <div>
                     <p class="caption-tar"
                        style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта
@@ -99,8 +99,8 @@
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div style="display: inline-block; width: 48%;">
+        <div class="col-sm-6">
+            <div style="display: inline-block;">
                 <div>
                     <p class="caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны
                         клиента: </p>
