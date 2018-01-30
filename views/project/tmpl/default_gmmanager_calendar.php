@@ -17,19 +17,13 @@
     $_SESSION['user_group'] = $user_group;
     $_SESSION['dop_num'] = $dop_num;
 
-    $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-
-    if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
-        $canEdit = JFactory::getUser()->id == $this->item->created_by;
-    }
 
     $project_total = 0;
     $project_total_discount = 0;
     $total_square = 0;
     $total_perimeter = 0;
-    $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations = $model->getProjectItems($this->item->id);
-    //$need_mount = 1;
+    $model_calc = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+    $calculations = $model_calc->getProjectItems($this->item->id);
 
     foreach ($calculations as $calculation) {
         $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
@@ -78,13 +72,10 @@
 
     $project_total = $project_total  + $sum_transport;
     $project_total_discount = $project_total_discount  + $sum_transport;
-    $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations1 = $calculationsModel->getProjectItems($this->item->id);
     $components_data = array();
     $project_sum = 0;
     $counter = 0;
-    foreach ($calculations1 as $calculation) {
-        $counter++;
+    foreach ($calculations as $calculation) {
         $from_db = 1;
         $save = 1;
         $ajax = 0;
@@ -102,10 +93,6 @@
         $project_sum += margin($calculation->components_sum, $this->item->gm_components_margin);
         $project_sum += margin($calculation->canvases_sum, $this->item->gm_canvases_margin);
         $project_sum += margin($calculation->mounting_sum, $this->item->gm_mounting_margin);
-        if ($counter == count($calculations1)) {
-            $flag_last = 1;
-            Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
-        }
     }
 
     // календарь
@@ -116,7 +103,7 @@
     //----------------------------------------------------------------------------------
 
     // все замерщики
-    $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
+    $AllGauger = $model_calc->FindAllGauger($user->dealer_id, 22);
     //----------------------------------------------------------------------------------
 
 ?>
@@ -128,8 +115,6 @@
 
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
-    <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-    <?php $calculations = $model->getProjectItems($this->item->id); ?>
     <?php
         $need_choose = false;
         $jinput = JFactory::getApplication()->input;
