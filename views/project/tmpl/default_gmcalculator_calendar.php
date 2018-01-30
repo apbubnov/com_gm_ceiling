@@ -1478,7 +1478,7 @@
             if (m.length == 1) {
                 m = "0"+m;
             }
-            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
+            window.date_gauger = idDay.match(reg3)[1]+"-"+m+"-"+d;
             jQuery("#modal-window-container2-tar").show();
 			jQuery("#modal-window-2-tar").show("slow");
             jQuery("#close2-tar").show();
@@ -1486,7 +1486,7 @@
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
                 data: {
-                    date: date,
+                    date: date_gauger,
                     dealer: <?php echo $user->dealer_id; ?>,
                 },
                 success: function(data) {
@@ -1777,6 +1777,33 @@
             jQuery("#modal-window-choose-tar").hide();
         });
         //------------------------------------------
+
+        // получение значений из селектов замерщиков
+		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
+            var times = jQuery("input[name='choose_time_gauger']");
+            time_gauger = "";
+            gauger_gauger = "";
+            times.each(function(element) {
+                if (jQuery(this).prop("checked") == true) {
+                    time_gauger = jQuery(this).val();
+                    gauger_gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
+                }
+            });
+            jQuery("#jform_new_project_calculation_daypart").val(time_gauger);
+            jQuery("#jform_project_new_calc_date").val(date);
+            jQuery("#jform_project_gauger").val(gauger_gauger);
+            if (jQuery(".change").length == 0) {
+                jQuery("#"+idDay).addClass("change");
+            } else {
+                jQuery(".change").removeClass("change");
+                jQuery("#"+idDay).addClass("change");
+            }
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+            jQuery("#modal-window-choose-tar").hide();
+        });
+        //------------------------------------------
+
 
         // подсвет сегоднешней даты
         window.today = new Date();
