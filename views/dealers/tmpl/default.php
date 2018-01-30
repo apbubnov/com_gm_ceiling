@@ -125,7 +125,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
     jQuery(document).ready(function()
     {
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
-        jQuery('tr').click(function(e)
+        jQuery('body').on('click', 'tr', function(e)
         {
             if(jQuery(this).data('href') != undefined && !sum_click_bool){
                 document.location.href = jQuery(this).data('href');
