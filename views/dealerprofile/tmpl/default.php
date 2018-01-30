@@ -22,6 +22,7 @@ $mount = $model_mount->getDataAll();
 
 ?>
 <?if(!$user->getDealerInfo()->update_check) { $user->setDealerInfo(["update_check" => true]);}?>
+<?=parent::getButtonBack();?>
 <form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
 	<h2>
 		Редактирование маржинальности и прайса монтажа
