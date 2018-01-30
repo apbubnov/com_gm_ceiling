@@ -1144,7 +1144,7 @@ class Gm_ceilingController extends JControllerLegacy
          WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
             $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $items = $model->getAllList_Price();
-            $filter = "component.title = 'Светильник' AND (a.title LIKE('%Эcola%') OR a.title LIKE('%Экола%') )";
+            $filter = "component.title = 'Светильник'";
             $items = $model->getFilteredItems($filter);
             die(json_encode($items));
         }
@@ -1165,7 +1165,7 @@ class Gm_ceilingController extends JControllerLegacy
              WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
             $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $items = $model->getAllList_Price();
-            $filter = "component.title = 'Лампа' AND (a.title LIKE('%Эcola%') OR a.title LIKE('%Экола%') )";
+            $filter = "component.title = 'Лампа'";
             $items = $model->getFilteredItems($filter);
             die(json_encode($items));
         }
@@ -3202,6 +3202,31 @@ class Gm_ceilingController extends JControllerLegacy
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function UserRefuseToCooperate()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+        
+            $id = $jinput->get('user_id', null, 'INT');
+    
+            $user = JFactory::getUser();
+            if (!$user->guest) {
+                $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                $result = $users_model->refuseToCooperate($id);
+            }
+    
+            die($result);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
     }
