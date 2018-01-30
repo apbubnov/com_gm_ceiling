@@ -133,16 +133,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             sum_click_bool = false;
         });*/
 
-        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-            var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-            if (!div3.is(e.target) // если клик был не по нашему блоку
-                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
-                jQuery("#close4-tar").hide();
-                jQuery("#modal-window-container").hide();
-                jQuery("#modal-window-1-tar").hide();
-            }
-        });
-
         jQuery("#new_dealer").click(function(){
             jQuery("#close4-tar").show();
             jQuery("#modal-window-container").show();
@@ -196,9 +186,20 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             var div = jQuery(".modal_window"); // тут указываем ID элемента
             if (!div.is(e.target) // если клик был не по нашему блоку
                 && div.has(e.target).length === 0) { // и не по его дочерним элементам
-                jQuery(".close_btn").hide();
-                jQuery(".modal_window_container").hide();
-                jQuery(".modal_window").hide();
+                if (div.css('display') == 'block')
+                {
+                    jQuery(".close_btn").hide();
+                    jQuery(".modal_window_container").hide();
+                    jQuery(".modal_window").hide();
+                }
+            }
+
+            var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+            if (!div3.is(e.target) // если клик был не по нашему блоку
+                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+                jQuery("#close4-tar").hide();
+                jQuery("#modal-window-container").hide();
+                jQuery("#modal-window-1-tar").hide();
             }
         });
 
