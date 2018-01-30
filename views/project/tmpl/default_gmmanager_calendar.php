@@ -17,19 +17,13 @@
     $_SESSION['user_group'] = $user_group;
     $_SESSION['dop_num'] = $dop_num;
 
-    $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-
-    if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
-        $canEdit = JFactory::getUser()->id == $this->item->created_by;
-    }
 
     $project_total = 0;
     $project_total_discount = 0;
     $total_square = 0;
     $total_perimeter = 0;
-    $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations = $model->getProjectItems($this->item->id);
-    //$need_mount = 1;
+    $model_calc = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+    $calculations = $model_calc->getProjectItems($this->item->id);
 
     foreach ($calculations as $calculation) {
         $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
@@ -78,35 +72,6 @@
 
     $project_total = $project_total  + $sum_transport;
     $project_total_discount = $project_total_discount  + $sum_transport;
-    $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations1 = $calculationsModel->getProjectItems($this->item->id);
-    $components_data = array();
-    $project_sum = 0;
-    $counter = 0;
-    foreach ($calculations1 as $calculation) {
-        $counter++;
-        $from_db = 1;
-        $save = 1;
-        $ajax = 0;
-        $pdf = 1;
-        $print_components = 0;
-        if($calculation->mounting_sum == 0) $need_mount = 0;
-        else $need_mount = 1;
-        Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
-        $from_db = 1;
-        $save = 0;
-        $ajax = 0;
-        $pdf = 0;
-        $print_components = 1;
-        $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
-        $project_sum += margin($calculation->components_sum, $this->item->gm_components_margin);
-        $project_sum += margin($calculation->canvases_sum, $this->item->gm_canvases_margin);
-        $project_sum += margin($calculation->mounting_sum, $this->item->gm_mounting_margin);
-        if ($counter == count($calculations1)) {
-            $flag_last = 1;
-            Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
-        }
-    }
 
     // календарь
     $month = date("n");
@@ -116,7 +81,7 @@
     //----------------------------------------------------------------------------------
 
     // все замерщики
-    $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
+    $AllGauger = $model_calc->FindAllGauger($user->dealer_id, 22);
     //----------------------------------------------------------------------------------
 
 ?>
@@ -128,8 +93,6 @@
 
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
-    <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-    <?php $calculations = $model->getProjectItems($this->item->id); ?>
     <?php
         $need_choose = false;
         $jinput = JFactory::getApplication()->input;
@@ -175,7 +138,6 @@
         $request_model->delete($this->item->id_client);
         $client_sex  = $model_client->getClientById($this->item->id_client)->sex;
         //$client_dealer_id = $model_client->getClientById($this->item->id_client)->dealer_id;
-        //throw new Exception($client_dealer_id);
         if($this->item->id_client!=1){
             $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
             $email = $dop_contacts->getEmailByClientID($this->item->id_client);
@@ -614,10 +576,8 @@
                 $calculation_total_11 = 0;
                 $project_total_11 = 0;
                 $kol = 0;
-                $tmp = 0;
                 $sum_transport_discount_total = 0;
                 $sum_transport_total = 0;
-                $JS_Calcs_Sum = array();
 
                 foreach ($calculations as $calculation) {
                     $dealer_canvases_sum = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
@@ -649,8 +609,6 @@
                     $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
                     $project_total += $calculation_total;
                     $project_total_discount += $calculation_total_discount;
-                    $JS_Calcs_Sum[] = round($calculation_total, 0);
-
 
                     ?>
 
@@ -773,9 +731,6 @@
                 <tr>
                     <?
 
-
-
-
                     //-------------------------Себестоимость транспорта-------------------------------------
                     if($this->item->transport == 0 ) $sum_transport_1 = 0;
                     if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
@@ -839,9 +794,7 @@
                     <th class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
                                                                           aria-hidden="true"></i></th>
                 </tr>
-                <?php foreach ($calculations
-
-                               as $calculation) { ?>
+                <?php foreach ($calculations as $calculation) { ?>
                 <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
                     <td><?php echo $calculation->calculation_title; ?></td>
                     <td>

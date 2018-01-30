@@ -182,13 +182,13 @@ class Gm_ceilingModelProjects extends JModelList
             } elseif ($type == "gmmanager" && $subtype == "runprojects") {
                 $query->where('a.project_status in (10,11, 16, 17)');
             } elseif ($type == "gmmanager" && $subtype == "archive") {
-            $query->where('a.project_status = 12');
+                $query->where('a.project_status = 12');
             } elseif ($type == "gmmanager" && $subtype == "refused") {
-            $query->where('a.project_status = 22');
+                $query->where('a.project_status = 22');
             } elseif ($type == "gmmanager") {
                 $query->where('a.project_status = 5 or a.project_status = 4');
                 $query->where('a.project_verdict  = 1');
-            }  elseif ($type == "manager") {
+            } elseif ($type == "manager") {
                 $query->where('dealer_id = ' . $user->dealer_id);
                 if ($subtype == "refused") {
                     $query->where('a.project_verdict = 0');
@@ -196,13 +196,18 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('a.project_status = 5');
                     $query->where('a.project_verdict = 1');
                 }
-            }
-            elseif (($type == "chief" || $type == "gmchief")&& $user->dealer_type == 2) {  $query->where('a.project_status >= 0'); }
-            elseif (($type == "gmchief" && $subtype =="run")||($type == "chief" && $subtype =="run")) {
+            } elseif (($type == "chief" || $type == "gmchief")&& $user->dealer_type == 2) {
+                $query->where('a.project_status >= 0'); 
+            } elseif (($type == "gmchief" && $subtype =="run")||($type == "chief" && $subtype =="run")) {
                 $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
             } elseif ($type == "gmchief" || $type == "chief") {
-                $query->where('a.project_status in ("10", "5", "11", "16", "17")');
-            }  elseif ($type == "gmcalculator") {
+                if ($type == "gmchief" && $subtype == "gaugings") {
+                    $query->where('a.project_status in ("1")');
+                    $query->where('a.who_calculate = "1"');
+                } else {
+                    $query->where('a.project_status in ("10", "5", "11", "16", "17")');
+                }
+            } elseif ($type == "gmcalculator") {
                 $query->where('a.who_calculate = 1');
                 if ($subtype == "calendar") {
                     $query->where('a.project_status = 1');

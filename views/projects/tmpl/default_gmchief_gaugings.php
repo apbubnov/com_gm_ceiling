@@ -43,168 +43,114 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		</div>
     <? endif; ?>
     <? if (count($this->items) > 0): ?>
-	<table class="table table-striped one-touch-view" id="projectList">
-		<thead>
-			<tr>
-				<th></th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE', 'a.project_calculation_date', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART', 'a.project_calculation_daypart', $listDirn, $listOrder); ?>
-				</th>
-                <th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Замерщик', 'a.project_calculator', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-                    <?php echo JHtml::_('grid.sort',  'Примечание менеджера', 'a.gm_manager_note', $listDirn, $listOrder); ?>
-				</th>
-                <th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php   foreach ($this->items as $i => $item) : ?>
-				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-
-				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
-					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
-				<?php endif; ?>
-				<?php if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
-				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
-                    <td>
-                        <? if ($item->project_status == 10): ?>
-                            <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>"
-                                    type="button">Выполнено
-                            </button>
-                        <? endif; ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php echo $item->id; ?>
-                    </td>
-
-                    <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
-                    <td class="center one-touch">
-                        <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
-                        <? else: ?><?= $jdate->format('d.m.Y'); ?>
-                        <? endif; ?>
-                    </td>
-                    <td class="center one-touch">
-                        <? if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
-                        <? else: ?>
-                            <?php echo $jdate->format('H:i'); ?>
-                        <? endif; ?>
-                    </td>
-					<td class="center one-touch">
-						<?php echo $this->escape($item->project_info); ?>
-					</td>
-					<td class="center one-touch">
-						<?php echo $item->client_contacts; ?>
-					</td>
-					<td class="center one-touch">
-						<?php echo $item->client_name; ?>
-					</td>
-					<td class="center one-touch">
-						<?php //$dealer = JFactory::getUser($item->dealer_id); ?>
-						<?php echo $item->dealer_name;; ?>
-					</td>
-					<td class="center one-touch">
-						<?php $calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-						<?php echo $calculations_model->getProjectQuadrature($item->id); ?>
-					</td>
-                    <? if ($item->project_mounter) {$mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
-                        $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
-                    <td class="center one-touch"><?= $mounter->name; ?></td>
-				</tr>
-				<?php endif; ?>
-			<?php endforeach; ?>
-		</tbody>
-
-	</table>
-    <table class="table table-striped one-touch-view" id="projectListMobil">
-        <thead>
-        <tr>
-            <th>
-
-            </th>
-            <th class='center'>
-                <?php echo JHtml::_('grid.sort',  '№', 'a.id', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?php echo JHtml::_('grid.sort',  'Время монтажа', 'a.project_mounting_date', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                Бригада
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php   foreach ($this->items as $i => $item) : ?>
-            <?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-
-            <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
-                <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
-            <?php endif; ?>
-            <?php if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
-                <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
-                    <td>
-                        <? if ($item->project_status == 10): ?>
-                            <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>"
-                                    type="button">Выполнено
-                            </button>
-                        <? endif; ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php echo $item->id; ?>
-                    </td>
-
-                    <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
-                    <td class="center one-touch">
-                        <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
-                        <? else: ?><?= $jdate->format('d.m'); ?>
-                        <? endif; ?>
-                        <? if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
-                        <? else: ?>
-                            <?php echo $jdate->format('H:i'); ?>
-                        <? endif; ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php echo $this->escape($item->project_info); ?>
-                    </td>
-                    <td class="center one-touch">
-                        <?php echo $item->client_contacts; ?><br>
-                        <?php echo $item->client_name; ?>
-                    </td>
-                    <? if ($item->project_mounter) {$mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
-                        $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
-                    <td class="center one-touch"><?= $mounter->name; ?></td>
+        <table class="table table-striped one-touch-view" id="projectList">
+            <thead>
+                <tr>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE', 'a.project_calculation_date', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'Замерщик', 'a.project_calculator', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'Примечание менеджера', 'a.gm_manager_note', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+                    </th>
                 </tr>
-            <?php endif; ?>
-        <?php endforeach; ?>
-        </tbody>
-
-    </table>
-	<input type="hidden" name="task" value=""/>
-	<input type="hidden" name="boxchecked" value="0"/>
-	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-	<?php echo JHtml::_('form.token'); ?>
+            </thead>
+            <tbody>
+                <?php   foreach ($this->items as $i => $item) : ?>
+                    <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
+                        <td class="center one-touch">
+                            <?php echo $item->id; ?>
+                        </td>
+                        <?php $jdate = new JDate(JFactory::getDate($item->calculation_date)); ?>
+                        <td class="center one-touch">
+                            <? if ($item->project_calculation_date == "00.00.0000 00:00"): ?> -
+                            <? else: ?><?= $jdate->format('d.m.Y H:i'); ?>
+                            <? endif; ?>
+                        </td>
+                        <? if ($item->project_calculator) {
+                            $mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
+                            $mounter = $mounters_model->getEmailMount($item->project_calculator);
+                        } ?>
+                            <td class="center one-touch">
+                                <?= $mounter->name; ?>
+                            </td>
+                        <td class="center one-touch">
+                            <?php echo $this->escape($item->project_info); ?>
+                        </td>
+                        <td class="center one-touch">
+                            <?php echo $item->client_contacts; ?>
+                        </td>
+                        <td class="center one-touch">
+                            <?php echo $item->gm_manager_note; ?>
+                        </td>
+                        <td class="center one-touch">
+                            <?php echo $item->client_name; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <table class="table table-striped one-touch-view" id="projectListMobil">
+            <thead>
+                <tr>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  '№', 'a.id', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE', 'a.project_calculation_date', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class='center'>
+                        <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($this->items as $i => $item) : ?>
+                    <?php if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
+                        <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
+                            <td class="center one-touch">
+                                <?php echo $item->id; ?>
+                            </td>
+                            <?php $jdate = new JDate(JFactory::getDate($item->calculation_date)); ?>
+                            <td class="center one-touch">
+                                <? if ($item->calculation_date == "00.00.0000 00:00"): ?> -
+                                <? else: ?><?= $jdate->format('d.m.Y H:i'); ?>
+                                <? endif; ?>
+                            </td>
+                            <td class="center one-touch">
+                                <?php echo $this->escape($item->project_info); ?>
+                            </td>
+                            <td class="center one-touch">
+                                <?php echo $item->client_name; ?>
+                                <?php echo $item->client_contacts; ?><br>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <input type="hidden" name="task" value=""/>
+        <input type="hidden" name="boxchecked" value="0"/>
+        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
+        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
+        <?php echo JHtml::_('form.token'); ?>
     <? else: ?>
         <p class="center">
         <h3>У вас еще нет заказов!</h3>
