@@ -2792,8 +2792,11 @@ class Gm_ceilingHelpersGm_ceiling
     }
     public static function create_client_single_estimate($calc_id=null,$data=null,$need_mount){
         $html = self::create_client_single_estimate_html($calc_id,$data,$need_mount);
+        if(empty($calc_id)){
+            $calc_id = $data['id'];
+        }
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-        $filename = md5($data['id'] . "-0-0") . ".pdf";
+        $filename = md5($calc_id . "client_single") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
     public static function create_client_single_estimate_html($calc_id=null,$data=null,$need_mount){
@@ -2984,10 +2987,10 @@ class Gm_ceilingHelpersGm_ceiling
         foreach($calculations as $calc){
             $html .= self::create_client_single_estimate_html($calc->id,null,$need_mount);
         }
-        $filename = md5($project->id . "-9") . ".pdf";
+        $filename = md5($project->id . "client_common") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
-    public static function calculate_components($calc_id,$data=null,$del_flag=0){
+    public static function calculate_components($calc_id=null,$data=null,$del_flag=0){
         
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
@@ -3615,7 +3618,7 @@ class Gm_ceilingHelpersGm_ceiling
 		$calc_id - id калькуляции в БД
 		$data - массив данных для просчета, если новый просчет
 	*/
-    public static function calculate_mount($del_flag,$calc_id,$data=null){
+    public static function calculate_mount($del_flag,$calc_id=null,$data=null){
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
         $calculation_model = self::getModel('calculation');
@@ -4821,7 +4824,7 @@ class Gm_ceilingHelpersGm_ceiling
         foreach($calculations as $calc){
             $html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
         }
-        $filename = md5($data['id'] . "-2") . ".pdf";
+        $filename = md5($project_id . "mount_common") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
     public static function create_single_mounter_estimate_html($calc_id,$phones,$brigade,$brigade_names){
@@ -4965,7 +4968,7 @@ class Gm_ceilingHelpersGm_ceiling
             $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
         }
         $html = self::create_single_mounter_estimate_html($calc_id);
-        $filename = md5($data['id'] . "-2") . ".pdf";
+        $filename = md5($calc_id . "mount_single") . ".pdf";
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         self::save_pdf($html, $sheets_dir . $filename, "A4");
     }
@@ -5106,7 +5109,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
 
-        $filename = md5($project_id . "-8") . ".pdf";
+        $filename = md5($project_id . "consumables") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
 
         return 1;
@@ -5197,7 +5200,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody>';
         $html .= '</table>';
         $html .= '<center><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".png" . '" style="width: 100%;"/></center>';
-        $filename = md5($data['id'] . 'cutpdf' . -2) . '.pdf';
+        $filename = md5($data['id'] . 'cutpdf') . '.pdf';
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
     /*функция генерации pdf для менеджера*/
@@ -5295,7 +5298,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".png" . '" style="width: 100%; max-height: 530px;"/> <br>';
-        $filename = md5($data['id'] . "-4") . ".pdf";
+        $filename = md5($data['id'] . "manager") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         return 1;
     }

@@ -72,7 +72,6 @@
 
     $project_total = $project_total  + $sum_transport;
     $project_total_discount = $project_total_discount  + $sum_transport;
-    $components_data = array();
 
     // календарь
     $month = date("n");
@@ -139,7 +138,6 @@
         $request_model->delete($this->item->id_client);
         $client_sex  = $model_client->getClientById($this->item->id_client)->sex;
         //$client_dealer_id = $model_client->getClientById($this->item->id_client)->dealer_id;
-        //throw new Exception($client_dealer_id);
         if($this->item->id_client!=1){
             $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
             $email = $dop_contacts->getEmailByClientID($this->item->id_client);
@@ -578,10 +576,8 @@
                 $calculation_total_11 = 0;
                 $project_total_11 = 0;
                 $kol = 0;
-                $tmp = 0;
                 $sum_transport_discount_total = 0;
                 $sum_transport_total = 0;
-                $JS_Calcs_Sum = array();
 
                 foreach ($calculations as $calculation) {
                     $dealer_canvases_sum = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
@@ -613,8 +609,6 @@
                     $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
                     $project_total += $calculation_total;
                     $project_total_discount += $calculation_total_discount;
-                    $JS_Calcs_Sum[] = round($calculation_total, 0);
-
 
                     ?>
 
@@ -737,9 +731,6 @@
                 <tr>
                     <?
 
-
-
-
                     //-------------------------Себестоимость транспорта-------------------------------------
                     if($this->item->transport == 0 ) $sum_transport_1 = 0;
                     if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
@@ -803,9 +794,7 @@
                     <th class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
                                                                           aria-hidden="true"></i></th>
                 </tr>
-                <?php foreach ($calculations
-
-                               as $calculation) { ?>
+                <?php foreach ($calculations as $calculation) { ?>
                 <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
                     <td><?php echo $calculation->calculation_title; ?></td>
                     <td>
