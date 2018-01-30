@@ -866,7 +866,11 @@ class Gm_ceilingModelProject extends JModelItem
 			$db->setQuery($query);
 			$item =  $db->loadObject();
 
-			return $item;
+			if ($id == null) {
+				return json_encode($item);
+			} else {
+				return $item;
+			}
 		}
 		catch(Exception $e)
         {
