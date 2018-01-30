@@ -201,6 +201,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 jQuery(".modal_window").hide();
             }
             var target = event.target;
+            console.log(event.target.tagName);
             // цикл двигается вверх от target к родителям до table
             while (target.tagName != 'table') {
                 if (target.tagName == 'tr') {// нашли элемент, который нас интересует!
