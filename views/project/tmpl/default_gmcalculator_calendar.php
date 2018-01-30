@@ -204,7 +204,8 @@
                         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                         <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
-                        <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart">                    
+                        <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="<?php if ($this->item->project_calculation_date != "0000-00-00 00:00:00") { echo $this->item->project_calculation_date; } ?>" type='hidden'> 
+                        <input id="jform_project_gauger" name="jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type='hidden'>  
                     </div>
                     <?php if ($user->dealer_type != 2) { ?>
                         <div class="row">
@@ -321,44 +322,13 @@
                                                         <button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                                     </div>
                                                 </div>
-
-                                                <!-- <?php
-                                                    //$date_time = $this->item->project_calculation_date;
-                                                    //$date_arr = date_parse($date_time);
-                                                    //$date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
-                                                    //$time = $date_arr['hour'].':00';
-                                                ?>
-                                                <input type = "date" name = "project_new_calc_date" id = "jform_project_new_calc_date" class = "inputactive" value = "<?php echo $date?>">
+                                                <!-- <input type = "date" name = "project_new_calc_date" id = "jform_project_new_calc_date" class = "inputactive" value = "<?php echo $date?>">
                                                 <label id="jform_project_calculation_daypart-lbl" for="jform_new_project_calculation_daypart">Новое время замера</label>
                                                 <select id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" class="inputactive" disabled="true">
-                                                    <option value="00:00" selected="">- Выберите время замера -</option>
-                                                    <option value="09:00">9:00-10:00</option>
-                                                    <option value="10:00">10:00-11:00</option>
-                                                    <option value="11:00">11:00-12:00</option>
-                                                    <option value="12:00">12:00-13:00</option>
-                                                    <option value="13:00">13:00-14:00</option>
-                                                    <option value="14:00">14:00-15:00</option>
-                                                    <option value="15:00">15:00-16:00</option>
-                                                    <option value="16:00">16:00-17:00</option>
-                                                    <option value="17:00">17:00-18:00</option>
-                                                    <option value="18:00">18:00-19:00</option>
-                                                    <option value="19:00">19:00-20:00</option>
-                                                    <option value="20:00">20:00-21:00</option>
                                                 </select> -->
                                             </div>
                                         </td>
                                     </tr>
-                                    <!-- <tr>
-                                        <th><?php// echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
-                                        <td>
-                                            <?php// if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                                -
-                                            <?php// } else { ?>
-                                                <?php// $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                                <?php// echo $jdate->format('H:i'); ?>
-                                            <?php// } ?>
-                                        </td>
-                                    </tr> -->
                                     <tr>
                                         <th>Замерщик</th>
                                         <td>
@@ -367,6 +337,9 @@
                                             <?php } else { ?>
                                                 <?php echo JFactory::getUser($this->item->project_calculator)->name; ?>
                                             <?php } ?>
+                                        </td>
+                                        <td class="Gauger" style="display: none;">
+                                            <p>Новый замерщик:</p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -2085,6 +2058,7 @@
             jQuery(".Contacts").toggle();
             jQuery(".Address").toggle();
             jQuery(".Date").toggle();
+            jQuery(".Gauger").toggle();
             jQuery("#accept_changes").toggle();
         });
 
