@@ -204,9 +204,9 @@
                         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                         <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
-                        <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="<?php if ($this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); } ?>" type='hidden'> 
-                        <input name = "project_new_calc_date" id = "jform_project_new_calc_date"  value="<?php if ($this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 0, 10); } ?>" type='hidden'>
-                        <input id="jform_project_gauger" name="jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type='hidden'>  
+                        <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="" type='hidden'> 
+                        <input name = "project_new_calc_date" id = "jform_project_new_calc_date"  value="" type='hidden'>
+                        <input id="jform_project_gauger" name="project_gauger" value="" type='hidden'>  
                     </div>
                     <?php if ($user->dealer_type != 2) { ?>
                         <div class="row">
@@ -1798,6 +1798,30 @@
                 jQuery(".change").removeClass("change");
                 jQuery("#"+idDay).addClass("change");
             }
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=project.GetNameGauger",
+                data: {
+                    id: gauger_gauger,
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    jQuery("#new_gauger").val(data->name);
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка вывода нового замерщика"
+                    });
+                }
+            });
+            console.log(jQuery("#jform_new_project_calculation_daypart").val());
+            console.log(jQuery("#jform_project_new_calc_date").val());
+            console.log(jQuery("#jform_project_gauger").val());
             jQuery("#close-tar").hide();
             jQuery("#modal-window-container-tar").hide();
             jQuery("#modal-window-choose-tar").hide();

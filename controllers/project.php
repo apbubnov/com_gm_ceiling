@@ -820,6 +820,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$newFIO = $jinput->get('new_client_name','', 'STRING');
 					$newDate = $jinput->get('project_new_calc_date','','STRING');
 					$newDayPart = $jinput->get('new_project_calculation_daypart','','STRING');
+					$newGauger = $jinput->get('project_gauger','','STRING');
 					$client_model =  $this->getModel('client', 'Gm_ceilingModel');
 					
 					if($data->client_id!=1){
@@ -854,6 +855,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 								$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$date." в ".$newDayPart);
 							}
 							
+						}
+						if (!empty($newGauger)) {
+							$model->update_date_gauger($data->id,$newGauger);
+							$name_gauger = $model->GetNameGauger($newGauger);
+							$client_history_model->save($data->id_client,"Замерщик изменен на $name_gauger->name");
 						}
 					}
 					else{
