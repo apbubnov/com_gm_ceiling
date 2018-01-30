@@ -132,7 +132,7 @@ if (count($AllGauger) == 0) {
 		</div>
 	</div>
 	<div>
-		<button id="calculate_button" class="btn btn-primary" style="width:100%;" type="button">Записать</button>
+		<button id="calculate_button" class="btn btn-primary" style="width:100%;margin-bottom: 10px;" type="button">Записать</button>
 	</div>
 	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -147,7 +147,17 @@ if (count($AllGauger) == 0) {
 </form>
 
 <script>
+    var $ = jQuery;
+    $(window).resize(function(){
+        if (screen.width <= '1024') {
+            jQuery('#choose_cleint_btn').css('font-size', '13px');
+        }
+        else {
+        }
+    });
 
+    // вызовем событие resize
+    $(window).resize();
 	// листание календаря
     month_old = 0;
 	year_old = 0;
