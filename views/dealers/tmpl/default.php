@@ -186,12 +186,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             var div = jQuery(".modal_window"); // тут указываем ID элемента
             if (!div.is(e.target) // если клик был не по нашему блоку
                 && div.has(e.target).length === 0) { // и не по его дочерним элементам
-                if (div.css('display') == 'block')
-                {
                     jQuery(".close_btn").hide();
                     jQuery(".modal_window_container").hide();
                     jQuery(".modal_window").hide();
-                }
             }
 
             var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
@@ -215,6 +212,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     return;
                 }
                 if (target.className.indexOf('btn-done') + 1) {// нашли элемент, который нас интересует!
+                    console.log(target.className.indexOf('btn-done') + 1);
                     var user_id = jQuery(this).attr("user_id");
                     jQuery(".close_btn").show();
                     jQuery("#modal_window_container" + user_id).show();
