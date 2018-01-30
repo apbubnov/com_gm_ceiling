@@ -205,12 +205,10 @@ class Gm_ceilingModelComponents extends JModelList
 
             $query->from("`#__gm_ceiling_components_option` AS options")
                 ->join("LEFT", "`#__gm_ceiling_components` AS components ON components.id = options.component_id")
+                ->join((($stock)?"RIGHT":"LEFT"), "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
                 ->select('options.id as option_id, options.title as option_title, options.price, options.count as option_count, options.count_sale as option_count_sale')
-                ->select('components.id as component_id, components.title as component_title, components.unit, components.code');
-
-            if ($stock)
-                $query->join("RIGHT", "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
-                    ->select("goods.*, goods.id as good_id");
+                ->select('components.id as component_id, components.title as component_title, components.unit, components.code')
+                ->select("goods.id as good_id, goods.stock as good_stock, goods.barcode as good_barcode, goods.article as good_article, goods.count as good_count");
 
             $query->group('components.title, options.title'.(($stock)?", goods.id":""));
 
@@ -254,12 +252,20 @@ class Gm_ceilingModelComponents extends JModelList
             $result = [];
             foreach ($items as $item) {
                 $query = $db->getQuery(true);
-                $query->from("`#__gm_ceiling_analytics_components` AS analytic")
+                $query->from("`#__gm_ceiling_analytics_components`")
                     ->select("MAX(price) as price")
                     ->where("good_id = '$item->good_id'")
                     ->where("status = 1");
                 $db->setQuery($query);
-                $item->analytic = $db->loadObjectList()->price;
+                $item->pprice = $db->loadObject()->price;
+                $item->pprice = (empty($item->pprice)?"Нет":$item->pprice);
+
+                $query = $db->getQuery(true);
+                $query->from("`#__gm_ceiling_stocks`")
+                    ->select("min_name as name")
+                    ->where("id = '$item->good_stock'");
+                $db->setQuery($query);
+                $item->stock_name = $db->loadObject()->name;
 
                 if (empty($result[$item->component_id]))
                 {
@@ -267,6 +273,8 @@ class Gm_ceilingModelComponents extends JModelList
                     $component->title = $item->component_title;
                     $component->unit = $item->component_unit;
                     $component->code = $item->component_code;
+                    $component->options = [];
+
                     $result[$item->component_id] = $component;
                 }
 
@@ -277,10 +285,20 @@ class Gm_ceilingModelComponents extends JModelList
                     $option->price = $item->option_price;
                     $option->count = $item->option_count;
                     $option->count_sale = $item->option_count_sale;
-                    $result[$item->component_id]->options[$item->options_id] = $item->option_id;
+                    $option->goods = [];
+
+                    $result[$item->component_id]->options[$item->options_id] = $option;
                 }
 
                 $good = (object) [];
+                $good->stock = $item->good_stock;
+                $good->barcode = $item->good_barcode;
+                $good->article = $item->good_article;
+                $good->count = $item->good_count;
+                $good->pprice = $item->pprice;
+                $good->stock_name = $item->stock_name;
+
+                $result[$item->component_id]->options[$item->options_id]->goods[$item->good_id] = $good;
             }
             return $result;
         }
