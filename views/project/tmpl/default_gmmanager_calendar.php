@@ -73,27 +73,6 @@
     $project_total = $project_total  + $sum_transport;
     $project_total_discount = $project_total_discount  + $sum_transport;
     $components_data = array();
-    $project_sum = 0;
-    $counter = 0;
-    foreach ($calculations as $calculation) {
-        $from_db = 1;
-        $save = 1;
-        $ajax = 0;
-        $pdf = 1;
-        $print_components = 0;
-        if($calculation->mounting_sum == 0) $need_mount = 0;
-        else $need_mount = 1;
-        Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
-        $from_db = 1;
-        $save = 0;
-        $ajax = 0;
-        $pdf = 0;
-        $print_components = 1;
-        $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
-        $project_sum += margin($calculation->components_sum, $this->item->gm_components_margin);
-        $project_sum += margin($calculation->canvases_sum, $this->item->gm_canvases_margin);
-        $project_sum += margin($calculation->mounting_sum, $this->item->gm_mounting_margin);
-    }
 
     // календарь
     $month = date("n");
