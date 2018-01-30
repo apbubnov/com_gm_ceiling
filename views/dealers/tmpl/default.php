@@ -200,10 +200,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 jQuery(".close_btn").hide();
                 jQuery(".modal_window_container").hide();
                 jQuery(".modal_window").hide();
+                sum_click_bool = true;
             }
         });
 
-        jQuery(".btn-done").mouseup(function(){
+        jQuery(".btn-done").click(function(){
             sum_click_bool = true;
             var user_id = jQuery(this).attr("user_id");
             jQuery(".close_btn").show();
