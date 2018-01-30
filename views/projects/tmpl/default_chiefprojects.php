@@ -25,7 +25,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 ?>
 <?=parent::getButtonBack();?>
-<h2 class="center">Не назначенные на монтаж</h2>
+<h3 class="center">Не назначенные на монтаж</h3>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects'); ?>" method="post"
       name="adminForm" id="adminForm">
 	  <? if (count($this->items) > 0 && empty($this->items->project_mounter)): ?>
@@ -77,6 +77,52 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 			  </tbody>
 	  </table>
 
+      <table class="table table-striped one-touch-view" id="projectListMobil">
+          <thead>
+          <tr>
+              <th class='center'>
+                  <?= JHtml::_('grid.sort', '№', 'id', $listDirn, $listOrder); ?>
+              </th>
+              <th class='center'>
+                  <?= JHtml::_('grid.sort', 'Дата/Время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
+              </th>
+              <th class='center'>
+                  <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+              </th>
+              <th class="center">
+                  Примечание
+              </th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <? foreach ($this->items as $i => $item) :
+              $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
+              if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
+                  $canEdit = JFactory::getUser()->id == $item->created_by;
+              ?>
+
+              <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
+              <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
+                  <td class="center one-touch">
+                      <?= $item->id; ?>
+                  </td>
+                  <td class="center one-touch">
+                      <? if ($item->calculation_date == "00.00.0000"): ?> -
+                      <? else: echo $item->calculation_date;
+                      endif;
+                      if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?> -
+                      <? else: echo $item->calculation_time;
+                      endif; ?>
+                  </td>
+                  <td class="center one-touch"><?= $item->address; ?></td>
+                  <td><?= ($item->dealer_chief_note)?$item->dealer_chief_note:$item->gm_chief_note ;  ?></td>
+              </tr>
+          <? endif; ?>
+          <? endforeach; ?>
+          </tbody>
+      </table>
+
 	  <input type="hidden" name="task" value=""/>
 	  <input type="hidden" name="boxchecked" value="0"/>
 	  <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
@@ -122,4 +168,23 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		  return false;
 	  }
   }
+
+  var $ = jQuery;
+  $(window).resize(function(){
+      if (screen.width <= '1024') {
+          jQuery('#projectList').hide();
+          jQuery('#projectListMobil').show();
+          jQuery('#projectListMobil').css('font-size', '10px');
+          jQuery('.container').css('padding-left', '0');
+          jQuery('.btn-done').css('font-size', '10px');
+          jQuery('.btn-done').css('padding', '5px');
+      }
+      else {
+          jQuery('#projectList').show();
+          jQuery('#projectListMobil').hide();
+      }
+  });
+
+  // вызовем событие resize
+  $(window).resize();
 </script>
