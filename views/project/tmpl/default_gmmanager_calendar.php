@@ -12,18 +12,31 @@
     $user       = JFactory::getUser();
     $userId     = $user->get('id');
     $user_group = $user->groups;
+    
     $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
+    $model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+    $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
+    $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
+    $model_client_phones = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+    $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
+    $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+    $request_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
+    $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
+    $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
+    $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+    $model_components = Gm_ceilingHelpersGm_ceiling::getModel('components');
+
     $dop_num = $dop_num_model->getData($userId)->dop_number;
     $_SESSION['user_group'] = $user_group;
     $_SESSION['dop_num'] = $dop_num;
 
-
+    
     $project_total = 0;
     $project_total_discount = 0;
     $total_square = 0;
     $total_perimeter = 0;
-    $model_calc = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations = $model_calc->getProjectItems($this->item->id);
+    $calculations = $model_calculations->getProjectItems($this->item->id);
 
     foreach ($calculations as $calculation) {
         $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
@@ -51,7 +64,7 @@
     }
 
     $sum_transport = 0;  $sum_transport_discount = 0;
-    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+    
     $mount_transport = $mountModel->getDataAll();
 
     if($this->item->transport == 0 ) $sum_transport = 0;
@@ -81,7 +94,7 @@
     //----------------------------------------------------------------------------------
 
     // все замерщики
-    $AllGauger = $model_calc->FindAllGauger($user->dealer_id, 22);
+    $AllGauger = $model_calculations->FindAllGauger($user->dealer_id, 22);
     //----------------------------------------------------------------------------------
 
 ?>
@@ -99,13 +112,13 @@
         $phoneto = $jinput->get('phoneto', '0', 'STRING');
         $phonefrom = $jinput->get('phonefrom', '0', 'STRING');
         $call_id = $jinput->get('call_id', 0, 'INT');
-        $model_api_phones = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
+        
         $all_advt = $model_api_phones->getAdvt();
         if (!empty($phoneto) && !empty($phonefrom)) {
             $reklama = $model_api_phones->getNumberInfo($phoneto);
             $write = $reklama->number .' '.$reklama->name . ' ' . $reklama->description;
         } elseif (!empty($this->item->api_phone_id)) {
-            $repeat_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
+            
             $repeat_advt = $repeat_model->getDataByProjectId($this->item->id);
             if ($this->item->api_phone_id == 10) {
                 if (!empty($repeat_advt->advt_id)) {
@@ -121,32 +134,32 @@
         } else {
             $need_choose = true;
         }
-        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-        $cl_phones = $client_model->getItemsByClientId($this->item->id_client);
+        
+        $cl_phones = $model_client_phones->getItemsByClientId($this->item->id_client);
         $date_time = $this->item->project_calculation_date;
         $date_arr = date_parse($date_time);
         $date = $date_arr['year'] . '-' . $date_arr['month'] . '-' . $date_arr['day'];
         $time = $date_arr['hour'] . ':00';
         //обновляем менеджера для клиента
-        $model_client = Gm_ceilingHelpersGm_ceiling::getModel('client');
+        
         if($this->item->manager_id==1||empty($model_client->getClientById($this->item->id_client)->manager_id)){
             $model_client->updateClientManager($this->item->id_client, $userId);
         }
-        $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+        
         $projects_model->updateManagerId($userId, $this->item->id_client);
-        $request_model = Gm_ceilingHelpersGm_ceiling::getModel('requestfrompromo');
+        
         $request_model->delete($this->item->id_client);
         $client_sex  = $model_client->getClientById($this->item->id_client)->sex;
         //$client_dealer_id = $model_client->getClientById($this->item->id_client)->dealer_id;
         if($this->item->id_client!=1){
-            $dop_contacts = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts');
+            
             $email = $dop_contacts->getEmailByClientID($this->item->id_client);
         }
         $client_dealer = JFactory::getUser($model_client->getClientById($this->item->id_client)->dealer_id);
         if($client_dealer->name == $this->item->client_id){
             $lk = true;
         }
-        $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
+        
         $all_recoil = $recoil_model->getData();
     ?>
     <h5 class="center">
@@ -264,8 +277,8 @@
                                     </td>
                                 </tr>
                                 <? 
-                                    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
-                                    $birthday = $client_model->getClientBirthday($this->item->id_client);
+                                      
+                                    $birthday = $model_client->getClientBirthday($this->item->id_client);
                                 ?>
                                 <tr>
                                     <th>Дата рождения</th>
@@ -602,7 +615,6 @@
                     $canvas = $dealer_canvases_sum;
                     // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
                     //$sum_transport = 0;  $sum_transport_discount = 0;
-                    //$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
                     //$mount_transport = $mountModel->getDataAll();
 
                     $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
@@ -799,7 +811,7 @@
                     <td><?php echo $calculation->calculation_title; ?></td>
                     <td>
                         <?php
-                        $path = "/costsheets/" . md5($calculation->id . "-0-0") . ".pdf";
+                        $path = "/costsheets/".md5($calculation->id."client_single").".pdf";
 
                         $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-0-0") . ".pdf", "id" => $calculation->id);
                         ?>
@@ -1003,7 +1015,6 @@
                             </div>
 
                             <?php if ($calculation->color > 0) { ?>
-                                <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
                                 <?php $color = $color_model->getData($calculation->color); ?>
                                 <div>
                                     Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
@@ -1023,9 +1034,8 @@
                                 </div>
                                 <? if ($calculation->n6 == 314) {?>
                                     <div> Белая </div>
-                                <?php } else  {?>
-                                    <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
-                                    <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
+                                <?php } else  { ?>
+                                    <?php $color_1 = $model_components->getColorId($calculation->n6); ?>
                                     <div>
                                         Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>"
                                                                                          alt=""/>
