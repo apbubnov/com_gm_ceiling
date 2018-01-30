@@ -203,13 +203,13 @@ class Gm_ceilingModelComponents extends JModelList
             $user->groups = $user->get('groups');
             $stock = in_array(19, $user->groups);
 
-            $query->form("`#__gm_ceiling_components_option` AS options")
+            $query->from("`#__gm_ceiling_components_option` AS options")
                 ->join("LEFT", "`#__gm_ceiling_components` AS components ON components.id = options.component_id")
                 ->select('options.id as option_id, options.title as option_title, options.price, options.count as option_count, options.count_sale')
                 ->select('components.id as component_id, components.title as component_title, components.unit, components.code');
 
             if ($stock)
-                $query->join("Right", "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
+                $query->join("RIGHT", "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
                     ->select("goods.*, goods.id as good_id");
 
             $query->group('components.title, options.title'.(($stock)?", goods.id":""));
