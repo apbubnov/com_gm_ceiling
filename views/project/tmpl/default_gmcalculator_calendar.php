@@ -1799,7 +1799,7 @@
                 jQuery("#"+idDay).addClass("change");
             }
             jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=project.GetNameGauger",
+                url: "/index.php?option=com_gm_ceiling&task=project.GetNameGauger",
                 data: {
                     id: gauger_gauger,
                 },
