@@ -57,14 +57,14 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         $sum +=  $item->sum;
                     }
         	?>
-                <tr class="row<?php echo $i % 2; ?>" >
-		            <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+                <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+		            <td>
 		               <?php echo $value->name; ?>
 		            </td>
-                    <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+                    <td>
                        <?php echo $value->client_contacts; ?>
                     </td>
-		            <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+		            <td>
 		               <?php
                             if($value->created == "0000-00-00 00:00:00") {
                                 echo "-";
@@ -120,14 +120,17 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 
 <script>
+    var sum_click_bool = false;
+
     jQuery(document).ready(function()
     {
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
-        jQuery('body').on('click', 'td', function(e)
+        jQuery('body').on('click', 'tr', function(e)
         {
-            if(jQuery(this).data('href')!=""){
+            if(jQuery(this).data('href') != undefined && !sum_click_bool){
                 document.location.href = jQuery(this).data('href');
             }
+            sum_click_bool = false;
         });
 
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
@@ -141,6 +144,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         });
 
         jQuery("#new_dealer").click(function(){
+            sum_click_bool = true;
             jQuery("#close4-tar").show();
             jQuery("#modal-window-container").show();
             jQuery("#modal-window-1-tar").show("slow");
