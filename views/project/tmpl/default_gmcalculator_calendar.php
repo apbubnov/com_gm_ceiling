@@ -1790,7 +1790,7 @@
                 }
             });
             jQuery("#jform_new_project_calculation_daypart").val(time_gauger);
-            jQuery("#jform_project_new_calc_date").val(date);
+            jQuery("#jform_project_new_calc_date").val(date_gauger);
             jQuery("#jform_project_gauger").val(gauger_gauger);
             if (jQuery(".change").length == 0) {
                 jQuery("#"+idDay).addClass("change");
