@@ -46,7 +46,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 	<table class="table table-striped one-touch-view" id="projectList">
 		<thead>
 			<tr>
-				<th></th>
 				<th class='center'>
 					<?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
 				</th>
