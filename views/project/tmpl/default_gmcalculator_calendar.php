@@ -1809,6 +1809,7 @@
                     jQuery("#new_gauger").val(data.name);
                 },
                 error: function (data) {
+                    console.log(data);
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
