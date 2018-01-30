@@ -476,6 +476,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         </form>
     </div>
 </div>
+<?endif;?>
 <div id="modal_window_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
     </button>
