@@ -1504,6 +1504,8 @@
                         Array.from(AllGauger).forEach(function(elementGauger) {
                             var emptytd = 0;
                             Array.from(data).forEach(function(elementProject) {
+                                console.log(time_gauger);
+                                console.log(gauger_gauger);
                                 if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
                                     if (elementProject.project_calculator == gauger_gauger && elementProject.project_calculation_date.substr(11) == times_gauger) {
                                         TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
