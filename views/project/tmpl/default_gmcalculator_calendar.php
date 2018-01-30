@@ -1799,12 +1799,12 @@
                 jQuery("#"+idDay).addClass("change");
             }
             jQuery.ajax({
+                type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=project.GetNameGauger",
                 data: {
                     id: gauger_gauger,
                 },
                 dataType: "json",
-                async: true,
                 success: function (data) {
                     console.log(data);
                     jQuery("#new_gauger").val(data.name);
