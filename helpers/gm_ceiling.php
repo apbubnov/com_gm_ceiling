@@ -2792,8 +2792,11 @@ class Gm_ceilingHelpersGm_ceiling
     }
     public static function create_client_single_estimate($calc_id=null,$data=null,$need_mount){
         $html = self::create_client_single_estimate_html($calc_id,$data,$need_mount);
+        if(empty($calc_id)){
+            $calc_id = $data['id'];
+        }
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-        $filename = md5($data['id'] . "-0-0") . ".pdf";
+        $filename = md5($calc_id . "client_single") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
     public static function create_client_single_estimate_html($calc_id=null,$data=null,$need_mount){
@@ -2984,11 +2987,11 @@ class Gm_ceilingHelpersGm_ceiling
         foreach($calculations as $calc){
             $html .= self::create_client_single_estimate_html($calc->id,null,$need_mount);
         }
-        $filename = md5($project->id . "-9") . ".pdf";
+        $filename = md5($project->id . "client_common") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
-    public static function calculate_components($calc_id,$data=null,$del_flag=0){
-
+    public static function calculate_components($calc_id=null,$data=null,$del_flag=0){
+        
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
             $calculation_data = $calculation_model->getData($calc_id);
@@ -3005,6 +3008,9 @@ class Gm_ceilingHelpersGm_ceiling
             $n23 = $data['n23'];
             $n15 = $data['n15'];
         }
+        $margins = self::get_margin($data['project_id']);
+        $gm_components_margin = $margins['gm_components_margin'];
+        $dealer_components_margin = $margins['dealer_components_margin'];
         $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
         $components_list = $components_model->getFilteredItems();
 
@@ -3163,9 +3169,6 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['n12'] > 0) {
             $component_count[$items_2[0]->id] += 2;
         }
-        //        $kolKP = 0.0;//переменная для просчета, является ли профиль из серии КП
-        //        $kolNP = 0.0; //переменная для просчета, является ли профиль из серии НП
-        //        $kolSP = 0.0;//переменная для просчета, является ли профиль из серии СП
         if ($del_flag == 1) {
             //светильники
             $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
@@ -3451,9 +3454,46 @@ class Gm_ceilingHelpersGm_ceiling
         }
         return $components_data;
     }
+    public static function get_margin($project_id=null){
+        $result = array();
+        if (!empty($project_id)) {
+            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+            $project = $project_model->getData($project_id);
+            $gm_canvases_margin = $project->gm_canvases_margin;            //Маржа ГМ на полотно
+            $gm_components_margin = $project->gm_components_margin;            //Маржа ГМ на комплектующие
+            $gm_mounting_margin = $project->gm_mounting_margin;            //Маржа ГМ на монтажные работы
+            $dealer_canvases_margin = $project->dealer_canvases_margin;    //Маржа дилера на полотно
+            $dealer_components_margin = $project->dealer_components_margin;    //Маржа дилера на комплектующие
+            $dealer_mounting_margin = $project->dealer_mounting_margin;    //Маржа дилера на монтажные работы
+           
+        } else {
+            $dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+            $dealer_marg = $dealer_info->getData();
+            //Или назначаем маржи из настроек дилера
+            $gm_canvases_margin = $dealer_marg->gm_canvases_margin;            //Маржа ГМ на полотно
+            $gm_components_margin = $dealer_marg->gm_components_margin;            //Маржа ГМ на комплектующие
+            $gm_mounting_margin = $dealer_marg->gm_mounting_margin;            //Маржа ГМ на монтажные работы
+
+            $dealer_canvases_margin = $dealer_marg->dealer_canvases_margin;    //Маржа дилера на полотно
+            $dealer_components_margin = $dealer_marg->dealer_components_margin;    //Маржа дилера на комплектующие
+            $dealer_mounting_margin = $dealer_marg->dealer_mounting_margin;
+
+            //Маржа дилера на монтажные работы
+        }
+        $result ['gm_canvases_margin'] = $gm_canvases_margin;
+        $result ['gm_components_margin'] = $gm_components_margin;
+        $result ['gm_mounting_margin'] = $gm_mounting_margin;
+        $result ['dealer_canvases_margin'] = $dealer_canvases_margin;
+        $result ['dealer_components_margin'] = $dealer_components_margin;
+        $result ['dealer_mounting_margin'] = $dealer_mounting_margin;
+        return $result;
+    }
     public static function calculate_canvases($calc_id){
         $calculation_model = self::getModel('calculation');
         $data = get_object_vars($calculation_model->getData($calc_id));
+        $margins = self::get_margin($data['project_id']);
+        $gm_canvases_margin = $margins['gm_canvases_margin'];
+        $dealer_canvases_margin = $margins['dealer_canvases_margin'];
         //Получаем прайс-лист полотен
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $canvases_list = $canvases_model->getFilteredItemsCanvas();
@@ -3487,26 +3527,8 @@ class Gm_ceilingHelpersGm_ceiling
             $data['n2'] = $data['n2_id'];
             $data['n3'] = $data['n3_id'];
         }
-        if ($data['project_id']) {
-            $project_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-            $project = $project_model->getData($data['project_id']);
-            $gm_canvases_margin = $project->gm_canvases_margin;            //Маржа ГМ на полотно
-            $gm_components_margin = $project->gm_components_margin;            //Маржа ГМ на комплектующие
-            $gm_mounting_margin = $project->gm_mounting_margin;            //Маржа ГМ на монтажные работы
-            $dealer_canvases_margin = $project->dealer_canvases_margin;    //Маржа дилера на полотно
-            $dealer_components_margin = $project->dealer_components_margin;    //Маржа дилера на комплектующие
-            $dealer_mounting_margin = $project->dealer_mounting_margin;    //Маржа дилера на монтажные работы
-
-        } else {
-            //Или назначаем маржи из настроек дилера
-            $gm_canvases_margin = $dealer_marg->gm_canvases_margin;            //Маржа ГМ на полотно
-            $gm_components_margin = $dealer_marg->gm_components_margin;            //Маржа ГМ на комплектующие
-            $gm_mounting_margin = $dealer_marg->gm_mounting_margin;            //Маржа ГМ на монтажные работы
-            $dealer_canvases_margin = $dealer_marg->dealer_canvases_margin;    //Маржа дилера на полотно
-            $dealer_components_margin = $dealer_marg->dealer_components_margin;    //Маржа дилера на комплектующие
-            $dealer_mounting_margin = $dealer_marg->dealer_mounting_margin;
-            //Маржа дилера на монтажные работы
-        }
+        $margins = self::get_margin($data['project_id']);
+        $gm_canvases_margin = $margins['gm_canvases_margin'];
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $canvases_list = $canvases_model->getFilteredItemsCanvas();
         foreach ($canvases_list as $i => $canvas) {
@@ -3596,7 +3618,7 @@ class Gm_ceilingHelpersGm_ceiling
 		$calc_id - id калькуляции в БД
 		$data - массив данных для просчета, если новый просчет
 	*/
-    public static function calculate_mount($del_flag,$calc_id,$data=null){
+    public static function calculate_mount($del_flag,$calc_id=null,$data=null){
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
         $calculation_model = self::getModel('calculation');
@@ -4558,6 +4580,11 @@ class Gm_ceilingHelpersGm_ceiling
                 "dealer_salary_total" => $extra_mount->value                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
+        $margins = self::get_margin($data['project_id']);
+        $gm_mounting_margin = $margins['gm_mounting_margin'];
+        $dealer_mounting_margin = $margins['dealer_mounting_margin'];
+        $gm_canvases_margin = $margins['gm_canvases_margin'];
+        $dealer_canvases_margin = $margins['dealer_canvases_margin'];
         //Добавление маржи ГМ и дилера и округление
         for ($i = 0; $i < count($mounting_data); $i++) {
             $mounting_data[$i]['gm_salary_total'] = round($mounting_data[$i]['gm_salary_total'], 2); //Округление зарплаты монтажников ГМ
@@ -4797,7 +4824,7 @@ class Gm_ceilingHelpersGm_ceiling
         foreach($calculations as $calc){
             $html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
         }
-        $filename = md5($data['id'] . "-2") . ".pdf";
+        $filename = md5($project_id . "mount_common") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
     public static function create_single_mounter_estimate_html($calc_id,$phones,$brigade,$brigade_names){
@@ -4941,7 +4968,7 @@ class Gm_ceilingHelpersGm_ceiling
             $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
         }
         $html = self::create_single_mounter_estimate_html($calc_id);
-        $filename = md5($data['id'] . "-2") . ".pdf";
+        $filename = md5($calc_id . "mount_single") . ".pdf";
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         self::save_pdf($html, $sheets_dir . $filename, "A4");
     }
@@ -5082,7 +5109,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
 
-        $filename = md5($project_id . "-8") . ".pdf";
+        $filename = md5($project_id . "consumables") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
 
         return 1;
@@ -5173,7 +5200,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody>';
         $html .= '</table>';
         $html .= '<center><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".png" . '" style="width: 100%;"/></center>';
-        $filename = md5($data['id'] . 'cutpdf' . -2) . '.pdf';
+        $filename = md5($data['id'] . 'cutpdf') . '.pdf';
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
     /*функция генерации pdf для менеджера*/
@@ -5271,14 +5298,13 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".png" . '" style="width: 100%; max-height: 530px;"/> <br>';
-        $filename = md5($data['id'] . "-4") . ".pdf";
+        $filename = md5($data['id'] . "manager") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         return 1;
     }
 
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
-    public static function print_components($project_id, $components_data)
-    {
+    public static function print_components($project_id, $components_data){
         //throw new Exception($project_id, 1);
 
         $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -5389,37 +5415,7 @@ class Gm_ceilingHelpersGm_ceiling
         $print_data[$it_655]['self_total'] = $print_data[$it_655]['self_price'] * $print_data[$it_655]['quantity'];
         $print_data[$it_656]['self_total'] = $print_data[$it_656]['self_price'] * $print_data[$it_656]['quantity'];
 
-        /*
-                //Снова округляем багет до 2.5 палок
-                $baget_count = intval($print_data[$it_11]['quantity'] / 2.5);
-                if (floatval($print_data[$it_11]['quantity'] / 2.5) > $baget_count) {
-                    $baget_count++;
-                }
-                $print_data[$it_11]['quantity'] = $baget_count * 2.5;
-                $print_data[$it_11]['self_total'] = $print_data[$it_11]['self_price'] * $print_data[$it_11]['quantity'];
 
-                $baget_count_1 = intval($print_data[$it_236]['quantity'] / 2.5);
-                if (floatval($print_data[$it_236]['quantity'] / 2.5) > $baget_count_1) {
-                    $baget_count_1++;
-                }
-                $print_data[$it_236]['quantity'] = $baget_count_1 * 2.5;
-                $print_data[$it_236]['self_total'] = $print_data[$it_236]['self_price'] * $print_data[$it_236]['quantity'];
-
-                $baget_count_2 = intval($print_data[$it_239]['quantity'] / 2.5);
-                if (floatval($print_data[$it_239]['quantity'] / 2.5) > $baget_count_2) {
-                    $baget_count_2++;
-                }
-                $print_data[$it_239]['quantity'] = $baget_count_2 * 2.5;
-                $print_data[$it_239]['self_total'] = $print_data[$it_239]['self_price'] * $print_data[$it_239]['quantity'];
-
-                //округляем брус
-                $brus_count = intval($print_data[$it_1]['quantity'] / 0.5);
-                if (floatval($print_data[$it_1]['quantity'] / 0.5) > $brus_count) {
-                    $brus_count++;
-                }
-                $print_data[$it_1]['quantity'] = $brus_count * 0.5;
-                $print_data[$it_1]['self_total'] = $print_data[$it_1]['self_price'] * $print_data[$it_1]['quantity'];
-        */
 
         //округляем провод
         $print_data[$it_4]['quantity'] = ceil($print_data[$it_4]['quantity']);
