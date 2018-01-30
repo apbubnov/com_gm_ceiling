@@ -2913,7 +2913,7 @@ class Gm_ceilingHelpersGm_ceiling
            return $html; 
     }
 
-    public static function create_client_common_estimate($project_id){
+    public static function create_client_common_estimate($project_id,$need_mount){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
