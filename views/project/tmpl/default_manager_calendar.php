@@ -461,7 +461,32 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     </table>
                 </div>
         </div>
-
+        <?php if ($this->item->project_verdict == 0) { ?>
+            <table>
+                <tr>
+                    <td>
+                        <a class="btn  btn-primary" id="rec_to_measurement">
+                            Записать на замер
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn  btn-danger" id="refuse_project">
+                            Отказ от замера
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=3>
+                        <div id="call" class="call" style="display:none;">
+                            <br>
+                            <input name="call_comment" id="call_comment" placeholder="Введите примечание">
+                            <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
+                                        class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        </div>
+                    <td>
+                </tr>
+            </table>
+        <?php } ?>
         <div id="modal-window-container-tar">
             <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
             <div id="modal-window-choose-tar">
