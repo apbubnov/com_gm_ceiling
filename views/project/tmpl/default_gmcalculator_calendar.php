@@ -1395,10 +1395,6 @@
                 msg += '<div class="btn-small-l"><button id="button-prev-gauger" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
                 jQuery("#calendar-container").append(msg);
                 Today(day, NowMonth, NowYear);
-                var datesession_gauger = jQuery("#jform_project_new_calc_date").val();
-                if (datesession_gauger != undefined) {
-                    jQuery("#current-monthD"+datesession_gauger.substr(8, 2)+"DM"+datesession_gauger.substr(5, 2)+"MY"+datesession_gauger.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
-                }
             },
             dataType: "text",
             timeout: 10000,
@@ -1464,14 +1460,6 @@
     //------------------------------------------
 
     jQuery(document).ready(function () {
-
-        //если сессия есть, то выдать дату, которая записана в сессии замерщиков
-        var datesession_gauger = jQuery("#jform_project_new_calc_date").val();  
-        if (datesession_gauger != undefined) {
-            jQuery("#current-monthD"+datesession_gauger.substr(8, 2)+"DM"+datesession_gauger.substr(5, 2)+"MY"+datesession_gauger.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
-        }
-        //-----------------------------------------------------------
-
 
         window.time_gauger = undefined;
         window.gauger_gauger = undefined;
