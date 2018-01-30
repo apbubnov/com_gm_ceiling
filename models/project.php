@@ -827,6 +827,51 @@ class Gm_ceilingModelProject extends JModelItem
         }
 	}
 	
+	public function update_date_gauger($id, $gauger)
+	{
+		try
+		{
+			$table = $this->getTable();
+			if($id > 0) {
+				$table->load($id);
+				$table->project_calculator = $gauger;
+			}
+			$return = $table->store();
+
+			return $return;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	public function GetNameGauger($id)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query ->select("name")
+				->from('`#__users`')
+				->where("id = '$id'");
+			$db->setQuery($query);
+			$item =  $db->loadObject();
+
+			return $item;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 	public function update_project_after_call($id,$client_id,$date,$address,$manager_comment,$status,$api_id=null,$manager_id, $gauger,$d_can_m=null,$d_com_m=null,$d_mou_m=null,$gm_can_m=null,$gm_com_m=null,$gm_mou_m=null){
 		try
 		{
