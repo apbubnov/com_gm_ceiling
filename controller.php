@@ -1144,7 +1144,7 @@ class Gm_ceilingController extends JControllerLegacy
          WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
             $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $items = $model->getAllList_Price();
-            $filter = "component.title = 'Светильник' AND (a.title LIKE('%Эcola%') OR a.title LIKE('%Экола%') )";
+            $filter = "component.title = 'Светильник'";
             $items = $model->getFilteredItems($filter);
             die(json_encode($items));
         }
@@ -1165,7 +1165,7 @@ class Gm_ceilingController extends JControllerLegacy
              WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
             $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $items = $model->getAllList_Price();
-            $filter = "component.title = 'Лампа' AND (a.title LIKE('%Эcola%') OR a.title LIKE('%Экола%') )";
+            $filter = "component.title = 'Лампа'";
             $items = $model->getFilteredItems($filter);
             die(json_encode($items));
         }
@@ -2337,7 +2337,7 @@ class Gm_ceilingController extends JControllerLegacy
             $project_calculation_date = $project_calc_date." ".$new_project_calculation_daypart;
             $model = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $model->updateClientNew($id, $fio, $phone,$adress, $project_calculation_date );
-            $this->setRedirect(JRoute::_('http://test1.gm-vrn.ru/components/com_gm_ceiling/views/saverclient/default.php?complite=1&id='.$id, false));
+            $this->setRedirect(JRoute::_('http://test1.gm-vrn.ru/components/com_gm_ceiling/views/saverclient/default_1.php?complite=1&id='.$id, false));
             return 1;
         }
         catch(Exception $e)
@@ -3202,6 +3202,31 @@ class Gm_ceilingController extends JControllerLegacy
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function UserRefuseToCooperate()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+        
+            $id = $jinput->get('user_id', null, 'INT');
+    
+            $user = JFactory::getUser();
+            if (!$user->guest) {
+                $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                $result = $users_model->refuseToCooperate($id);
+            }
+    
+            die($result);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
     }

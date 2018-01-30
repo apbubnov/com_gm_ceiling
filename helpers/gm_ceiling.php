@@ -2819,19 +2819,17 @@ class Gm_ceilingHelpersGm_ceiling
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
-        $html .= '<div width = 100%>';
-        $html .= '<span width = 33% >';
-        $html .= '<p><b>Дилер: </b>' . $dealer->name . '</p>';
-        $html .= '<p><h2>Дата: ' . date("d.m.Y") . '</h2></p>';
-        $html .= '<p><h2>Общее: ' . $new_total . ' руб.</h2></p>';
-        $thml .= '</span>';
-        $html .= '<span width = 33% style = "display: inline-block;" >';
-        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td>';    
-        $thml .= '</span>';  
-        $html .= '<span width = 33% style = "display: inline-block;" >';
-        $html .= $data['calc_data'];    
-        $thml .= '</span>';
-        $html .= '</div>';
+        $html .= '<table class = "no_border">';
+        $html .= '<tr>';
+        $html .= '<td>' . $dealer->name . '</td><td rowspan = "3"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td><td rowspan = "3">'.str_replace(';','; ',$data['calc_data']).'</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<td><h2>Дата: ' . date("d.m.Y") . '</h2></td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<td><h2>Общее: ' . $new_total . ' руб.</h2></td>';
+        $thml .= '</tr>';
+        $html .= '</table>';
         if ($data['discount'] != 0){
             $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
         }
@@ -2912,7 +2910,7 @@ class Gm_ceilingHelpersGm_ceiling
            return $html; 
     }
 
-    public static function create_client_common_estimate(){
+    public static function create_client_common_estimate($project_id){
 
     }
     public static function calculate_components($calc_id,$data=null,$del_flag=0){

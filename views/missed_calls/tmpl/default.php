@@ -116,7 +116,18 @@ $items = json_encode($this->item);
                         if(client)
                         {
                             data[i][Object.keys(data[i])[j]] = client['client_name']+"/"+data[i][Object.keys(data[i])[j]];
-                            jQuery('#callbacksList > tbody > tr:last').attr('data-href','index.php?option=com_gm_ceiling&view=clientcard&id='+client['id']);
+                            if(client['dealer_type'] == 3)
+                            {
+                                jQuery('#callbacksList > tbody > tr:last').attr('data-href','index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='+client['id']);
+                            }
+                            else if(client['dealer_type'] == 0 || client['dealer_type'] == 1)
+                            {
+                                jQuery('#callbacksList > tbody > tr:last').attr('data-href','index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='+client['id']);
+                            }
+                            else
+                            {
+                                jQuery('#callbacksList > tbody > tr:last').attr('data-href','index.php?option=com_gm_ceiling&view=clientcard&id='+client['id']);
+                            }
                         }
                     }
                     if(Object.keys(data[i])[j]=='dateTimeUtc'){

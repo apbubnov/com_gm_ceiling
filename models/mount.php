@@ -109,6 +109,8 @@ class Gm_ceilingModelMount extends JModelList
     	{
 	        $db    = $this->getDbo();
 
+	        unset($data->id);
+
 	       	$col = '';
 			$val = '';
 			foreach ($data as $key => $value)
@@ -119,6 +121,7 @@ class Gm_ceilingModelMount extends JModelList
 			$col = substr($col, 0, -1);
 			$val = substr($val, 0, -1);
 
+			$query = $db->getQuery(true);
 	        $query->delete('`#__gm_ceiling_mount`');
 	        $query->where("`user_id` = $data->user_id");
 	        $db->setQuery($query);
