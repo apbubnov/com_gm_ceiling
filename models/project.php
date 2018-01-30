@@ -849,28 +849,19 @@ class Gm_ceilingModelProject extends JModelItem
         }
 	}
 
-	public function GetNameGauger($id=null)
+	public function GetNameGauger($id)
 	{
 		try
 		{
-			if ($id == null) {
-				$gauger = $_POST["id"];
-			} else {
-				$gauger = $id;
-			}
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query ->select("name")
 				->from('`#__users`')
-				->where("id = '$gauger'");
+				->where("id = '$id'");
 			$db->setQuery($query);
 			$item =  $db->loadObject();
 
-			if ($id == null) {
-				return json_encode($item);
-			} else {
-				return $item;
-			}
+			return $item;
 		}
 		catch(Exception $e)
         {
