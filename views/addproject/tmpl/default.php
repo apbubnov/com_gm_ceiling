@@ -151,7 +151,7 @@ if (count($AllGauger) == 0) {
     $(window).resize(function(){
         if (screen.width <= '1024') {
             jQuery('#choose_cleint_btn').css('font-size', '13px');
-            jQuery('#choose_cleint_btn').css('padding', '0 5px');
+            jQuery('#choose_cleint_btn').css('padding', '10px 5px');
         }
         else {
         }
