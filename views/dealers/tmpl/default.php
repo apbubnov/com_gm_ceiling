@@ -120,19 +120,18 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 
 <script>
-    var sum_click_bool = false;
 
     jQuery(document).ready(function()
     {
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
-        jQuery('body').on('click', 'tr', function(e)
+       /* jQuery('body').on('click', 'tr', function(e)
         {
             console.log(sum_click_bool);
             if(jQuery(this).data('href') != undefined && !sum_click_bool){
                 document.location.href = jQuery(this).data('href');
             }
             sum_click_bool = false;
-        });
+        });*/
 
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
             var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
@@ -195,17 +194,16 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
             var user_id = jQuery(this).attr("user_id");
             var div = jQuery(".modal_window"); // тут указываем ID элемента
+            console.log(e.target);
             if (!div.is(e.target) // если клик был не по нашему блоку
                 && div.has(e.target).length === 0) { // и не по его дочерним элементам
                 jQuery(".close_btn").hide();
                 jQuery(".modal_window_container").hide();
                 jQuery(".modal_window").hide();
-                sum_click_bool = true;
             }
         });
 
         jQuery(".btn-done").click(function(){
-            sum_click_bool = true;
             var user_id = jQuery(this).attr("user_id");
             jQuery(".close_btn").show();
             jQuery("#modal_window_container" + user_id).show();
