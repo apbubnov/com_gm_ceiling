@@ -41,10 +41,23 @@ $_SESSION['dop_num'] = $dop_num;
 
         <tbody>
         <?php
-            foreach($this->item as $item) :
+            foreach($this->item as $item)
+            {
+                if ($item->dealer_type == 3)
+                {
+                    $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.$item->client_id, false);
+                }
+                elseif (is_null($item->dealer_type))
+                {
+                    $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.$item->client_id, false);
+                }
+                elseif ($item->dealer_type == 0 || $item->dealer_type == 1)
+                {
+                    $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.$item->client_id, false);
+                }
         ?>
            
-           <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.$item->client_id,false )?>">
+           <tr data-href="<?php echo $href; ?>">
                 <td>
                     <?php echo $item->client_name;?>
                 </td>
@@ -58,7 +71,7 @@ $_SESSION['dop_num'] = $dop_num;
                     ?>
                 </td>
             </tr>
-        <?php endforeach;?>
+        <?php } ?>
         </tbody>
     </table>
 </form>

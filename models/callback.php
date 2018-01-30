@@ -25,25 +25,16 @@ class Gm_ceilingModelCallback extends JModelList
 	{
 		try
 		{
-			/*
-
-	SELECT a.project_id,c.client_name,a.date_time,a.comment,(SELECT s.title FROM `rgzbn_gm_ceiling_projects` AS p INNER JOIN `rgzbn_gm_ceiling_status` AS s ON p.project_status = s.id
-	WHERE p.id = a.project_id) AS st FROM `rgzbn_gm_ceiling_callback` AS a INNER JOIN `rgzbn_gm_ceiling_clients` AS c ON a.client_id = c.id */
-			// Create a new query object.
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
-			$query->select('a.id')
-				->select('a.date_time')
-				->select('a.comment')
-				->select('a.manager_id')
-				->select('a.client_id')
-				->select('c.client_name')
-				->from('#__gm_ceiling_callback as a')
-				->innerJoin('#__gm_ceiling_clients as c ON a.client_id = c.id ORDER BY `date_time` DESC');
+			$query->select('`a`.*, `c`.`client_name`, `u`.`dealer_type`')
+				->from('`#__gm_ceiling_callback` as `a`')
+				->innerJoin('`#__gm_ceiling_clients` as `c` ON `a`.`client_id` = `c`.`id`')
+				->leftJoin('`#__users` as `u` ON `a`.`client_id` = `u`.`associated_client`')
+				->order('`date_time` DESC');
 			$db->setQuery($query);
 			
-
 			$items = $db->loadObjectList();
 			return $items;
 		}

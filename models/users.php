@@ -62,7 +62,7 @@ class Gm_ceilingModelUsers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`');
+			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`,`u`.`refused_to_cooperate`');
 			$query->from('`#__users` AS `u`');
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
@@ -185,6 +185,54 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->update("`#__users`");
 			$query->set("`name` = '$name'");
 			$query->where("`associated_client` = $associated_client");
+			
+			$db->setQuery($query);
+			$db->execute();
+			
+			return true;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	function getUserByAssociatedClient($associated_client)
+	{
+		try
+		{
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from("`#__users`");
+			$query->where("`associated_client` = $associated_client");
+			
+			$db->setQuery($query);
+			$item = $db->loadObject();
+			
+			return $item;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	function refuseToCooperate($id)
+	{
+		try
+		{
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->update("`#__users`");
+			$query->set("`refused_to_cooperate` = 1");
+			$query->where("`id` = $id");
 			
 			$db->setQuery($query);
 			$db->execute();
