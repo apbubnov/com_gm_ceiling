@@ -200,6 +200,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 jQuery(".modal_window_container").hide();
                 jQuery(".modal_window").hide();
             }
+        });
+
+        jQuery(document).click(function (e){
             var target = event.target;
             console.log(event.target.tagName);
             // цикл двигается вверх от target к родителям до table
@@ -210,7 +213,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     }
                     return;
                 }
-                if (target.className == 'btn-done') {// нашли элемент, который нас интересует!
+                if (target.className.indexOf('btn-done') + 1) {// нашли элемент, который нас интересует!
                     var user_id = jQuery(this).attr("user_id");
                     jQuery(".close_btn").show();
                     jQuery("#modal_window_container" + user_id).show();
