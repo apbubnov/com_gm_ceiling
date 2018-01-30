@@ -91,20 +91,19 @@
     <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
 </div>
 
-<? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-$dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
-<div>
-    <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Телефоны клиента: </p>
-</div>
-<? if (!empty($dop_contacts)) { ?>
+<div style="display: inline-block; width: 48%;">
     <div>
-        <? foreach ($dop_contacts AS $contact) {?>
-            <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
+        <p class = "caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны клиента: </p>
     </div>
-<? } ?>
-<div>
-    <input type="text" id="new_email" placeholder="Почта" required>
-    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+    <div>
+        <?php foreach($client_phones as $item) { ?>
+            <p  style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></p>
+        <?php } ?>
+    </div>
+    <div>
+        <input type="text" id="new_phone" placeholder="Телефон" required>
+        <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
+    </div>
 </div>
 
 <?php if($user->dealer_type != 1) { ?>
@@ -471,5 +470,32 @@ $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
             }
         });
     }
+    document.getElementById('add_phone').onclick = function()
+        {
+            var client_id = <?php echo $client->id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.addPhone",
+                data: {
+                    client_id: client_id,
+                    phone: document.getElementById('new_phone').value
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
 
 </script>
