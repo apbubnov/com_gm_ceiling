@@ -1806,7 +1806,7 @@
                 },
                 dataType: "json",
                 success: function (data) {
-                    jQuery("#new_gauger").test(data.name);
+                    jQuery("#new_gauger").text(data.name);
                 },
                 error: function (data) {
                     console.log(data);
