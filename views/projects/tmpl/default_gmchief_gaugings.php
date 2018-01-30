@@ -46,6 +46,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 	<table class="table table-striped one-touch-view" id="projectList">
 		<thead>
 			<tr>
+				<th></th>
 				<th class='center'>
 					<?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
 				</th>
@@ -55,6 +56,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 				<th class='center'>
 					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART', 'a.project_calculation_daypart', $listDirn, $listOrder); ?>
 				</th>
+                <th class='center'>
+					<?php echo JHtml::_('grid.sort',  'Замерщик', 'a.project_calculator', $listDirn, $listOrder); ?>
+				</th>
 				<th class='center'>
 					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
 				</th>
@@ -62,16 +66,10 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					<?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
 				</th>
 				<th class='center'>
+					Примечание менеджера
+				</th>
+                <th class='center'>
 					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
-				</th>
-				<th class='center'>
-					Имя дилера
-				</th>
-				<th class='center'>
-					Квадратура
-				</th>
-				<th class='center'>
-					Бригада
 				</th>
 			</tr>
 		</thead>
