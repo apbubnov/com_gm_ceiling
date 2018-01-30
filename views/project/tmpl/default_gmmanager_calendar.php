@@ -276,19 +276,6 @@
                                         <label for='female'>Женский</label>
                                     </td>
                                 </tr>
-                                <? 
-                                      
-                                    $birthday = $model_client->getClientBirthday($this->item->id_client);
-                                ?>
-                                <tr>
-                                    <th>Дата рождения</th>
-                                    <td>
-                                        <input name="new_birthday" id="jform_birthday" class="inputactive" value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date">
-                                    </td>
-                                    <td>
-                                        <button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button>
-                                    </td>
-                                </tr>
                                 <tr>
                                     <th>
                                         <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
