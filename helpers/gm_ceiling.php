@@ -2957,7 +2957,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td>' . $calc->calculation_title . '</td>';
             $html .= '<td class="center">' . $calc->n4 . '</td>';
             $html .= '<td class="center">' . $calc->n5 . '</td>';
-            $html .= '<td class="center">' . $calc->mounting_sum + $calc->canvases_sum + $calc->components_sum . '</td>';
+            $html .= '<td class="center">' . ($calc->mounting_sum + $calc->canvases_sum + $calc->components_sum) . '</td>';
             $html .= '</tr>';
             $sum += $calc->mounting_sum + $calc->canvases_sum + $calc->components_sum;
         }
