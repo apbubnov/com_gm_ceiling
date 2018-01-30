@@ -1032,7 +1032,7 @@
                     </div>
                 </form>
             </div>
-
+            <?php if($user->dealer_type == 0) { ?>
             <div class="col-xl-6">
                 <div class="comment">
                     <label style="font-weight: bold;"> История клиента: </label>
@@ -1173,6 +1173,7 @@
                     </div>
                 </form>-->
             </div>
+            <? } ?>
         </div>
     </div>
     <div id="modal-window-container-tar">
