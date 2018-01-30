@@ -1502,16 +1502,9 @@
                         t++;
                         Array.from(AllGauger).forEach(function(elementGauger) {
                             var emptytd = 0;
-                            console.log(elementTime);
                             Array.from(data).forEach(function(elementProject) {
-                                console.log(elementGauger.id);
-                                console.log(elementTime);
                                 if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                    console.log(time_gauger);
-                                    console.log(gauger_gauger);
-                                    console.log(elementProject.project_calculation_date.substr(11));
-                                    console.log(elementProject.project_calculator);
-                                    if (elementProject.project_calculator == gauger_gauger && elementProject.project_calculation_date.substr(11) == times_gauger) {
+                                    if (elementProject.project_calculator == gauger_gauger && elementProject.project_calculation_date.substr(11) == time_gauger) {
                                         TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                                     } else {
                                         TableForSelect += '<tr><td></td>';
