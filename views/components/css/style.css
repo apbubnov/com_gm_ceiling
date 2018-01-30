@@ -1,3 +1,7 @@
+body {
+    background-color: #E6E6FA;
+}
+
 .Page, .Page div, .Page form, .Page table {
     display: inline-block;
     width: 100%;
@@ -75,7 +79,10 @@
 .Page .Body thead td, .Page .Body tfoot td {
     background-color: rgb(64, 65, 154);
     color: rgb(255, 255, 255);
-    text-align: center;
+}
+
+.Page .Body tr td {
+    border-right: 1px solid rgb(64, 65, 154);
 }
 
 .Page .Body thead tr td:not(:last-child) {
@@ -83,7 +90,26 @@
 }
 
 .Page .Body td {
-    padding: 5px 15px;
+    padding: 5px;
+    text-align: center;
+}
+
+.Page .Body .Lavel1 {
+    background-color: rgba(234, 89, 0, .5);
+    color: rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Body .Lavel2 {
+    background-color: rgba(0, 198, 133, .5);
+    color: rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Body .Lavel3 {
+    background-color: rgba(255, 255, 255, .5);
+    color: rgb(0, 0, 0);
+    border-bottom: 1px solid rgb(64, 65, 154);
 }
 
 .MarginLeft {

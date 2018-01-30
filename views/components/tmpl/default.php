@@ -22,17 +22,23 @@ $user = JFactory::getUser();
 $user->groups = $user->get('groups');
 $user->info = $user->getDealerInfo();
 
-$userDealer = JFactory::getUser($user->dealer_id);
-$userDealer->groups = $userDealer->get('groups');
-$userDealer->info = $userDealer->getDealerInfo();
+$userDealer = $user;
+
+if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
+    $userDealer = JFactory::getUser($user->dealer_id);
+    $userDealer->groups = $userDealer->get('groups');
+    $userDealer->info = $userDealer->getDealerInfo();
+}
 
 $stock = in_array(19, $user->groups);
 $managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups) && !$stock;
-$manager = in_array(13, $user->groups) || in_array(14, $userDealer->groups) && !$managerGM && !$stock;
 
 $dealer = null;
 
-if ($managerGM || true) {
+$stock = $managerGM = false;
+$managerGM = true;
+
+if ($managerGM) {
     $dealerId = $app->input->get('dealer', null, 'int');
 
     if (isset($dealerId)) {
@@ -42,6 +48,10 @@ if ($managerGM || true) {
         // $dealer->price = $model->getDealerPrice($dealerId);
     }
 }
+
+function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
+function double_margin($value, $margin1, $margin2) { return margin(margin($value, $margin1), $margin2); }
+
 ?>
 <link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css">
 
@@ -51,7 +61,7 @@ if ($managerGM || true) {
     </div>
     <div class="Actions">
         <?=parent::getButtonBack();?>
-        <?if ($managerGM && empty($dealer)):?>
+        <?if ($managerGM):?>
         <form class="FormSimple UpdatePrice MarginLeft" action="javascript:UpdatePrice(0);">
             <label for="allPrice">Изменить цену:</label>
             <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}"  name="allPrice" id="allPrice" placeholder="0"
@@ -68,13 +78,12 @@ if ($managerGM || true) {
             <tr class="THead">
                 <td><i class="fa fa-bars" aria-hidden="true"></i></td>
                 <td><i class="fa fa-hashtag" aria-hidden="true"></i></td>
-                <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
                 <td>Наименование</td>
-                <td><i class="fa fa-info" aria-hidden="true"></i></td>
                 <td>Кол-во</td>
                 <?if($stock):?>
                 <td>Заказать</td>
                 <td>Цена закупки</td>
+                <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
                 <td>Изменить</td>
                 <?elseif ($managerGM && empty($dealer)):?>
                 <td>Цена дилера</td>
@@ -84,16 +93,72 @@ if ($managerGM || true) {
                 <td>Цена</td>
                 <td>Цена дилера</td>
                 <td>Изменить</td>
+                <?else:?>
+                <td>Цена дилера</td>
+                <td>Цена клиента</td>
                 <?endif;?>
             </tr>
         </thead>
         <tbody>
         <?foreach ($this->items as $key_c => $component):?>
-
+            <tr class="TBody Lavel1">
+                <td><i class="fa fa-caret-down" aria-hidden="true"></i></td>
+                <td><?=$key_c;?></td>
+                <td><?=$component->title;?> <?=$component->unit;?></td>
+                <td></td>
+                <?if($stock):?>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                <?elseif ($managerGM && empty($dealer)):?>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                <?elseif ($managerGM):?>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                <?else:?>
+                    <td></td>
+                    <td></td>
+                <?endif;?>
+            </tr>
         <?foreach ($component->options as $key_o => $option):?>
-
+                <tr class="TBody Lavel2" style="display: none;">
+                    <td><i class="fa <?=($stock)?"fa-caret-down":"fa-caret-right";?>" aria-hidden="true"></i></td>
+                    <td><?=$key_o;?></td>
+                    <td><?=$component->title;?> <?=$option->title;?></td>
+                    <td><?=$option->count;?></td>
+                    <?if($stock):?>
+                        <td></td>
+                        <td><?=$option->pprice;?></td>
+                        <td></td>
+                        <td></td>
+                    <?elseif ($managerGM && empty($dealer)):?>
+                        <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
+                        <td><?=double_margin($option->price, $userDealer->info->gm_components_margin, $userDealer->info->dealer_components_margin);?></td>
+                        <td></td>
+                    <?elseif ($managerGM):?>
+                        <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
+                        <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
+                        <td></td>
+                    <?else:?>
+                        <td><?=margin($option->price, $userDealer->info->gm_components_margin);?></td>
+                        <td><?=double_margin($option->price, $userDealer->info->gm_components_margin, $userDealer->info->dealer_components_margin);?></td>
+                    <?endif;?>
+                </tr>
         <?if ($stock) foreach ($option->goods as $key_g => $good):?>
-
+                    <tr class="TBody Lavel3" style="display: none;">
+                        <td><i class="fa fa-caret-right" aria-hidden="true"></i></td>
+                        <td><?=$key_g;?></td>
+                        <td>#<?=$good->barcode;?> @<?=$good->article;?></td>
+                        <td><?=$good->count;?></td>
+                        <td></td>
+                        <td><?=$good->pprice;?></td>
+                        <td><?=$good->stock_name;?></td>
+                        <td></td>
+                    </tr>
         <?endforeach;?>
         <?endforeach;?>
         <?endforeach;?>

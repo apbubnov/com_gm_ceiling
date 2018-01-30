@@ -206,7 +206,7 @@ class Gm_ceilingModelComponents extends JModelList
             $query->from("`#__gm_ceiling_components_option` AS options")
                 ->join("LEFT", "`#__gm_ceiling_components` AS components ON components.id = options.component_id")
                 ->join((($stock)?"RIGHT":"LEFT"), "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
-                ->select('options.id as option_id, options.title as option_title, options.price, options.count as option_count, options.count_sale as option_count_sale')
+                ->select('options.id as option_id, options.title as option_title, options.price as option_price, options.count as option_count, options.count_sale as option_count_sale')
                 ->select('components.id as component_id, components.title as component_title, components.unit, components.code')
                 ->select("goods.id as good_id, goods.stock as good_stock, goods.barcode as good_barcode, goods.article as good_article, goods.count as good_count");
 
@@ -250,6 +250,11 @@ class Gm_ceilingModelComponents extends JModelList
             $items = parent::getItems();
 
             $result = [];
+
+            $component_id = null;
+            $option_id = null;
+            $good_id = null;
+
             foreach ($items as $item) {
                 $query = $db->getQuery(true);
                 $query->from("`#__gm_ceiling_analytics_components`")
@@ -278,16 +283,17 @@ class Gm_ceilingModelComponents extends JModelList
                     $result[$item->component_id] = $component;
                 }
 
-                if (empty($result[$item->component_id]->options[$item->options_id]))
+                if (empty($result[$item->component_id]->options[$item->option_id]))
                 {
                     $option = (object) [];
                     $option->title = $item->option_title;
                     $option->price = $item->option_price;
                     $option->count = $item->option_count;
                     $option->count_sale = $item->option_count_sale;
+                    $option->pprice = null;
                     $option->goods = [];
 
-                    $result[$item->component_id]->options[$item->options_id] = $option;
+                    $result[$item->component_id]->options[$item->option_id] = $option;
                 }
 
                 $good = (object) [];
@@ -298,8 +304,30 @@ class Gm_ceilingModelComponents extends JModelList
                 $good->pprice = $item->pprice;
                 $good->stock_name = $item->stock_name;
 
-                $result[$item->component_id]->options[$item->options_id]->goods[$item->good_id] = $good;
+                $result[$item->component_id]->options[$item->option_id]->goods[$item->good_id] = $good;
+
+                if ($good_id != $item->good_id) {
+                    $good_id = $item->good_id;
+                }
+
+                if ($option_id != $item->option_id) {
+                    if (isset($option_id)) {
+                        $tempOption = $result[$component_id]->options[$option_id];
+                        foreach ($tempOption->goods as $v) {
+                            if (empty($tempOption->pprice) || $v->pprice > $tempOption->pprice) {
+                                $tempOption->pprice = $v->pprice;
+                            }
+                        }
+                        $result[$component_id]->options[$option_id] = $tempOption;
+                    }
+                    $option_id = $item->option_id;
+                }
+
+                if ($component_id != $item->component_id) {
+                    $component_id = $item->component_id;
+                }
             }
+
             return $result;
         }
         catch(Exception $e)
