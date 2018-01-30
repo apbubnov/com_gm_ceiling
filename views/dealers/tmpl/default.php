@@ -194,20 +194,30 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
             var user_id = jQuery(this).attr("user_id");
             var div = jQuery(".modal_window"); // тут указываем ID элемента
-            console.log(e.target);
             if (!div.is(e.target) // если клик был не по нашему блоку
                 && div.has(e.target).length === 0) { // и не по его дочерним элементам
                 jQuery(".close_btn").hide();
                 jQuery(".modal_window_container").hide();
                 jQuery(".modal_window").hide();
             }
-        });
-
-        jQuery(".btn-done").click(function(){
-            var user_id = jQuery(this).attr("user_id");
-            jQuery(".close_btn").show();
-            jQuery("#modal_window_container" + user_id).show();
-            jQuery("#modal_window_acct" + user_id).show("slow");
+            var target = event.target;
+            // цикл двигается вверх от target к родителям до table
+            while (target.tagName != 'table') {
+                if (target.tagName == 'tr') {// нашли элемент, который нас интересует!
+                    if(jQuery(target).data('href') != undefined){
+                        document.location.href = jQuery(target).data('href');
+                    }
+                    return;
+                }
+                if (target.className == 'btn-done') {// нашли элемент, который нас интересует!
+                    var user_id = jQuery(this).attr("user_id");
+                    jQuery(".close_btn").show();
+                    jQuery("#modal_window_container" + user_id).show();
+                    jQuery("#modal_window_acct" + user_id).show("slow");
+                    return;
+                }
+                target = target.parentNode;
+            }
         });
 
         jQuery(".save_pay").click(function(){
