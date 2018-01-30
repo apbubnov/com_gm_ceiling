@@ -121,7 +121,21 @@ $result_users = $users_model->getDesigners();
                     phone: document.getElementById('designer_contacts').value
                 },
                 success: function(data){
-                    location.reload();
+                    if (data == 'client_found')
+                    {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Клиент с таким номером существует!"
+                        });
+                    }
+                    else
+                    {
+                        location.reload();
+                    }
                 },
                 dataType: "text",
                 async: false,

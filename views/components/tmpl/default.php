@@ -42,7 +42,6 @@ if ($managerGM || true) {
         // $dealer->price = $model->getDealerPrice($dealerId);
     }
 }
-
 ?>
 <link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css">
 
@@ -89,7 +88,15 @@ if ($managerGM || true) {
             </tr>
         </thead>
         <tbody>
+        <?foreach ($this->items as $key_c => $component):?>
 
+        <?foreach ($component->options as $key_o => $option):?>
+
+        <?if ($stock) foreach ($option->goods as $key_g => $good):?>
+
+        <?endforeach;?>
+        <?endforeach;?>
+        <?endforeach;?>
         </tbody>
         <tfoot>
         <tr>
