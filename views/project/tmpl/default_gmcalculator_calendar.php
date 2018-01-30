@@ -204,9 +204,9 @@
                         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                         <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
-                        <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="<?php if ($this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); } ?>" type='hidden'> 
-                        <input name = "project_new_calc_date" id = "jform_project_new_calc_date"  value="<?php if ($this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 0, 10); } ?>" type='hidden'>
-                        <input id="jform_project_gauger" name="jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type='hidden'>  
+                        <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="" type='hidden'> 
+                        <input name = "project_new_calc_date" id = "jform_project_new_calc_date"  value="" type='hidden'>
+                        <input id="jform_project_gauger" name="project_gauger" value="" type='hidden'>  
                     </div>
                     <?php if ($user->dealer_type != 2) { ?>
                         <div class="row">
@@ -1395,10 +1395,6 @@
                 msg += '<div class="btn-small-l"><button id="button-prev-gauger" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
                 jQuery("#calendar-container").append(msg);
                 Today(day, NowMonth, NowYear);
-                var datesession = jQuery("#jform_project_new_calc_date").val();
-                if (datesession != undefined) {
-                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("class", "change");
-                }
             },
             dataType: "text",
             timeout: 10000,
@@ -1465,8 +1461,8 @@
 
     jQuery(document).ready(function () {
 
-        window.time = undefined;
-        window.gauger = undefined;
+        window.time_gauger = undefined;
+        window.gauger_gauger = undefined;
 
         // открытие модального окна с календаря замерщиков
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
@@ -1482,7 +1478,7 @@
             if (m.length == 1) {
                 m = "0"+m;
             }
-            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
+            window.date_gauger = idDay.match(reg3)[1]+"-"+m+"-"+d;
             jQuery("#modal-window-container2-tar").show();
 			jQuery("#modal-window-2-tar").show("slow");
             jQuery("#close2-tar").show();
@@ -1490,7 +1486,7 @@
                 type: 'POST',
                 url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
                 data: {
-                    date: date,
+                    date: date_gauger,
                     dealer: <?php echo $user->dealer_id; ?>,
                 },
                 success: function(data) {
@@ -1499,7 +1495,6 @@
                     };
                     AllGauger = <?php echo json_encode($AllGauger); ?>;
                     data = JSON.parse(data); // замеры
-                    console.log(data);
                     AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
                     var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
                     AllTime.forEach( elementTime => {
@@ -1509,9 +1504,7 @@
                             var emptytd = 0;
                             Array.from(data).forEach(function(elementProject) {
                                 if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
-                                    var gaugersession = jQuery("#jform_project_gauger").val();
-                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                    if (elementProject.project_calculator == gauger_gauger && elementProject.project_calculation_date.substr(11) == time_gauger) {
                                         TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                                     } else {
                                         TableForSelect += '<tr><td></td>';
@@ -1781,6 +1774,55 @@
             jQuery("#modal-window-choose-tar").hide();
         });
         //------------------------------------------
+
+        // получение значений из селектов замерщиков
+		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
+            var times = jQuery("input[name='choose_time_gauger']");
+            time_gauger = "";
+            gauger_gauger = "";
+            times.each(function(element) {
+                if (jQuery(this).prop("checked") == true) {
+                    time_gauger = jQuery(this).val();
+                    gauger_gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
+                }
+            });
+            jQuery("#jform_new_project_calculation_daypart").val(time_gauger);
+            jQuery("#jform_project_new_calc_date").val(date_gauger);
+            jQuery("#jform_project_gauger").val(gauger_gauger);
+            if (jQuery(".change").length == 0) {
+                jQuery("#"+idDay).addClass("change");
+            } else {
+                jQuery(".change").removeClass("change");
+                jQuery("#"+idDay).addClass("change");
+            }
+            jQuery.ajax({
+                type: 'POST',
+                url: "/index.php?option=com_gm_ceiling&task=project.GetNameGauger",
+                data: {
+                    id: gauger_gauger,
+                },
+                dataType: "json",
+                success: function (data) {
+                    jQuery("#new_gauger").text(data.name);
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка вывода нового замерщика"
+                    });
+                }
+            });
+            jQuery("#close2-tar").hide();
+            jQuery("#modal-window-container2-tar").hide();
+            jQuery("#modal-window-2-tar").hide();
+        });
+        //------------------------------------------
+
 
         // подсвет сегоднешней даты
         window.today = new Date();

@@ -515,6 +515,7 @@
 					},
 					success: function(data) {
 						data = JSON.parse(data); // замеры и выходные
+						console.log(data);
 						Array.from(data).forEach(function(element) {
 							if (element.project_info == null) {
 								table += '<tr><td style="width: 25%;">'+element.project_calculation_date.substr(11, 5)+" - "+element.project_calculation_day_off.substr(11, 5)+'</td><td style="width: 75%;">Выходной</td></tr>';
@@ -532,7 +533,8 @@
 										timegauging2++;
 									}
 									timegauging = element.project_calculation_date.substr(11, 5)+" - "+timegauging2+":00";
-									table += '<tr><td style="width: 25%;">'+timegauging+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
+									table += '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+')">';
+									table += '<td style="width: 25%;">'+timegauging+'</td><td style="width: 75%;">'+element.project_info+'</td></tr>';
 								}
 							}
 						});
@@ -542,6 +544,13 @@
 			}
 		}
 		// -----------------------------------------
+
+		// перенаправление на страницу заказа
+		function ReplaceToOrder(project) {
+			location.replace("/index.php?option=com_gm_ceiling&view=projectform&type=chief&id="+project);
+		}
+		// ------------------------------------------------
+
 
 		// нажатие на "добавить выходной"
 		jQuery("#add_free_day").click (function () {
@@ -572,8 +581,6 @@
 			jQuery("#modal-window-choose-tar").show();
 		});
 		// -----------------------------------------
-
-		//Вывод замеров у НМС у замерщиков 36
 
         // получение значений из селектов
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {

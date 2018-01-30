@@ -140,7 +140,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <? endif; ?>
                 </td>
                 <td class="center one-touch"><?= $item->address; ?></td>
-                <td class="center one-touch"><?= $item->client_contacts; ?></td>
+                <td class="center one-touch"><?= $item->client_contacts; ?><br><?php echo $item->client_name; ?></td>
             </tr>
         <? endforeach; ?>
         </tbody>

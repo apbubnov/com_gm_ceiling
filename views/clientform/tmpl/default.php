@@ -41,7 +41,7 @@ $type = $jinput->getString('type', NULL);
     <?php endif; ?>
     <div class="col-md-4"></div>
     <div class="col-md-4">
-        <div id="form-client" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+        <form id="form-client" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 
             <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>"/>
 
@@ -87,8 +87,7 @@ $type = $jinput->getString('type', NULL);
             <input type="hidden" name="task"
                    value="clientform.save"/>
             <?php echo JHtml::_('form.token'); ?>
-        </div>
+        </form>
     </div>
     <div class="col-md-4"></div>
-    </form>
 </div>

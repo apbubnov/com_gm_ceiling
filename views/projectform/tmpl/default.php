@@ -136,9 +136,9 @@
 <h2>Просмотр проекта</h2>
 <form id="form-client">
 <?php if ($this->item) {?>
+    <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
     <?php if (sizeof($calculations) > 0) { ?>
         <?php echo "<h3>Расчеты для проекта № ".$this->item->id." </h3>"; ?>
-        <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
@@ -223,6 +223,7 @@
                 ?>
                 <tr class="section_ceilings">
                     <td class="include_calculation">
+
                         <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
                         <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
                         <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
