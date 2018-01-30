@@ -203,6 +203,7 @@ class Gm_ceilingModelProjects extends JModelList
             } elseif ($type == "gmchief" || $type == "chief") {
                 if ($type == "gmchief" && $subtype == "gaugings") {
                     $query->where('a.project_status in ("1")');
+                    $query->where('a.who_calculate = "1"');
                 } else {
                     $query->where('a.project_status in ("10", "5", "11", "16", "17")');
                 }
