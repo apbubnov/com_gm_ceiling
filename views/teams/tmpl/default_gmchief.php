@@ -380,7 +380,7 @@ foreach ($brigade_id as $value) {
 
 	// перенаправление на страницу заказа
 	function ReplaceToOrder(project) {
-		location.replace("/index.php?option=com_gm_ceiling&view=projectform&type=chief&id="+project);
+		location.replace("/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id="+project);
         //location.href="/index.php?option=com_gm_ceiling&view=projectform&type=chief&id="+project;
     }
 	// ------------------------------------------------

@@ -31,14 +31,14 @@ $answer3 = $model->getDataByStatus("ComplitedMountings");
 <h2 class="center">Начальник монтажной службы ГМ</h2>
 
 <div class="start_page">
-	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
+	<!-- <div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> Замеры</a>
-			<?php if ($answer1[0]->count != 0) { ?>
-				<div class="circl-digits"><?php echo $answer1[0]->count; ?></div>
-			<?php } ?>
+			<a class="btn btn-large btn-primary" href="<?php// echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> Замеры</a>
+			<?php// if ($answer1[0]->count != 0) { ?>
+				<div class="circl-digits"><?// echo $answer1[0]->count; ?></div>
+			<?php //} ?>
 		</div>
-	</div>
+	</div> -->
 	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		<div class="container-for-circl">
 			<a class="btn btn-large btn-danger" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> Монтажи</a>

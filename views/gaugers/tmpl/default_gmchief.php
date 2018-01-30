@@ -368,6 +368,13 @@
     });
     //--------------------------------------------------
 
+	// перенаправление на страницу заказа
+	function ReplaceToOrder(project) {
+		location.replace("/index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id="+project);
+	}
+	// ------------------------------------------------
+
+
 	jQuery(document).ready(function () {
 		// подсвет сегоднешней даты
         window.today = new Date();
@@ -544,13 +551,6 @@
 			}
 		}
 		// -----------------------------------------
-
-		// перенаправление на страницу заказа
-		function ReplaceToOrder(project) {
-			location.replace("/index.php?option=com_gm_ceiling&view=projectform&type=chief&id="+project);
-		}
-		// ------------------------------------------------
-
 
 		// нажатие на "добавить выходной"
 		jQuery("#add_free_day").click (function () {
