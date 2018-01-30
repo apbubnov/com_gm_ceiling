@@ -98,7 +98,7 @@
     </div>
     <div style="display: inline-block; width: 48%;">
         <div>
-            <p class="caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны
+            <p class="caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Телефоны
                 клиента: </p>
         </div>
         <div>
