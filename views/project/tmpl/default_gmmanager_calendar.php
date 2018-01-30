@@ -496,72 +496,57 @@
                                 </tr>
                             </table>
                         </div>
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-6">
-                    <label for="slider-table"><b>Тип:</b></label>
-                        <table class="slider-table">
-                            <tr>
-                                <td></td>
-                                <td>Клиент</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Диллер</td>
-                                <td>
-                                    <div class='switcher'>
-                                        <label class='switcher-label switcher-state1' for='state1'>Дилер</label>
-                                        <input id='state1' class='switcher-radio-state1' type='radio'
-                                               name='slider-radio' value='dealer'<?php if($this->item->project_status == 20) echo "checked"?>>
-                                        <label class='switcher-label switcher-state2' for='state2'>Клиент</label>
-                                        <input id='state2' class='switcher-radio-state2' type='radio'
-                                               name='slider-radio' value='client' <?php if($this->item->project_status != 20 && $this->item->project_status !=21 ) echo "checked"?>>
-                                        <label class='switcher-label switcher-state3' for='state3'>Реклама</label>
-                                        <input id='state3' class='switcher-radio-state3' type='radio'
-                                               name='slider-radio' value='promo' <?php if($this->item->project_status == 21) echo "checked"?>>
-                                        <div class='switcher-slider'></div>
-                                    </div>
-                                </td>
-                                <td>Реклама</td>
-                            </tr>
-                        </table>
-                        <div class="comment">
-                            <label> История клиента: </label>
-                            <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
-                            <table>
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <label for="slider-table"><b>Тип:</b></label>
+                            <table class="slider-table">
                                 <tr>
-                                    <td><label> Добавить комментарий: </label></td>
+                                    <td></td>
+                                    <td>Клиент</td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                                    <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                                    </button></td>
+                                    <td>Диллер</td>
+                                    <td>
+                                        <div class='switcher'>
+                                            <label class='switcher-label switcher-state1' for='state1'>Дилер</label>
+                                            <input id='state1' class='switcher-radio-state1' type='radio'
+                                                name='slider-radio' value='dealer'<?php if($this->item->project_status == 20) echo "checked"?>>
+                                            <label class='switcher-label switcher-state2' for='state2'>Клиент</label>
+                                            <input id='state2' class='switcher-radio-state2' type='radio'
+                                                name='slider-radio' value='client' <?php if($this->item->project_status != 20 && $this->item->project_status !=21 ) echo "checked"?>>
+                                            <label class='switcher-label switcher-state3' for='state3'>Реклама</label>
+                                            <input id='state3' class='switcher-radio-state3' type='radio'
+                                                name='slider-radio' value='promo' <?php if($this->item->project_status == 21) echo "checked"?>>
+                                            <div class='switcher-slider'></div>
+                                        </div>
+                                    </td>
+                                    <td>Реклама</td>
                                 </tr>
                             </table>
+                            <div class="comment">
+                                <label> История клиента: </label>
+                                <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
+                                <table>
+                                    <tr>
+                                        <td><label> Добавить комментарий: </label></td>
+                                    </tr>
+                                    <tr>
+                                        <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                        <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                        </button></td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                       <!-- <div class="radio-toolbar-two">
-
-                            <input type="radio" id="radio4" name="radios-two" value="all" checked>
-                            <label for="radio4">16 ГБ</label>
-
-                            <input type="radio" id="radio5" name="radios-two"value="false">
-                            <label for="radio5">32 ГБ</label>
-
-                            <input type="radio" id="radio6" name="radios-two" value="true">
-                            <label for="radio6">64 ГБ</label>
-
-                            <input type="radio" id="radio7" name="radios-two" value="true">
-                            <label for="radio7">128 ГБ</label>
-
-                        </div> -->
                         <label ><b>Предоставление личного кабиента</b></label>
-                            <br>
-                            <div class="radio-group">
+                        <br>
+                        <div class="radio-group">
                             <input id='no' class='' type='radio' name='client_lk' value='0' <?php if(!$lk) echo checked ?>>
                             <label for='no'>Убрать</label>
                             <input id='yes' class='' type='radio' name='client_lk' value='1' <?php if($lk) echo checked ?>>
                             <label class='' for='yes'>Предоставить</label>
-                    </div>
+                        </div>
             </div>
             <table class="table calculation_sum">
                 <?php if ($this->item->project_verdict == 0) { ?>
