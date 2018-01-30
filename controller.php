@@ -1144,7 +1144,7 @@ class Gm_ceilingController extends JControllerLegacy
          WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
             $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $items = $model->getAllList_Price();
-            $filter = "component.title = 'Светильник' AND (a.title LIKE('%Эcola%') OR a.title LIKE('%Экола%') )";
+            $filter = "component.title = 'Светильник'";
             $items = $model->getFilteredItems($filter);
             die(json_encode($items));
         }
@@ -1165,7 +1165,7 @@ class Gm_ceilingController extends JControllerLegacy
              WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
             $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $items = $model->getAllList_Price();
-            $filter = "component.title = 'Лампа' AND (a.title LIKE('%Эcola%') OR a.title LIKE('%Экола%') )";
+            $filter = "component.title = 'Лампа'";
             $items = $model->getFilteredItems($filter);
             die(json_encode($items));
         }
