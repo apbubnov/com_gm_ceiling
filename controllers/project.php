@@ -1207,7 +1207,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$return = $model->GetNameGauger($id);
 
-			return json_encode($return);
+			die(json_encode($return));
 		}
 		catch(Exception $e)
         {
