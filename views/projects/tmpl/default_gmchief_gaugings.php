@@ -57,7 +57,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART', 'a.project_calculation_daypart', $listDirn, $listOrder); ?>
 				</th>
                 <th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_CALCULATOR', 'a.project_calculator', $listDirn, $listOrder); ?>
+					<?php echo JHtml::_('grid.sort',  'Замерщик', 'a.project_calculator', $listDirn, $listOrder); ?>
 				</th>
 				<th class='center'>
 					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
