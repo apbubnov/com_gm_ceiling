@@ -489,7 +489,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <tr class="TR">
                         <td><span><?=ceil($calculationsItog->dealer_sum->CanvasAndComponents);?></span></td>
                         <td><span><?=ceil($calculationsItog->dealer_sum->mounting);?></span></td>
-                        <td colspan="2"><span><?=ceil($calculationsItog->dealer_sum->itog);?></span></td>
+                        <td></td>
+                        <td><span><?=ceil($calculationsItog->dealer_sum->itog);?></span></td>
                     </tr>
                     </tbody>
                 </table>
