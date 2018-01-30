@@ -1500,9 +1500,9 @@
                     AllTime.forEach( elementTime => {
                         var t = elementTime.substr(0, 2);
                         t++;
-                        console.log(elementTime);
                         Array.from(AllGauger).forEach(function(elementGauger) {
                             var emptytd = 0;
+                            console.log(elementTime);
                             Array.from(data).forEach(function(elementProject) {
                                 console.log(elementGauger.id);
                                 console.log(elementTime);
