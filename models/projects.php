@@ -201,11 +201,12 @@ class Gm_ceilingModelProjects extends JModelList
             } elseif (($type == "gmchief" && $subtype =="run")||($type == "chief" && $subtype =="run")) {
                 $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
             } elseif ($type == "gmchief" || $type == "chief") {
-                $query->where('a.project_status in ("10", "5", "11", "16", "17")');
-            } elseif ($type == "gmchief" && $subtype == "gaugings") {
-                throw new Exception("Error Processing Request");
-                
-                $query->where('a.project_status in ("1")');
+                if ($type == "gmchief" && $subtype == "gaugings") {
+                    $query->where('a.project_status in ("1")');
+                    $query->where('a.who_calculate = "1"');
+                } else {
+                    $query->where('a.project_status in ("10", "5", "11", "16", "17")');
+                }
             } elseif ($type == "gmcalculator") {
                 $query->where('a.who_calculate = 1');
                 if ($subtype == "calendar") {
