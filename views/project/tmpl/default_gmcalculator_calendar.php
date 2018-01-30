@@ -1806,7 +1806,7 @@
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    jQuery("#new_gauger").val(data->name);
+                    jQuery("#new_gauger").val(data.name);
                 },
                 error: function (data) {
                     var n = noty({
