@@ -140,7 +140,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <? endif; ?>
                 </td>
                 <td class="center one-touch"><?= $item->address; ?></td>
-                <td class="center one-touch"><?= $item->client_contacts; ?></td>
+                <td class="center one-touch"><?= $item->client_contacts; ?><br><?php echo $item->client_name; ?></td>
             </tr>
         <? endforeach; ?>
         </tbody>
@@ -166,23 +166,24 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 return false;
             }
         }
-        var $ = jQuery;
-        $(window).resize(function(){
-            if (screen.width <= '1024') {
-                jQuery('#projectList').hide();
-                jQuery('#projectListMobil').show();
-                jQuery('#projectListMobil').css('font-size', '10px');
-                jQuery('.container').css('padding-left', '0');
-            }
-            else {
-                jQuery('#projectList').show();
-                jQuery('#projectListMobil').hide();
-            }
-        });
-
-        // вызовем событие resize
-        $(window).resize();
-
-
     </script>
 <? endif; ?>
+<script type="text/javascript">
+    var $ = jQuery;
+    $(window).resize(function(){
+        if (screen.width <= '1024') {
+            jQuery('#projectList').hide();
+            jQuery('#projectListMobil').show();
+            jQuery('#projectListMobil').css('font-size', '10px');
+            jQuery('.container').css('padding-left', '0');
+        }
+        else {
+            jQuery('#projectList').show();
+            jQuery('#projectListMobil').hide();
+        }
+    });
+
+    // вызовем событие resize
+    $(window).resize();
+
+</script>

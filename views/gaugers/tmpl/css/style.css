@@ -114,17 +114,9 @@
     font-size: 14px;
 }
 
-/* #hours1, #hours2 {
-    width: 200px;
+.clickabel {
+    cursor: pointer;
 }
-
-#hours {
-    margin-left: calc(50% - 115px);
-}
-
-#hours td {
-    padding: 10px;        
-} */
 
 #wrong-window {
     color: #ff3d3d;

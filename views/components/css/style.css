@@ -1,0 +1,91 @@
+.Page, .Page div, .Page form, .Page table {
+    display: inline-block;
+    width: 100%;
+    float: left;
+    text-align: left;
+}
+
+.Page button, .Page a {
+    float: left;
+    cursor: pointer;
+}
+
+.FormSimple {
+    width: auto !important;
+    overflow: hidden;
+    border-radius: 5px;
+    float: left;
+}
+
+.FormSimple label,
+.FormSimple button {
+    display: inline-block;
+    width: auto;
+    height: 38px;
+    line-height: 38px;
+    padding: 0 10px;
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    float: left;
+    margin: 0;
+    border: 1px solid rgb(64, 65, 154);
+}
+
+.FormSimple button {
+    width: 38px;
+    padding: 0;
+}
+
+.FormSimple input[type="text"],
+.FormSimple input[type="number"] {
+    display: inline-block;
+    width: auto;
+    height: 38px;
+    line-height: 38px;
+    font-size: 16px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    padding: 0 10px;
+    border: 1px solid rgb(64, 65, 154);
+    margin: 0;
+    float: left;
+}
+
+.Page .Title {
+    font-size: 25px;
+    text-align: center;
+}
+
+.Page .Actions {
+    margin-top: 15px;
+}
+
+.Page .Body {
+    display: table;
+    margin-top: 15px;
+    border-collapse: collapse;
+    border: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Body thead, .Page .Body tbody, .Page .Body tfoot {
+    width: 100%;
+}
+
+.Page .Body thead td, .Page .Body tfoot td {
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    text-align: center;
+}
+
+.Page .Body thead tr td:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, .5);
+}
+
+.Page .Body td {
+    padding: 5px 15px;
+}
+
+.MarginLeft {
+    margin-left: 5px;
+}

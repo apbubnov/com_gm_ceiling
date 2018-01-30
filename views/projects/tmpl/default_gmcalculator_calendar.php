@@ -132,7 +132,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		</tbody>
 	</table>
 
-    <table class="table table-striped one-touch-view" id="projectListMobil">
+    <table class="table table-striped one-touch-view" id="projectListMobil" style="display: none;">
         <thead>
         <tr>
             <th class='center'>
@@ -145,7 +145,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                 <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
+                <?php echo JHtml::_('grid.sort',  'Примечание менеджера', 'a.gm_manager_note', $listDirn, $listOrder); ?>
             </th>
         </tr>
         </thead>
@@ -176,8 +176,8 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     <td class="center one-touch">
                         <?php echo $this->escape($item->project_info); ?>
                     </td>
-                    <td class="center one-touch">
-                        <?php echo $item->client_contacts; ?>
+                    <td>
+                        <?php echo $item->gm_manager_note; ?>
                     </td>
                 </tr>
             <?php } ?>
@@ -193,11 +193,14 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 	<?php echo JHtml::_('form.token'); ?>
 </form>
 
-<?php if($canDelete) : ?>
+
 <script type="text/javascript">
+
+    var $ = jQuery;
 
 	jQuery(document).ready(function () {
 		jQuery('.delete-button').click(deleteItem);
+		Resize();
 	});
 
 	function deleteItem() {
@@ -206,9 +209,10 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 			return false;
 		}
 	}
-    var $ = jQuery;
-    $(window).resize(function(){
-        if (screen.width <= '1024') {
+    $(window).resize(Resize);
+
+    function Resize() {
+        if ($(window).width() <= '1024') {
             jQuery('#projectList').hide();
             jQuery('#projectListMobil').show();
             jQuery('#projectListMobil').css('font-size', '10px');
@@ -217,10 +221,11 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
         else {
             jQuery('#projectList').show();
             jQuery('#projectListMobil').hide();
+            jQuery('#projectListMobil').css('display', 'none');
         }
-    });
+
+    }
 
     // вызовем событие resize
     $(window).resize();
 </script>
-<?php endif; ?>

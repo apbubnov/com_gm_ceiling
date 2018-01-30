@@ -119,21 +119,6 @@ if (count($AllGauger) == 0) {
 			<input name="jform[project_note]" id="jform_project_note" value="" style="width:100%; margin-bottom:1em;" placeholder="Примечание" type="text">
 		</div>
 	</div>
-	<!-- <div class="control-group">
-		<?php// if ($user->dealer_id != 1) { ?>
-		 	<div class="control-label">
-				<label id="jform_who_calculate-lbl" for="jform_who_calculate" class="required">Выберите замерщика<span class="star">&nbsp;*</span></label>
-			</div>
-			<div class="controls">
-				<p><input name="jform[who_calculate]" id="jform_who_calculate1" type="radio" value="1" checked><label id="jform_who_calculate-lbl" for="jform_who_calculate1" class="required">Замерщик ГМ</label></p>
-				<p><input name="jform[who_calculate]" id="jform_who_calculate2" type="radio" value="0"><label id="jform_who_calculate-lbl" for="jform_who_calculate2" class="required">Замерщик Дилера</label></p>
-			</div>
-		<?php// } else if ($user->dealer_type == 1) { ?>
-			<input name="jform[who_calculate]" id="jform_who_calculate2" type="hidden" value="0" checked>
-		<?php// } else {?>
-			<input name="jform[who_calculate]" id="jform_who_calculate1" type="hidden" value="1" checked>
-		<?php// } ?>
-	</div> -->
 	<div class="control-group" style="margin-bottom: 1em;">
 		<p>Выберите удобные дату и время замера</p>
 		<div id="calendar-container" style="position: relative;">
@@ -147,7 +132,7 @@ if (count($AllGauger) == 0) {
 		</div>
 	</div>
 	<div>
-		<button id="calculate_button" class="btn btn-primary" style="width:100%;" type="submit">Записать</button>
+		<button id="calculate_button" class="btn btn-primary" style="width:100%;" type="button">Записать</button>
 	</div>
 	<div id="modal-window-container-tar">
 		<button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -270,7 +255,20 @@ if (count($AllGauger) == 0) {
 
 		window.time = undefined;
         window.gauger = undefined;
-
+		jQuery("#calculate_button").click(function(){
+			if(jQuery("#jform_project_calculation_date").val()!="" && jQuery("#jform_project_calculation_daypart").val()!="" && jQuery("#jform_project_calculator").val()!=""){
+				jQuery("#calculate_form").submit();
+			}
+			else{
+				var n = noty({
+							theme: 'relax',
+							layout: 'center',
+							maxVisible: 5,
+							type: "error",
+							text: "Не выбрана дата замера и замерщик!"
+						});
+			}
+		});
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -302,11 +300,6 @@ if (count($AllGauger) == 0) {
 					Array.prototype.diff = function(a) {
                         return this.filter(function(i) {return a.indexOf(i) < 0;});
                     };
-					/* if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-						AllGauger = <?php// echo json_encode($AllGaugerGM); ?>;
-					} else {
-						AllGauger = <?php// echo json_encode($AllGaugerDealer); ?>;
-					} */
 					AllGauger = <?php echo json_encode($AllGauger); ?>;
                     data = JSON.parse(data); // замеры
                     AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
@@ -389,28 +382,6 @@ if (count($AllGauger) == 0) {
         window.NowMonth = today.getMonth();
         window.day = today.getDate();
         Today(day, NowMonth, NowYear);
-        //------------------------------------------
-
-		// если изменился радиобаттон, менять календарь
-		/* jQuery("input[name=\"jform[who_calculate]\"]").click( function () {
-			month = 0;
-			if (month == 0) {
-				if (month_old != 0) {
-					month = month_old;
-					year = year_old;
-				} else {
-					month = <?php// echo $month; ?>;
-					year = <?php// echo $year; ?>;
-				}
-			}
-			if (jQuery("#jform_who_calculate1").attr("checked") == "checked") {
-				update_calendar(month, year, 1);
-			}
-			if (jQuery("#jform_who_calculate2").attr("checked") == "checked") {
-				update_calendar(month, year, <?php echo $user->dealer_id; ?>);
-			}
-		}); */
-		//-------------------------------------------------
 
 		jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
 		

@@ -77,51 +77,82 @@
 </div>
 <? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
-<div>
-<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта клиента: </p>
-</div>
-<? if (!empty($dop_contacts)) { ?>
-<div>
-<? foreach ($dop_contacts AS $contact) {?>
-    <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
-</div>
-<? } ?>
-<div>
-    <input type="text" id="new_email" placeholder="Почта" required>
-    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
-</div>
-<div class="row">
-    <div class="col-sm-12" id = "calls">
-        <p class="caption-tar">История клиента</p>
-        <div id="calls-tar">
-            <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
-            
-                <?php foreach($history as $item): ?>
-
-                <tr>
-                    <td>
-                        <?php 
-                            $date = new DateTime($item->date_time);
-                            echo $date->Format('d.m.Y H:i');
-                        ?>
-                    </td>
-                    <td><?php echo $item->text;?></td>
-                </tr>
-
-                <?php endforeach;?>
-          
-            </table>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <div style="display: inline-block;">
+                <div>
+                    <p class="caption-tar"
+                       style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта
+                        клиента: </p>
+                </div>
+                <? if (!empty($dop_contacts)) { ?>
+                    <div>
+                        <? foreach ($dop_contacts AS $contact) { ?>
+                            <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact;
+                                echo "<br>"; ?></p> <? } ?>
+                    </div>
+                <? } ?>
+                <div>
+                    <input type="text" id="new_email" placeholder="Почта" required>
+                    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div style="display: inline-block;">
+                <div>
+                    <p class="caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны
+                        клиента: </p>
+                </div>
+                <div>
+                    <?php foreach ($client_phones as $item) { ?>
+                        <a href="tel:<? echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></a><br>
+                    <?php } ?>
+                </div>
+                <div>
+                    <input type="text" id="new_phone" placeholder="Телефон" required>
+                    <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="col-xs-12" id="add-note-container-tar">
-        <label for="comments">Добавить комментарий:</label>
-        <br>
-        <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
-        <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-    </div>
-
 </div>
+
+<?php if($user->dealer_type != 1) { ?>
+    <div class="row">
+        <div class="col-sm-12" id = "calls">
+            <p class="caption-tar">История клиента</p>
+            <div id="calls-tar">
+                <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
+
+                    <?php foreach($history as $item): ?>
+
+                    <tr>
+                        <td>
+                            <?php
+                                $date = new DateTime($item->date_time);
+                                echo $date->Format('d.m.Y H:i');
+                            ?>
+                        </td>
+                        <td><?php echo $item->text;?></td>
+                    </tr>
+
+                    <?php endforeach;?>
+
+                </table>
+            </div>
+        </div>
+
+        <div class="col-xs-12" id="add-note-container-tar">
+            <label for="comments">Добавить комментарий:</label>
+            <br>
+            <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
+            <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+        </div>
+
+    </div>
+<? } ?>
 <div id="orders-container-tar">
     <p class="caption-tar">Заказы</p>
     <table id="table-orders-tar" class="table table-striped one-touch-view">
@@ -135,8 +166,9 @@
      
         <?php foreach($projects as $item):?>
 
-            <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) { 
-                echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
+            <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) {
+                if($item->status == "Отказ от договора") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
+                else echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
                 else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
                 <td><?php echo $item->id;?></td>
                 <td>
@@ -298,6 +330,8 @@
 
     jQuery(document).ready(function ()
     {
+        jQuery('#new_phone').mask('+7(999) 999-9999');
+
         document.getElementById('calls-tar').scrollTop = 9999;
 
         document.getElementById('add_email').onclick = function()
@@ -451,5 +485,32 @@
             }
         });
     }
+    document.getElementById('add_phone').onclick = function()
+        {
+            var client_id = <?php echo $client->id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.addPhone",
+                data: {
+                    client_id: client_id,
+                    phone: document.getElementById('new_phone').value
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
 
 </script>

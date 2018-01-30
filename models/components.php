@@ -199,33 +199,30 @@ class Gm_ceilingModelComponents extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            $query->from('`#__gm_ceiling_components_goods` AS goods')
-            ->join('LEFT', '`#__gm_ceiling_components_option` AS options ON options.id = goods.option_id')
-            ->join('LEFT', '`#__gm_ceiling_components` AS components ON components.id = options.component_id');
+            $user = JFactory::getUser();
+            $user->groups = $user->get('groups');
+            $stock = in_array(19, $user->groups);
 
-            $query->select('goods.*, goods.id as good_id')
-            ->select('options.id as option_id, options.title as option_title, options.price, options.count as option_count, options.count_sale')
-            ->select('components.id as component_id, components.title as component_title, components.unit, components.code');
+            $query->from("`#__gm_ceiling_components_option` AS options")
+                ->join("LEFT", "`#__gm_ceiling_components` AS components ON components.id = options.component_id")
+                ->select('options.id as option_id, options.title as option_title, options.price, options.count as option_count, options.count_sale as option_count_sale')
+                ->select('components.id as component_id, components.title as component_title, components.unit, components.code');
 
-            $query->group('components.title, options.title, goods.id');
+            if ($stock)
+                $query->join("RIGHT", "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
+                    ->select("goods.*, goods.id as good_id");
 
-            if (!empty($search)) {
-                if (stripos($search, 'id:') === 0) {
-                    $query->where('a.id = ' . (int)substr($search, 3));
-                } else {
-                    $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                    $query->where('( a.title LIKE ' . $search . '  OR  component.unit LIKE ' . $search . '  OR a.price LIKE ' . $search . ' )');
-                }
-            }
+            $query->group('components.title, options.title'.(($stock)?", goods.id":""));
 
             // Add the list ordering clause.
             $orderCol = $this->state->get('list.ordering');
             $orderDirn = $this->state->get('list.direction');
 
-            if ($orderCol && $orderDirn) {
+            if ($orderCol && $orderDirn)
                 $query->order($db->escape($orderCol . ' ' . $orderDirn));
-            }
+
             $this->setState('list.limit', null);
+
             return $query;
         }
         catch(Exception $e)
@@ -246,58 +243,70 @@ class Gm_ceilingModelComponents extends JModelList
     {
         try
         {
-            $items = parent::getItems();
             $user = JFactory::getUser();
+            $user->groups = $user->get('groups');
+            $stock = in_array(19, $user->groups);
 
-            $result = array();
+            $db = $this->getDbo();
+
+            $items = parent::getItems();
+
+            $result = [];
             foreach ($items as $item) {
-                $analytic = $this->getAnalyticInfoInEnd($item->option_id);
-                $item->analytic = $analytic->id;
-                $item->storekeeper_id = $analytic->storekeeper_id;
-                $item->storekeeper_name = $analytic->storekeeper_name;
-                $item->dealer_id = $analytic->dealer_id;
-                $item->dealer_name = $analytic->dealer_name;
-                $item->client_type = $analytic->client_type;
+                $query = $db->getQuery(true);
+                $query->from("`#__gm_ceiling_analytics_components` AS analytic")
+                    ->select("MAX(price) as price")
+                    ->where("good_id = '$item->good_id'")
+                    ->where("status = 1");
+                $db->setQuery($query);
+                $item->analytic = $db->loadObjectList()->price;
 
-                if (empty($result[$item->component_id])) {
-                    $result[$item->component_id] = array();
-                    $result[$item->component_id]['id'] = $item->component_id;
-                    $result[$item->component_id]['title'] = $item->component_title;
-                    $result[$item->component_id]['unit'] = $item->unit;
-                    $result[$item->component_id]['count'] = 0;
-                    $result[$item->component_id]['order_count'] = 0;
-                    $result[$item->component_id]['option_count'] = 0;
-                    $result[$item->component_id]['price'] = 0;
-                    $result[$item->component_id]['options'] = array();
+                if (empty($result[$item->component_id]))
+                {
+                    $component = (object) [];
+                    $component->title = $item->component_title;
+                    $component->unit = $item->component_unit;
+                    $component->code = $item->component_code;
+                    $result[$item->component_id] = $component;
                 }
-                if (empty($result[$item->component_id]['options'][$item->option_id])) {
-                    $result[$item->component_id]['option_count'] += 1;
-                    $result[$item->component_id]['options'][$item->option_id] = array();
 
-                    $result[$item->component_id]['options'][$item->option_id]['stock'] = $item->stock;
-                    $result[$item->component_id]['options'][$item->option_id]['id'] = $item->option_id;
-                    $result[$item->component_id]['options'][$item->option_id]['analytic'] = $item->analytic;
-                    $result[$item->component_id]['options'][$item->option_id]['option_count'] = $item->option_count;
-                    $result[$item->component_id]['options'][$item->option_id]['order_count'] = $item->order_count;
-                    $result[$item->component_id]['options'][$item->option_id]['full_name'] = $item->component_title." ".$item->option_title;
-                    $result[$item->component_id]['options'][$item->option_id]['unit'] = $item->unit;
-                    $result[$item->component_id]['options'][$item->option_id]['client_type'] = $item->client_type;
-                    $result[$item->component_id]['options'][$item->option_id]['storekeeper_id'] = $item->storekeeper_id;
-                    $result[$item->component_id]['options'][$item->option_id]['storekeeper_name'] = $item->storekeeper_name;
-                    $result[$item->component_id]['options'][$item->option_id]['dealer_id'] = $item->dealer_id;
-                    $result[$item->component_id]['options'][$item->option_id]['dealer_name'] = $item->dealer_name;
-                    $result[$item->component_id]['options'][$item->option_id]['price'] = $item->price;
-                    $result[$item->component_id]['options'][$item->option_id]['title'] = $item->title_option;
-
-                    $result[$item->component_id]['count'] += $item->option_count;
-                    $result[$item->component_id]['order_count'] += $item->order_count;
-                    $result[$item->component_id]['price'] += $item->price;
+                if (empty($result[$item->component_id]->options[$item->options_id]))
+                {
+                    $option = (object) [];
+                    $option->title = $item->option_title;
+                    $option->price = $item->option_price;
+                    $option->count = $item->option_count;
+                    $option->count_sale = $item->option_count_sale;
+                    $result[$item->component_id]->options[$item->options_id] = $item->option_id;
                 }
+
+                $good = (object) [];
             }
             return $result;
         }
         catch(Exception $e)
         {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getInfoAnalytics($data) {
+        try {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+
+            $query->from("`#__gm_ceiling_analytics_components` AS analytic")
+                ->select("analytic.*")
+                ->where("$data->type = $data->id");
+
+            $db->setQuery($query);
+            $return = $db->loadObject();
+
+            return $return;
+        } catch (Exception $ex) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);

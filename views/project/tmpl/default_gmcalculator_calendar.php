@@ -204,6 +204,9 @@
                         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                         <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
+                        <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="" type='hidden'> 
+                        <input name = "project_new_calc_date" id = "jform_project_new_calc_date"  value="" type='hidden'>
+                        <input id="jform_project_gauger" name="project_gauger" value="" type='hidden'>  
                     </div>
                     <?php if ($user->dealer_type != 2) { ?>
                         <div class="row">
@@ -303,7 +306,7 @@
                                                 -
                                             <?php } else { ?>
                                                 <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                                <?php echo $jdate->format('d.m.Y'); ?>
+                                                <?php echo $jdate->format('d.m.Y H:i'); ?>
                                             <?php } ?>
                                         </td>
                                         <td>
@@ -320,42 +323,21 @@
                                                         <button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                                     </div>
                                                 </div>
-
-                                                <!-- <?php
-                                                    $date_time = $this->item->project_calculation_date;
-                                                    $date_arr = date_parse($date_time);
-                                                    $date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
-                                                    $time = $date_arr['hour'].':00';
-                                                ?>
-                                                <input type = "date" name = "project_new_calc_date" id = "jform_project_new_calc_date" class = "inputactive" value = "<?php echo $date?>">
-                                                <label id="jform_project_calculation_daypart-lbl" for="jform_new_project_calculation_daypart">Новое время замера</label>
-                                                <select id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" class="inputactive" disabled="true">
-                                                    <option value="00:00" selected="">- Выберите время замера -</option>
-                                                    <option value="09:00">9:00-10:00</option>
-                                                    <option value="10:00">10:00-11:00</option>
-                                                    <option value="11:00">11:00-12:00</option>
-                                                    <option value="12:00">12:00-13:00</option>
-                                                    <option value="13:00">13:00-14:00</option>
-                                                    <option value="14:00">14:00-15:00</option>
-                                                    <option value="15:00">15:00-16:00</option>
-                                                    <option value="16:00">16:00-17:00</option>
-                                                    <option value="17:00">17:00-18:00</option>
-                                                    <option value="18:00">18:00-19:00</option>
-                                                    <option value="19:00">19:00-20:00</option>
-                                                    <option value="20:00">20:00-21:00</option>
-                                                </select> -->
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
+                                        <th>Замерщик</th>
                                         <td>
-                                            <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                                -
+                                            <?php if ($this->item->project_calculator == null) { ?>
+                                                - 
                                             <?php } else { ?>
-                                                <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                                <?php echo $jdate->format('H:i'); ?>
+                                                <?php echo JFactory::getUser($this->item->project_calculator)->name; ?>
                                             <?php } ?>
+                                        </td>
+                                        <td class="Gauger" style="display: none;">
+                                            <p>Новый замерщик:</p>
+                                            <p id="new_gauger"></p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -1413,10 +1395,6 @@
                 msg += '<div class="btn-small-l"><button id="button-prev-gauger" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
                 jQuery("#calendar-container").append(msg);
                 Today(day, NowMonth, NowYear);
-                /* var datesession = jQuery("#jform_project_new_calc_date").val();
-                if (datesession != undefined) {
-                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("class", "change");
-                } */
             },
             dataType: "text",
             timeout: 10000,
@@ -1483,6 +1461,9 @@
 
     jQuery(document).ready(function () {
 
+        window.time_gauger = undefined;
+        window.gauger_gauger = undefined;
+
         // открытие модального окна с календаря замерщиков
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -1497,152 +1478,58 @@
             if (m.length == 1) {
                 m = "0"+m;
             }
-            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
+            window.date_gauger = idDay.match(reg3)[1]+"-"+m+"-"+d;
             jQuery("#modal-window-container2-tar").show();
 			jQuery("#modal-window-2-tar").show("slow");
             jQuery("#close2-tar").show();
+            jQuery.ajax({
+                type: 'POST',
+                url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
+                data: {
+                    date: date_gauger,
+                    dealer: <?php echo $user->dealer_id; ?>,
+                },
+                success: function(data) {
+                    Array.prototype.diff = function(a) {
+                        return this.filter(function(i) {return a.indexOf(i) < 0;});
+                    };
+                    AllGauger = <?php echo json_encode($AllGauger); ?>;
+                    data = JSON.parse(data); // замеры
+                    AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                    var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
+                    AllTime.forEach( elementTime => {
+                        var t = elementTime.substr(0, 2);
+                        t++;
+                        Array.from(AllGauger).forEach(function(elementGauger) {
+                            var emptytd = 0;
+                            Array.from(data).forEach(function(elementProject) {
+                                if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                    if (elementProject.project_calculator == gauger_gauger && elementProject.project_calculation_date.substr(11) == time_gauger) {
+                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                    } else {
+                                        TableForSelect += '<tr><td></td>';
+                                    }
+                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                    TableForSelect += '<td>'+elementProject.project_info+'</td>';
+                                    emptytd = 1;
+                                }
+                            });
+                            if (emptytd == 0) {
+                                TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                TableForSelect += '<td></td>';
+                            }
+                            TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
+                        });
+                    });
+                    jQuery("#projects_gaugers").empty();
+                    jQuery("#projects_gaugers").append(TableForSelect);
+                    jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
+                }
+            });
 
         });
         //------------------------------------
-
-        $("#modal_window_container #ok").click(function() { click_ok(this); });
-        show_comments();
-        trans();
-
-        // для истории и добавления комментария
-        function formatDate(date) {
-
-            var dd = date.getDate();
-            if (dd < 10) dd = '0' + dd;
-
-            var mm = date.getMonth() + 1;
-            if (mm < 10) mm = '0' + mm;
-
-            var yy = date.getFullYear();
-            if (yy < 10) yy = '0' + yy;
-
-            var hh = date.getHours();
-            if (hh < 10) hh = '0' + hh;
-
-            var ii = date.getMinutes();
-            if (ii < 10) ii = '0' + ii;
-
-            var ss = date.getSeconds();
-            if (ss < 10) ss = '0' + ss;
-
-            return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
-        }
-        function show_comments() {
-            var id_client = <?php echo $this->item->id_client;?>;
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=selectComments",
-                data: {
-                    id_client: id_client
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    var comments_area = document.getElementById('comments');
-                    comments_area.innerHTML = "";
-                    var date_t;
-                    for (var i = 0; i < data.length; i++) {
-                        date_t = new Date(data[i].date_time);
-                        comments_area.innerHTML += formatDate(date_t) + "\n" + data[i].text + "\n----------\n";
-                    }
-                    comments_area.scrollTop = comments_area.scrollHeight;
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка вывода примечаний"
-                    });
-                }
-            });
-        }
-        jQuery("#add_comment").click(function () {
-            var comment = jQuery("#new_comment").val();
-            var reg_comment = /[\\\<\>\/\'\"\#]/;
-            var id_client = <?php echo $this->item->id_client;?>;
-            if (reg_comment.test(comment) || comment === "") {
-                alert('Неверный формат примечания!');
-                return;
-            }
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=addComment",
-                data: {
-                    comment: comment,
-                    id_client: id_client
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Комментарий добавлен"
-                    });
-                    //new_comments_id.push(data);
-                    //document.getElementById("comments_id").value +=data+";";
-                    jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
-                    show_comments();
-
-                    jQuery("#new_comment").val("");
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка отправки"
-                    });
-                }
-            });
-        });
-
-        jQuery("#add_birthday").click(function () {
-            var birthday = jQuery("#jform_birthday").val();
-            var id_client = <?php echo $this->item->id_client;?>;
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=client.addBirthday",
-                data: {
-                    birthday: birthday,
-                    id_client: id_client
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Дата рождения добавлена"
-                    });
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка отправки"
-                    });
-                }
-            });
-        });
-
-        // ----------------------------------------
 
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
@@ -1869,7 +1756,7 @@
         });
         // -------------------------------------------
 
-        // получение значений из селектов
+        // получение значений из селектов монтажников
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
             var mounter = jQuery("#mounters").val();
             var time = jQuery("#hours").val();
@@ -1888,6 +1775,55 @@
         });
         //------------------------------------------
 
+        // получение значений из селектов замерщиков
+		jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
+            var times = jQuery("input[name='choose_time_gauger']");
+            time_gauger = "";
+            gauger_gauger = "";
+            times.each(function(element) {
+                if (jQuery(this).prop("checked") == true) {
+                    time_gauger = jQuery(this).val();
+                    gauger_gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
+                }
+            });
+            jQuery("#jform_new_project_calculation_daypart").val(time_gauger);
+            jQuery("#jform_project_new_calc_date").val(date_gauger);
+            jQuery("#jform_project_gauger").val(gauger_gauger);
+            if (jQuery(".change").length == 0) {
+                jQuery("#"+idDay).addClass("change");
+            } else {
+                jQuery(".change").removeClass("change");
+                jQuery("#"+idDay).addClass("change");
+            }
+            jQuery.ajax({
+                type: 'POST',
+                url: "/index.php?option=com_gm_ceiling&task=project.GetNameGauger",
+                data: {
+                    id: gauger_gauger,
+                },
+                dataType: "json",
+                success: function (data) {
+                    jQuery("#new_gauger").text(data.name);
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка вывода нового замерщика"
+                    });
+                }
+            });
+            jQuery("#close2-tar").hide();
+            jQuery("#modal-window-container2-tar").hide();
+            jQuery("#modal-window-2-tar").hide();
+        });
+        //------------------------------------------
+
+
         // подсвет сегоднешней даты
         window.today = new Date();
         window.NowYear = today.getFullYear();
@@ -1896,42 +1832,174 @@
         Today(day, NowMonth, NowYear);
         //------------------------------------------
 
-        //если сессия есть, то выдать дату, которая записана в сессии
+        //если сессия есть, то выдать дату, которая записана в сессии монтажникам
         var datesession = jQuery("#jform_project_mounting_date").val();  
         if (datesession != undefined) {
             jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
         }
         //-----------------------------------------------------------
 
+        // для истории и добавления комментария
+        function formatDate(date) {
+            var dd = date.getDate();
+            if (dd < 10) dd = '0' + dd;
+            var mm = date.getMonth() + 1;
+            if (mm < 10) mm = '0' + mm;
+            var yy = date.getFullYear();
+            if (yy < 10) yy = '0' + yy;
+            var hh = date.getHours();
+            if (hh < 10) hh = '0' + hh;
+            var ii = date.getMinutes();
+            if (ii < 10) ii = '0' + ii;
+            var ss = date.getSeconds();
+            if (ss < 10) ss = '0' + ss;
+            return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
+            }
+            function show_comments() {
+            var id_client = <?php echo $this->item->id_client;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=selectComments",
+                data: {
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var comments_area = document.getElementById('comments');
+                    comments_area.innerHTML = "";
+                    var date_t;
+                    for (var i = 0; i < data.length; i++) {
+                        date_t = new Date(data[i].date_time);
+                        comments_area.innerHTML += formatDate(date_t) + "\n" + data[i].text + "\n----------\n";
+                    }
+                    comments_area.scrollTop = comments_area.scrollHeight;
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка вывода примечаний"
+                    });
+                }
+            });
+            }
+            jQuery("#add_comment").click(function () {
+            var comment = jQuery("#new_comment").val();
+            var reg_comment = /[\\\<\>\/\'\"\#]/;
+            var id_client = <?php echo $this->item->id_client;?>;
+            if (reg_comment.test(comment) || comment === "") {
+                alert('Неверный формат примечания!');
+                return;
+            }
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=addComment",
+                data: {
+                    comment: comment,
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Комментарий добавлен"
+                    });
+                    //new_comments_id.push(data);
+                    //document.getElementById("comments_id").value +=data+";";
+                    jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
+                    show_comments();
+
+                    jQuery("#new_comment").val("");
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка отправки"
+                    });
+                }
+            });
+        });
+        // ----------------------------------------
+
+        $("#modal_window_container #ok").click(function() { click_ok(this); });
+        show_comments();
+        trans();
+
+        jQuery("#add_birthday").click(function () {
+            var birthday = jQuery("#jform_birthday").val();
+            var id_client = <?php echo $this->item->id_client;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.addBirthday",
+                data: {
+                    birthday: birthday,
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Дата рождения добавлена"
+                    });
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка отправки"
+                    });
+                }
+            });
+        });
 
         jQuery("#save").click(function(){
-
             if(jQuery("#project_mounter").val()==0 && jQuery("#jform_project_mounting_date").val()==0 ){
                 jQuery("#new_call").show();
             }
             else {
                 jQuery("#form-client").submit();
             }
-        })
+        });
 
         jQuery("#ok_btn").click(function(){
             if(jQuery("#calldate_without_mounter").val()&&jQuery("#calltime_without_mounter").val()){
                 jQuery("#form-client").submit();
-                }
-                else{
-                    var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: "Введите дату и время звонка!"
-                            });
-                }
-        })
+            }
+            else{
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Введите дату и время звонка!"
+                });
+            }
+        });
+
         jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
+
         jQuery("#jform_project_new_calc_date").on("keyup", function () {
             jQuery("#jform_new_project_calculation_daypart").prop("disabled",false);
         });
+
         jQuery("input[name^='include_calculation']").click(function () {
             var _this = jQuery(this);
             var id = _this.val();
@@ -2030,6 +2098,7 @@
             jQuery(".Contacts").toggle();
             jQuery(".Address").toggle();
             jQuery(".Date").toggle();
+            jQuery(".Gauger").toggle();
             jQuery("#accept_changes").toggle();
         });
 
