@@ -151,7 +151,21 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     phone: document.getElementById('dealer_contacts').value
                 },
                 success: function(data){
-                    location.href = location.href;
+                    if (data == 'client_found')
+                    {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Клиент с таким номером существует!"
+                        });
+                    }
+                    else
+                    {
+                        location.reload();
+                    }
                 },
                 dataType: "text",
                 async: false,
