@@ -2219,6 +2219,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '</tbody></table><p>&nbsp;</p>';
                 }
 
+                
                 $filename = md5($data['id'] . "-2") . ".pdf";
                 Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
 
@@ -2801,7 +2802,7 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data = self::calculate_canvases($calc_id);
         $offcut_square_data = self::calculate_offcut($calc_id);
         $components_data = self::calculate_components($calc_id,null,0);
-        $guild_data = self::calculate_guild_jobs($calc_id);
+        $guild_data = self::calculate_guild_jobs($calc_id)['guild_data'];
         $mounting_data = self::calculate_mount(0,$calc_id,null);
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
@@ -2815,6 +2816,8 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_components_sum += $component_item['gm_total'];
             $dealer_components_sum += $component_item['dealer_total'];
         }
+        $total_with_gm_dealer_margin = $mounting_data['total_with_gm_dealer_margin'];
+        $total_with_gm_dealer_margin_guild = $mount_data['total_with_gm_dealer_margin_guild'];
         $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
@@ -2911,7 +2914,78 @@ class Gm_ceilingHelpersGm_ceiling
     }
 
     public static function create_client_common_estimate($project_id){
-
+        $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+        $project_model = self::getModel('project');
+        $project = $project_model->getData($project_id);
+        $calculations_model = self::getModel('calculations');
+        if($project->project_mounter != 0){
+            $names = $calculations_model->FindAllMounters($project->project_mounter);
+            $brigade = JFactory::getUser($project->project_mounter);
+        }
+        $calculations = $calculations_model->getProjectItems($project_id);
+        $transport = self::calculate_transport($project_id);
+        $client_contacts_model = self::getModel('client_phones');
+        $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
+        for($i=0;$i<count($client_contacts);$i++){
+            $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
+        }
+        $html = ' <h1>Номер договора: ' . $project_id . '</h1><br>';
+        $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
+        if(isset($brigade)){
+            $html .= '<h2>Монтажная бригада: ' . $brigade->name . '</h2>';
+            $html .= "<h2>Состав монтажной бригады: </h2>";
+            for($i=0;$i<count($names);$i++){
+                $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
+            }
+            $html .= $brigade_names;
+            $html .= "<br>";
+        }
+        $html .= "<h2>Адрес: </h2>" . $project->project_info . "<br>";
+        $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
+        $html .= "<h2>Дата монтажа: </h2>" . $jdate->format('d.m.Y  H:i') . "<br>";
+        $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
+        $html .= '<table border="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <th>Название</th>
+                            <th class="center">Площадь, м<sup>2</sup>.</th>
+                            <th class="center">Периметр, м </th>
+                            <th class="center">Стоимость, руб.</th>
+                        </tr>';
+        foreach ($calculations as $calc) {
+            $html .= '<tr>';
+            $html .= '<td>' . $calc->calculation_title . '</td>';
+            $html .= '<td class="center">' . $calc->n4 . '</td>';
+            $html .= '<td class="center">' . $calc->n5 . '</td>';
+            $html .= '<td class="center">' . $calc->mounting_sum + $calc->canvases_sum + $calc->components_sum . '</td>';
+            $html .= '</tr>';
+            $sum += $calc->mounting_sum + $calc->canvases_sum + $calc->components_sum;
+        }
+        $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
+        $html .= '</tbody></table><p>&nbsp;</p>';
+        $html .= '<h2>Транспортные расходы: </h2>';
+        $html .= '<table border="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <th>Вид транспорта</th>
+                            <th class="center">Кол-во км<sup>2</sup>.</th>
+                            <th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th>
+                        </tr>'; 
+        $html .= '<tr>';
+        $html .= '<td>' . $transport['transport']. '</td>';
+        $html .= '<td class="center">' . $transport['distance'] . '</td>';
+        $html .= '<td class="center">' . $transport['distance_col'] . '</td>';
+        $html .= '<td class="center">' . $transport['mounter_sum'] . '</td>';
+        $html .= '</tr>';
+        $html .= '</tbody></table><p>&nbsp;</p>';
+        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
+        $html .= '</tbody></table><p>&nbsp;</p><br>';
+        $html .= "<pagebreak />";
+        foreach($calculations as $calc){
+            $html .= self::create_client_single_estimate_html($calc->id,null,$need_mount);
+        }
+        $filename = md5($project->id . "-9") . ".pdf";
+        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
     public static function calculate_components($calc_id,$data=null,$del_flag=0){
 
@@ -3502,7 +3576,20 @@ class Gm_ceilingHelpersGm_ceiling
                 "dealer_salary_total" => $data['n31'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
-        return $guild_data;
+        foreach ($guild_data as $guild) {
+            $total_gm_guild += $guild['gm_salary_total'];
+            $total_dealer_guild += $guild['dealer_salary_total'];
+            $total_with_gm_margin_guild += $guild['total_with_gm_margin'];
+            $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
+            $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
+        }
+        $result['giuld_data'] = $guild_data;
+        $result['total_gm_guild'] = $total_gm_guild;
+        $result['total_dealer_guild'] = $total_dealer_guild;
+        $result['total_with_gm_margin_guild'] = $total_with_gm_margin_guild;
+        $result['total_with_gm_dealer_margin_guild'] = $total_with_gm_dealer_margin_guild;
+        $result['total_with_dealer_margin_guild'] = $total_with_dealer_margin_guild;
+        return $result;
     }
     /* 	основная функция для расчета стоимости монтажа
         $del_flag 0 - не удалать светильники, трубы и т.д что хранится в др. таблицах
@@ -4533,17 +4620,13 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin += $mounting_item['total_with_gm_dealer_margin'];
             $total_with_dealer_margin += $mounting_item['total_with_dealer_margin'];
         }
-        foreach ($guild_data as $guild) {
-            $total_gm_guild += $guild['gm_salary_total'];
-            $total_dealer_guild += $guild['dealer_salary_total'];
-            $total_with_gm_margin_guild += $guild['total_with_gm_margin'];
-            $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
-            $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
-        }
+       
         $result['mounting_data'] = $mounting_data;
         $result['total_gm_mounting'] =  $total_gm_mounting;
         $result['total_dealer_mounting'] =  $total_dealer_mounting;
-        
+        $result['total_with_gm_margin'] = $total_with_gm_margin;
+        $result['total_with_gm_dealer_margin'] = $total_with_gm_dealer_margin;
+        $result['total_with_dealer_margin'] = $total_with_dealer_margin;
         return $result;
        
     }
@@ -5102,7 +5185,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project = $project_model->getData($data->project_id);
         $canvases_data = self::calculate_canvases($calc_id);
         $offcut_square_data =self::calculate_offcut($calc_id);
-        $guild_data = self::calculate_guild_jobs($calc_id);
+        $guild_data = self::calculate_guild_jobs($calc_id)['guild_data'];
         foreach ($guild_data as $guild) {
             $total_gm_guild += $guild['gm_salary_total'];
             $total_dealer_guild += $guild['dealer_salary_total'];
