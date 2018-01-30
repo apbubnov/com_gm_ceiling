@@ -204,7 +204,8 @@
                         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                         <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
-                        <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="<?php if ($this->item->project_calculation_date != "0000-00-00 00:00:00") { echo $this->item->project_calculation_date; } ?>" type='hidden'> 
+                        <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="<?php if ($this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); } ?>" type='hidden'> 
+                        <input name = "project_new_calc_date" id = "jform_project_new_calc_date"  value="<?php if ($this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 0, 10); } ?>" type='hidden'>
                         <input id="jform_project_gauger" name="jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type='hidden'>  
                     </div>
                     <?php if ($user->dealer_type != 2) { ?>
@@ -322,10 +323,6 @@
                                                         <button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                                     </div>
                                                 </div>
-                                                <!-- <input type = "date" name = "project_new_calc_date" id = "jform_project_new_calc_date" class = "inputactive" value = "<?php echo $date?>">
-                                                <label id="jform_project_calculation_daypart-lbl" for="jform_new_project_calculation_daypart">Новое время замера</label>
-                                                <select id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" class="inputactive" disabled="true">
-                                                </select> -->
                                             </div>
                                         </td>
                                     </tr>
@@ -340,6 +337,7 @@
                                         </td>
                                         <td class="Gauger" style="display: none;">
                                             <p>Новый замерщик:</p>
+                                            <p id="new_gauger"></p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -1397,10 +1395,10 @@
                 msg += '<div class="btn-small-l"><button id="button-prev-gauger" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button></div><div class="btn-small-r"><button id="button-next-gauger" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button></div>';
                 jQuery("#calendar-container").append(msg);
                 Today(day, NowMonth, NowYear);
-                /* var datesession = jQuery("#jform_project_new_calc_date").val();
+                var datesession = jQuery("#jform_project_new_calc_date").val();
                 if (datesession != undefined) {
                     jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("class", "change");
-                } */
+                }
             },
             dataType: "text",
             timeout: 10000,
