@@ -1503,6 +1503,8 @@
                         Array.from(AllGauger).forEach(function(elementGauger) {
                             var emptytd = 0;
                             Array.from(data).forEach(function(elementProject) {
+                                console.log(elementGauger.id);
+                                console.log(elementTime);
                                 if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
                                     console.log(time_gauger);
                                     console.log(gauger_gauger);
