@@ -199,33 +199,30 @@ class Gm_ceilingModelComponents extends JModelList
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
-            $query->from('`#__gm_ceiling_components_goods` AS goods')
-            ->join('LEFT', '`#__gm_ceiling_components_option` AS options ON options.id = goods.option_id')
-            ->join('LEFT', '`#__gm_ceiling_components` AS components ON components.id = options.component_id');
+            $user = JFactory::getUser();
+            $user->groups = $user->get('groups');
+            $stock = in_array(19, $user->groups);
 
-            $query->select('goods.*, goods.id as good_id')
-            ->select('options.id as option_id, options.title as option_title, options.price, options.count as option_count, options.count_sale')
-            ->select('components.id as component_id, components.title as component_title, components.unit, components.code');
+            $query->form("`#__gm_ceiling_components_option` AS options")
+                ->join("LEFT", "`#__gm_ceiling_components` AS components ON components.id = options.component_id")
+                ->select('options.id as option_id, options.title as option_title, options.price, options.count as option_count, options.count_sale')
+                ->select('components.id as component_id, components.title as component_title, components.unit, components.code');
 
-            $query->group('components.title, options.title, goods.id');
+            if ($stock)
+                $query->join("Right", "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
+                    ->select("goods.*, goods.id as good_id");
 
-            if (!empty($search)) {
-                if (stripos($search, 'id:') === 0) {
-                    $query->where('a.id = ' . (int)substr($search, 3));
-                } else {
-                    $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                    $query->where('( a.title LIKE ' . $search . '  OR  component.unit LIKE ' . $search . '  OR a.price LIKE ' . $search . ' )');
-                }
-            }
+            $query->group('components.title, options.title'.(($stock)?", goods.id":""));
 
             // Add the list ordering clause.
             $orderCol = $this->state->get('list.ordering');
             $orderDirn = $this->state->get('list.direction');
 
-            if ($orderCol && $orderDirn) {
+            if ($orderCol && $orderDirn)
                 $query->order($db->escape($orderCol . ' ' . $orderDirn));
-            }
+
             $this->setState('list.limit', null);
+
             return $query;
         }
         catch(Exception $e)

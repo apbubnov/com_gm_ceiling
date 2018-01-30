@@ -1,4 +1,4 @@
-.Page, .Page div, .Page form {
+.Page, .Page div, .Page form, .Page table {
     display: inline-block;
     width: 100%;
     float: left;
@@ -59,6 +59,31 @@
 
 .Page .Actions {
     margin-top: 15px;
+}
+
+.Page .Body {
+    display: table;
+    margin-top: 15px;
+    border-collapse: collapse;
+    border: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Body thead, .Page .Body tbody, .Page .Body tfoot {
+    width: 100%;
+}
+
+.Page .Body thead td, .Page .Body tfoot td {
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    text-align: center;
+}
+
+.Page .Body thead tr td:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, .5);
+}
+
+.Page .Body td {
+    padding: 5px 15px;
 }
 
 .MarginLeft {
