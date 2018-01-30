@@ -1806,8 +1806,7 @@
                 },
                 dataType: "json",
                 success: function (data) {
-                    console.log(data);
-                    jQuery("#new_gauger").val(data.name);
+                    jQuery("#new_gauger").test(data.name);
                 },
                 error: function (data) {
                     console.log(data);
@@ -1821,12 +1820,9 @@
                     });
                 }
             });
-            console.log(jQuery("#jform_new_project_calculation_daypart").val());
-            console.log(jQuery("#jform_project_new_calc_date").val());
-            console.log(jQuery("#jform_project_gauger").val());
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container-tar").hide();
-            jQuery("#modal-window-choose-tar").hide();
+            jQuery("#close2-tar").hide();
+            jQuery("#modal-window-container2-tar").hide();
+            jQuery("#modal-window-2-tar").hide();
         });
         //------------------------------------------
 
