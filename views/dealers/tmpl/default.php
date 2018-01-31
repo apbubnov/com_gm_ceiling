@@ -95,7 +95,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id="dealer_contacts"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <div id="modal_window">
+        <div class="modal_window" id="modal_window">
             <p><strong id="dealer_name"></strong></p>
             <p id="dealer_invoice"></p>
             <p>Сумма взноса:</p>
