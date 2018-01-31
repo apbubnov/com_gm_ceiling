@@ -1533,7 +1533,7 @@
                 setTimeout(function() { 
                     var times = jQuery("input[name='choose_time_gauger']");
                     times.each(function(element) {
-                        if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                        if (time_gauger == jQuery(this).val() && gauger_gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
                             jQuery(this).prop("checked", true);
                         }
                     });
@@ -1676,8 +1676,14 @@
                 setTimeout(function() {
                     // время
                     var timeall = document.getElementById('hours').options;
+                    console.log(time);
                     for (var i = 0; i < timeall.length; i++) {
-                        if (timesession != undefined) {
+                        if (time != undefined) {
+                            if (timeall[i].value == time) {
+                                document.getElementById('hours').disabled = false;
+                                timeall[i].selected = true;
+                            }
+                        } else if (timesession != undefined) {
                             if (timeall[i].value == timesession) {
                                 document.getElementById('hours').disabled = false;
                                 timeall[i].selected = true;
