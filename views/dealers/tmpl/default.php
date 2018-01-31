@@ -95,7 +95,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id="dealer_contacts"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <div class="modal_window" id="modal_window">
+        <div class="modal_window" id="modal_window" style="display: none;">
             <p><strong id="dealer_name"></strong></p>
             <p id="dealer_invoice"></p>
             <p>Сумма взноса:</p>
@@ -211,7 +211,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                             return;
                         }
                     }
-                    
                     return;
                 }
 
@@ -228,7 +227,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     if (target.className.indexOf('btn-done') + 1)
                     {
                         var user_id = jQuery(target).attr("user_id");
-
+                        console.log(user_id);
                         document.getElementById('dealer_name').innerHTML = 'Взнос задолжности. Дилер: ' + dealers[user_id].name;
                         document.getElementById('dealer_invoice').innerHTML = 'На счете: ' + sum[user_id] + ' руб.';
                         document.getElementById('pay_sum').value = (sum[user_id]<0)?Math.abs(sum[user_id]):0;
