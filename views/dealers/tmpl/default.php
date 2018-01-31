@@ -124,14 +124,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
     jQuery(document).ready(function()
     {
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
-       /* jQuery('body').on('click', 'tr', function(e)
-        {
-            console.log(sum_click_bool);
-            if(jQuery(this).data('href') != undefined && !sum_click_bool){
-                document.location.href = jQuery(this).data('href');
-            }
-            sum_click_bool = false;
-        });*/
 
         jQuery("#new_dealer").click(function(){
             jQuery("#close4-tar").show();
@@ -181,30 +173,14 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         });
 
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-            var user_id = jQuery(this).attr("user_id");
-            var div = jQuery(".modal_window"); // тут указываем ID элемента
-            if (!div.is(e.target) // если клик был не по нашему блоку
-                && div.has(e.target).length === 0) { // и не по его дочерним элементам
-                    console.log('mouseup');
-                    jQuery(".close_btn").hide();
-                    jQuery(".modal_window_container").hide();
-                    jQuery(".modal_window").hide();
-            }
-
-            var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-            if (!div3.is(e.target) // если клик был не по нашему блоку
-                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
-                jQuery("#close4-tar").hide();
-                jQuery("#modal-window-container").hide();
-                jQuery("#modal-window-1-tar").hide();
-            }
+            
         });
 
         jQuery(document).click(function (e){
             var target = event.target;
             console.log(event.target.tagName);
             // цикл двигается вверх от target к родителям до table
-            while (target.tagName != 'body') {
+            while (target.tagName != 'BODY') {
                 if (target.tagName == 'TR') {// нашли элемент, который нас интересует!
                     if(jQuery(target).data('href') != undefined){
                         document.location.href = jQuery(target).data('href');
@@ -221,6 +197,22 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         jQuery("#modal_window_acct" + user_id).show("slow");
                         return;
                     }
+                }
+                
+                var div = jQuery(".modal_window"); // тут указываем ID элемента
+                if (!div.is(e.target) // если клик был не по нашему блоку
+                    && div.has(e.target).length === 0) { // и не по его дочерним элементам
+                        jQuery(".close_btn").hide();
+                        jQuery(".modal_window_container").hide();
+                        jQuery(".modal_window").hide();
+                }
+
+                var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+                if (!div3.is(e.target) // если клик был не по нашему блоку
+                    && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+                    jQuery("#close4-tar").hide();
+                    jQuery("#modal-window-container").hide();
+                    jQuery("#modal-window-1-tar").hide();
                 }
                 target = target.parentNode;
             }
