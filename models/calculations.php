@@ -1090,6 +1090,12 @@ class Gm_ceilingModelCalculations extends JModelList {
                     array_push($items, $day);
                 }
             }
+            $itemstest = [];
+            foreach ( $items as $item) {
+                array_push($itemstest, get_object_vars($item) );
+            }
+            throw new Exception(implode("|", $itemstest));
+            
 
     		return $items;
         }
