@@ -131,66 +131,114 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#modal-window-1-tar").show("slow");
         });
 
-        jQuery("#save_dealer").click(function(){
-             jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=dealer.create_dealer",
-                data: {
-                    fio: document.getElementById('fio_dealer').value,
-                    phone: document.getElementById('dealer_contacts').value
-                },
-                success: function(data){
-                    if (data == 'client_found')
-                    {
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Клиент с таким номером существует!"
-                        });
-                    }
-                    else
-                    {
-                        location.reload();
-                    }
-                },
-                dataType: "text",
-                async: false,
-                timeout: 10000,
-                error: function(data){
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка. Сервер не отвечает"
-                    });
-                }                   
-            });
-        });
-
-        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-            
-        });
-
-        jQuery(document).click(function (e){
-            var target = event.target;
-            console.log(event.target.tagName);
+        jQuery(document).click(function(e){
+            var target = e.target;
+            console.log(e.target.tagName);
             // цикл двигается вверх от target к родителям до table
-            while (target.tagName != 'BODY') {
-                if (target.tagName == 'TR') {// нашли элемент, который нас интересует!
+            while (target.tagName != 'BODY')
+            {
+                var div = jQuery(".modal_window");
+                var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+                if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
+                {
+                    if (target.id != undefined)
+                    {
+                        if (target.id == 'save_dealer')
+                        {
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: "index.php?option=com_gm_ceiling&task=dealer.create_dealer",
+                                data: {
+                                    fio: document.getElementById('fio_dealer').value,
+                                    phone: document.getElementById('dealer_contacts').value
+                                },
+                                success: function(data){
+                                    if (data == 'client_found')
+                                    {
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "error",
+                                            text: "Клиент с таким номером существует!"
+                                        });
+                                    }
+                                    else
+                                    {
+                                        location.reload();
+                                    }
+                                },
+                                dataType: "text",
+                                async: false,
+                                timeout: 10000,
+                                error: function(data){
+                                    var n = noty({
+                                        timeout: 2000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "error",
+                                        text: "Ошибка. Сервер не отвечает"
+                                    });
+                                }                   
+                            });
+                        }
+                    }
+                    if (target.className != undefined)
+                    {
+                        if (target.className.indexOf('save_pay') + 1)
+                        {
+                            var user_id = jQuery(target).attr("user_id");
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
+                                data: {
+                                    id: user_id,
+                                    sum: document.getElementById('pay_sum'+user_id).value
+                                },
+                                success: function(data){
+                                    var n = noty({
+                                        timeout: 5000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "success",
+                                        text: "Сумма успешно добавлена"
+                                    });
+                                    setInterval(function() { location.reload();}, 1500);
+                                },
+                                dataType: "text",
+                                async: false,
+                                timeout: 10000,
+                                error: function(data){
+                                    var n = noty({
+                                        timeout: 2000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "error",
+                                        text: "Ошибка. Сервер не отвечает"
+                                    });
+                                }
+                            });
+                            return;
+                        } 
+                    }
+                    return;
+                }
+
+                if (target.tagName == 'TR')
+                {
                     if(jQuery(target).data('href') != undefined){
                         document.location.href = jQuery(target).data('href');
                     }
                     return;
                 }
+
                 if (target.className != undefined)
                 {
-                    if (target.className.indexOf('btn-done') + 1) {// нашли элемент, который нас интересует!
-                        console.log(target.className.indexOf('btn-done') + 1);
+                    if (target.className.indexOf('btn-done') + 1) {
                         var user_id = jQuery(target).attr("user_id");
                         jQuery(".close_btn").show();
                         jQuery("#modal_window_container" + user_id).show();
@@ -205,6 +253,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         return;
                     }
                 }
+                
                 if (target.id != undefined)
                 {
                     if (target.id == 'close4-tar' || target.id == 'modal-window-container')
@@ -218,42 +267,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
                 target = target.parentNode;
             }
-        });
-
-        jQuery(".save_pay").click(function(){
-            var user_id = jQuery(this).attr("user_id");
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
-                data: {
-                    id: user_id,
-                    sum: document.getElementById('pay_sum'+user_id).value
-                },
-                success: function(data){
-                    var n = noty({
-                        timeout: 5000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Сумма успешно добавлена"
-                    });
-                    setInterval(function() { location.reload();}, 1500);
-                },
-                dataType: "text",
-                async: false,
-                timeout: 10000,
-                error: function(data){
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка. Сервер не отвечает"
-                    });
-                }
-            });
         });
 
         jQuery("#find_dealer").click(function(){
