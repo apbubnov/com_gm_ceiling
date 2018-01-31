@@ -2737,7 +2737,7 @@ class Gm_ceilingController extends JControllerLegacy
                 }
                 $code = md5($user_id.'commercial_offer');
                 $server_name = $_SERVER['SERVER_NAME'];
-                $site = "http://'.$server_name.'/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
+                $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 // письмо
     			$mailer = JFactory::getMailer();
     			$config = JFactory::getConfig();
