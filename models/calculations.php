@@ -1003,9 +1003,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->LeftJoin("#__users as users ON day_off.id_user = users.id")
                 ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and map.group_id = '$who2' and users.dealer_id = '$dealer'" );
             $db->setQuery($query2);
-            $items2 = $db->loadObjectList();
-
-            throw new Exception(count($items2));
+            $items2 = $db->loadObject();
             
             // объединение с выходным днем
             $index = 0;
@@ -1027,11 +1025,68 @@ class Gm_ceilingModelCalculations extends JModelList {
                 $day = array(
                     'project_calculator'=>$items2->id_user,
                     'project_calculation_date'=>$items2->date_from,
-                    'project_info'=>"Выходной",
+                    'project_info'=>"Выходные часы",
                     'project_calculation_day_off'=>$items2->date_to
                 );
                 $day = array((object)$day);
                 array_splice($items,$index,0,$day);
+            }
+
+    		return $items;
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function FindBusyGauger2($date1, $date2, $dealer) {
+        try
+        {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query2 = $db->getQuery(true);
+            
+            if ($dealer == 1) {
+                $who = 1;
+                $who2 = 22;
+            } else {
+                $who = 0;
+                $who2 = 21;
+            }
+
+            $query->select('projects.project_info, projects.project_calculation_date, projects.project_calculator')
+                ->from('#__gm_ceiling_projects as projects')
+                ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                ->where("projects.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and projects.who_calculate = '$who' and clients.dealer_id = '$dealer' and projects.project_status NOT IN (2, 3, 9, 15, 22)");
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+
+            $query2->select('day_off.id_user, day_off.date_from, day_off.date_to')
+                ->from('#__gm_ceiling_day_off as day_off')
+                ->LeftJoin("#__user_usergroup_map as map ON day_off.id_user = map.user_id")
+                ->LeftJoin("#__users as users ON day_off.id_user = users.id")
+                ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and map.group_id = '$who2' and users.dealer_id = '$dealer'" );
+            $db->setQuery($query2);
+            $items2 = $db->loadObjectList();
+            
+            // объединение с выходным днем
+            for ($i=0; $i < count($items); $i++) {
+                $items[$i]->project_calculation_day_off = "";
+            }
+            //создание нового массива
+            if (!empty($items2)) {
+                $day = array(
+                    'project_calculator'=>$items2->id_user,
+                    'project_calculation_date'=>$items2->date_from,
+                    'project_info'=>"Выходной",
+                    'project_calculation_day_off'=>$items2->date_to
+                );
+                $day = array((object)$day);
+                array_push($items, $day);
             }
 
     		return $items;

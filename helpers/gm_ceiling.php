@@ -4466,7 +4466,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                     $date1 = $year . "-" . $monthfull . "-01";
                     $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                    $BusyGauger = $model->FindBusyGauger($date1, $date2, $flag[1]);
+                    $BusyGauger = $model->FindBusyGauger2($date1, $date2, $flag[1]);
                     $DayTimeGauger = [];
                     for ($w = 1; $w <= $current_days; $w++) {
                         if (strlen($w) == 1) {
