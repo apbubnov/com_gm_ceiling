@@ -1683,6 +1683,10 @@
                                 timeall[i].selected = true;
                             }
                         }
+                        if (time != undefined) {
+                            document.getElementById('hours').disabled = false;
+                                timeall[i].selected = true;
+                        }
                     }
                     // бригада
                     var mounterall = document.getElementById('mounters').options;
