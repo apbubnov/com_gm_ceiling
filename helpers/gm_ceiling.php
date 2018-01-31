@@ -801,7 +801,7 @@ class Gm_ceilingHelpersGm_ceiling
             if ($ajax == 1) {
                 $return = json_encode($ajax_return);
             }
-
+        }
             return $return;
     }
     public static function create_client_single_estimate($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
