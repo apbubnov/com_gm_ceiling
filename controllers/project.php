@@ -941,12 +941,20 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							
 						}
 						else{
-							
-							$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
-							$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
-							$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
-							$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
-							$return = $model->activate($data, 5/*3*/);
+							if($project_status == 4){
+                                $client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
+                                $client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
+                                $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
+                                $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
+                                $return = $model->activate($data, 4);
+                            } else {
+                                $client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
+                                $client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
+                                $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
+                                $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
+                                $return = $model->activate($data, 5/*3*/);
+                            }
+
 							
 						}
 						
