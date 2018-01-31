@@ -29,7 +29,7 @@ class Gm_ceilingModelApi extends JModelList
         {
             $db = $this->getDbo();
             $arr_ids = [];
-            throw new Exception("Error Processing Request", 1);
+
             foreach ($data as $key => $value)
             {
                 if (empty($data[$key]->android_id))
