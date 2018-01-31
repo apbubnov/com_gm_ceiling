@@ -1282,7 +1282,7 @@
                     var datesession = jQuery("#jform_project_mounting_date").val();  
                     console.log(datesession);
                     if (datesession != undefined) {
-                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
                     }
                 },
                 dataType: "text",
@@ -1316,7 +1316,7 @@
                     var datesession = jQuery("#jform_project_mounting_date").val();  
                     console.log(datesession);
                     if (datesession != undefined) {
-                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
                     }
                 },
                 dataType: "text",
@@ -1349,7 +1349,7 @@
         // функция подсвета сегоднешней даты
         var Today = function (day, month, year) {
             month++;
-            jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"I").addClass("today");
+            jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC1C").addClass("today");
         }   
         //------------------------------------------
 
@@ -1668,7 +1668,7 @@
                 } else {
                     monthtocalendar = datesession.substr(5, 2);
                 }
-                jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+                jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
             }
             //-----------------------------------------------------------
 

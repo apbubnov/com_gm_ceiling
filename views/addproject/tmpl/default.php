@@ -252,7 +252,7 @@ if (count($AllGauger) == 0) {
 	// функция подсвета сегоднешней даты
 	var Today = function (day, month, year) {
         month++;
-        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"I").addClass("today");
+        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC0C").addClass("today");
     }   
     //------------------------------------------
 
@@ -482,9 +482,6 @@ if (count($AllGauger) == 0) {
             var client_contacts = jQuery('#clients :selected').attr("phone");
             jQuery('#jform_client_fio-find').val(client_id);
             jQuery('#jform_client_contacts').val(client_contacts);
-
-
-
         })
     });
 
