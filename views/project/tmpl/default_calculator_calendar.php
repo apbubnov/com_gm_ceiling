@@ -1729,7 +1729,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
         </button>
 
-        <table id="mounter_wraper" style="display: none;">
+        <table id="mounter_wraper" <?if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
             <tr>
                 <h4 id="title" style="display: none;">
                     Назначить монтажную бригаду
