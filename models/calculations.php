@@ -1001,7 +1001,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->from('#__gm_ceiling_day_off as day_off')
                 ->LeftJoin("#__user_usergroup_map as map ON day_off.id_user = map.user_id")
                 ->LeftJoin("#__users as users ON day_off.id_user = users.id")
-                ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and map.group_id = '$who2' and users.dealer_id = '$who'" );
+                ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and map.group_id = '$who2' and users.dealer_id = '$dealer'" );
             $db->setQuery($query2);
             $items2 = $db->loadObject();
             
@@ -1031,6 +1031,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 $day = array((object)$day);
                 array_splice($items,$index,0,$day);
             }
+
 
     		return $items;
         }
