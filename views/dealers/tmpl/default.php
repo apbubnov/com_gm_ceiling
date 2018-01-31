@@ -197,21 +197,25 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         jQuery("#modal_window_acct" + user_id).show("slow");
                         return;
                     }
-                }
 
-                var div = jQuery(".modal_window");
-                var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-                if (!div.is(e.target) && !div2.is(e.target) // если клик был не по нашему блоку
-                    && div.has(e.target).length === 0  // и не по его дочерним элементам
-                    && div2.has(e.target).length === 0) {
+                    if (target.className.indexOf('close_btn') + 1 || target.className.indexOf('modal_window_container') + 1) {
                         jQuery(".close_btn").hide();
                         jQuery(".modal_window_container").hide();
                         jQuery(".modal_window").hide();
+                        return;
+                    }
+                }
+                if (target.id != undefined)
+                {
+                    if (target.id == 'close4-tar' || target.id == 'modal-window-container')
+                    {
                         jQuery("#close4-tar").hide();
                         jQuery("#modal-window-container").hide();
                         jQuery("#modal-window-1-tar").hide();
                         return;
+                    }
                 }
+
                 target = target.parentNode;
             }
         });
