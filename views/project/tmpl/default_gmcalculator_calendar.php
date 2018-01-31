@@ -1528,7 +1528,17 @@
                     jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
                 }
             });
-
+            //если Время было выбрано, то выдать его
+            if (time_gauger != undefined) {
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    times.each(function(element) {
+                        if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                            jQuery(this).prop("checked", true);
+                        }
+                    });
+                }, 200);
+            }
         });
         //------------------------------------
 
@@ -1823,7 +1833,6 @@
             jQuery("#modal-window-2-tar").hide();
         });
         //------------------------------------------
-
 
         // подсвет сегоднешней даты
         window.today = new Date();
