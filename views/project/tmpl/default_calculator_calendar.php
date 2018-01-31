@@ -2474,6 +2474,9 @@ var $ = jQuery;
         jQuery("#save_exit").click(function () {
             jQuery("input[name='project_verdict']").val(2);
         });
+        jQuery("#save").click(function () {
+            jQuery("input[name='project_verdict']").val(1);
+        });
         $tmp_accept = 0; $tmp_refuse = 0;
         jQuery("#accept_project").click(function () {
             jQuery("input[name='project_verdict']").val(1);
