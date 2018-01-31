@@ -79,4 +79,80 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    public function updatePrice() {
+        try
+        {
+
+            $app = JFactory::getApplication();
+            $model = $this->getModel();
+
+            $user = JFactory::getUser();
+            $user->groups = $user->get('groups');
+            $user->info = $user->getDealerInfo();
+
+            $userDealer = $user;
+
+            if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
+                $userDealer = JFactory::getUser($user->dealer_id);
+                $userDealer->groups = $userDealer->get('groups');
+                $userDealer->info = $userDealer->getDealerInfo();
+            }
+
+            $managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
+
+            $dealer = null;
+
+            if ($managerGM) {
+                $dealerId = $app->input->get('dealer', null, 'int');
+
+                if (isset($dealerId)) {
+                    $dealer = JFactory::getUser($dealerId);
+                    $dealer->groups = $dealer->get('groups');
+                    $dealer->info = $dealer->getDealerInfo();
+                    // $dealer->price = $model->getDealerPrice($dealerId);
+                }
+            }
+
+            $id = $app->input->get('id', null, 'int');
+            $price = $app->input->get('Price', null, 'string');
+
+            $p = str_replace("%", "", $price);
+            $a = str_replace(["+", "-"], "", $p);
+            $price = $a;
+            $a = ($a != $p);
+            $p = ($p != $price);
+
+            $oldPrice = $model->getPrice($id);
+
+            $answer = (object) [];
+            $answer->status = "success";
+            $answer->message = "Обновление произошло успешно!";
+            $answer->elements = [];
+
+            foreach ($oldPrice as $v)
+            {
+
+
+                if ($p) {
+
+                }
+            }
+
+
+            $newPrice =
+            $model->setPrice((object) ["price" => $price, "id" => $id]);
+
+
+
+            die(json_encode($answer));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }

@@ -1,5 +1,5 @@
 <?php
-echo parent::getPreloader();
+echo parent::getPreloaderNotJS();
 /**
  * @version    CVS: 0.1.7
  * @package    Com_Gm_ceiling
@@ -31,7 +31,7 @@ if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
 }
 
 $stock = in_array(19, $user->groups);
-$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups) /*&& $userDealer->dealer_type != 1*/ && !$stock;
+$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups) && !$stock;
 
 $dealer = null;
 
@@ -61,11 +61,11 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
             <i class="fa fa-caret-down" aria-hidden="true"></i> <span>Раскрыть все</span>
         </button>
         <?if ($managerGM):?>
-        <form class="FormSimple UpdatePrice MarginLeft" action="javascript:UpdatePrice(0);">
-            <label for="allPrice" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-            <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}"  name="allPrice" id="allPrice" placeholder="0"
+        <form class="FormSimple UpdatePrice MarginLeft">
+            <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+            <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
                    title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
-                   size="5">
+                   size="5" required>
             <button type="submit" class="buttonOK">
                 <i class="fa fa-paper-plane" aria-hidden="true"></i>
             </button>
@@ -119,8 +119,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                 <?elseif ($managerGM):?>
                     <td></td>
                     <td></td>
-                    <td>
-                    </td>
+                    <td></td>
                 <?else:?>
                     <td></td>
                     <td></td>
@@ -142,11 +141,11 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                         <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
                         <td><?=double_margin($option->price, $userDealer->info->gm_components_margin, $userDealer->info->dealer_components_margin);?></td>
                         <td>
-                            <form class="FormSimple UpdatePrice MarginLeft" action="javascript:UpdatePrice(<?=$key_o;?>);">
-                                <label for="allPrice" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}"  name="allPrice" id="allPrice" placeholder="0"
+                            <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
+                                <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
                                        title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
-                                       size="5">
+                                       size="5" required>
                                 <button type="submit" class="buttonOK">
                                     <i class="fa fa-paper-plane" aria-hidden="true"></i>
                                 </button>
@@ -156,11 +155,11 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                         <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
                         <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
                         <td>
-                            <form class="FormSimple UpdatePrice MarginLeft" action="javascript:UpdatePrice(<?=$key_o;?>);">
-                                <label for="allPrice" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}"  name="allPrice" id="allPrice" placeholder="0"
+                            <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
+                                <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
                                        title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
-                                       size="5">
+                                       size="5" required>
                                 <button type="submit" class="buttonOK">
                                     <i class="fa fa-paper-plane" aria-hidden="true"></i>
                                 </button>
@@ -181,7 +180,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                         <td></td>
                         <td><?=$good->pprice;?></td>
                         <td><?=$good->stock_name;?></td>
-                        <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=component&id=<?=$key_o;?>">Инфо</a></td>
+                        <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=component&id=<?=$key_o;?>&good=<?=$key_g;?>">Инфо</a></td>
                     </tr>
         <?endforeach;?>
         <?endforeach;?>
@@ -195,7 +194,6 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
     </table>
     </div>
 </div>
-
 <script type="text/javascript">
     var $ = jQuery,
         Data = {};
@@ -205,6 +203,10 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
     $(document).scroll(Scroll);
 
     function Init() {
+        Data.Preloader = $(".PRELOADER_GM");
+
+        Data.Ajax = "/index.php?option=com_gm_ceiling&task=";
+
         Data.Page = $(".Page");
         Data.Actions = Data.Page.find(".Actions");
         Data.Table = Data.Page.find(".Body");
@@ -218,27 +220,26 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         Data.Table.Action.click(ActionTR);
         Data.Actions.find("#ActionTR").click(AllActionTR);
 
+        Data.Forms = Data.Page.find("form");
+        Data.Forms.filter(".UpdatePrice").attr("action","javascript:null;");
+        Data.Forms.filter(".UpdatePrice").submit(UpdatePrice);
+
         Data.Temp = {};
-        /*Data.Scroll = {};
+        Data.Scroll = {};
+
+        Data.Dealer = <?=isset($dealer)?$dealer->id:"null";?>;
 
         ScrollInit();
-        ResizeHead();*/
+        ResizeHead();
         Resize();
+
+        Data.Preloader.hide();
     }
 
     function Resize() {
-        /*ResizeHead();*/
+        ResizeHead();
     }
 
-    function Scroll() {
-        var scrollTop = $(window).scrollTop(),
-            offset = Data.Table.offset();
-
-        console.log(scrollTop + " - " + offset.top + " = " + (scrollTop - offset.top));
-
-        Data.Table.THead.css("top", Math.max(scrollTop - offset.top, 0));
-    }
-/*
     function ScrollInit() {
         Data.Scroll.EHead = Data.Table.find("thead");
         Data.Scroll.EHeadTr = Data.Scroll.EHead.find(".THead");
@@ -265,7 +266,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         if (scrollTop >= offset.top) { if (!has) Data.Scroll.EHeadTrClone.addClass("Show"); }
         else { if (has) Data.Scroll.EHeadTrClone.removeClass("Show"); }
     }
-*/
+
     function ActionTR() {
         var TR = $(this),
             level = parseInt(this.dataset.level),
@@ -305,7 +306,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
             }
         }
 
-        //ResizeHead();
+        ResizeHead();
     }
 
     function AllActionTR() {
@@ -327,6 +328,68 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
             Button.find("span").text("Скрыть все");
         }
 
-        //ResizeHead();
+        ResizeHead();
+    }
+
+    function UpdatePrice() {
+        Data.Preloader.show();
+        var values = JSON.serialize(this);
+        values.id = this.dataset.id;
+        values.dealer = Data.Dealer;
+
+        jQuery.ajax({
+            type: 'POST',
+            url: Data.Ajax + "components.UpdatePrice",
+            data: values,
+            cache: false,
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+
+                $.each(data.elements, function (i, v) {
+                    Data.Page.find(v.name).text(v.value);
+                });
+
+                Noty(data.status, data.message);
+            },
+            dataType: "text",
+            timeout: 5000,
+            error: Noty
+        });
+
+        Data.Preloader.hide();
+
+        return false;
+    }
+
+    function Noty(status = "error", message = "Сервер не отвечает, попробуйте снова!", time = 2000) {
+        noty({
+            theme: 'relax',
+            layout: 'center',
+            timeout: time,
+            type: status,
+            text: message
+        });
+    }
+
+    JSON.serialize = function (obj) {
+        var inputs = $(obj).find("input:not(:disabled)"),
+            datas = $(obj).find("[data-JsonSend]").filter("[id]"),
+            values = $(obj).find("[data-Send]").filter("[id]"),
+            result = {jsons:{}, values:{}};
+
+        $.each(inputs, function (i, v) {
+            result[v.name] = v.value;
+        });
+
+        $.each(datas, function (i, v) {
+            result.jsons[v.id] = JSON.parse(v.dataset.jsonsend);
+        });
+
+        $.each(values, function (i, v) {
+            result.values[v.id] = v.dataset.send;
+        });
+
+        return result;
     }
 </script>

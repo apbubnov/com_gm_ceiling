@@ -722,13 +722,45 @@ class Gm_ceilingModelComponents extends JModelList
     public function setPrice($data) {
         try
         {
+            if (gettype($data) == "object")
+                $data = [$data];
+
+            $db = $this->getDbo();
+            $querySTR = "";
+            foreach ($data as $v) {
+                $query = $db->getQuery(true);
+                $query->update("`#__gm_ceiling_components_option`")
+                    ->set("price = $data->price")
+                    ->where("id = $data->id");
+                $querySTR .= (string) $query;
+            }
+            $db->setQuery($querySTR);
+            $db->execute();
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getPrice($data) {
+        try
+        {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->update("`#__gm_ceiling_components_option`")
-                ->set("price = $data->price")
-                ->where("id = $data->id");
+            $query->from("`#__gm_ceiling_components_option`")
+                ->select("id, price");
+
+            if (gettype($data) == "array")
+                $query->where("id in (" . implode(", ", $data) . ")");
+            else if (gettype($data) == "string" || gettype($data) == "integer")
+                $query->where("id = '$data'");
+
             $db->setQuery($query);
-            $db->execute();
+            return $db->loadObjectList();
         }
         catch(Exception $e)
         {
