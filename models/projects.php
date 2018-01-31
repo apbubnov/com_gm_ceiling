@@ -844,12 +844,23 @@ class Gm_ceilingModelProjects extends JModelList
     {
         try
         {
+            $user = JFactory::getUser();
             $db = $this->getDbo();
+
             $query = $db->getQuery(true);
-            $query->delete($db->quoteName('#__gm_ceiling_projects'));
-            $query->where('project_status = 0 AND client_id = ' . $id);
+            $query->from('`#__gm_ceiling_clients`')
+                ->select('dealer_id')
+                ->where('id = '. $id);
             $db->setQuery($query);
-            $db->execute();
+            $dealer = $db->loadObject();
+            if ($dealer->dealer_id == $user->id) {
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName('#__gm_ceiling_projects'));
+                $query->where('project_status = 0 AND client_id = ' . $id);
+                $db->setQuery($query);
+                $db->execute();
+            }
+
             return 1;
         }
         catch(Exception $e)

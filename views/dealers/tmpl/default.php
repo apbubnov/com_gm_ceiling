@@ -14,7 +14,6 @@ $userId     = $user->get('id');
 
 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
 $result_users = $users_model->getDealers();
-$sum = 0;
 $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 ?>
@@ -52,9 +51,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         		foreach ($result_users as $key => $value)
         		{
                     $data = $recoil_map_model->getData($value->id);
+                    $sum[$value->id] = 0;
                     foreach ($data as $item)
                     {
-                        $sum +=  $item->sum;
+                        $sum[$value->id] +=  $item->sum;
                     }
         	?>
                 <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
@@ -77,20 +77,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 		            </td>
                     <td data-href="">
                         <button class="btn btn-primary btn-done" user_id="<?= $value->id; ?>" type="button" > Внести сумму </button>
-                        <div id="modal_window_container<?= $value->id; ?>" class="modal_window_container">
-                            <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
-                            </button>
-                            <div id="modal_window_acct<?= $value->id; ?>" class="modal_window">
-                                <p><strong>Взнос задолжности. Дилер: <?php echo $value->name; ?> </strong></p>
-                                <p>На счете : <?=$sum;?> руб.</p>
-                                <p>Сумма взноса:</p>
-                                <p><input type="text" id="pay_sum<?= $value->id; ?>" value=" <?=($sum<0)?abs($sum):0;?>"> </p>
-                                <p><button type="submit" id="save_pay" class="btn btn-primary save_pay" user_id="<?= $value->id; ?>">ОК</button></p>
-                            </div>
-                        </div>
                     </td>
 		        </tr>
-
         	<?php
         		}
         	?>
@@ -106,24 +94,24 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id="dealer_contacts"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
+        <div id="modal_window">
+            <p><strong>Взнос задолжности. Дилер: <?php //echo $value->name; ?> </strong></p>
+            <p>На счете: <?//=$sum;?> руб.</p>
+            <p>Сумма взноса:</p>
+            <p><input type="text" id="pay_sum" value=" <?//=($sum<0)?abs($sum):0;?>"></p>
+            <p><button type="submit" id="save_pay" class="btn btn-primary save_pay">ОК</button></p>
+        </div>
     </div>
-
-<!--    <div id="modal-window-container">-->
-<!--        <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>-->
-<!--        <div id="modal-window-1-tar" >-->
-<!--            <p><strong>Взнос задолжности</strong></p>-->
-<!--            <p>Сумма взноса:</p>-->
-<!--            <p><input type="text" id="pay_sum"></p>-->
-<!--            <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>-->
-<!--        </div>-->
-<!--    </div>-->
-
 
 <script>
 
     jQuery(document).ready(function()
     {
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
+
+        var sum = JSON.parse('<?php echo json_encode($sum); ?>');
+        var dealers = JSON.parse('<?php echo json_encode($result_users); ?>');
+        console.log(sum, dealers);
 
         jQuery("#new_dealer").click(function(){
             jQuery("#close4-tar").show();
@@ -253,7 +241,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         return;
                     }
                 }
-                
+
                 if (target.id != undefined)
                 {
                     if (target.id == 'close4-tar' || target.id == 'modal-window-container')
