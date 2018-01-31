@@ -22,8 +22,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Дилеры</h2>
-    <div style="width: 100%; text-align: left;">
+    <div style="display:inline-block; width: 48%; text-align: left;">
         <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
+    </div>
+    <div style="display:inline-block; width: 48%; text-align: left;">
+        <input type="text" id="name_find_dealer">
+        <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
     <br>
     <table class="table table-striped one-touch-view" id="callbacksList">
@@ -43,7 +47,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="tbody_dealers">
         	<?php
         		foreach ($result_users as $key => $value)
         		{
@@ -53,14 +57,14 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         $sum +=  $item->sum;
                     }
         	?>
-                <tr class="row<?php echo $i % 2; ?>" >
-		            <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+                <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+		            <td>
 		               <?php echo $value->name; ?>
 		            </td>
-                    <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+                    <td>
                        <?php echo $value->client_contacts; ?>
                     </td>
-		            <td data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+		            <td>
 		               <?php
                             if($value->created == "0000-00-00 00:00:00") {
                                 echo "-";
@@ -116,25 +120,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 
 <script>
+
     jQuery(document).ready(function()
     {
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
-        jQuery('body').on('click', 'td', function(e)
-        {
-            if(jQuery(this).data('href')!=""){
-                document.location.href = jQuery(this).data('href');
-            }
-        });
-
-        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-            var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-            if (!div3.is(e.target) // если клик был не по нашему блоку
-                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
-                jQuery("#close4-tar").hide();
-                jQuery("#modal-window-container").hide();
-                jQuery("#modal-window-1-tar").hide();
-            }
-        });
 
         jQuery("#new_dealer").click(function(){
             jQuery("#close4-tar").show();
@@ -183,23 +172,52 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             });
         });
 
-        //для внесения денег
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-            var user_id = jQuery(this).attr("user_id");
-            var div = jQuery(".modal_window"); // тут указываем ID элемента
-            if (!div.is(e.target) // если клик был не по нашему блоку
-                && div.has(e.target).length === 0) { // и не по его дочерним элементам
-                jQuery(".close_btn").hide();
-                jQuery(".modal_window_container").hide();
-                jQuery(".modal_window").hide();
-            }
+            
         });
 
-        jQuery(".btn-done").click(function(){
-            var user_id = jQuery(this).attr("user_id");
-            jQuery(".close_btn").show();
-            jQuery("#modal_window_container" + user_id).show();
-            jQuery("#modal_window_acct" + user_id).show("slow");
+        jQuery(document).click(function (e){
+            var target = event.target;
+            console.log(event.target.tagName);
+            // цикл двигается вверх от target к родителям до table
+            while (target.tagName != 'BODY') {
+                if (target.tagName == 'TR') {// нашли элемент, который нас интересует!
+                    if(jQuery(target).data('href') != undefined){
+                        document.location.href = jQuery(target).data('href');
+                    }
+                    return;
+                }
+                if (target.className != undefined)
+                {
+                    if (target.className.indexOf('btn-done') + 1) {// нашли элемент, который нас интересует!
+                        console.log(target.className.indexOf('btn-done') + 1);
+                        var user_id = jQuery(target).attr("user_id");
+                        jQuery(".close_btn").show();
+                        jQuery("#modal_window_container" + user_id).show();
+                        jQuery("#modal_window_acct" + user_id).show("slow");
+                        return;
+                    }
+
+                    if (target.className.indexOf('close_btn') + 1 || target.className.indexOf('modal_window_container') + 1) {
+                        jQuery(".close_btn").hide();
+                        jQuery(".modal_window_container").hide();
+                        jQuery(".modal_window").hide();
+                        return;
+                    }
+                }
+                if (target.id != undefined)
+                {
+                    if (target.id == 'close4-tar' || target.id == 'modal-window-container')
+                    {
+                        jQuery("#close4-tar").hide();
+                        jQuery("#modal-window-container").hide();
+                        jQuery("#modal-window-1-tar").hide();
+                        return;
+                    }
+                }
+
+                target = target.parentNode;
+            }
         });
 
         jQuery(".save_pay").click(function(){
@@ -238,6 +256,43 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             });
         });
 
-
+        jQuery("#find_dealer").click(function(){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=findOldClients",
+                data: {
+                    fio: document.getElementById('name_find_dealer').value,
+                    flag: 'dealers'
+                },
+                success: function(data){
+                    console.log(data);
+                    var tbody = document.getElementById('tbody_dealers');
+                    tbody.innerHTML = '';
+                    var html = '';
+                    for(var i in data)
+                    {
+                        html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
+                        html += '<td>' + data[i].client_name + '</td>';
+                        html += '<td>' + data[i].client_contacts + '</td>';
+                        html += '<td>' + data[i].created + '</td></tr>';
+                    }
+                    tbody.innerHTML = html;
+                    html = '';
+                },
+                dataType: "json",
+                async: false,
+                timeout: 20000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });
+        });
     });
 </script>

@@ -107,7 +107,7 @@
                 </div>
                 <div>
                     <?php foreach ($client_phones as $item) { ?>
-                        <a href="tel:<? echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></a><br>
+                        <a href="tel:<? echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></a><
                     <?php } ?>
                 </div>
                 <div>
@@ -330,6 +330,7 @@
 
     jQuery(document).ready(function ()
     {
+        deleteEmptyProject();
         jQuery('#new_phone').mask('+7(999) 999-9999');
 
         document.getElementById('calls-tar').scrollTop = 9999;
@@ -496,6 +497,32 @@
                 },
                 dataType: "json",
                 async: false,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
+
+        function deleteEmptyProject()
+        {
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=projects.deleteEmptyProject",
+                data: {
+                    client_id: "<?php echo $this->item->id;?>"
+                },
+                dataType: "json",
+                async: true,
                 success: function(data) {
                     location.reload();
                 },
