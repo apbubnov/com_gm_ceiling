@@ -518,7 +518,6 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if (!empty($cuts))
             {
-                $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');
                 $canvases_model->saveCuts($ajax_return['id'],$cuts);
             }
         }
@@ -802,9 +801,9 @@ class Gm_ceilingHelpersGm_ceiling
 
             
         }
-        if ($ajax == 1) {
+        //if ($ajax == 1) {
             $return = json_encode($ajax_return);
-        }
+        //}
         return $return;
     }
     public static function create_client_single_estimate($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
