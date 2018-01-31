@@ -455,7 +455,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $total_with_gm_dealer_margin  = $mounting_data['total_with_gm_dealer_margin'];
         $total_with_gm_dealer_margin_guild = $mounting_data['total_with_gm_dealer_margin_guild'];
-        $total_gm_mounting = = $mounting_data['total_gm_mounting'];
+        $total_gm_mounting = $mounting_data['total_gm_mounting'];
         $total_gm_guild = $guild_data['total_gm_guild'];
         //Получаем скидку
         $new_discount = $data['discount'];
