@@ -1523,15 +1523,17 @@
                 }
             });
             //если Время было выбрано, то выдать его
-            if (time_gauger != undefined) {
-                setTimeout(function() { 
-                    var times = jQuery("input[name='choose_time_gauger']");
-                    times.each(function(element) {
-                        if (time_gauger == jQuery(this).val() && gauger_gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                            jQuery(this).prop("checked", true);
-                        }
-                    });
-                }, 200);
+            if (date_gauger == idDay.match(reg3)[1]+"-"+m+"-"+d) {
+                if (time_gauger != undefined) {
+                    setTimeout(function() { 
+                        var times = jQuery("input[name='choose_time_gauger']");
+                        times.each(function(element) {
+                            if (time_gauger == jQuery(this).val() && gauger_gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                jQuery(this).prop("checked", true);
+                            }
+                        });
+                    }, 200);
+                }
             }
         });
         //------------------------------------
@@ -1671,7 +1673,12 @@
                     // время
                     var timeall = document.getElementById('hours').options;
                     for (var i = 0; i < timeall.length; i++) {
-                        if (timesession != undefined) {
+                        if (time_mounter != undefined) {
+                            if (timeall[i].value == time_mounter) {
+                                document.getElementById('hours').disabled = false;
+                                timeall[i].selected = true;
+                            }
+                        } else if (timesession != undefined) {
                             if (timeall[i].value == timesession) {
                                 document.getElementById('hours').disabled = false;
                                 timeall[i].selected = true;
@@ -1764,8 +1771,8 @@
         // получение значений из селектов монтажников
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
             var mounter = jQuery("#mounters").val();
-            var time = jQuery("#hours").val();
-            var datetime = date+" "+time;
+            time_mounter = jQuery("#hours").val();
+            var datetime = date+" "+time_mounter;
             jQuery("#project_mounter").val(mounter);
             jQuery("#jform_project_mounting_date").val(datetime);
             if (jQuery(".change").length == 0) {
