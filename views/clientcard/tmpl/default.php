@@ -347,8 +347,18 @@
                 dataType: "json",
                 async: false,
                 success: function(data) {
+                    location.reload();
                 },
                 error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
                 }
             });
         }
@@ -512,20 +522,11 @@
                     client_id: "<?php echo $this->item->id;?>"
                 },
                 dataType: "json",
-                async: true,
+                async: false,
                 success: function(data) {
                     location.reload();
                 },
                 error: function(data) {
-                    console.log(data);
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
                 }
             });
         }
