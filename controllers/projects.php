@@ -44,4 +44,27 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+    public function deleteEmptyProject()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $client_id = $jinput->get('client_id', 1, 'INT');
+            $user = JFactory::getUser();
+            $model = $this->getModel('Projects', 'Gm_ceilingModel');
+            if($user->dealer_type == 1) {
+                $model->deleteEmptyProject($client_id);
+            }
+            die(true);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
 }

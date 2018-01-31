@@ -634,6 +634,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input name="type" value="calculator" type="hidden">
                         <input name="subtype" value="calendar" type="hidden">
                         <input id="project_verdict" name="project_verdict" value="0" type="hidden">
+                        <input id="project_status" name="project_status" value="0" type="hidden">
                         <input name="data_change" value="0" type="hidden">
                         <input name="data_delete" value="0" type="hidden">
                         <input id="mounting_date" name="mounting_date" type='hidden'>
@@ -1680,13 +1681,13 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </div>
      
     <?php } ?>
-    <?php if ($this->item->project_verdict == 0) { ?>
-        <?php if ($user->dealer_type != 2) { ?>
+    <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
+        <?php// if ($user->dealer_type != 2) { ?>
             <table>
 
                 <tr>
                     <td>
-                        <a class="btn  btn-success" id="accept_project">
+                        <a class="btn  btn-success" id="accept_project" >
                             Договор
                         </a>
                     </td>
@@ -1703,7 +1704,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </tr>
 
             </table>
-        <?php } ?>
+        <?php// } ?>
     <?php } ?>
     <!--<form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">-->
     <!--<div class="project_activation" style="display: none;">
@@ -1717,19 +1718,19 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input id ="jform_project_mounting_to" name="jform_project_mounting_to" value="" type='hidden'>
                         <input  id ="project_sum" name="project_sum" value="<?php// echo $project_total_discount ?>" type="hidden">
                 </div>-->
-    <div class="project_activation" style="display: none;" id="project_activation">
+    <div class="project_activation" <?if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?> id="project_activation">
         <?php if ($user->dealer_type != 2) { ?>
         <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">
             Примечание к договору
         </label>
         <div class="controls">
             <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору"
-                        aria-invalid="false"></textarea>
+                        aria-invalid="false"><?=($this->item->dealer_calculator_note)?$this->item->dealer_calculator_note:""?></textarea>
         </div>
         <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
         </button>
 
-        <table id="mounter_wraper" style="display: none;">
+        <table id="mounter_wraper" <?if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
             <tr>
                 <h4 id="title" style="display: none;">
                     Назначить монтажную бригаду
@@ -1772,20 +1773,24 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         Примечание к монтажу
                     </label>
                     <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
-                                aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea>
+                                aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button class="validate btn btn-primary" id="save" type="submit"> Сохранить и запустить <br> в
+                    <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
                         производство
                     </button>
                 </td>
                 <td>
-                    <a class="btn btn-primary"
-                        href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">
-                        Перейти к монтажам </a>
+                    <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
+                    </button>
                 </td>
+<!--                <td>-->
+<!--                    <a class="btn btn-primary"-->
+<!--                        href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?><!--">-->
+<!--                        Перейти к монтажам </a>-->
+<!--                </td>-->
                 <td>
                 </td>
             </tr>
@@ -2047,7 +2052,7 @@ var $ = jQuery;
     // функция подсвета сегоднешней даты
     var Today = function (day, month, year) {
         month++;
-        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"I").addClass("today");
+        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC0C").addClass("today");
     }
     //------------------------------------------
 
@@ -2466,6 +2471,28 @@ var $ = jQuery;
         jQuery("#client_order").click(function () {
             jQuery("input[name='project_verdict']").val(1);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
+        });
+        jQuery("#save_exit").click(function () {
+            jQuery("input[name='project_status']").val(4);
+            jQuery("input[name='project_verdict']").val(1);
+        });
+        jQuery("#save").mousedown(function () {
+            if(jQuery("input[name='project_mounter']").val() === "")
+            {
+                jQuery(this).attr("type", "button");
+                     noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Выберите монтажную бригаду!"
+                    });
+
+            }
+            else
+                jQuery(this).attr("type", "submit");
+            jQuery("input[name='project_status']").val(4);
+            jQuery("input[name='project_verdict']").val(1);
         });
         $tmp_accept = 0; $tmp_refuse = 0;
         jQuery("#accept_project").click(function () {

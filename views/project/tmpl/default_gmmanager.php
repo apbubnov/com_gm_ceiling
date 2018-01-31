@@ -853,7 +853,7 @@ $AllMounters = $model->FindAllMounters($where);
 
             //если сессия есть, то выдать дату, которая записана в сессии
             if ("<?php echo substr($this->item->project_mounting_date, 0, 10); ?>" != undefined) {
-                jQuery("#current-monthD"+<?php echo substr($this->item->project_mounting_date, 8, 2); ?>+"DM"+<?php echo substr($this->item->project_mounting_date, 5, 2); ?>+"MY"+<?php echo substr($this->item->project_mounting_date, 0, 4); ?>+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+                jQuery("#current-monthD"+<?php echo substr($this->item->project_mounting_date, 8, 2); ?>+"DM"+<?php echo substr($this->item->project_mounting_date, 5, 2); ?>+"MY"+<?php echo substr($this->item->project_mounting_date, 0, 4); ?>+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
             }
             //-----------------------------------------------------------
 
@@ -962,7 +962,7 @@ $AllMounters = $model->FindAllMounters($where);
                     Today(day, NowMonth, NowYear);
                     var datesession = "<?php echo $this->item->project_mounting_date; ?>"; 
                     if (datesession != undefined) {
-                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
                     }
                 },
                 dataType: "text",
@@ -995,7 +995,7 @@ $AllMounters = $model->FindAllMounters($where);
                     Today(day, NowMonth, NowYear);
                     var datesession = "<?php echo $this->item->project_mounting_date; ?>";  
                     if (datesession != undefined) {
-                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
                     }
                 },
                 dataType: "text",
@@ -1028,7 +1028,7 @@ $AllMounters = $model->FindAllMounters($where);
         // функция подсвета сегоднешней даты
         var Today = function (day, month, year) {
             month++;
-            jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"I").addClass("today");
+            jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC1C").addClass("today");
         }   
         //------------------------------------------
 

@@ -239,7 +239,9 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "1"');
                     } else {
+                        $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
                         $query->where('a.project_status in ("10", "5", "11", "16", "17")');
+                        $query->where('c.dealer_id = '. $user->dealer_id);
                     }
                     break;
                 case "chief":
@@ -248,8 +250,11 @@ class Gm_ceilingModelProjects extends JModelList
                     } elseif ($subtype =="run") {
                         $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
                     } elseif ($subtype == "gaugings") {
+                        $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "0"');
+                        $query->where('c.dealer_id = '. $user->dealer_id);
+
                     } else {
                         $query->where('a.project_status in ("10", "5", "11", "16", "17")');
                     }
@@ -827,6 +832,38 @@ class Gm_ceilingModelProjects extends JModelList
             $db->setQuery($query);
             $return = $db->loadObject();
             return $return;
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function deleteEmptyProject($id)
+    {
+        try
+        {
+            $user = JFactory::getUser();
+            $db = $this->getDbo();
+
+            $query = $db->getQuery(true);
+            $query->from('`#__gm_ceiling_clients`')
+                ->select('dealer_id')
+                ->where('id = '. $id);
+            $db->setQuery($query);
+            $dealer = $db->loadObject();
+            if ($dealer->dealer_id == $user->id) {
+                $query = $db->getQuery(true);
+                $query->delete($db->quoteName('#__gm_ceiling_projects'));
+                $query->where('project_status = 0 AND client_id = ' . $id);
+                $db->setQuery($query);
+                $db->execute();
+            }
+
+            return 1;
         }
         catch(Exception $e)
         {

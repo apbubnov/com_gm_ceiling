@@ -86,7 +86,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
 					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 				<?php endif; ?>
-				<?php if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
+				<?php// if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
 				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
                     <td>
                         <? if ($item->project_status == 10): ?>
@@ -98,7 +98,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     <td class="center one-touch">
                         <?php echo $item->id; ?>
                     </td>
-
                     <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
                     <td class="center one-touch">
                         <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
@@ -132,7 +131,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
                     <td class="center one-touch"><?= $mounter->name; ?></td>
 				</tr>
-				<?php endif; ?>
+				<?php// endif; ?>
 			<?php endforeach; ?>
 		</tbody>
 
@@ -168,7 +167,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                 <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
                     <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
                 <?php endif; ?>
-                <?php if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
+                <?php// if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
                     <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
                         <td>
                             <? if ($item->project_status == 10): ?>
@@ -202,7 +201,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                             $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
                         <td class="center one-touch"><?= $mounter->name; ?></td>
                     </tr>
-                <?php endif; ?>
+                <?php// endif; ?>
             <?php endforeach; ?>
             </tbody>
 
