@@ -248,7 +248,7 @@ class Gm_ceilingModelProjects extends JModelList
                     } elseif ($subtype =="run") {
                         $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
                     } elseif ($subtype == "gaugings") {
-                        $query->innerJoin('`#__gm_ceiling_clients as c on a.client_id = c.id`');
+                        $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "0"');
                         $query->where('c.dealer_id = '. $user->dealer_id);
