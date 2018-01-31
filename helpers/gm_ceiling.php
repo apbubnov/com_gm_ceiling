@@ -443,7 +443,7 @@ class Gm_ceilingHelpersGm_ceiling
         //считаем монтаж
         $mounting_data = self::calculate_mount($del_flag,null,$data);   
         //счиатем работы ГМ     
-        //$guild_data = self::calculate_guild_jobs(null,$data);
+        $guild_data = self::calculate_guild_jobs(null,$data);
         //Итоговая сумма компонентов
         $total_sum = 0;
         //Прибавляем к подсчету комплектующие
@@ -953,182 +953,93 @@ class Gm_ceilingHelpersGm_ceiling
                 $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
 
                 $html = '
-			<h1>Смета по материалам и комплектующим</h1>';
-                $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
-                $html .= "<b>Дилер: </b>" . $dealer->name . "<br>";
-                $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>
-			<h2>Общее: ' . $new_total . ' руб.</h2>';
+                <h1>Смета по материалам и комплектующим</h1>';
+                    $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
+                    $html .= "<b>Дилер: </b>" . $dealer->name . "<br>";
+                    $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>
+                <h2>Общее: ' . $new_total . ' руб.</h2>';
 
-                if ($data['discount'] != 0)
-                    $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
-                $html .= '<table border="0" cellspacing="0" width="100%">
-			<tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
-                if ($data['n1'] && $data['n2'] && $data['n3']) {
-                    if ($data['color'] > 0) {
-                        $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
-                        $color = $color_model->getData($data['color']);
-                        $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
-                    } else {
-                        $name = $canvases_data['title'];
-                    }
-                    $html .= '<tr>';
-                    $html .= '<td>' . $name . '</td>';
-                    $html .= '<td class="center">' . round($canvases_data['dealer_price'], 2) . '</td>';
-                    $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
-                    $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
-                    $html .= '</tr>';
-                }
-                if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] > 0) {
-                    $name = $offcut_square_data['title'];
-                    $html .= '<tr>';
-                    $html .= '<td>' . $name . '</td>';
-                    $html .= '<td class="center">' . round($offcut_square_data['dealer_price'], 2) . '</td>';
-                    $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
-                    $html .= '<td class="center">' . $offcut_square_data['dealer_total'] . '</td>';
-                    $html .= '</tr>';
-                }
-                foreach ($components_data as $key => $item) {
-                    if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
+                    if ($data['discount'] != 0)
+                        $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
+                    $html .= '<table border="0" cellspacing="0" width="100%">
+                <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
+                    if ($data['n1'] && $data['n2'] && $data['n3']) {
+                        if ($data['color'] > 0) {
+                            $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+                            $color = $color_model->getData($data['color']);
+                            $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
+                        } else {
+                            $name = $canvases_data['title'];
+                        }
                         $html .= '<tr>';
-                        $html .= '<td>' . $item['title'] . '</td>';
-                        $html .= '<td class="center">' . round($item['dealer_price'], 2) . '</td>';
-                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                        $html .= '<td class="center">' . $item['dealer_total'] . '</td>';
+                        $html .= '<td>' . $name . '</td>';
+                        $html .= '<td class="center">' . round($canvases_data['dealer_price'], 2) . '</td>';
+                        $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
+                        $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
                         $html .= '</tr>';
                     }
-                }
-                foreach ($guild_data as $item) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . $item['title'] . '</td>';
-                    $html .= '<td class="center">' . round($item['gm_salary'] * 2, 2) . '</td>';
-                    $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                    $html .= '<td class="center">' . $item['gm_salary_total'] * 2 . '</td>';
-                    $html .= '</tr>';
-
-                }
-                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild, 2) . '</th></tr>';
-                $html .= '</tbody></table><p>&nbsp;</p>';
-                if ($need_mount) {
-                    $html .= '<h1>Смета по монтажным работам</h1>
-                            <h2>Дата: ' . date("d.m.Y") . '</h2>
-                            <table border="0" cellspacing="0" width="100%">
-                            <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
-
-                    foreach ($mounting_data as $item) {
+                    if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] > 0) {
+                        $name = $offcut_square_data['title'];
+                        $html .= '<tr>';
+                        $html .= '<td>' . $name . '</td>';
+                        $html .= '<td class="center">' . round($offcut_square_data['dealer_price'], 2) . '</td>';
+                        $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
+                        $html .= '<td class="center">' . $offcut_square_data['dealer_total'] . '</td>';
+                        $html .= '</tr>';
+                    }
+                    foreach ($components_data as $key => $item) {
+                        if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
+                            $html .= '<tr>';
+                            $html .= '<td>' . $item['title'] . '</td>';
+                            $html .= '<td class="center">' . round($item['dealer_price'], 2) . '</td>';
+                            $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                            $html .= '<td class="center">' . $item['dealer_total'] . '</td>';
+                            $html .= '</tr>';
+                        }
+                    }
+                    foreach ($guild_data as $item) {
                         $html .= '<tr>';
                         $html .= '<td>' . $item['title'] . '</td>';
-                        $html .= '<td class="center">' . round($item['price_with_gm_dealer_margin'], 2) . '</td>';
+                        $html .= '<td class="center">' . round($item['gm_salary'] * 2, 2) . '</td>';
                         $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                        $html .= '<td class="center">' . $item['total_with_gm_dealer_margin'] . '</td>';
+                        $html .= '<td class="center">' . $item['gm_salary_total'] * 2 . '</td>';
                         $html .= '</tr>';
-                        
-                    }
 
-                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_with_gm_dealer_margin, 2) . '</th></tr>';
+                    }
+                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild, 2) . '</th></tr>';
                     $html .= '</tbody></table><p>&nbsp;</p>';
-                }
-                if ($data['discount'] != 0)
-                    $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. - ' . $data['discount'] . '% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
-                else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб.</div>';
+                    if ($need_mount) {
+                        $html .= '<h1>Смета по монтажным работам</h1>
+                                <h2>Дата: ' . date("d.m.Y") . '</h2>
+                                <table border="0" cellspacing="0" width="100%">
+                                <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
 
-                $filename = md5($data['id'] . "-0-0") . ".pdf";
-                Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+                        foreach ($mounting_data as $item) {
+                            $html .= '<tr>';
+                            $html .= '<td>' . $item['title'] . '</td>';
+                            $html .= '<td class="center">' . round($item['price_with_gm_dealer_margin'], 2) . '</td>';
+                            $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                            $html .= '<td class="center">' . $item['total_with_gm_dealer_margin'] . '</td>';
+                            $html .= '</tr>';
+                            
+                        }
 
-            }
-            if ($print_components == 1) {
-                return $components_data;
-            }
-            if ($send_client_cost == 1) {
-                //___________________________СМЕТА ДЛЯ КЛИЕНТА С ДИЛЕРСКИМИ ЦЕНАМИ___НА ПОЧТУ________________________________________//
-                $user = JFactory::getUser();
-                $dealer = JFactory::getUser($user->dealer_id);
-                $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
-                $html = '<b>Дилер: </b>' . $dealer->name . '<br>';
-                $html = '<h1>Смета по материалам и комплектующим</h1>
-                        <h2> Дилер: ' . $dealer->name . '</h2>
-                        <h2>Дата: ' . date("d.m.Y") . '</h2>
-
-                        <table border="0" cellspacing="0" width="100%">
-                        <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
-                if ($data['n1'] && $data['n2'] && $data['n3']) {
-                    if ($data['color'] > 0) {
-                        $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
-                        $color = $color_model->getData($data['color']);
-                        $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
-                    } else {
-                        $name = $canvases_data['title'];
+                        $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_with_gm_dealer_margin, 2) . '</th></tr>';
+                        $html .= '</tbody></table><p>&nbsp;</p>';
                     }
-                    $html .= '<tr>';
-                    $html .= '<td>' . $name . '</td>';
-                    $html .= '<td class="center">' . round($canvases_data['dealer_price'], 2) . '</td>';
-                    $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
-                    $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
-                    $html .= '</tr>';
-                }
-                if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] > 0) {
-                    $name = $offcut_square_data['title'];
-                    $html .= '<tr>';
-                    $html .= '<td>' . $name . '</td>';
-                    $html .= '<td class="center">' . round($offcut_square_data['dealer_price'], 2) . '</td>';
-                    $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
-                    $html .= '<td class="center">' . $offcut_square_data['dealer_total'] . '</td>';
-                    $html .= '</tr>';
-                }
-                foreach ($components_data as $key => $item) {
-                    if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
-                        $html .= '<tr>';
-                        $html .= '<td>' . $item['title'] . '</td>';
-                        $html .= '<td class="center">' . round($item['dealer_price'], 2) . '</td>';
-                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                        $html .= '<td class="center">' . $item['dealer_total'] . '</td>';
-                        $html .= '</tr>';
-                    }
-                }
-                foreach ($guild_data as $item) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . $item['title'] . '</td>';
-                    $html .= '<td class="center">' . round($item['gm_salary'] * 2, 2) . '</td>';
-                    $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                    $html .= '<td class="center">' . $item['gm_salary_total'] * 2 . '</td>';
-                    $html .= '</tr>';
-                }
-                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild, 2) . '</th></tr>';
-                $html .= '</tbody></table><p>&nbsp;</p>';
-                if ($need_mount) {
-                    $html .= '<h1>Смета по монтажным работам</h1>
-				<h2>Дата: ' . date("d.m.Y") . '</h2>
-				<table border="0" cellspacing="0" width="100%">
-				<tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
+                    if ($data['discount'] != 0)
+                        $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. - ' . $data['discount'] . '% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
+                    else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб.</div>';
 
-                    foreach ($mounting_data as $item) {
-                        $html .= '<tr>';
-                        $html .= '<td>' . $item['title'] . '</td>';
-                        $html .= '<td class="center">' . round($item['price_with_gm_dealer_margin'], 2) . '</td>';
-                        $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                        $html .= '<td class="center">' . $item['total_with_gm_dealer_margin'] . '</td>';
-                        $html .= '</tr>';
-                    }
-                    $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_with_gm_dealer_margin, 2) . '</th></tr>';
-                    $html .= '</tbody></table><p>&nbsp;</p>';
+                    $filename = md5($data['id'] . "-0-0") . ".pdf";
+                    Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+
                 }
-                $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
-                if ($new_client == 1 || $flag == 1) {
-                    $new_total_discount = round($new_total * (1 - (30 / 100)), 2);
-                    $new_total_discount_dop = round($new_total * (1 - (30 / 100)), 2);
-                    $data['new_total'] = $new_total;
-                    $data['new_total_discount_dop'] = $new_total_discount_dop;
-                } else {
-                    $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
+                if ($print_components == 1) {
+                    return $components_data;
                 }
-                if ($flag == 1) $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. Итого со скидкой 30% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
-                elseif (/*$project->project_discount*/
-                    $new_discount != 0 || $new_client == 1)
-                    $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. Итого со скидкой = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
-                else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. </div>';
-                if ($flag == 1) $filename = "Ваш потолок со скидкой 30%" . ".pdf";
-                else $filename = $data['calculation_title'] . ".pdf";
-                Gm_ceilingHelpersGm_ceiling::save_pdf($html, $_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename, "P");
-                if ($flag == 1) {
+                if ($send_client_cost == 1) {
+                    //___________________________СМЕТА ДЛЯ КЛИЕНТА С ДИЛЕРСКИМИ ЦЕНАМИ___НА ПОЧТУ________________________________________//
                     $user = JFactory::getUser();
                     $dealer = JFactory::getUser($user->dealer_id);
                     $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
@@ -1136,9 +1047,9 @@ class Gm_ceilingHelpersGm_ceiling
                     $html = '<h1>Смета по материалам и комплектующим</h1>
                             <h2> Дилер: ' . $dealer->name . '</h2>
                             <h2>Дата: ' . date("d.m.Y") . '</h2>
+
                             <table border="0" cellspacing="0" width="100%">
                             <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
-
                     if ($data['n1'] && $data['n2'] && $data['n3']) {
                         if ($data['color'] > 0) {
                             $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
@@ -1181,14 +1092,13 @@ class Gm_ceilingHelpersGm_ceiling
                         $html .= '<td class="center">' . $item['gm_salary_total'] * 2 . '</td>';
                         $html .= '</tr>';
                     }
-
                     $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild, 2) . '</th></tr>';
                     $html .= '</tbody></table><p>&nbsp;</p>';
                     if ($need_mount) {
                         $html .= '<h1>Смета по монтажным работам</h1>
-				<h2>Дата: ' . date("d.m.Y") . '</h2>
-				<table border="0" cellspacing="0" width="100%">
-				<tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
+                    <h2>Дата: ' . date("d.m.Y") . '</h2>
+                    <table border="0" cellspacing="0" width="100%">
+                    <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
 
                         foreach ($mounting_data as $item) {
                             $html .= '<tr>';
@@ -1202,72 +1112,162 @@ class Gm_ceilingHelpersGm_ceiling
                         $html .= '</tbody></table><p>&nbsp;</p>';
                     }
                     $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
-                    $new_total_discount = round($new_total * (1 - (50 / 100)), 2);
-                    $new_total_discount_dop = round($new_total * (1 - (50 / 100)), 2);
-                    $data['new_total'] = $new_total;
-                    $data['new_total_discount_dop'] = $new_total_discount_dop;
+                    if ($new_client == 1 || $flag == 1) {
+                        $new_total_discount = round($new_total * (1 - (30 / 100)), 2);
+                        $new_total_discount_dop = round($new_total * (1 - (30 / 100)), 2);
+                        $data['new_total'] = $new_total;
+                        $data['new_total_discount_dop'] = $new_total_discount_dop;
+                    } else {
+                        $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
+                    }
+                    if ($flag == 1) $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. Итого со скидкой 30% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
+                    elseif (/*$project->project_discount*/
+                        $new_discount != 0 || $new_client == 1)
+                        $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. Итого со скидкой = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
+                    else $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. </div>';
+                    if ($flag == 1) $filename = "Ваш потолок со скидкой 30%" . ".pdf";
+                    else $filename = $data['calculation_title'] . ".pdf";
+                    Gm_ceilingHelpersGm_ceiling::save_pdf($html, $_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename, "P");
+                    if ($flag == 1) {
+                        $user = JFactory::getUser();
+                        $dealer = JFactory::getUser($user->dealer_id);
+                        $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
+                        $html = '<b>Дилер: </b>' . $dealer->name . '<br>';
+                        $html = '<h1>Смета по материалам и комплектующим</h1>
+                                <h2> Дилер: ' . $dealer->name . '</h2>
+                                <h2>Дата: ' . date("d.m.Y") . '</h2>
+                                <table border="0" cellspacing="0" width="100%">
+                                <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
 
-                    $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. Итого со скидкой  50% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
+                        if ($data['n1'] && $data['n2'] && $data['n3']) {
+                            if ($data['color'] > 0) {
+                                $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+                                $color = $color_model->getData($data['color']);
+                                $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
+                            } else {
+                                $name = $canvases_data['title'];
+                            }
+                            $html .= '<tr>';
+                            $html .= '<td>' . $name . '</td>';
+                            $html .= '<td class="center">' . round($canvases_data['dealer_price'], 2) . '</td>';
+                            $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
+                            $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
+                            $html .= '</tr>';
+                        }
+                        if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] > 0) {
+                            $name = $offcut_square_data['title'];
+                            $html .= '<tr>';
+                            $html .= '<td>' . $name . '</td>';
+                            $html .= '<td class="center">' . round($offcut_square_data['dealer_price'], 2) . '</td>';
+                            $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
+                            $html .= '<td class="center">' . $offcut_square_data['dealer_total'] . '</td>';
+                            $html .= '</tr>';
+                        }
+                        foreach ($components_data as $key => $item) {
+                            if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
+                                $html .= '<tr>';
+                                $html .= '<td>' . $item['title'] . '</td>';
+                                $html .= '<td class="center">' . round($item['dealer_price'], 2) . '</td>';
+                                $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                                $html .= '<td class="center">' . $item['dealer_total'] . '</td>';
+                                $html .= '</tr>';
+                            }
+                        }
+                        foreach ($guild_data as $item) {
+                            $html .= '<tr>';
+                            $html .= '<td>' . $item['title'] . '</td>';
+                            $html .= '<td class="center">' . round($item['gm_salary'] * 2, 2) . '</td>';
+                            $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                            $html .= '<td class="center">' . $item['gm_salary_total'] * 2 . '</td>';
+                            $html .= '</tr>';
+                        }
+
+                        $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild, 2) . '</th></tr>';
+                        $html .= '</tbody></table><p>&nbsp;</p>';
+                        if ($need_mount) {
+                            $html .= '<h1>Смета по монтажным работам</h1>
+                    <h2>Дата: ' . date("d.m.Y") . '</h2>
+                    <table border="0" cellspacing="0" width="100%">
+                    <tbody><tr><th>Наименование</th><th class="center">Цена, руб.</th><th class="center">Кол-во</th><th class="center">Стоимость, руб.</th></tr>';
+
+                            foreach ($mounting_data as $item) {
+                                $html .= '<tr>';
+                                $html .= '<td>' . $item['title'] . '</td>';
+                                $html .= '<td class="center">' . round($item['price_with_gm_dealer_margin'], 2) . '</td>';
+                                $html .= '<td class="center">' . $item['quantity'] . '</td>';
+                                $html .= '<td class="center">' . $item['total_with_gm_dealer_margin'] . '</td>';
+                                $html .= '</tr>';
+                            }
+                            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($total_with_gm_dealer_margin, 2) . '</th></tr>';
+                            $html .= '</tbody></table><p>&nbsp;</p>';
+                        }
+                        $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
+                        $new_total_discount = round($new_total * (1 - (50 / 100)), 2);
+                        $new_total_discount_dop = round($new_total * (1 - (50 / 100)), 2);
+                        $data['new_total'] = $new_total;
+                        $data['new_total_discount_dop'] = $new_total_discount_dop;
+
+                        $html .= '<div style="text-align: right; font-weight: bold;">ИТОГО: ' . $new_total . ' руб. Итого со скидкой  50% = <span style="background: #14D100; color: #fff;">' . $new_total_discount . ' руб.</span></div>';
 
 
-                    $filename1 = "Ваш потолок со скидкой 50%" . ".pdf";
-                    Gm_ceilingHelpersGm_ceiling::save_pdf($html, $_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename1, "P");
+                        $filename1 = "Ваш потолок со скидкой 50%" . ".pdf";
+                        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename1, "P");
 
-                }
-                $mailer = JFactory::getMailer();
+                    }
+                    $mailer = JFactory::getMailer();
 
-                $config = JFactory::getConfig();
-                $sender = array(
-                    $config->get('mailfrom'),
-                    $config->get('fromname')
-                );
+                    $config = JFactory::getConfig();
+                    $sender = array(
+                        $config->get('mailfrom'),
+                        $config->get('fromname')
+                    );
 
-                $mailer->setSender($sender);
+                    $mailer->setSender($sender);
 
-                $mailer->addRecipient($data['send_email']);
+                    $mailer->addRecipient($data['send_email']);
 
-                if ($flag == 1) {
-                    $new_project_id = $jinput->get('new_project_id', '0', 'INT');
-                    $password = $jinput->get('password', '', 'STRING');
+                    if ($flag == 1) {
+                        $new_project_id = $jinput->get('new_project_id', '0', 'INT');
+                        $password = $jinput->get('password', '', 'STRING');
 
-                    $html = file_get_contents("http://" . $_SERVER['SERVER_NAME'] . "/components/com_gm_ceiling/views/mail/mail_discount.html");
-                    $html = str_replace("#id", $id, $html);
-                    $html = str_replace("#login", $login, $html);
-                    $html = str_replace("#password", $password, $html);
-                    $html = str_replace("#link", $_SERVER['SERVER_NAME'], $html);
-                    $mailer->isHtml(true);
-                    $mailer->Encoding = 'base64';
-                    $body = $html;
-                } else $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
+                        $html = file_get_contents("http://" . $_SERVER['SERVER_NAME'] . "/components/com_gm_ceiling/views/mail/mail_discount.html");
+                        $html = str_replace("#id", $id, $html);
+                        $html = str_replace("#login", $login, $html);
+                        $html = str_replace("#password", $password, $html);
+                        $html = str_replace("#link", $_SERVER['SERVER_NAME'], $html);
+                        $mailer->isHtml(true);
+                        $mailer->Encoding = 'base64';
+                        $body = $html;
+                    } else $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
 
-                $mailer->setSubject('Подробная смета');
-                $mailer->setBody($body);
+                    $mailer->setSubject('Подробная смета');
+                    $mailer->setBody($body);
 
-                $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
-                $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename1);
+                    $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+                    $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename1);
 
-                $send = $mailer->Send();
+                    $send = $mailer->Send();
 
-                $mailer = JFactory::getMailer();
+                    $mailer = JFactory::getMailer();
 
-                $config = JFactory::getConfig();
-                $sender = array(
-                    $config->get('mailfrom'),
-                    $config->get('fromname')
-                );
+                    $config = JFactory::getConfig();
+                    $sender = array(
+                        $config->get('mailfrom'),
+                        $config->get('fromname')
+                    );
 
-                $mailer->setSender($sender);
+                    $mailer->setSender($sender);
 
-                $body = "Здравствуйте. Клиент запросил подробную смету на адрес: " . $data['send_email'];
+                    $body = "Здравствуйте. Клиент запросил подробную смету на адрес: " . $data['send_email'];
 
-                $mailer->setSubject('Подробная смета');
-                $mailer->setBody($body);
+                    $mailer->setSubject('Подробная смета');
+                    $mailer->setBody($body);
 
-                $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+                    $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
 
-                $send = $mailer->Send();
+                    $send = $mailer->Send();
 
-                unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+                    unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
             }
 
             if ($ajax == 1) {
@@ -1332,7 +1332,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<td><h2>Общее: ' . $new_total . ' руб.</h2></td>';
-        $thml .= '</tr>';
+        $html .= '</tr>';
         $html .= '</table>';
         if ($data['discount'] != 0){
             $html .= '<h2>Общее (со скидкой): <strong>' . $new_total_discount . ' руб.</strong></h2>';
@@ -3689,13 +3689,13 @@ class Gm_ceilingHelpersGm_ceiling
         $data = get_object_vars($calculation_model->getData($calc_id));
         $project_model = self::getModel('project');
         $project = $project_model->getData($data->project_id);
-        if(empty($canvases_data){
+        if(empty($canvases_data)){
             $canvases_data = self::calculate_canvases($calc_id);
         }
-        if(empty($offcut_square_data){
+        if(empty($offcut_square_data)){
             $offcut_square_data =self::calculate_offcut($calc_id);
         }
-        if(empty($guild_data){
+        if(empty($guild_data)){
             $guild_data = self::calculate_guild_jobs($calc_id)['guild_data'];
         }
         foreach ($guild_data as $guild) {
