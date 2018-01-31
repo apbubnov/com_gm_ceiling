@@ -1291,7 +1291,7 @@
                 Today(day, NowMonth, NowYear);
                 var datesession = jQuery("#jform_project_mounting_date").val();  
                 if (datesession != undefined) {
-                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IС1С").addClass("change");
+                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
                 }
             },
             dataType: "text",
@@ -1324,7 +1324,7 @@
                 Today(day, NowMonth, NowYear);
                 var datesession = jQuery("#jform_project_mounting_date").val();  
                 if (datesession != undefined) {
-                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IС1С").addClass("change");
+                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
                 }
             },
             dataType: "text",
@@ -1440,8 +1440,8 @@
     // функция подсвета сегоднешней даты
     var Today = function (day, month, year) {
         month++;
-        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IС0С").addClass("today");
-        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IС1С").addClass("today");
+        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC0C").addClass("today");
+        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC1C").addClass("today");
     }
     //------------------------------------------
 
@@ -1836,7 +1836,7 @@
         //если сессия есть, то выдать дату, которая записана в сессии монтажникам
         var datesession = jQuery("#jform_project_mounting_date").val();  
         if (datesession != undefined) {
-            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YIС1С"+<?php echo $userId; ?>+"I").addClass("change");
+            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
         }
         //-----------------------------------------------------------
 
