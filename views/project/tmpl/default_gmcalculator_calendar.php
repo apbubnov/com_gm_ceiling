@@ -1671,7 +1671,12 @@
                     // время
                     var timeall = document.getElementById('hours').options;
                     for (var i = 0; i < timeall.length; i++) {
-                        if (timesession != undefined) {
+                        if (time_mounter != undefined) {
+                            if (timeall[i].value == time_mounter) {
+                                document.getElementById('hours').disabled = false;
+                                timeall[i].selected = true;
+                            }
+                        } else if (timesession != undefined) {
                             if (timeall[i].value == timesession) {
                                 document.getElementById('hours').disabled = false;
                                 timeall[i].selected = true;
@@ -1764,8 +1769,8 @@
         // получение значений из селектов монтажников
         jQuery("#modal-window-container-tar").on("click", "#save-choise-tar", function() {
             var mounter = jQuery("#mounters").val();
-            var time = jQuery("#hours").val();
-            var datetime = date+" "+time;
+            time_mounter = jQuery("#hours").val();
+            var datetime = date+" "+time_mounter;
             jQuery("#project_mounter").val(mounter);
             jQuery("#jform_project_mounting_date").val(datetime);
             if (jQuery(".change").length == 0) {
