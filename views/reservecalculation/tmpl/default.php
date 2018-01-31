@@ -272,7 +272,7 @@ if (count($AllGauger) == 0) {
     // функция подсвета сегоднешней даты
     var Today = function (day, month, year) {
         month++;
-        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"I").addClass("today");
+        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC0C").addClass("today");
     }   
     //------------------------------------------
 

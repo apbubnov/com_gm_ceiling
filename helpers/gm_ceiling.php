@@ -3825,11 +3825,11 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                     }
                     if (count($DayTimeGauger[$j - $first_day_of_week + 1]) == 0) {
-                        $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                        $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'IC0C">' . ($j - $first_day_of_week + 1) . '</td>';
                     } else if (($DayTimeGauger[$j - $first_day_of_week + 1] * Count($AllGauger)) == (Count($AllGauger) * 12)) {
-                        $table .= '<td class="full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                        $table .= '<td class="full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'IC0C">' . ($j - $first_day_of_week + 1) . '</td>';
                     } else {
-                        $table .= '<td class="not-full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                        $table .= '<td class="not-full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'IC0C">' . ($j - $first_day_of_week + 1) . '</td>';
                     }
                 }
                 // вывод свободных замерщиков (по одному)
@@ -3918,11 +3918,11 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                     }
                     if (count($DayMounters[$j - $first_day_of_week + 1]) == 0) {
-                        $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                        $table .= '<td class="current-month" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'IC1C">' . ($j - $first_day_of_week + 1) . '</td>';
                     } /*else if ($DayMounters[$j - $first_day_of_week + 1] == Count($Allbrigades)) {
                         $table .= '<td class="full-day" id="current-monthD'.($j - $first_day_of_week + 1).'DM'.$month.'MY'.$year.'YI'.$id.'I">'.($j - $first_day_of_week + 1).'</td>';                            
                     }*/ else {
-                        $table .= '<td class="not-full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'I">' . ($j - $first_day_of_week + 1) . '</td>';
+                        $table .= '<td class="not-full-day" id="current-monthD' . ($j - $first_day_of_week + 1) . 'DM' . $month . 'MY' . $year . 'YI' . $id . 'IC1C">' . ($j - $first_day_of_week + 1) . '</td>';
                     }
                 }
                 // для вывода монтажника (по одному)
