@@ -1778,12 +1778,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </tr>
             <tr>
                 <td>
-                    <button class="validate btn btn-primary" id="save" type="submit"> Сохранить и запустить <br> в
+                    <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
                         производство
                     </button>
                 </td>
                 <td>
-                    <button class="validate btn btn-primary" id="save_exit" type="submit"> Сохранить и выйти
+                    <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
                     </button>
                 </td>
                 <td>
@@ -2476,9 +2476,21 @@ var $ = jQuery;
             jQuery("input[name='project_status']").val(4);
             jQuery("input[name='project_verdict']").val(1);
         });
-        jQuery("#save").click(function () {
-            if(jQuery("input[name='project_mounter']").val()=="")
-                jQuery("input[name='project_mounter']").attr("required");
+        jQuery("#save").mousedown(function () {
+            if(jQuery("input[name='project_mounter']").val() === "")
+            {
+                jQuery(this).attr("type", "button");
+                     noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Выберите монтажную бригаду!"
+                    });
+
+            }
+            else
+                jQuery(this).attr("type", "submit");
             jQuery("input[name='project_status']").val(4);
             jQuery("input[name='project_verdict']").val(1);
         });
