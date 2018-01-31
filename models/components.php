@@ -292,6 +292,7 @@ class Gm_ceilingModelComponents extends JModelList
                     $option->count_sale = $item->option_count_sale;
                     $option->pprice = null;
                     $option->goods = [];
+                    $option->ocount = $this->getOCount($item->option_id);
 
                     $result[$item->component_id]->options[$item->option_id] = $option;
                 }
@@ -337,6 +338,49 @@ class Gm_ceilingModelComponents extends JModelList
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
+    }
+
+    private function getOCount($option_id) {
+        $db = $this->getDbo();
+
+        $TempDate = (object) [];
+        $TempDate->YDateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m"), 1, date("Y") - 1));
+        $TempDate->YDateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m") + 1, 1, date("Y") - 1));
+        $TempDate->MDateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m") - 1, 1, date("Y")));
+        $TempDate->MDateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), 1, date("Y")));
+        $TempDate->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m"), 1, date("Y")));
+        $TempDate->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m") + 1, 1, date("Y")));
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_components`")
+            ->select("SUM(count) as count")
+            ->where("(date_update > '$TempDate->YDateStart' AND date_update < '$TempDate->YDateEnd')")
+            ->where("status = '1'")
+            ->where("option_id = '$option_id'");
+        $db->setQuery($query);
+        $YCount = $db->loadObject()->count;
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_components`")
+            ->select("SUM(count) as count")
+            ->where("(date_update > '$TempDate->MDateStart' AND date_update < '$TempDate->MDateEnd')")
+            ->where("status = '1'")
+            ->where("option_id = '$option_id'");
+        $db->setQuery($query);
+        $MCount = $db->loadObject()->count;
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_components`")
+            ->select("SUM(count) as count")
+            ->where("(date_update > '$TempDate->DateStart' AND date_update < '$TempDate->DateEnd')")
+            ->where("status = '1'")
+            ->where("option_id = '$option_id'");
+        $db->setQuery($query);
+        $Count = $db->loadObject()->count;
+
+        $result = ceil((floatval($YCount) + floatval($MCount)) / 2);
+        $result -= ($result < $Count)?0:$Count;
+        return $result;
     }
 
     public function getInfoAnalytics($data) {

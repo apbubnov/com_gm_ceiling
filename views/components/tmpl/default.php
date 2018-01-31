@@ -31,12 +31,9 @@ if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
 }
 
 $stock = in_array(19, $user->groups);
-$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups) && !$stock;
+$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups) /*&& $userDealer->dealer_type != 1*/ && !$stock;
 
 $dealer = null;
-
-$stock = $managerGM = false;
-$managerGM = true;
 
 if ($managerGM) {
     $dealerId = $app->input->get('dealer', null, 'int');
@@ -54,16 +51,18 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
 
 ?>
 <link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css">
-
 <div class="Page">
     <div class="Title">
         Прайс компонентов<?=(isset($dealer))?" для $dealer->name #$dealer->id":"";?>.
     </div>
     <div class="Actions">
         <?=parent::getButtonBack();?>
+        <button type="button" class="Current ActionTR" id="ActionTR">
+            <i class="fa fa-caret-down" aria-hidden="true"></i> <span>Раскрыть все</span>
+        </button>
         <?if ($managerGM):?>
         <form class="FormSimple UpdatePrice MarginLeft" action="javascript:UpdatePrice(0);">
-            <label for="allPrice">Изменить цену:</label>
+            <label for="allPrice" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
             <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}"  name="allPrice" id="allPrice" placeholder="0"
                    title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
                    size="5">
@@ -73,6 +72,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         </form>
         <?endif;?>
     </div>
+    <div>
     <table class="Body">
         <thead>
             <tr class="THead">
@@ -84,7 +84,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                 <td>Заказать</td>
                 <td>Цена закупки</td>
                 <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
-                <td>Изменить</td>
+                <td>Посмотреть</td>
                 <?elseif ($managerGM && empty($dealer)):?>
                 <td>Цена дилера</td>
                 <td>Цена клиента</td>
@@ -101,7 +101,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         </thead>
         <tbody>
         <?foreach ($this->items as $key_c => $component):?>
-            <tr class="TBody Lavel1">
+            <tr class="TBody Level1 Action" data-component="<?=$key_c;?>" data-level="1">
                 <td><i class="fa fa-caret-down" aria-hidden="true"></i></td>
                 <td><?=$key_c;?></td>
                 <td><?=$component->title;?> <?=$component->unit;?></td>
@@ -114,42 +114,66 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                 <?elseif ($managerGM && empty($dealer)):?>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td>
+                    </td>
                 <?elseif ($managerGM):?>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td>
+                    </td>
                 <?else:?>
                     <td></td>
                     <td></td>
                 <?endif;?>
             </tr>
         <?foreach ($component->options as $key_o => $option):?>
-                <tr class="TBody Lavel2" style="display: none;">
+                <tr class="TBody Level2 <?=($stock)?"Action":""?>" style="display: none;" data-component="<?=$key_c;?>"
+                    data-option="<?=$key_o;?>" data-level="2">
                     <td><i class="fa <?=($stock)?"fa-caret-down":"fa-caret-right";?>" aria-hidden="true"></i></td>
                     <td><?=$key_o;?></td>
                     <td><?=$component->title;?> <?=$option->title;?></td>
                     <td><?=$option->count;?></td>
                     <?if($stock):?>
-                        <td></td>
+                        <td><?=$option->ocount;?></td>
                         <td><?=$option->pprice;?></td>
                         <td></td>
-                        <td></td>
+                        <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=component&id=<?=$key_o;?>">Инфо</a></td>
                     <?elseif ($managerGM && empty($dealer)):?>
                         <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
                         <td><?=double_margin($option->price, $userDealer->info->gm_components_margin, $userDealer->info->dealer_components_margin);?></td>
-                        <td></td>
+                        <td>
+                            <form class="FormSimple UpdatePrice MarginLeft" action="javascript:UpdatePrice(<?=$key_o;?>);">
+                                <label for="allPrice" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}"  name="allPrice" id="allPrice" placeholder="0"
+                                       title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                                       size="5">
+                                <button type="submit" class="buttonOK">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </td>
                     <?elseif ($managerGM):?>
                         <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
                         <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
-                        <td></td>
+                        <td>
+                            <form class="FormSimple UpdatePrice MarginLeft" action="javascript:UpdatePrice(<?=$key_o;?>);">
+                                <label for="allPrice" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}"  name="allPrice" id="allPrice" placeholder="0"
+                                       title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                                       size="5">
+                                <button type="submit" class="buttonOK">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </td>
                     <?else:?>
                         <td><?=margin($option->price, $userDealer->info->gm_components_margin);?></td>
                         <td><?=double_margin($option->price, $userDealer->info->gm_components_margin, $userDealer->info->dealer_components_margin);?></td>
                     <?endif;?>
                 </tr>
         <?if ($stock) foreach ($option->goods as $key_g => $good):?>
-                    <tr class="TBody Lavel3" style="display: none;">
+                    <tr class="TBody Level3" style="display: none;" data-component="<?=$key_c;?>"
+                        data-option="<?=$key_o;?>" data-good="<?=$key_g;?>" data-level="3">
                         <td><i class="fa fa-caret-right" aria-hidden="true"></i></td>
                         <td><?=$key_g;?></td>
                         <td>#<?=$good->barcode;?> @<?=$good->article;?></td>
@@ -157,7 +181,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                         <td></td>
                         <td><?=$good->pprice;?></td>
                         <td><?=$good->stock_name;?></td>
-                        <td></td>
+                        <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=component&id=<?=$key_o;?>">Инфо</a></td>
                     </tr>
         <?endforeach;?>
         <?endforeach;?>
@@ -169,4 +193,131 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         </tr>
         </tfoot>
     </table>
+    </div>
 </div>
+
+<script type="text/javascript">
+    var $ = jQuery,
+        Data = {};
+
+    $(document).ready(Init);
+    $(window).resize(Resize);
+    $(document).scroll(Scroll);
+
+    function Init() {
+        Data.Page = $(".Page");
+        Data.Actions = Data.Page.find(".Actions");
+        Data.Table = Data.Page.find(".Body");
+        Data.Table.THead = Data.Table.find(".THead");
+        Data.Table.TBody = Data.Table.find(".TBody");
+        Data.Table.Level1 = Data.Table.find(".Level1");
+        Data.Table.Level2 = Data.Table.find(".Level2");
+        Data.Table.Level3 = Data.Table.find(".Level3");
+        Data.Table.Action = Data.Table.find(".Action");
+
+        Data.Table.Action.click(ActionTR);
+        Data.Actions.find("#ActionTR").click(AllActionTR);
+
+        Data.Temp = {};
+        Data.Scroll = {};
+
+        ScrollInit();
+        ResizeHead();
+        Resize();
+    }
+
+    function Resize() {
+        ResizeHead();
+    }
+
+    function ScrollInit() {
+        Data.Scroll.EHead = Data.Table.find("thead");
+        Data.Scroll.EHeadTr = Data.Scroll.EHead.find(".THead");
+        Data.Scroll.EHeadTrClone = Data.Scroll.EHeadTr.clone();
+
+        Data.Scroll.EHeadTrClone.removeClass("THead").addClass("THeadClone");
+        Data.Scroll.EHead.append(Data.Scroll.EHeadTrClone);
+
+        Data.Page.scroll(ResizeHead);
+    }
+
+    function ResizeHead() {
+        Data.Scroll.EHeadTrClone.css("left", (Data.Scroll.EHeadTr.offset().left));
+
+        for (var i = 0; i < Data.Scroll.EHeadTr.children().length; i++)
+            $(Data.Scroll.EHeadTrClone.children()[i])
+                .width($(Data.Scroll.EHeadTr.children()[i]).width());
+    }
+
+    function Scroll() {
+        var scrollTop = $(window).scrollTop(),
+            offset = Data.Scroll.EHeadTr.offset(),
+            has = Data.Scroll.EHeadTrClone.hasClass("Show");
+        if (scrollTop >= offset.top) { if (!has) Data.Scroll.EHeadTrClone.addClass("Show"); }
+        else { if (has) Data.Scroll.EHeadTrClone.removeClass("Show"); }
+    }
+
+    function ActionTR() {
+        var TR = $(this),
+            level = parseInt(this.dataset.level),
+            data = {};
+
+        switch (level)
+        {
+            case 1: data.title = "component"; break;
+            case 2: data.title = "option"; break;
+            case 3: data.title = "good"; break;
+        }
+
+        data.id = this.dataset[data.title];
+
+        var TRN = TR.next();
+        if (TR.hasClass("Active")) {
+            TR.removeClass("Active");
+            TR.find("td:first-child i").removeClass("fa-caret-up").addClass("fa-caret-down");
+
+            while (TRN.length !== 0 && TRN.data("level") > level) {
+                TRN.removeClass("Active");
+
+                if (TRN.hasClass("Action"))
+                    TRN.find("td:first-child i").removeClass("fa-caret-up").addClass("fa-caret-down");
+
+                TRN.hide();
+                TRN = TRN.next();
+            }
+        } else {
+            TR.addClass("Active");
+            TR.find("td:first-child i").removeClass("fa-caret-down").addClass("fa-caret-up");
+
+            while (TRN.length !== 0 && TRN.data("level") > level) {
+                if (TRN.hasClass("Level" + (level + 1)))
+                    TRN.show();
+                TRN = TRN.next();
+            }
+        }
+
+        ResizeHead();
+    }
+
+    function AllActionTR() {
+        var Button = $(this),
+            TR = Data.Table.TBody;
+        if (Button.hasClass("Active")) {
+            TR.removeClass("Active");
+            TR.filter(":not(.Level1)").hide();
+            TR.filter(".Action").find("td:first-child i").removeClass("fa-caret-up").addClass("fa-caret-down");
+            Button.removeClass("Active");
+            Button.find("i").removeClass("fa-caret-up").addClass("fa-caret-down");
+            Button.find("span").text("Раскрыть все");
+        } else {
+            TR.filter(".Action").addClass("Active");
+            TR.show();
+            TR.filter(".Action").find("td:first-child i").removeClass("fa-caret-down").addClass("fa-caret-up");
+            Button.addClass("Active");
+            Button.find("i").removeClass("fa-caret-down").addClass("fa-caret-up");
+            Button.find("span").text("Скрыть все");
+        }
+
+        ResizeHead();
+    }
+</script>
