@@ -1069,7 +1069,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					}
 					elseif ($type === "calculator" && $subtype === "calendar") {
 						if($user->dealer_type!=2)
-						    if($project_status == 4 ) $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar', false));
+						    if($project_status == 4 ) $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage', false));
 							else $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.$project_id, false));
 						else $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.$project_id, false));
 					}
