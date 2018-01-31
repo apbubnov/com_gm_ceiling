@@ -1072,8 +1072,6 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and map.group_id = '$who2' and users.dealer_id = '$dealer'" );
             $db->setQuery($query2);
             $items2 = $db->loadObjectList();
-
-            throw new Exception(count($items2));
             
             // объединение с выходным днем
             for ($i=0; $i < count($items); $i++) {
@@ -1081,14 +1079,16 @@ class Gm_ceilingModelCalculations extends JModelList {
             }
             //создание нового массива
             if (!empty($items2)) {
-                $day = array(
-                    'project_calculator'=>$items2->id_user,
-                    'project_calculation_date'=>$items2->date_from,
-                    'project_info'=>"Выходной",
-                    'project_calculation_day_off'=>$items2->date_to
-                );
-                $day = array((object)$day);
-                array_push($items, $day);
+                foreach ($items2 as $value) {
+                    $day = array(
+                        'project_calculator'=>$value->id_user,
+                        'project_calculation_date'=>$value->date_from,
+                        'project_info'=>"Выходные часы",
+                        'project_calculation_day_off'=>$value->date_to
+                    );
+                    $day = array((object)$day);
+                    array_push($items, $day);
+                }
             }
 
     		return $items;
