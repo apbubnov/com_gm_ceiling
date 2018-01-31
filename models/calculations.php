@@ -1005,7 +1005,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db->setQuery($query2);
             $items2 = $db->loadObject();
 
-            throw new Exception(count($items2));
+            throw new Exception($items2[0]);
             
             // объединение с выходным днем
             $index = 0;
