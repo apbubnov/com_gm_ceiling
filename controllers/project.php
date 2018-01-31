@@ -1045,9 +1045,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							Gm_ceilingHelpersGm_ceiling::notify($data, 6);
 							$this->setMessage("Проект сформирован! <br>  Неотмеченные потолки перемещены в копию проекта с отказом");
 						} else {
-							Gm_ceilingHelpersGm_ceiling::notify($data, 2);
-							$this->setMessage("Проект сформирован");
-							Gm_ceilingHelpersGm_ceiling::notify($data, 7);
+						    if($project_status == 4 )  { $this->setMessage("Проект сохранен");}
+						    else {
+                                Gm_ceilingHelpersGm_ceiling::notify($data, 2);
+                                $this->setMessage("Проект сформирован");
+                                Gm_ceilingHelpersGm_ceiling::notify($data, 7);
+                            }
 						}
 					} elseif($project_verdict == 0) {
 						Gm_ceilingHelpersGm_ceiling::notify($data, 4);
