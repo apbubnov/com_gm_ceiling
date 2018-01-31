@@ -117,7 +117,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         jQuery("#new_dealer").click(function(){
             jQuery("#close4-tar").show();
             jQuery("#modal-window-container").show();
-            jQuery("#modal-window").show("slow");
+            jQuery("#modal-window-1-tar").show("slow");
         });
 
         jQuery(document).click(function(e){
