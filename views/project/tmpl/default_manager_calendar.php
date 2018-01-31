@@ -31,36 +31,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations = $model->getProjectItems($this->item->id);
 //$need_mount = 1;
 
-foreach ($calculations as $calculation) {
-
-    $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
-    $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
-    $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-
-    $calculation->dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-    $calculation->dealer_components_sum_1 = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
-    $calculation->dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-
-    $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-    //$calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $this->item->project_discount) / 100);
-    $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
-    $project_total += $calculation->calculation_total;
-    $project_total_discount += $calculation->calculation_total_discount;
-
-    if ($user->dealer_type != 2) {
-        $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-        $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
-        $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
-        $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
-        $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
-        $calculation_total_11 += $calculation_total_1;
-        $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
-    }
-    $project_total_11 += $project_total_1;
-
-    $calculation_total = $calculation->calculation_total;
-
-}
 
 $sum_transport = 0;  $sum_transport_discount = 0;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
@@ -88,30 +58,7 @@ $calculations1 = $calculationsModel->getProjectItems($this->item->id);
 $components_data = array();
 $project_sum = 0;
 $counter = 0;
-foreach ($calculations1 as $calculation) {
-    $counter++;
-    $from_db = 1;
-    $save = 1;
-    $ajax = 0;
-    $pdf = 1;
-    $print_components = 0;
-    if($calculation->mounting_sum == 0) $need_mount = 0;
-    else $need_mount = 1;
-    Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
-    $from_db = 1;
-    $save = 0;
-    $ajax = 0;
-    $pdf = 0;
-    $print_components = 1;
-    $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
-    $project_sum += margin($calculation->components_sum, $this->item->gm_components_margin);
-    $project_sum += margin($calculation->canvases_sum, $this->item->gm_canvases_margin);
-    $project_sum += margin($calculation->mounting_sum, $this->item->gm_mounting_margin);
-    if ($counter == count($calculations1)) {
-        $flag_last = 1;
-        Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
-    }
-}
+
 
 // календарь
 $month = date("n");
