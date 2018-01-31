@@ -19,7 +19,11 @@ $userId     = $user->get('id');
 // календарь
 $month = date("n");
 $year = date("Y");
-$FlagCalendar = [3, 1];
+if ($user->dealer_id == 1 && in_array("14", $user->groups)) {
+	$FlagCalendar = [3, $userId];
+} else {
+	$FlagCalendar = [3, $user->dealer_id];
+}
 $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
 //----------------------------------------------------------------------------------
 
@@ -483,7 +487,7 @@ if (count($AllGauger) == 0) {
 
         })
     });
-	
+
 	// Подсказки по городам
     ymaps.ready(init);
 
