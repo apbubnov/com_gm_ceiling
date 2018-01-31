@@ -234,6 +234,8 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         var scrollTop = $(window).scrollTop(),
             offset = Data.Table.offset();
 
+        console.log(scrollTop + " - " + offset.top + " = " + (scrollTop - offset.top));
+
         Data.Table.THead.css("top", Math.max(scrollTop - offset.top, 0));
     }
 /*
