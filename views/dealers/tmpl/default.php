@@ -85,7 +85,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         	?>
         </tbody>
     </table>
-    <div class="modal-window-container" id="mv_container">
+    <div class="modal_window_container" id="mv_container">
         <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div class="modal_window" id="modal_window_create">
                 <p><strong>Создание нового дилера</strong></p>
