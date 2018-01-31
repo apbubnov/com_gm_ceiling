@@ -1786,11 +1786,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
                     </button>
                 </td>
-                <td>
-                    <a class="btn btn-primary"
-                        href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">
-                        Перейти к монтажам </a>
-                </td>
+<!--                <td>-->
+<!--                    <a class="btn btn-primary"-->
+<!--                        href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?><!--">-->
+<!--                        Перейти к монтажам </a>-->
+<!--                </td>-->
                 <td>
                 </td>
             </tr>
