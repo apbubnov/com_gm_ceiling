@@ -25,7 +25,14 @@ $canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
 $canChange = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 ?>
-
+<style>
+    #projectList th:nth-child(1) {
+        width: 1%;
+    }
+    #projectList th:nth-child(3) {
+        width: 15%;
+    }
+</style>
 <h2>График замеров</h2>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar'); ?>"
       method="post" name="adminForm" id="adminForm">
