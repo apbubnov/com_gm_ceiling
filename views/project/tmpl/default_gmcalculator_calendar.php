@@ -1676,15 +1676,15 @@
                 setTimeout(function() {
                     // время
                     var timeall = document.getElementById('hours').options;
+                    console.log(time);
                     for (var i = 0; i < timeall.length; i++) {
-                        if (timesession != undefined) {
-                            if (timeall[i].value == timesession) {
+                        if (time != undefined) {
+                            if (timeall[i].value == time) {
                                 document.getElementById('hours').disabled = false;
                                 timeall[i].selected = true;
                             }
-                        }
-                        if (time != undefined) {
-                            if (timeall[i].value == time) {
+                        } else if (timesession != undefined) {
+                            if (timeall[i].value == timesession) {
                                 document.getElementById('hours').disabled = false;
                                 timeall[i].selected = true;
                             }
