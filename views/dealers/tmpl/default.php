@@ -130,6 +130,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
                 if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
                 {
+                    console.log(target);
                     if (target.id != undefined)
                     {
                         if (target.id == 'save_dealer')
