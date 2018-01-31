@@ -908,7 +908,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$this->setMessage("Проект вернулся в Замеры");
 
 				} else {
-					$project_verdict = $jinput->get('project_verdict', '0', 'INT');	
+					$project_verdict = $jinput->get('project_verdict', '0', 'INT');
+					print_r($project_verdict); exit;
 					if($project_verdict == 1) {
 						$data->project_verdict = 1;
 					}
