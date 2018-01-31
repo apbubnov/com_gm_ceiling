@@ -1684,8 +1684,10 @@
                             }
                         }
                         if (time != undefined) {
-                            document.getElementById('hours').disabled = false;
+                            if (timeall[i].value == time) {
+                                document.getElementById('hours').disabled = false;
                                 timeall[i].selected = true;
+                            }
                         }
                     }
                     // бригада
