@@ -56,7 +56,7 @@ class Gm_ceilingControllerProjects extends Gm_ceilingController
             if($user->dealer_type == 1) {
                 $model->deleteEmptyProject($client_id);
             }
-            return 1;
+            die(true);
         }
         catch(Exception $e)
         {
