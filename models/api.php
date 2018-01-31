@@ -81,6 +81,8 @@ class Gm_ceilingModelApi extends JModelList
                     $query->where("`android_id` = $android_id OR `id` = $android_id");
                     $db->setQuery($query);
                     $object_table = $db->loadObject();
+                    throw new Exception(json_encode($object_table));
+                    
                     if (isset($object_table->id))
                     {
                         $id = $object_table->id;
