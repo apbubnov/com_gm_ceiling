@@ -1032,6 +1032,7 @@ class Gm_ceilingModelCalculations extends JModelList {
                 array_splice($items,$index,0,$day);
             }
 
+            throw new Exception(count($items));
 
     		return $items;
         }
