@@ -328,6 +328,9 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         ResizeHead();
     }
 
+    /**
+     * @return {boolean}
+     */
     function UpdatePrice() {
         Data.Preloader.show();
         var values = JSON.serialize(this);
@@ -354,6 +357,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
             error: Noty
         });
 
+        $(this).find("input:not(:disabled)").val("");
         Data.Preloader.hide();
 
         return false;
@@ -370,7 +374,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
     }
 
     JSON.serialize = function (obj) {
-        var inputs = $(obj).find("[value]:not(:disabled)"),
+        var inputs = $(obj).find("input:not(:disabled)"),
             datas = $(obj).find("[data-JsonSend]").filter("[id]"),
             values = $(obj).find("[data-Send]").filter("[id]"),
             result = {jsons:{}, values:{}};

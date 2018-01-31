@@ -104,7 +104,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             if ($managerGM) {
                 $dealerId = $app->input->get('dealer', null, 'int');
 
-                if (isset($dealerId)) {
+                if (!empty($dealerId)) {
                     $dealer = JFactory::getUser($dealerId);
                     $dealer->groups = $dealer->get('groups');
                     // $dealer->price = $model->getDealerPrice($dealerId);
@@ -116,7 +116,9 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
 
             $p = str_replace("%", "", $price);
             $e = str_replace(["+", "-"], "", $p);
-            $type = ($e != $p)?(($p != $price)?"percent":"expression"):"number";
+            $type = (strlen($e) != strlen($p))
+                ?((strlen($p) != strlen($price))?"percent":"expression")
+                :"number";
             $number = floatval($p);
 
             $answer = (object) [];
@@ -141,11 +143,11 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                             break;
                     }
                     $answer->elements[] = (object) [
-                        "name" => ".Level2[data-option='$newPrice->id'] #GMPrice",
-                        "value" => margin($newPrice[$k]->price, $userDealer->gm_components_margin)];
+                        "name" => ".Level2[data-option='$v->id'] #GMPrice",
+                        "value" => $this->margin($newPrice[$k]->price, $userDealer->gm_components_margin)];
                     $answer->elements[] = (object) [
-                        "name" => ".Level2[data-option='$newPrice->id'] #DealerPrice",
-                        "value" => double_margin($newPrice[$k]->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin)];
+                        "name" => ".Level2[data-option='$v->id'] #DealerPrice",
+                        "value" => $this->double_margin($newPrice[$k]->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin)];
                 }
                 $model->setPrice($newPrice);
             }
@@ -160,4 +162,8 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    private function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
+    private function double_margin($value, $margin1, $margin2) { return $this->margin($this->margin($value, $margin1), $margin2); }
+
 }

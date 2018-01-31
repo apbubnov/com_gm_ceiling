@@ -205,7 +205,7 @@ class Gm_ceilingModelComponents extends JModelList
 
             $query->from("`#__gm_ceiling_components_option` AS options")
                 ->join("LEFT", "`#__gm_ceiling_components` AS components ON components.id = options.component_id")
-                ->join((($stock)?"RIGHT":"LEFT"), "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
+                ->join("LEFT", "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
                 ->select('options.id as option_id, options.title as option_title, options.price as option_price, options.count as option_count, options.count_sale as option_count_sale')
                 ->select('components.id as component_id, components.title as component_title, components.unit, components.code')
                 ->select("goods.id as good_id, goods.stock as good_stock, goods.barcode as good_barcode, goods.article as good_article, goods.count as good_count");
@@ -730,9 +730,9 @@ class Gm_ceilingModelComponents extends JModelList
             foreach ($data as $v) {
                 $query = $db->getQuery(true);
                 $query->update("`#__gm_ceiling_components_option`")
-                    ->set("price = $data->price")
-                    ->where("id = $data->id");
-                $querySTR .= (string) $query;
+                    ->set("price = '$v->price'")
+                    ->where("id = '$v->id'");
+                $querySTR .= ((string) $query) . "; ";
             }
             $db->setQuery($querySTR);
             $db->execute();
