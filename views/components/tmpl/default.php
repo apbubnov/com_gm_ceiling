@@ -219,17 +219,24 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         Data.Actions.find("#ActionTR").click(AllActionTR);
 
         Data.Temp = {};
-        Data.Scroll = {};
+        /*Data.Scroll = {};
 
         ScrollInit();
-        ResizeHead();
+        ResizeHead();*/
         Resize();
     }
 
     function Resize() {
-        ResizeHead();
+        /*ResizeHead();*/
     }
 
+    function Scroll() {
+        var scrollTop = $(window).scrollTop(),
+            offset = Data.Table.offset();
+
+        Data.Table.THead.css("top", Math.max(scrollTop - offset.top, 0));
+    }
+/*
     function ScrollInit() {
         Data.Scroll.EHead = Data.Table.find("thead");
         Data.Scroll.EHeadTr = Data.Scroll.EHead.find(".THead");
@@ -256,7 +263,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         if (scrollTop >= offset.top) { if (!has) Data.Scroll.EHeadTrClone.addClass("Show"); }
         else { if (has) Data.Scroll.EHeadTrClone.removeClass("Show"); }
     }
-
+*/
     function ActionTR() {
         var TR = $(this),
             level = parseInt(this.dataset.level),
@@ -296,7 +303,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
             }
         }
 
-        ResizeHead();
+        //ResizeHead();
     }
 
     function AllActionTR() {
@@ -318,6 +325,6 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
             Button.find("span").text("Скрыть все");
         }
 
-        ResizeHead();
+        //ResizeHead();
     }
 </script>

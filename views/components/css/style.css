@@ -106,6 +106,10 @@ body {
     width: 100%;
 }
 
+.Page .Body thead .THead {
+    position: relative;
+}
+
 .Page .Body thead .THeadClone {
     display: none;
     position: fixed;
