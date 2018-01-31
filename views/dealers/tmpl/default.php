@@ -85,9 +85,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         	?>
         </tbody>
     </table>
-    <div id="modal-window-container">
-        <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="modal-window-1-tar">
+    <div class="modal-window-container" id="mv_container">
+        <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div class="modal_window" id="modal_window_create">
                 <p><strong>Создание нового дилера</strong></p>
                 <p>ФИО:</p>
                 <p><input type="text" id="fio_dealer"></p>
@@ -95,7 +95,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id="dealer_contacts"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <div class="modal_window" id="modal_window">
+        <div class="modal_window" id="modal_window_sum">
             <p><strong id="dealer_name"></strong></p>
             <p id="dealer_invoice"></p>
             <p>Сумма взноса:</p>
@@ -115,9 +115,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         console.log(sum, dealers);
 
         jQuery("#new_dealer").click(function(){
-            jQuery("#close4-tar").show();
-            jQuery("#modal-window-container").show();
-            jQuery("#modal-window-1-tar").show("slow");
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_create").show("slow");
         });
 
         jQuery(document).click(function(e){
@@ -126,8 +126,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             // цикл двигается вверх от target к родителям до table
             while (target.tagName != 'BODY')
             {
-                var div = jQuery("#modal_window");
-                var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+                var div = jQuery("#modal_window_create");
+                var div2 = jQuery("#modal_window_sum"); // тут указываем ID элемента
                 if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
                 {
                     console.log(target);
@@ -233,21 +233,21 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         document.getElementById('dealer_invoice').innerHTML = 'На счете: ' + sum[user_id] + ' руб.';
                         document.getElementById('pay_sum').value = (sum[user_id]<0)?Math.abs(sum[user_id]):0;
 
-                        jQuery("#close4-tar").show();
-                        jQuery("#modal_window_container").show();
-                        jQuery("#modal_window").show("slow");
+                        jQuery("#close").show();
+                        jQuery("#mv_container").show();
+                        jQuery("#modal_window_sum").show("slow");
                         return;
                     }
                 }
 
                 if (target.id != undefined)
                 {
-                    if (target.id == 'close4-tar' || target.id == 'modal-window-container')
+                    if (target.id == 'close' || target.id == 'mv_container')
                     {
-                        jQuery("#close4-tar").hide();
-                        jQuery("#modal-window-container").hide();
-                        jQuery("#modal-window-1-tar").hide();
-                        jQuery("#modal-window").hide();
+                        jQuery("#close").hide();
+                        jQuery("#mv_container").hide();
+                        jQuery("#modal_window_create").hide();
+                        jQuery("#modal_window_sum").hide();
                         return;
                     }
                 }
