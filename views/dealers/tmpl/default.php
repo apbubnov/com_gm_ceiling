@@ -95,7 +95,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id="dealer_contacts"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <div class="modal_window" id="modal_window" style="display: none;">
+        <div class="modal_window" id="modal_window">
             <p><strong id="dealer_name"></strong></p>
             <p id="dealer_invoice"></p>
             <p>Сумма взноса:</p>
@@ -117,7 +117,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         jQuery("#new_dealer").click(function(){
             jQuery("#close4-tar").show();
             jQuery("#modal-window-container").show();
-            jQuery("#modal-window-1-tar").show("slow");
+            jQuery("#modal-window").show("slow");
         });
 
         jQuery(document).click(function(e){
