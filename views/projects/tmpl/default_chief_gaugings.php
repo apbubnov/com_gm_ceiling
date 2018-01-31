@@ -123,26 +123,24 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
             </thead>
             <tbody>
                 <?php foreach ($this->items as $i => $item) : ?>
-                    <?php if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
-                        <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
-                            <td class="center one-touch">
-                                <?php echo $item->id; ?>
-                            </td>
-                            <?php $jdate = new JDate(JFactory::getDate($item->calculation_date)); ?>
-                            <td class="center one-touch">
-                                <? if ($item->calculation_date == "00.00.0000 00:00"): ?> -
-                                <? else: ?><?= $jdate->format('d.m.Y H:i'); ?>
-                                <? endif; ?>
-                            </td>
-                            <td class="center one-touch">
-                                <?php echo $this->escape($item->project_info); ?>
-                            </td>
-                            <td class="center one-touch">
-                                <?php echo $item->client_name; ?>
-                                <?php echo $item->client_contacts; ?><br>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
+                    <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
+                        <td class="center one-touch">
+                            <?php echo $item->id; ?>
+                        </td>
+                        <?php $jdate = new JDate(JFactory::getDate($item->calculation_date)); ?>
+                        <td class="center one-touch">
+                            <? if ($item->calculation_date == "00.00.0000 00:00"): ?> -
+                            <? else: ?><?= $jdate->format('d.m.Y H:i'); ?>
+                            <? endif; ?>
+                        </td>
+                        <td class="center one-touch">
+                            <?php echo $this->escape($item->project_info); ?>
+                        </td>
+                        <td class="center one-touch">
+                            <?php echo $item->client_name; ?>
+                            <?php echo $item->client_contacts; ?><br>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>

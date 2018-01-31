@@ -100,6 +100,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             <p id="dealer_invoice"></p>
             <p>Сумма взноса:</p>
             <p><input type="text" id="pay_sum"></p>
+            <input type="hidden" id="hidden_user_id">
             <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
         </div>
     </div>
@@ -176,12 +177,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         }
                         if (target.id == 'save_pay')
                         {
-                            var user_id = jQuery(target).attr("user_id");
                             jQuery.ajax({
                                 type: 'POST',
                                 url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
                                 data: {
-                                    id: user_id,
+                                    id: document.getElementById('hidden_user_id').value,
                                     sum: document.getElementById('pay_sum').value
                                 },
                                 success: function(data){
@@ -228,10 +228,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     if (target.className.indexOf('btn-done') + 1)
                     {
                         var user_id = jQuery(target).attr("user_id");
-                        console.log(user_id);
+                        
                         document.getElementById('dealer_name').innerHTML = 'Взнос задолжности. Дилер: ' + dealers[user_id].name;
                         document.getElementById('dealer_invoice').innerHTML = 'На счете: ' + sum[user_id] + ' руб.';
                         document.getElementById('pay_sum').value = (sum[user_id]<0)?Math.abs(sum[user_id]):0;
+                        document.getElementById('hidden_user_id').value = user_id;
 
                         jQuery("#close").show();
                         jQuery("#mv_container").show();
@@ -274,7 +275,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
-                        html += '<td>' + data[i].created + '</td></tr>';
+                        html += '<td>' + data[i].created + '</td>';
+                        html += '<td>' + data[i].dealer_id + '</td></tr>';
                     }
                     tbody.innerHTML = html;
                     html = '';
