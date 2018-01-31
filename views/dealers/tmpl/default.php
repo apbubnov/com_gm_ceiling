@@ -124,14 +124,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
     jQuery(document).ready(function()
     {
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
-       /* jQuery('body').on('click', 'tr', function(e)
-        {
-            console.log(sum_click_bool);
-            if(jQuery(this).data('href') != undefined && !sum_click_bool){
-                document.location.href = jQuery(this).data('href');
-            }
-            sum_click_bool = false;
-        });*/
 
         jQuery("#new_dealer").click(function(){
             jQuery("#close4-tar").show();
@@ -139,125 +131,142 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#modal-window-1-tar").show("slow");
         });
 
-        jQuery("#save_dealer").click(function(){
-             jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=dealer.create_dealer",
-                data: {
-                    fio: document.getElementById('fio_dealer').value,
-                    phone: document.getElementById('dealer_contacts').value
-                },
-                success: function(data){
-                    if (data == 'client_found')
-                    {
-                        var n = noty({
-                            timeout: 2000,
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Клиент с таким номером существует!"
-                        });
-                    }
-                    else
-                    {
-                        location.reload();
-                    }
-                },
-                dataType: "text",
-                async: false,
-                timeout: 10000,
-                error: function(data){
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка. Сервер не отвечает"
-                    });
-                }                   
-            });
-        });
-
-        //для внесения денег
-        jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-            var user_id = jQuery(this).attr("user_id");
-            var div = jQuery(".modal_window"); // тут указываем ID элемента
-            if (!div.is(e.target) // если клик был не по нашему блоку
-                && div.has(e.target).length === 0) { // и не по его дочерним элементам
-                    console.log('mouseup');
-                    jQuery(".close_btn").hide();
-                    jQuery(".modal_window_container").hide();
-                    jQuery(".modal_window").hide();
-            }
-
-            var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-            if (!div3.is(e.target) // если клик был не по нашему блоку
-                && div3.has(e.target).length === 0) { // и не по его дочерним элементам
-                jQuery("#close4-tar").hide();
-                jQuery("#modal-window-container").hide();
-                jQuery("#modal-window-1-tar").hide();
-            }
-        });
-
-        jQuery(document).click(function (e){
-            var target = event.target;
-            console.log(event.target.tagName);
+        jQuery(document).click(function(e){
+            var target = e.target;
+            console.log(e.target.tagName);
             // цикл двигается вверх от target к родителям до table
-            while (target.tagName != 'body') {
-                if (target.tagName == 'TR') {// нашли элемент, который нас интересует!
+            while (target.tagName != 'BODY')
+            {
+                var div = jQuery(".modal_window");
+                var div2 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
+                if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
+                {
+                    if (target.id != undefined)
+                    {
+                        if (target.id == 'save_dealer')
+                        {
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: "index.php?option=com_gm_ceiling&task=dealer.create_dealer",
+                                data: {
+                                    fio: document.getElementById('fio_dealer').value,
+                                    phone: document.getElementById('dealer_contacts').value
+                                },
+                                success: function(data){
+                                    if (data == 'client_found')
+                                    {
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "error",
+                                            text: "Клиент с таким номером существует!"
+                                        });
+                                    }
+                                    else
+                                    {
+                                        location.reload();
+                                    }
+                                },
+                                dataType: "text",
+                                async: false,
+                                timeout: 10000,
+                                error: function(data){
+                                    var n = noty({
+                                        timeout: 2000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "error",
+                                        text: "Ошибка. Сервер не отвечает"
+                                    });
+                                }                   
+                            });
+                        }
+                    }
+                    if (target.className != undefined)
+                    {
+                        if (target.className.indexOf('save_pay') + 1)
+                        {
+                            var user_id = jQuery(target).attr("user_id");
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
+                                data: {
+                                    id: user_id,
+                                    sum: document.getElementById('pay_sum'+user_id).value
+                                },
+                                success: function(data){
+                                    var n = noty({
+                                        timeout: 5000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "success",
+                                        text: "Сумма успешно добавлена"
+                                    });
+                                    setInterval(function() { location.reload();}, 1500);
+                                },
+                                dataType: "text",
+                                async: false,
+                                timeout: 10000,
+                                error: function(data){
+                                    var n = noty({
+                                        timeout: 2000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "error",
+                                        text: "Ошибка. Сервер не отвечает"
+                                    });
+                                }
+                            });
+                            return;
+                        } 
+                    }
+                    return;
+                }
+
+                if (target.tagName == 'TR')
+                {
                     if(jQuery(target).data('href') != undefined){
                         document.location.href = jQuery(target).data('href');
                     }
                     return;
                 }
-                if (target.className.indexOf('btn-done') + 1) {// нашли элемент, который нас интересует!
-                    console.log(target.className.indexOf('btn-done') + 1);
-                    var user_id = jQuery(this).attr("user_id");
-                    jQuery(".close_btn").show();
-                    jQuery("#modal_window_container" + user_id).show();
-                    jQuery("#modal_window_acct" + user_id).show("slow");
-                    return;
+
+                if (target.className != undefined)
+                {
+                    if (target.className.indexOf('btn-done') + 1) {
+                        var user_id = jQuery(target).attr("user_id");
+                        jQuery(".close_btn").show();
+                        jQuery("#modal_window_container" + user_id).show();
+                        jQuery("#modal_window_acct" + user_id).show("slow");
+                        return;
+                    }
+
+                    if (target.className.indexOf('close_btn') + 1 || target.className.indexOf('modal_window_container') + 1) {
+                        jQuery(".close_btn").hide();
+                        jQuery(".modal_window_container").hide();
+                        jQuery(".modal_window").hide();
+                        return;
+                    }
                 }
+                
+                if (target.id != undefined)
+                {
+                    if (target.id == 'close4-tar' || target.id == 'modal-window-container')
+                    {
+                        jQuery("#close4-tar").hide();
+                        jQuery("#modal-window-container").hide();
+                        jQuery("#modal-window-1-tar").hide();
+                        return;
+                    }
+                }
+
                 target = target.parentNode;
             }
-        });
-
-        jQuery(".save_pay").click(function(){
-            var user_id = jQuery(this).attr("user_id");
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
-                data: {
-                    id: user_id,
-                    sum: document.getElementById('pay_sum'+user_id).value
-                },
-                success: function(data){
-                    var n = noty({
-                        timeout: 5000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Сумма успешно добавлена"
-                    });
-                    setInterval(function() { location.reload();}, 1500);
-                },
-                dataType: "text",
-                async: false,
-                timeout: 10000,
-                error: function(data){
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка. Сервер не отвечает"
-                    });
-                }
-            });
         });
 
         jQuery("#find_dealer").click(function(){
