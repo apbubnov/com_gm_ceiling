@@ -301,7 +301,7 @@ if (count($AllGauger) == 0) {
                 url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
                 data: {
                     date: date,
-					dealer: <?php if ($user->dealer_id == 1 && in_array("14", $user->groups)) { echo $user; } else { echo $user->dealer_id; } ?>,
+					dealer: <?php if ($user->dealer_id == 1 && in_array("14", $user->groups)) { echo $userId; } else { echo $user->dealer_id; } ?>,
                 },
                 success: function(data) {
 					Array.prototype.diff = function(a) {
