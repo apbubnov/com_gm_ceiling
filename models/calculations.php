@@ -1074,7 +1074,7 @@ class Gm_ceilingModelCalculations extends JModelList {
             $items2 = $db->loadObjectList();
 
             throw new Exception(count($items2));
-\            
+            
             // объединение с выходным днем
             for ($i=0; $i < count($items); $i++) {
                 $items[$i]->project_calculation_day_off = "";
