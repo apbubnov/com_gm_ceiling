@@ -107,7 +107,7 @@
                 </div>
                 <div>
                     <?php foreach ($client_phones as $item) { ?>
-                        <a href="tel:<? echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></a><
+                        <a href="tel:<? echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></a>
                     <?php } ?>
                 </div>
                 <div>
@@ -167,7 +167,8 @@
         <?php foreach($projects as $item):?>
 
             <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) {
-                if($item->status == "Отказ от договора") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
+                if($item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
+                elseif($item->status == "В производстве" || $item->status == "Ожидание монтажа" || "Заказ закрыт") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
                 else echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
                 else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
                 <td><?php echo $item->id;?></td>
