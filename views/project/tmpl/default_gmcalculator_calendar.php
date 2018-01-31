@@ -348,12 +348,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Примечание клиента</th>
-                                            <td>
-                                                <?php echo $this->item->project_note; ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td colspan=3 style="text-align: center;">
                                                 <button type="submit" id="accept_changes" class="btn btn btn-success" style="display: none;">Сохранить изменения</button>
                                             </td>
@@ -1533,7 +1527,7 @@
                 setTimeout(function() { 
                     var times = jQuery("input[name='choose_time_gauger']");
                     times.each(function(element) {
-                        if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                        if (time_gauger == jQuery(this).val() && gauger_gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
                             jQuery(this).prop("checked", true);
                         }
                     });

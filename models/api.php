@@ -29,6 +29,7 @@ class Gm_ceilingModelApi extends JModelList
         {
             $db = $this->getDbo();
             $arr_ids = [];
+            throw new Exception("Error Processing Request", 1);
             foreach ($data as $key => $value)
             {
                 if (empty($data[$key]->android_id))
@@ -61,6 +62,7 @@ class Gm_ceilingModelApi extends JModelList
                         ->values($columns_values);
                     $db->setQuery($query);
                     $db->execute();
+                    
                     $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $db->insertid());
                 }
                 else
@@ -80,7 +82,16 @@ class Gm_ceilingModelApi extends JModelList
                     $query->from("`$table`");
                     $query->where("`android_id` = $android_id OR `id` = $android_id");
                     $db->setQuery($query);
-                    $id = $db->loadObject()->id;
+                    $object_table = $db->loadObject();
+                    
+                    if (isset($object_table->id))
+                    {
+                        $id = $object_table->id;
+                    }
+                    else
+                    {
+                        $id = null;
+                    }
 
                     $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $id);
                 }
