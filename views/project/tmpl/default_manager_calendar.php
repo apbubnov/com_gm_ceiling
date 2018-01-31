@@ -76,7 +76,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
 
-<button id = "back_btn" class = "btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
+<?= parent::getButtonBack(); ?>
 
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
@@ -1206,5 +1206,21 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 		input.val(s);
 		});
     }
+
+    jQuery("#BackPage").click(function ()
+    {
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=projects.deleteEmptyProject",
+            data: {
+                client_id: "<?php echo $this->item->id_client;?>"
+            },
+            dataType: "json",
+            async: false,
+            success: function(data) {
+            },
+            error: function(data) {
+            }
+        });
+    })
 
 </script>
