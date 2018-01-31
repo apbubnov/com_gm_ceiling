@@ -266,6 +266,31 @@ class Gm_ceilingModelProject extends JModelItem
         }
 	}
 
+	public function getGauger($project_id)
+    {
+    	try
+    	{
+	        $db = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+	            ->select('projects.project_calculator, users.name')
+	            ->from('`#__gm_ceiling_projects` AS projects')
+	            ->join('LEFT', '`#__users` AS users ON users.id = projects.project_calculator')
+	            ->where("projects.id = '$project_id'");
+
+	        $db->setQuery($query);
+	        $result = $db->loadObject();
+	        return $result;
+	    }
+	    catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 	function getMounterBrigade($brigade_id) 
 	{
 		try
