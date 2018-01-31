@@ -330,7 +330,6 @@
 
     jQuery(document).ready(function ()
     {
-        deleteEmptyProject();
         jQuery('#new_phone').mask('+7(999) 999-9999');
 
         document.getElementById('calls-tar').scrollTop = 9999;
@@ -514,21 +513,6 @@
             });
         }
 
-        function deleteEmptyProject()
-        {
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=projects.deleteEmptyProject",
-                data: {
-                    client_id: "<?php echo $this->item->id;?>"
-                },
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    location.reload();
-                },
-                error: function(data) {
-                }
-            });
-        }
+
 
 </script>
