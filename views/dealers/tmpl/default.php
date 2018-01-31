@@ -180,7 +180,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             });
         });
 
-        //для внесения денег
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
             var user_id = jQuery(this).attr("user_id");
             var div = jQuery(".modal_window"); // тут указываем ID элемента
@@ -212,13 +211,16 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     }
                     return;
                 }
-                if (target.className.indexOf('btn-done') + 1) {// нашли элемент, который нас интересует!
-                    console.log(target.className.indexOf('btn-done') + 1);
-                    var user_id = jQuery(this).attr("user_id");
-                    jQuery(".close_btn").show();
-                    jQuery("#modal_window_container" + user_id).show();
-                    jQuery("#modal_window_acct" + user_id).show("slow");
-                    return;
+                if (target.className != undefined)
+                {
+                    if (target.className.indexOf('btn-done') + 1) {// нашли элемент, который нас интересует!
+                        console.log(target.className.indexOf('btn-done') + 1);
+                        var user_id = jQuery(this).attr("user_id");
+                        jQuery(".close_btn").show();
+                        jQuery("#modal_window_container" + user_id).show();
+                        jQuery("#modal_window_acct" + user_id).show("slow");
+                        return;
+                    }
                 }
                 target = target.parentNode;
             }
