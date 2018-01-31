@@ -76,7 +76,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                             }
                        ?>
 		            </td>
-                    <td data-href="">
+                    <td>
                         <button class="btn btn-primary btn-done" user_id="<?= $value->id; ?>" type="button"> Внести сумму </button>
                     </td>
 		        </tr>
@@ -276,7 +276,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].created + '</td>';
-                        html += '<td>' + data[i].dealer_id + '</td></tr>';
+                        html += '<td><button class="btn btn-primary btn-done" user_id="' + data[i].dealer_id + '" type="button"> Внести сумму </button></td></tr>';
                     }
                     tbody.innerHTML = html;
                     html = '';
