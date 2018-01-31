@@ -1725,7 +1725,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </label>
         <div class="controls">
             <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору"
-                        aria-invalid="false"></textarea>
+                        aria-invalid="false"><?=($this->item->dealer_calculator_note)?$this->item->dealer_calculator_note:""?></textarea>
         </div>
         <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
         </button>
@@ -1773,7 +1773,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         Примечание к монтажу
                     </label>
                     <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
-                                aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea>
+                                aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
                 </td>
             </tr>
             <tr>
