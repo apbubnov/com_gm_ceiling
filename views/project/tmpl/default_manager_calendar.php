@@ -537,7 +537,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                 Today(day, NowMonth, NowYear);
                 var datesession = jQuery("#jform_project_new_calc_date").val();
                 if (datesession != undefined) {
-                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("class", "change");
+                    jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IС0С").addClass("class", "change");
                 }
             },
             dataType: "text",
@@ -570,7 +570,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
     // функция подсвета сегоднешней даты
     var Today = function (day, month, year) {
         month++;
-        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"I").addClass("today");
+        jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IС0С").addClass("today");
     }
     //------------------------------------------
 
@@ -738,7 +738,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                 } else {
                     monthtocalendar = datesession.substr(5, 2);
                 }
-            jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"I").addClass("change");
+            jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IС0С").addClass("change");
         }
         //-----------------------------------------------------------
 
