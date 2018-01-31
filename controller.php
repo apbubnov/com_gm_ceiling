@@ -902,12 +902,7 @@ class Gm_ceilingController extends JControllerLegacy
             $phone_client = $jinput->get('phone', '', 'STRING');
 
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-            $result = $callback_model->save($jdate, $comment, $id_client, $manager_id, $phone_client);
-            //throw new Exception($result == 'call_find', 1);
-
-            if (!$result) {
-                $result = json_encode('call_find');
-            }
+            $result = $callback_model->save($jdate, $comment, $id_client, $manager_id);
 
             die($result);
         }
