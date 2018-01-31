@@ -1680,13 +1680,13 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </div>
      
     <?php } ?>
-    <?php if ($this->item->project_verdict == 0) { ?>
-        <?php if ($user->dealer_type != 2) { ?>
+    <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
+        <?php// if ($user->dealer_type != 2) { ?>
             <table>
 
                 <tr>
                     <td>
-                        <a class="btn  btn-success" id="accept_project">
+                        <a class="btn  btn-success" id="accept_project" >
                             Договор
                         </a>
                     </td>
@@ -1703,7 +1703,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </tr>
 
             </table>
-        <?php } ?>
+        <?php// } ?>
     <?php } ?>
     <!--<form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">-->
     <!--<div class="project_activation" style="display: none;">
@@ -1717,7 +1717,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input id ="jform_project_mounting_to" name="jform_project_mounting_to" value="" type='hidden'>
                         <input  id ="project_sum" name="project_sum" value="<?php// echo $project_total_discount ?>" type="hidden">
                 </div>-->
-    <div class="project_activation" style="display: none;" id="project_activation">
+    <div class="project_activation" <?if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?> id="project_activation">
         <?php if ($user->dealer_type != 2) { ?>
         <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">
             Примечание к договору
