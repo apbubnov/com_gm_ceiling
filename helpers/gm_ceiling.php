@@ -4092,7 +4092,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                     $date1 = $year . "-" . $monthfull . "-01";
                     $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                    $BusyMounters = $model->FindBusyMounters($date1, $date2, $flag[1]);
+                    $BusyMounters = $model->FindBusyMounters2($date1, $date2, $flag[1]);
                     $DayMounters = [];
                     for ($i = 1; $i <= $current_days; $i++) {
                         if (strlen($i) == 1) {
