@@ -435,7 +435,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
         }
         //cчитаем полотно
-        $canvases_data = self::calculate_canvases(null,$data);
+        //$canvases_data = self::calculate_canvases(null,$data);
         //считаем обрезки
         $offcut_square_data = self::calculate_offcut(null,$data);
         //считаем комплектующие
