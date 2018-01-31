@@ -951,6 +951,64 @@ class Gm_ceilingModelCalculations extends JModelList {
         }
     }
 
+    public function FindBusyMounters2($date1, $date2, $dealer) {
+        try
+        {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query2 = $db->getQuery(true);
+            $query3 = $db->getQuery(true);
+
+            $query2->select("SUM(calculations.n5)")
+                ->from("#__gm_ceiling_calculations AS calculations")
+                ->where("calculations.project_id = projects.id");
+
+            $query->select("projects.project_mounter, projects.project_mounting_date, projects.project_info, ($query2) as n5")
+                ->from('#__gm_ceiling_projects as projects')
+                ->innerJoin("#__gm_ceiling_clients as clients ON projects.client_id = clients.id")
+                ->where("projects.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' and clients.dealer_id = '$dealer'")
+                ->order('projects.id');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+
+            $query3->select('day_off.id_user, day_off.date_from, day_off.date_to')
+                ->from('#__gm_ceiling_day_off as day_off')
+                ->LeftJoin("#__user_usergroup_map as users ON day_off.id_user = users.user_id")
+                ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and group_id = 11");
+            $db->setQuery($query3);
+            $items3 = $db->loadObjectList();
+            
+            // объединение с выходным днем
+            for ($i=0; $i < count($items); $i++) {
+                $items[$i]->project_mounting_day_off = "";
+            }
+
+            //создание нового массива
+            if (!empty($items3)) {
+                foreach ($items3 as $value) {
+                    $day = array(
+                        'project_mounter'=>$value->id_user,
+                        'project_mounting_date'=>$value->date_from,
+                        'project_info'=>"Выходные часы",
+                        'n5'=>NULL,
+                        'project_mounting_day_off'=>$value->date_to
+                    );
+                    $day = (object)$day;
+                    array_push($items, $day);
+                }
+            }
+            
+    		return $items;
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function FindAllGauger($id, $gauger) {
         try
         {
@@ -1090,12 +1148,6 @@ class Gm_ceilingModelCalculations extends JModelList {
                     array_push($items, $day);
                 }
             }
-            /* $itemstest = [];
-            foreach ( $items as $item) {
-                array_push($itemstest, get_object_vars($item) );
-            }
-            throw new Exception(implode("|", $itemstest)); */
-            
 
     		return $items;
         }
