@@ -2736,8 +2736,8 @@ class Gm_ceilingController extends JControllerLegacy
                     throw new Exception('empty email');
                 }
                 $code = md5($user_id.'commercial_offer');
-
-                $site = "http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
+                $server_name = $_SERVER['SERVER_NAME'];
+                $site = "http://'.$server_name.'/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 // письмо
     			$mailer = JFactory::getMailer();
     			$config = JFactory::getConfig();
@@ -2747,7 +2747,6 @@ class Gm_ceilingController extends JControllerLegacy
     			);
     			$mailer->setSender($sender);
                 $mailer->addRecipient($email);
-                $server_name = $_SERVER['SERVER_NAME'];
                 $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
                 $body .= '<body style="margin: 10px;">';
                 $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
