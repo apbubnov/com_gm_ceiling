@@ -89,14 +89,12 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
 
             $user = JFactory::getUser();
             $user->groups = $user->get('groups');
-            $user->info = $user->getDealerInfo();
 
             $userDealer = $user;
 
             if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
                 $userDealer = JFactory::getUser($user->dealer_id);
                 $userDealer->groups = $userDealer->get('groups');
-                $userDealer->info = $userDealer->getDealerInfo();
             }
 
             $managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
@@ -109,7 +107,6 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 if (isset($dealerId)) {
                     $dealer = JFactory::getUser($dealerId);
                     $dealer->groups = $dealer->get('groups');
-                    $dealer->info = $dealer->getDealerInfo();
                     // $dealer->price = $model->getDealerPrice($dealerId);
                 }
             }
@@ -118,32 +115,40 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             $price = $app->input->get('Price', null, 'string');
 
             $p = str_replace("%", "", $price);
-            $a = str_replace(["+", "-"], "", $p);
-            $price = $a;
-            $a = ($a != $p);
-            $p = ($p != $price);
-
-            $oldPrice = $model->getPrice($id);
+            $e = str_replace(["+", "-"], "", $p);
+            $type = ($e != $p)?(($p != $price)?"percent":"expression"):"number";
+            $number = floatval($p);
 
             $answer = (object) [];
             $answer->status = "success";
             $answer->message = "Обновление произошло успешно!";
             $answer->elements = [];
 
-            foreach ($oldPrice as $v)
-            {
-
-
-                if ($p) {
-
+            if (empty($dealer)) {
+                $oldPrice = $model->getPrice($id);
+                $newPrice = $oldPrice;
+                foreach ($oldPrice as $k => $v)
+                {
+                    switch ($type) {
+                        case "percent":
+                            $newPrice[$k]->price = $v->price + $v->price * ($number / 100);
+                            break;
+                        case "expression":
+                            $newPrice[$k]->price = $v->price + $number;
+                            break;
+                        case "number":
+                            $newPrice[$k]->price = $number;
+                            break;
+                    }
+                    $answer->elements[] = (object) [
+                        "name" => ".Level2[data-option='$newPrice->id'] #GMPrice",
+                        "value" => margin($newPrice[$k]->price, $userDealer->gm_components_margin)];
+                    $answer->elements[] = (object) [
+                        "name" => ".Level2[data-option='$newPrice->id'] #DealerPrice",
+                        "value" => double_margin($newPrice[$k]->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin)];
                 }
+                $model->setPrice($newPrice);
             }
-
-
-            $newPrice =
-            $model->setPrice((object) ["price" => $price, "id" => $id]);
-
-
 
             die(json_encode($answer));
         }

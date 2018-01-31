@@ -20,14 +20,12 @@ $model = $this->getModel();
 
 $user = JFactory::getUser();
 $user->groups = $user->get('groups');
-$user->info = $user->getDealerInfo();
 
 $userDealer = $user;
 
 if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
     $userDealer = JFactory::getUser($user->dealer_id);
     $userDealer->groups = $userDealer->get('groups');
-    $userDealer->info = $userDealer->getDealerInfo();
 }
 
 $stock = in_array(19, $user->groups);
@@ -41,7 +39,6 @@ if ($managerGM) {
     if (isset($dealerId)) {
         $dealer = JFactory::getUser($dealerId);
         $dealer->groups = $dealer->get('groups');
-        $dealer->info = $dealer->getDealerInfo();
         // $dealer->price = $model->getDealerPrice($dealerId);
     }
 }
@@ -138,8 +135,8 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                         <td></td>
                         <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=component&id=<?=$key_o;?>">Инфо</a></td>
                     <?elseif ($managerGM && empty($dealer)):?>
-                        <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
-                        <td><?=double_margin($option->price, $userDealer->info->gm_components_margin, $userDealer->info->dealer_components_margin);?></td>
+                        <td id="GMPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
+                        <td id="DealerPrice"><?=double_margin($option->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
@@ -152,8 +149,8 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                             </form>
                         </td>
                     <?elseif ($managerGM):?>
-                        <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
-                        <td><?=margin($option->price, $dealer->info->gm_components_margin);?></td>
+                        <td id="GMPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
+                        <td id="DealerPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
@@ -166,8 +163,8 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                             </form>
                         </td>
                     <?else:?>
-                        <td><?=margin($option->price, $userDealer->info->gm_components_margin);?></td>
-                        <td><?=double_margin($option->price, $userDealer->info->gm_components_margin, $userDealer->info->dealer_components_margin);?></td>
+                        <td><?=margin($option->price, $userDealer->gm_components_margin);?></td>
+                        <td><?=double_margin($option->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
                     <?endif;?>
                 </tr>
         <?if ($stock) foreach ($option->goods as $key_g => $good):?>
@@ -373,7 +370,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
     }
 
     JSON.serialize = function (obj) {
-        var inputs = $(obj).find("input:not(:disabled)"),
+        var inputs = $(obj).find("[value]:not(:disabled)"),
             datas = $(obj).find("[data-JsonSend]").filter("[id]"),
             values = $(obj).find("[data-Send]").filter("[id]"),
             result = {jsons:{}, values:{}};
