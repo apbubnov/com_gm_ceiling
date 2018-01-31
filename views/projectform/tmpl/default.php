@@ -888,7 +888,7 @@
                                         <?php echo $jdate->format('d.m.Y H:i'); ?>
                                     <?php } ?>
                                 </td>
-                            <?php } if ($this->item->project_status == 11 || $this->item->project_status != 17) { ?>
+                            <?php } if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status != 17) { ?>
                                 <th>Дата монтажа</th>
                                 <td>
                                     <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
