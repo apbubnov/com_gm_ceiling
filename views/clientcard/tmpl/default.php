@@ -107,7 +107,7 @@
                 </div>
                 <div>
                     <?php foreach ($client_phones as $item) { ?>
-                        <a href="tel:<? echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></a>
+                        <a href="tel:<? echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></a><br>
                     <?php } ?>
                 </div>
                 <div>
