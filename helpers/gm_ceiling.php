@@ -256,7 +256,9 @@ class Gm_ceilingHelpersGm_ceiling
             $data = $data['jform'];
 
             $data['n3'] = ($_SESSION['n3']) ? ($_SESSION['n3']) : $data['n3'];
-            if($data['n2'] == 0) { $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;}
+            if($data['n2'] == 0) {
+                $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;
+            }
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
             $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -3452,7 +3454,7 @@ class Gm_ceilingHelpersGm_ceiling
         for($i=0;$i<count($client_contacts);$i++){
             $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
         }
-        $html = self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names,$data_mount)
+        $html = self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names,$data_mount);
         $filename = md5($calc_id . "mount_single") . ".pdf";
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         self::save_pdf($html, $sheets_dir . $filename, "A4");
