@@ -821,11 +821,11 @@
                         <input type="hidden" name="jform[modified_by]" value="<?php echo $this->item->modified_by; ?>"/>
                     <?php endif; ?>
                     <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
+                    <!-- тут скрытые поля замерщика вставить -->
                     <input id="jform_project_mounting_date" type="hidden" name="jform[project_mounting_date]" value="<?php echo $this->item->project_mounting_date; ?>"/>
                     <input id="jform_project_mounter" type="hidden" name="jform[project_mounting]" value="<?php echo $this->item->project_mounter; ?>"/>
                     <input id="jform_project_mounter_old" type="hidden" name="jform_project_mounting_old" value="<?php echo $this->item->project_mounter; ?>"/>
                     <input id="jform_project_mounting_date_old" type="hidden" name="jform_project_mounting_date_old" value="<?php echo $this->item->project_mounting_date; ?>"/>
-                    <br>
                     <input type="hidden" name="option" value="com_gm_ceiling"/>
                     <input type="hidden" name="task" value="project.approve"/>
                     <?php echo JHtml::_('form.token'); ?>
@@ -935,7 +935,7 @@
                             <td><textarea name="jform[gm_chief_note]" id="jform_gm_chief_note" placeholder="Примечание начальника МС ГМ" aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea></td>
                         </tr>
                         <tr>
-                            <?php if ($this->item->project_status == 1) { ?>
+                            <?php if ($this->item->project_status <= 4) { ?>
                                 <th>Замерщик</th>
                                 <?php 
                                     $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
@@ -967,7 +967,7 @@
                         <?php// } ?>
                         <tr>
                             <?
-                            $sum_transport = 0;  $sum_transport_discount = 0;
+                            /* $sum_transport = 0;  $sum_transport_discount = 0;
                             $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
                             $mount_transport = $mountModel->getDataAll();
                             if($this->item->transport == 0 ) $sum_transport = 0;
@@ -981,22 +981,44 @@
                             $project_total_discount_transport = $project_total_discount + $sum_transport;
 
                             $project_total = $project_total + $sum_transport;
-                            $project_total_discount = $project_total_discount + $sum_transport;
+                            $project_total_discount = $project_total_discount + $sum_transport; */
                             ?>
                             <th> Транспорт</th>
-                            <td id="transport_sum"> <?=$sum_transport;?> руб. </td>
+                            <td id="transport_sum"> <? //=$sum_transport;?> руб. </td>
                             <td></td>
                         </tr>
                         <tr>
                             <th class="right">Итого:</th>
-                            <? if($project_total < 3500 && $project_total > 0 && $mount_sum != 0)  { $project_total = 3500; }?>
-                            <? if($project_total_discount < 3500 && $project_total_discount > 0 && $mount_sum != 0)  { $project_total_discount = 3500; }?>
-                            <th class="center" id="project_total"><?php echo $project_total; ?></th>
-                            <th class="center" id="project_total_discount"><?php echo $project_total_discount; ?></th>
+                            <?// if($project_total < 3500 && $project_total > 0 && $mount_sum != 0)  { $project_total = 3500; }?>
+                            <?// if($project_total_discount < 3500 && $project_total_discount > 0 && $mount_sum != 0)  { $project_total_discount = 3500; }?>
+                            <th class="center" id="project_total"><?php// echo $project_total; ?></th>
+                            <th class="center" id="project_total_discount"><?php// echo $project_total_discount; ?></th>
                         </tr>
                     </table>-->
-                    <?php if ($this->item->project_status <= 11 || $this->item->project_status == 17) { ?>
-                        <h4 style="text-align:center;">Назначить монтажную бригаду</h4>
+                    <?php if ($this->item->project_status == 1) { ?>
+                        <h4 style="text-align:center;">Изменить замерщика, время и дату замера</h4>
+                        <div class="calendar_wrapper" style="background: #ffffff">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                    </td>
+                                    <td style="width: 100%">
+                                        <div id="calendar1" style="padding: 1em">
+                                            <?php echo $calendar1; ?>
+                                        </div>
+                                        <div id="calendar2" style="padding: 1em">
+                                            <?php echo $calendar2; ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    <?php } else if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status == 17) { ?>
+                        <h4 style="text-align:center;">Назначить/изменить монтажную бригаду, время и дату</h4>
                         <div class="calendar_wrapper" style="background: #ffffff">
                             <table>
                                 <tr>
