@@ -21,10 +21,10 @@ $month = date("n");
 $year = date("Y");
 if ($user->dealer_id == 1 && in_array("14", $user->groups)) {
 	$FlagCalendar = [3, $userId];
-	echo "дилер гм"
+	echo "дилер гм";
 } else {
 	$FlagCalendar = [3, $user->dealer_id];
-	echo "дилер, гм"
+	echo "дилер, гм";
 }
 $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $FlagCalendar);
 //----------------------------------------------------------------------------------
