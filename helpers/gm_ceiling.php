@@ -2649,16 +2649,19 @@ class Gm_ceilingHelpersGm_ceiling
         $filename = md5($project_id . "mount_common") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
-    public static function create_single_mounter_estimate_html($calc_id,$phones,$brigade,$brigade_names,$data_mount = null){
-        $calculation_model = self::getModel('calculation');
-        $calc = $calculation_model->getData($calc_id);
+    public static function create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount = null){
+        if(!empty($calc_id)){
+            $calculation_model = self::getModel('calculation');
+            $data = $calculation_model->getData($calc_id);
+        }
+       
         $project_model = self::getModel('project');
-        $project = $project_model->getData($calc->project_id);
+        $project = $project_model->getData($data['project_id']);
         if(empty($data_mount)){
-            $data_mount = self::calculate_mount(0,$calc->id,null);
+            $data_mount = self::calculate_mount(0,$data['id'],null);
         }
         $html .= '<h1>Информация</h1>';
-            $html .= "<b>Название: </b>" . $calc->calculation_title . "<br>";
+            $html .= "<b>Название: </b>" . $datacalculation_title . "<br>";
             if (isset($project->id)) {
                 if ($project->id) {
                     $html .= "<b>Номер договора: </b>" . $project->id . "<br>";
@@ -2711,11 +2714,11 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
             }
             $mounting_data = $data_mount['mounting_data'];
-            if ($calc->mounting_sum != 0) {
+            if ($data['mounting_sum'] != 0) {
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
-                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch".$calc->id) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch".$data['id']) . ".png" . '" style="width: 100%; max-height: 800px;"/>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -2751,7 +2754,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
-                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calc->id) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".png" . '" style="width: 100%; max-height: 800px;"/>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -2793,7 +2796,7 @@ class Gm_ceilingHelpersGm_ceiling
         for($i=0;$i<count($client_contacts);$i++){
             $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
         }
-        $html = self::create_single_mounter_estimate_html($data['id'],$phones,$brigade,$brigade_names,$data_mount);
+        $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
         $filename = md5($calc_id . "mount_single") . ".pdf";
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         self::save_pdf($html, $sheets_dir . $filename, "A4");
