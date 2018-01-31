@@ -1677,7 +1677,6 @@
                     // время
                     var timeall = document.getElementById('hours').options;
                     console.log(time);
-                    
                     for (var i = 0; i < timeall.length; i++) {
                         if (time != undefined) {
                             if (timeall[i].value == time) {
