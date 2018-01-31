@@ -1782,6 +1782,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     </button>
                 </td>
                 <td>
+                    <button class="validate btn btn-primary" id="save_exit" type="submit"> Сохранить и выйти
+                    </button>
+                </td>
+                <td>
                     <a class="btn btn-primary"
                         href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">
                         Перейти к монтажам </a>
@@ -2466,6 +2470,9 @@ var $ = jQuery;
         jQuery("#client_order").click(function () {
             jQuery("input[name='project_verdict']").val(1);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
+        });
+        jQuery("#save_exit").click(function () {
+            jQuery("input[name='project_verdict']").val(2);
         });
         $tmp_accept = 0; $tmp_refuse = 0;
         jQuery("#accept_project").click(function () {
