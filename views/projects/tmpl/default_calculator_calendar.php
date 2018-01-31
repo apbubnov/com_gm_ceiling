@@ -50,16 +50,10 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 <?= JHtml::_('grid.sort', 'Номер договора', 'a.id', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Дата замера', 'a.calculation_date', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Время замера', 'calculation_time', $listDirn, $listOrder); ?>
+                <?= JHtml::_('grid.sort', 'Дата и время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
                 <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
                 <?= JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
@@ -86,15 +80,13 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <? if ($item->calculation_date == "00.00.0000"): ?>-
                     <? else: ?><?= $item->calculation_date; ?>
                     <? endif; ?>
-                </td>
-                <td class="center one-touch">
+                    <br>
                     <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
                     <? else: ?><?= $item->calculation_time; ?>
                     <? endif; ?>
                 </td>
                 <td class="center one-touch"><?= $item->address; ?></td>
-                <td class="center one-touch"><?= $item->client_contacts; ?></td>
-                <td class="center one-touch"><?= $item->client_name; ?></td>
+                <td class="center one-touch"><?= $item->client_contacts; ?><br><?= $item->client_name; ?></td>
                 <?if (in_array("16", $groups)):?>
                     <td class="center one-touch"><?= $item->dealer_name; ?></td>
                 <?endif;?>
