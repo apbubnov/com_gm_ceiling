@@ -25,8 +25,11 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 
 // все замерщики
 $model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
-//$AllGaugerGM = $model->FindAllGauger(1);
-/* $AllGaugerDealer */$AllGauger = $model->FindAllGauger($user->dealer_id);
+if ($user->dealer_id == 1 && in_array("14", $user->groups)) {
+	$AllGauger = $model->FindAllGauger($userId);
+} else {
+	$AllGauger = $model->FindAllGauger($user->dealer_id);
+}
 if (count($AllGauger) == 0) {
     array_push($AllGauger, ["id" => $userId, "name" => $user->name]);
 }
@@ -36,8 +39,8 @@ if (count($AllGauger) == 0) {
 ?>
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/addproject/tmpl/css/style.css" type="text/css" />
+
 <?=parent::getButtonBack();?>
 <form id="calculate_form" action="/index.php?option=com_gm_ceiling&task=addproject.save" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 	<!-- Скрытые поля -->
@@ -204,7 +207,7 @@ if (count($AllGauger) == 0) {
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
             data: {
                 id: <?php echo $userId; ?>,
-                id_dealer: <?php echo $user->dealer_id; ?>,
+                id_dealer: <?php if ($user->dealer_id == 1 && in_array("14", $user->groups)) { echo $user; } else { echo $user->dealer_id; } ?>,
                 flag: 3,
                 month: month,
                 year: year,
@@ -268,20 +271,7 @@ if (count($AllGauger) == 0) {
 
 		window.time = undefined;
         window.gauger = undefined;
-		jQuery("#calculate_button").click(function(){
-			if(jQuery("#jform_project_calculation_date").val()!="" && jQuery("#jform_project_calculation_daypart").val()!="" && jQuery("#jform_project_calculator").val()!=""){
-				jQuery("#calculate_form").submit();
-			}
-			else{
-				var n = noty({
-							theme: 'relax',
-							layout: 'center',
-							maxVisible: 5,
-							type: "error",
-							text: "Не выбрана дата замера и замерщик!"
-						});
-			}
-		});
+		
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -307,7 +297,7 @@ if (count($AllGauger) == 0) {
                 url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
                 data: {
                     date: date,
-					dealer: <?php echo $user->dealer_id; ?>,
+					dealer: <?php if ($user->dealer_id == 1 && in_array("14", $user->groups)) { echo $user; } else { echo $user->dealer_id; } ?>,
                 },
                 success: function(data) {
 					Array.prototype.diff = function(a) {
@@ -396,6 +386,21 @@ if (count($AllGauger) == 0) {
         window.day = today.getDate();
         Today(day, NowMonth, NowYear);
 
+		jQuery("#calculate_button").click(function(){
+			if(jQuery("#jform_project_calculation_date").val()!="" && jQuery("#jform_project_calculation_daypart").val()!="" && jQuery("#jform_project_calculator").val()!=""){
+				jQuery("#calculate_form").submit();
+			}
+			else{
+				var n = noty({
+					theme: 'relax',
+					layout: 'center',
+					maxVisible: 5,
+					type: "error",
+					text: "Не выбрана дата замера и замерщик!"
+				});
+			}
+		});
+
 		jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
 		
 		jQuery('#clients').change(function(){
@@ -466,6 +471,7 @@ if (count($AllGauger) == 0) {
 			jQuery('#select_clients').show();
 		});	
 	});
+
     jQuery(function(){
         jQuery('#clients').change(function(){
             var client_id = jQuery('#clients :selected').text();
@@ -477,6 +483,7 @@ if (count($AllGauger) == 0) {
 
         })
     });
+	
 	// Подсказки по городам
     ymaps.ready(init);
 
