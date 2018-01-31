@@ -348,12 +348,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Примечание клиента</th>
-                                            <td>
-                                                <?php echo $this->item->project_note; ?>
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td colspan=3 style="text-align: center;">
                                                 <button type="submit" id="accept_changes" class="btn btn btn-success" style="display: none;">Сохранить изменения</button>
                                             </td>
@@ -1676,7 +1670,6 @@
                 setTimeout(function() {
                     // время
                     var timeall = document.getElementById('hours').options;
-                    
                     for (var i = 0; i < timeall.length; i++) {
                         if (timesession != undefined) {
                             if (timeall[i].value == timesession) {
