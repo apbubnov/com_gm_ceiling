@@ -384,7 +384,7 @@
                         text: "Коммерческое предложение отправленно"
                     });
                     jQuery("#close").hide();
-                    jQuery("#mw_container").hide();
+                    jQuery("#mv_container").hide();
                     jQuery("#modal_window_comm").hide();
                 },
                 error: function(data) {
