@@ -441,7 +441,7 @@ class Gm_ceilingHelpersGm_ceiling
         //считаем монтаж
         $mounting_data = self::calculate_mount($del_flag,null,$data);   
         //счиатем работы ГМ     
-        $guild_data = self::calculate_guild_jobs(null,$data)ж
+        $guild_data = self::calculate_guild_jobs(null,$data);
         //Итоговая сумма компонентов
         $total_sum = 0;
         //Прибавляем к подсчету комплектующие
