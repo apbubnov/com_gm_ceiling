@@ -909,7 +909,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 				} else {
 					$project_verdict = $jinput->get('project_verdict', '0', 'INT');
-					print_r($project_verdict); exit;
+                    $project_status = $jinput->get('project_status', '0', 'INT');
 					if($project_verdict == 1) {
 						$data->project_verdict = 1;
 					}
