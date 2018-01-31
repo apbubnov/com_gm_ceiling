@@ -2478,7 +2478,7 @@ var $ = jQuery;
         });
         jQuery("#save").click(function () {
             if(jQuery("input[name='project_mounter']").val()=="")
-                jQuery("input[name='project_mounter']").attr("required", required);
+                jQuery("input[name='project_mounter']").attr("required");
             jQuery("input[name='project_status']").val(4);
             jQuery("input[name='project_verdict']").val(1);
         });
