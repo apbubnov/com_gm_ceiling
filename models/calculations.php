@@ -1086,15 +1086,15 @@ class Gm_ceilingModelCalculations extends JModelList {
                         'project_info'=>"Выходные часы",
                         'project_calculation_day_off'=>$value->date_to
                     );
-                    $day = array((object)$day);
+                    $day = (object)$day;
                     array_push($items, $day);
                 }
             }
-            $itemstest = [];
+            /* $itemstest = [];
             foreach ( $items as $item) {
                 array_push($itemstest, get_object_vars($item) );
             }
-            throw new Exception(implode("|", $itemstest));
+            throw new Exception(implode("|", $itemstest)); */
             
 
     		return $items;
