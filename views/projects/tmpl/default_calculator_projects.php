@@ -73,7 +73,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 <td class="center one-touch">
                     <? if ($item->calculation_date == "00.00.0000"): ?>-
                     <? else: ?><?= $item->calculation_date; ?>
-                    <? endif; ?>
+                    <? endif; ?><br>
                     <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
                     <? else: ?><?= $item->calculation_time; ?>
                     <? endif; ?>
@@ -117,7 +117,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 <td class="center one-touch">
                     <? if ($item->calculation_date == "00.00.0000"): ?>-
                     <? else: ?><?= $item->calculation_date; ?>
-                    <? endif; ?><br>
+                    <? endif; ?>
                     <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
                     <? else: ?><?= $item->calculation_time; ?>
                     <? endif; ?>
