@@ -32,6 +32,9 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
     #projectList th:nth-child(3) {
         width: 15%;
     }
+    #projectList th:nth-child(5) {
+        width: 5%;
+    }
 </style>
 <h2 class="center">Запущенные в производство</h2>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects'); ?>"
