@@ -565,7 +565,9 @@ class Gm_ceilingHelpersGm_ceiling
             self::create_cut_pdf(null,$data);
             //для менеджера
             self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
-            //self::create_client_single_estimate   
+            //клиентская смета 
+            self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,
+            $mounting_data);  
             if ($send_client_cost == 1) {
                     //___________________________СМЕТА ДЛЯ КЛИЕНТА С ДИЛЕРСКИМИ ЦЕНАМИ___НА ПОЧТУ________________________________________//
                     $user = JFactory::getUser();
@@ -4092,7 +4094,7 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                     $date1 = $year . "-" . $monthfull . "-01";
                     $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                    $BusyMounters = $model->FindBusyMounters($date1, $date2, $flag[1]);
+                    $BusyMounters = $model->FindBusyMounters2($date1, $date2, $flag[1]);
                     $DayMounters = [];
                     for ($i = 1; $i <= $current_days; $i++) {
                         if (strlen($i) == 1) {
