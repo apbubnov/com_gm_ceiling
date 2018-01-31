@@ -634,6 +634,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input name="type" value="calculator" type="hidden">
                         <input name="subtype" value="calendar" type="hidden">
                         <input id="project_verdict" name="project_verdict" value="0" type="hidden">
+                        <input id="project_status" name="project_status" value="0" type="hidden">
                         <input name="data_change" value="0" type="hidden">
                         <input name="data_delete" value="0" type="hidden">
                         <input id="mounting_date" name="mounting_date" type='hidden'>
@@ -2472,9 +2473,13 @@ var $ = jQuery;
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
         });
         jQuery("#save_exit").click(function () {
-            jQuery("input[name='project_verdict']").val(2);
+            jQuery("input[name='project_status']").val(4);
+            jQuery("input[name='project_verdict']").val(1);
         });
         jQuery("#save").click(function () {
+            if(jQuery("input[name='project_mounter']").val()=="")
+                jQuery("input[name='project_mounter']").attr("required");
+            jQuery("input[name='project_status']").val(4);
             jQuery("input[name='project_verdict']").val(1);
         });
         $tmp_accept = 0; $tmp_refuse = 0;
