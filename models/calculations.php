@@ -1072,7 +1072,9 @@ class Gm_ceilingModelCalculations extends JModelList {
                 ->where("day_off.date_from between '$date1 00:00:00' and '$date2 23:59:59' and map.group_id = '$who2' and users.dealer_id = '$dealer'" );
             $db->setQuery($query2);
             $items2 = $db->loadObjectList();
-            
+
+            throw new Exception(count($items2));
+\            
             // объединение с выходным днем
             for ($i=0; $i < count($items); $i++) {
                 $items[$i]->project_calculation_day_off = "";
