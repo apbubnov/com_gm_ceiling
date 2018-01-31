@@ -168,7 +168,7 @@
 
             <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) {
                 if($item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
-                elseif($item->status == "В производстве" || $item->status == "Ожидание монтажа" || "Заказ закрыт") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
+                elseif($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
                 else echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
                 else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
                 <td><?php echo $item->id;?></td>
