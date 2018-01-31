@@ -997,6 +997,9 @@ class Gm_ceilingModelCalculations extends JModelList {
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
+            throw new Exception(count($items));
+            
+
             $query2->select('day_off.id_user, day_off.date_from, day_off.date_to')
                 ->from('#__gm_ceiling_day_off as day_off')
                 ->LeftJoin("#__user_usergroup_map as map ON day_off.id_user = map.user_id")
@@ -1031,8 +1034,6 @@ class Gm_ceilingModelCalculations extends JModelList {
                 $day = array((object)$day);
                 array_splice($items,$index,0,$day);
             }
-
-            throw new Exception(implode("|", $items));
 
     		return $items;
         }
