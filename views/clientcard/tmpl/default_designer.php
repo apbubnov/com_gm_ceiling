@@ -256,6 +256,7 @@
             jQuery("#modal_window_fio").hide();
             jQuery("#modal_window_client").hide();
             jQuery("#modal_window_comm").hide();
+            jQuery("#modal_window_call").hide();
         }
     });
 
