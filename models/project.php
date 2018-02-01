@@ -975,13 +975,17 @@ class Gm_ceilingModelProject extends JModelItem
 			if($data->id > 0) {
 				$table->load($data->id);
 				$table->gm_chief_note = $data->gm_chief_note;
-				if ($data->project_mounting_date != "00.00.0000 00:00")
-				$table->project_mounting_date = $data->project_mounting_date;
-				if($user->dealer_type == 1) $table->project_status = 5;
-				//$table->project_status = $data->project_status;
-				$table->project_mounter = $data->project_mounter;
-				//$table->project_sum = $data->project_sum;
-				$table->who_mounting = $data->who_mounting;
+				if ($data->project_mounting_date != "00.00.0000 00:00") {
+					$table->project_mounting_date = $data->project_mounting_date;
+					if ($user->dealer_type == 1) {
+						$table->project_status = 5;
+					}
+					$table->project_mounter = $data->project_mounter;
+				}
+				if ($data->project_calculation_date != "00.00.0000 00:00") {
+					$table->project_calculation_date = $data->project_calculation_date;
+					$table->project_calculator = $data->project_calculator;
+				}
 			}
 			$return = $table->store();
 
@@ -1137,8 +1141,8 @@ class Gm_ceilingModelProject extends JModelItem
 				$query4->update('#__gm_ceiling_projects')
 				->set("read_by_mounter = '0'")
 				->where("id = '$data->id'");
-				$db->setQuery($query4);
-				$db->execute();
+			$db->setQuery($query4);
+			$db->execute();
 			
 		}
 		catch(Exception $e)
