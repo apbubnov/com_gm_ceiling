@@ -25,6 +25,17 @@ $canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 ?>
 <?=parent::getButtonBack();?>
+<style>
+    #projectList th:nth-child(1) {
+        width: 1%;
+    }
+    #projectList th:nth-child(3) {
+        width: 15%;
+    }
+    #projectList th:nth-child(5) {
+        width: 5%;
+    }
+</style>
 <h3 class="center">Не назначенные на монтаж</h3>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects'); ?>" method="post"
       name="adminForm" id="adminForm">
@@ -34,19 +45,16 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 			  <thead>
 			  <tr>
 				  <th class='center'>
-					  <?= JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
+					  <?= JHtml::_('grid.sort', '№', 'id', $listDirn, $listOrder); ?>
 				  </th>
+                  <th class='center'>
+                      <?= JHtml::_('grid.sort', 'Дата/Время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
+                  </th>
 				  <th class='center'>
 					  <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
 				  </th>
 				  <th class='center'>
-					  <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
-				  </th>
-				  <th class='center'>
 					  <?= JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
-				  </th>
-				  <th class="center">
-					  <?= JHtml::_('grid.sort', 'Дилер', 'dealer_name', $listDirn, $listOrder); ?>
 				  </th>
 				  <th class="center">
 					  <?= JHtml::_('grid.sort', 'Квадратура', 'quadrature', $listDirn, $listOrder); ?>
@@ -66,10 +74,16 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						  <td class="center one-touch">
 							  <?= $item->id; ?>
 						  </td>
-						  <td class="center one-touch"><?= $item->address; ?></td>
-						  <td class="center one-touch"><?= $item->client_contacts; ?></td>
+                          <td class="center one-touch">
+                              <? if ($item->calculation_date == "00.00.0000"): ?> -
+                              <? else: echo $item->calculation_date;
+                              endif;?><br><?
+                              if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?> -
+                              <? else: echo $item->calculation_time;
+                              endif; ?>
+                          </td>
+						  <td class="center one-touch"><?= $item->address; ?><br><?= $item->client_contacts; ?></td>
 						  <td class="center one-touch"><?= $item->client_name; ?></td>
-						  <td class="center one-touch"><?= $item->dealer_name; ?></td>
 						  <td class="center one-touch"><?= round($item->quadrature, 2); ?></td>
 					  </tr>
 				  <? endif; ?>
@@ -110,7 +124,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                   <td class="center one-touch">
                       <? if ($item->calculation_date == "00.00.0000"): ?> -
                       <? else: echo $item->calculation_date;
-                      endif;
+                      endif;?><br><?
                       if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?> -
                       <? else: echo $item->calculation_time;
                       endif; ?>
@@ -178,6 +192,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
           jQuery('.container').css('padding-left', '0');
           jQuery('.btn-done').css('font-size', '10px');
           jQuery('.btn-done').css('padding', '5px');
+          jQuery('.table td, .table th').css('padding', '0.5rem');
       }
       else {
           jQuery('#projectList').show();
