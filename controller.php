@@ -1404,10 +1404,10 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $jinput = JFactory::getApplication()->input;
-            $data = $jinput->get('data', '0', 'string');
+            $data = $jinput->get('data', '', 'string');
             $auto = $jinput->get('auto', '', 'string');
-            $user_id = $jinput->get('id', '0', 'int');
-            $length_arr = $jinput->get('arr_length', '', 'array');
+            $user_id = $jinput->get('id', 0, 'int');
+            $length_arr = $jinput->get('arr_length', null, 'array');
             for ($i = 0; $i < count($length_arr); $i++) {
                 $str .= implode('=', $length_arr[$i]);
                 $str .= ';';
@@ -1415,11 +1415,11 @@ class Gm_ceilingController extends JControllerLegacy
 
             $filename = md5($user_id . "-" . date("d-m-Y H:i:s"));
 
-            list($type, $data) = explode(';', $data);
-            list(, $data) = explode(',', $data);
-            $data = base64_decode($data);
+            //list($type, $data) = explode(';', $data);
+            //list(, $data) = explode(',', $data);
+            //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".png", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();
@@ -1451,10 +1451,10 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $jinput = JFactory::getApplication()->input;
-            $data = $jinput->get('data', '0', 'string');
-            $user_id = $jinput->get('id', '0', 'int');
-            $arr_points = $jinput->get('arr_points', '', 'array');
-            $offcut_square = $jinput->get('square_obrezkov', '', 'FLOAT');
+            $data = $jinput->get('data', '', 'string');
+            $user_id = $jinput->get('id', 0, 'int');
+            $arr_points = $jinput->get('arr_points', null, 'array');
+            $offcut_square = $jinput->get('square_obrezkov', 0, 'FLOAT');
             $cuts = $jinput->get('cuts', '', 'string');
             
             for ($i = 0; $i < count($arr_points); $i++)
@@ -1471,16 +1471,16 @@ class Gm_ceilingController extends JControllerLegacy
 
             $filename = md5($user_id . "cut-" . date("d-m-Y H:i:s"));
 
-            list($type, $data) = explode(';', $data);
-            list(, $data) = explode(',', $data);
-            $data = base64_decode($data);
+            //list($type, $data) = explode(';', $data);
+            //list(, $data) = explode(',', $data);
+            //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".png", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();
             $_SESSION['cut'] = $filename;
-            $_SESSION['width'] = $jinput->get('width', '0', 'INT');
+            $_SESSION['width'] = $jinput->get('width', 0, 'INT');
             $_SESSION['offcut'] = $offcut_square;
             $_SESSION['cuts'] = $cuts;
 
