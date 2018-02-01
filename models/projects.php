@@ -882,7 +882,7 @@ class Gm_ceilingModelProjects extends JModelList
             $query = $db->getQuery(true);
             $query->from('`#__gm_ceiling_projects` as p')
                 ->join("LEFT","`#__gm_ceiling_clients` as client ON client.id = p.client_id")
-                ->select(' client.client_name as client_name, client.created as created')
+                ->select(' client.client_name as client_name, client.created as created, client.id as client_id')
                 ->join("LEFT","`#__gm_ceiling_clients_contacts` as phone ON phone.client_id = p.client_id")
                 ->select('phone.phone as client_contacts')
                 ->where('p.project_status = '. $status . ' and client.dealer_id = '. $user->dealer_id)
