@@ -1407,7 +1407,7 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
             $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
         }
-        $result['giuld_data'] = $guild_data;
+        $result['guild_data'] = $guild_data;
         $result['total_gm_guild'] = $total_gm_guild;
         $result['total_dealer_guild'] = $total_dealer_guild;
         $result['total_with_gm_margin_guild'] = $total_with_gm_margin_guild;
