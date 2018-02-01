@@ -215,7 +215,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
             <?
             $mounters = json_decode($calculation->mounting_sum); ?>
             <?
-            $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".png"; ?>
+            $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg"; ?>
             <div class="tab-pane<?
             if ($k == 0) {
                 echo " active";

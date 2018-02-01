@@ -1460,7 +1460,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     </div>
     <?php $first = true; foreach ($calculations as $k => $calculation) { ?>
         <?php $mounters = json_decode($calculation->mounting_sum); ?>
-        <?php if(!empty($calculation->n2)) $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".png"; ?>
+        <?php if(!empty($calculation->n2)) $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg"; ?>
         <div class="tab-pane <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
             <h3><?php echo $calculation->calculation_title; ?></h3>
 
