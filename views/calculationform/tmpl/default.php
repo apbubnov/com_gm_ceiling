@@ -2873,8 +2873,8 @@
 					selects[index].appendChild(th_squares[i].clone());
 			}
         };
-		 var change_options15 = function (obj,classname1,classname2) {
-            var select = jQuery(obj);
+		var change_options15 = function (obj,classname1,classname2) {
+        	var select = jQuery(obj);
             var value = select.val();
 			var index = 0;
 			var types = jQuery( "select[name=\""+classname1+"\"" );

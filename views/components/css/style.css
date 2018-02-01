@@ -7,8 +7,7 @@ body {
     width: 100%;
     float: left;
     text-align: left;
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow: visible;
 }
 
 .Page button, .Page a {
@@ -38,7 +37,7 @@ body {
 
 .FormSimple {
     width: auto !important;
-    overflow: hidden;
+    overflow: hidden !important;
     border-radius: 5px;
     float: left;
     white-space: nowrap;
@@ -106,12 +105,16 @@ body {
     width: 100%;
 }
 
+.Page .Scroll {
+    overflow: auto;
+}
+
 .Page .Body thead .THeadClone {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 0;
 }
 
 .Page .Body thead, .Page .Body tbody, .Page .Body tfoot {
@@ -167,4 +170,12 @@ body {
 
 .Show {
     display: inherit !important;
+}
+
+@media (max-width: 767px) {
+    .Page .Scroll {
+        position: relative;
+        left: -30px;
+        width: calc(100% + 60px);
+    }
 }

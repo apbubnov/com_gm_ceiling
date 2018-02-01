@@ -20,12 +20,14 @@ $model = $this->getModel();
 
 $user = JFactory::getUser();
 $user->groups = $user->get('groups');
+$user->getDealerInfo();
 
 $userDealer = $user;
 
 if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
     $userDealer = JFactory::getUser($user->dealer_id);
     $userDealer->groups = $userDealer->get('groups');
+    $userDealer->getDealerInfo();
 }
 
 $stock = in_array(19, $user->groups);
@@ -39,6 +41,7 @@ if ($managerGM) {
     if (isset($dealerId)) {
         $dealer = JFactory::getUser($dealerId);
         $dealer->groups = $dealer->get('groups');
+        $dealer->getDealerInfo();
         // $dealer->price = $model->getDealerPrice($dealerId);
     }
 }
@@ -46,8 +49,9 @@ if ($managerGM) {
 function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
 function double_margin($value, $margin1, $margin2) { return margin(margin($value, $margin1), $margin2); }
 
+print_r($_SESSION);
 ?>
-<link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css">
+<link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css?date=<?=date("H.i.s");?>">
 <div class="Page">
     <div class="Title">
         Прайс компонентов<?=(isset($dealer))?" для $dealer->name #$dealer->id":"";?>.
@@ -69,14 +73,14 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         </form>
         <?endif;?>
     </div>
-    <div>
+    <div class="Scroll">
     <table class="Body">
         <thead>
             <tr class="THead">
                 <td><i class="fa fa-bars" aria-hidden="true"></i></td>
-                <td><i class="fa fa-hashtag" aria-hidden="true"></i></td>
-                <td>Наименование</td>
-                <td>Кол-во</td>
+                <td data-name="id" data-sort="ask"><i class="fa fa-hashtag" aria-hidden="true"></i></td>
+                <td data-name="name" data-sort="">Наименование</td>
+                <td data-name="count" data-sort="">Кол-во</td>
                 <?if($stock):?>
                 <td>Заказать</td>
                 <td>Цена закупки</td>
@@ -91,7 +95,7 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                 <td>Цена дилера</td>
                 <td>Изменить</td>
                 <?else:?>
-                <td>Цена дилера</td>
+                <td>Себестоймость</td>
                 <td>Цена клиента</td>
                 <?endif;?>
             </tr>
@@ -226,6 +230,9 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
 
         Data.Dealer = <?=isset($dealer)?$dealer->id:"null";?>;
 
+        Data.Table.Sorts = Data.Table.THead.find("td[data-sort]");
+        Data.Table.Sorts.click(Sort);
+
         ScrollInit();
         ResizeHead();
         Resize();
@@ -245,12 +252,13 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         Data.Scroll.EHeadTrClone.removeClass("THead").addClass("THeadClone");
         Data.Scroll.EHead.append(Data.Scroll.EHeadTrClone);
 
-        Data.Page.scroll(ResizeHead);
+        Data.Page.find(".Scroll").scroll(ResizeHead);
     }
 
     function ResizeHead() {
         Data.Scroll.EHeadTrClone.css("left", (Data.Scroll.EHeadTr.offset().left));
 
+        Data.Scroll.EHeadTrClone.width(Data.Scroll.EHeadTr.width());
         for (var i = 0; i < Data.Scroll.EHeadTr.children().length; i++)
             $(Data.Scroll.EHeadTrClone.children()[i])
                 .width($(Data.Scroll.EHeadTr.children()[i]).width());
@@ -392,5 +400,30 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
         });
 
         return result;
+    }
+
+    function Sort() {
+        var name = this.dataset.name,
+            sort = this.dataset.sort;
+
+        if (sort === "" || sort === "desc") sort = "asc";
+        else sort = "desc";
+
+        setSession("list.ordering", name);
+        setSession("list.direction", sort);
+        location.reload();
+    }
+
+    function setSession(name, value) {
+        jQuery.ajax({
+            type: 'POST',
+            url: Data.Ajax + "setSession",
+            data: {name: name, value: value},
+            cache: false,
+            async: false,
+            success: function (data) {
+
+            }
+        });
     }
 </script>

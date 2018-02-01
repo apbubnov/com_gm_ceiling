@@ -997,27 +997,27 @@
                     </table>-->
                     <?php if ($this->item->project_status == 1) { ?>
                         <h4 style="text-align:center;">Изменить замерщика, время и дату замера</h4>
-                        <div class="calendar_wrapper" style="background: #ffffff">
+                        <div class="calendar_wrapper_gauger" style="background: #ffffff">
                             <table>
                                 <tr>
                                     <td>
-                                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                        <button id="button-prev-gauger" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                                     </td>
                                     <td style="width: 100%">
-                                        <div id="calendar1" style="padding: 1em">
-                                            <?php echo $calendar1; ?>
+                                        <div id="calendar_gauger1" style="padding: 1em">
+                                            <?php echo $calendar_gauger1; ?>
                                         </div>
-                                        <div id="calendar2" style="padding: 1em">
-                                            <?php echo $calendar2; ?>
+                                        <div id="calendar_gauger2" style="padding: 1em">
+                                            <?php echo $calendar_gauger2; ?>
                                         </div>
                                     </td>
                                     <td>
-                                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                        <button id="button-next-gauger" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                     </td>
                                 </tr>
                             </table>
                         </div>
-                    <?php } else if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status == 17) { ?>
+                    <?php } else if ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) { ?>
                         <h4 style="text-align:center;">Назначить/изменить монтажную бригаду, время и дату</h4>
                         <div class="calendar_wrapper" style="background: #ffffff">
                             <table>
