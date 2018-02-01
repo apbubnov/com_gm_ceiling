@@ -3841,6 +3841,8 @@ class Gm_ceilingHelpersGm_ceiling
                     //}
                     $date1 = $year . "-" . $monthfull . "-01";
                     $date2 = $year . "-" . $monthfull . "-" . $current_days;
+                    throw new Exception($date1);
+                    
                     $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($id, $date1, $date2); //masID
                     $Dates = [];
                     for ($y = 1; $y <= $current_days; $y++) {
