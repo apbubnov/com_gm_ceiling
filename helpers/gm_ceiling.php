@@ -167,7 +167,7 @@ class Gm_ceilingHelpersGm_ceiling
 		$pdf - 0,1 флаг формирования PDF
 		$print_components - 0,1 флаг возвращения расчета при вызове в переменную
 	*/
-    public static function calculate($from_db, $calculation_id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount){
+    public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount){
         $jinput = JFactory::getApplication()->input;
         //Получаем прайс-лист комплектующих
         $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -506,15 +506,16 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if ($new_client != 1) {
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
+                $data['id'] = $ajax_return['id'];
             }
             $filename = md5("calculation_sketch" . $ajax_return['id']);
             $cut_filename = md5("cut_sketch" . $ajax_return['id']);
             
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".png");
+            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg")) {
+                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".svg");
             }
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png")) {
-                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".png");
+            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg")) {
+                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".svg");
             }
             if (!empty($cuts))
             {
