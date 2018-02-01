@@ -611,6 +611,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
         }
+        $guild_data = $guild_data['guild_data'];
         $components_sum = 0;
         $gm_components_sum = 0;
         $dealer_components_sum = 0;
