@@ -15,6 +15,9 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
+$listOrder = $this->state->get('list.ordering');
+$listDirn = $this->state->get('list.direction');
+
 $app = JFactory::getApplication();
 $model = $this->getModel();
 
@@ -48,8 +51,6 @@ if ($managerGM) {
 
 function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
 function double_margin($value, $margin1, $margin2) { return margin(margin($value, $margin1), $margin2); }
-
-print_r($_SESSION);
 ?>
 <link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css?date=<?=date("H.i.s");?>">
 <div class="Page">
@@ -74,29 +75,35 @@ print_r($_SESSION);
         <?endif;?>
     </div>
     <div class="Scroll">
+        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=components'); ?>" method="post"
+              name="adminForm" id="adminForm" hidden>
+            <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
+            <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
+            <?= JHtml::_('form.token'); ?>
+        </form>
     <table class="Body">
         <thead>
             <tr class="THead">
                 <td><i class="fa fa-bars" aria-hidden="true"></i></td>
-                <td data-name="id" data-sort="ask"><i class="fa fa-hashtag" aria-hidden="true"></i></td>
-                <td data-name="name" data-sort="">Наименование</td>
-                <td data-name="count" data-sort="">Кол-во</td>
+                <td><?=JHtml::_( 'grid.sort', '<i class="fa fa-hashtag" aria-hidden="true"></i>', 'component_id', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Наименование', 'component_title', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Количество', 'component_title', $listDirn, $listOrder);?></td>
                 <?if($stock):?>
                 <td>Заказать</td>
                 <td>Цена закупки</td>
                 <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
                 <td>Посмотреть</td>
                 <?elseif ($managerGM && empty($dealer)):?>
-                <td>Цена дилера</td>
-                <td>Цена клиента</td>
+                <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'option_price', $listDirn, $listOrder);?></td>
                 <td>Изменить</td>
                 <?elseif ($managerGM):?>
-                <td>Цена</td>
-                <td>Цена дилера</td>
+                <td><?=JHtml::_( 'grid.sort', 'Цена', 'option_price', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
                 <td>Изменить</td>
                 <?else:?>
-                <td>Себестоймость</td>
-                <td>Цена клиента</td>
+                <td><?=JHtml::_( 'grid.sort', 'Себестоймость', 'option_price', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'option_price', $listDirn, $listOrder);?></td>
                 <?endif;?>
             </tr>
         </thead>
@@ -230,9 +237,6 @@ print_r($_SESSION);
 
         Data.Dealer = <?=isset($dealer)?$dealer->id:"null";?>;
 
-        Data.Table.Sorts = Data.Table.THead.find("td[data-sort]");
-        Data.Table.Sorts.click(Sort);
-
         ScrollInit();
         ResizeHead();
         Resize();
@@ -351,8 +355,9 @@ print_r($_SESSION);
             data: values,
             cache: false,
             async: false,
+            dataType: "json",
+            timeout: 5000,
             success: function (data) {
-                data = JSON.parse(data);
 
                 $.each(data.elements, function (i, v) {
                     Data.Page.find(v.name).text(v.value);
@@ -360,8 +365,6 @@ print_r($_SESSION);
 
                 Noty(data.status, data.message);
             },
-            dataType: "text",
-            timeout: 5000,
             error: Noty
         });
 
@@ -400,30 +403,5 @@ print_r($_SESSION);
         });
 
         return result;
-    }
-
-    function Sort() {
-        var name = this.dataset.name,
-            sort = this.dataset.sort;
-
-        if (sort === "" || sort === "desc") sort = "asc";
-        else sort = "desc";
-
-        setSession("list.ordering", name);
-        setSession("list.direction", sort);
-        location.reload();
-    }
-
-    function setSession(name, value) {
-        jQuery.ajax({
-            type: 'POST',
-            url: Data.Ajax + "setSession",
-            data: {name: name, value: value},
-            cache: false,
-            async: false,
-            success: function (data) {
-
-            }
-        });
     }
 </script>
