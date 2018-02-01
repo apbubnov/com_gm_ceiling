@@ -138,17 +138,19 @@ $status = $status_model->getData();
         var status = jQuery("#select_status").val();
 
         jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=filterProjectForStatus",
+            type: "POST",
+            url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
             data: {
                 status: status
             },
             dataType: "json",
             async: true,
+            cache: false,
             success: function (data) {
-                data = JSON.parse(data);
                 console.log(data);
-
+                $("#clientList td").remove();
             },
+            timeout: 50000,
             error: function (data) {
                 console.log(data);
                 var n = noty({

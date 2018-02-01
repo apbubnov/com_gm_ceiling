@@ -3265,7 +3265,7 @@ class Gm_ceilingController extends JControllerLegacy
             $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             $result =  $projects_model->filterProjectForStatus($status);
 
-            die($result);
+            die(json_encode($result));
         }
         catch(Exception $e)
         {
