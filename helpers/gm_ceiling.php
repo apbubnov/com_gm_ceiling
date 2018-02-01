@@ -521,7 +521,7 @@ class Gm_ceilingHelpersGm_ceiling
             {
                 $canvases_model->saveCuts($ajax_return['id'],$cuts);
             }
-        
+        }
         /* if ($new_client == 1) {
             $clients = $calculation_model->add_client($data);
             if (!empty($clients)) {
