@@ -138,7 +138,7 @@ $status = $status_model->getData();
         var status = jQuery("#select_status").val();
 
         jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=",
+            url: "index.php?option=com_gm_ceiling&task=filterProjectForStatus",
             data: {
                 status: status
             },
