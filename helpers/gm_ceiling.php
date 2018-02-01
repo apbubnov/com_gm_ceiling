@@ -628,7 +628,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
         $html .= '<table class = "no_border">';
         $html .= '<tr>';
-        $html .= '<td>' . $dealer->name . '</td><td rowspan = "3"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.png" align="right" width="200" height="200"/></td><td rowspan = "3">'.str_replace(';','; ',$data['calc_data']).'</td>';
+        $html .= '<td>' . $dealer->name . '</td><td rowspan = "3"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.svg" align="right" width="200" height="200"/></td><td rowspan = "3">'.str_replace(';','; ',$data['calc_data']).'</td>';
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<td><h2>Дата: ' . date("d.m.Y") . '</h2></td>';
@@ -2683,7 +2683,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
-                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch".$data['id']) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch".$data['id']) . ".svg" . '" style="width: 100%; max-height: 800px;"/>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -2719,7 +2719,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<p>&nbsp;</p>
                         <h1>Наряд монтажной бригаде</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
-                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".png" . '" style="width: 100%; max-height: 800px;"/>
+                        <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 800px;"/>
                         <table border="0" cellspacing="0" width="100%">
                         <tbody>
                             <tr>
@@ -2952,7 +2952,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= ' </tbody>';
         $html .= '</table>';
-        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".png" . '" style="width: 100%;"/>';
+        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%;"/>';
         $html .= "<pagebreak />";
         $html .= $html;
         $html .= '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Раскрой № _________</h1>';
@@ -2988,7 +2988,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';
-        $html .= '<center><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".png" . '" style="width: 100%;"/></center>';
+        $html .= '<center><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;"/></center>';
         $filename = md5($data['id'] . 'cutpdf') . '.pdf';
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
@@ -3094,7 +3094,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
-        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".png" . '" style="width: 100%; max-height: 530px;"/> <br>';
+        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 530px;"/> <br>';
         $filename = md5($data['id'] . "manager") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         return 1;
@@ -3825,25 +3825,23 @@ class Gm_ceilingHelpersGm_ceiling
                 // вывод свободных замерщиков (по одному)
                 if ($flag[0] == 4) {
                     $model = self::getModel('gaugers');
-                    //$gaugers_id = $model->getData($flag[1]);
+                    $gaugers_id = $model->getData($flag[1]);
                     if (strlen($month) == 1) {
                         $monthfull = "0" . $month;
                     } else {
                         $monthfull = $month;
                     }
-                    //$masID = [];
-                    //if (!empty($gaugers_id)) {
-                        //foreach ($gaugers_id as $value) {
-                            //array_push($masID, $value->id);
-                        //}
-                    //} else {
-                        //$masID = [$id];
-                    //}
+                    $masID = [];
+                    if (!empty($gaugers_id)) {
+                        foreach ($gaugers_id as $value) {
+                            array_push($masID, $value->id);
+                        }
+                    } else {
+                        $masID = [$id];
+                    }
                     $date1 = $year . "-" . $monthfull . "-01";
                     $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                    throw new Exception($date1);
-                    
-                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($id, $date1, $date2); //masID
+                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($masID, $date1, $date2);
                     $Dates = [];
                     for ($y = 1; $y <= $current_days; $y++) {
                         if (strlen($y) == 1) {
@@ -3852,11 +3850,11 @@ class Gm_ceilingHelpersGm_ceiling
                             $u = $y;
                         }
                         foreach ($AllGaugingOfGaugers as $value) {
-                            //if ($value->project_calculator == $id) {
+                            if ($value->project_calculator == $id) {
                                 if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
                                     $Dates[$y] += 1;
                                 }
-                            //}
+                            }
                         }
                     }
                     // выходные дни
@@ -3920,7 +3918,7 @@ class Gm_ceilingHelpersGm_ceiling
                 // для вывода монтажника (по одному)
                 if ($flag[0] == 1) {
                     $model = self::getModel('teams');
-                    $brigade_id = $model->getDatas($flag[1]);
+                    $brigade_id = $model->getData($flag[1]);
                     if (strlen($month) == 1) {
                         $monthfull = "0" . $month;
                     } else {

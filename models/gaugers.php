@@ -89,7 +89,6 @@ class Gm_ceilingModelGaugers extends JModelItem {
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();
-			throw new Exception(count($items));
 			
 			return $items;
 		}
