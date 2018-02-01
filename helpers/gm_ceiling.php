@@ -522,39 +522,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $canvases_model->saveCuts($ajax_return['id'],$cuts);
             }
         }
-        /* if ($new_client == 1) {
-            $clients = $calculation_model->add_client($data);
-            if (!empty($clients)) {
-                $project_client = $calculation_model->add_project($data, $clients);
-                $data['project_id'] = $project_client;
-                $data['discount'] = 30;
-                $tmp_filename = $data['sketch_name'];
-                $tmp_cut_filename = $data['cut_name'];
-                $tmp_original_filename = $data['original_name'];
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                    $data['calc_image'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-                    $data['calc_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                    $data['cut_image'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-                    $data['cut_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".txt");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-
-                    $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
-                }
-                $calc_id = $calculation_model->save($data, 1);
-                $filename = md5("calculation_sketch" . $calc_id);
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                    rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".png");
-                }
-            }
-        } */
-
         //Пошла печать PDF
         if ($pdf == 1) {
             //наряд монтажной бригаде
