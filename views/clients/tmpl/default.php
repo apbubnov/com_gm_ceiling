@@ -51,7 +51,7 @@ $status = $status_model->getData();
 		<div class="span9">
 			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
-        <select id="select_status" style="display:none;"><option value='0' disabled selected>Выберите статус</option>
+        <select id="select_status" ><option value='' selected>Выберите статус</option>
             <?php foreach($status as $item): ?>
             <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
                 <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
@@ -116,6 +116,7 @@ $status = $status_model->getData();
 <script type="text/javascript">
 
 	jQuery(document).ready(function () {
+        jQuery("#select_status").change();
 		jQuery('.delete-button').click(deleteItem);
 	});
 
@@ -159,8 +160,13 @@ $status = $status_model->getData();
                     var tr = $("#TrClone").clone();
                     tr.show();
                     tr.find(".created").text(data[i].created);
+                    tr.find(".name").text(data[i].client_name);
+                    if (data[i].client_contacts != null)
+                    tr.find(".phone").text(data[i].client_contacts);
+                    tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
                     list.append(tr);
                 }
+                OpenPage();
             },
             timeout: 50000,
             error: function (data) {
@@ -176,5 +182,13 @@ $status = $status_model->getData();
             }
         });
     });
+    function OpenPage() {
+        var e = jQuery("[data-href]");
+        jQuery.each(e, function (i, v) {
+            jQuery(v).click(function () {
+                document.location.href = this.dataset.href;
+            });
+        });
+    }
 </script>
 
