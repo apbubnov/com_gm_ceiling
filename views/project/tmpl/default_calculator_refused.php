@@ -175,7 +175,7 @@ $project_total_discount = round($project_total_discount, 2);
 	<div class="tab-content">
         <?php foreach ($calculations as $k => $calculation) { ?>
             <?php $mounters = json_decode($calculation->mounting_sum); ?>
-            <?php $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".png"; ?>
+            <?php $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg"; ?>
             <div class="tab-pane<?php if ($k == 0) {
                 echo " active";
             } ?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">

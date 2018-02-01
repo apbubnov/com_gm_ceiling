@@ -287,7 +287,7 @@ else  $sb_project_id = 0;
 			</div>
 		<?php foreach($calculations as $k => $calculation) { ?>
 			<?php $mounters = json_decode($calculation->mounting_sum); ?>
-			<?php $filename = "/calculation_images/".md5("calculation_sketch".$calculation->id).".png"; ?>
+			<?php $filename = "/calculation_images/".md5("calculation_sketch".$calculation->id).".svg"; ?>
 			<div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
 				<h3><?php echo $calculation->calculation_title; ?></h3>
             <? if (!empty($filename)):?>

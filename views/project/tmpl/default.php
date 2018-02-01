@@ -210,7 +210,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 	
 	<?php foreach($calculations as $calculation) { ?>
 		<?php $mounters = json_decode($calculation->mounting_sum); ?>
-		<?php $filename = "/calculation_images/".md5("calculation_sketch".$calculation->id).".png"; ?>
+		<?php $filename = "/calculation_images/".md5("calculation_sketch".$calculation->id).".svg"; ?>
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'order' . $calculation->id, $calculation->calculation_title); ?>
 		<h3><?php echo $calculation->calculation_title; ?></h3>
 		<div class="sketch_image_block">
@@ -220,8 +220,6 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 			<div class="section_content">
 				<?php if (file_exists($_SERVER['DOCUMENT_ROOT'].$filename)){ ?>
                     <img class="sketch_image" src="<?php echo $filename; ?>" style="width:80vw;"/>
-                <?php }else{ ?>
-                    <img src="data:image/png;base64,<?php echo base64_encode($calculation->calc_image); ?>" style="width:80vw;"/>
                 <?php } ?>
 			</div>
 		</div>
