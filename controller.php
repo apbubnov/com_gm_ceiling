@@ -1414,7 +1414,7 @@ class Gm_ceilingController extends JControllerLegacy
             //list(, $data) = explode(',', $data);
             //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", base64_decode($data));
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();
@@ -1470,7 +1470,7 @@ class Gm_ceilingController extends JControllerLegacy
             //list(, $data) = explode(',', $data);
             //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", base64_decode($data)));
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();
