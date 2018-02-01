@@ -2553,7 +2553,6 @@
 							calculate_button.find("span.static").show();
 						}					
 					});
-					<?}?>
 				}
 			}
 			else{
