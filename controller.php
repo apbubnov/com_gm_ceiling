@@ -1414,7 +1414,7 @@ class Gm_ceilingController extends JControllerLegacy
             //list(, $data) = explode(',', $data);
             //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", base64_decode($data));
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();
@@ -1451,7 +1451,6 @@ class Gm_ceilingController extends JControllerLegacy
             $arr_points = $jinput->get('arr_points', null, 'array');
             $offcut_square = $jinput->get('square_obrezkov', 0, 'FLOAT');
             $cuts = $jinput->get('cuts', '', 'string');
-            throw new Exception($data);
             
             for ($i = 0; $i < count($arr_points); $i++)
             {
@@ -1471,7 +1470,7 @@ class Gm_ceilingController extends JControllerLegacy
             //list(, $data) = explode(',', $data);
             //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", base64_decode($data));
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();

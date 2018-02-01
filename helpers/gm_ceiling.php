@@ -611,6 +611,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
         }
+        $guild_data = $guild_data['guild_data'];
         $components_sum = 0;
         $gm_components_sum = 0;
         $dealer_components_sum = 0;
@@ -1406,7 +1407,7 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
             $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
         }
-        $result['giuld_data'] = $guild_data;
+        $result['guild_data'] = $guild_data;
         $result['total_gm_guild'] = $total_gm_guild;
         $result['total_dealer_guild'] = $total_dealer_guild;
         $result['total_with_gm_margin_guild'] = $total_with_gm_margin_guild;
