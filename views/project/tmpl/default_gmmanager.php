@@ -426,7 +426,7 @@ $AllMounters = $model->FindAllMounters($where);
                 <button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
                 <div id="modal_window_date" class = "modal_window">
                     <h6 style = "margin-top:10px">Введите к скольки должен быть готов</h6>
-                    <p><input type="date"  name = "ready_date" id="ready_date" value = <?php echo date('Y-m-d'); ?>> <input name ="time" type ="time" id = "time" value = "<?php echo date("H:i")?>" required ></p>
+                    <p><input type="date"  name = "ready_date" id="ready_date" value = <?php echo date('Y-m-d'); ?>> <input name ="time" type ="time" id = "time" required ></p>
                     <p ><input type= "checkbox" name = 'quick' id = 'quick' value = 0>Срочный</p>
                     <p><button type="submit" id="save" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
                 </div>
@@ -543,7 +543,7 @@ $AllMounters = $model->FindAllMounters($where);
                     var date = new Date();
                     var h = date.getHours();
                     var m = date.getMinutes();
-                    if(m.length=1)
+                    if(m.length == 1)
                     {
                         m = "0"+m;
                     }
