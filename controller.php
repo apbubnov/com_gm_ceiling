@@ -1414,7 +1414,7 @@ class Gm_ceilingController extends JControllerLegacy
             //list(, $data) = explode(',', $data);
             //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", base64_decode($data));
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();
@@ -1470,7 +1470,7 @@ class Gm_ceilingController extends JControllerLegacy
             //list(, $data) = explode(',', $data);
             //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", base64_decode($data));
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();
@@ -3216,45 +3216,37 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
-
-    public function setSession() {
-        try
-        {
+    public function sendClientEstimate(){
+        try{
             $jinput = JFactory::getApplication()->input;
-            $name = $jinput->get('name', null, 'string');
-            $value = $jinput->get('value', null, 'string');
-
-            $_SESSION[$name] = $value;
-
-            die((object) ["status" => "success", "message" => "Успешно добавленно в сессию!"]);
+            $id = $jinput->get('calc_id', null, 'INT');
+            $mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
+            $sender = array(
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            );
+            $client_estimate = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/". md5($data['id']."client_single") . ".pdf";
+            copy($client_estimate,$_SERVER['DOCUMENT_ROOT'] . "/tmp/". "Подробная смета.pdf");
+            $mailer->setSender($sender);
+            $mailer->addRecipient($data['send_email']);
+            $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
+            $mailer->setSubject('Подробная смета');
+            $mailer->setBody($body);
+            $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
+            $send = $mailer->Send();
+            unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+            die(true);
         }
         catch(Exception $e)
         {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            die((object) ["status" => "error", "message" => $e->getMessage()]);
+            throw new Exception('Ошибка!', 500);
         }
-    }
 
-    public function setState() {
-        try
-        {
-            $jinput = JFactory::getApplication()->input;
-            $name = $jinput->get('name', null, 'string');
-            $value = $jinput->get('value', null, 'string');
 
-            $this->setState($name, $value);
-
-            die((object) ["status" => "success", "message" => "Успешно добавленно в сессию!"]);
-        }
-        catch(Exception $e)
-        {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            die((object) ["status" => "error", "message" => $e->getMessage()]);
-        }
     }
 
     public function filterProjectForStatus() {
