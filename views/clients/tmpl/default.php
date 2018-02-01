@@ -51,7 +51,7 @@ $status = $status_model->getData();
 		<div class="span9">
 			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
-        <select id="select_status" style="display:none;"><option value='' selected>Выберите статус</option>
+        <select id="select_status" ><option value='' selected>Выберите статус</option>
             <?php foreach($status as $item): ?>
             <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
                 <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
