@@ -1533,7 +1533,6 @@ class Gm_ceilingController extends JControllerLegacy
             $id = $jinput->get('id', '0', 'INT');
             $save = $jinput->get('save', '0', 'INT');
             $pdf = $jinput->get('pdf', '0', 'INT');
-            $ajax = $jinput->get('ajax', '0', 'INT');
             $need_mount = $jinput->get('need_mount', '0', 'INT');
             $del_flag = $jinput->get('del_flag', '0', 'INT');
           

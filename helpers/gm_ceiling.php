@@ -535,45 +535,7 @@ class Gm_ceilingHelpersGm_ceiling
             //клиентская смета 
             self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,
             $mounting_data); 
-        } 
-     /*    if ($send_client_cost == 1) {
-            $user = JFactory::getUser();
-            $dealer = JFactory::getUser($user->dealer_id);
-        
-            $mailer = JFactory::getMailer();
-            $config = JFactory::getConfig();
-            $sender = array(
-                $config->get('mailfrom'),
-                $config->get('fromname')
-            );
-
-            $client_estimate = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/". md5($data['id']."client_single") . ".pdf";
-            copy($client_estimate,$_SERVER['DOCUMENT_ROOT'] . "/tmp/". "Подробная смета.pdf");
-            $mailer->setSender($sender);
-            $mailer->addRecipient($data['send_email']);
-
-            $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
-
-            $mailer->setSubject('Подробная смета');
-            $mailer->setBody($body);
-            $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
-            $send = $mailer->Send();
-            $mailer = JFactory::getMailer();
-            $config = JFactory::getConfig();
-
-            $sender = array(
-                $config->get('mailfrom'),
-                $config->get('fromname')
-            );
-            $mailer->setSender($sender);
-            $body = "Здравствуйте. Клиент запросил подробную смету на адрес: " . $data['send_email'];
-            $mailer->setSubject('Клиент запросил подробную смету');
-            $mailer->setBody($body);
-            $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
-            $send = $mailer->Send();
-            unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
-        } */
-        
+        }         
         $return = json_encode($ajax_return);
         
         return $return;
