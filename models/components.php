@@ -31,11 +31,7 @@ class Gm_ceilingModelComponents extends JModelList
         {
             if (empty($config['filter_fields'])) {
                 $config['filter_fields'] = array(
-                    'id', 'a.id',
-                    'full_name', 'a.full_name',
-                    'count_comp', 'a.count_comp',
-                    'count_order', 'a.count_order',
-                    'price', 'a.price'
+                    'component_id', 'component_title', 'option_count', "option_price"
                 );
             }
 
@@ -215,8 +211,6 @@ class Gm_ceilingModelComponents extends JModelList
             // Add the list ordering clause.
             $orderCol = $this->state->get('list.ordering');
             $orderDirn = $this->state->get('list.direction');
-
-            print_r($orderCol);
 
             if ($orderCol && $orderDirn)
                 $query->order($db->escape($orderCol . ' ' . $orderDirn));
