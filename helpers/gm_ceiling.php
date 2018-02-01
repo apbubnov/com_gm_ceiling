@@ -167,7 +167,7 @@ class Gm_ceilingHelpersGm_ceiling
 		$pdf - 0,1 флаг формирования PDF
 		$print_components - 0,1 флаг возвращения расчета при вызове в переменную
 	*/
-    public static function calculate($from_db, $calculation_id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount){
+    public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount){
         $jinput = JFactory::getApplication()->input;
         //Получаем прайс-лист комплектующих
         $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -506,54 +506,22 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if ($new_client != 1) {
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
+                $data['id'] = $ajax_return['id'];
             }
             $filename = md5("calculation_sketch" . $ajax_return['id']);
             $cut_filename = md5("cut_sketch" . $ajax_return['id']);
             
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".png");
+            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg")) {
+                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".svg");
             }
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png")) {
-                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".png");
+            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg")) {
+                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".svg");
             }
             if (!empty($cuts))
             {
                 $canvases_model->saveCuts($ajax_return['id'],$cuts);
             }
         }
-        /* if ($new_client == 1) {
-            $clients = $calculation_model->add_client($data);
-            if (!empty($clients)) {
-                $project_client = $calculation_model->add_project($data, $clients);
-                $data['project_id'] = $project_client;
-                $data['discount'] = 30;
-                $tmp_filename = $data['sketch_name'];
-                $tmp_cut_filename = $data['cut_name'];
-                $tmp_original_filename = $data['original_name'];
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                    $data['calc_image'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-                    $data['calc_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                    $data['cut_image'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-                    $data['cut_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".txt");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-
-                    $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
-                }
-                $calc_id = $calculation_model->save($data, 1);
-                $filename = md5("calculation_sketch" . $calc_id);
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                    rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".png");
-                }
-            }
-        } */
-
         //Пошла печать PDF
         if ($pdf == 1) {
             //наряд монтажной бригаде
@@ -643,6 +611,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
         }
+        $guild_data = $guild_data['guild_data'];
         $components_sum = 0;
         $gm_components_sum = 0;
         $dealer_components_sum = 0;
@@ -1438,7 +1407,7 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
             $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
         }
-        $result['giuld_data'] = $guild_data;
+        $result['guild_data'] = $guild_data;
         $result['total_gm_guild'] = $total_gm_guild;
         $result['total_dealer_guild'] = $total_dealer_guild;
         $result['total_with_gm_margin_guild'] = $total_with_gm_margin_guild;

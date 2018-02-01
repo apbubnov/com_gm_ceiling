@@ -108,7 +108,6 @@ body {
 .Page .Scroll {
     overflow: auto;
 }
-
 .Page .Body thead .THeadClone {
     display: none;
     position: fixed;
@@ -124,6 +123,17 @@ body {
 .Page .Body thead td, .Page .Body tfoot td {
     background-color: rgb(64, 65, 154);
     color: rgb(255, 255, 255);
+}
+.Page .Body thead tr td {
+    padding: 5px 10px;
+}
+
+.Page .Body thead tr td a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    line-height: normal;
+    padding: 0;
 }
 
 .Page .Body tr td {
