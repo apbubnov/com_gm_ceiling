@@ -894,20 +894,15 @@ class Gm_ceilingController extends JControllerLegacy
     {
         try
         {
+            $user = JFactory::getUser();
             $jinput = JFactory::getApplication()->input;
             $jdate = new JDate($jinput->get('date', '01.01.1970', 'STRING'));
             $id_client = $jinput->get('id_client', '0', 'INT');
-            $manager_id = $jinput->get('manager_id', '0', 'INT');
+            $manager_id = $user->id;
             $comment = $jinput->get('comment', '', 'STRING');
-            $phone_client = $jinput->get('phone', '', 'STRING');
 
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-            $result = $callback_model->save($jdate, $comment, $id_client, $manager_id, $phone_client);
-            //throw new Exception($result == 'call_find', 1);
-
-            if (!$result) {
-                $result = json_encode('call_find');
-            }
+            $result = $callback_model->save($jdate, $comment, $id_client, $manager_id);
 
             die($result);
         }

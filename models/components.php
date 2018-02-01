@@ -205,7 +205,7 @@ class Gm_ceilingModelComponents extends JModelList
 
             $query->from("`#__gm_ceiling_components_option` AS options")
                 ->join("LEFT", "`#__gm_ceiling_components` AS components ON components.id = options.component_id")
-                ->join((($stock)?"RIGHT":"LEFT"), "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
+                ->join("LEFT", "`#__gm_ceiling_components_goods` AS goods ON goods.option_id = options.id")
                 ->select('options.id as option_id, options.title as option_title, options.price as option_price, options.count as option_count, options.count_sale as option_count_sale')
                 ->select('components.id as component_id, components.title as component_title, components.unit, components.code')
                 ->select("goods.id as good_id, goods.stock as good_stock, goods.barcode as good_barcode, goods.article as good_article, goods.count as good_count");
@@ -292,6 +292,7 @@ class Gm_ceilingModelComponents extends JModelList
                     $option->count_sale = $item->option_count_sale;
                     $option->pprice = null;
                     $option->goods = [];
+                    $option->ocount = $this->getOCount($item->option_id);
 
                     $result[$item->component_id]->options[$item->option_id] = $option;
                 }
@@ -337,6 +338,49 @@ class Gm_ceilingModelComponents extends JModelList
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
+    }
+
+    private function getOCount($option_id) {
+        $db = $this->getDbo();
+
+        $TempDate = (object) [];
+        $TempDate->YDateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m"), 1, date("Y") - 1));
+        $TempDate->YDateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m") + 1, 1, date("Y") - 1));
+        $TempDate->MDateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m") - 1, 1, date("Y")));
+        $TempDate->MDateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), 1, date("Y")));
+        $TempDate->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m"), 1, date("Y")));
+        $TempDate->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m") + 1, 1, date("Y")));
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_components`")
+            ->select("SUM(count) as count")
+            ->where("(date_update > '$TempDate->YDateStart' AND date_update < '$TempDate->YDateEnd')")
+            ->where("status = '1'")
+            ->where("option_id = '$option_id'");
+        $db->setQuery($query);
+        $YCount = $db->loadObject()->count;
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_components`")
+            ->select("SUM(count) as count")
+            ->where("(date_update > '$TempDate->MDateStart' AND date_update < '$TempDate->MDateEnd')")
+            ->where("status = '1'")
+            ->where("option_id = '$option_id'");
+        $db->setQuery($query);
+        $MCount = $db->loadObject()->count;
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_components`")
+            ->select("SUM(count) as count")
+            ->where("(date_update > '$TempDate->DateStart' AND date_update < '$TempDate->DateEnd')")
+            ->where("status = '1'")
+            ->where("option_id = '$option_id'");
+        $db->setQuery($query);
+        $Count = $db->loadObject()->count;
+
+        $result = ceil((floatval($YCount) + floatval($MCount)) / 2);
+        $result -= ($result < $Count)?0:$Count;
+        return $result;
     }
 
     public function getInfoAnalytics($data) {
@@ -678,13 +722,45 @@ class Gm_ceilingModelComponents extends JModelList
     public function setPrice($data) {
         try
         {
+            if (gettype($data) == "object")
+                $data = [$data];
+
+            $db = $this->getDbo();
+            $querySTR = "";
+            foreach ($data as $v) {
+                $query = $db->getQuery(true);
+                $query->update("`#__gm_ceiling_components_option`")
+                    ->set("price = '$v->price'")
+                    ->where("id = '$v->id'");
+                $querySTR .= ((string) $query) . "; ";
+            }
+            $db->setQuery($querySTR);
+            $db->execute();
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getPrice($data) {
+        try
+        {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->update("`#__gm_ceiling_components_option`")
-                ->set("price = $data->price")
-                ->where("id = $data->id");
+            $query->from("`#__gm_ceiling_components_option`")
+                ->select("id, price");
+
+            if (gettype($data) == "array")
+                $query->where("id in (" . implode(", ", $data) . ")");
+            else if (gettype($data) == "string" || gettype($data) == "integer")
+                $query->where("id = '$data'");
+
             $db->setQuery($query);
-            $db->execute();
+            return $db->loadObjectList();
         }
         catch(Exception $e)
         {

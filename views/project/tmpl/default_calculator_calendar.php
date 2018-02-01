@@ -1725,7 +1725,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </label>
         <div class="controls">
             <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору"
-                        aria-invalid="false"></textarea>
+                        aria-invalid="false"><?=($this->item->dealer_calculator_note)?$this->item->dealer_calculator_note:""?></textarea>
         </div>
         <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
         </button>
@@ -1773,24 +1773,24 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         Примечание к монтажу
                     </label>
                     <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
-                                aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea>
+                                aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button class="validate btn btn-primary" id="save" type="submit"> Сохранить и запустить <br> в
+                    <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
                         производство
                     </button>
                 </td>
                 <td>
-                    <button class="validate btn btn-primary" id="save_exit" type="submit"> Сохранить и выйти
+                    <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
                     </button>
                 </td>
-                <td>
-                    <a class="btn btn-primary"
-                        href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">
-                        Перейти к монтажам </a>
-                </td>
+<!--                <td>-->
+<!--                    <a class="btn btn-primary"-->
+<!--                        href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?><!--">-->
+<!--                        Перейти к монтажам </a>-->
+<!--                </td>-->
                 <td>
                 </td>
             </tr>
@@ -2476,9 +2476,21 @@ var $ = jQuery;
             jQuery("input[name='project_status']").val(4);
             jQuery("input[name='project_verdict']").val(1);
         });
-        jQuery("#save").click(function () {
-            if(jQuery("input[name='project_mounter']").val()=="")
-                jQuery("input[name='project_mounter']").attr("required");
+        jQuery("#save").mousedown(function () {
+            if(jQuery("input[name='project_mounter']").val() === "")
+            {
+                jQuery(this).attr("type", "button");
+                     noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Выберите монтажную бригаду!"
+                    });
+
+            }
+            else
+                jQuery(this).attr("type", "submit");
             jQuery("input[name='project_status']").val(4);
             jQuery("input[name='project_verdict']").val(1);
         });

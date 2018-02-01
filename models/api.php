@@ -29,7 +29,7 @@ class Gm_ceilingModelApi extends JModelList
         {
             $db = $this->getDbo();
             $arr_ids = [];
-            throw new Exception("Error Processing Request", 1);
+
             foreach ($data as $key => $value)
             {
                 if (empty($data[$key]->android_id))
@@ -179,43 +179,86 @@ class Gm_ceilingModelApi extends JModelList
             $db = $this->getDbo();
 
             $change_time = $db->escape($data->change_time, false);
-            $dealer_id = $db->escape($data->dealer_id, false);
 
-            //клиенты
-            $query = $db->getQuery(true);
-            $query->select("*");
-            $query->from("`rgzbn_gm_ceiling_clients`");
-            $query->where("`dealer_id` = $dealer_id");
-            $db->setQuery($query);
-            $list_clients = $db->loadObjectList();
-
-            if (count($list_clients) > 0)
+            if (!empty($data->dealer_id))
             {
-                //проекты
-                $where = "";
-                foreach ($list_clients as $key => $value)
+                $dealer_id = $db->escape($data->dealer_id, false);
+                //клиенты
+                $query = $db->getQuery(true);
+                $query->select("*");
+                $query->from("`rgzbn_gm_ceiling_clients`");
+                $query->where("`dealer_id` = $dealer_id");
+                $db->setQuery($query);
+                $list_clients = $db->loadObjectList();
+
+                if (count($list_clients) > 0)
                 {
-                    $id = $value->id;
-                    if ($key == count($list_clients) - 1)
+                    //проекты
+                    $where = "";
+                    foreach ($list_clients as $key => $value)
                     {
-                        $where .= "`client_id`=$id";
+                        $id = $value->id;
+                        if ($key == count($list_clients) - 1)
+                        {
+                            $where .= "`client_id`=$id";
+                        }
+                        else
+                        {
+                            $where .= "`client_id`=$id OR ";
+                        }
                     }
-                    else
-                    {
-                        $where .= "`client_id`=$id OR ";
-                    }
+                    
+                    $query = $db->getQuery(true);
+                    $query->select("*");
+                    $query->from("`rgzbn_gm_ceiling_projects`");
+                    $query->where($where);
+                    $db->setQuery($query);
+                    $list_projects = $db->loadObjectList();
                 }
-                
+                else
+                {
+                    $list_projects = array();
+                }
+            }
+            elseif (!empty($data->project_calculator))
+            {
+                $project_calculator = $db->escape($data->project_calculator, false);
+                //проекты
                 $query = $db->getQuery(true);
                 $query->select("*");
                 $query->from("`rgzbn_gm_ceiling_projects`");
-                $query->where($where);
+                $query->where("`project_calculator` = $project_calculator");
                 $db->setQuery($query);
                 $list_projects = $db->loadObjectList();
-            }
-            else
-            {
-                $list_projects = array();
+
+                if (count($list_projects) > 0)
+                {
+                    //клиенты
+                    $where = "";
+                    foreach ($list_projects as $key => $value)
+                    {
+                        $client_id = $value->client_id;
+                        if ($key == count($list_projects) - 1)
+                        {
+                            $where .= "`id`=$client_id";
+                        }
+                        else
+                        {
+                            $where .= "`id`=$client_id OR ";
+                        }
+                    }
+                    
+                    $query = $db->getQuery(true);
+                    $query->select("*");
+                    $query->from("`rgzbn_gm_ceiling_clients`");
+                    $query->where($where);
+                    $db->setQuery($query);
+                    $list_clients = $db->loadObjectList();
+                }
+                else
+                {
+                    $list_clients = array();
+                }
             }
 
             if (count($list_clients) > 0)
