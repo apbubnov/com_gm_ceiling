@@ -48,6 +48,7 @@ $status = $status_model->getData();
 				</a>
 			<?php endif; ?>
 		</div>
+        <div id="search" style="display: none; width: 40px; height: 40px;"><i class="fa fa-search"></i></div>
 		<div class="span9">
 			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
@@ -116,7 +117,9 @@ $status = $status_model->getData();
 <script type="text/javascript">
 
 	jQuery(document).ready(function () {
-        jQuery("#select_status").change();
+	    if(jQuery("#filter_search").val() == '') {
+            jQuery("#select_status").change();
+        }
 		jQuery('.delete-button').click(deleteItem);
 	});
 
@@ -131,6 +134,8 @@ $status = $status_model->getData();
     $(window).resize(function(){
         if (screen.width <= '1024') {
             jQuery('#clientList').css('font-size', '10px');
+            jQuery('#search').css('display', 'block');
+            jQuery('.span9').css('display', 'none');
         }
         else {
         }
@@ -190,5 +195,10 @@ $status = $status_model->getData();
             });
         });
     }
+    var tmp = 1;
+    jQuery("#search").click(function () {
+        if(tmp == 1) { jQuery(".span9").show(); tmp = 0;}
+        else { jQuery(".span9").hide(); tmp = 1;}
+    })
 </script>
 

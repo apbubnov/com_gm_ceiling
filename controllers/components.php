@@ -124,6 +124,8 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             $answer->message = "Обновление произошло успешно!";
             $answer->elements = [];
 
+            print_r($user->addComponentsPrice(["price" => "15"]));
+
             if (empty($dealer)) {
                 $oldPrice = $model->getPrice($id);
                 $newPrice = $oldPrice;
@@ -150,7 +152,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $model->setPrice($newPrice);
             }
             else {
-                $model
+
             }
 
             die(json_encode($answer));
