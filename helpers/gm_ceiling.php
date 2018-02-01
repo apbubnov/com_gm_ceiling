@@ -3825,7 +3825,7 @@ class Gm_ceilingHelpersGm_ceiling
                 // вывод свободных замерщиков (по одному)
                 if ($flag[0] == 4) {
                     $model = self::getModel('gaugers');
-                    $gaugers_id = $model->getData($flag[1]);
+                    //$gaugers_id = $model->getData($flag[1]);
                     if (strlen($month) == 1) {
                         $monthfull = "0" . $month;
                     } else {
@@ -3918,7 +3918,7 @@ class Gm_ceilingHelpersGm_ceiling
                 // для вывода монтажника (по одному)
                 if ($flag[0] == 1) {
                     $model = self::getModel('teams');
-                    $brigade_id = $model->getData($flag[1]);
+                    $brigade_id = $model->getDatas($flag[1]);
                     if (strlen($month) == 1) {
                         $monthfull = "0" . $month;
                     } else {
