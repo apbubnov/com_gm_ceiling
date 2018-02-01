@@ -3634,6 +3634,41 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Замер отменен');
             $mailer->setBody($body);
             $mailer->addRecipient($user->email);
+        } elseif ($type == 10) {
+            // уведомление о изменении даты замера
+            $user = JFactory::getUser($data->project_calculator);
+            $dopinfo = $client->getInfo($data->id_client);
+            
+            $body = "Здравствуйте, " . $user->name . ". У договора " . $data->id . " изменилась дата(время) замера!\n\n";
+            $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
+            $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+            $body .= "Адрес: " . $data->project_info . "\n";
+            $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
+            if ($data->old_date_gauger != "0000-00-00 00:00:00") {
+            $body .= "Старая дата и время замера: " . $jdate1->format('d.m.Y H:i') . "\n";
+            }
+            $jdate = new JDate(JFactory::getDate($data->project_calculation_date));
+            if ($data->project_calculation_date != "0000-00-00 00:00:00") {
+                $body .= "Новая дата и время замера: " . $jdate->format('d.m.Y H:i') . "\n";
+            }
+            $body .= "Примечание менеджера ГМ: " . $data->gm_manager_note . "\n";
+            $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+            $mailer->setSubject('Изменена дата(время) замера');
+            $mailer->setBody($body);
+            $mailer->addRecipient($user->email);
+        } elseif ($type == 11) {
+            // уведомление о изменнеии замерщика
+            $user = JFactory::getUser($data->project_calculator);
+            $dopinfo = $client->getInfo($data->id_client);
+
+            $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
+            $body = "Здравствуйте, " . $user->name . ". замер договора " . $data->id . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
+            $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
+            $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+            $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+            $mailer->setSubject('Замер отменен');
+            $mailer->setBody($body);
+            $mailer->addRecipient($user->email);
         }
 
         if ($type != 5) {
@@ -3825,23 +3860,23 @@ class Gm_ceilingHelpersGm_ceiling
                 // вывод свободных замерщиков (по одному)
                 if ($flag[0] == 4) {
                     $model = self::getModel('gaugers');
-                    $gaugers_id = $model->getData($flag[1]);
+                    //$gaugers_id = $model->getData($flag[1]);
                     if (strlen($month) == 1) {
                         $monthfull = "0" . $month;
                     } else {
                         $monthfull = $month;
                     }
-                    $masID = [];
-                    if (!empty($gaugers_id)) {
-                        foreach ($gaugers_id as $value) {
-                            array_push($masID, $value->id);
-                        }
-                    } else {
-                        $masID = [$id];
-                    }
+                    //$masID = [];
+                    //if (!empty($gaugers_id)) {
+                        //foreach ($gaugers_id as $value) {
+                            //array_push($masID, $value->id);
+                        //}
+                    //} else {
+                        //$masID = [$id];
+                    //}
                     $date1 = $year . "-" . $monthfull . "-01";
                     $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($masID, $date1, $date2);
+                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($id, $date1, $date2);//masID
                     $Dates = [];
                     for ($y = 1; $y <= $current_days; $y++) {
                         if (strlen($y) == 1) {
@@ -3850,11 +3885,11 @@ class Gm_ceilingHelpersGm_ceiling
                             $u = $y;
                         }
                         foreach ($AllGaugingOfGaugers as $value) {
-                            if ($value->project_calculator == $id) {
+                            //if ($value->project_calculator == $id) {
                                 if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
                                     $Dates[$y] += 1;
                                 }
-                            }
+                            //}
                         }
                     }
                     // выходные дни
@@ -3918,7 +3953,7 @@ class Gm_ceilingHelpersGm_ceiling
                 // для вывода монтажника (по одному)
                 if ($flag[0] == 1) {
                     $model = self::getModel('teams');
-                    $brigade_id = $model->getData($flag[1]);
+                    $brigade_id = $model->getDatas($flag[1]);
                     if (strlen($month) == 1) {
                         $monthfull = "0" . $month;
                     } else {
