@@ -116,9 +116,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
 
             $p = str_replace("%", "", $price);
             $e = str_replace(["+", "-"], "", $p);
-            $type = (strlen($e) != strlen($p))
-                ?((strlen($p) != strlen($price))?"percent":"expression")
-                :"number";
+            $type = (strlen($e) != strlen($p))?((strlen($p) != strlen($price))?3:2):1;
             $number = floatval($p);
 
             $answer = (object) [];
@@ -132,13 +130,13 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 foreach ($oldPrice as $k => $v)
                 {
                     switch ($type) {
-                        case "percent":
+                        case 3:
                             $newPrice[$k]->price = $v->price + $v->price * ($number / 100);
                             break;
-                        case "expression":
+                        case 2:
                             $newPrice[$k]->price = $v->price + $number;
                             break;
-                        case "number":
+                        case 1:
                             $newPrice[$k]->price = $number;
                             break;
                     }
@@ -150,6 +148,9 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                         "value" => $this->double_margin($newPrice[$k]->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin)];
                 }
                 $model->setPrice($newPrice);
+            }
+            else {
+                $model
             }
 
             die(json_encode($answer));
