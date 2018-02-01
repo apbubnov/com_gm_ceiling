@@ -3256,6 +3256,25 @@ class Gm_ceilingController extends JControllerLegacy
             die((object) ["status" => "error", "message" => $e->getMessage()]);
         }
     }
+
+    public function filterProjectForStatus() {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $status = $jinput->get('status', '0', 'int');
+            $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $result =  $projects_model->filterProjectForStatus($status);
+
+            die($result);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
 }
 
 ?>

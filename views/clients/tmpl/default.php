@@ -54,7 +54,7 @@ $status = $status_model->getData();
         <select id="select_status" style="display:none;"><option value='0' disabled selected>Выберите статус</option>
             <?php foreach($status as $item): ?>
             <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
-                <option value="<?php echo $item->title; ?>"><?php echo $item->title; ?></option>
+                <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
             <? } ?>
             <?php endforeach;?>
         </select>
@@ -145,15 +145,8 @@ $status = $status_model->getData();
             dataType: "json",
             async: true,
             success: function (data) {
-
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: ""
-                });
+                data = JSON.parse(data);
+                console.log(data);
 
             },
             error: function (data) {
