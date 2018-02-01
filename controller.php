@@ -84,9 +84,9 @@ class Gm_ceilingController extends JControllerLegacy
                         if (!empty($type)) {
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=' . $type, false));
                             $app->input->set('type', $type);
-                        } else {
+                        }/*  else {
                             $this->setRedirect(JRoute::_('index.php', false));
-                        }
+                        } */
                     } else {
                         $this->setRedirect(JRoute::_('index.php?option=com_users&view=login', false));
                     }
@@ -1547,9 +1547,8 @@ class Gm_ceilingController extends JControllerLegacy
             ));
             $data1 = $data1['jform'];
             if(!empty($data1)) $this->texturesId($data1['n2'],$data1['proizv'],$data1['n3'],$data1['color']);
-            $print_components = 0;
 
-            $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
+            $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount);
             die($result);
          }
         catch(Exception $e)
@@ -3103,13 +3102,6 @@ class Gm_ceilingController extends JControllerLegacy
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }
-
-    public function test_estimate(){
-        $jinput = JFactory::getApplication()->input;
-        $id = $jinput->get('id','','INT');
-        $result = Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($id,null,1);
-        die(json_encode($result));
     }
 
     public function printInProductionOnGmMainPage(){
