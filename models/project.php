@@ -975,14 +975,14 @@ class Gm_ceilingModelProject extends JModelItem
 			if($data->id > 0) {
 				$table->load($data->id);
 				$table->gm_chief_note = $data->gm_chief_note;
-				if ($data->project_mounting_date != "00.00.0000 00:00") {
+				if ($data->project_mounting_date != "00-00-0000 00:00:00") {
 					$table->project_mounting_date = $data->project_mounting_date;
 					if ($user->dealer_type == 1) {
 						$table->project_status = 5;
 					}
 					$table->project_mounter = $data->project_mounter;
 				}
-				if ($data->project_calculation_date != "00.00.0000 00:00") {
+				if ($data->project_calculation_date != "00-00-0000 00:00:00") {
 					$table->project_calculation_date = $data->project_calculation_date;
 					$table->project_calculator = $data->project_calculator;
 				}
@@ -1079,9 +1079,11 @@ class Gm_ceilingModelProject extends JModelItem
     }
 	
 	/*
-		// добавление истории клиента при изменении даты и/или МБ
-		// флаг = 1 изменилась только дата
+		// добавление истории клиента при изменении даты и/или МБ/замерщика
+		// флаг = 1 изменилась только дата монтажа
 		// флаг = 2 изменилась МБ
+		// флаг = 3 изменилась только дата замера
+		// флаг = 4 изменился замерщик
 	*/
 	public function AddComment($flag, $data) {
 		try
@@ -1096,8 +1098,8 @@ class Gm_ceilingModelProject extends JModelItem
 				$date = substr($data->project_mounting_date, 8, 2)."-".substr($data->project_mounting_date, 5, 2)."-".substr($data->project_mounting_date, 0, 4)." ".substr($data->project_mounting_date, 11, 5);
 				$text = "У проекта №$data->id дата монтажа перенесена на $date";
 				$query->insert('#__gm_ceiling_client_history')
-				->columns('client_id, date_time, text')
-				->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
+					->columns('client_id, date_time, text')
+					->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
 				$db->setQuery($query);
 				$db->execute();
 
@@ -1115,12 +1117,11 @@ class Gm_ceilingModelProject extends JModelItem
 				// перенос даты перезвона
 				$query3 = $db->getQuery(true);
 				$query3->update('#__gm_ceiling_callback')
-				->set("date_time = '$newdate 09:00:00'")
-				->where("client_id = '$data->id_client' and date_time like '$olddate%'");
+					->set("date_time = '$newdate 09:00:00'")
+					->where("client_id = '$data->id_client' and date_time like '$olddate%'");
 				$db->setQuery($query3);
 				$db->execute();
-			}
-			if ($flag == 2) {
+			} else if ($flag == 2) {
 				$query2 = $db->getQuery(true);
 				$query2->select('name')
 					->from('#__users')
@@ -1130,20 +1131,44 @@ class Gm_ceilingModelProject extends JModelItem
 
 				$text = "У проекта №$data->id монтажная бригада заменена на ".$brigade[0]->name;
 				$query->insert('#__gm_ceiling_client_history')
-				->columns('client_id, date_time, text')
-				->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
+					->columns('client_id, date_time, text')
+					->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
+				$db->setQuery($query);
+				$db->execute();
+			} else if ($flag == 3) {
+				// коммент о переносе даты
+				$date = substr($data->project_calculation_date, 8, 2)."-".substr($data->project_calculation_date, 5, 2)."-".substr($data->project_calculation_date, 0, 4)." ".substr($data->project_calculation_date, 11, 5);
+				$text = "У проекта №$data->id дата замера перенесена на $date";
+				$query->insert('#__gm_ceiling_client_history')
+					->columns('client_id, date_time, text')
+					->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
+				$db->setQuery($query);
+				$db->execute();
+			} else if ($flag == 4) {
+				$query2 = $db->getQuery(true);
+				$query2->select('name')
+					->from('#__users')
+					->where("id = $data->project_calculator");
+				$db->setQuery($query2);
+				$gauger = $db->loadObject();			
+
+				$text = "У проекта №$data->id был изменен замерщик на ".$gauger->name;
+				$query->insert('#__gm_ceiling_client_history')
+					->columns('client_id, date_time, text')
+					->values('"'.$data->id_client.'", "'.$currentDate.'", "'.$text.'"');
 				$db->setQuery($query);
 				$db->execute();
 			}
 
 			// статус монтажа изменить на непросмотренный
-			$query4 = $db->getQuery(true);
+			if ($flag == 1 || $flag == 2) {
+				$query4 = $db->getQuery(true);
 				$query4->update('#__gm_ceiling_projects')
-				->set("read_by_mounter = '0'")
-				->where("id = '$data->id'");
-			$db->setQuery($query4);
-			$db->execute();
-			
+					->set("read_by_mounter = '0'")
+					->where("id = '$data->id'");
+				$db->setQuery($query4);
+				$db->execute();
+			}
 		}
 		catch(Exception $e)
 		{

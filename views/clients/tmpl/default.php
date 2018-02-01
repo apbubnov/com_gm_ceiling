@@ -51,7 +51,7 @@ $status = $status_model->getData();
 		<div class="span9">
 			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
-        <select id="select_status" style="display:none;"><option value='0' disabled selected>Выберите статус</option>
+        <select id="select_status" ><option value='' selected>Выберите статус</option>
             <?php foreach($status as $item): ?>
             <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
                 <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
@@ -62,7 +62,7 @@ $status = $status_model->getData();
 	<table class="table table-striped table_cashbox one-touch-view" id="clientList">
 		<thead>
 			<tr>
-				<th class=''>
+				<th class='' >
 					<?php echo JHtml::_('grid.sort',  'Создан', 'a.created', $listDirn, $listOrder); ?>
 				</th>
 				<th class=''>
@@ -72,6 +72,11 @@ $status = $status_model->getData();
 					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS', 'a.client_contacts', $listDirn, $listOrder); ?>
 				</th>
 			</tr>
+            <tr class="row" id="TrClone" data-href="" style="display: none">
+                <td class="one-touch created"></td>
+                <td class="one-touch name"></td>
+                <td class="one-touch phone"></td>
+            </tr>
 		</thead>
 
 		<tbody>
@@ -81,8 +86,8 @@ $status = $status_model->getData();
 				<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 			<?php endif; ?>
 			<?php if($item->id !== $user->associated_client): ?>
-			<tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
-				<td class="one-touch">
+			<tr class="row<?php echo $i % 2; ?> inform" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
+				<td class="one-touch created">
 					<?php
 						if($item->created == "0000-00-00 00:00:00") {
 							echo "-";
@@ -94,8 +99,8 @@ $status = $status_model->getData();
 					?>
                     
 				</td>
-				<td class="one-touch"><?php echo $this->escape($item->client_name); ?></td>
-				<td class="one-touch"><?php echo $item->client_contacts; ?></td>
+				<td class="one-touch name"><?php echo $this->escape($item->client_name); ?></td>
+				<td class="one-touch phone"><?php echo $item->client_contacts; ?></td>
 			</tr>
 			<?php endif; endforeach; ?>
 		</tbody>
@@ -111,6 +116,7 @@ $status = $status_model->getData();
 <script type="text/javascript">
 
 	jQuery(document).ready(function () {
+        jQuery("#select_status").change();
 		jQuery('.delete-button').click(deleteItem);
 	});
 
@@ -136,7 +142,6 @@ $status = $status_model->getData();
     jQuery("#select_status").change(function ()
     {
         var status = jQuery("#select_status").val();
-
         jQuery.ajax({
             type: "POST",
             url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
@@ -148,7 +153,20 @@ $status = $status_model->getData();
             cache: false,
             success: function (data) {
                 console.log(data);
-                $("#clientList td").remove();
+                var list = $("#clientList tbody");
+                list.empty();
+                var text='';
+                for(i=0;i<data.length;i++){
+                    var tr = $("#TrClone").clone();
+                    tr.show();
+                    tr.find(".created").text(data[i].created);
+                    tr.find(".name").text(data[i].client_name);
+                    if (data[i].client_contacts != null)
+                    tr.find(".phone").text(data[i].client_contacts);
+                    tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
+                    list.append(tr);
+                }
+                OpenPage();
             },
             timeout: 50000,
             error: function (data) {
@@ -164,5 +182,13 @@ $status = $status_model->getData();
             }
         });
     });
+    function OpenPage() {
+        var e = jQuery("[data-href]");
+        jQuery.each(e, function (i, v) {
+            jQuery(v).click(function () {
+                document.location.href = this.dataset.href;
+            });
+        });
+    }
 </script>
 

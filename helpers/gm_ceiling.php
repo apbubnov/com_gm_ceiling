@@ -522,39 +522,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $canvases_model->saveCuts($ajax_return['id'],$cuts);
             }
         }
-        /* if ($new_client == 1) {
-            $clients = $calculation_model->add_client($data);
-            if (!empty($clients)) {
-                $project_client = $calculation_model->add_project($data, $clients);
-                $data['project_id'] = $project_client;
-                $data['discount'] = 30;
-                $tmp_filename = $data['sketch_name'];
-                $tmp_cut_filename = $data['cut_name'];
-                $tmp_original_filename = $data['original_name'];
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                    $data['calc_image'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-                    $data['calc_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                    $data['cut_image'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".png");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-                    $data['cut_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".txt");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-
-                    $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
-                }
-                $calc_id = $calculation_model->save($data, 1);
-                $filename = md5("calculation_sketch" . $calc_id);
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png")) {
-                    rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".png");
-                }
-            }
-        } */
-
         //Пошла печать PDF
         if ($pdf == 1) {
             //наряд монтажной бригаде
@@ -644,6 +611,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
         }
+        $guild_data = $guild_data['guild_data'];
         $components_sum = 0;
         $gm_components_sum = 0;
         $dealer_components_sum = 0;
@@ -1439,7 +1407,7 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
             $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
         }
-        $result['giuld_data'] = $guild_data;
+        $result['guild_data'] = $guild_data;
         $result['total_gm_guild'] = $total_gm_guild;
         $result['total_dealer_guild'] = $total_dealer_guild;
         $result['total_with_gm_margin_guild'] = $total_with_gm_margin_guild;
@@ -3346,16 +3314,12 @@ class Gm_ceilingHelpersGm_ceiling
         $mounterModel = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
         //throw new Exception("fdf");
         if ($type == 0) {
-
-
             //Уведомление о записи на замер
             $db = JFactory::getDBO();
             $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
 				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 22';
             $db->setQuery($q);
             $users = $db->loadObjectList();
-
-
 
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
@@ -3443,7 +3407,6 @@ class Gm_ceilingHelpersGm_ceiling
             $db->setQuery($q);
             $users = $db->loadObjectList();
 
-
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
             }
@@ -3475,7 +3438,6 @@ class Gm_ceilingHelpersGm_ceiling
 
             $db->setQuery($q);
             $users = $db->loadObjectList();
-
 
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
@@ -3534,7 +3496,6 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Договор перемещен в отказы');
             $mailer->setBody($body);
         } elseif ($type == 5) {
-
             $dopinfo = $client->getInfo($data->client_id);
             $body = "Здравствуйте. Необходимо перезвонить:\n\n";
             $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
@@ -3545,8 +3506,6 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Перезвонить клиенту!');
             $mailer->setBody($body);
             $mailer->addRecipient($data->email);
-
-
         } elseif ($type == 6) {
             //Уведомление об отправке договора в производство и отказы
             $db = JFactory::getDBO();
@@ -3610,7 +3569,6 @@ class Gm_ceilingHelpersGm_ceiling
             $jdate = new JDate(JFactory::getDate($data->project_mounting_date));
             if ($data->project_mounting_date != "0000-00-00 00:00:00")
                 $body .= "Новая дата и время монтажа: " . $jdate->format('d.m.Y H:i') . "\n";
-            $body .= "Примечание клиента: " . $data->project_note . "\n";
             $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
             if ($em) {
                 $user = JFactory::getUser();
@@ -3626,16 +3584,12 @@ class Gm_ceilingHelpersGm_ceiling
             $db = JFactory::getDBO();
             if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->old_mounter);
             $dopinfo = $client->getInfo($data->id_client);
+
             $jdate1 = new JDate(JFactory::getDate($data->old_date));
             $body = "Здравствуйте, " . $mounters->name . ". Монтаж договора " . $data->id . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
             $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
             $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
 
-            /* $jdate = new JDate(JFactory::getDate($data->project_mounting_date));
-             if ($data->project_mounting_date != "0000-00-00 00:00:00")
-                 $body .= "Новая дата и время монтажа: " . $jdate->format('d.m.Y H:i') . "\n";
-             $body .= "Примечание клиента: " . $data->project_note . "\n";
-             $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";*/
             if ($em) {
                 $user = JFactory::getUser();
                 $dealer = JFactory::getUser($user->dealer_id);
@@ -3645,7 +3599,43 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Монтаж отменен');
             $mailer->setBody($body);
             $mailer->addRecipient($mounters->email);
+        } elseif ($type == 10) {
+            // уведомление о изменении даты замера
+            $user = JFactory::getUser($data->project_calculator);
+            $dopinfo = $client->getInfo($data->id_client);
+
+            $body = "Здравствуйте, " . $user->name . ". У договора " . $data->id . " изменилась дата(время) замера!\n\n";
+            $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
+            $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+            $body .= "Адрес: " . $data->project_info . "\n";
+            $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
+            if ($data->old_date_gauger != "0000-00-00 00:00:00") {
+                $body .= "Старая дата и время замера: " . $jdate1->format('d.m.Y H:i') . "\n";
+            }
+            $jdate = new JDate(JFactory::getDate($data->project_calculation_date));
+            if ($data->project_calculation_date != "0000-00-00 00:00:00") {
+                $body .= "Новая дата и время замера: " . $jdate->format('d.m.Y H:i') . "\n";
+            }
+            $body .= "Примечание менеджера ГМ: " . $data->gm_manager_note . "\n";
+            $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+            $mailer->setSubject('Изменена дата(время) замера');
+            $mailer->setBody($body);
+            $mailer->addRecipient($user->email);
+        } elseif ($type == 11) {
+            // уведомление о изменнеии замерщика
+            $user = JFactory::getUser($data->project_calculator);
+            $dopinfo = $client->getInfo($data->id_client);
+
+            $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
+            $body = "Здравствуйте, " . $user->name . ". замер договора " . $data->id . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
+            $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
+            $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+            $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+            $mailer->setSubject('Замер отменен');
+            $mailer->setBody($body);
+            $mailer->addRecipient($user->email);
         }
+
         if ($type != 5) {
             $mailer->addRecipient($em);
         }
@@ -3841,17 +3831,17 @@ class Gm_ceilingHelpersGm_ceiling
                     } else {
                         $monthfull = $month;
                     }
-                    $masID = [];
-                    if (!empty($gaugers_id)) {
-                        foreach ($gaugers_id as $value) {
-                            array_push($masID, $value->id);
-                        }
-                    } else {
-                        $masID = [$id];
-                    }
+                    //$masID = [];
+                    //if (!empty($gaugers_id)) {
+                        //foreach ($gaugers_id as $value) {
+                            //array_push($masID, $value->id);
+                        //}
+                    //} else {
+                        //$masID = [$id];
+                    //}
                     $date1 = $year . "-" . $monthfull . "-01";
                     $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($masID, $date1, $date2);
+                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($id, $date1, $date2); //masID
                     $Dates = [];
                     for ($y = 1; $y <= $current_days; $y++) {
                         if (strlen($y) == 1) {
@@ -3860,11 +3850,11 @@ class Gm_ceilingHelpersGm_ceiling
                             $u = $y;
                         }
                         foreach ($AllGaugingOfGaugers as $value) {
-                            if ($value->project_calculator == $id) {
+                            //if ($value->project_calculator == $id) {
                                 if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
                                     $Dates[$y] += 1;
                                 }
-                            }
+                            //}
                         }
                     }
                     // выходные дни
