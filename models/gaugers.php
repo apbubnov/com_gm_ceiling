@@ -80,7 +80,7 @@ class Gm_ceilingModelGaugers extends JModelItem {
 				//}
 			//}
 			$whereAll = "project_calculator = '$id'";
-			$whereAll .= ") and project_calculation_date between '$date1 00:00:00' and '$date2 23:59:59'";
+			$whereAll .= " and project_calculation_date between '$date1 00:00:00' and '$date2 23:59:59'"; //)
 			
 			$query->select('project_calculator, project_calculation_date')
 				->from('#__gm_ceiling_projects')
