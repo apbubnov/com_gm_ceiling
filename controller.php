@@ -84,9 +84,9 @@ class Gm_ceilingController extends JControllerLegacy
                         if (!empty($type)) {
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=' . $type, false));
                             $app->input->set('type', $type);
-                        }/*  else {
+                        } else {
                             $this->setRedirect(JRoute::_('index.php', false));
-                        } */
+                        }
                     } else {
                         $this->setRedirect(JRoute::_('index.php?option=com_users&view=login', false));
                     }
@@ -3216,45 +3216,26 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+    public function sendClientEstimate(){
+        $jinput = JFactory::getApplication()->input;
+        $id = $jinput->get('calc_id', null, 'INT');
+        $mailer = JFactory::getMailer();
+        $config = JFactory::getConfig();
+        $sender = array(
+            $config->get('mailfrom'),
+            $config->get('fromname')
+        );
+        $client_estimate = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/". md5($data['id']."client_single") . ".pdf";
+        copy($client_estimate,$_SERVER['DOCUMENT_ROOT'] . "/tmp/". "Подробная смета.pdf");
+        $mailer->setSender($sender);
+        $mailer->addRecipient($data['send_email']);
+        $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
+        $mailer->setSubject('Подробная смета');
+        $mailer->setBody($body);
+        $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
+        $send = $mailer->Send();
+        unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
 
-    public function setSession() {
-        try
-        {
-            $jinput = JFactory::getApplication()->input;
-            $name = $jinput->get('name', null, 'string');
-            $value = $jinput->get('value', null, 'string');
-
-            $_SESSION[$name] = $value;
-
-            die((object) ["status" => "success", "message" => "Успешно добавленно в сессию!"]);
-        }
-        catch(Exception $e)
-        {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            die((object) ["status" => "error", "message" => $e->getMessage()]);
-        }
-    }
-
-    public function setState() {
-        try
-        {
-            $jinput = JFactory::getApplication()->input;
-            $name = $jinput->get('name', null, 'string');
-            $value = $jinput->get('value', null, 'string');
-
-            $this->setState($name, $value);
-
-            die((object) ["status" => "success", "message" => "Успешно добавленно в сессию!"]);
-        }
-        catch(Exception $e)
-        {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            die((object) ["status" => "error", "message" => $e->getMessage()]);
-        }
     }
 }
 
