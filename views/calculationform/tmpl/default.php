@@ -66,57 +66,6 @@
 		echo "<script>BackPage = function() { window.history.go(-3); }</script>";
 	}
 ?>
-
-<style>
-    .Area {
-        height: auto;
-        overflow: visible;
-        position: relative;
-    }
-    .Area .Input {
-        display: inline-block;
-        width: 100%;
-        padding-left: 5px;
-    }
-    .Area .Selects {
-        display: inline-block;
-        position: relative;
-        float: left;
-        width: 100%;
-        height: 0;
-        z-index: 2; 
-    }
-    .Area .Selects .Select {
-        position: absolute;
-        top: -1px;
-        left: 0;
-        display: inline-block;
-        float: left;
-        width: 100%;
-        border: 1px solid rgb(169, 169, 169);
-        border-top: 0;
-        height: auto;
-		background-color: #ffffff;
-        color: #414099;
-        max-height: 120px;
-        overflow-y: scroll;
-        overflow-x: hidden;
-    }
-    .Area .Selects .Select .Item {
-        display: inline-block;
-        float: left;
-        width: 100%;
-        padding: 10px 5px;
-        height: auto;
-        line-height: 25px;
-        font-size: 14px;
-        cursor: pointer;
-    }
-    .Area .Selects .Select .Item:hover {
-        background-color: #d3d3f9;
-    }
-</style>
-
 <div class="calculation-edit front-end-edit">
 	<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 		<?php if ($this->type === "guest") { ?>
@@ -314,7 +263,7 @@
 						<?php
 							if ($this->item->id > 0)
 							{
-								$filename = "/calculation_images/" . md5("calculation_sketch" . $this->item->id) . ".png";
+								$filename = "/calculation_images/" . md5("calculation_sketch" . $this->item->id) . ".svg";
 						?>
 							<img id="sketch_image" src="<?php echo $filename.'?t='.time(); ?>">
 						<?php 		
@@ -2580,32 +2529,6 @@
 					jQuery("#jform_task").val( "calculate" );
 					data = jQuery( "#form-calculation").serialize();
 					jQuery("#jform_task").val( temp_task );
-					<?php if($this->type === "guest") {?>
-					var additional = "new_client=1&del_flag=1&need_mount="+jQuery(".need_mount").val();
-					jQuery.ajax({
-						type: 'POST',
-						url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
-						data: data,
-						success: function(data){
-							jQuery('#send_email_success').slideDown();
-						},
-						dataType: "text",
-						timeout: 10000,
-						error: function(){
-							var n = noty({
-								theme: 'relax',
-								timeout: 2000,
-								layout: 'center',
-								maxVisible: 5,
-								type: "error",
-								text: "Ошибка при попытке рассчитать. Сервер не отвечает"
-							});
-							calculate_button.removeClass("loading");
-							calculate_button.find("span.loading").hide();
-							calculate_button.find("span.static").show();
-						}					
-					});
-					<?} else {?>
 					var additional = "del_flag=1&need_mount="+jQuery(".need_mount").val();
 					jQuery.ajax({
 						type: 'POST',
@@ -2630,7 +2553,6 @@
 							calculate_button.find("span.static").show();
 						}					
 					});
-					<?}?>
 				}
 			}
 			else{
@@ -2726,7 +2648,6 @@
 								url: "index.php?option=com_gm_ceiling&task=calculate&ajax=1&"+additional,
 								data: data,
 								success: function(data){
-									console.log(data);
 									var html = "",
 									total_sum = parseFloat(data.total_sum),
 									project_discount = parseFloat(data.project_discount),
@@ -3164,7 +3085,7 @@
 				.'jQuery("#jform_cut_name").val("'.$cut.'");'
 				.'jQuery("#jform_original_name").val("'.$original.'");'
 				.'jQuery("#jform_cuts").val(\''.$cuts.'\');'
-				.'jQuery("#sketch_image").prop("src", "/tmp/" + "'.$data.'" + ".png");'
+				.'jQuery("#sketch_image").prop("src", "/tmp/" + "'.$data.'" + ".svg");'
 				.'jQuery("#sketch_image").removeAttr("hidden");'
 				.'jQuery("#sketch_image_block").show();'
 				.'jQuery("#data-wrapper").show();'

@@ -74,7 +74,13 @@
         $month2++;
         $year2 = $year1;
     }
-    $FlagCalendar = [2, $user->dealer_id];
+    if ($this->item->project_status == 1) {
+        $whatCalendar = 0;
+        $FlagCalendar = [3, $user->dealer_id];
+    } elseif ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) {
+        $whatCalendar = 1;
+        $FlagCalendar = [2, $user->dealer_id];
+    }
     $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
     $calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
     //----------------------------------------------------------------------------------
@@ -99,6 +105,14 @@
             }
         }
         $AllMounters = $model->FindAllMounters($where);
+    }
+    //----------------------------------------------------------------------------------
+
+    // все замерщики
+    if ($user->dealer_id == 1 && !in_array("14", $user->groups)) {
+        $AllGauger = $model_calculations->FindAllGauger($user->dealer_id, 22);
+    } else {
+        $AllGauger = $model_calculations->FindAllGauger($user->dealer_id, 21);
     }
     //----------------------------------------------------------------------------------
 
@@ -821,11 +835,16 @@
                         <input type="hidden" name="jform[modified_by]" value="<?php echo $this->item->modified_by; ?>"/>
                     <?php endif; ?>
                     <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
-                    <!-- тут скрытые поля замерщика вставить -->
-                    <input id="jform_project_mounting_date" type="hidden" name="jform[project_mounting_date]" value="<?php echo $this->item->project_mounting_date; ?>"/>
-                    <input id="jform_project_mounter" type="hidden" name="jform[project_mounting]" value="<?php echo $this->item->project_mounter; ?>"/>
-                    <input id="jform_project_mounter_old" type="hidden" name="jform_project_mounting_old" value="<?php echo $this->item->project_mounter; ?>"/>
-                    <input id="jform_project_mounting_date_old" type="hidden" name="jform_project_mounting_date_old" value="<?php echo $this->item->project_mounting_date; ?>"/>
+
+                    <input name = "jform[project_new_calc_date]" id = "jform_project_new_calc_date" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date; } ?>" type="hidden">
+                    <input name = "jform[project_gauger]" id = "jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type="hidden">
+                    <input id="jform_project_gauger_old" type="hidden" name="jform_project_gauger_old" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else { echo "0"; } ?>"/>
+                    <input id="jform_project_calculation_date_old" type="hidden" name="jform_project_calculation_date_old" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;} ?>"/>
+
+                    <input id="jform_project_mounting_date" type="hidden" name="jform[project_mounting_date]" value="<?php if (isset($this->item->project_mounting_date)) { echo $this->item->project_mounting_date; } ?>"/>
+                    <input id="jform_project_mounter" type="hidden" name="jform[project_mounting]" value="<?php if (isset($this->item->project_mounter)) { echo $this->item->project_mounter; } ?>"/>
+                    <input id="jform_project_mounter_old" type="hidden" name="jform_project_mounting_old" value="<?php if (isset($this->item->project_mounter)) { echo $this->item->project_mounter; } ?>"/>
+                    <input id="jform_project_mounting_date_old" type="hidden" name="jform_project_mounting_date_old" value="<?php if (isset($this->item->project_mounting_date)) { echo $this->item->project_mounting_date; } ?>"/>
                     <input type="hidden" name="option" value="com_gm_ceiling"/>
                     <input type="hidden" name="task" value="project.approve"/>
                     <?php echo JHtml::_('form.token'); ?>
@@ -952,67 +971,24 @@
                             <?php } ?>
                         </tr>
                     </table>
-                    <!--<table class="table calculation_sum">
-                        <tr>
-                            <th class="center">Название расчета</th>
-                            <th class="center">Без скидки</th>
-                            <th class="center">Со скидкой</th>
-                        </tr>
-                        <?php// foreach ($calculations as $calculation) { ?>
-                            <tr>
-                                <td><?php// echo $calculation->calculation_title; ?></td>
-                                <td class="center"><?php// echo round($calculation->calculation_total, 2); ?></td>
-                                <td class="center"><?php// echo round($calculation->calculation_total_discount, 2); ?></td>
-                            </tr>
-                        <?php// } ?>
-                        <tr>
-                            <?
-                            /* $sum_transport = 0;  $sum_transport_discount = 0;
-                            $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-                            $mount_transport = $mountModel->getDataAll();
-                            if($this->item->transport == 0 ) $sum_transport = 0;
-                            if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-                            if($this->item->transport == 2 ) $sum_transport = double_margin($mount_transport->distance * $this->item->distance * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-                            $min = 100;
-                            foreach($calculations as $d) {
-                                if($d->discount < $min) $min = $d->discount;
-                            }
-                            $sum_transport = $sum_transport * ((100 - $min)/100);
-                            $project_total_discount_transport = $project_total_discount + $sum_transport;
-
-                            $project_total = $project_total + $sum_transport;
-                            $project_total_discount = $project_total_discount + $sum_transport; */
-                            ?>
-                            <th> Транспорт</th>
-                            <td id="transport_sum"> <? //=$sum_transport;?> руб. </td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <th class="right">Итого:</th>
-                            <?// if($project_total < 3500 && $project_total > 0 && $mount_sum != 0)  { $project_total = 3500; }?>
-                            <?// if($project_total_discount < 3500 && $project_total_discount > 0 && $mount_sum != 0)  { $project_total_discount = 3500; }?>
-                            <th class="center" id="project_total"><?php// echo $project_total; ?></th>
-                            <th class="center" id="project_total_discount"><?php// echo $project_total_discount; ?></th>
-                        </tr>
-                    </table>-->
                     <?php if ($this->item->project_status == 1) { ?>
                         <h4 style="text-align:center;">Изменить замерщика, время и дату замера</h4>
-                        <div class="calendar_wrapper_gauger" style="background: #ffffff">
+                        <div class="calendar_wrapper" style="background: #ffffff">
                             <table>
                                 <tr>
                                     <td>
-                                        <button id="button-prev-gauger" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                                     </td>
                                     <td style="width: 100%">
-                                        <div id="calendar_gauger1" style="padding: 1em">
-                                            <?php echo $calendar_gauger1; ?>
+                                        <div id="calendar1" style="padding: 1em">
+                                            <?php echo $calendar1; ?>
                                         </div>
-                                        <div id="calendar_gauger2" style="padding: 1em">
-                                            <?php echo $calendar_gauger2; ?>
+                                        <div id="calendar2" style="padding: 1em">
+                                            <?php echo $calendar2; ?>
                                         </div>
                                     </td>
                                     <td>
-                                        <button id="button-next-gauger" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                     </td>
                                 </tr>
                             </table>
@@ -1207,18 +1183,19 @@
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="modal-window-choose-tar">
             <p id="date-modal"></p>
-            <p><strong>Выберите монтажника:</strong></p>
-            <p>
-                <select name="mounters" id="mounters"></select>
-            </p>
-            <p style="margin-bottom: 0;"><strong>Монтажники:</strong></p>
-            <div id="mounters_names"></div>
-            <div id="projects_brigade_container"></div>
-            <p style="margin-top: 1em;"><strong>Выберите время начала монтажа:</strong></p>
-            <p>
-                <select name="hours" id='hours'></select>
-            </p>
-            <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+            <?php if ($whatCalendar == 0) { ?>
+                <p><strong>Выберите время замера:</strong></p>
+                <p><table id="projects_gaugers"></table></p>
+            <?php } else { ?>
+                <p><strong>Выберите монтажника:</strong></p>
+                <p><select name="mounters" id="mounters"></select></p>
+                <p style="margin-bottom: 0;"><strong>Монтажники:</strong></p>
+                <div id="mounters_names"></div>
+                <div id="projects_brigade_container"></div>
+                <p style="margin-top: 1em;"><strong>Выберите время начала монтажа:</strong></p>
+                <p><select name="hours" id='hours'></select></p>
+                <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+            <?php } ?>
         </div>
     </div>
 
@@ -1226,6 +1203,7 @@
 
         var preloader = '<?=parent::getPreloaderNotJS();?>';
 
+        whatCalendar = <?php echo $whatCalendar ?>
         // листание календаря
         month_old1 = 0;
         year_old1 = 0;
@@ -1299,7 +1277,7 @@
                 data: {
                     id: <?php echo $userId; ?>,
                     id_dealer: <?php echo $user->dealer_id; ?>,
-                    flag: 2,
+                    flag: <?php if ($whatCalendar == 0) { echo 3; } else { echo 2; } ?>,
                     month: month,
                     year: year,
                 },
@@ -1310,7 +1288,11 @@
                     var datesession = jQuery("#jform_project_mounting_date").val();  
                     console.log(datesession);
                     if (datesession != undefined) {
-                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+                        if (whatCalendar == 0) {
+                            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
+                        } else {
+                            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+                        }
                     }
                 },
                 dataType: "text",
@@ -1335,7 +1317,7 @@
                     month: month,
                     year: year,
                     id_dealer: <?php echo $user->dealer_id; ?>,
-                    flag: 2,
+                    flag: <?php if ($whatCalendar == 0) { echo 3; } else { echo 2; } ?>,
                 },
                 success: function (msg) {
                     jQuery("#calendar2").empty();
@@ -1344,7 +1326,11 @@
                     var datesession = jQuery("#jform_project_mounting_date").val();  
                     console.log(datesession);
                     if (datesession != undefined) {
-                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+                        if (whatCalendar == 0) {
+                            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
+                        } else {
+                            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+                        }
                     }
                 },
                 dataType: "text",
@@ -1377,7 +1363,11 @@
         // функция подсвета сегоднешней даты
         var Today = function (day, month, year) {
             month++;
-            jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC1C").addClass("today");
+            if (whatCalendar == 0) {
+                jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC0C").addClass("today");
+            } else {
+                jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC1C").addClass("today");
+            }
         }   
         //------------------------------------------
 
@@ -1428,7 +1418,7 @@
                 }
             });
         }
-        //---------------------------------------------------------------------------------------------------------------
+        //------------------------------------------------------
 
         // форматирование даты для вывода
         function formatDate(date) {
@@ -1460,7 +1450,10 @@
 
             trans();
 
-            // открытие модального окна с календаря и получение даты и вывода свободных монтажников
+            window.time_gauger = undefined;
+            window.gauger = undefined;
+
+            // открытие модального окна с календаря и получение даты и вывода свободных монтажников или замерщиков
             jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change, .full-day", function() {
                 window.idDay = jQuery(this).attr("id");
                 reg1 = "D(.*)D";
@@ -1478,131 +1471,206 @@
                 jQuery("#modal-window-container-tar").show();
                 jQuery("#modal-window-choose-tar").show("slow");
                 jQuery("#close-tar").show();
-                jQuery.ajax({
-                    type: 'POST',
-                    url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyMounters",
-                    data: {
-                        date: date,
-                        dealer: <?php echo $user->dealer_id; ?>,
-                    },
-                    success: function(data) {
-                        Array.prototype.diff = function(a) {
-                            return this.filter(function(i) {return a.indexOf(i) < 0;});
-                        };
-                        window.DataOfProject = JSON.parse(data);
-                        window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
-                        data = JSON.parse(data);
-                        jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
-                        // заполнение бригад в селекте
-                        jQuery("#mounters").empty();
-                        Allbrigades = <?php echo json_encode($Allbrigades); ?>;
-                        select_brigade = "";
-                        Array.from(Allbrigades).forEach(function(elem) {
-                            select_brigade += '<option value="'+elem.id+'">'+elem.name+'</option>';
-                        });
-                        jQuery("#mounters").append(select_brigade);
-                        // вывод имен монтажников
-                        var selectedBrigade = jQuery("#mounters").val();
-                        jQuery("#mounters_names").empty();
-                        AllMounters = <?php echo json_encode($AllMounters) ?>;
-                        AllMounters.forEach(elem => {
-                            if (selectedBrigade == elem.id_brigade) {
-                                jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
-                            }
-                        });
-                        // вывод работ бригады
-                        jQuery("#projects_brigade_container").empty();
-                        var table_projects = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
-                        table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
-                        Array.from(data).forEach(function(element) {
-                            if (element.project_mounter == selectedBrigade) {
-                                if (element.project_mounting_day_off != "") {
-                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
-                                } else {
-                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
-                                }
-                            }
-                        });
-                        table_projects += "</table>";
-                        jQuery("#projects_brigade_container").append(table_projects);
-                        // вывод времени бригады
-                        var BusyTimes = [];
-                        Array.from(data).forEach(function(elem) {
-                            if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
-                                BusyTimes.push(elem.project_mounting_date.substr(11));
-                            } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
-                                AllTime.forEach(element => {
-                                    if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
-                                        BusyTimes.push(element);
+                if (whatCalendar == 0) {
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
+                        data: {
+                            date: date,
+                            dealer: <?php echo $user->dealer_id; ?>,
+                        },
+                        success: function(data) {
+                            Array.prototype.diff = function(a) {
+                                return this.filter(function(i) {return a.indexOf(i) < 0;});
+                            };
+                            AllGauger = <?php echo json_encode($AllGauger); ?>;
+                            data = JSON.parse(data); // замеры
+                            console.log(data);
+                            AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                            var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
+                            AllTime.forEach( elementTime => {
+                                var t = elementTime.substr(0, 2);
+                                t++;
+                                Array.from(AllGauger).forEach(function(elementGauger) {
+                                    var emptytd = 0;
+                                    Array.from(data).forEach(function(elementProject) {
+                                        if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                            var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                                            var gaugersession = jQuery("#jform_project_gauger").val();
+                                            if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                                TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                            } else {
+                                                TableForSelect += '<tr><td></td>';
+                                            }
+                                            TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                            TableForSelect += '<td>'+elementProject.project_info+'</td>';
+                                            emptytd = 1;
+                                        }
+                                    });
+                                    if (emptytd == 0) {
+                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                        TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                        TableForSelect += '<td></td>';
                                     }
-                                }); 
+                                    TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
+                                });
+                            });
+                            jQuery("#projects_gaugers").empty();
+                            jQuery("#projects_gaugers").append(TableForSelect);
+                            jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
+                        }
+                    });
+                    //если сессия есть, то выдать время, которое записано в сессии
+                    if (date == datesession_gauger.substr(0, 10)) {
+                        var timesession_gauger = jQuery("#jform_project_new_calc_date").val();
+                        var gaugersession = jQuery("#jform_project_gauger").val();
+                        setTimeout(function() { 
+                            var times = jQuery("input[name='choose_time_gauger']");
+                            if (timesession_gauger != undefined) {
+                                times.each(function(element) {
+                                    if (timesession_gauger == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                        jQuery(this).prop("checked", true);
+                                    }
+                                });
                             }
-                        });
-                        FreeTimes = AllTime.diff(BusyTimes);
-                        var select_hours;
-                        FreeTimes.forEach(element => {
-                            select_hours += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
-                        });
-                        jQuery("#hours").empty();
-                        jQuery("#hours").append(select_hours);
+                        }, 200);
+                    } else if (time_gauger != undefined) {
+                        setTimeout(function() { 
+                            var times = jQuery("input[name='choose_time_gauger']");
+                            times.each(function(element) {
+                                if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                    jQuery(this).prop("checked", true);
+                                }
+                            });
+                        }, 200);
                     }
-                });
-                //если монтаж есть, то выдать время, монтажную бригаду и инфу о ней, которые записаны
-                if (date == datesession.substr(0, 10)) {
-                    var timesession = jQuery("#jform_project_mounting_date").val().substr(11);
-                    var mountersession = jQuery("#jform_project_mounter").val();
-                    setTimeout(function() {
-                        // время
-                        var timeall = document.getElementById('hours').options;
-                        for (var i = 0; i < timeall.length; i++) {
-                            if (timesession != undefined) {
-                                if (timeall[i].value == timesession) {
-                                    document.getElementById('hours').disabled = false;
-                                    timeall[i].selected = true;
+                } else {
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyMounters",
+                        data: {
+                            date: date,
+                            dealer: <?php echo $user->dealer_id; ?>,
+                        },
+                        success: function(data) {
+                            Array.prototype.diff = function(a) {
+                                return this.filter(function(i) {return a.indexOf(i) < 0;});
+                            };
+                            window.DataOfProject = JSON.parse(data);
+                            window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                            data = JSON.parse(data);
+                            jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
+                            // заполнение бригад в селекте
+                            jQuery("#mounters").empty();
+                            Allbrigades = <?php echo json_encode($Allbrigades); ?>;
+                            select_brigade = "";
+                            Array.from(Allbrigades).forEach(function(elem) {
+                                select_brigade += '<option value="'+elem.id+'">'+elem.name+'</option>';
+                            });
+                            jQuery("#mounters").append(select_brigade);
+                            // вывод имен монтажников
+                            var selectedBrigade = jQuery("#mounters").val();
+                            jQuery("#mounters_names").empty();
+                            AllMounters = <?php echo json_encode($AllMounters) ?>;
+                            AllMounters.forEach(elem => {
+                                if (selectedBrigade == elem.id_brigade) {
+                                    jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
+                                }
+                            });
+                            // вывод работ бригады
+                            jQuery("#projects_brigade_container").empty();
+                            var table_projects = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
+                            table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                            Array.from(data).forEach(function(element) {
+                                if (element.project_mounter == selectedBrigade) {
+                                    if (element.project_mounting_day_off != "") {
+                                        table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
+                                    } else {
+                                        table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                                    }
+                                }
+                            });
+                            table_projects += "</table>";
+                            jQuery("#projects_brigade_container").append(table_projects);
+                            // вывод времени бригады
+                            var BusyTimes = [];
+                            Array.from(data).forEach(function(elem) {
+                                if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
+                                    BusyTimes.push(elem.project_mounting_date.substr(11));
+                                } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
+                                    AllTime.forEach(element => {
+                                        if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                            BusyTimes.push(element);
+                                        }
+                                    }); 
+                                }
+                            });
+                            FreeTimes = AllTime.diff(BusyTimes);
+                            var select_hours;
+                            FreeTimes.forEach(element => {
+                                select_hours += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
+                            });
+                            jQuery("#hours").empty();
+                            jQuery("#hours").append(select_hours);
+                        }
+                    });
+                    //если монтаж есть, то выдать время, монтажную бригаду и инфу о ней, которые записаны
+                    if (date == datesession.substr(0, 10)) {
+                        var timesession = jQuery("#jform_project_mounting_date").val().substr(11);
+                        var mountersession = jQuery("#jform_project_mounter").val();
+                        setTimeout(function() {
+                            // время
+                            var timeall = document.getElementById('hours').options;
+                            for (var i = 0; i < timeall.length; i++) {
+                                if (timesession != undefined) {
+                                    if (timeall[i].value == timesession) {
+                                        document.getElementById('hours').disabled = false;
+                                        timeall[i].selected = true;
+                                    }
                                 }
                             }
-                        }
-                        // бригада
-                        var mounterall = document.getElementById('mounters').options;
-                        for (var i = 0; i < mounterall.length; i++) {
-                            if (mountersession != undefined) {
-                                if (mounterall[i].value == mountersession) {
-                                    document.getElementById('mounters').disabled = false;
-                                    mounterall[i].selected = true;
+                            // бригада
+                            var mounterall = document.getElementById('mounters').options;
+                            for (var i = 0; i < mounterall.length; i++) {
+                                if (mountersession != undefined) {
+                                    if (mounterall[i].value == mountersession) {
+                                        document.getElementById('mounters').disabled = false;
+                                        mounterall[i].selected = true;
+                                    }
                                 }
                             }
-                        }
-                        // инфа о бригаде
-                        jQuery("#mounters_names").empty();
-                        AllMounters = <?php echo json_encode($AllMounters) ?>;
-                        AllMounters.forEach(elem => {
-                            if (mountersession == elem.id_brigade) {
-                                jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
+                            // инфа о бригаде
+                            jQuery("#mounters_names").empty();
+                            AllMounters = <?php echo json_encode($AllMounters) ?>;
+                            AllMounters.forEach(elem => {
+                                if (mountersession == elem.id_brigade) {
+                                    jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
+                                }
+                            });
+                            // монтажи
+                            jQuery("#projects_brigade_container").empty();
+                            var table_projects3 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
+                            table_projects3 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                            Array.from(DataOfProject).forEach(function(element) {
+                                if (element.project_mounter == mountersession) {
+                                    table_projects3 += '<tr><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                                }
+                            });
+                            table_projects3 += "</table>";
+                            jQuery("#projects_brigade_container").append(table_projects3);
+                        }, 200);
+                    }
+                    // запрет выбора монтажника, если монтаж в статусе недовыполнен
+                    if (<?php echo $this->item->project_status ?> == 17) {
+                        setTimeout(function() {
+                            var mounter = document.getElementById('mounters').options;
+                            for (var i = 0; i < mounter.length; i++) {
+                                document.getElementById('mounters').disabled = true;
+                                
                             }
-                        });
-                        // монтажи
-                        jQuery("#projects_brigade_container").empty();
-                        var table_projects3 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
-                        table_projects3 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
-                        Array.from(DataOfProject).forEach(function(element) {
-                            if (element.project_mounter == mountersession) {
-                                table_projects3 += '<tr><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
-                            }
-                        });
-                        table_projects3 += "</table>";
-                        jQuery("#projects_brigade_container").append(table_projects3);
-                    }, 200);
-                }
-                // запрет выбора монтажника, если монтаж в статусе недовыполнен
-                if (<?php echo $this->item->project_status ?> == 17) {
-                    setTimeout(function() {
-                        var mounter = document.getElementById('mounters').options;
-                        for (var i = 0; i < mounter.length; i++) {
-                            document.getElementById('mounters').disabled = true;
-                            
-                        }
-                        console.log(mounter);
-                    }, 200);
+                            console.log(mounter);
+                        }, 200);
+                    }
                 }
             });
             //--------------------------------------------
@@ -1656,13 +1724,39 @@
             });
             //-------------------------------------------
 
-            // получение значений из селектов
+            // получение значений из селектов монтажников
             jQuery("#save-choise-tar").click(function() {
                 var mounter = jQuery("#mounters").val();
                 var time = jQuery("#hours").val();
                 var datatime = date+" "+time;
                 jQuery("#jform_project_mounter").val(mounter);
                 jQuery("#jform_project_mounting_date").val(datatime);
+                if (jQuery(".change").length == 0) {
+                    jQuery("#"+idDay).addClass("change");
+                } else {
+                    jQuery(".change").removeClass("change");
+                    jQuery("#"+idDay).addClass("change");
+                }
+                jQuery("#close-tar").hide();
+                jQuery("#modal-window-container-tar").hide();
+                jQuery("#modal-window-choose-tar").hide();
+            });
+            //------------------------------------------
+
+            // получение значений из селектов замерщиков
+            jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
+                var times = jQuery("input[name='choose_time_gauger']");
+                time_gauger = "";
+                gauger = "";
+                times.each(function(element) {
+                    if (jQuery(this).prop("checked") == true) {
+                        time_gauger = jQuery(this).val();
+                        gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
+                    }
+                });
+                jQuery("#jform_new_project_calculation_daypart").val(time_gauger);
+                jQuery("#jform_project_new_calc_date").val(date);
+                jQuery("#jform_project_gauger").val(gauger);
                 if (jQuery(".change").length == 0) {
                     jQuery("#"+idDay).addClass("change");
                 } else {
@@ -1697,6 +1791,20 @@
                     monthtocalendar = datesession.substr(5, 2);
                 }
                 jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+            }
+            var datesession_gauger = jQuery("#jform_project_new_calc_date").val();
+            if (datesession_gauger != undefined) {
+                if (datesession_gauger.substr(8, 1) == "0") {
+                    daytocalendar_gauger = datesession_gauger.substr(9, 1);
+                } else {
+                    daytocalendar_gauger = datesession_gauger.substr(8, 2);
+                }
+                if (datesession_gauger.substr(5, 1) == "0") {
+                    monthtocalendar_gauger = datesession_gauger.substr(6, 1);
+                } else {
+                    monthtocalendar_gauger = datesession_gauger.substr(5, 2);
+                }
+                jQuery("#current-monthD"+daytocalendar_gauger+"DM"+monthtocalendar_gauger+"MY"+datesession_gauger.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
             }
             //-----------------------------------------------------------
 
@@ -1947,6 +2055,8 @@
                 calculate_total1();
                 trans();
             });
+            // -------------------------------------------------------------------
+
             function trans() {
                 var id = <?php echo $this->item->id; ?>;
                 var calcul = jQuery("input[name='transport']:checked").val();
@@ -2070,7 +2180,6 @@
                 jQuery("#calculation_total2").text(pr_total2.toFixed(0));
                 jQuery("#calculation_total3").text(pr_total3.toFixed(0));
             }
-            // -------------------------------------------------------------------
 
             jQuery("#spend-form input").on("keyup", function () {
                 jQuery('#extra_spend_submit').fadeIn();
@@ -2151,6 +2260,7 @@
                     }
                 });
             });
+
             jQuery("#penalty-form").submit(function (e) {
                 e.preventDefault();
                 data = jQuery(this).serialize();
@@ -2185,6 +2295,7 @@
                     }
                 });
             });
+
             jQuery("#bonus-form").submit(function (e) {
                 e.preventDefault();
                 data = jQuery(this).serialize();

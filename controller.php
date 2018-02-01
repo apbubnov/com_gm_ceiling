@@ -84,9 +84,9 @@ class Gm_ceilingController extends JControllerLegacy
                         if (!empty($type)) {
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=' . $type, false));
                             $app->input->set('type', $type);
-                        }/*  else {
+                        } else {
                             $this->setRedirect(JRoute::_('index.php', false));
-                        } */
+                        }
                     } else {
                         $this->setRedirect(JRoute::_('index.php?option=com_users&view=login', false));
                     }
@@ -3266,7 +3266,7 @@ class Gm_ceilingController extends JControllerLegacy
             $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             $result =  $projects_model->filterProjectForStatus($status);
 
-            die($result);
+            die(json_encode($result));
         }
         catch(Exception $e)
         {
