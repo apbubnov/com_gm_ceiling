@@ -31,7 +31,8 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 $jinput = JFactory::getApplication()->input;
 $type = $jinput->getString('type', NULL);
-
+$status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
+$status = $status_model->getData();
 ?>
 
 <?=parent::getButtonBack();?>
@@ -50,6 +51,13 @@ $type = $jinput->getString('type', NULL);
 		<div class="span9">
 			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
+        <select id="select_status" style="display:none;"><option value='0' disabled selected>Выберите статус</option>
+            <?php foreach($status as $item): ?>
+            <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
+                <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
+            <? } ?>
+            <?php endforeach;?>
+        </select>
 	</div>
 	<table class="table table-striped table_cashbox one-touch-view" id="clientList">
 		<thead>
@@ -124,5 +132,35 @@ $type = $jinput->getString('type', NULL);
 
     // вызовем событие resize
     $(window).resize();
+
+    jQuery("#select_status").change(function ()
+    {
+        var status = jQuery("#select_status").val();
+
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=filterProjectForStatus",
+            data: {
+                status: status
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data);
+
+            },
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    });
 </script>
 

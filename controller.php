@@ -84,9 +84,9 @@ class Gm_ceilingController extends JControllerLegacy
                         if (!empty($type)) {
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=' . $type, false));
                             $app->input->set('type', $type);
-                        } else {
+                        }/*  else {
                             $this->setRedirect(JRoute::_('index.php', false));
-                        }
+                        } */
                     } else {
                         $this->setRedirect(JRoute::_('index.php?option=com_users&view=login', false));
                     }
@@ -1399,10 +1399,10 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $jinput = JFactory::getApplication()->input;
-            $data = $jinput->get('data', '0', 'string');
+            $data = $jinput->get('data', '', 'string');
             $auto = $jinput->get('auto', '', 'string');
-            $user_id = $jinput->get('id', '0', 'int');
-            $length_arr = $jinput->get('arr_length', '', 'array');
+            $user_id = $jinput->get('id', 0, 'int');
+            $length_arr = $jinput->get('arr_length', null, 'array');
             for ($i = 0; $i < count($length_arr); $i++) {
                 $str .= implode('=', $length_arr[$i]);
                 $str .= ';';
@@ -1410,11 +1410,11 @@ class Gm_ceilingController extends JControllerLegacy
 
             $filename = md5($user_id . "-" . date("d-m-Y H:i:s"));
 
-            list($type, $data) = explode(';', $data);
-            list(, $data) = explode(',', $data);
-            $data = base64_decode($data);
+            //list($type, $data) = explode(';', $data);
+            //list(, $data) = explode(',', $data);
+            //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".png", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();
@@ -1446,10 +1446,10 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $jinput = JFactory::getApplication()->input;
-            $data = $jinput->get('data', '0', 'string');
-            $user_id = $jinput->get('id', '0', 'int');
-            $arr_points = $jinput->get('arr_points', '', 'array');
-            $offcut_square = $jinput->get('square_obrezkov', '', 'FLOAT');
+            $data = $jinput->get('data', '', 'string');
+            $user_id = $jinput->get('id', 0, 'int');
+            $arr_points = $jinput->get('arr_points', null, 'array');
+            $offcut_square = $jinput->get('square_obrezkov', 0, 'FLOAT');
             $cuts = $jinput->get('cuts', '', 'string');
             
             for ($i = 0; $i < count($arr_points); $i++)
@@ -1466,16 +1466,16 @@ class Gm_ceilingController extends JControllerLegacy
 
             $filename = md5($user_id . "cut-" . date("d-m-Y H:i:s"));
 
-            list($type, $data) = explode(';', $data);
-            list(, $data) = explode(',', $data);
-            $data = base64_decode($data);
+            //list($type, $data) = explode(';', $data);
+            //list(, $data) = explode(',', $data);
+            //$data = base64_decode($data);
 
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".png", $data);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", $data);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
 
             session_start();
             $_SESSION['cut'] = $filename;
-            $_SESSION['width'] = $jinput->get('width', '0', 'INT');
+            $_SESSION['width'] = $jinput->get('width', 0, 'INT');
             $_SESSION['offcut'] = $offcut_square;
             $_SESSION['cuts'] = $cuts;
 
@@ -1547,9 +1547,8 @@ class Gm_ceilingController extends JControllerLegacy
             ));
             $data1 = $data1['jform'];
             if(!empty($data1)) $this->texturesId($data1['n2'],$data1['proizv'],$data1['n3'],$data1['color']);
-            $print_components = 0;
 
-            $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
+            $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount);
             die($result);
          }
         catch(Exception $e)
@@ -3105,13 +3104,6 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
-    public function test_estimate(){
-        $jinput = JFactory::getApplication()->input;
-        $id = $jinput->get('id','','INT');
-        $result = Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($id,null,1);
-        die(json_encode($result));
-    }
-
     public function printInProductionOnGmMainPage(){
         try
         {
@@ -3222,6 +3214,65 @@ class Gm_ceilingController extends JControllerLegacy
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function setSession() {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $name = $jinput->get('name', null, 'string');
+            $value = $jinput->get('value', null, 'string');
+
+            $_SESSION[$name] = $value;
+
+            die((object) ["status" => "success", "message" => "Успешно добавленно в сессию!"]);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
+
+    public function setState() {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $name = $jinput->get('name', null, 'string');
+            $value = $jinput->get('value', null, 'string');
+
+            $this->setState($name, $value);
+
+            die((object) ["status" => "success", "message" => "Успешно добавленно в сессию!"]);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
+
+    public function filterProjectForStatus() {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $status = $jinput->get('status', '0', 'int');
+            $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+            $result =  $projects_model->filterProjectForStatus($status);
+
+            die($result);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
         }
     }
 }

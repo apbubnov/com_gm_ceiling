@@ -521,7 +521,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $canvases_model->saveCuts($ajax_return['id'],$cuts);
             }
         }
-        if ($new_client == 1) {
+        /* if ($new_client == 1) {
             $clients = $calculation_model->add_client($data);
             if (!empty($clients)) {
                 $project_client = $calculation_model->add_project($data, $clients);
@@ -552,7 +552,7 @@ class Gm_ceilingHelpersGm_ceiling
                     rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".png", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".png");
                 }
             }
-        }
+        } */
 
         //Пошла печать PDF
         if ($pdf == 1) {
@@ -566,51 +566,48 @@ class Gm_ceilingHelpersGm_ceiling
             self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
             //клиентская смета 
             self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,
-            $mounting_data);  
-            if ($send_client_cost == 1) {
-                    //___________________________СМЕТА ДЛЯ КЛИЕНТА С ДИЛЕРСКИМИ ЦЕНАМИ___НА ПОЧТУ________________________________________//
-                    $user = JFactory::getUser();
-                    $dealer = JFactory::getUser($user->dealer_id);
-                
-                    $mailer = JFactory::getMailer();
-                    $config = JFactory::getConfig();
-                    $sender = array(
-                        $config->get('mailfrom'),
-                        $config->get('fromname')
-                    );
+            $mounting_data); 
+        } 
+     /*    if ($send_client_cost == 1) {
+            $user = JFactory::getUser();
+            $dealer = JFactory::getUser($user->dealer_id);
+        
+            $mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
+            $sender = array(
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            );
 
-                    $client_estimate = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/". md5($data['id']."client_single") . ".pdf";
-                    copy($client_estimate,$_SERVER['DOCUMENT_ROOT'] . "/tmp/". "Подробная смета.pdf");
-                    $mailer->setSender($sender);
-                    $mailer->addRecipient($data['send_email']);
+            $client_estimate = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/". md5($data['id']."client_single") . ".pdf";
+            copy($client_estimate,$_SERVER['DOCUMENT_ROOT'] . "/tmp/". "Подробная смета.pdf");
+            $mailer->setSender($sender);
+            $mailer->addRecipient($data['send_email']);
 
-                    $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
+            $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
 
-                    $mailer->setSubject('Подробная смета');
-                    $mailer->setBody($body);
-                    $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
-                    $send = $mailer->Send();
-                    $mailer = JFactory::getMailer();
-                    $config = JFactory::getConfig();
+            $mailer->setSubject('Подробная смета');
+            $mailer->setBody($body);
+            $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
+            $send = $mailer->Send();
+            $mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
 
-                    $sender = array(
-                        $config->get('mailfrom'),
-                        $config->get('fromname')
-                    );
-                    $mailer->setSender($sender);
-                    $body = "Здравствуйте. Клиент запросил подробную смету на адрес: " . $data['send_email'];
-                    $mailer->setSubject('Клиент запросил подробную смету');
-                    $mailer->setBody($body);
-                    $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
-                    $send = $mailer->Send();
-                    unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
-            }
-
-            
-        }
-        //if ($ajax == 1) {
-            $return = json_encode($ajax_return);
-        //}
+            $sender = array(
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            );
+            $mailer->setSender($sender);
+            $body = "Здравствуйте. Клиент запросил подробную смету на адрес: " . $data['send_email'];
+            $mailer->setSubject('Клиент запросил подробную смету');
+            $mailer->setBody($body);
+            $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
+            $send = $mailer->Send();
+            unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+        } */
+        
+        $return = json_encode($ajax_return);
+        
         return $return;
     }
     public static function create_client_single_estimate($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
@@ -1263,7 +1260,6 @@ class Gm_ceilingHelpersGm_ceiling
         $extra_components = json_decode($data['extra_components']);
         foreach ($extra_components as $extra_component) {
             $component_item = array();
-
             $component_item['title'] = $extra_component->title;                                        //Название комплектующего
             $component_item['unit'] = "шт.";                                                            //В чем измеряется
             $component_item['id'] = 0;                                                                  //ID
