@@ -110,9 +110,9 @@
 
     // все замерщики
     if ($user->dealer_id == 1 && !in_array("14", $user->groups)) {
-        $AllGauger = $model_calculations->FindAllGauger($user->dealer_id, 22);
+        $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
     } else {
-        $AllGauger = $model_calculations->FindAllGauger($user->dealer_id, 21);
+        $AllGauger = $model->FindAllGauger($user->dealer_id, 21);
     }
     //----------------------------------------------------------------------------------
 
