@@ -65,20 +65,21 @@ class Gm_ceilingModelGaugers extends JModelItem {
         }
 	}
 
-	function GetAllGaugingOfGaugers($masID, $date1, $date2) {
+	function GetAllGaugingOfGaugers($id, $date1, $date2) { //masID
 		try
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 
 			$whereAll = "";
-			foreach ($masID as $value) {
-				if ($whereAll == "") {
-					$whereAll .= "(project_calculator = '$value'";
-				} else {
-					$whereAll .= " or project_calculator = '$value'";				
-				}
-			}
+			//foreach ($masID as $value) {
+				//if ($whereAll == "") {
+					//$whereAll .= "(project_calculator = '$value'";
+				//} else {
+					//$whereAll .= " or project_calculator = '$value'";				
+				//}
+			//}
+			$whereAll = "project_calculator = '$id'";
 			$whereAll .= ") and project_calculation_date between '$date1 00:00:00' and '$date2 23:59:59'";
 			
 			$query->select('project_calculator, project_calculation_date')

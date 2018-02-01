@@ -3831,17 +3831,17 @@ class Gm_ceilingHelpersGm_ceiling
                     } else {
                         $monthfull = $month;
                     }
-                    $masID = [];
-                    if (!empty($gaugers_id)) {
-                        foreach ($gaugers_id as $value) {
-                            array_push($masID, $value->id);
-                        }
-                    } else {
-                        $masID = [$id];
-                    }
+                    //$masID = [];
+                    //if (!empty($gaugers_id)) {
+                        //foreach ($gaugers_id as $value) {
+                            //array_push($masID, $value->id);
+                        //}
+                    //} else {
+                        //$masID = [$id];
+                    //}
                     $date1 = $year . "-" . $monthfull . "-01";
                     $date2 = $year . "-" . $monthfull . "-" . $current_days;
-                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($masID, $date1, $date2);
+                    $AllGaugingOfGaugers = $model->GetAllGaugingOfGaugers($id, $date1, $date2); //masID
                     $Dates = [];
                     for ($y = 1; $y <= $current_days; $y++) {
                         if (strlen($y) == 1) {
@@ -3850,11 +3850,11 @@ class Gm_ceilingHelpersGm_ceiling
                             $u = $y;
                         }
                         foreach ($AllGaugingOfGaugers as $value) {
-                            if ($value->project_calculator == $id) {
+                            //if ($value->project_calculator == $id) {
                                 if (substr($value->project_calculation_date, 0, 10) == $year . "-" . $monthfull . "-" . $u) {
                                     $Dates[$y] += 1;
                                 }
-                            }
+                            //}
                         }
                     }
                     // выходные дни
