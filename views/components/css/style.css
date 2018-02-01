@@ -7,22 +7,10 @@ body {
     width: 100%;
     float: left;
     text-align: left;
+    overflow: visible;
 }
 
 .Page button, .Page a {
-    float: left;
-    cursor: pointer;
-}
-
-.FormSimple {
-    width: auto !important;
-    overflow: hidden;
-    border-radius: 5px;
-    float: left;
-}
-
-.FormSimple label,
-.FormSimple button {
     display: inline-block;
     width: auto;
     height: 38px;
@@ -31,20 +19,61 @@ body {
     background-color: rgb(64, 65, 154);
     color: rgb(255, 255, 255);
     font-size: 16px;
-    float: left;
     margin: 0;
     border: 1px solid rgb(64, 65, 154);
+    float: left;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
 }
 
+.Page button:hover, .Page a:hover {
+
+}
+
+.Page .Actions .Current {
+    margin: 0 0 0 5px;
+}
+
+.FormSimple {
+    width: auto !important;
+    overflow: hidden !important;
+    border-radius: 5px;
+    float: left;
+    white-space: nowrap;
+}
+
+.Page .TBody .FormSimple {
+    width: 157px;
+    min-width: 157px;
+    max-width: 157px;
+}
+
+.FormSimple label,
 .FormSimple button {
+    display: inline-block;
     width: 38px;
+    max-width: 38px;
+    min-width: 38px;
+    height: 38px;
+    line-height: 38px;
     padding: 0;
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    float: left;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    text-align: center;
 }
 
 .FormSimple input[type="text"],
 .FormSimple input[type="number"] {
     display: inline-block;
-    width: auto;
+    width: 81px;
+    max-width: 81px;
+    min-width: 81px;
     height: 38px;
     line-height: 38px;
     font-size: 16px;
@@ -72,6 +101,22 @@ body {
     border: 1px solid rgb(64, 65, 154);
 }
 
+.Page .Body a, .Page .Body button {
+    width: 100%;
+}
+
+.Page .Scroll {
+    overflow: auto;
+}
+
+.Page .Body thead .THeadClone {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
 .Page .Body thead, .Page .Body tbody, .Page .Body tfoot {
     width: 100%;
 }
@@ -94,24 +139,43 @@ body {
     text-align: center;
 }
 
-.Page .Body .Lavel1 {
-    background-color: rgba(234, 89, 0, .5);
-    color: rgb(255, 255, 255);
-    border-bottom: 1px solid rgb(64, 65, 154);
-}
-
-.Page .Body .Lavel2 {
-    background-color: rgba(0, 198, 133, .5);
-    color: rgb(255, 255, 255);
-    border-bottom: 1px solid rgb(64, 65, 154);
-}
-
-.Page .Body .Lavel3 {
-    background-color: rgba(255, 255, 255, .5);
+.Page .Body .TBody.tr {
     color: rgb(0, 0, 0);
     border-bottom: 1px solid rgb(64, 65, 154);
 }
 
+.Page .Body .Action {
+    cursor: pointer;
+}
+
+.Page .Body tr:hover {
+    box-shadow: inset 0 0 15px 0 rgba(0,0,0,.05);
+}
+
+.Page .Body .Level1 {
+    background-color: rgba(155, 155, 219, .5);
+}
+
+.Page .Body .Level2 {
+    background-color: rgba(198, 192, 236, .4);
+}
+
+.Page .Body .Level3 {
+    background-color: rgba(211, 212, 243, .1);
+}
+
 .MarginLeft {
     margin-left: 5px;
+}
+
+.Show {
+    display: inherit !important;
+}
+
+@media (max-width: 767px) {
+    .Page .Scroll {
+        position: relative;
+        left: -30px;
+        width: calc(100% + 60px);
+    }
 }

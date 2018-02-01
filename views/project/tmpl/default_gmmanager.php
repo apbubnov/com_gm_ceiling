@@ -543,7 +543,7 @@ $AllMounters = $model->FindAllMounters($where);
                     var date = new Date();
                     var h = date.getHours();
                     var m = date.getMinutes();
-                    if(m.length=1)
+                    if(m.length == 1)
                     {
                         m = "0"+m;
                     }

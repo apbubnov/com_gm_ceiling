@@ -279,7 +279,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 ?>
 <?=parent::getPreloader();?>
 <?/*print_r($Client);*/?>
-<link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/tmpl/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
+<link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
 
 <div>
     /* Правит - @CEH4TOP */
@@ -1219,9 +1219,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <td><?php echo $calculation->calculation_title; ?></td>
                 <td>
                     <?php
-                    $path = "/costsheets/" . md5($calculation->id . "-0-0") . ".pdf";
+                    $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
 
-                    $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-0-0") . ".pdf", "id" => $calculation->id);
+                    $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
                     ?>
                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
@@ -1285,8 +1285,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                     <td><?php echo $calculation->calculation_title; ?></td>
                     <td>
-                        <?php $path = "/costsheets/" . md5($calculation->id . "-2") . ".pdf"; ?>
-                        <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-2") . ".pdf", "id" => $calculation->id); ?>
+                        <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
+                        <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id); ?>
                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                         <?php } else { ?>
@@ -1338,12 +1338,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <td><b>Отправить общую смету <b></td>
                 <td>
                     <?php
-                    $path = "/costsheets/" . md5($this->item->id . "-9") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                    $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                     <?php } else { ?>
                         -
                     <?php }
-                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "-9") . ".pdf", "id" => $this->item->id);
+                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
                     $json2 = json_encode($pdf_names); ?>
                 </td>
                 <td></td>
@@ -1387,12 +1387,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <td><b>Общий наряд на монтаж <b></td>
                 <td>
                     <?php
-                    $path = "/costsheets/" . md5($this->item->id . "-10") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                    $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                     <?php } else { ?>
                         -
                     <?php }
-                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "-10") . ".pdf", "id" => $this->item->id);
+                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
                     $json2 = json_encode($pdf_names); ?>
                 </td>
                 <td></td>
@@ -1725,7 +1725,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </label>
         <div class="controls">
             <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору"
-                        aria-invalid="false"></textarea>
+                        aria-invalid="false"><?=($this->item->dealer_calculator_note)?$this->item->dealer_calculator_note:""?></textarea>
         </div>
         <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
         </button>
@@ -1773,7 +1773,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         Примечание к монтажу
                     </label>
                     <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
-                                aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea>
+                                aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
                 </td>
             </tr>
             <tr>
@@ -1786,11 +1786,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
                     </button>
                 </td>
-                <td>
-                    <a class="btn btn-primary"
-                        href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">
-                        Перейти к монтажам </a>
-                </td>
+<!--                <td>-->
+<!--                    <a class="btn btn-primary"-->
+<!--                        href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?><!--">-->
+<!--                        Перейти к монтажам </a>-->
+<!--                </td>-->
                 <td>
                 </td>
             </tr>

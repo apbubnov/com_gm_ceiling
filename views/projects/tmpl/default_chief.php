@@ -29,7 +29,14 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 ?>
 <?= parent::getButtonBack(); ?>
 <? if ($user->dealer_type != 2): ?><h2 class="center">Монтажи</h2><? else: ?><h2 class="center">Заказы</h2><? endif; ?>
-
+<style>
+    #projectList th:nth-child(1) {
+        width: 1%;
+    }
+    #projectList th:nth-child(4) {
+        width: 25%;
+    }
+</style>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>" method="post"
       name="adminForm" id="adminForm">
 
@@ -45,11 +52,11 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 <thead>
                 <tr>
                     <th class='center'>
-                        <? //= //JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
+                        <?= JHtml::_('grid.sort', '№', 'id', $listDirn, $listOrder); ?>
                     </th>
                     <th class='center'>
-                        <?= JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
                     </th>
+
                     <th class='center'>
                         <?= JHtml::_('grid.sort', 'Дата и время монтажа', 'mounting_date', $listDirn, $listOrder); ?>
                     </th>
@@ -58,9 +65,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     </th>
                     <th class='center'>
                         <?= JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
-                    </th>
-                    <th class="center">
-                        <?= JHtml::_('grid.sort', 'Дилер', 'dealer_name', $listDirn, $listOrder); ?>
                     </th>
                     <th class="center">
                         <?= JHtml::_('grid.sort', 'Квадратура', 'quadrature', $listDirn, $listOrder); ?>
@@ -84,7 +88,9 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
                     <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
                     <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
-
+                        <td class="center one-touch">
+                            <?= $item->id; ?>
+                        </td>
                         <td>
                             <? if ($item->project_status == 10): ?>
                                 <!--                                --><? // //elseif ($item->project_status == 8): ?><!-- Требует утверждения-->
@@ -96,9 +102,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                                 <!--                                    --><? // //else: ?><!--Запущен. Монтаж ГМ--><? //endif; ?>
                                 <!--                                --><? // //else: ?><!--Требует утверждения--><? endif; ?>
                         </td>
-                        <td class="center one-touch">
-                            <?= $item->id; ?>
-                        </td>
+
                         <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
                         <td class="center one-touch">
                             <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
@@ -111,7 +115,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         </td>
                         <td class="center one-touch"><?= $item->address; ?></td>
                         <td class="center one-touch"><?= $item->client_contacts; ?> <br> <?= $item->client_name; ?></td>
-                        <td class="center one-touch"><?= $item->dealer_name; ?></td>
                         <td class="center one-touch"><?= round($item->quadrature, 2); ?></td>
                         <? if ($item->project_mounter) {
                             $mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');

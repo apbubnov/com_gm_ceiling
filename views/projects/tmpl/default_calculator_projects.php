@@ -25,6 +25,17 @@ $canChange = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
 ?>
+<style>
+    #projectList th:nth-child(1) {
+        width: 1%;
+    }
+    #projectList th:nth-child(3) {
+        width: 15%;
+    }
+    #projectList th:nth-child(5) {
+        width: 5%;
+    }
+</style>
 <h2 class="center">Запущенные в производство</h2>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects'); ?>"
       method="post"
@@ -46,25 +57,16 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 <?= JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Дата замера', 'calculation_date', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Время замера', 'calculation_time', $listDirn, $listOrder); ?>
+                <?= JHtml::_('grid.sort', 'Дата и время замера', 'calculation_date', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
                 <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
                 <?= JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
             </th>
             <th class='center'>
                 <?= JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
-            </th>
-            <th class="center">
-                <?= JHtml::_('grid.sort', 'Дилер', 'dealer_name', $listDirn, $listOrder); ?>
             </th>
         </tr>
         </thead>
@@ -82,18 +84,14 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 <td class="center one-touch">
                     <? if ($item->calculation_date == "00.00.0000"): ?>-
                     <? else: ?><?= $item->calculation_date; ?>
-                    <? endif; ?>
-                </td>
-                <td class="center one-touch">
+                    <? endif; ?><br>
                     <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
                     <? else: ?><?= $item->calculation_time; ?>
                     <? endif; ?>
                 </td>
                 <td class="center one-touch"><?= $item->address; ?></td>
-                <td class="center one-touch"><?= $item->client_contacts; ?></td>
-                <td class="center one-touch"><?= $item->client_name; ?></td>
+                <td class="center one-touch"><?= $item->client_contacts; ?><br><?= $item->client_name; ?></td>
                 <td class="center one-touch"><?= $item->status; ?></td>
-                <td class="center one-touch"><?= $item->dealer_name; ?></td>
             </tr>
         <? endforeach; ?>
         </tbody>

@@ -79,4 +79,91 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    public function updatePrice() {
+        try
+        {
+
+            $app = JFactory::getApplication();
+            $model = $this->getModel();
+
+            $user = JFactory::getUser();
+            $user->groups = $user->get('groups');
+
+            $userDealer = $user;
+
+            if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
+                $userDealer = JFactory::getUser($user->dealer_id);
+                $userDealer->groups = $userDealer->get('groups');
+            }
+
+            $managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
+
+            $dealer = null;
+
+            if ($managerGM) {
+                $dealerId = $app->input->get('dealer', null, 'int');
+
+                if (!empty($dealerId)) {
+                    $dealer = JFactory::getUser($dealerId);
+                    $dealer->groups = $dealer->get('groups');
+                    // $dealer->price = $model->getDealerPrice($dealerId);
+                }
+            }
+
+            $id = $app->input->get('id', null, 'int');
+            $price = $app->input->get('Price', null, 'string');
+
+            $p = str_replace("%", "", $price);
+            $e = str_replace(["+", "-"], "", $p);
+            $type = (strlen($e) != strlen($p))
+                ?((strlen($p) != strlen($price))?"percent":"expression")
+                :"number";
+            $number = floatval($p);
+
+            $answer = (object) [];
+            $answer->status = "success";
+            $answer->message = "Обновление произошло успешно!";
+            $answer->elements = [];
+
+            if (empty($dealer)) {
+                $oldPrice = $model->getPrice($id);
+                $newPrice = $oldPrice;
+                foreach ($oldPrice as $k => $v)
+                {
+                    switch ($type) {
+                        case "percent":
+                            $newPrice[$k]->price = $v->price + $v->price * ($number / 100);
+                            break;
+                        case "expression":
+                            $newPrice[$k]->price = $v->price + $number;
+                            break;
+                        case "number":
+                            $newPrice[$k]->price = $number;
+                            break;
+                    }
+                    $answer->elements[] = (object) [
+                        "name" => ".Level2[data-option='$v->id'] #GMPrice",
+                        "value" => $this->margin($newPrice[$k]->price, $userDealer->gm_components_margin)];
+                    $answer->elements[] = (object) [
+                        "name" => ".Level2[data-option='$v->id'] #DealerPrice",
+                        "value" => $this->double_margin($newPrice[$k]->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin)];
+                }
+                $model->setPrice($newPrice);
+            }
+
+            die(json_encode($answer));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    private function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
+    private function double_margin($value, $margin1, $margin2) { return $this->margin($this->margin($value, $margin1), $margin2); }
+
 }
