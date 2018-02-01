@@ -3224,6 +3224,46 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    public function setSession() {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $name = $jinput->get('name', null, 'string');
+            $value = $jinput->get('value', null, 'string');
+
+            $_SESSION[$name] = $value;
+
+            die((object) ["status" => "success", "message" => "Успешно добавленно в сессию!"]);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
+
+    public function setState() {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $name = $jinput->get('name', null, 'string');
+            $value = $jinput->get('value', null, 'string');
+
+            $this->setState($name, $value);
+
+            die((object) ["status" => "success", "message" => "Успешно добавленно в сессию!"]);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
 }
 
 ?>
