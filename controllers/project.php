@@ -1116,14 +1116,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 			$type = $jinput->get('type', '', 'STRING');
 			$subtype = $jinput->get('subtype', '', 'STRING');
+
 			$data->gm_chief_note = $get_data['gm_chief_note'];
+
 			$data->project_mounting_date = $get_data['project_mounting_date'];
-			
 			$old_date = $jinput->get('jform_project_mounting_date_old', '0000-00-00 00:00:00', 'DATE');
 			$data->old_date = $old_date;
 			$old_mounter = $jinput->get('jform_project_mounting_old','0','INT');
 			$data->old_mounter = $old_mounter;
-			
 			if (!empty($get_data['project_mounting'])) {
 				$data->project_mounter = $get_data['project_mounting'];
 			}
@@ -1144,17 +1144,26 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				$model->AddComment(2, $data);
 			}
 
+			$data->project_calculation_date = $get_data['project_new_calc_date'];
+			$old_date_gauger = $jinput->get('jform_project_calculation_date_old', '0000-00-00 00:00:00', 'DATE');
+			$data->old_date_gauger = $old_date_gauger;
+			$old_mounter_gauger = $jinput->get('jform_project_gauger_old','0','INT');
+			$data->old_mounter_gauger = $old_mounter_gauger;
+			if (!empty($get_data['project_gauger'])) {
+				$data->project_gauger = $get_data['project_gauger'];
+			}
+
             $return = $model->approve($data);
             
-			if ($return === false)
-			{
+			if ($return === false) {
 				$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
 			} else {
 				$this->setMessage("Данные успешно изменены!");
 			}
+
 			if($type === "gmchief") {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
-			} elseif($type === "chief" && $user->dealer_type == 1 && $old_date) {
+			} elseif ($type === "chief" && $user->dealer_type == 1 && $old_date) {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
 			} else {
 				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));

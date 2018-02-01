@@ -175,6 +175,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             jQuery('#projectListMobil').show();
             jQuery('#projectListMobil').css('font-size', '10px');
             jQuery('.container').css('padding-left', '0');
+            jQuery('.table td, .table th').css('padding', '0.5rem');
         }
         else {
             jQuery('#projectList').show();
