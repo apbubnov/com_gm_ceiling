@@ -1119,6 +1119,30 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 			$data->gm_chief_note = $get_data['gm_chief_note'];
 
+			// замеры
+			$data->project_calculation_date = $get_data['project_new_calc_date'];
+			$old_date_gauger = $jinput->get('jform_project_calculation_date_old', '0000-00-00 00:00:00', 'DATE');
+			$data->old_date_gauger = $old_date_gauger;
+			$old_gauger = $jinput->get('jform_project_gauger_old','0','INT');
+			$data->old_gauger = $old_gauger;
+			if (!empty($get_data['project_gauger'])) {
+				$data->project_calculator = $get_data['project_gauger'];
+			}
+			if ($data->project_calculation_date != $old_date_gauger) { // если изменилась только дата
+				Gm_ceilingHelpersGm_ceiling::notify($data, 10);
+			}
+			if ($data->project_calculator != $old_gauger) { // если изменился замерщик
+				Gm_ceilingHelpersGm_ceiling::notify($data, 0);
+				Gm_ceilingHelpersGm_ceiling::notify($data, 11);
+			}
+			if ($data->project_calculation_date != $old_date_gauger) {
+				$model->AddComment(3, $data);
+			}
+			if ($data->project_calculator != $old_gauger) {
+				$model->AddComment(4, $data);
+			}
+
+			// монтажи
 			$data->project_mounting_date = $get_data['project_mounting_date'];
 			$old_date = $jinput->get('jform_project_mounting_date_old', '0000-00-00 00:00:00', 'DATE');
 			$data->old_date = $old_date;
@@ -1127,7 +1151,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if (!empty($get_data['project_mounting'])) {
 				$data->project_mounter = $get_data['project_mounting'];
 			}
-
 			if ($data->project_mounting_date != $data->old_date && $data->project_mounter == $old_mounter) { // если изменилась только дата
 				Gm_ceilingHelpersGm_ceiling::notify($data, 8);
 			}
@@ -1135,22 +1158,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				Gm_ceilingHelpersGm_ceiling::notify($data, 7);
 				Gm_ceilingHelpersGm_ceiling::notify($data, 9);
 			}
-			
-			// условия для комментов
 			if ($data->project_mounting_date != $data->old_date) {
 				$model->AddComment(1, $data);
 			}
 			if ($data->project_mounter != $old_mounter) {
 				$model->AddComment(2, $data);
-			}
-
-			$data->project_calculation_date = $get_data['project_new_calc_date'];
-			$old_date_gauger = $jinput->get('jform_project_calculation_date_old', '0000-00-00 00:00:00', 'DATE');
-			$data->old_date_gauger = $old_date_gauger;
-			$old_mounter_gauger = $jinput->get('jform_project_gauger_old','0','INT');
-			$data->old_mounter_gauger = $old_mounter_gauger;
-			if (!empty($get_data['project_gauger'])) {
-				$data->project_gauger = $get_data['project_gauger'];
 			}
 
             $return = $model->approve($data);

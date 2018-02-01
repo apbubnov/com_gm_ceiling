@@ -3314,16 +3314,12 @@ class Gm_ceilingHelpersGm_ceiling
         $mounterModel = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
         //throw new Exception("fdf");
         if ($type == 0) {
-
-
             //Уведомление о записи на замер
             $db = JFactory::getDBO();
             $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
 				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 22';
             $db->setQuery($q);
             $users = $db->loadObjectList();
-
-
 
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
@@ -3411,7 +3407,6 @@ class Gm_ceilingHelpersGm_ceiling
             $db->setQuery($q);
             $users = $db->loadObjectList();
 
-
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
             }
@@ -3443,7 +3438,6 @@ class Gm_ceilingHelpersGm_ceiling
 
             $db->setQuery($q);
             $users = $db->loadObjectList();
-
 
             foreach ($users as $user) {
                 $mailer->addRecipient($user->email);
@@ -3502,7 +3496,6 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Договор перемещен в отказы');
             $mailer->setBody($body);
         } elseif ($type == 5) {
-
             $dopinfo = $client->getInfo($data->client_id);
             $body = "Здравствуйте. Необходимо перезвонить:\n\n";
             $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
@@ -3513,8 +3506,6 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Перезвонить клиенту!');
             $mailer->setBody($body);
             $mailer->addRecipient($data->email);
-
-
         } elseif ($type == 6) {
             //Уведомление об отправке договора в производство и отказы
             $db = JFactory::getDBO();
@@ -3578,7 +3569,6 @@ class Gm_ceilingHelpersGm_ceiling
             $jdate = new JDate(JFactory::getDate($data->project_mounting_date));
             if ($data->project_mounting_date != "0000-00-00 00:00:00")
                 $body .= "Новая дата и время монтажа: " . $jdate->format('d.m.Y H:i') . "\n";
-            $body .= "Примечание клиента: " . $data->project_note . "\n";
             $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";
             if ($em) {
                 $user = JFactory::getUser();
@@ -3594,16 +3584,12 @@ class Gm_ceilingHelpersGm_ceiling
             $db = JFactory::getDBO();
             if ($data->project_mounter) $mounters = $mounterModel->getEmailMount($data->old_mounter);
             $dopinfo = $client->getInfo($data->id_client);
+
             $jdate1 = new JDate(JFactory::getDate($data->old_date));
             $body = "Здравствуйте, " . $mounters->name . ". Монтаж договора " . $data->id . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
             $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
             $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
 
-            /* $jdate = new JDate(JFactory::getDate($data->project_mounting_date));
-             if ($data->project_mounting_date != "0000-00-00 00:00:00")
-                 $body .= "Новая дата и время монтажа: " . $jdate->format('d.m.Y H:i') . "\n";
-             $body .= "Примечание клиента: " . $data->project_note . "\n";
-             $body .= "Примечание замерщика ГМ: " . $data->gm_calculator_note . "\n";*/
             if ($em) {
                 $user = JFactory::getUser();
                 $dealer = JFactory::getUser($user->dealer_id);
@@ -3613,7 +3599,43 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Монтаж отменен');
             $mailer->setBody($body);
             $mailer->addRecipient($mounters->email);
+        } elseif ($type == 10) {
+            // уведомление о изменении даты замера
+            $user = JFactory::getUser($data->project_calculator);
+            $dopinfo = $client->getInfo($data->id_client);
+
+            $body = "Здравствуйте, " . $user->name . ". У договора " . $data->id . " изменилась дата(время) замера!\n\n";
+            $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
+            $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+            $body .= "Адрес: " . $data->project_info . "\n";
+            $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
+            if ($data->old_date_gauger != "0000-00-00 00:00:00") {
+                $body .= "Старая дата и время замера: " . $jdate1->format('d.m.Y H:i') . "\n";
+            }
+            $jdate = new JDate(JFactory::getDate($data->project_calculation_date));
+            if ($data->project_calculation_date != "0000-00-00 00:00:00") {
+                $body .= "Новая дата и время замера: " . $jdate->format('d.m.Y H:i') . "\n";
+            }
+            $body .= "Примечание менеджера ГМ: " . $data->gm_manager_note . "\n";
+            $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+            $mailer->setSubject('Изменена дата(время) замера');
+            $mailer->setBody($body);
+            $mailer->addRecipient($user->email);
+        } elseif ($type == 11) {
+            // уведомление о изменнеии замерщика
+            $user = JFactory::getUser($data->project_calculator);
+            $dopinfo = $client->getInfo($data->id_client);
+
+            $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
+            $body = "Здравствуйте, " . $user->name . ". замер договора " . $data->id . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
+            $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
+            $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+            $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+            $mailer->setSubject('Замер отменен');
+            $mailer->setBody($body);
+            $mailer->addRecipient($user->email);
         }
+
         if ($type != 5) {
             $mailer->addRecipient($em);
         }
