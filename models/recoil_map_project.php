@@ -211,6 +211,25 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
-	
+
+    function filterDateScore($date1, $date2){
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select("*")
+                ->from('`#__gm_ceiling_recoil_map_project`')
+                ->where("date_time BETWEEN $date1 AND $date2");
+            $db->setQuery($query);
+            return($db->loadResultList());
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }
 ?>

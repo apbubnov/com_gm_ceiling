@@ -3229,6 +3229,29 @@ class Gm_ceilingController extends JControllerLegacy
             die((object) ["status" => "error", "message" => $e->getMessage()]);
         }
     }
+
+    public function filterDateScore() {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $date1 = $jinput->get('date1', '0000-00-00 00:00:00', 'datetime');
+            $date2 = $jinput->get('date2', '0000-00-00 00:00:00', 'datetime');
+            $recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+            $result =  $recoil_map_project_model->filterDateScore($date1, $date2);
+            foreach ($result as $key => $value) {
+                $result[$key]->date_time = date("d.m.Y H:i", strtotime($value->date_time));
+            }
+
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
 }
 
 ?>
