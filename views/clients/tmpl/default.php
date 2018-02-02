@@ -117,9 +117,9 @@ $status = $status_model->getData();
 <script type="text/javascript">
 
 	jQuery(document).ready(function () {
-	    if(jQuery("#filter_search").val() == '') {
+	   // if(jQuery("#filter_search").val() == '') {
             jQuery("#select_status").change();
-        }
+        //}
 		jQuery('.delete-button').click(deleteItem);
 	});
 
