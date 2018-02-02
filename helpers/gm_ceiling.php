@@ -2604,7 +2604,7 @@ class Gm_ceilingHelpersGm_ceiling
         $filename = md5($project_id . "mount_common") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
-    public static function create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount = null){
+    public static function create_single_mounter_estimate_html($calc_id=null,$data=null,$phones=null,$brigade=null,$brigade_names=null,$data_mount = null){
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
