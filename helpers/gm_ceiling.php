@@ -3286,6 +3286,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_documents.css');
             }
             if (gettype($html) == "array") {
+                throw new Exception($filename);
                 $mpdf->SetImportUse();
                 foreach ($html as $index => $value) {
                     if (substr($value, -4, 4) == ".pdf") {
@@ -3303,10 +3304,11 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             } else {
+                throw new Exception($filename);
                 $mpdf->WriteHTML($stylesheet, 1);
                 $mpdf->WriteHTML($html, 2);
             }
-            throw new Exception($filename);
+            
             $mpdf->Output($filename, 'F');
             return 1;
         }
