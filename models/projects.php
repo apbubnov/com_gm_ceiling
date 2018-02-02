@@ -880,21 +880,23 @@ class Gm_ceilingModelProjects extends JModelList
             $user = JFactory::getUser();
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->from('`#__gm_ceiling_projects` as p')
-                ->select('p.project_info as address')
-                ->join("LEFT","`#__gm_ceiling_clients` as client ON client.id = p.client_id")
-                ->select(' client.client_name as client_name, client.created as created, client.id as client_id')
-                ->join("LEFT","`#__gm_ceiling_clients_contacts` as phone ON phone.client_id = p.client_id")
-                ->select('GROUP_CONCAT(phone.phone SEPARATOR \', \') as client_contacts');
+            $query->from("`#__gm_ceiling_clients` as client")
+                ->join("LEFT", "`#__gm_ceiling_clients_contacts` as phone ON phone.client_id = client.id")
+                ->join("LEFT", "`#__gm_ceiling_projects` as p ON p.client_id = client.id")
+                ->select("p.project_info as address")
+                ->select("client.client_name as client_name, client.created as created, client.id as client_id")
+                ->select("GROUP_CONCAT(phone.phone SEPARATOR ', ') as client_contacts")
+                ->group("client.client_name")
+                ->group("p.id");
+
             if($status && !$search)
                 $query->where('p.project_status = '. $status . ' and client.dealer_id = '. $user->dealer_id);
             elseif($status && $search)
                 $query->where('p.project_status = '. $status . ' and client.dealer_id = '. $user->dealer_id . ' and (client.client_name like \'%'.$search.'%\' or phone.phone like \'%'.$search.'%\')');
-            elseif(!$status && !$search) $query->where('client.dealer_id = '. $user->dealer_id);
+            elseif(!$status && !$search)
+                $query->where('client.dealer_id = '. $user->dealer_id);
             elseif(!$status && $search)
                 $query->where(' client.dealer_id = '. $user->dealer_id . ' and (client.client_name like \'%'.$search.'%\' or phone.phone like \'%'.$search.'%\')');
-
-            $query->group('client.client_name, phone.phone');
           // print_r((string)$query); exit;
             $db->setQuery($query);
             $result = $db->loadObjectList();
