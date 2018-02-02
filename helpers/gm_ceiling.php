@@ -2751,6 +2751,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $calculation_model = self::getModel('calculation');
                 $data = get_object_vars($calculation_model->getData($calc_id));
             }
+            throw new Exception($data['id']);
             if(empty($calc_id)){
                 $calc_id = $data['id'];
             }
