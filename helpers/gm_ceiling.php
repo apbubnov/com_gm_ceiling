@@ -2751,10 +2751,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $calculation_model = self::getModel('calculation');
                 $data = get_object_vars($calculation_model->getData($calc_id));
             }
-            throw new Exception($data['id']);
-            if(empty($calc_id)){
-                $calc_id = $data['id'];
-            }
+            throw new Exception($calc_id);
+           // if(empty($calc_id)){
+            //    $calc_id = $data['id'];
+           // }
             $project_model = self::getModel('project');
             $project = $project_model->getData($data['project_id']);
             $calculations_model = self::getModel('calculations');
