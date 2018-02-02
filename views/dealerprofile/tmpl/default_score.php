@@ -55,8 +55,8 @@ $rest = -($total_sum) - $contributed;
             <td class="one-touch sum"></td>
         </tr>
         <tr style="border: 1px solid #414099; display: none;"  id="TrClone2" >
-            <th class="right" colspan="2"> ИТОГО: </th>
-            <th class="center itog"><?= $rest ? round(-$rest,2) : 0; ?> руб.</th>
+            <th class="right title" colspan="2"> ИТОГО: </th>
+            <th class="center itog"></th>
         </tr>
         </thead>
 
@@ -131,8 +131,8 @@ $rest = -($total_sum) - $contributed;
 
                     list.append(tr);
                 }
-                //trItog.find(".itog").text(data[data.length - 1].itog_sum);
-                //list.append(trItog);
+                trItog.find(".title").text("ИТОГО");
+                list.append(trItog);
                 OpenPage();
             },
             timeout: 50000,
