@@ -2671,7 +2671,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                 $mounting_data = $data_mount['mounting_data'];
                 if ($data['mounting_sum'] != 0) {
-                    $svg = file_get_contents($_SERVER['DOCUMENT_ROOT']."/calculation_images/man.svg");
+                    $svg = file_get_contents($_SERVER['DOCUMENT_ROOT']."/libraries/mpdf/examples/tiger.svg");
                     $html .= '<p>&nbsp;</p>
                             <h1>Наряд монтажной бригаде</h1>
                             <h2>Дата: ' . date("d.m.Y") . '</h2>
