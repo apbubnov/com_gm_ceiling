@@ -2607,7 +2607,7 @@ class Gm_ceilingHelpersGm_ceiling
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
-                $data = $calculation_model->getData($calc_id);
+                $data = get_objects_vars($calculation_model->getData($calc_id));
             }
         
             $project_model = self::getModel('project');
