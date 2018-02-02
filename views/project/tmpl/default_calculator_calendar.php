@@ -143,20 +143,6 @@ if (count($Allbrigades) == 0) {
 }
 //----------------------------------------------------------------------------------
 
-//TODO убрать,сделать через модель
-/*$db = JFactory::getDbo();
-$query = $db->getQuery(true);
-$query
-    ->select(
-        array(
-            '`id`',
-            '`name`',
-        )
-    )
-    ->from($db->quoteName("#__gm_ceiling_groups"))
-    ->where($db->quoteName('brigadir_id') . ' = ' . $userId . ' OR ' . $db->quoteName('brigadir_id') . ' = ' . $user->dealer_id . ' OR ' . $db->quoteName('brigadir_id') . ' = 0 ORDER BY id DESC ');
-$db->setQuery($query);
-$results = $db->loadObjectList();*/
 if(false):
 /***************************************************************************************************************************************************************************************************************************************************/
 /* Клиент */
@@ -279,6 +265,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 ?>
 <?=parent::getPreloader();?>
 <?/*print_r($Client);*/?>
+
+<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
+
 <link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
 
 <div>
@@ -638,8 +627,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input name="data_change" value="0" type="hidden">
                         <input name="data_delete" value="0" type="hidden">
                         <input id="mounting_date" name="mounting_date" type='hidden'>
-                        <input id="jform_project_mounting_date" name="jform_project_mounting_date" value="" type='hidden'>
-                        <input id="project_mounter" name="project_mounter" type='hidden'>
+                        <input id="jform_project_mounting_date" name="jform_project_mounting_date" value="<?php echo $this->item->project_mounting_date; ?>" type='hidden'>
+                        <input id="project_mounter" name="project_mounter" value="<?php echo $this->item->project_mounter; ?>" type='hidden'>
                         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount; ?>" type="hidden">
                         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport; ?>" type="hidden">
                         <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
@@ -2325,6 +2314,56 @@ var $ = jQuery;
                     jQuery("#hours").append(select_hours);
                 }
             });
+            if (date == datesession.substr(0, 10)) {
+                var timesession = jQuery("#jform_project_mounting_date").val().substr(11);
+                var mountersession = jQuery("#project_mounter").val();
+                setTimeout(function() {
+                    // время
+                    var timeall = document.getElementById('hours').options;
+                    for (var i = 0; i < timeall.length; i++) {
+                        if (time_mounter != undefined) {
+                            if (timeall[i].value == time_mounter) {
+                                document.getElementById('hours').disabled = false;
+                                timeall[i].selected = true;
+                            }
+                        } else if (timesession != undefined) {
+                            if (timeall[i].value == timesession) {
+                                document.getElementById('hours').disabled = false;
+                                timeall[i].selected = true;
+                            }
+                        }
+                    }
+                    // бригада
+                    var mounterall = document.getElementById('mounters').options;
+                    for (var i = 0; i < mounterall.length; i++) {
+                        if (mountersession != undefined) {
+                            if (mounterall[i].value == mountersession) {
+                                document.getElementById('mounters').disabled = false;
+                                mounterall[i].selected = true;
+                            }
+                        }
+                    }
+                    // инфа о бригаде
+                    jQuery("#mounters_names").empty();
+                    AllMounters = <?php echo json_encode($AllMounters) ?>;
+                    AllMounters.forEach(elem => {
+                        if (mountersession == elem.id_brigade) {
+                            jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
+                        }
+                    });
+                    // монтажи
+                    jQuery("#projects_brigade_container").empty();
+                    var table_projects3 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
+                    table_projects3 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                    Array.from(DataOfProject).forEach(function(element) {
+                        if (element.project_mounter == mountersession) {
+                            table_projects3 += '<tr><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                        }
+                    });
+                    table_projects3 += "</table>";
+                    jQuery("#projects_brigade_container").append(table_projects3);
+                }, 200);
+            }
         });
         //--------------------------------------------
 
@@ -2395,6 +2434,13 @@ var $ = jQuery;
             jQuery("#modal-window-choose-tar").hide();
         });
         //------------------------------------------
+
+        //если сессия есть, то выдать дату, которая записана в сессии монтажникам
+        var datesession = jQuery("#jform_project_mounting_date").val();  
+        if (datesession != undefined) {
+            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+        }
+        //-----------------------------------------------------------
 
         // подсвет сегоднешней даты
         window.today = new Date();

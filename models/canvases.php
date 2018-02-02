@@ -30,14 +30,7 @@ class Gm_ceilingModelCanvases extends JModelList
     {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'id', 'a.id',
-                'full_name', 'a.full_name',
-                'texture_title', 'a.texture_title',
-                'color_title', 'a.color_title',
-                'lenght', 'a.lenght',
-                'count', 'a.count',
-                'purchasing_price', 'a.purchasing_price',
-                'price', 'a.price'
+                'canvas_title', 'canvas_count', 'canvas_price'
             );
         }
 
@@ -180,7 +173,7 @@ if (empty($list['direction']))
                     $canvas->color_title = $item->color_title;
                     $canvas->color_file = $item->color_file;
                     $canvas->color_hex = $item->color_hex;
-                    $canvas->ocount = getOCount($item->canvas_id);
+                    $canvas->ocount = self::getOCount($item->canvas_id);
                     $canvas->rollers = [];
 
                     $result[$item->canvas_id] = $canvas;
@@ -190,6 +183,7 @@ if (empty($list['direction']))
                 $roller->barcode = $item->roller_barcode;
                 $roller->article = $item->roller_article;
                 $roller->stock = $item->roller_stock;
+                $roller->stock_name = $item->stock_name;
                 $roller->type = $item->roller_type;
                 $roller->quad = $item->roller_quad;
                 $roller->pprice = $item->pprice;

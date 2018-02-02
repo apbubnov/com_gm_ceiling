@@ -1,4 +1,5 @@
 <?php
+echo parent::getPreloaderNotJS();
 /**
  * @version    CVS: 0.1.7
  * @package    Com_Gm_ceiling
@@ -8,359 +9,385 @@
  */
 // No direct access
 defined('_JEXEC') or die;
+
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
+$listOrder = $this->state->get('list.ordering');
+$listDirn = $this->state->get('list.direction');
 
-$user       = JFactory::getUser();
-$userId     = $user->get('id');
-$listOrder  = $this->state->get('list.ordering');
-$listDirn   = $this->state->get('list.direction');
-$canCreate  = $user->dealer_id == 1;
-$canEdit    = $user->dealer_id == 1;
-$canCheckin = $user->dealer_id == 1;
-$canChange  = $user->dealer_id == 1;
-$canDelete  = $user->dealer_id == 1;
-$dealer = JFactory::getUser($user->dealer_id);
+$app = JFactory::getApplication();
+$model = $this->getModel();
+
+$user = JFactory::getUser();
+$user->groups = $user->get('groups');
+$user->getDealerInfo();
+
+$userDealer = $user;
+
+if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
+    $userDealer = JFactory::getUser($user->dealer_id);
+    $userDealer->groups = $userDealer->get('groups');
+    $userDealer->getDealerInfo();
+}
+
+$stock = in_array(19, $user->groups);
+$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups) && !$stock;
+
+$dealer = null;
+
+if ($managerGM) {
+    $dealerId = $app->input->get('dealer', null, 'int');
+
+    if (isset($dealerId)) {
+        $dealer = JFactory::getUser($dealerId);
+        $dealer->groups = $dealer->get('groups');
+        $dealer->getDealerInfo();
+        $dealer->getCanvasesPrice();
+    }
+}
+
+function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
+function double_margin($value, $margin1, $margin2) { return margin(margin($value, $margin1), $margin2); }
+function dealer_margin($price, $margin, $value, $type) {
+    $result = 0;
+    switch ($type)
+    {
+        case 0: $result = $price; break;
+        case 1: $result = $value; break;
+        case 2: $result = $price + $value; break;
+        case 3: $result = $price + $price * floatval($value) / 100; break;
+    }
+    return margin($result, $margin);
+}
 ?>
-<?= parent::getPreloader(); ?>
-
-
-<form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=canvases'); ?>" method="post"
-      name="adminForm"
-      id="adminForm">
-
-    <? /*=JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__));*/ ?>
-<?=parent::getButtonBack();?>
-
-    <a class="btn btn-large btn-primary show-hide"><i class="fa fa-angle-down" aria-hidden="true"></i>
-        <span>Раскрыть все</span></a>
-
-    <table class="table table-striped" id="canvasList">
+<link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/canvases/css/style.css?date=<?=date("H.i.s");?>">
+<div class="Page">
+    <div class="Title">
+        Прайс полотен<?=(isset($dealer))?" для $dealer->name #$dealer->id":"";?>.
+    </div>
+    <div class="Actions">
+        <?=parent::getButtonBack();?>
+        <button type="button" class="Current ActionTR" id="ActionTR">
+            <i class="fa fa-caret-down" aria-hidden="true"></i> <span>Раскрыть все</span>
+        </button>
+        <?if ($managerGM):?>
+        <form class="FormSimple UpdatePrice MarginLeft">
+            <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+            <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
+                   title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                   size="5" required>
+            <button type="submit" class="buttonOK">
+                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            </button>
+        </form>
+        <?endif;?>
+    </div>
+    <div class="Scroll">
+        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=components'); ?>" method="post"
+              name="adminForm" id="adminForm" hidden>
+            <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
+            <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
+            <?= JHtml::_('form.token'); ?>
+        </form>
+    <table class="Body">
         <thead>
-        <tr>
-            <th class='center'>
-                <i class="fa fa-bars" aria-hidden="true"></i>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'ID', 'id', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Наименование полотна', 'full_name', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Фактура полотна', 'texture_title', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Цвет полотна', 'color_title', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Квадратура', 'lenght', $listDirn, $listOrder); ?>
-            </th>
-            <!--<th class='center'>
-                <?= JHtml::_('grid.sort', 'Цена закупки', 'purchasing_price', $listDirn, $listOrder); ?>
-            </th>-->
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Цена для дилера', 'price', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Цена для клиента', 'price', $listDirn, $listOrder); ?>
-            </th>
-            <? if ($canEdit): ?>
-                <th class="center can">Изменить цену для дилера</th>
-            <? endif; ?>
-        </tr>
-        </thead>
-
-        <tbody>
-        <? $cIndex = 0; foreach ($this->items as $key => $category): $cIndex++; ?>
-            <tr class="canvases category category_<?= $cIndex; ?>" category="<?= $cIndex; ?>">
-                <td class="center one-touch"><i class="fa fa-angle-down show_hide" aria-hidden="true"></i></td>
-                <td class="center one-touch"></td>
-                <td class="center one-touch"><?= $category['full_name']; ?></td>
-                <td class="center one-touch"><?= $category['texture_title']; ?></td>
-                <td class="center one-touch custom_color"
-                    style="<?= (!empty($category['color_file'])) ? 'background-image: url(\'' . $category['color_file'] . '\')' : 'background-color: ' . $category['color_hex']; ?>">
-                    <span style="padding: 2px 4px; background-color: rgba(255,255,255,.8);"><?= $category['color_title']; ?></span>
-                </td>
-                <td class="center one-touch"><?= $category['lenght']; ?> м²</td>
-                <td class="center one-touch" colspan="3"></td>
+            <tr class="THead">
+                <td><i class="fa fa-bars" aria-hidden="true"></i></td>
+                <td><?=JHtml::_( 'grid.sort', '<i class="fa fa-hashtag" aria-hidden="true"></i>', 'canvas_id', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Наименование', 'canvas_title', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Количество', 'canvas_count', $listDirn, $listOrder);?></td>
+                <?if($stock):?>
+                <td>Заказать</td>
+                <td>Цена закупки</td>
+                <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
+                <td>Посмотреть</td>
+                <?elseif ($managerGM && empty($dealer)):?>
+                <td><?=JHtml::_( 'grid.sort', 'Цена', 'canvas_price', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'canvas_price', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'canvas_price', $listDirn, $listOrder);?></td>
+                <td>Изменить</td>
+                <?elseif ($managerGM):?>
+                <td><?=JHtml::_( 'grid.sort', 'Цена', 'canvas_price', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'canvas_price', $listDirn, $listOrder);?></td>
+                <td>Изменить</td>
+                <?else:?>
+                <td><?=JHtml::_( 'grid.sort', 'Себестоймость', 'canvas_price', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'canvas_price', $listDirn, $listOrder);?></td>
+                <?endif;?>
             </tr>
-            <? $wIndex = 0; foreach ($category['child'] as $keyWidth => $catWidth): $wIndex++; ?>
-                <tr class="canvases catWidth category_<?= $cIndex; ?>  catWidth_<?= $cIndex.'_' .$wIndex; ?>"
-                    category="<?= $cIndex; ?>" catWidth="<?= $cIndex.'_'.$wIndex; ?>" style="cursor: pointer; display: none;">
-                    <td class="center one-touch"></td>
-                    <td class="center one-touch id"><?= $catWidth['id']; ?></td>
-                    <td class="center one-touch">Ширина: <?= $catWidth['width']; ?></td>
-                    <td class="center one-touch" colspan="2"></td>
-                    <td class="center one-touch"><?= $catWidth['lenght']; ?> м²</td>
-                    <!--<td class="center one-touch"><?= $catWidth['one_purchasing_price']; ?></td>-->
-                    <td class="center one-touch price"><?= $catWidth['one_price']; ?></td>
-                    <td class="center one-touch client_price"><?= $catWidth['one_client_price']; ?></td>
-                    <? if ($canEdit): ?>
-                        <td class="center update_price">
-                            <div class="update_price">
-                                <input type="text" class="new_price" value="<?=$catWidth['one_price'];?>">
-                                <button type="submit" onsubmit="saveSum(this);" formaction="javascript:false;" class="save" onclick="saveSum(this);">
-                                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </td>
-                    <? endif; ?>
+        </thead>
+        <tbody>
+        <?foreach ($this->items as $key_c => $canvas):?>
+            <tr class="TBody Level1 <?=($stock)?"Action":""?>" data-component="<?=$key_c;?>" data-level="1">
+                <td><i class="fa fa-caret-down" aria-hidden="true"></i></td>
+                <td><?=$key_c;?></td>
+                <td><?=$canvas->name." ".$canvas->country . " " . $canvas->width . " : " . $canvas->texture_title . " " . $canvas->color_title;?></td>
+                <td><?=$canvas->count;?></td>
+                <?if($stock):?>
+                    <td><?=$canvas->ocount;?></td>
+                    <td><?=$canvas->pprice;?></td>
+                    <td></td>
+                    <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?=$key_c;?>">Инфо</a></td>
+                <?elseif ($managerGM && empty($dealer)):?>
+                    <td id="GMPrice"><?=$canvas->price;?></td>
+                    <td id="GMPrice"><?=margin($canvas->price, $dealer->gm_components_margin);?></td>
+                    <td id="DealerPrice"><?=double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
+                    <td>
+                        <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_c;?>">
+                            <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                            <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
+                                   title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                                   size="5" required>
+                            <button type="submit" class="buttonOK">
+                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </td>
+                <?elseif ($managerGM):?>
+                    <td id="GMPrice"><?=margin($canvas->price, $dealer->gm_components_margin);?></td>
+                    <td id="DealerPrice"><?=dealer_margin($canvas->price, $dealer->gm_components_margin,
+                            $dealer->ComponentsPrice[$key_c]->value, $dealer->ComponentsPrice[$key_c]->type);?></td>
+                    <td>
+                        <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_c;?>">
+                            <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                            <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
+                                   title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                                   size="5" required>
+                            <button type="submit" class="buttonOK">
+                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </td>
+                <?else:?>
+                    <td><?=margin($canvas->price, $userDealer->gm_components_margin);?></td>
+                    <td><?=double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
+                <?endif;?>
+            </tr>
+        <? if ($stock) foreach ($canvas->rollers as $key_r => $roller):?>
+                <tr class="TBody Level2" style="display: none;" data-component="<?=$key_r;?>"
+                    data-option="<?=$key_r;?>" data-level="2">
+                    <td><i class="fa fa-caret-right" aria-hidden="true"></i></td>
+                    <td><?=$key_r;?></td>
+                    <td>#<?=$roller->barcode;?> @<?=$roller->article;?></td>
+                    <td><?=$roller->quad;?></td>
+                    <td></td>
+                    <td><?=$roller->pprice;?></td>
+                    <td><?=$roller->stock_name;?></td>
+                    <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?=$key_r;?>&roller=<?=$key_r;?>">Инфо</a></td>
                 </tr>
-            <? endforeach; ?>
-        <? endforeach; ?>
+        <?endforeach;?>
+        <?endforeach;?>
         </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="9"></td>
+        </tr>
+        </tfoot>
     </table>
+    </div>
+</div>
+<script type="text/javascript">
+    var $ = jQuery,
+        Data = {};
 
-    <input type="hidden" name="task" value=""/>
-    <input type="hidden" name="boxchecked" value="0"/>
-    <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
-    <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
-    <?= JHtml::_('form.token'); ?>
-</form>
+    $(document).ready(Init);
+    $(window).resize(Resize);
+    $(document).scroll(Scroll);
 
-<style>
-    table {
-        margin-top: 15px;
+    function Init() {
+        Data.Preloader = $(".PRELOADER_GM");
+
+        Data.Ajax = "/index.php?option=com_gm_ceiling&task=";
+
+        Data.Page = $(".Page");
+        Data.Actions = Data.Page.find(".Actions");
+        Data.Table = Data.Page.find(".Body");
+        Data.Table.THead = Data.Table.find(".THead");
+        Data.Table.TBody = Data.Table.find(".TBody");
+        Data.Table.Level1 = Data.Table.find(".Level1");
+        Data.Table.Level2 = Data.Table.find(".Level2");
+        Data.Table.Level3 = Data.Table.find(".Level3");
+        Data.Table.Action = Data.Table.find(".Action");
+
+        Data.Table.Action.click(ActionTR);
+        Data.Actions.find("#ActionTR").click(AllActionTR);
+
+        Data.Forms = Data.Page.find("form");
+        Data.Forms.filter(".UpdatePrice").attr("action","javascript:null;");
+        Data.Forms.filter(".UpdatePrice").submit(UpdatePrice);
+
+        Data.Temp = {};
+        Data.Scroll = {};
+
+        Data.Dealer = <?=isset($dealer)?$dealer->id:"null";?>;
+
+        ScrollInit();
+        ResizeHead();
+        Resize();
+
+        Data.Preloader.hide();
     }
 
-    .custom_color {
-        background-size: cover;
+    function Resize() {
+        ResizeHead();
     }
 
-    #canvasList .canvases:not(.catAll) {
-        cursor: pointer !important;
+    function ScrollInit() {
+        Data.Scroll.EHead = Data.Table.find("thead");
+        Data.Scroll.EHeadTr = Data.Scroll.EHead.find(".THead");
+        Data.Scroll.EHeadTrClone = Data.Scroll.EHeadTr.clone();
+
+        Data.Scroll.EHeadTrClone.removeClass("THead").addClass("THeadClone");
+        Data.Scroll.EHead.append(Data.Scroll.EHeadTrClone);
+
+        Data.Page.find(".Scroll").scroll(ResizeHead);
     }
 
-    #canvasList .category td:not(.custom_color) {
-        background-color: rgba(229, 229, 229, 1) !important;
+    function ResizeHead() {
+        Data.Scroll.EHeadTrClone.css("left", (Data.Scroll.EHeadTr.offset().left));
+
+        Data.Scroll.EHeadTrClone.width(Data.Scroll.EHeadTr.width());
+        for (var i = 0; i < Data.Scroll.EHeadTr.children().length; i++)
+            $(Data.Scroll.EHeadTrClone.children()[i])
+                .width($(Data.Scroll.EHeadTr.children()[i]).width());
     }
 
-    #canvasList .category:hover td:not(.custom_color) {
-        background-color: rgba(240, 240, 240, 1) !important;
+    function Scroll() {
+        var scrollTop = $(window).scrollTop(),
+            offset = Data.Scroll.EHeadTr.offset(),
+            has = Data.Scroll.EHeadTrClone.hasClass("Show");
+        if (scrollTop >= offset.top) { if (!has) Data.Scroll.EHeadTrClone.addClass("Show"); }
+        else { if (has) Data.Scroll.EHeadTrClone.removeClass("Show"); }
     }
 
-    #canvasList .catWidth {
-        background-color: rgba(215, 215, 215, 1) !important;
+    function ActionTR() {
+        var TR = $(this),
+            level = parseInt(this.dataset.level),
+            data = {};
+
+        switch (level)
+        {
+            case 1: data.title = "component"; break;
+            case 2: data.title = "option"; break;
+            case 3: data.title = "good"; break;
+        }
+
+        data.id = this.dataset[data.title];
+
+        var TRN = TR.next();
+        if (TR.hasClass("Active")) {
+            TR.removeClass("Active");
+            TR.find("td:first-child i").removeClass("fa-caret-up").addClass("fa-caret-down");
+
+            while (TRN.length !== 0 && TRN.data("level") > level) {
+                TRN.removeClass("Active");
+
+                if (TRN.hasClass("Action"))
+                    TRN.find("td:first-child i").removeClass("fa-caret-up").addClass("fa-caret-down");
+
+                TRN.hide();
+                TRN = TRN.next();
+            }
+        } else {
+            TR.addClass("Active");
+            TR.find("td:first-child i").removeClass("fa-caret-down").addClass("fa-caret-up");
+
+            while (TRN.length !== 0 && TRN.data("level") > level) {
+                if (TRN.hasClass("Level" + (level + 1)))
+                    TRN.show();
+                TRN = TRN.next();
+            }
+        }
+
+        ResizeHead();
     }
 
-    #canvasList .catWidth:hover td {
-        background-color: rgba(225, 225, 225, 1) !important;
+    function AllActionTR() {
+        var Button = $(this),
+            TR = Data.Table.TBody;
+        if (Button.hasClass("Active")) {
+            TR.removeClass("Active");
+            TR.filter(":not(.Level1)").hide();
+            TR.filter(".Action").find("td:first-child i").removeClass("fa-caret-up").addClass("fa-caret-down");
+            Button.removeClass("Active");
+            Button.find("i").removeClass("fa-caret-up").addClass("fa-caret-down");
+            Button.find("span").text("Раскрыть все");
+        } else {
+            TR.filter(".Action").addClass("Active");
+            TR.show();
+            TR.filter(".Action").find("td:first-child i").removeClass("fa-caret-down").addClass("fa-caret-up");
+            Button.addClass("Active");
+            Button.find("i").removeClass("fa-caret-down").addClass("fa-caret-up");
+            Button.find("span").text("Скрыть все");
+        }
+
+        ResizeHead();
     }
 
-    #canvasList .catAll {
-        background-color: rgba(255, 255, 255, 1) !important;
-    }
-
-    #canvasList .catAll:hover td {
-        background-color: rgba(245, 245, 245, 1) !important;
-    }
-
-    .show_hide {
-        color: rgb(0, 0, 0);
-        font-size: 20px;
-    }
-
-    #canvasList .update_price {
-        width: auto;
-        min-width: 100px;
-    }
-    #canvasList .update_price .new_price {
-        width: calc(100% - 30px);
-        min-width: 50px;
-        height: 30px;
-        float: left;
-        border-radius: 5px 0 0 5px;
-        border: none;
-        box-shadow: inset 0 0 1px 1px rgb(64, 65, 154);
-        padding: 0 5px;
-        margin: 0;
-    }
-    #canvasList .update_price .save {
-        width: 30px;
-        height: 30px;
-        float: left;
-        border-radius: 0 5px 5px 0;
-        background-color: rgb(64, 65, 154);
-        color: rgb(255, 255, 255);
-        border: none;
-        margin: 0;
-        cursor: pointer;
-    }
-</style>
-
-<script>
-    var $ = jQuery;
-
-    function saveSum(e) {
-        e = $(e);
-        var parent = e.closest("tr"),
-            id = parseInt(parent.find(".id").text()),
-            price = parseInt(parent.find(".new_price").val());
+    /**
+     * @return {boolean}
+     */
+    function UpdatePrice() {
+        Data.Preloader.show();
+        var values = JSON.serialize(this);
+        values.id = this.dataset.id;
+        values.dealer = Data.Dealer;
 
         jQuery.ajax({
             type: 'POST',
-            url: "/index.php?option=com_gm_ceiling&task=canvases.setPrice",
-            data: {id: id, price: price},
+            url: Data.Ajax + "components.UpdatePrice",
+            data: values,
             cache: false,
             async: false,
+            dataType: "json",
+            timeout: 5000,
             success: function (data) {
-                data = JSON.parse(data);
 
-                if (data.status === "success")
-                {
-                    parent.find(".price").text(data.data.price);
-                    parent.find(".client_price").text(data.data.client_price);
-                }
-
-                noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    timeout: 1500,
-                    type: data.status,
-                    text: data.message
+                $.each(data.elements, function (i, v) {
+                    Data.Page.find(v.name).text(v.value);
                 });
+
+                Noty(data.status, data.message);
             },
-            dataType: "text",
-            timeout: 15000,
-            error: function () {
-                noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    timeout: 1500,
-                    type: "error",
-                    text: "Сервер не отвечает!"
-                });
-            }
+            error: Noty
+        });
+
+        $(this).find("input:not(:disabled)").val("");
+        Data.Preloader.hide();
+
+        return false;
+    }
+
+    function Noty(status = "error", message = "Сервер не отвечает, попробуйте снова!", time = 2000) {
+        noty({
+            theme: 'relax',
+            layout: 'center',
+            timeout: time,
+            type: status,
+            text: message
         });
     }
 
-    jQuery(document).ready(function () {
+    JSON.serialize = function (obj) {
+        var inputs = $(obj).find("input:not(:disabled)"),
+            datas = $(obj).find("[data-JsonSend]").filter("[id]"),
+            values = $(obj).find("[data-Send]").filter("[id]"),
+            result = {jsons:{}, values:{}};
 
-        jQuery(".catWidth").click(function () {
-            var _this = jQuery(this);
-            var id_category = _this.attr("category");
-
-            jQuery(".catWidth").filter(":not(.category_"+id_category+")").hide();
-            jQuery(".category").filter(":not(.category_"+id_category+")").val(0);
-
-            jQuery(".show-hide").val(0).find(span).html("Раскрыть все");
-            jQuery(".show-hide i").removeClass('fa-angle-up').addClass('fa-angle-down');
+        $.each(inputs, function (i, v) {
+            result[v.name] = v.value;
         });
 
-        jQuery(".category").click(function () {
-            var _this = jQuery(this);
-            var id_category = _this.attr("category");
-
-            jQuery(".canvases").filter(":not(.category)").hide();
-            jQuery.each(jQuery(".canvases .show_hide"), function (key, val) {
-                jQuery(val).removeClass('fa-angle-up').addClass('fa-angle-down');
-            });
-
-            if (_this.val() == 0) {
-                jQuery(".category").val(0);
-                _this.val(1).find(".show_hide").removeClass('fa-angle-down').addClass('fa-angle-up');
-
-                jQuery(".catWidth").val(0);
-                jQuery(".category_" + id_category).filter(".catWidth").val(1).show();
-            }
-            else {
-                _this.val(0);
-                jQuery(".catWidth").val(0);
-            }
-
-            jQuery(".show-hide").val(0).find(span).html("Раскрыть все");
-            jQuery(".show-hide i").removeClass('fa-angle-up').addClass('fa-angle-down');
+        $.each(datas, function (i, v) {
+            result.jsons[v.id] = JSON.parse(v.dataset.jsonsend);
         });
 
-        jQuery(".show-hide").click(function () {
-            var _this = jQuery(this);
-            var text = _this.children("span");
-
-            if (_this.val() == 0) {
-                _this.val(1).children("i").removeClass("fa-angle-down").addClass('fa-angle-up');
-
-                text.html("Скрыть все");
-                jQuery(".canvases").filter(":not(.category)").show();
-
-                jQuery.each(jQuery(".canvases .show_hide"), function (key, val) {
-                    jQuery(val).removeClass('fa-angle-down').addClass('fa-angle-up');
-                });
-            }
-            else {
-                _this.val(0).children("i").removeClass("fa-angle-up").addClass('fa-angle-down');
-
-                text.html("Раскрыть все");
-                jQuery(".canvases").filter(":not(.category)").hide();
-
-                jQuery.each(jQuery(".canvases .show_hide"), function (key, val) {
-                    jQuery(val).removeClass('fa-angle-up').addClass('fa-angle-down');
-                });
-            }
-            jQuery(".canvases").val(0);
+        $.each(values, function (i, v) {
+            result.values[v.id] = v.dataset.send;
         });
 
-        jQuery("#change_margin").click(function(){
-            jQuery(".new_margin").show();
-        });
-
-        jQuery("#update_margin").click(function(){
-            jQuery("input[name='ismarginChange']").val(1);
-            jQuery(".new_margin").hide();
-        });
-    });
-
-    jQuery("#update_margin").click(function(){
-		jQuery.ajax({
-			type: 'POST',
-			url: "index.php?option=com_gm_ceiling&task=update_margin",
-			data: {
-				new_margin: jQuery("#jform_new_margin").val(),
-				type: 1
-			},
-
-			success: function(data){
-
-			    var answer = "Данные успешно изменены";
-
-			    if (data[0] === '{') {
-                    var info = jQuery.parseJSON(data);
-			        answer = info.answer_error;
-			    } else {
-                    data = jQuery("<div/>", {"html":data}).find('#canvasList').html()
-                    jQuery("#canvasList").html(data);
-                }
-
-				var n = noty({
-					theme: 'relax',
-					modal: true,
-					layout: 'center',
-					text: answer
-				});
-
-                setTimeout(function () {
-                    location.reload();
-                }, 2000);
-			},
-			dataType: "text",
-			timeout: 10000,
-			error: function(){
-				var n = noty({
-					theme: 'relax',
-					layout: 'center',
-					maxVisible: 5,
-					type: "error",
-					text: "Ошибка при попытке обновить процент маржинальности. Сервер не отвечает"
-				});
-			}
-		});
-	});
-</script>
-<script language="JavaScript">
-		function PressEnter(your_text, your_event) {
-		  if(your_text != "" && your_event.keyCode == 13)
-			jQuery("#update_margin").click();
-		}
+        return result;
+    }
 </script>
