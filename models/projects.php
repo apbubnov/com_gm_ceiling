@@ -208,6 +208,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('a.who_calculate = 1');
                     if ($subtype == "calendar") {
                         $query->where('a.project_status = 1');
+                        $query->where("a.project_calculator = '$user->id'");
                         $query->order('a.project_calculation_date');
                     } elseif ($subtype == "projects") {
                         $query->where('a.project_verdict = 1 AND a.project_status BETWEEN 5 AND 15');
@@ -231,6 +232,8 @@ class Gm_ceilingModelProjects extends JModelList
                     }
                     break;
                 case "gmchief":
+                    $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
+                    $query->where('c.dealer_id = '. $user->dealer_id);
                     if ($user->dealer_type == 2) {
                         $query->where('a.project_status >= 0'); 
                     } elseif ($subtype =="run") {
@@ -239,22 +242,19 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "1"');
                     } else {
-                        $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
                         $query->where('a.project_status in ("10", "5", "11", "16", "17")');
-                        $query->where('c.dealer_id = '. $user->dealer_id);
                     }
                     break;
                 case "chief":
+                    $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
+                    $query->where('c.dealer_id = '. $user->dealer_id);
                     if ($user->dealer_type == 2) {
                         $query->where('a.project_status >= 0'); 
                     } elseif ($subtype =="run") {
                         $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
                     } elseif ($subtype == "gaugings") {
-                        $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "0"');
-                        $query->where('c.dealer_id = '. $user->dealer_id);
-
                     } else {
                         $query->where('a.project_status in ("10", "5", "11", "16", "17")');
                     }
@@ -374,7 +374,7 @@ class Gm_ceilingModelProjects extends JModelList
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
 
-            // замерщик (график замеров), НМС (замеры), дилер (замерщик)
+            // дилер (замерщик), НМС (график замеров)
             if ($status == "GaugingsGraph") {
                 $groups = $user->groups;
                 if (in_array("12", $groups) || in_array("14", $groups) || in_array("17", $groups)) {
@@ -392,6 +392,12 @@ class Gm_ceilingModelProjects extends JModelList
                         ->from('#__gm_ceiling_projects as projects')
                         ->where("projects.project_status = '1' and projects.project_calculator  = '$userId'");
                 }
+            } else
+            // замерщик (график замеров), НМС (войти как замерщик)
+            if ($status == "GaugingsGraphNMS") {
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->where("projects.project_status = '1' and projects.project_calculator  = '$userId'");
             } else
             // НМС (монтажи)
             if ($status == "Mountings") {
@@ -885,7 +891,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->join("LEFT", "`#__gm_ceiling_projects` as p ON p.client_id = client.id")
                 ->select("p.project_info as address")
                 ->select("client.client_name as client_name, client.created as created, client.id as client_id")
-                ->select("GROUP_CONCAT(DISTINCT phone.phone SEPARATOR ', ') as client_contacts")
+                ->select("GROUP_CONCAT(distinct phone.phone SEPARATOR ', ') as client_contacts")
                 ->group("client.id");
 
             if($status && !$search)

@@ -546,15 +546,14 @@ class Gm_ceilingHelpersGm_ceiling
                
                 //наряд монтажной бригаде
                 if($need_mount){
-                    self::create_single_mount_estimate(null,$data,$mounting_data);
+                    //self::create_single_mount_estimate(null,$data,$mounting_data);
                 }       
                 //PDF раскроя
-                self::create_cut_pdf(null,$data);
+                //self::create_cut_pdf(null,$data);
                 //для менеджера
                 self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета 
                 self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
-                throw new Exception("123123");
             }         
             $return = json_encode($ajax_return);
             
@@ -2602,13 +2601,14 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
         }
         $filename = md5($project_id . "mount_common") . ".pdf";
-        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+        
+        self::save_pdf($html, $sheets_dir . $filename, "A4");
     }
-    public static function create_single_mounter_estimate_html($calc_id=null,$data=null,$phones=null,$brigade=null,$brigade_names=null,$data_mount = null){
+    public static function create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount = null){
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
-                $data = $calculation_model->getData($calc_id);
+                $data = get_objects_vars($calculation_model->getData($calc_id));
             }
         
             $project_model = self::getModel('project');
@@ -2733,7 +2733,7 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                     }
 
-                    $html .= '</tbody></table><p>&nbsp;</p>';
+                    $html .= '</tbody></table>';
                 }
                 return $html;
             }
@@ -2767,10 +2767,14 @@ class Gm_ceilingHelpersGm_ceiling
             
             
             $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
-            throw new Exception("Error Processing Request", 1);
-            $filename = md5($calc_id . "mount_single") . ".pdf";
+
+            $filename = md5($data['id'] . "mount_single") . ".pdf";
+           
+            
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             self::save_pdf($html, $sheets_dir . $filename, "A4");
+           
+            return true;
         }
         catch(Exception $e)
         {
@@ -3270,39 +3274,51 @@ class Gm_ceilingHelpersGm_ceiling
 
     //Печатаем подготовленные данные в PDF
     public static function save_pdf($html, $filename, $mode, $type = null){
-
-        $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
-        $mpdf->SetDisplayMode('fullpage');
-        $mpdf->list_indent_first_level = 0;
-        if ($type == "cut") {
-            $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_cut.css');
-        } else {
-            $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_documents.css');
-        }
-        if (gettype($html) == "array") {
-            $mpdf->SetImportUse();
-            foreach ($html as $index => $value) {
-                if (substr($value, -4, 4) == ".pdf") {
-                    $page = $mpdf->SetSourceFile($value);
-                    for ($i = 1; $i <= $page; $i++) {
-                        $mpdf->AddPage("P");
-
-                        $id = $mpdf->ImportPage($i);
-                        $mpdf->UseTemplate($id);
-                    }
-                } else {
-                    $mpdf->AddPage("P");
-                    $mpdf->WriteHTML($stylesheet, 1);
-                    $mpdf->WriteHTML($value, 2);
-                }
+        try{
+            
+            $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
+            $mpdf->SetDisplayMode('fullpage');
+            $mpdf->list_indent_first_level = 0;
+            if ($type == "cut") {
+                $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_cut.css');
+            } else {
+                $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_documents.css');
             }
-        } else {
-            $mpdf->WriteHTML($stylesheet, 1);
-            $mpdf->WriteHTML($html, 2);
-        }
+            if (gettype($html) == "array") {
+               
+                $mpdf->SetImportUse();
+                foreach ($html as $index => $value) {
+                    if (substr($value, -4, 4) == ".pdf") {
+                        $page = $mpdf->SetSourceFile($value);
+                        for ($i = 1; $i <= $page; $i++) {
+                            $mpdf->AddPage("P");
 
-        $mpdf->Output($filename, 'F');
-        return 1;
+                            $id = $mpdf->ImportPage($i);
+                            $mpdf->UseTemplate($id);
+                        }
+                    } else {
+                        $mpdf->AddPage("P");
+                        $mpdf->WriteHTML($stylesheet, 1);
+                        $mpdf->WriteHTML($value, 2);
+                    }
+                }
+            } else {
+                
+                $mpdf->WriteHTML($stylesheet, 1);
+                $mpdf->WriteHTML($html, 2);
+               
+            }
+            
+            $mpdf->Output($filename, 'F');
+            return 1;
+        }
+        catch(Exception $e)
+        {
+             $date = date("d.m.Y H:i:s");
+             $files = "components/com_gm_ceiling/";
+             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+             throw new Exception('Ошибка!', 500);
+        }
     }
 
     public static function getClassPDF($mode, $format, $default_font_size, $default_font, $margin_left, $margin_right, $margin_top, $margin_bottom, $margin_header, $margin_footer, $orientation)

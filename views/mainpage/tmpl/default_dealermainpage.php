@@ -126,7 +126,7 @@ $rest = -($total_sum) - $contributed;
         <?endif;?>
     </button>
 
-        <a class="btn btn-primary btn-acct" > <?=$rest?-$rest:0;?> руб. </a>
+        <a class="btn btn-primary btn-acct" href="/index.php?option=com_gm_ceiling&view=dealerprofile&type=score"> <?=$rest?-$rest:0;?> руб. </a>
         <div id="modal_window_container" class="modal_window_container" >
             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar"
                                                                   aria-hidden="true"></i>
@@ -310,7 +310,7 @@ $rest = -($total_sum) - $contributed;
             });
         });
         jQuery("#toProfile").click(function(){
-		    location.href = "index.php?option=com_gm_ceiling&view=dealerprofile";
+		    location.href = "index.php?option=com_gm_ceiling&view=dealerprofile&type=edit";
 	    });
         jQuery("#new_msrmnt_btn").click(function () {
             location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>";
