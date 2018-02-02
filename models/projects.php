@@ -231,6 +231,8 @@ class Gm_ceilingModelProjects extends JModelList
                     }
                     break;
                 case "gmchief":
+                    $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
+                    $query->where('c.dealer_id = '. $user->dealer_id);
                     if ($user->dealer_type == 2) {
                         $query->where('a.project_status >= 0'); 
                     } elseif ($subtype =="run") {
@@ -239,24 +241,22 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "1"');
                     } else {
-                        $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
                         $query->where('a.project_status in ("10", "5", "11", "16", "17")');
                     }
-                    $query->where('c.dealer_id = '. $user->dealer_id);
                     break;
                 case "chief":
+                    $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
+                    $query->where('c.dealer_id = '. $user->dealer_id);
                     if ($user->dealer_type == 2) {
                         $query->where('a.project_status >= 0'); 
                     } elseif ($subtype =="run") {
                         $query->where('a.project_status = 12 AND a.project_verdict = 1 ');
                     } elseif ($subtype == "gaugings") {
-                        $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "0"');
                     } else {
                         $query->where('a.project_status in ("10", "5", "11", "16", "17")');
                     }
-                    $query->where('c.dealer_id = '. $user->dealer_id);
                     break;
                 case "dealer":
                     $query->where('( dealer_id = ' . $user->id . ' OR dealer_id = ' . $user->dealer_id . ')');
