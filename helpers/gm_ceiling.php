@@ -182,9 +182,6 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases[$canvas->id] = $canvas;
         }
         //Получаем данные
-        $send_client_cost = $jinput->get('send_client_cost', '0', 'INT');
-        $new_client = $jinput->get('new_client', '0', 'INT');
-        $flag = $jinput->get('flag', '0', 'INT');
         if ($from_db == 1) {
             //Загружаем из БД
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
@@ -254,8 +251,14 @@ class Gm_ceilingHelpersGm_ceiling
                 )
             ));
             $data = $data['jform'];
-
-            $data['n3'] = ($_SESSION['n3']) ? ($_SESSION['n3']) : $data['n3'];
+            $color = $data['color'];
+            $color_filter = $color ? "= " .$color : "IS NULL";            
+            $filter = "texture_id = ".$data['n2']." AND name = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            $items = $model->getIdFilteredItems($filter);
+            if(count($items)>0){
+                $data['n3'] = $items[0]->id;
+            }
             if($data['n2'] == 0) {
                 $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;
             }
@@ -504,10 +507,8 @@ class Gm_ceilingHelpersGm_ceiling
             if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
                 $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
             }
-            if ($new_client != 1) {
-                $ajax_return['id'] = $calculation_model->save($data, $del_flag);
-                $data['id'] = $ajax_return['id'];
-            }
+            $ajax_return['id'] = $calculation_model->save($data, $del_flag);
+            $data['id'] = $ajax_return['id'];
             $filename = md5("calculation_sketch" . $ajax_return['id']);
             $cut_filename = md5("cut_sketch" . $ajax_return['id']);
             
