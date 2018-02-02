@@ -2772,7 +2772,6 @@ class Gm_ceilingHelpersGm_ceiling
            
             
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-            throw new Exception($html);
             self::save_pdf($html, $sheets_dir . $filename, "A4");
            
             return true;
