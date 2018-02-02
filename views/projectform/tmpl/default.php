@@ -1370,7 +1370,7 @@
                                 var emptytd = 0;
                                 Array.from(data).forEach(function(elementProject) {
                                     if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                        var timesession_gauger = jQuery("#jform_new_project_calculation_daypart").val();
+                                        var timesession_gauger = jQuery("#jform_project_new_calc_date").val();
                                         var gaugersession = jQuery("#jform_project_gauger").val();
                                         if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession_gauger.substr(11)) {
                                             TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
@@ -1633,8 +1633,8 @@
                     gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
                 }
             });
-            jQuery("#jform_new_project_calculation_daypart").val(time_gauger);
-            jQuery("#jform_project_new_calc_date").val(date);
+            datetime_gauger = date+" "+time_gauger;
+            jQuery("#jform_project_new_calc_date").val(datetime_gauger);
             jQuery("#jform_project_gauger").val(gauger);
             if (jQuery(".change").length == 0) {
                 jQuery("#"+idDay).addClass("change");
