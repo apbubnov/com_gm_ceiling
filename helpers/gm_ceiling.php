@@ -3276,7 +3276,7 @@ class Gm_ceilingHelpersGm_ceiling
     //Печатаем подготовленные данные в PDF
     public static function save_pdf($html, $filename, $mode, $type = null){
         try{
-            throw new Exception($filename);
+            
             $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->list_indent_first_level = 0;
@@ -3286,6 +3286,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_documents.css');
             }
             if (gettype($html) == "array") {
+               
                 $mpdf->SetImportUse();
                 foreach ($html as $index => $value) {
                     if (substr($value, -4, 4) == ".pdf") {
@@ -3303,10 +3304,13 @@ class Gm_ceilingHelpersGm_ceiling
                     }
                 }
             } else {
+                
                 $mpdf->WriteHTML($stylesheet, 1);
+                throw new Exception($html);
                 $mpdf->WriteHTML($html, 2);
+               
             }
-
+            
             $mpdf->Output($filename, 'F');
             return 1;
         }
