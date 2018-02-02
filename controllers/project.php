@@ -1173,13 +1173,25 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				$this->setMessage("Данные успешно изменены!");
 			}
 
-			if($type === "gmchief") {
-				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
-			} elseif ($type === "chief" && $user->dealer_type == 1 && $old_date) {
-				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
+			// редирект
+			if ($data->project_status == 1 ) {
+				if($type === "gmchief") {
+					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=gaugings', false));
+				} elseif ($type === "chief") { // && $user->dealer_type == 1 && $old_date
+					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings', false));
+				} //else {
+					//$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
+				//}
 			} else {
-				$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
+				if($type === "gmchief") {
+					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
+				} elseif ($type === "chief" && $user->dealer_type == 1 && $old_date) {
+					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
+				} else {
+					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
+				}
 			}
+			
 		}
 		catch(Exception $e)
         {

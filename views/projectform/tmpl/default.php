@@ -1404,11 +1404,6 @@
                         if (timesession_gauger != undefined) {
                             times.each(function(element) {
                                 if (timesession_gauger.substr(11) == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                                    console.log(timesession_gauger.substr(11));
-                                console.log(jQuery(this).val());
-                                console.log(gaugersession);
-                                console.log(jQuery(this).closest('tr').find("input[name='gauger']").val());
-
                                     jQuery(this).prop("checked", true);
                                 }
                             });
