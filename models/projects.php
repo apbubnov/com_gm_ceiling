@@ -253,7 +253,6 @@ class Gm_ceilingModelProjects extends JModelList
                         $query->innerJoin('`#__gm_ceiling_clients` as c on a.client_id = c.id');
                         $query->where('a.project_status in ("1")');
                         $query->where('a.who_calculate = "0"');
-                        $query->where('c.dealer_id = '. $user->dealer_id);
                     } else {
                         $query->where('a.project_status in ("10", "5", "11", "16", "17")');
                     }
