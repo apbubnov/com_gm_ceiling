@@ -1495,8 +1495,10 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $color = $color ? "= " .$color : "IS NULL";
-
+           
+            
             $filter = "texture_id = ".$textures." AND name = '" . $manufacturer . "' AND width = '" . $width . "' AND color_id " . $color . "";
+            throw new Exception($filter);
             $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
             $items = $model->getIdFilteredItems($filter);
             $_SESSION['n3'] = $items[0]->id;
@@ -1545,7 +1547,6 @@ class Gm_ceilingController extends JControllerLegacy
                 )
             ));
             $data1 = $data1['jform'];
-            throw new Exception(implode('|',$data1));
             if(!empty($data1)){
                 $this->texturesId($data1['n2'],$data1['proizv'],$data1['n3'],$data1['color']);
             } 
