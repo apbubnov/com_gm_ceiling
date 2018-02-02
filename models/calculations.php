@@ -841,6 +841,8 @@ class Gm_ceilingModelCalculations extends JModelList {
 
     public function FindAllbrigades($id) {
         try {
+            throw new Exception($id);
+            
             $db = $this->getDbo();
             $query = $db->getQuery(true);
 
