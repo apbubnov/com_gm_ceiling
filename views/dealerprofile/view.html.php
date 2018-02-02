@@ -38,7 +38,7 @@ class Gm_ceilingViewDealerProfile extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-/*		$app = JFactory::getApplication();
+	    $app = JFactory::getApplication();
 
 		$this->state      = $this->get('State');
 		$this->items = $this->get('Items');
@@ -52,8 +52,15 @@ class Gm_ceilingViewDealerProfile extends JViewLegacy
 		{
 			throw new Exception(implode("\n", $errors));
 		}
+		$tpl = $app->input->getString('type', NULL);
 
-		$this->_prepareDocument();*/
+		$user = JFactory::getUser();
+		if($user->guest) {
+			$mainframe = &JFactory::getApplication();
+			$mainframe->redirect(JURI::root()."index.php?option=com_users&view=login","Требуется авторизация");
+		}
+
+		$this->_prepareDocument();
 		parent::display($tpl);
 	}
 
