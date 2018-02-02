@@ -885,7 +885,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->join("LEFT","`#__gm_ceiling_clients` as client ON client.id = p.client_id")
                 ->select(' client.client_name as client_name, client.created as created, client.id as client_id')
                 ->join("LEFT","`#__gm_ceiling_clients_contacts` as phone ON phone.client_id = p.client_id")
-                ->select('phone.phone as client_contacts');
+                ->select('GROUP_CONCAT(phone.phone SEPARATOR \', \') as client_contacts');
             if($status && !$search)
                 $query->where('p.project_status = '. $status . ' and client.dealer_id = '. $user->dealer_id);
             elseif($status && $search)
@@ -894,7 +894,7 @@ class Gm_ceilingModelProjects extends JModelList
             elseif(!$status && $search)
                 $query->where(' client.dealer_id = '. $user->dealer_id . ' and (client.client_name like \'%'.$search.'%\' or phone.phone like \'%'.$search.'%\')');
 
-            $query->group('client.client_name');
+            $query->group('client.client_name, phone.phone');
           // print_r((string)$query); exit;
             $db->setQuery($query);
             $result = $db->loadObjectList();
