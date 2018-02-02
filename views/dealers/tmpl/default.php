@@ -44,6 +44,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             <th>
                 Взнос
             </th>
+            <th>
+                Изменить
+            </th>
         </tr>
         </thead>
         <tbody id="tbody_dealers">
@@ -78,6 +81,13 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 		            </td>
                     <td>
                         <button class="btn btn-primary btn-done" user_id="<?= $value->id; ?>" type="button"> Внести сумму </button>
+                    </td>
+                    <td>
+                        <select class="SelectPrice" autocomplete="off">
+                            <option disabled selected> Прайс:</option>
+                            <option value="/index.php?option=com_gm_ceiling&view=components&dealer=<?=$value->id;?>">Компонентов</option>
+                            <option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=<?=$value->id;?>">Полотен</option>
+                        </select>
                     </td>
 		        </tr>
         	<?php
@@ -119,6 +129,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_create").show("slow");
+        });
+
+        jQuery(".SelectPrice").change(function () {
+            location.href = this.value;
+            jQuery(".SelectPrice option:first-child").prop("selected", true);
         });
 
         jQuery(document).click(function(e){
@@ -237,6 +252,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         jQuery("#close").show();
                         jQuery("#mv_container").show();
                         jQuery("#modal_window_sum").show("slow");
+                        return;
+                    }
+                    if (target.className.indexOf('SelectPrice') + 1)
+                    {
                         return;
                     }
                 }
