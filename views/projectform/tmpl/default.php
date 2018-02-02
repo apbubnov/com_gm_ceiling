@@ -134,7 +134,7 @@
 
 <h2>Просмотр проекта</h2>
 <form id="form-client">
-<?php if ($this->item) {?>
+<?php if ($this->item) { ?>
     <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
     <?php if (sizeof($calculations) > 0) { ?>
         <?php echo "<h3>Расчеты для проекта № ".$this->item->id." </h3>"; ?>
@@ -956,7 +956,7 @@
                                 <th>Замерщик</th>
                                 <?php 
                                     $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                                    $gauger = $gauger_model->getMount($this->item->id); 
+                                    $gauger = $gauger_model->getGauger($this->item->id); 
                                 ?>
                                 <td><?php echo $gauger->name; ?></td>
                             <?php } else { ?>
