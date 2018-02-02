@@ -270,7 +270,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $color = $data['color'];
                 $color_filter = $color ? "= " .$color : "IS NULL";       
                 $filter = "texture_id = ".$data['n2']." and `name` = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
-               
                 $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
                 $items = $model->getIdFilteredItems($filter);
                 if(count($items)>0){
@@ -525,6 +524,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
+                throw new Exception("123123123");
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
                 $data['id'] = $ajax_return['id'];
                 $filename = md5("calculation_sketch" . $ajax_return['id']);
