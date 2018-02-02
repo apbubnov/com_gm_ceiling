@@ -810,7 +810,7 @@
             <?php } ?>
         </div>
     <?php } ?>
-    </form>
+    
     <div class="container">
         <div class="row" style="padding-top: 1em;">
             <div class="col-xl-6 item_fields project-edit front-end-edit">
@@ -1073,7 +1073,7 @@
         </div>
     </div>
 <?php } ?>
-
+</form>
 <script>
 
     var preloader = '<?=parent::getPreloaderNotJS();?>';
