@@ -546,7 +546,7 @@ class Gm_ceilingHelpersGm_ceiling
                
                 //наряд монтажной бригаде
                 if($need_mount){
-                    self::create_single_mount_estimate(null,$data,$mounting_data);
+                    //self::create_single_mount_estimate(null,$data,$mounting_data);
                 }       
                 //PDF раскроя
                 self::create_cut_pdf(null,$data);
