@@ -147,11 +147,13 @@ $status = $status_model->getData();
     jQuery("#select_status").change(function ()
     {
         var status = jQuery("#select_status").val();
+        var search = jQuery("#filter_search").val();
         jQuery.ajax({
             type: "POST",
             url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
             data: {
-                status: status
+                status: status,
+                search: search
             },
             dataType: "json",
             async: true,

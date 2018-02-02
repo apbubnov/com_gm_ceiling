@@ -874,7 +874,7 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    public function filterProjectForStatus($status){
+    public function filterProjectForStatus($status, $search){
         try
         {
             $user = JFactory::getUser();
@@ -885,9 +885,11 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select(' client.client_name as client_name, client.created as created, client.id as client_id')
                 ->join("LEFT","`#__gm_ceiling_clients_contacts` as phone ON phone.client_id = p.client_id")
                 ->select('phone.phone as client_contacts');
-            if($status)
+            if($status && !$search)
                 $query->where('p.project_status = '. $status . ' and client.dealer_id = '. $user->dealer_id);
-            else $query->where('client.dealer_id = '. $user->dealer_id);
+            elseif($status && $search)
+                $query->where('p.project_status = '. $status . ' and client.dealer_id = '. $user->dealer_id . ' and (client.client_name like %'.$search.'% or phone.phone like %'.$search.'%)');
+            elseif(!$status && !$search) $query->where('client.dealer_id = '. $user->dealer_id);
             $query->group('client.client_name');
            // print_r((string)$query); exit;
             $db->setQuery($query);

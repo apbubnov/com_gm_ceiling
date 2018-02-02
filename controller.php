@@ -3253,8 +3253,9 @@ class Gm_ceilingController extends JControllerLegacy
         {
             $jinput = JFactory::getApplication()->input;
             $status = $jinput->get('status', '0', 'int');
+            $search = $jinput->get('search', '', 'string');
             $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-            $result =  $projects_model->filterProjectForStatus($status);
+            $result =  $projects_model->filterProjectForStatus($status, $search);
 
             die(json_encode($result));
         }
