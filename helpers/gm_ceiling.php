@@ -268,8 +268,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $data = $data['jform'];
                 
                 $color = $data['color'];
-                $color_filter = $color ? "= " .$color : "IS NULL";   
-                throw new Exception("n2 -". $data['n2'].",proizv -". $data['proizv'].",width-". $data['n3']);         
+                $color_filter = $color ? "= " .$color : "IS NULL";       
                 $filter = "texture_id = ".$data['n2']." AND name = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
                 $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
                 $items = $model->getIdFilteredItems($filter);
