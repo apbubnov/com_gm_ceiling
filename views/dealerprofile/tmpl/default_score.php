@@ -93,7 +93,8 @@ $rest = -($total_sum) - $contributed;
     <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
     <?php echo JHtml::_('form.token'); ?>
 </form>
-<script>
+<script type="text/javascript">
+    var $ = jQuery;
     jQuery("#c_show_all").click(function ()
     {
         var date1 = jQuery("#c_date1").val();
