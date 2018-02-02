@@ -1403,17 +1403,19 @@
                         var times = jQuery("input[name='choose_time_gauger']");
                         if (timesession_gauger != undefined) {
                             times.each(function(element) {
-                                console.log(timesession_gauger.substr(11));
+                                if (timesession_gauger.substr(11) == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                    console.log(timesession_gauger.substr(11));
                                 console.log(jQuery(this).val());
                                 console.log(gaugersession);
                                 console.log(jQuery(this).closest('tr').find("input[name='gauger']").val());
-                                if (timesession_gauger.substr(11) == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+
                                     jQuery(this).prop("checked", true);
                                 }
                             });
                         }
                     }, 200);
-                } else if (time_gauger != undefined) {
+                }
+                if (time_gauger != undefined) {
                     setTimeout(function() { 
                         var times = jQuery("input[name='choose_time_gauger']");
                         times.each(function(element) {
