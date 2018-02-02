@@ -3215,6 +3215,9 @@ class Gm_ceilingController extends JControllerLegacy
             $search = $jinput->get('search', '', 'string');
             $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             $result =  $projects_model->filterProjectForStatus($status, $search);
+            foreach ($result as $key => $value) {
+                $result[$key]->created = date("d.m.Y H:i", strtotime($value->created));
+            }
 
             die(json_encode($result));
         }
