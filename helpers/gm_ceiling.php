@@ -252,7 +252,6 @@ class Gm_ceilingHelpersGm_ceiling
                 )
             ));
             $data = $data['jform'];
-            throw new Exception(implode('|',$data));
             if(!empty($data['n2']) && !empty($data['proizv']) && !empty($data['n3'])){
                 $color = $data['color'];
                 $color_filter = $color ? "= " .$color : "IS NULL";            
