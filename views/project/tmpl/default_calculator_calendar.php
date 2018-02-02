@@ -2313,8 +2313,9 @@ var $ = jQuery;
                 }
             });
             if (date == datesession.substr(0, 10)) {
-                var timesession = jQuery("#jform_project_mounting_date").val().substr(11);
+                var timesession = datesession.substr(11);
                 var mountersession = jQuery("#project_mounter").val();
+                console.log(timesession);
                 setTimeout(function() {
                     // время
                     var timeall = document.getElementById('hours').options;
