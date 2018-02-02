@@ -1414,16 +1414,18 @@
                         }
                     }, 200);
                 }
-                if (date == datetime_gauger.substr(0, 10)) {
-                    if (time_gauger != undefined) {
-                        setTimeout(function() { 
-                            var times = jQuery("input[name='choose_time_gauger']");
-                            times.each(function(element) {
-                                if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                                    jQuery(this).prop("checked", true);
-                                }
-                            });
-                        }, 200);
+                if (datetime_gauger != undefined) {
+                    if (date == datetime_gauger.substr(0, 10)) {
+                        if (time_gauger != undefined) {
+                            setTimeout(function() { 
+                                var times = jQuery("input[name='choose_time_gauger']");
+                                times.each(function(element) {
+                                    if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                        jQuery(this).prop("checked", true);
+                                    }
+                                });
+                            }, 200);
+                        }
                     }
                 }
             } else {
@@ -1543,48 +1545,50 @@
                     }, 200);
                 }
                 // Если перевыбрана дата монтажа, показать ее
-                if (date == datatime.substr(0, 10)) {
-                    setTimeout(function() {
-                        // время
-                        var timeall = document.getElementById('hours').options;
-                        for (var i = 0; i < timeall.length; i++) {
-                            if (time != undefined) {
-                                if (timeall[i].value == time) {
-                                    document.getElementById('hours').disabled = false;
-                                    timeall[i].selected = true;
+                if (datatime != undefined) {
+                    if (date == datatime.substr(0, 10)) {
+                        setTimeout(function() {
+                            // время
+                            var timeall = document.getElementById('hours').options;
+                            for (var i = 0; i < timeall.length; i++) {
+                                if (time != undefined) {
+                                    if (timeall[i].value == time) {
+                                        document.getElementById('hours').disabled = false;
+                                        timeall[i].selected = true;
+                                    }
                                 }
                             }
-                        }
-                        // бригада
-                        var mounterall = document.getElementById('mounters').options;
-                        for (var i = 0; i < mounterall.length; i++) {
-                            if (mounter != undefined) {
-                                if (mounterall[i].value == mounter) {
-                                    document.getElementById('mounters').disabled = false;
-                                    mounterall[i].selected = true;
+                            // бригада
+                            var mounterall = document.getElementById('mounters').options;
+                            for (var i = 0; i < mounterall.length; i++) {
+                                if (mounter != undefined) {
+                                    if (mounterall[i].value == mounter) {
+                                        document.getElementById('mounters').disabled = false;
+                                        mounterall[i].selected = true;
+                                    }
                                 }
                             }
-                        }
-                        // инфа о бригаде
-                        jQuery("#mounters_names").empty();
-                        AllMounters = <?php echo json_encode($AllMounters) ?>;
-                        AllMounters.forEach(elem => {
-                            if (mounter == elem.id_brigade) {
-                                jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
-                            }
-                        });
-                        // монтажи
-                        jQuery("#projects_brigade_container").empty();
-                        var table_projects3 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
-                        table_projects3 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
-                        Array.from(DataOfProject).forEach(function(element) {
-                            if (element.project_mounter == mounter) {
-                                table_projects3 += '<tr><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
-                            }
-                        });
-                        table_projects3 += "</table>";
-                        jQuery("#projects_brigade_container").append(table_projects3);
-                    }, 200);
+                            // инфа о бригаде
+                            jQuery("#mounters_names").empty();
+                            AllMounters = <?php echo json_encode($AllMounters) ?>;
+                            AllMounters.forEach(elem => {
+                                if (mounter == elem.id_brigade) {
+                                    jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
+                                }
+                            });
+                            // монтажи
+                            jQuery("#projects_brigade_container").empty();
+                            var table_projects3 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
+                            table_projects3 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                            Array.from(DataOfProject).forEach(function(element) {
+                                if (element.project_mounter == mounter) {
+                                    table_projects3 += '<tr><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                                }
+                            });
+                            table_projects3 += "</table>";
+                            jQuery("#projects_brigade_container").append(table_projects3);
+                        }, 200);
+                    }
                 }
                 // запрет выбора монтажника, если монтаж в статусе недовыполнен
                 if (<?php echo $this->item->project_status ?> == 17) {
