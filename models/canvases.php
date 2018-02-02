@@ -102,27 +102,20 @@ if (empty($list['direction']))
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
-        $query->from('`#__gm_ceiling_canvases_all` AS roller')
-            ->join('LEFT', '`#__gm_ceiling_canvases` AS canvas ON canvas.id = roller.id_canvas')
+        $query->from('`#__gm_ceiling_canvases` AS canvas')
+            ->join('LEFT', '`#__gm_ceiling_canvases_all` AS roller ON roller.id_canvas = canvas.id')
             ->join('LEFT', '`#__gm_ceiling_textures` AS texture ON texture.id = canvas.texture_id')
             ->join('LEFT', '`#__gm_ceiling_colors` AS color ON color.id = canvas.color_id');
 
-        $query->select('roller.id as roller_id, roller.barcode, roller.article, roller.stock, roller.type, roller.quad, roller.points')
-            ->select('canvas.id as canvas_id, canvas.name, canvas.country, canvas.width, canvas.price, canvas.count')
+        $query->select('canvas.id as canvas_id, canvas.name as canvas_name, canvas.country as canvas_country, '
+            . 'canvas.width as canvas_width, canvas.price as canvas_price, canvas.count as canvas_count')
+            ->select('roller.id as roller_id, roller.barcode as roller_barcode, roller.article as roller_article, '
+            . 'roller.stock as roller_stock, roller.type as roller_type, roller.quad as roller_quad')
             ->select('color.id as color_id, color.title as color_title, color.file as color_file, color.hex as color_hex')
-            ->select('texture.id as texture_id, texture.texture_title, texture.texture_colored');
+            ->select('texture.id as texture_id, texture.texture_title as texture_title, '
+                . ' texture.texture_colored as texture_colored');
 
         $query->group('canvas.country, canvas.name, canvas.width, roller.id');
-
-        $search = $this->getState('filter.search');
-        if (!empty($search)) {
-            if (stripos($search, 'id:') === 0) {
-                $query->where('a.id = ' . (int)substr($search, 3));
-            } else {
-                $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                $query->where('( a.title LIKE ' . $search . '  OR  component.unit LIKE ' . $search . '  OR a.price LIKE ' . $search . ' )');
-            }
-        }
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
@@ -133,6 +126,7 @@ if (empty($list['direction']))
         }
 
         $this->setState('list.limit', null);
+
         return $query;
     }
 
@@ -143,6 +137,138 @@ if (empty($list['direction']))
      */
     public function getItems()
     {
+        try {
+            $user = JFactory::getUser();
+            $user->groups = $user->get('groups');
+            $stock = in_array(19, $user->groups);
+
+            $db = $this->getDbo();
+
+            $items = parent::getItems();
+
+            $result = [];
+
+            $canvas_id = null;
+            $roller_id = null;
+
+            foreach ($items as $item) {
+                $query = $db->getQuery(true);
+                $query->from("`#__gm_ceiling_analytics_canvas`")
+                    ->select("MAX(price) as price")
+                    ->where("roller_id = '$item->roller_id'")
+                    ->where("status = 1");
+                $db->setQuery($query);
+                $item->pprice = $db->loadObject()->price;
+                $item->pprice = (empty($item->pprice) ? "Нет" : $item->pprice);
+
+                $query = $db->getQuery(true);
+                $query->from("`#__gm_ceiling_stocks`")
+                    ->select("min_name as name")
+                    ->where("id = '$item->good_stock'");
+                $db->setQuery($query);
+                $item->stock_name = $db->loadObject()->name;
+
+                if (empty($result[$item->canvas_id])) {
+                    $canvas = (object)[];
+                    $canvas->name = $item->canvas_name;
+                    $canvas->country = $item->canvas_country;
+                    $canvas->width = $item->canvas_width;
+                    $canvas->price = $item->canvas_price;
+                    $canvas->count = $item->canvas_count;
+                    $canvas->texture_title = $item->texture_title;
+                    $canvas->texture_colored = $item->texture_colored;
+                    $canvas->color_title = $item->color_title;
+                    $canvas->color_file = $item->color_file;
+                    $canvas->color_hex = $item->color_hex;
+                    $canvas->ocount = getOCount($item->canvas_id);
+                    $canvas->rollers = [];
+
+                    $result[$item->canvas_id] = $canvas;
+                }
+
+                $roller = (object)[];
+                $roller->barcode = $item->roller_barcode;
+                $roller->article = $item->roller_article;
+                $roller->stock = $item->roller_stock;
+                $roller->type = $item->roller_type;
+                $roller->quad = $item->roller_quad;
+                $roller->pprice = $item->pprice;
+
+                $result[$item->canvas_id]->rollers[$item->roller_id] = $roller;
+
+                if ($roller_id != $item->roller_id) {
+                    $roller_id = $item->roller_id;
+                }
+
+                if ($canvas_id != $item->canvas_id) {
+                    if (isset($option_id)) {
+                        $tempOption = $result[$canvas_id];
+                        foreach ($tempOption->rollers as $v) {
+                            if (empty($tempOption->pprice) || $v->pprice > $tempOption->pprice) {
+                                $tempOption->pprice = $v->pprice;
+                            }
+                        }
+                        $result[$canvas_id] = $tempOption;
+                    }
+                    $option_id = $item->option_id;
+                }
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    private function getOCount($canvas_id) {
+        $db = $this->getDbo();
+
+        $TempDate = (object) [];
+        $TempDate->YDateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m"), 1, date("Y") - 1));
+        $TempDate->YDateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m") + 1, 1, date("Y") - 1));
+        $TempDate->MDateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m") - 1, 1, date("Y")));
+        $TempDate->MDateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m"), 1, date("Y")));
+        $TempDate->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, date("m"), 1, date("Y")));
+        $TempDate->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, date("m") + 1, 1, date("Y")));
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_canvases`")
+            ->select("SUM(count) as count")
+            ->where("(date_update > '$TempDate->YDateStart' AND date_update < '$TempDate->YDateEnd')")
+            ->where("status = '1'")
+            ->where("canvas_if = '$canvas_id'");
+        $db->setQuery($query);
+        $YCount = $db->loadObject()->count;
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_canvases`")
+            ->select("SUM(count) as count")
+            ->where("(date_update > '$TempDate->MDateStart' AND date_update < '$TempDate->MDateEnd')")
+            ->where("status = '1'")
+            ->where("canvas_id = '$canvas_id'");
+        $db->setQuery($query);
+        $MCount = $db->loadObject()->count;
+
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_canvases`")
+            ->select("SUM(count) as count")
+            ->where("(date_update > '$TempDate->DateStart' AND date_update < '$TempDate->DateEnd')")
+            ->where("status = '1'")
+            ->where("canvas_id = '$canvas_id'");
+        $db->setQuery($query);
+        $Count = $db->loadObject()->count;
+
+        $result = ceil((floatval($YCount) + floatval($MCount)) / 2);
+        $result -= ($result < $Count)?0:$Count;
+        return $result;
+    }
+
+
+
+        /*
         $items = parent::getItems();
         $user = JFactory::getUser();
         $dealer = JFactory::getUser($user->dealer_id);
@@ -214,7 +340,8 @@ if (empty($list['direction']))
             }
         }
         return $result;
-    }
+
+    }*/
 
     //KM_CHANGED START
 
@@ -574,6 +701,31 @@ if (empty($list['direction']))
                 ->where("id = $data->id");
             $db->setQuery($query);
             $db->execute();
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getPrice($data) {
+        try
+        {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->from("`#__gm_ceiling_canvases`")
+                ->select("id, price");
+
+            if (gettype($data) == "array")
+                $query->where("id in (" . implode(", ", $data) . ")");
+            else if (gettype($data) == "string" || gettype($data) == "integer")
+                $query->where("id = '$data'");
+
+            $db->setQuery($query);
+            return $db->loadObjectList();
         }
         catch(Exception $e)
         {
