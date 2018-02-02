@@ -134,7 +134,7 @@
 
 <h2>Просмотр проекта</h2>
 <form id="form-client">
-<?php if ($this->item) {?>
+<?php if ($this->item) { ?>
     <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
     <?php if (sizeof($calculations) > 0) { ?>
         <?php echo "<h3>Расчеты для проекта № ".$this->item->id." </h3>"; ?>
@@ -543,7 +543,6 @@
                     </tr>
                     <? }?>
                 </table>
-                </form>
                 <?php if ($user->dealer_type == 2) { ?>
                     <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
                         формирование заказа
@@ -811,6 +810,7 @@
             <?php } ?>
         </div>
     <?php } ?>
+    </form>
     <div class="container">
         <div class="row" style="padding-top: 1em;">
             <div class="col-xl-6 item_fields project-edit front-end-edit">
@@ -956,7 +956,7 @@
                                 <th>Замерщик</th>
                                 <?php 
                                     $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                                    $gauger = $gauger_model->getMount($this->item->id); 
+                                    $gauger = $gauger_model->getGauger($this->item->id); 
                                 ?>
                                 <td><?php echo $gauger->name; ?></td>
                             <?php } else { ?>
@@ -1034,22 +1034,22 @@
                 </form>
             </div>
             <?php if($user->dealer_type == 0) { ?>
-            <div class="col-xl-6">
-                <div class="comment">
-                    <label style="font-weight: bold;"> История клиента: </label>
-                    <textarea id="comments" class="input-comment" rows=11 readonly style="resize: none; outline: none;"></textarea>
-                    <table>
-                        <tr>
-                            <td><label style="font-weight: bold;"> Добавить комментарий: </label></td>
-                        </tr>
-                        <tr>
-                            <td width = 100%><textarea  style="resize: none;" class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                            <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button></td>
-                        </tr>
-                    </table>
+                <div class="col-xl-6">
+                    <div class="comment">
+                        <label style="font-weight: bold;"> История клиента: </label>
+                        <textarea id="comments" class="input-comment" rows=11 readonly style="resize: none; outline: none;"></textarea>
+                        <table>
+                            <tr>
+                                <td><label style="font-weight: bold;"> Добавить комментарий: </label></td>
+                            </tr>
+                            <tr>
+                                <td width = 100%><textarea  style="resize: none;" class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-            </div>
             <? } ?>
         </div>
     </div>
@@ -1370,9 +1370,9 @@
                                 var emptytd = 0;
                                 Array.from(data).forEach(function(elementProject) {
                                     if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                        var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                                        var timesession_gauger = jQuery("#jform_project_new_calc_date").val();
                                         var gaugersession = jQuery("#jform_project_gauger").val();
-                                        if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                        if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession_gauger.substr(11)) {
                                             TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                                         } else {
                                             TableForSelect += '<tr><td></td>';
@@ -1403,13 +1403,14 @@
                         var times = jQuery("input[name='choose_time_gauger']");
                         if (timesession_gauger != undefined) {
                             times.each(function(element) {
-                                if (timesession_gauger == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                if (timesession_gauger.substr(11) == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
                                     jQuery(this).prop("checked", true);
                                 }
                             });
                         }
                     }, 200);
-                } else if (time_gauger != undefined) {
+                }
+                if (time_gauger != undefined) {
                     setTimeout(function() { 
                         var times = jQuery("input[name='choose_time_gauger']");
                         times.each(function(element) {
@@ -1629,8 +1630,8 @@
                     gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
                 }
             });
-            jQuery("#jform_new_project_calculation_daypart").val(time_gauger);
-            jQuery("#jform_project_new_calc_date").val(date);
+            datetime_gauger = date+" "+time_gauger;
+            jQuery("#jform_project_new_calc_date").val(datetime_gauger);
             jQuery("#jform_project_gauger").val(gauger);
             if (jQuery(".change").length == 0) {
                 jQuery("#"+idDay).addClass("change");
@@ -1752,7 +1753,7 @@
                 var email = jQuery("#all-email1").val();
                 var client_id = jQuery("#client_id").val();
                 var dop_file = jQuery("#dop_file").serialize();
-                var testfilename = "<?php echo $json;?>";
+                var testfilename = <?php if (isset($json)) { echo $json;} ?>;
                 var filenames = [];
                 for (var i = 0; i < testfilename.length; i++) {
                     var id = testfilename[i].id;
@@ -1821,7 +1822,7 @@
             });
             jQuery("#send_all_to_email2").click(function () {
                 var email = jQuery("#all-email2").val();
-                var testfilename = "<?php echo $json1;?>";
+                var testfilename = <?php if (isset($json1)) { echo $json1;} ?>;
                 var filenames = [];
                 for (var i = 0; i < testfilename.length; i++) {
                     var id = testfilename[i].id;

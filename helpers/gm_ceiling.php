@@ -168,377 +168,389 @@ class Gm_ceilingHelpersGm_ceiling
 		$print_components - 0,1 флаг возвращения расчета при вызове в переменную
 	*/
     public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount){
-        $jinput = JFactory::getApplication()->input;
-        //Получаем прайс-лист комплектующих
-        $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-        $components_list = $components_model->getFilteredItems();
-        foreach ($components_list as $i => $component) {
-            $components[$component->id] = $component;
-        }
-        //Получаем прайс-лист полотен
-        $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-        $canvases_list = $canvases_model->getFilteredItemsCanvas();
-        foreach ($canvases_list as $i => $canvas) {
-            $canvases[$canvas->id] = $canvas;
-        }
-        //Получаем данные
-        $send_client_cost = $jinput->get('send_client_cost', '0', 'INT');
-        $new_client = $jinput->get('new_client', '0', 'INT');
-        $flag = $jinput->get('flag', '0', 'INT');
-        if ($from_db == 1) {
-            //Загружаем из БД
-            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-            $calculation_data = $calculation_model->getData($calculation_id);
-            foreach ($calculation_data as $key => $item) {
-                $data[$key] = $item;
+        try{
+            $jinput = JFactory::getApplication()->input;
+            //Получаем прайс-лист комплектующих
+            $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $components_list = $components_model->getFilteredItems();
+            foreach ($components_list as $i => $component) {
+                $components[$component->id] = $component;
             }
-            //throw  new Exception("Test", 3);
-            $data['n1'] = $calculation_data->n1_id;
-            $data['n2'] = $calculation_data->n2_id;
-            $data['n3'] = $calculation_data->n3_id;
-        } else {
-            //Получаем из запроса
-            $data = $jinput->getArray(array(
-                'jform' => array(
-                    'id' => 'int', //id потолка
-                    'dealer_id' => 'int', //владелец
-                    'n1' => 'int', //тип потолка
-                    'n2' => 'int', //тип фактуры
-                    'n3' => 'int', //Производитель и ширина
-                    'n4' => 'float', //Площадь
-                    'n5' => 'float', //Периметр
-                    'n6' => 'int', //Со вставкой
-                    'n7' => 'float', //Крепление в плитку
-                    'n8' => 'float', //Крепление в керамогранит
-                    'n9' => 'int', //Углы
-                    'n10' => 'float', //Криволинейный участок
-                    'n11' => 'float', //Внутренний вырез
-                    'n12' => 'int', //Упрощенные люстры
-                    'n13' => 'int', //Упрощенные светильники
-                    'n14' => 'int', //Упрощенные обводы труб
-                    'n15' => 'int', //Шторный карниз
-                    'n16' => 'int', //Скрытый карниз
-                    'n17' => 'float', //Закладная брусом
-                    'n18' => 'float', //Укрепление стены
-                    'n19' => 'float', //Провод
-                    'n20' => 'float', //Разделитель
-                    'n21' => 'float', //Пожарная сигнализация
-                    'n22' => 'int',
-                    'n23' => 'int',
-                    'n24' => 'float', //Сложность к месту доступа
-                    'n25' => 'int',
-                    'n26' => 'int',
-                    'n27' => 'float',
-                    'n28' => 'int',
-                    'n29' => 'float',
-                    'n30' => 'float',
-                    'n31' => 'float',
-                    'n32' => 'int',
-                    'height'=>'int',
-                    'distance' => 'float',
-                    'distance_col' => 'int',
-                    'dop_krepezh' => 'float', //Доп. крепеж
-                    'transport' => 'int', //Транспортные расходы
-                    'calculation_title' => 'string',
-                    'project_id' => 'int',
-                    'send_email' => 'string', //адрес почты клиента
-                    'sketch_name' => 'string', //имя чертежа
-                    'cut_name' => 'string',//имя раскроя
-                    'color' => 'string', //цвет
-                    'details' => 'string', //цвет
-                    'offcut_square' => 'float',
-                    'discount' => 'int',
-                    'original_name' => 'string',
-                    'cuts' => 'string',
-                    'rek' => 'int'
-                )
-            ));
-            $data = $data['jform'];
-
-            $data['n3'] = ($_SESSION['n3']) ? ($_SESSION['n3']) : $data['n3'];
-            if($data['n2'] == 0) {
-                $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;
+            //Получаем прайс-лист полотен
+            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            $canvases_list = $canvases_model->getFilteredItemsCanvas();
+            foreach ($canvases_list as $i => $canvas) {
+                $canvases[$canvas->id] = $canvas;
             }
-            //ecola
-            $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
-            $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
-            $ecola_lamps = $jinput->get('light_lamp_color', array(), 'ARRAY');
-            $n26 = array();
-            if (count($ecola_count) >= 1 && !empty($ecola_count[0])) {
-                foreach ($ecola_count as $key => $each) {
-                    if ($ecola_count[$key] != "")
-                        $n26[] = array(
-                            $ecola_count[$key],
-                            $ecola_type[$key],
-                            $ecola_lamps[$key]
-                        );
+            //Получаем данные
+            if ($from_db == 1) {
+                //Загружаем из БД
+                $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                $calculation_data = $calculation_model->getData($calculation_id);
+                foreach ($calculation_data as $key => $item) {
+                    $data[$key] = $item;
                 }
-                $data['n26'] = json_encode($n26);
-            }
-
-            //Получаем массив из переменной светильников
-            $n13_count = $jinput->get('n13_count', array(), 'ARRAY');
-            $n13_type = $jinput->get('n13_type', array(), 'ARRAY');
-            $n13_ring = $jinput->get('n13_ring', array(), 'ARRAY');
-            $n13 = array();
-            if (count($n13_count) >= 1 && !empty($n13_count[0])) {
-                foreach ($n13_count as $key => $each) {
-                    if ($n13_count[$key] != "")
-                        $n13[] = array(
-                            $n13_count[$key],
-                            $n13_type[$key],
-                            $n13_ring[$key]
-                        );
-                }
-                $data['n13'] = json_encode($n13);
-            }
-            //Получаем массив из переменной обвода труб
-            $n14_count = $jinput->get('n14_count', array(), 'ARRAY');
-            $n14_type = $jinput->get('n14_type', array(), 'ARRAY');
-            $n14 = array();
-            if (count($n14_count) >= 1 && !empty($n14_count[0])) {
-                foreach ($n14_count as $key => $each) {
-                    $n14[] = array(
-                        $n14_count[$key],
-                        $n14_type[$key]
-                    );
-                }
-                $data['n14'] = json_encode($n14);
-            }
-            //Получаем массив из переменной вентиляции
-            $n22_count = $jinput->get('n22_count', array(), 'ARRAY');
-            $n22_type = $jinput->get('n22_type', array(), 'ARRAY');
-            $n22_diam = $jinput->get('n22_diam', array(), 'ARRAY');
-            $n22 = array();
-            if (count($n22_count) >= 1 && !empty($n22_count[0])) {
-
-                foreach ($n22_count as $key => $each) {
-                    $n22[] = array(
-                        $n22_count[$key],
-                        $n22_type[$key],
-                        $n22_diam[$key]
-                    );
-                }
-                $data['n22'] = json_encode($n22);
-
-            }
-            $n23_count = $jinput->get('n23_count', array(), 'ARRAY');
-            $n23_size = $jinput->get('n23_size', array(), 'ARRAY');
-            $n23 = array();
-            if (count($n23_count) >= 1 && !empty($n23_count[0])) {
-                foreach ($n23_count as $key => $each) {
-                    $n23[] = array(
-                        $n23_count[$key],
-                        $n23_size[$key]
-                    );
-                }
-                $data['n23'] = json_encode($n23);
-            }
-
-            $n15_count = $jinput->get('n15_count', array(), 'ARRAY');
-            $n15_type = $jinput->get('n15_type', array(), 'ARRAY');
-            $n15_size = $jinput->get('n15_size', array(), 'ARRAY');
-            $n15 = array();
-            if (count($n15_count) >= 1 && !empty($n15_count[0])) {
-                foreach ($n15_count as $key => $each) {
-                    if ($n15_count[$key] != "")
-                        $n15[] = array(
-                            $n15_count[$key],
-                            $n15_type[$key],
-                            $n15_size[$key]
-                        );
-                }
-                $data['n15'] = json_encode($n15);
-            }
-
-            $n29_count = $jinput->get('n29_count', array(), 'ARRAY');
-            $n29_type = $jinput->get('n29_type', array(), 'ARRAY');
-            //$n29_profil = $jinput->get('n29_profil', array(), 'ARRAY');
-            $n29 = array();
-            if (count($n29_count) >= 1 && !empty($n29_count[0])) {
-                foreach ($n29_count as $key => $each) {
-                    if ($n29_count[$key] != "")
-                        $n29[] = array(
-                            $n29_count[$key],
-                            $n29_type[$key]
-                            //$n29_profil[$key]
-                        );
-                }
-                $data['n29'] = json_encode($n29);
-            }
-
-            //Получаем массив из переменной дополнительных комплектующих со склада
-            $components_title_stock = $jinput->get('components_title_stock', '-', 'ARRAY');
-            $components_value_stock = $jinput->get('components_value_stock', '-', 'ARRAY');
-            $components_stock = array();
-            if ($components_title_stock !== '-') {
-                foreach ($components_title_stock as $key => $title) {
-                    if (!empty($title) && $components_value_stock[$key]) {
-                        $components_stock[] = array(
-                            'title' => $title,
-                            'value' => $components_value_stock[$key]
-                        );
-                    }
-                }
-            }
-            $data['components_stock'] = json_encode($components_stock, JSON_FORCE_OBJECT);
-
-            //Получаем массив из переменной дополнительных комплектующих
-            $extra_components_title = $jinput->get('extra_components_title', '-', 'ARRAY');
-            $extra_components_value = $jinput->get('extra_components_value', '-', 'ARRAY');
-            $extra_components = array();
-            if ($extra_components_title !== '-') {
-                foreach ($extra_components_title as $key => $title) {
-                    if (!empty($title) && $extra_components_value[$key]) {
-                        $extra_components[] = array(
-                            'title' => $title,
-                            'value' => $extra_components_value[$key]
-                        );
-                    }
-                }
-            }
-            $data['extra_components'] = json_encode($extra_components, JSON_FORCE_OBJECT);
-
-            //Получаем массив из переменной дополнительных монтажных работ
-            $extra_mounting_title = $jinput->get('extra_mounting_title', '-', 'ARRAY');
-            $extra_mounting_value = $jinput->get('extra_mounting_value', '-', 'ARRAY');
-            $extra_mounting = array();
-            if ($extra_mounting_title !== '-') {
-                foreach ($extra_mounting_title as $key => $title) {
-                    if (!empty($title) && $extra_mounting_value[$key]) {
-                        $extra_mounting[] = array(
-                            'title' => $title,
-                            'value' => $extra_mounting_value[$key]
-                        );
-                    }
-                }
-            }
-            $data['extra_mounting'] = json_encode($extra_mounting, JSON_FORCE_OBJECT);
-
-        }
-        if($data['n2'] == 29){
-            $data['n1'] = 29;
-        } 
-        //Получаем объект дилера
-        if (gettype($data) == "array")
-        {
-            if (empty($data['dealer_id'])) {
-                $dealer = JFactory::getUser(2);
+                //throw  new Exception("Test", 3);
+                $data['n1'] = $calculation_data->n1_id;
+                $data['n2'] = $calculation_data->n2_id;
+                $data['n3'] = $calculation_data->n3_id;
             } else {
-                $dealer = JFactory::getUser($data['dealer_id']);
+                //Получаем из запроса
+                $data = $jinput->getArray(array(
+                    'jform' => array(
+                        'id' => 'int', //id потолка
+                        'dealer_id' => 'int', //владелец
+                        'n1' => 'int', //тип потолка
+                        'n2' => 'int', //тип фактуры
+                        'n3' => 'int', //Производитель и ширина
+                        'n4' => 'float', //Площадь
+                        'n5' => 'float', //Периметр
+                        'n6' => 'int', //Со вставкой
+                        'n7' => 'float', //Крепление в плитку
+                        'n8' => 'float', //Крепление в керамогранит
+                        'n9' => 'int', //Углы
+                        'n10' => 'float', //Криволинейный участок
+                        'n11' => 'float', //Внутренний вырез
+                        'n12' => 'int', //Упрощенные люстры
+                        'n13' => 'int', //Упрощенные светильники
+                        'n14' => 'int', //Упрощенные обводы труб
+                        'n15' => 'int', //Шторный карниз
+                        'n16' => 'int', //Скрытый карниз
+                        'n17' => 'float', //Закладная брусом
+                        'n18' => 'float', //Укрепление стены
+                        'n19' => 'float', //Провод
+                        'n20' => 'float', //Разделитель
+                        'n21' => 'float', //Пожарная сигнализация
+                        'n22' => 'int',
+                        'n23' => 'int',
+                        'n24' => 'float', //Сложность к месту доступа
+                        'n25' => 'int',
+                        'n26' => 'int',
+                        'n27' => 'float',
+                        'n28' => 'int',
+                        'n29' => 'float',
+                        'n30' => 'float',
+                        'n31' => 'float',
+                        'n32' => 'int',
+                        'height'=>'int',
+                        'distance' => 'float',
+                        'distance_col' => 'int',
+                        'dop_krepezh' => 'float', //Доп. крепеж
+                        'transport' => 'int', //Транспортные расходы
+                        'calculation_title' => 'string',
+                        'project_id' => 'int',
+                        'send_email' => 'string', //адрес почты клиента
+                        'sketch_name' => 'string', //имя чертежа
+                        'cut_name' => 'string',//имя раскроя
+                        'color' => 'string', //цвет
+                        'details' => 'string', //цвет
+                        'offcut_square' => 'float',
+                        'discount' => 'int',
+                        'original_name' => 'string',
+                        'cuts' => 'string',
+                        'rek' => 'int'
+                    )
+                ));
+                $data = $data['jform'];
+                if(!empty($data['n2']) && !empty($data['proizv']) && !empty($data['n3'])){
+                    $color = $data['color'];
+                    $color_filter = $color ? "= " .$color : "IS NULL";            
+                    $filter = "texture_id = ".$data['n2']." AND name = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
+                    $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+                    $items = $model->getIdFilteredItems($filter);
+                    if(count($items)>0){
+                        $data['n3'] = $items[0]->id;
+                    }
+                }
+                if($data['n2'] == 0) {
+                    $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;
+                }
+                //ecola
+                $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
+                $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
+                $ecola_lamps = $jinput->get('light_lamp_color', array(), 'ARRAY');
+                $n26 = array();
+                if (count($ecola_count) >= 1 && !empty($ecola_count[0])) {
+                    foreach ($ecola_count as $key => $each) {
+                        if ($ecola_count[$key] != "")
+                            $n26[] = array(
+                                $ecola_count[$key],
+                                $ecola_type[$key],
+                                $ecola_lamps[$key]
+                            );
+                    }
+                    $data['n26'] = json_encode($n26);
+                }
+
+                //Получаем массив из переменной светильников
+                $n13_count = $jinput->get('n13_count', array(), 'ARRAY');
+                $n13_type = $jinput->get('n13_type', array(), 'ARRAY');
+                $n13_ring = $jinput->get('n13_ring', array(), 'ARRAY');
+                $n13 = array();
+                if (count($n13_count) >= 1 && !empty($n13_count[0])) {
+                    foreach ($n13_count as $key => $each) {
+                        if ($n13_count[$key] != "")
+                            $n13[] = array(
+                                $n13_count[$key],
+                                $n13_type[$key],
+                                $n13_ring[$key]
+                            );
+                    }
+                    $data['n13'] = json_encode($n13);
+                }
+                //Получаем массив из переменной обвода труб
+                $n14_count = $jinput->get('n14_count', array(), 'ARRAY');
+                $n14_type = $jinput->get('n14_type', array(), 'ARRAY');
+                $n14 = array();
+                if (count($n14_count) >= 1 && !empty($n14_count[0])) {
+                    foreach ($n14_count as $key => $each) {
+                        $n14[] = array(
+                            $n14_count[$key],
+                            $n14_type[$key]
+                        );
+                    }
+                    $data['n14'] = json_encode($n14);
+                }
+                //Получаем массив из переменной вентиляции
+                $n22_count = $jinput->get('n22_count', array(), 'ARRAY');
+                $n22_type = $jinput->get('n22_type', array(), 'ARRAY');
+                $n22_diam = $jinput->get('n22_diam', array(), 'ARRAY');
+                $n22 = array();
+                if (count($n22_count) >= 1 && !empty($n22_count[0])) {
+
+                    foreach ($n22_count as $key => $each) {
+                        $n22[] = array(
+                            $n22_count[$key],
+                            $n22_type[$key],
+                            $n22_diam[$key]
+                        );
+                    }
+                    $data['n22'] = json_encode($n22);
+
+                }
+                $n23_count = $jinput->get('n23_count', array(), 'ARRAY');
+                $n23_size = $jinput->get('n23_size', array(), 'ARRAY');
+                $n23 = array();
+                if (count($n23_count) >= 1 && !empty($n23_count[0])) {
+                    foreach ($n23_count as $key => $each) {
+                        $n23[] = array(
+                            $n23_count[$key],
+                            $n23_size[$key]
+                        );
+                    }
+                    $data['n23'] = json_encode($n23);
+                }
+
+                $n15_count = $jinput->get('n15_count', array(), 'ARRAY');
+                $n15_type = $jinput->get('n15_type', array(), 'ARRAY');
+                $n15_size = $jinput->get('n15_size', array(), 'ARRAY');
+                $n15 = array();
+                if (count($n15_count) >= 1 && !empty($n15_count[0])) {
+                    foreach ($n15_count as $key => $each) {
+                        if ($n15_count[$key] != "")
+                            $n15[] = array(
+                                $n15_count[$key],
+                                $n15_type[$key],
+                                $n15_size[$key]
+                            );
+                    }
+                    $data['n15'] = json_encode($n15);
+                }
+
+                $n29_count = $jinput->get('n29_count', array(), 'ARRAY');
+                $n29_type = $jinput->get('n29_type', array(), 'ARRAY');
+                //$n29_profil = $jinput->get('n29_profil', array(), 'ARRAY');
+                $n29 = array();
+                if (count($n29_count) >= 1 && !empty($n29_count[0])) {
+                    foreach ($n29_count as $key => $each) {
+                        if ($n29_count[$key] != "")
+                            $n29[] = array(
+                                $n29_count[$key],
+                                $n29_type[$key]
+                                //$n29_profil[$key]
+                            );
+                    }
+                    $data['n29'] = json_encode($n29);
+                }
+
+                //Получаем массив из переменной дополнительных комплектующих со склада
+                $components_title_stock = $jinput->get('components_title_stock', '-', 'ARRAY');
+                $components_value_stock = $jinput->get('components_value_stock', '-', 'ARRAY');
+                $components_stock = array();
+                if ($components_title_stock !== '-') {
+                    foreach ($components_title_stock as $key => $title) {
+                        if (!empty($title) && $components_value_stock[$key]) {
+                            $components_stock[] = array(
+                                'title' => $title,
+                                'value' => $components_value_stock[$key]
+                            );
+                        }
+                    }
+                }
+                $data['components_stock'] = json_encode($components_stock, JSON_FORCE_OBJECT);
+
+                //Получаем массив из переменной дополнительных комплектующих
+                $extra_components_title = $jinput->get('extra_components_title', '-', 'ARRAY');
+                $extra_components_value = $jinput->get('extra_components_value', '-', 'ARRAY');
+                $extra_components = array();
+                if ($extra_components_title !== '-') {
+                    foreach ($extra_components_title as $key => $title) {
+                        if (!empty($title) && $extra_components_value[$key]) {
+                            $extra_components[] = array(
+                                'title' => $title,
+                                'value' => $extra_components_value[$key]
+                            );
+                        }
+                    }
+                }
+                $data['extra_components'] = json_encode($extra_components, JSON_FORCE_OBJECT);
+
+                //Получаем массив из переменной дополнительных монтажных работ
+                $extra_mounting_title = $jinput->get('extra_mounting_title', '-', 'ARRAY');
+                $extra_mounting_value = $jinput->get('extra_mounting_value', '-', 'ARRAY');
+                $extra_mounting = array();
+                if ($extra_mounting_title !== '-') {
+                    foreach ($extra_mounting_title as $key => $title) {
+                        if (!empty($title) && $extra_mounting_value[$key]) {
+                            $extra_mounting[] = array(
+                                'title' => $title,
+                                'value' => $extra_mounting_value[$key]
+                            );
+                        }
+                    }
+                }
+                $data['extra_mounting'] = json_encode($extra_mounting, JSON_FORCE_OBJECT);
+
             }
-        } else {
-            if (empty($data->dealer_id)) {
-                $dealer = JFactory::getUser(2);
+            if($data['n2'] == 29){
+                $data['n1'] = 29;
+            } 
+            //Получаем объект дилера
+            if (gettype($data) == "array")
+            {
+                if (empty($data['dealer_id'])) {
+                    $dealer = JFactory::getUser(2);
+                } else {
+                    $dealer = JFactory::getUser($data['dealer_id']);
+                }
             } else {
-                $dealer = JFactory::getUser($data->dealer_id);
+                if (empty($data->dealer_id)) {
+                    $dealer = JFactory::getUser(2);
+                } else {
+                    $dealer = JFactory::getUser($data->dealer_id);
+                }
             }
-        }
-        //cчитаем полотно
-        $canvases_data = self::calculate_canvases(null,$data);
-        //считаем обрезки
-        $offcut_square_data = self::calculate_offcut(null,$data);
-        //считаем комплектующие
-        $components_data = self::calculate_components(null,$data,$del_flag);
-        //считаем монтаж
-        $mounting_data = self::calculate_mount($del_flag,null,$data);   
-        //счиатем работы ГМ     
-        $guild_data = self::calculate_guild_jobs(null,$data);
-        //Итоговая сумма компонентов
-        $total_sum = 0;
-        //Прибавляем к подсчету комплектующие
-        $components_sum = 0;
-        $gm_components_sum = 0;
-        $dealer_components_sum = 0;
-        foreach ($components_data as $component_item) {
-            $components_sum += $component_item['self_total'];
-            $gm_components_sum += $component_item['gm_total'];
-            $dealer_components_sum += $component_item['dealer_total'];
-        }
-        $total_with_gm_dealer_margin  = $mounting_data['total_with_gm_dealer_margin'];
-        $total_with_gm_dealer_margin_guild = $mounting_data['total_with_gm_dealer_margin_guild'];
-        $total_gm_mounting = $mounting_data['total_gm_mounting'];
-        $total_gm_guild = $guild_data['total_gm_guild'];
-        //Получаем скидку
-        $new_discount = $data['discount'];
-        //Сюда забиваем ответ в JSON
-        $ajax_return = array();
-        $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
-        $ajax_return['project_discount'] = $new_discount;
-        $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'];
-        $ajax_return['components_sum'] = $components_sum;
-        $ajax_return['mounting_sum'] = $total_gm_mounting;
-        $ajax_return['mounting_arr'] = $data;
-        $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $total_gm_guild;
-        $data['components_sum'] = $components_sum;
-        $data['mounting_sum'] = $total_gm_mounting;
-        $data['project_discount'] = $dealer->discount;
-        $data["state"] = 1;
-        $data["checked_out"] = 0;
-        $data["checked_out_time"] = "00.00.0000 00:00";
-        $data["created_by"] = $user->id;
-        $data["modified_by"] = $user->id;
-        $db = JFactory::getDBO();
-        $query = 'SELECT `id` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
-        $db->setQuery($query);
-        $calculations = $db->loadObjectList();
-        $k = count($calculations);
-        if ($k > 0) {
-            if (empty($data['calculation_title']))
-                $data['calculation_title'] = "Потолок " . $k;
-        } else if (empty($data['calculation_title']))
-            $data['calculation_title'] = "Потолок 1";
-        //Сохранение калькуляции
-        $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
-        if ($save == 1) {
-            $tmp_filename = $data['sketch_name'];
-            $tmp_cut_filename = $data['cut_name'];
-            $tmp_original_filename = $data['original_name'];
-            $cuts = $data['cuts'];
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-                $data['calc_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt");
+            //cчитаем полотно
+            $canvases_data = self::calculate_canvases(null,$data);
+            //считаем обрезки
+            $offcut_square_data = self::calculate_offcut(null,$data);
+            //считаем комплектующие
+            $components_data = self::calculate_components(null,$data,$del_flag);
+            //считаем монтаж
+            $mounting_data = self::calculate_mount($del_flag,null,$data);   
+            //счиатем работы ГМ     
+            $guild_data = self::calculate_guild_jobs(null,$data);
+            //Итоговая сумма компонентов
+            $total_sum = 0;
+            //Прибавляем к подсчету комплектующие
+            $components_sum = 0;
+            $gm_components_sum = 0;
+            $dealer_components_sum = 0;
+            foreach ($components_data as $component_item) {
+                $components_sum += $component_item['self_total'];
+                $gm_components_sum += $component_item['gm_total'];
+                $dealer_components_sum += $component_item['dealer_total'];
             }
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".txt")) {
-                $data['cut_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".txt");
-            }
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
-                $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
-            }
-            if ($new_client != 1) {
+            $total_with_gm_dealer_margin  = $mounting_data['total_with_gm_dealer_margin'];
+            $total_with_gm_dealer_margin_guild = $mounting_data['total_with_gm_dealer_margin_guild'];
+            $total_gm_mounting = $mounting_data['total_gm_mounting'];
+            $total_gm_guild = $guild_data['total_gm_guild'];
+            //Получаем скидку
+            $new_discount = $data['discount'];
+            //Сюда забиваем ответ в JSON
+            $ajax_return = array();
+            $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
+            $ajax_return['project_discount'] = $new_discount;
+            $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'];
+            $ajax_return['components_sum'] = $components_sum;
+            $ajax_return['mounting_sum'] = $total_gm_mounting;
+            $ajax_return['mounting_arr'] = $data;
+            $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $total_gm_guild;
+            $data['components_sum'] = $components_sum;
+            $data['mounting_sum'] = $total_gm_mounting;
+            $data['project_discount'] = $dealer->discount;
+            $data["state"] = 1;
+            $data["checked_out"] = 0;
+            $data["checked_out_time"] = "00.00.0000 00:00";
+            $data["created_by"] = $user->id;
+            $data["modified_by"] = $user->id;
+            $db = JFactory::getDBO();
+            $query = 'SELECT `id` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
+            $db->setQuery($query);
+            $calculations = $db->loadObjectList();
+            $k = count($calculations);
+            if ($k > 0) {
+                if (empty($data['calculation_title']))
+                    $data['calculation_title'] = "Потолок " . $k;
+            } else if (empty($data['calculation_title']))
+                $data['calculation_title'] = "Потолок 1";
+            //Сохранение калькуляции
+            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
+            if ($save == 1) {
+                $tmp_filename = $data['sketch_name'];
+                $tmp_cut_filename = $data['cut_name'];
+                $tmp_original_filename = $data['original_name'];
+                $cuts = $data['cuts'];
+                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
+                    $data['calc_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt");
+                }
+                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".txt")) {
+                    $data['cut_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".txt");
+                }
+                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
+                    $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
+                }
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
                 $data['id'] = $ajax_return['id'];
+                $filename = md5("calculation_sketch" . $ajax_return['id']);
+                $cut_filename = md5("cut_sketch" . $ajax_return['id']);
+                
+                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg")) {
+                    rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".svg");
+                }
+                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg")) {
+                    rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".svg");
+                }
+                if (!empty($cuts))
+                {
+                    $canvases_model->saveCuts($ajax_return['id'],$cuts);
+                }
             }
-            $filename = md5("calculation_sketch" . $ajax_return['id']);
-            $cut_filename = md5("cut_sketch" . $ajax_return['id']);
+            //Пошла печать PDF
+            if ($pdf == 1) {
+                //наряд монтажной бригаде
+                if($need_mount){
+                    self::create_single_mount_estimate(null,$data,$mounting_data);
+                }       
+                //PDF раскроя
+                self::create_cut_pdf(null,$data);
+                //для менеджера
+                self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
+                //клиентская смета 
+                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,
+                $mounting_data); 
+            }         
+            $return = json_encode($ajax_return);
             
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg")) {
-                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".svg");
-            }
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg")) {
-                rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".svg");
-            }
-            if (!empty($cuts))
-            {
-                $canvases_model->saveCuts($ajax_return['id'],$cuts);
-            }
+            return $return;
         }
-        //Пошла печать PDF
-        if ($pdf == 1) {
-            //наряд монтажной бригаде
-            if($need_mount){
-                self::create_single_mount_estimate(null,$data,$mounting_data);
-            }       
-            //PDF раскроя
-            self::create_cut_pdf(null,$data);
-            //для менеджера
-            self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
-            //клиентская смета 
-            self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,
-            $mounting_data); 
-        }         
-        $return = json_encode($ajax_return);
-        
-        return $return;
+        catch(Exception $e)
+        {
+             $date = date("d.m.Y H:i:s");
+             $files = "components/com_gm_ceiling/";
+             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+             throw new Exception('Ошибка!', 500);
+        }
     }
     public static function create_client_single_estimate($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
     $mounting_data = null){

@@ -1490,35 +1490,6 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
-    public function texturesId($textures,$manufacturer,$width,$color)
-    {
-        try
-        {
-            $color = $color ? "= " .$color : "IS NULL";
-
-            $filter = "texture_id = ".$textures." AND name = '" . $manufacturer . "' AND width = '" . $width . "' AND color_id " . $color . "";
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-            $items = $model->getIdFilteredItems($filter);
-            $_SESSION['n3'] = $items[0]->id;
-            unset($_SESSION['texture'], $_SESSION['manufacturer'], $_SESSION['width'], $_SESSION['color']);
-        }
-        catch(Exception $e)
-        {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
-        }
-    }
-
-    public function isId($n3){
-        $filter = "id = $n3";
-        $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-        $items = $model->getFilteredItems($filter);
-
-        return $items;
-
-    }
     /*  функция для AJAX-запроса расчета потолка из calculationform
         функция вызывает одноименную функцию в файле /helpers/gm_ceiling.php
     */
@@ -1535,18 +1506,6 @@ class Gm_ceilingController extends JControllerLegacy
             $pdf = $jinput->get('pdf', '0', 'INT');
             $need_mount = $jinput->get('need_mount', '0', 'INT');
             $del_flag = $jinput->get('del_flag', '0', 'INT');
-          
-            $data1 = $jinput->getArray(array(
-                'jform' => array(
-                    'n2' => 'int', //тип фактуры
-                    'n3' => 'STRING', //Производитель и ширина
-                    'proizv' => 'STRING',
-                    'color' => 'int'
-                )
-            ));
-            $data1 = $data1['jform'];
-            if(!empty($data1)) $this->texturesId($data1['n2'],$data1['proizv'],$data1['n3'],$data1['color']);
-
             $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount);
             die($result);
          }

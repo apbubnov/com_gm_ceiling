@@ -6,13 +6,18 @@
     width: 200px;
 }
 
-#projects_brigade {
+#projects_brigade, #projects_gaugers {
     width: 100%;
     text-align: center;
+    border-bottom: 1px solid #d3d3f9;
 }
 
-#projects_brigade td {
+#projects_brigade td, #projects_gaugers td {
     border-bottom: 1px solid #d3d3f9;
+}
+
+#projects_brigade th, #projects_gaugers th {
+    text-align: center;
 }
 
 .caption {
