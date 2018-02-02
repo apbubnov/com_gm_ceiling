@@ -8,4 +8,6 @@
     color: rgb(255, 255, 255);
     float: left;
     display: inline-block;
+    text-align: center;
+    padding-left: 10px;
 }

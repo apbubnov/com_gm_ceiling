@@ -360,7 +360,7 @@ if (!empty($calculation_ids)) {
         <?php foreach ($calculation_ids as $value) { ?>
             <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
                 <div class="ceiling">
-                    <img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.png" class="image-ceiling">
+                    <img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.svg" class="image-ceiling">
                 </div>
                 <div class = "overflow">
                     <table id="table-order-<?php echo $value->id; ?>" cols=4 class="table-order">
