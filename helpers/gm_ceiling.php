@@ -2773,7 +2773,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
 
             
-            $filename = md5("mount_single") . ".pdf";
+            $filename = md5($calc_id."mount_single") . ".pdf";
            
             
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
@@ -3286,7 +3286,9 @@ class Gm_ceilingHelpersGm_ceiling
     //Печатаем подготовленные данные в PDF
     public static function save_pdf($html, $filename, $mode, $type = null){
         try{
-            
+            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename)) {
+                unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+            }
             $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->list_indent_first_level = 0;
