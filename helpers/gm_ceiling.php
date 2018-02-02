@@ -2752,9 +2752,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $data = get_object_vars($calculation_model->getData($calc_id));
             }
            // throw new Exception($calc_id);
-           // if(empty($calc_id)){
-            //    $calc_id = $data['id'];
-           // }
+            if(empty($calc_id)){
+                $calc_id = $data['id'];
+            }
             $project_model = self::getModel('project');
             $project = $project_model->getData($data['project_id']);
             $calculations_model = self::getModel('calculations');
@@ -2773,7 +2773,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
 
             
-            $filename = md5($calc_id."mount_single") . ".pdf";
+            $filename = md5($calc_id."1") . ".pdf";
            
             
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
