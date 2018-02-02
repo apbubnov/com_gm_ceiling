@@ -554,7 +554,6 @@ class Gm_ceilingHelpersGm_ceiling
                 self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета 
                 self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
-                throw new Exception("123123");
             }         
             $return = json_encode($ajax_return);
             
@@ -2608,7 +2607,7 @@ class Gm_ceilingHelpersGm_ceiling
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
-                $data = $calculation_model->getData($calc_id);
+                $data = get_objects_vars($calculation_model->getData($calc_id));
             }
         
             $project_model = self::getModel('project');
