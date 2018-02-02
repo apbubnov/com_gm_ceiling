@@ -270,7 +270,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $color = $data['color'];
                 $color_filter = $color ? "= " .$color : "IS NULL";       
                 $filter = "texture_id = ".$data['n2']." and `name` = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
-               
                 $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
                 $items = $model->getIdFilteredItems($filter);
                 if(count($items)>0){
@@ -525,8 +524,9 @@ class Gm_ceilingHelpersGm_ceiling
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
+               
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
-                $data['id'] = $ajax_return['id'];
+                //$data['id'] = $ajax_return['id'];
                 $filename = md5("calculation_sketch" . $ajax_return['id']);
                 $cut_filename = md5("cut_sketch" . $ajax_return['id']);
                 
@@ -543,6 +543,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //Пошла печать PDF
             if ($pdf == 1) {
+               
                 //наряд монтажной бригаде
                 if($need_mount){
                     self::create_single_mount_estimate(null,$data,$mounting_data);
@@ -552,8 +553,8 @@ class Gm_ceilingHelpersGm_ceiling
                 //для менеджера
                 self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета 
-                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,
-                $mounting_data); 
+                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
+                throw new Exception("123123");
             }         
             $return = json_encode($ajax_return);
             
@@ -2736,24 +2737,36 @@ class Gm_ceilingHelpersGm_ceiling
             return $html;
     }
     public static function create_single_mount_estimate($calc_id = null,$data = null,$data_mount = null){
-        if(!empty($calc_id)){
-            $calculation_model = self::getModel('calculation');
-            $data = get_objects_vars($calculation_model->getData($calc_id));
+        try{
+            if(!empty($calc_id)){
+                $calculation_model = self::getModel('calculation');
+                $data = get_objects_vars($calculation_model->getData($calc_id));
+            }
+            $project_model = self::getModel('project');
+            $project = $project_model->getData($data['project_id']);
+            $calculations_model = self::getModel('calculations');
+            $names = $calculations_model->FindAllMounters($project->project_mounter);
+            for($i=0;$i<count($names);$i++){
+                $brigade_names .= $names[$i]->name . (($i < count($names) - 1) ? " , " : " ");
+            }
+            $brigade = JFactory::getUser($project->project_mounter);
+            $client_contacts_model = self::getModel('client_phones');
+            $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
+            for($i=0;$i<count($client_contacts);$i++){
+                $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
+            }
+            $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
+            $filename = md5($calc_id . "mount_single") . ".pdf";
+            $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
+            self::save_pdf($html, $sheets_dir . $filename, "A4");
         }
-        $project_model = self::getModel('project');
-        $project = $project_model->getData($data['project_id']);
-        $calculations_model = self::getModel('calculations');
-        $names = $calculations_model->FindAllMounters($project->project_mounter);
-        $brigade = JFactory::getUser($project->project_mounter);
-        $client_contacts_model = self::getModel('client_phones');
-        $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
-        for($i=0;$i<count($client_contacts);$i++){
-            $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
         }
-        $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
-        $filename = md5($calc_id . "mount_single") . ".pdf";
-        $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-        self::save_pdf($html, $sheets_dir . $filename, "A4");
     }
     /* функция для создания PDF документа с расходкой по проекту */
     public static function create_estimate_of_consumables($project_id){

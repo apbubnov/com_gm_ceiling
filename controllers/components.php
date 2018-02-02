@@ -106,8 +106,6 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
 
                 if (!empty($dealerId)) {
                     $dealer = JFactory::getUser($dealerId);
-                    $dealer->groups = $dealer->get('groups');
-                    // $dealer->price = $model->getDealerPrice($dealerId);
                 }
             }
 
@@ -150,7 +148,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $model->setPrice($newPrice);
             }
             else {
-
+                $dealer->set
             }
 
             die(json_encode($answer));
