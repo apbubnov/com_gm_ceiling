@@ -2674,7 +2674,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '<p>&nbsp;</p>
                             <h1>Наряд монтажной бригаде</h1>
                             <h2>Дата: ' . date("d.m.Y") . '</h2>
-                            <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch".$data['id']) . ".svg" . '" style="width: 100%; max-height: 800px;"/>
+                            
                             <table border="0" cellspacing="0" width="100%">
                             <tbody>
                                 <tr>
@@ -3286,8 +3286,8 @@ class Gm_ceilingHelpersGm_ceiling
     //Печатаем подготовленные данные в PDF
     public static function save_pdf($html, $filename, $mode, $type = null){
         try{
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename)) {
-                unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename)) {
+                unlink($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename);
             }
             $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
             $mpdf->SetDisplayMode('fullpage');
