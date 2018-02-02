@@ -2733,7 +2733,7 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                     }
 
-                    $html .= '</tbody></table><p>&nbsp;</p>';
+                    $html .= '</tbody></table>';
                 }
                 return $html;
             }
