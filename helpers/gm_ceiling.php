@@ -3286,8 +3286,8 @@ class Gm_ceilingHelpersGm_ceiling
     //Печатаем подготовленные данные в PDF
     public static function save_pdf($html, $filename, $mode, $type = null){
         try{
-            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename)) {
-                unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename)) {
+                unlink($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename);
             }
             $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
             $mpdf->SetDisplayMode('fullpage');
