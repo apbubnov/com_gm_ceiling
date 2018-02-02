@@ -3306,8 +3306,9 @@ class Gm_ceilingHelpersGm_ceiling
             } else {
                 
                 $mpdf->WriteHTML($stylesheet, 1);
+                throw new Exception($html);
                 $mpdf->WriteHTML($html, 2);
-                throw new Exception($filename);
+               
             }
             
             $mpdf->Output($filename, 'F');
