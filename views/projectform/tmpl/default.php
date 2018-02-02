@@ -1370,7 +1370,7 @@
                                 var emptytd = 0;
                                 Array.from(data).forEach(function(elementProject) {
                                     if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                        var timesession_gauger = jQuery("#jform_new_project_calculation_daypart").val();
+                                        var timesession_gauger = jQuery("#jform_project_new_calc_date").val();
                                         var gaugersession = jQuery("#jform_project_gauger").val();
                                         if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession_gauger.substr(11)) {
                                             TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
@@ -1403,17 +1403,19 @@
                         var times = jQuery("input[name='choose_time_gauger']");
                         if (timesession_gauger != undefined) {
                             times.each(function(element) {
-                                console.log(timesession_gauger.substr(11));
+                                if (timesession_gauger.substr(11) == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                    console.log(timesession_gauger.substr(11));
                                 console.log(jQuery(this).val());
                                 console.log(gaugersession);
                                 console.log(jQuery(this).closest('tr').find("input[name='gauger']").val());
-                                if (timesession_gauger.substr(11) == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+
                                     jQuery(this).prop("checked", true);
                                 }
                             });
                         }
                     }, 200);
-                } else if (time_gauger != undefined) {
+                }
+                if (time_gauger != undefined) {
                     setTimeout(function() { 
                         var times = jQuery("input[name='choose_time_gauger']");
                         times.each(function(element) {
@@ -1633,8 +1635,8 @@
                     gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
                 }
             });
-            jQuery("#jform_new_project_calculation_daypart").val(time_gauger);
-            jQuery("#jform_project_new_calc_date").val(date);
+            datetime_gauger = date+" "+time_gauger;
+            jQuery("#jform_project_new_calc_date").val(datetime_gauger);
             jQuery("#jform_project_gauger").val(gauger);
             if (jQuery(".change").length == 0) {
                 jQuery("#"+idDay).addClass("change");
