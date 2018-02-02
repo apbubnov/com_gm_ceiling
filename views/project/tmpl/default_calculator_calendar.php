@@ -2321,12 +2321,7 @@ var $ = jQuery;
                     // время
                     var timeall = document.getElementById('hours').options;
                     for (var i = 0; i < timeall.length; i++) {
-                        if (time_mounter != undefined) {
-                            if (timeall[i].value == time_mounter) {
-                                document.getElementById('hours').disabled = false;
-                                timeall[i].selected = true;
-                            }
-                        } else if (timesession != undefined) {
+                        else if (timesession != undefined) {
                             if (timeall[i].value == timesession) {
                                 document.getElementById('hours').disabled = false;
                                 timeall[i].selected = true;
