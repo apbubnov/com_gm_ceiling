@@ -526,7 +526,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
                
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
-                //$data['id'] = $ajax_return['id'];
+                $data['id'] = $ajax_return['id'];
                 $filename = md5("calculation_sketch" . $ajax_return['id']);
                 $cut_filename = md5("cut_sketch" . $ajax_return['id']);
                 
