@@ -810,7 +810,7 @@
             <?php } ?>
         </div>
     <?php } ?>
-    
+    </form>
     <div class="container">
         <div class="row" style="padding-top: 1em;">
             <div class="col-xl-6 item_fields project-edit front-end-edit">
@@ -1073,7 +1073,7 @@
         </div>
     </div>
 <?php } ?>
-</form>
+
 <script>
 
     var preloader = '<?=parent::getPreloaderNotJS();?>';
@@ -1399,6 +1399,8 @@
                 if (date == datesession_gauger.substr(0, 10)) {
                     var timesession_gauger = jQuery("#jform_project_new_calc_date").val();
                     var gaugersession = jQuery("#jform_project_gauger").val();
+                    console.log(timesession_gauger);
+                    console.log(gaugersession);
                     setTimeout(function() { 
                         var times = jQuery("input[name='choose_time_gauger']");
                         if (timesession_gauger != undefined) {
