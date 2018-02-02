@@ -546,14 +546,14 @@ class Gm_ceilingHelpersGm_ceiling
                
                 //наряд монтажной бригаде
                 if($need_mount){
-                    //self::create_single_mount_estimate(null,$data,$mounting_data);
+                    self::create_single_mount_estimate(null,$data,$mounting_data);
                 }       
                 //PDF раскроя
                 //self::create_cut_pdf(null,$data);
                 //для менеджера
-                self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
+               // self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета 
-                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
+                //self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
             }         
             $return = json_encode($ajax_return);
             
@@ -2768,7 +2768,8 @@ class Gm_ceilingHelpersGm_ceiling
             
             $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
 
-            $filename = md5($data['id'] . "mount_single") . ".pdf";
+            
+            $filename = md5( "mount_single") . ".pdf";
            
             
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';

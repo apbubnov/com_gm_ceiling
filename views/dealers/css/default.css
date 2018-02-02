@@ -1,0 +1,13 @@
+.SelectPrice {
+    width: auto;
+    height: 38px;
+    line-height: 38px;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    float: left;
+    display: inline-block;
+    text-align: center;
+    padding-left: 10px;
+}
