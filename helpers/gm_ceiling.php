@@ -2601,7 +2601,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
         }
         $filename = md5($project_id . "mount_common") . ".pdf";
-        throw new Exception($html);
+        
         self::save_pdf($html, $sheets_dir . $filename, "A4");
     }
     public static function create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount = null){
@@ -2772,7 +2772,7 @@ class Gm_ceilingHelpersGm_ceiling
            
             
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-            
+            throw new Exception($html);
             self::save_pdf($html, $sheets_dir . $filename, "A4");
            
             return true;
