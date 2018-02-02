@@ -134,7 +134,7 @@
 
 <h2>Просмотр проекта</h2>
 <form id="form-client">
-<?php if ($this->item) {?>
+<?php if ($this->item) { ?>
     <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
     <?php if (sizeof($calculations) > 0) { ?>
         <?php echo "<h3>Расчеты для проекта № ".$this->item->id." </h3>"; ?>
@@ -543,7 +543,6 @@
                     </tr>
                     <? }?>
                 </table>
-                </form>
                 <?php if ($user->dealer_type == 2) { ?>
                     <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
                         формирование заказа
@@ -811,6 +810,7 @@
             <?php } ?>
         </div>
     <?php } ?>
+    </form>
     <div class="container">
         <div class="row" style="padding-top: 1em;">
             <div class="col-xl-6 item_fields project-edit front-end-edit">
@@ -898,7 +898,7 @@
                             <?php if ($this->item->project_status == 1) { ?>
                                 <th>Дата замера</th>
                                 <td>
-                                    <?php if ($this->item->project_mounting_date == "0000-00-00 00:00:00") { ?>
+                                    <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
                                         -
                                     <?php } else { ?>
                                         <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
@@ -956,7 +956,7 @@
                                 <th>Замерщик</th>
                                 <?php 
                                     $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                                    $gauger = $gauger_model->getMount($this->item->id); 
+                                    $gauger = $gauger_model->getGauger($this->item->id); 
                                 ?>
                                 <td><?php echo $gauger->name; ?></td>
                             <?php } else { ?>
@@ -1034,146 +1034,22 @@
                 </form>
             </div>
             <?php if($user->dealer_type == 0) { ?>
-            <div class="col-xl-6">
-                <div class="comment">
-                    <label style="font-weight: bold;"> История клиента: </label>
-                    <textarea id="comments" class="input-comment" rows=11 readonly style="resize: none; outline: none;"></textarea>
-                    <table>
-                        <tr>
-                            <td><label style="font-weight: bold;"> Добавить комментарий: </label></td>
-                        </tr>
-                        <tr>
-                            <td width = 100%><textarea  style="resize: none;" class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                            <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button></td>
-                        </tr>
-                    </table>
+                <div class="col-xl-6">
+                    <div class="comment">
+                        <label style="font-weight: bold;"> История клиента: </label>
+                        <textarea id="comments" class="input-comment" rows=11 readonly style="resize: none; outline: none;"></textarea>
+                        <table>
+                            <tr>
+                                <td><label style="font-weight: bold;"> Добавить комментарий: </label></td>
+                            </tr>
+                            <tr>
+                                <td width = 100%><textarea  style="resize: none;" class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <!--<h4>Наряды на монтаж</h4>
-                <table class="table">
-                    <?php// foreach ($calculations as $calculation) { ?>
-                        <tr>
-                            <th><?php// echo $calculation->calculation_title; ?></th>
-                            <td><?php// echo $calculation->mounting_sum; ?> руб.</td>
-                            <td>
-                                <?php// $path = "/costsheets/" . md5($calculation->id . "-2") . ".pdf"; ?>
-                                <?php// if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                    <a href="<?php// echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                <?php// } else { ?>
-                                    Сохранится после утверждения
-                                <?php// } ?>
-                            </td>
-                        </tr>
-                    <?php// } ?>
-                </table>
-                <h4>Доп. затраты</h4>
-                <form id="spend-form" action="/" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                    <div class="container">
-                        <div class="row sm-margin-bottom">
-                            <div class="col-sm-4">
-                                <h5>Название</h5>
-                                <div id="extra_spend_title_container">
-                                    <?php// foreach ($extra_spend_array as $item) { ?>
-                                        <div class='form-group'><input name='extra_spend_title[]' value='<?php// echo $item['title']; ?>' class='form-control' type='text'></div>
-                                    <?php// } ?>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <h5>Стоимость</h5>
-                                <div id="extra_spend_value_container">
-                                    <?php// foreach ($extra_spend_array as $item) { ?>
-                                        <div class='form-group'><input name='extra_spend_value[]' value='<?php// echo $item['value']; ?>' class='form-control' type='text'></div>
-                                    <?php// } ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row sm-margin-bottom">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <button id="extra_spend_button" class="btn btn-primary" type="button">Добавить</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <button id="extra_spend_submit" class="btn btn-success" type="submit" style="display: none;">Сохранить</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <h4>Штрафы</h4>
-                <form id="penalty-form" action="/" method="post" class="form-validate form-horizontal"
-                        enctype="multipart/form-data">
-                    <div class="container">
-                        <div class="row sm-margin-bottom">
-                            <div class="col-sm-4">
-                                <h5>Название</h5>
-                                <div id="penalty_title_container">
-                                    <?php// foreach ($penalty_array as $item) { ?>
-                                        <div class='form-group'><input name='penalty_title[]' value='<?php// echo $item['title']; ?>' class='form-control' type='text'></div>
-                                    <?php// } ?>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <h5>Стоимость</h5>
-                                <div id="penalty_value_container">
-                                    <?php// foreach ($penalty_array as $item) { ?>
-                                        <div class='form-group'><input name='penalty_value[]' value='<?php// echo $item['value']; ?>' class='form-control' type='text'></div>
-                                    <?php// } ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row sm-margin-bottom">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <button id="penalty_button" class="btn btn-primary" type="button">Добавить</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <button id="penalty_submit" class="btn btn-success" type="submit" style="display: none;">Сохранить</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <h4>Премии</h4>
-                <form id="bonus-form" action="/" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                    <div class="container">
-                        <div class="row sm-margin-bottom">
-                            <div class="col-sm-4">
-                                <h5>Название</h5>
-                                <div id="bonus_title_container">
-                                    <?php// foreach ($bonus_array as $item) { ?>
-                                        <div class='form-group'><input name='bonus_title[]' value='<?php// echo $item['title']; ?>' class='form-control' type='text'></div>
-                                    <?php// } ?>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <h5>Стоимость</h5>
-                                <div id="bonus_value_container">
-                                    <?php// foreach ($bonus_array as $item) { ?>
-                                        <div class='form-group'><input name='bonus_value[]' value='<?php// echo $item['value']; ?>' class='form-control' type='text'></div>
-                                    <?php// } ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row sm-margin-bottom">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <button id="bonus_button" class="btn btn-primary" type="button">Добавить</button>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <button id="bonus_submit" class="btn btn-success" type="submit" style="display: none;">Сохранить
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>-->
-            </div>
             <? } ?>
         </div>
     </div>
@@ -1196,213 +1072,651 @@
             <?php } ?>
         </div>
     </div>
+<?php } ?>
 
-    <script>
+<script>
 
-        var preloader = '<?=parent::getPreloaderNotJS();?>';
+    var preloader = '<?=parent::getPreloaderNotJS();?>';
 
-        whatCalendar = <?php echo $whatCalendar ?>
-        // листание календаря
-        month_old1 = 0;
-        year_old1 = 0;
-        month_old2 = 0;
-        year_old2 = 0;
-        jQuery("#button-next").click(function () {
-            month1 = <?php echo $month1; ?>;
-            year1 = <?php echo $year1; ?>;
-            month2 = <?php echo $month2; ?>;
-            year2 = <?php echo $year2; ?>;
-            if (month_old1 != 0) {
-                month1 = month_old1;
-                year1 = year_old1;
-                month2 = month_old2;
-                year2 = year_old2;
-            }
-            if (month1 == 12) {
-                month1 = 1;
-                year1++;
-            } else {
-                month1++;
-            }
-            if (month2 == 12) {
-                month2 = 1;
-                year2++;
-            } else {
-                month2++;
-            }
-            month_old1 = month1;
-            year_old1 = year1;
-            month_old2 = month2;
-            year_old2 = year2;
-            update_calendar(month1, year1);
-            update_calendar2(month2, year2);
-        });
-        jQuery("#button-prev").click(function () {
-            month1 = <?php echo $month1; ?>;
-            year1 = <?php echo $year1; ?>;
-            month2 = <?php echo $month2; ?>;
-            year2 = <?php echo $year2; ?>;
-            if (month_old1 != 0) {
-                month1 = month_old1;
-                year1 = year_old1;
-                month2 = month_old2;
-                year2 = year_old2;
-            }
-            if (month1 == 1) {
-                month1 = 12;
-                year1--;
-            } else {
-                month1--;
-            }
-            if (month2 == 1) {
-                month2 = 12;
-                year2--;
-            } else {
-                month2--;
-            }
-            month_old1 = month1;
-            year_old1 = year1;
-            month_old2 = month2;
-            year_old2 = year2;
-            update_calendar(month1, year1);
-            update_calendar2(month2, year2);
-        });
-    
-        function update_calendar(month, year) {
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-                data: {
-                    id: <?php echo $userId; ?>,
-                    id_dealer: <?php echo $user->dealer_id; ?>,
-                    flag: <?php if ($whatCalendar == 0) { echo 3; } else { echo 2; } ?>,
-                    month: month,
-                    year: year,
-                },
-                success: function (msg) {
-                    jQuery("#calendar1").empty();
-                    jQuery("#calendar1").append(msg);
-                    Today(day, NowMonth, NowYear);
-                    var datesession = jQuery("#jform_project_mounting_date").val();  
-                    console.log(datesession);
-                    if (datesession != undefined) {
-                        if (whatCalendar == 0) {
-                            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
-                        } else {
-                            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
-                        }
-                    }
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-                    });
-                }
-            });
+    whatCalendar = <?php echo $whatCalendar; ?>
+    // листание календаря
+    month_old1 = 0;
+    year_old1 = 0;
+    month_old2 = 0;
+    year_old2 = 0;
+    jQuery("#button-next").click(function () {
+        month1 = <?php echo $month1; ?>;
+        year1 = <?php echo $year1; ?>;
+        month2 = <?php echo $month2; ?>;
+        year2 = <?php echo $year2; ?>;
+        if (month_old1 != 0) {
+            month1 = month_old1;
+            year1 = year_old1;
+            month2 = month_old2;
+            year2 = year_old2;
         }
-        function update_calendar2(month, year) {
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-                data: {
-                    id: <?php echo $userId; ?>,
-                    month: month,
-                    year: year,
-                    id_dealer: <?php echo $user->dealer_id; ?>,
-                    flag: <?php if ($whatCalendar == 0) { echo 3; } else { echo 2; } ?>,
-                },
-                success: function (msg) {
-                    jQuery("#calendar2").empty();
-                    jQuery("#calendar2").append(msg);
-                    Today(day, NowMonth, NowYear);
-                    var datesession = jQuery("#jform_project_mounting_date").val();  
-                    console.log(datesession);
-                    if (datesession != undefined) {
-                        if (whatCalendar == 0) {
-                            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
-                        } else {
-                            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
-                        }
-                    }
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-                    });
-                }
-            });
+        if (month1 == 12) {
+            month1 = 1;
+            year1++;
+        } else {
+            month1++;
         }
-        //----------------------------------------
+        if (month2 == 12) {
+            month2 = 1;
+            year2++;
+        } else {
+            month2++;
+        }
+        month_old1 = month1;
+        year_old1 = year1;
+        month_old2 = month2;
+        year_old2 = year2;
+        update_calendar(month1, year1);
+        update_calendar2(month2, year2);
+    });
+    jQuery("#button-prev").click(function () {
+        month1 = <?php echo $month1; ?>;
+        year1 = <?php echo $year1; ?>;
+        month2 = <?php echo $month2; ?>;
+        year2 = <?php echo $year2; ?>;
+        if (month_old1 != 0) {
+            month1 = month_old1;
+            year1 = year_old1;
+            month2 = month_old2;
+            year2 = year_old2;
+        }
+        if (month1 == 1) {
+            month1 = 12;
+            year1--;
+        } else {
+            month1--;
+        }
+        if (month2 == 1) {
+            month2 = 12;
+            year2--;
+        } else {
+            month2--;
+        }
+        month_old1 = month1;
+        year_old1 = year1;
+        month_old2 = month2;
+        year_old2 = year2;
+        update_calendar(month1, year1);
+        update_calendar2(month2, year2);
+    });
 
-        //скрыть модальное окно
-        jQuery(document).mouseup(function (e) {
-            var div = jQuery("#modal-window-choose-tar");
-            if (!div.is(e.target)
-                && div.has(e.target).length === 0) {
-                jQuery("#close-tar").hide();
-                jQuery("#modal-window-container-tar").hide();
-                jQuery("#modal-window-choose-tar").hide();
+    function update_calendar(month, year) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+            data: {
+                id: <?php echo $userId; ?>,
+                id_dealer: <?php echo $user->dealer_id; ?>,
+                flag: <?php if ($whatCalendar == 0) { echo 3; } else { echo 2; } ?>,
+                month: month,
+                year: year,
+            },
+            success: function (msg) {
+                jQuery("#calendar1").empty();
+                jQuery("#calendar1").append(msg);
+                Today(day, NowMonth, NowYear);
+                var datesession = jQuery("#jform_project_mounting_date").val();  
+                console.log(datesession);
+                if (datesession != undefined) {
+                    if (whatCalendar == 0) {
+                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
+                    } else {
+                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+                    }
+                }
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+                });
             }
         });
-        //--------------------------------------------------
+    }
+    function update_calendar2(month, year) {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
+            data: {
+                id: <?php echo $userId; ?>,
+                month: month,
+                year: year,
+                id_dealer: <?php echo $user->dealer_id; ?>,
+                flag: <?php if ($whatCalendar == 0) { echo 3; } else { echo 2; } ?>,
+            },
+            success: function (msg) {
+                jQuery("#calendar2").empty();
+                jQuery("#calendar2").append(msg);
+                Today(day, NowMonth, NowYear);
+                var datesession = jQuery("#jform_project_mounting_date").val();  
+                console.log(datesession);
+                if (datesession != undefined) {
+                    if (whatCalendar == 0) {
+                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
+                    } else {
+                        jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+                    }
+                }
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                var n = noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
+                });
+            }
+        });
+    }
+    //----------------------------------------
 
-        // функция подсвета сегоднешней даты
-        var Today = function (day, month, year) {
-            month++;
+    //скрыть модальное окно
+    jQuery(document).mouseup(function (e) {
+        var div = jQuery("#modal-window-choose-tar");
+        if (!div.is(e.target)
+            && div.has(e.target).length === 0) {
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+            jQuery("#modal-window-choose-tar").hide();
+        }
+    });
+    //--------------------------------------------------
+
+    // функция подсвета сегоднешней даты
+    var Today = function (day, month, year) {
+        month++;
+        if (whatCalendar == 0) {
+            jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC0C").addClass("today");
+        } else {
+            jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC1C").addClass("today");
+        }
+    }   
+    //------------------------------------------
+
+    // функция чтобы другая функция выполнилась позже чем document ready
+    Function.prototype.process= function(state){
+        var process= function(){
+            var args= arguments;
+            var self= arguments.callee;
+            setTimeout(function(){
+                self.handler.apply(self, args);
+            }, 0 )
+        }
+        for(var i in state) process[i]= state[i];
+        process.handler= this;
+        return process;
+    }
+    //------------------------------------------
+
+    // показать историю
+    function show_comments() {
+        var id_client = <?php echo $this->item->id_client;?>;
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=selectComments",
+            data: {
+                id_client: id_client
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                var comments_area = document.getElementById('comments');
+                comments_area.innerHTML = "";
+                var date_t;
+                for (var i = 0; i < data.length; i++) {
+                    date_t = new Date(data[i].date_time);
+                    comments_area.innerHTML += formatDate(date_t) + "\n" + data[i].text + "\n----------\n";
+                }
+                comments_area.scrollTop = comments_area.scrollHeight;
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка вывода примечаний"
+                });
+            }
+        });
+    }
+    //------------------------------------------------------
+
+    // форматирование даты для вывода
+    function formatDate(date) {
+        var dd = date.getDate();
+        if (dd < 10) dd = '0' + dd;
+        var mm = date.getMonth() + 1;
+        if (mm < 10) mm = '0' + mm;
+        var yy = date.getFullYear();
+        if (yy < 10) yy = '0' + yy;
+        var hh = date.getHours();
+        if (hh < 10) hh = '0' + hh;
+        var ii = date.getMinutes();
+        if (ii < 10) ii = '0' + ii;
+        var ss = date.getSeconds();
+        if (ss < 10) ss = '0' + ss;
+        return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
+    }
+    // ------------------------------------------------------------------------
+
+    // при нажатии на энтер добавляется коммент
+    document.getElementById('new_comment').onkeydown = function (e) {
+        if (e.keyCode === 13) {
+            document.getElementById('add_comment').click();
+        }
+    }
+    // ----------------------------------------------------------------------
+
+    jQuery(document).ready(function () {
+
+        trans();
+
+        window.time_gauger = undefined;
+        window.gauger = undefined;
+
+        // открытие модального окна с календаря и получение даты и вывода свободных монтажников или замерщиков
+        jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change, .full-day", function() {
+            window.idDay = jQuery(this).attr("id");
+            reg1 = "D(.*)D";
+            reg2 = "M(.*)M";
+            reg3 = "Y(.*)Y";
+            var d = idDay.match(reg1)[1];
+            var m = idDay.match(reg2)[1];
+            if (d.length == 1) {
+                d = "0"+d;
+            }
+            if (m.length == 1) {
+                m = "0"+m;
+            }
+            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
+            jQuery("#modal-window-container-tar").show();
+            jQuery("#modal-window-choose-tar").show("slow");
+            jQuery("#close-tar").show();
             if (whatCalendar == 0) {
-                jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC0C").addClass("today");
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
+                    data: {
+                        date: date,
+                        dealer: <?php echo $user->dealer_id; ?>,
+                    },
+                    success: function(data) {
+                        Array.prototype.diff = function(a) {
+                            return this.filter(function(i) {return a.indexOf(i) < 0;});
+                        };
+                        AllGauger = <?php echo json_encode($AllGauger); ?>;
+                        data = JSON.parse(data); // замеры
+                        console.log(data);
+                        AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                        var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
+                        AllTime.forEach( elementTime => {
+                            var t = elementTime.substr(0, 2);
+                            t++;
+                            Array.from(AllGauger).forEach(function(elementGauger) {
+                                var emptytd = 0;
+                                Array.from(data).forEach(function(elementProject) {
+                                    if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                        var timesession_gauger = jQuery("#jform_project_new_calc_date").val();
+                                        var gaugersession = jQuery("#jform_project_gauger").val();
+                                        if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession_gauger.substr(11)) {
+                                            TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                        } else {
+                                            TableForSelect += '<tr><td></td>';
+                                        }
+                                        TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                        TableForSelect += '<td>'+elementProject.project_info+'</td>';
+                                        emptytd = 1;
+                                    }
+                                });
+                                if (emptytd == 0) {
+                                    TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                    TableForSelect += '<td></td>';
+                                }
+                                TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
+                            });
+                        });
+                        jQuery("#projects_gaugers").empty();
+                        jQuery("#projects_gaugers").append(TableForSelect);
+                        jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
+                    }
+                });
+                //если сессия есть, то выдать время, которое записано в сессии
+                if (date == datesession_gauger.substr(0, 10)) {
+                    var timesession_gauger = jQuery("#jform_project_new_calc_date").val();
+                    var gaugersession = jQuery("#jform_project_gauger").val();
+                    setTimeout(function() { 
+                        var times = jQuery("input[name='choose_time_gauger']");
+                        if (timesession_gauger != undefined) {
+                            times.each(function(element) {
+                                if (timesession_gauger.substr(11) == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                    jQuery(this).prop("checked", true);
+                                }
+                            });
+                        }
+                    }, 200);
+                }
+                if (time_gauger != undefined) {
+                    setTimeout(function() { 
+                        var times = jQuery("input[name='choose_time_gauger']");
+                        times.each(function(element) {
+                            if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                jQuery(this).prop("checked", true);
+                            }
+                        });
+                    }, 200);
+                }
             } else {
-                jQuery("#current-monthD"+day+"DM"+month+"MY"+year+"YI"+<?php echo $userId; ?>+"IC1C").addClass("today");
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyMounters",
+                    data: {
+                        date: date,
+                        dealer: <?php echo $user->dealer_id; ?>,
+                    },
+                    success: function(data) {
+                        Array.prototype.diff = function(a) {
+                            return this.filter(function(i) {return a.indexOf(i) < 0;});
+                        };
+                        window.DataOfProject = JSON.parse(data);
+                        window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                        data = JSON.parse(data);
+                        jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
+                        // заполнение бригад в селекте
+                        jQuery("#mounters").empty();
+                        Allbrigades = <?php echo json_encode($Allbrigades); ?>;
+                        select_brigade = "";
+                        Array.from(Allbrigades).forEach(function(elem) {
+                            select_brigade += '<option value="'+elem.id+'">'+elem.name+'</option>';
+                        });
+                        jQuery("#mounters").append(select_brigade);
+                        // вывод имен монтажников
+                        var selectedBrigade = jQuery("#mounters").val();
+                        jQuery("#mounters_names").empty();
+                        AllMounters = <?php echo json_encode($AllMounters) ?>;
+                        AllMounters.forEach(elem => {
+                            if (selectedBrigade == elem.id_brigade) {
+                                jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
+                            }
+                        });
+                        // вывод работ бригады
+                        jQuery("#projects_brigade_container").empty();
+                        var table_projects = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
+                        table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                        Array.from(data).forEach(function(element) {
+                            if (element.project_mounter == selectedBrigade) {
+                                if (element.project_mounting_day_off != "") {
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
+                                } else {
+                                    table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                                }
+                            }
+                        });
+                        table_projects += "</table>";
+                        jQuery("#projects_brigade_container").append(table_projects);
+                        // вывод времени бригады
+                        var BusyTimes = [];
+                        Array.from(data).forEach(function(elem) {
+                            if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
+                                BusyTimes.push(elem.project_mounting_date.substr(11));
+                            } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
+                                AllTime.forEach(element => {
+                                    if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                                        BusyTimes.push(element);
+                                    }
+                                }); 
+                            }
+                        });
+                        FreeTimes = AllTime.diff(BusyTimes);
+                        var select_hours;
+                        FreeTimes.forEach(element => {
+                            select_hours += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
+                        });
+                        jQuery("#hours").empty();
+                        jQuery("#hours").append(select_hours);
+                    }
+                });
+                //если монтаж есть, то выдать время, монтажную бригаду и инфу о ней, которые записаны
+                if (date == datesession.substr(0, 10)) {
+                    var timesession = jQuery("#jform_project_mounting_date").val().substr(11);
+                    var mountersession = jQuery("#jform_project_mounter").val();
+                    setTimeout(function() {
+                        // время
+                        var timeall = document.getElementById('hours').options;
+                        for (var i = 0; i < timeall.length; i++) {
+                            if (timesession != undefined) {
+                                if (timeall[i].value == timesession) {
+                                    document.getElementById('hours').disabled = false;
+                                    timeall[i].selected = true;
+                                }
+                            }
+                        }
+                        // бригада
+                        var mounterall = document.getElementById('mounters').options;
+                        for (var i = 0; i < mounterall.length; i++) {
+                            if (mountersession != undefined) {
+                                if (mounterall[i].value == mountersession) {
+                                    document.getElementById('mounters').disabled = false;
+                                    mounterall[i].selected = true;
+                                }
+                            }
+                        }
+                        // инфа о бригаде
+                        jQuery("#mounters_names").empty();
+                        AllMounters = <?php echo json_encode($AllMounters) ?>;
+                        AllMounters.forEach(elem => {
+                            if (mountersession == elem.id_brigade) {
+                                jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
+                            }
+                        });
+                        // монтажи
+                        jQuery("#projects_brigade_container").empty();
+                        var table_projects3 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
+                        table_projects3 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                        Array.from(DataOfProject).forEach(function(element) {
+                            if (element.project_mounter == mountersession) {
+                                table_projects3 += '<tr><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                            }
+                        });
+                        table_projects3 += "</table>";
+                        jQuery("#projects_brigade_container").append(table_projects3);
+                    }, 200);
+                }
+                // запрет выбора монтажника, если монтаж в статусе недовыполнен
+                if (<?php echo $this->item->project_status ?> == 17) {
+                    setTimeout(function() {
+                        var mounter = document.getElementById('mounters').options;
+                        for (var i = 0; i < mounter.length; i++) {
+                            document.getElementById('mounters').disabled = true;
+                            
+                        }
+                        console.log(mounter);
+                    }, 200);
+                }
             }
-        }   
+        });
+        //--------------------------------------------
+
+        // заполнение данных о выбранной бригаде при изменении селекта
+        jQuery("#mounters").change(function () {
+            // имена бригад
+            jQuery("#mounters_names").empty();
+            var id = jQuery("#mounters").val();
+            AllMounters = <?php echo json_encode($AllMounters) ?>;
+            AllMounters.forEach(elem => {
+                if (id == elem.id_brigade) {
+                    jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
+                }
+            });
+            // монтажи
+            jQuery("#projects_brigade_container").empty();
+            var table_projects2 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
+            table_projects2 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+            Array.from(DataOfProject).forEach(function(element) {
+                if (element.project_mounter == id) {
+                    if (element.project_mounting_day_off != "") {
+                        table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
+                    } else {
+                        table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                    }
+                }
+            });
+            table_projects2 += "</table>";
+            jQuery("#projects_brigade_container").append(table_projects2);
+            // времена
+            jQuery("#hours").empty();
+            var BusyTimes = [];
+            Array.from(DataOfProject).forEach(function(elem) {
+                if (id == elem.project_mounter && elem.project_mounting_day_off == "" ) {
+                    BusyTimes.push(elem.project_mounting_date.substr(11));
+                } else if (id == elem.project_mounter && elem.project_mounting_day_off != "") {
+                    AllTime.forEach(element => {
+                        if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
+                            BusyTimes.push(element);
+                        }
+                    }); 
+                }
+            });
+            FreeTimes = AllTime.diff(BusyTimes);
+            var select_hours2;
+            FreeTimes.forEach(element => {
+                select_hours2 += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
+            });
+            jQuery("#hours").append(select_hours2);
+        });
+        //-------------------------------------------
+
+        // получение значений из селектов монтажников
+        jQuery("#save-choise-tar").click(function() {
+            var mounter = jQuery("#mounters").val();
+            var time = jQuery("#hours").val();
+            var datatime = date+" "+time;
+            jQuery("#jform_project_mounter").val(mounter);
+            jQuery("#jform_project_mounting_date").val(datatime);
+            if (jQuery(".change").length == 0) {
+                jQuery("#"+idDay).addClass("change");
+            } else {
+                jQuery(".change").removeClass("change");
+                jQuery("#"+idDay).addClass("change");
+            }
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+            jQuery("#modal-window-choose-tar").hide();
+        });
         //------------------------------------------
 
-        // функция чтобы другая функция выполнилась позже чем document ready
-        Function.prototype.process= function(state){
-            var process= function(){
-                var args= arguments;
-                var self= arguments.callee;
-                setTimeout(function(){
-                    self.handler.apply(self, args);
-                }, 0 )
+        // получение значений из селектов замерщиков
+        jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
+            var times = jQuery("input[name='choose_time_gauger']");
+            time_gauger = "";
+            gauger = "";
+            times.each(function(element) {
+                if (jQuery(this).prop("checked") == true) {
+                    time_gauger = jQuery(this).val();
+                    gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
+                }
+            });
+            datetime_gauger = date+" "+time_gauger;
+            jQuery("#jform_project_new_calc_date").val(datetime_gauger);
+            jQuery("#jform_project_gauger").val(gauger);
+            if (jQuery(".change").length == 0) {
+                jQuery("#"+idDay).addClass("change");
+            } else {
+                jQuery(".change").removeClass("change");
+                jQuery("#"+idDay).addClass("change");
             }
-            for(var i in state) process[i]= state[i];
-            process.handler= this;
-            return process;
-        }
+            jQuery("#close-tar").hide();
+            jQuery("#modal-window-container-tar").hide();
+            jQuery("#modal-window-choose-tar").hide();
+        });
         //------------------------------------------
+
+        // подсвет сегоднешней даты
+        window.today = new Date();
+        window.NowYear = today.getFullYear();
+        window.NowMonth = today.getMonth();
+        window.day = today.getDate();
+        Today(day, NowMonth, NowYear);
+        //------------------------------------------
+
+        //если сессия есть, то выдать дату, которая записана в сессии
+        var datesession = jQuery("#jform_project_mounting_date").val();
+        if (datesession != undefined) {
+            if (datesession.substr(8, 1) == "0") {
+                daytocalendar = datesession.substr(9, 1);
+            } else {
+                daytocalendar = datesession.substr(8, 2);
+            }
+            if (datesession.substr(5, 1) == "0") {
+                monthtocalendar = datesession.substr(6, 1);
+            } else {
+                monthtocalendar = datesession.substr(5, 2);
+            }
+            jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+        }
+        var datesession_gauger = jQuery("#jform_project_new_calc_date").val();
+        if (datesession_gauger != undefined) {
+            if (datesession_gauger.substr(8, 1) == "0") {
+                daytocalendar_gauger = datesession_gauger.substr(9, 1);
+            } else {
+                daytocalendar_gauger = datesession_gauger.substr(8, 2);
+            }
+            if (datesession_gauger.substr(5, 1) == "0") {
+                monthtocalendar_gauger = datesession_gauger.substr(6, 1);
+            } else {
+                monthtocalendar_gauger = datesession_gauger.substr(5, 2);
+            }
+            jQuery("#current-monthD"+daytocalendar_gauger+"DM"+monthtocalendar_gauger+"MY"+datesession_gauger.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
+        }
+        //-----------------------------------------------------------
 
         // показать историю
-        function show_comments() {
+        show_comments();
+        //---------------------------------------------------------
+
+        // добавление коммента и обновление истории
+        jQuery("#add_comment").click(function () {
+            var comment = jQuery("#new_comment").val();
+            var reg_comment = /[\\\<\>\/\'\"\#]/;
             var id_client = <?php echo $this->item->id_client;?>;
+            if (reg_comment.test(comment) || comment === "") {
+                alert('Неверный формат примечания!');
+                return;
+            }
             jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=selectComments",
+                url: "index.php?option=com_gm_ceiling&task=addComment",
                 data: {
+                    comment: comment,
                     id_client: id_client
                 },
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    var comments_area = document.getElementById('comments');
-                    comments_area.innerHTML = "";
-                    var date_t;
-                    for (var i = 0; i < data.length; i++) {
-                        date_t = new Date(data[i].date_time);
-                        comments_area.innerHTML += formatDate(date_t) + "\n" + data[i].text + "\n----------\n";
-                    }
-                    comments_area.scrollTop = comments_area.scrollHeight;
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Комментарий добавлен"
+                    });
+                    jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
+                    show_comments();
+                    jQuery("#new_comment").val("");
                 },
                 error: function (data) {
                     var n = noty({
@@ -1411,927 +1725,489 @@
                         layout: 'center',
                         maxVisible: 5,
                         type: "error",
-                        text: "Ошибка вывода примечаний"
+                        text: "Ошибка отправки"
                     });
                 }
             });
-        }
-        //------------------------------------------------------
+        });
+        //----------------------------------------------------------------------------------
 
-        // форматирование даты для вывода
-        function formatDate(date) {
-            var dd = date.getDate();
-            if (dd < 10) dd = '0' + dd;
-            var mm = date.getMonth() + 1;
-            if (mm < 10) mm = '0' + mm;
-            var yy = date.getFullYear();
-            if (yy < 10) yy = '0' + yy;
-            var hh = date.getHours();
-            if (hh < 10) hh = '0' + hh;
-            var ii = date.getMinutes();
-            if (ii < 10) ii = '0' + ii;
-            var ss = date.getSeconds();
-            if (ss < 10) ss = '0' + ss;
-            return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
-        }
-        // ------------------------------------------------------------------------
-
-        // при нажатии на энтер добавляется коммент
-        document.getElementById('new_comment').onkeydown = function (e) {
-            if (e.keyCode === 13) {
-                document.getElementById('add_comment').click();
-            }
-        }
-        // ----------------------------------------------------------------------
-
-        jQuery(document).ready(function () {
-
-            trans();
-
-            window.time_gauger = undefined;
-            window.gauger = undefined;
-
-            // открытие модального окна с календаря и получение даты и вывода свободных монтажников или замерщиков
-            jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change, .full-day", function() {
-                window.idDay = jQuery(this).attr("id");
-                reg1 = "D(.*)D";
-                reg2 = "M(.*)M";
-                reg3 = "Y(.*)Y";
-                var d = idDay.match(reg1)[1];
-                var m = idDay.match(reg2)[1];
-                if (d.length == 1) {
-                    d = "0"+d;
+        // с вкладкой общее связано
+            var flag1 = 0;
+            jQuery("#sh_estimate").click(function () {
+                if (flag1) {
+                    jQuery(".section_estimate").hide();
+                    flag1 = 0;
                 }
-                if (m.length == 1) {
-                    m = "0"+m;
+                else {
+                    jQuery(".section_estimate").show();
+                    flag1 = 1;
                 }
-                window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
-                jQuery("#modal-window-container-tar").show();
-                jQuery("#modal-window-choose-tar").show("slow");
-                jQuery("#close-tar").show();
-                if (whatCalendar == 0) {
-                    jQuery.ajax({
-                        type: 'POST',
-                        url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
-                        data: {
-                            date: date,
-                            dealer: <?php echo $user->dealer_id; ?>,
-                        },
-                        success: function(data) {
-                            Array.prototype.diff = function(a) {
-                                return this.filter(function(i) {return a.indexOf(i) < 0;});
-                            };
-                            AllGauger = <?php echo json_encode($AllGauger); ?>;
-                            data = JSON.parse(data); // замеры
-                            console.log(data);
-                            AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
-                            var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
-                            AllTime.forEach( elementTime => {
-                                var t = elementTime.substr(0, 2);
-                                t++;
-                                Array.from(AllGauger).forEach(function(elementGauger) {
-                                    var emptytd = 0;
-                                    Array.from(data).forEach(function(elementProject) {
-                                        if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                            var timesession = jQuery("#jform_new_project_calculation_daypart").val();
-                                            var gaugersession = jQuery("#jform_project_gauger").val();
-                                            if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
-                                                TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                                            } else {
-                                                TableForSelect += '<tr><td></td>';
-                                            }
-                                            TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-                                            TableForSelect += '<td>'+elementProject.project_info+'</td>';
-                                            emptytd = 1;
-                                        }
-                                    });
-                                    if (emptytd == 0) {
-                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
-                                        TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
-                                        TableForSelect += '<td></td>';
-                                    }
-                                    TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
-                                });
-                            });
-                            jQuery("#projects_gaugers").empty();
-                            jQuery("#projects_gaugers").append(TableForSelect);
-                            jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
-                        }
-                    });
-                    //если сессия есть, то выдать время, которое записано в сессии
-                    if (date == datesession_gauger.substr(0, 10)) {
-                        var timesession_gauger = jQuery("#jform_project_new_calc_date").val();
-                        var gaugersession = jQuery("#jform_project_gauger").val();
-                        setTimeout(function() { 
-                            var times = jQuery("input[name='choose_time_gauger']");
-                            if (timesession_gauger != undefined) {
-                                times.each(function(element) {
-                                    if (timesession_gauger == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                                        jQuery(this).prop("checked", true);
-                                    }
-                                });
-                            }
-                        }, 200);
-                    } else if (time_gauger != undefined) {
-                        setTimeout(function() { 
-                            var times = jQuery("input[name='choose_time_gauger']");
-                            times.each(function(element) {
-                                if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                                    jQuery(this).prop("checked", true);
-                                }
-                            });
-                        }, 200);
-                    }
-                } else {
-                    jQuery.ajax({
-                        type: 'POST',
-                        url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyMounters",
-                        data: {
-                            date: date,
-                            dealer: <?php echo $user->dealer_id; ?>,
-                        },
-                        success: function(data) {
-                            Array.prototype.diff = function(a) {
-                                return this.filter(function(i) {return a.indexOf(i) < 0;});
-                            };
-                            window.DataOfProject = JSON.parse(data);
-                            window.AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
-                            data = JSON.parse(data);
-                            jQuery("#date-modal").text("Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]);
-                            // заполнение бригад в селекте
-                            jQuery("#mounters").empty();
-                            Allbrigades = <?php echo json_encode($Allbrigades); ?>;
-                            select_brigade = "";
-                            Array.from(Allbrigades).forEach(function(elem) {
-                                select_brigade += '<option value="'+elem.id+'">'+elem.name+'</option>';
-                            });
-                            jQuery("#mounters").append(select_brigade);
-                            // вывод имен монтажников
-                            var selectedBrigade = jQuery("#mounters").val();
-                            jQuery("#mounters_names").empty();
-                            AllMounters = <?php echo json_encode($AllMounters) ?>;
-                            AllMounters.forEach(elem => {
-                                if (selectedBrigade == elem.id_brigade) {
-                                    jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
-                                }
-                            });
-                            // вывод работ бригады
-                            jQuery("#projects_brigade_container").empty();
-                            var table_projects = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
-                            table_projects += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
-                            Array.from(data).forEach(function(element) {
-                                if (element.project_mounter == selectedBrigade) {
-                                    if (element.project_mounting_day_off != "") {
-                                        table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
-                                    } else {
-                                        table_projects += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
-                                    }
-                                }
-                            });
-                            table_projects += "</table>";
-                            jQuery("#projects_brigade_container").append(table_projects);
-                            // вывод времени бригады
-                            var BusyTimes = [];
-                            Array.from(data).forEach(function(elem) {
-                                if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off == "" ) {
-                                    BusyTimes.push(elem.project_mounting_date.substr(11));
-                                } else if (selectedBrigade == elem.project_mounter && elem.project_mounting_day_off != "") {
-                                    AllTime.forEach(element => {
-                                        if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
-                                            BusyTimes.push(element);
-                                        }
-                                    }); 
-                                }
-                            });
-                            FreeTimes = AllTime.diff(BusyTimes);
-                            var select_hours;
-                            FreeTimes.forEach(element => {
-                                select_hours += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
-                            });
-                            jQuery("#hours").empty();
-                            jQuery("#hours").append(select_hours);
-                        }
-                    });
-                    //если монтаж есть, то выдать время, монтажную бригаду и инфу о ней, которые записаны
-                    if (date == datesession.substr(0, 10)) {
-                        var timesession = jQuery("#jform_project_mounting_date").val().substr(11);
-                        var mountersession = jQuery("#jform_project_mounter").val();
-                        setTimeout(function() {
-                            // время
-                            var timeall = document.getElementById('hours').options;
-                            for (var i = 0; i < timeall.length; i++) {
-                                if (timesession != undefined) {
-                                    if (timeall[i].value == timesession) {
-                                        document.getElementById('hours').disabled = false;
-                                        timeall[i].selected = true;
-                                    }
-                                }
-                            }
-                            // бригада
-                            var mounterall = document.getElementById('mounters').options;
-                            for (var i = 0; i < mounterall.length; i++) {
-                                if (mountersession != undefined) {
-                                    if (mounterall[i].value == mountersession) {
-                                        document.getElementById('mounters').disabled = false;
-                                        mounterall[i].selected = true;
-                                    }
-                                }
-                            }
-                            // инфа о бригаде
-                            jQuery("#mounters_names").empty();
-                            AllMounters = <?php echo json_encode($AllMounters) ?>;
-                            AllMounters.forEach(elem => {
-                                if (mountersession == elem.id_brigade) {
-                                    jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
-                                }
-                            });
-                            // монтажи
-                            jQuery("#projects_brigade_container").empty();
-                            var table_projects3 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
-                            table_projects3 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
-                            Array.from(DataOfProject).forEach(function(element) {
-                                if (element.project_mounter == mountersession) {
-                                    table_projects3 += '<tr><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
-                                }
-                            });
-                            table_projects3 += "</table>";
-                            jQuery("#projects_brigade_container").append(table_projects3);
-                        }, 200);
-                    }
-                    // запрет выбора монтажника, если монтаж в статусе недовыполнен
-                    if (<?php echo $this->item->project_status ?> == 17) {
-                        setTimeout(function() {
-                            var mounter = document.getElementById('mounters').options;
-                            for (var i = 0; i < mounter.length; i++) {
-                                document.getElementById('mounters').disabled = true;
-                                
-                            }
-                            console.log(mounter);
-                        }, 200);
-                    }
-                }
+                jQuery(".section_estimate").each(function () {
+                    var el = jQuery(this);
+                    if (el.attr("vis") == "hide") el.hide();
+                })
             });
-            //--------------------------------------------
 
-            // заполнение данных о выбранной бригаде при изменении селекта
-            jQuery("#mounters").change(function () {
-                // имена бригад
-                jQuery("#mounters_names").empty();
-                var id = jQuery("#mounters").val();
-                AllMounters = <?php echo json_encode($AllMounters) ?>;
-                AllMounters.forEach(elem => {
-                    if (id == elem.id_brigade) {
-                        jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
-                    }
+            jQuery("#send_all_to_email1").click(function () {
+                var email = jQuery("#all-email1").val();
+                var client_id = jQuery("#client_id").val();
+                var dop_file = jQuery("#dop_file").serialize();
+                var testfilename = <?php if (isset($json)) { echo $json;} ?>;
+                var filenames = [];
+                for (var i = 0; i < testfilename.length; i++) {
+                    var id = testfilename[i].id;
+                    var el = jQuery("#section_estimate_" + id);
+                    if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
+                }
+                var formData = new FormData();
+                jQuery.each(jQuery('#dopfile')[0].files, function (i, file) {
+                    formData.append('dopfile', file)
                 });
-                // монтажи
-                jQuery("#projects_brigade_container").empty();
-                var table_projects2 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
-                table_projects2 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
-                Array.from(DataOfProject).forEach(function(element) {
-                    if (element.project_mounter == id) {
-                        if (element.project_mounting_day_off != "") {
-                            table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+' - '+element.project_mounting_day_off.substr(11, 5)+'</td><td colspan="2">'+element.project_info+'</td></tr>';
-                        } else {
-                            table_projects2 += '<tr><td>'+element.project_mounting_date.substr(11, 5)+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
-                        }
-                    }
-                });
-                table_projects2 += "</table>";
-                jQuery("#projects_brigade_container").append(table_projects2);
-                // времена
-                jQuery("#hours").empty();
-                var BusyTimes = [];
-                Array.from(DataOfProject).forEach(function(elem) {
-                    if (id == elem.project_mounter && elem.project_mounting_day_off == "" ) {
-                        BusyTimes.push(elem.project_mounting_date.substr(11));
-                    } else if (id == elem.project_mounter && elem.project_mounting_day_off != "") {
-                        AllTime.forEach(element => {
-                            if (element >= elem.project_mounting_date.substr(11) && element <= elem.project_mounting_day_off.substr(11)) {
-                                BusyTimes.push(element);
-                            }
-                        }); 
-                    }
-                });
-                FreeTimes = AllTime.diff(BusyTimes);
-                var select_hours2;
-                FreeTimes.forEach(element => {
-                    select_hours2 += '<option value="'+element+'">'+element.substr(0, 5)+'</option>';
-                });
-                jQuery("#hours").append(select_hours2);
-            });
-            //-------------------------------------------
-
-            // получение значений из селектов монтажников
-            jQuery("#save-choise-tar").click(function() {
-                var mounter = jQuery("#mounters").val();
-                var time = jQuery("#hours").val();
-                var datatime = date+" "+time;
-                jQuery("#jform_project_mounter").val(mounter);
-                jQuery("#jform_project_mounting_date").val(datatime);
-                if (jQuery(".change").length == 0) {
-                    jQuery("#"+idDay).addClass("change");
-                } else {
-                    jQuery(".change").removeClass("change");
-                    jQuery("#"+idDay).addClass("change");
-                }
-                jQuery("#close-tar").hide();
-                jQuery("#modal-window-container-tar").hide();
-                jQuery("#modal-window-choose-tar").hide();
-            });
-            //------------------------------------------
-
-            // получение значений из селектов замерщиков
-            jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
-                var times = jQuery("input[name='choose_time_gauger']");
-                time_gauger = "";
-                gauger = "";
-                times.each(function(element) {
-                    if (jQuery(this).prop("checked") == true) {
-                        time_gauger = jQuery(this).val();
-                        gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
-                    }
-                });
-                jQuery("#jform_new_project_calculation_daypart").val(time_gauger);
-                jQuery("#jform_project_new_calc_date").val(date);
-                jQuery("#jform_project_gauger").val(gauger);
-                if (jQuery(".change").length == 0) {
-                    jQuery("#"+idDay).addClass("change");
-                } else {
-                    jQuery(".change").removeClass("change");
-                    jQuery("#"+idDay).addClass("change");
-                }
-                jQuery("#close-tar").hide();
-                jQuery("#modal-window-container-tar").hide();
-                jQuery("#modal-window-choose-tar").hide();
-            });
-            //------------------------------------------
-
-            // подсвет сегоднешней даты
-            window.today = new Date();
-            window.NowYear = today.getFullYear();
-            window.NowMonth = today.getMonth();
-            window.day = today.getDate();
-            Today(day, NowMonth, NowYear);
-            //------------------------------------------
-
-            //если сессия есть, то выдать дату, которая записана в сессии
-            var datesession = jQuery("#jform_project_mounting_date").val();
-            if (datesession != undefined) {
-                if (datesession.substr(8, 1) == "0") {
-                    daytocalendar = datesession.substr(9, 1);
-                } else {
-                    daytocalendar = datesession.substr(8, 2);
-                }
-                if (datesession.substr(5, 1) == "0") {
-                    monthtocalendar = datesession.substr(6, 1);
-                } else {
-                    monthtocalendar = datesession.substr(5, 2);
-                }
-                jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
-            }
-            var datesession_gauger = jQuery("#jform_project_new_calc_date").val();
-            if (datesession_gauger != undefined) {
-                if (datesession_gauger.substr(8, 1) == "0") {
-                    daytocalendar_gauger = datesession_gauger.substr(9, 1);
-                } else {
-                    daytocalendar_gauger = datesession_gauger.substr(8, 2);
-                }
-                if (datesession_gauger.substr(5, 1) == "0") {
-                    monthtocalendar_gauger = datesession_gauger.substr(6, 1);
-                } else {
-                    monthtocalendar_gauger = datesession_gauger.substr(5, 2);
-                }
-                jQuery("#current-monthD"+daytocalendar_gauger+"DM"+monthtocalendar_gauger+"MY"+datesession_gauger.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
-            }
-            //-----------------------------------------------------------
-
-            // показать историю
-            show_comments();
-            //---------------------------------------------------------
-
-            // добавление коммента и обновление истории
-            jQuery("#add_comment").click(function () {
-                var comment = jQuery("#new_comment").val();
-                var reg_comment = /[\\\<\>\/\'\"\#]/;
-                var id_client = <?php echo $this->item->id_client;?>;
-                if (reg_comment.test(comment) || comment === "") {
-                    alert('Неверный формат примечания!');
-                    return;
-                }
+                formData.append('filenames', JSON.stringify(filenames));
+                formData.append('email', email);
+                formData.append('type', 0);
+                formData.append('client_id', client_id);
                 jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=addComment",
-                    data: {
-                        comment: comment,
-                        id_client: id_client
-                    },
-                    dataType: "json",
-                    async: true,
+                    url: "index.php?option=com_gm_ceiling&task=send_estimate",
+                    data: formData, /*{
+                        filenames: JSON.stringify(filenames),
+                        email: email,
+                        type: 0,
+                        client_id: client_id,
+                        dop_file : serialize
+                    },*/
+                    type: "POST",
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
                     success: function (data) {
+                        console.log(data);
                         var n = noty({
-                            timeout: 2000,
                             theme: 'relax',
                             layout: 'center',
                             maxVisible: 5,
                             type: "success",
-                            text: "Комментарий добавлен"
+                            text: "Сметы отправлены!"
                         });
-                        jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
-                        show_comments();
-                        jQuery("#new_comment").val("");
+
                     },
                     error: function (data) {
+                        console.log(data);
                         var n = noty({
-                            timeout: 2000,
                             theme: 'relax',
                             layout: 'center',
                             maxVisible: 5,
                             type: "error",
-                            text: "Ошибка отправки"
+                            text: "ошибка отправки"
                         });
                     }
                 });
             });
-            //----------------------------------------------------------------------------------
-
-            // с вкладкой общее связано
-                var flag1 = 0;
-                jQuery("#sh_estimate").click(function () {
-                    if (flag1) {
-                        jQuery(".section_estimate").hide();
-                        flag1 = 0;
-                    }
-                    else {
-                        jQuery(".section_estimate").show();
-                        flag1 = 1;
-                    }
-                    jQuery(".section_estimate").each(function () {
-                        var el = jQuery(this);
-                        if (el.attr("vis") == "hide") el.hide();
-                    })
-                });
-
-                jQuery("#send_all_to_email1").click(function () {
-                    var email = jQuery("#all-email1").val();
-                    var client_id = jQuery("#client_id").val();
-                    var dop_file = jQuery("#dop_file").serialize();
-                    var testfilename = "<?php echo $json;?>";
-                    var filenames = [];
-                    for (var i = 0; i < testfilename.length; i++) {
-                        var id = testfilename[i].id;
-                        var el = jQuery("#section_estimate_" + id);
-                        if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-                    }
-                    var formData = new FormData();
-                    jQuery.each(jQuery('#dopfile')[0].files, function (i, file) {
-                        formData.append('dopfile', file)
-                    });
-                    formData.append('filenames', JSON.stringify(filenames));
-                    formData.append('email', email);
-                    formData.append('type', 0);
-                    formData.append('client_id', client_id);
-                    jQuery.ajax({
-                        url: "index.php?option=com_gm_ceiling&task=send_estimate",
-                        data: formData, /*{
-                            filenames: JSON.stringify(filenames),
-                            email: email,
-                            type: 0,
-                            client_id: client_id,
-                            dop_file : serialize
-                        },*/
-                        type: "POST",
-                        dataType: 'json',
-                        processData: false,
-                        contentType: false,
-                        cache: false,
-                        success: function (data) {
-                            console.log(data);
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "success",
-                                text: "Сметы отправлены!"
-                            });
-
-                        },
-                        error: function (data) {
-                            console.log(data);
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: "ошибка отправки"
-                            });
-                        }
-                    });
-                });
-                var flag2 = 0;
-                jQuery("#sh_mount").click(function () {
-                    if (flag2) {
-                        jQuery(".section_mount").hide();
-                        flag2 = 0;
-                    }
-                    else {
-                        jQuery(".section_mount").show();
-                        flag2 = 1;
-                    }
-                    jQuery(".section_mount").each(function () {
-                        var el = jQuery(this);
-                        if (el.attr("vis") == "hide") el.hide();
-                    })
-                });
-                jQuery("#send_all_to_email2").click(function () {
-                    var email = jQuery("#all-email2").val();
-                    var testfilename = "<?php echo $json1;?>";
-                    var filenames = [];
-                    for (var i = 0; i < testfilename.length; i++) {
-                        var id = testfilename[i].id;
-                        var el = jQuery("#section_mount_" + id);
-                        if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-                    }
-                    console.log(filenames);
-                    var formData = new FormData();
-                    jQuery.each(jQuery('#dopfile1')[0].files, function (i, file) {
-                        formData.append('dopfile1', file)
-                    });
-                    formData.append('filenames', JSON.stringify(filenames));
-                    formData.append('email', email);
-                    formData.append('type', 1);
-                    //formData.append('client_id', client_id);
-                    jQuery.ajax({
-                        url: "index.php?option=com_gm_ceiling&task=send_estimate",
-                        data: formData,/* {
-                            filenames: JSON.stringify(filenames),
-                            email: email,
-                            type: 1
-                        },*/
-                        type: "POST",
-                        dataType: 'json',
-                        processData: false,
-                        contentType: false,
-                        cache: false,
-                        success: function (data) {
-                            console.log(data);
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "success",
-                                text: "Наряды на монтаж отправлены!"
-                            });
-
-                        },
-                        error: function (data) {
-                            console.log(data);
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: "ошибка отправки"
-                            });
-                        }
-                    });
-                });
-            jQuery("input[name='transport']").click(function () {
-                var transport = jQuery("input[name='transport']:checked").val();
-
-                if (transport == '2') {
-                    jQuery("#transport_dist").show();
-                    jQuery("#transport_dist_col").hide();
-                    jQuery("#distance").val('');
-                    jQuery("#distance_col").val('');
-                }
-                else if(transport == '1') {
-                    jQuery("#transport_dist").hide();
-                    jQuery("#transport_dist_col").show();
-                    jQuery("#distance_col").val('');
-                    jQuery("#distance").val('');
+            var flag2 = 0;
+            jQuery("#sh_mount").click(function () {
+                if (flag2) {
+                    jQuery(".section_mount").hide();
+                    flag2 = 0;
                 }
                 else {
-                    jQuery("#transport_dist").hide();
-                    jQuery("#transport_dist_col").hide();
-                    jQuery("#distance").val('');
-                    jQuery("#distance_col").val('');
+                    jQuery(".section_mount").show();
+                    flag2 = 1;
                 }
-
-                trans();
+                jQuery(".section_mount").each(function () {
+                    var el = jQuery(this);
+                    if (el.attr("vis") == "hide") el.hide();
+                })
             });
-
-            jQuery("#click_transport").click(function () {
-                trans();
-            });
-            jQuery("#click_transport_1").click(function () {
-                trans();
-            });
-
-            if (jQuery("input[name='transport']:checked").val() == '2') {
-                    jQuery("#transport_dist").show();
-            }
-            if (jQuery("input[name='transport']:checked").val() == '1') {
-                    jQuery("#transport_dist_col").show();
-            }
-            jQuery("input[name^='include_calculation']").click(function () {
-                var _this = jQuery(this);
-                var id = _this.val();
-                var estimate = jQuery("#section_estimate_" + id);
-                var mount = jQuery("#section_mount_" + id);
-                if (jQuery(this).prop("checked")) {
-                    jQuery(this).closest("tr").removeClass("not-checked");
-                    estimate.attr("vis", "");
-                    if (flag1 == 1) estimate.show();
-                    mount.attr("vis", "");
-                    if (flag2 == 1) mount.show();
-                } else {
-                    jQuery(this).closest("tr").addClass("not-checked");
-                    estimate.attr("vis", "hide").hide();
-                    mount.attr("vis", "hide").hide();
+            jQuery("#send_all_to_email2").click(function () {
+                var email = jQuery("#all-email2").val();
+                var testfilename = <?php if (isset($json1)) { echo $json1;} ?>;
+                var filenames = [];
+                for (var i = 0; i < testfilename.length; i++) {
+                    var id = testfilename[i].id;
+                    var el = jQuery("#section_mount_" + id);
+                    if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
                 }
-                square_total();
-                calculate_total();
-                calculate_total1();
-                trans();
-            });
-            // -------------------------------------------------------------------
-
-            function trans() {
-                var id = <?php echo $this->item->id; ?>;
-                var calcul = jQuery("input[name='transport']:checked").val();
-                var transport = jQuery("input[name='transport']:checked").val();
-                var distance = jQuery("#distance").val();
-                var distance_col = jQuery("#distance_col").val();
-                var distance_col_1 = jQuery("#distance_col_1").val();
-                var form = jQuery("#form-client").serialize();
-                console.log(distance);
-                // alert(distance_col);
+                console.log(filenames);
+                var formData = new FormData();
+                jQuery.each(jQuery('#dopfile1')[0].files, function (i, file) {
+                    formData.append('dopfile1', file)
+                });
+                formData.append('filenames', JSON.stringify(filenames));
+                formData.append('email', email);
+                formData.append('type', 1);
+                //formData.append('client_id', client_id);
                 jQuery.ajax({
-                    type: 'POST',
-                    url: "index.php?option=com_gm_ceiling&task=big_smeta.transport",
-                    data: form,
-                    success: function(data){
-                        data = JSON.parse(data);
-                        var html = "",
-                            transport_sum = parseFloat(data);
-                        var calc_sum = 0, calc_total = 0;
-                        jQuery.each(jQuery("[name='include_calculation[]']:checked"), function (i,e) {
-                            calc_sum += parseFloat(jQuery("[name='calculation_total_discount["+jQuery(e).val()+"]']").val());
-                            calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
-                        });
-
-                        var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
-                        var sum_total = Float(calc_total + transport_sum);
-                        if(sum < 3500 )sum = 3500;
-                        if(sum_total < 3500 )sum_total = 3500;
-                        jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
-                        //jQuery("#project_total").text(sum  + " руб.");
-                        jQuery("#project_total span.sum").text(sum_total);
-                        jQuery("#project_total span.dop").html((sum_total <= 3500)?" * минимальная сумма заказа 3500р.":"");
-                        jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                        jQuery("#project_total_discount span.dop").html((sum <= 3500)?" * минимальная сумма заказа 3500р.":"");
-                        jQuery("#project_sum_transport").val(sum);
-                        jQuery(" #project_sum").val(sum);
-
-                    },
-                    dataType: "json",
-                    timeout: 10000,
-                    error: function(data){
+                    url: "index.php?option=com_gm_ceiling&task=send_estimate",
+                    data: formData,/* {
+                        filenames: JSON.stringify(filenames),
+                        email: email,
+                        type: 1
+                    },*/
+                    type: "POST",
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (data) {
+                        console.log(data);
                         var n = noty({
                             theme: 'relax',
-                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Наряды на монтаж отправлены!"
+                        });
+
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        var n = noty({
+                            theme: 'relax',
                             layout: 'center',
                             maxVisible: 5,
                             type: "error",
-                            text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
+                            text: "ошибка отправки"
                         });
                     }
                 });
-            }   
-            function Float(x, y = 2) {
-                return Math.round(parseFloat(""+x) * Math.pow(10,y)) / Math.pow(10,y);
+            });
+        jQuery("input[name='transport']").click(function () {
+            var transport = jQuery("input[name='transport']:checked").val();
+
+            if (transport == '2') {
+                jQuery("#transport_dist").show();
+                jQuery("#transport_dist_col").hide();
+                jQuery("#distance").val('');
+                jQuery("#distance_col").val('');
             }
-            function calculate_total() {
-                var project_total = 0,
-                    project_total_discount = 0,
-                    pr_total2 = 0;
-
-                jQuery("input[name^='include_calculation']:checked").each(function () {
-                    var parent = jQuery(this).closest(".include_calculation"),
-                        calculation_total = parent.find("input[name^='calculation_total']").val(),
-                        calculation_total_discount = parent.find("input[name^='calculation_total_discount']").val(),
-                        project_total2 = parent.find("input[name^='calculation_total2']").val();
-
-
-                    project_total += parseFloat(calculation_total);
-                    project_total_discount += parseFloat(calculation_total_discount);
-                    pr_total2 += parseFloat(project_total2);
-                });
-
-                if(project_total < 3500 && pr_total2 !== 0)  project_total = 3500;
-                if(project_total_discount < 3500 && pr_total2 !== 0)  project_total_discount = 3500;
-
-                jQuery("#project_total span.sum").text(project_total.toFixed(2));
-                if (project_total > 3500) { jQuery("#project_total span.dop").html(" "); }
-                if (project_total <= 3500 && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа 3500р."); }
-                if (project_total <= 3500 && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
-                jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
-                if (project_total_discount > 3500) { jQuery("#project_total_discount span.dop").html(" "); }
-                if (project_total_discount <= 3500 && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа 3500р."); }
-                if (project_total_discount <= 3500 && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
-                //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
-                jQuery("#project_sum").val(project_total_discount);
+            else if(transport == '1') {
+                jQuery("#transport_dist").hide();
+                jQuery("#transport_dist_col").show();
+                jQuery("#distance_col").val('');
+                jQuery("#distance").val('');
             }
-            function square_total() {
-                var square = 0,
-                    perimeter = 0;
-                var total_sq = 0, total_p = 0;
-                jQuery("input[name^='include_calculation']:checked").each(function () {
-                    var parent = jQuery(this).closest(".include_calculation"),
-                        square = parent.find("input[name^='total_square']").val(),
-                        perimeter = parent.find("input[name^='total_perimeter']").val();
-                    total_sq += parseFloat(square);
-                    total_p += parseFloat(perimeter);
-                });
-
-                jQuery("#total_square").text(total_sq.toFixed(2));
-                jQuery("#total_perimeter").text(total_p.toFixed(2));
-            }
-            function calculate_total1() {
-                var project_total1 = 0,
-                    project_total2 = 0,
-                    project_total3 = 0,
-                    pr_total1 = 0,
-                    pr_total2 = 0,
-                    pr_total3 = 0;
-
-                jQuery("input[name^='include_calculation']:checked").each(function () {
-                    var parent = jQuery(this).closest(".include_calculation"),
-                        project_total1 = parent.find("input[name^='calculation_total1']").val(),
-                        project_total2 = parent.find("input[name^='calculation_total2']").val(),
-                        project_total3 = parent.find("input[name^='calculation_total3']").val();
-
-                    pr_total1 += parseFloat(project_total1);
-                    pr_total2 += parseFloat(project_total2);
-                    pr_total3 += parseFloat(project_total3);
-                });
-                jQuery("#calculation_total1").text(pr_total1.toFixed(0));
-                jQuery("#calculation_total2").text(pr_total2.toFixed(0));
-                jQuery("#calculation_total3").text(pr_total3.toFixed(0));
+            else {
+                jQuery("#transport_dist").hide();
+                jQuery("#transport_dist_col").hide();
+                jQuery("#distance").val('');
+                jQuery("#distance_col").val('');
             }
 
+            trans();
+        });
+
+        jQuery("#click_transport").click(function () {
+            trans();
+        });
+        jQuery("#click_transport_1").click(function () {
+            trans();
+        });
+
+        if (jQuery("input[name='transport']:checked").val() == '2') {
+                jQuery("#transport_dist").show();
+        }
+        if (jQuery("input[name='transport']:checked").val() == '1') {
+                jQuery("#transport_dist_col").show();
+        }
+        jQuery("input[name^='include_calculation']").click(function () {
+            var _this = jQuery(this);
+            var id = _this.val();
+            var estimate = jQuery("#section_estimate_" + id);
+            var mount = jQuery("#section_mount_" + id);
+            if (jQuery(this).prop("checked")) {
+                jQuery(this).closest("tr").removeClass("not-checked");
+                estimate.attr("vis", "");
+                if (flag1 == 1) estimate.show();
+                mount.attr("vis", "");
+                if (flag2 == 1) mount.show();
+            } else {
+                jQuery(this).closest("tr").addClass("not-checked");
+                estimate.attr("vis", "hide").hide();
+                mount.attr("vis", "hide").hide();
+            }
+            square_total();
+            calculate_total();
+            calculate_total1();
+            trans();
+        });
+        // -------------------------------------------------------------------
+
+        function trans() {
+            var id = <?php echo $this->item->id; ?>;
+            var calcul = jQuery("input[name='transport']:checked").val();
+            var transport = jQuery("input[name='transport']:checked").val();
+            var distance = jQuery("#distance").val();
+            var distance_col = jQuery("#distance_col").val();
+            var distance_col_1 = jQuery("#distance_col_1").val();
+            var form = jQuery("#form-client").serialize();
+            console.log(distance);
+            // alert(distance_col);
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=big_smeta.transport",
+                data: form,
+                success: function(data){
+                    data = JSON.parse(data);
+                    var html = "",
+                        transport_sum = parseFloat(data);
+                    var calc_sum = 0, calc_total = 0;
+                    jQuery.each(jQuery("[name='include_calculation[]']:checked"), function (i,e) {
+                        calc_sum += parseFloat(jQuery("[name='calculation_total_discount["+jQuery(e).val()+"]']").val());
+                        calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
+                    });
+
+                    var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
+                    var sum_total = Float(calc_total + transport_sum);
+                    if(sum < 3500 )sum = 3500;
+                    if(sum_total < 3500 )sum_total = 3500;
+                    jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
+                    //jQuery("#project_total").text(sum  + " руб.");
+                    jQuery("#project_total span.sum").text(sum_total);
+                    jQuery("#project_total span.dop").html((sum_total <= 3500)?" * минимальная сумма заказа 3500р.":"");
+                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
+                    jQuery("#project_total_discount span.dop").html((sum <= 3500)?" * минимальная сумма заказа 3500р.":"");
+                    jQuery("#project_sum_transport").val(sum);
+                    jQuery(" #project_sum").val(sum);
+
+                },
+                dataType: "json",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
+                    });
+                }
+            });
+        }   
+        function Float(x, y = 2) {
+            return Math.round(parseFloat(""+x) * Math.pow(10,y)) / Math.pow(10,y);
+        }
+        function calculate_total() {
+            var project_total = 0,
+                project_total_discount = 0,
+                pr_total2 = 0;
+
+            jQuery("input[name^='include_calculation']:checked").each(function () {
+                var parent = jQuery(this).closest(".include_calculation"),
+                    calculation_total = parent.find("input[name^='calculation_total']").val(),
+                    calculation_total_discount = parent.find("input[name^='calculation_total_discount']").val(),
+                    project_total2 = parent.find("input[name^='calculation_total2']").val();
+
+
+                project_total += parseFloat(calculation_total);
+                project_total_discount += parseFloat(calculation_total_discount);
+                pr_total2 += parseFloat(project_total2);
+            });
+
+            if(project_total < 3500 && pr_total2 !== 0)  project_total = 3500;
+            if(project_total_discount < 3500 && pr_total2 !== 0)  project_total_discount = 3500;
+
+            jQuery("#project_total span.sum").text(project_total.toFixed(2));
+            if (project_total > 3500) { jQuery("#project_total span.dop").html(" "); }
+            if (project_total <= 3500 && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа 3500р."); }
+            if (project_total <= 3500 && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
+            jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
+            if (project_total_discount > 3500) { jQuery("#project_total_discount span.dop").html(" "); }
+            if (project_total_discount <= 3500 && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа 3500р."); }
+            if (project_total_discount <= 3500 && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
+            //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
+            jQuery("#project_sum").val(project_total_discount);
+        }
+        function square_total() {
+            var square = 0,
+                perimeter = 0;
+            var total_sq = 0, total_p = 0;
+            jQuery("input[name^='include_calculation']:checked").each(function () {
+                var parent = jQuery(this).closest(".include_calculation"),
+                    square = parent.find("input[name^='total_square']").val(),
+                    perimeter = parent.find("input[name^='total_perimeter']").val();
+                total_sq += parseFloat(square);
+                total_p += parseFloat(perimeter);
+            });
+
+            jQuery("#total_square").text(total_sq.toFixed(2));
+            jQuery("#total_perimeter").text(total_p.toFixed(2));
+        }
+        function calculate_total1() {
+            var project_total1 = 0,
+                project_total2 = 0,
+                project_total3 = 0,
+                pr_total1 = 0,
+                pr_total2 = 0,
+                pr_total3 = 0;
+
+            jQuery("input[name^='include_calculation']:checked").each(function () {
+                var parent = jQuery(this).closest(".include_calculation"),
+                    project_total1 = parent.find("input[name^='calculation_total1']").val(),
+                    project_total2 = parent.find("input[name^='calculation_total2']").val(),
+                    project_total3 = parent.find("input[name^='calculation_total3']").val();
+
+                pr_total1 += parseFloat(project_total1);
+                pr_total2 += parseFloat(project_total2);
+                pr_total3 += parseFloat(project_total3);
+            });
+            jQuery("#calculation_total1").text(pr_total1.toFixed(0));
+            jQuery("#calculation_total2").text(pr_total2.toFixed(0));
+            jQuery("#calculation_total3").text(pr_total3.toFixed(0));
+        }
+
+        jQuery("#spend-form input").on("keyup", function () {
+            jQuery('#extra_spend_submit').fadeIn();
+        });
+
+        jQuery("#penalty-form input").on("keyup", function () {
+            jQuery('#penalty_submit').fadeIn();
+        });
+
+        jQuery("#bonus-form input").on("keyup", function () {
+            jQuery('#bonus_submit').fadeIn();
+        });
+
+        jQuery("#extra_spend_button").click(function () {
+            var extra_spend_title_container = jQuery("#extra_spend_title_container"),
+                extra_spend_value_container = jQuery("#extra_spend_value_container");
+            jQuery("<div class='form-group'><input name='extra_spend_title[]' value='' class='form-control' type='text'></div>").appendTo(extra_spend_title_container);
+            jQuery("<div class='form-group'><input name='extra_spend_value[]' value='' class='form-control' type='tel'></div>").appendTo(extra_spend_value_container);
+            jQuery('#extra_spend_submit').fadeIn();
             jQuery("#spend-form input").on("keyup", function () {
                 jQuery('#extra_spend_submit').fadeIn();
             });
+        });
 
+        jQuery("#penalty_button").click(function () {
+            var extra_spend_title_container = jQuery("#penalty_title_container"),
+                extra_spend_value_container = jQuery("#penalty_value_container");
+            jQuery("<div class='form-group'><input name='penalty_title[]' value='' class='form-control' type='text'></div>").appendTo(penalty_title_container);
+            jQuery("<div class='form-group'><input name='penalty_value[]' value='' class='form-control' type='tel'></div>").appendTo(penalty_value_container);
+            jQuery('#penalty_submit').fadeIn();
             jQuery("#penalty-form input").on("keyup", function () {
                 jQuery('#penalty_submit').fadeIn();
             });
+        });
 
+        jQuery("#bonus_button").click(function () {
+            var extra_spend_title_container = jQuery("#bonus_title_container"),
+                extra_spend_value_container = jQuery("#bonus_value_container");
+            jQuery("<div class='form-group'><input name='bonus_title[]' value='' class='form-control' type='text'></div>").appendTo(bonus_title_container);
+            jQuery("<div class='form-group'><input name='bonus_value[]' value='' class='form-control' type='tel'></div>").appendTo(bonus_value_container);
+            jQuery('#bonus_submit').fadeIn();
             jQuery("#bonus-form input").on("keyup", function () {
                 jQuery('#bonus_submit').fadeIn();
             });
-
-            jQuery("#extra_spend_button").click(function () {
-                var extra_spend_title_container = jQuery("#extra_spend_title_container"),
-                    extra_spend_value_container = jQuery("#extra_spend_value_container");
-                jQuery("<div class='form-group'><input name='extra_spend_title[]' value='' class='form-control' type='text'></div>").appendTo(extra_spend_title_container);
-                jQuery("<div class='form-group'><input name='extra_spend_value[]' value='' class='form-control' type='tel'></div>").appendTo(extra_spend_value_container);
-                jQuery('#extra_spend_submit').fadeIn();
-                jQuery("#spend-form input").on("keyup", function () {
-                    jQuery('#extra_spend_submit').fadeIn();
-                });
-            });
-
-            jQuery("#penalty_button").click(function () {
-                var extra_spend_title_container = jQuery("#penalty_title_container"),
-                    extra_spend_value_container = jQuery("#penalty_value_container");
-                jQuery("<div class='form-group'><input name='penalty_title[]' value='' class='form-control' type='text'></div>").appendTo(penalty_title_container);
-                jQuery("<div class='form-group'><input name='penalty_value[]' value='' class='form-control' type='tel'></div>").appendTo(penalty_value_container);
-                jQuery('#penalty_submit').fadeIn();
-                jQuery("#penalty-form input").on("keyup", function () {
-                    jQuery('#penalty_submit').fadeIn();
-                });
-            });
-
-            jQuery("#bonus_button").click(function () {
-                var extra_spend_title_container = jQuery("#bonus_title_container"),
-                    extra_spend_value_container = jQuery("#bonus_value_container");
-                jQuery("<div class='form-group'><input name='bonus_title[]' value='' class='form-control' type='text'></div>").appendTo(bonus_title_container);
-                jQuery("<div class='form-group'><input name='bonus_value[]' value='' class='form-control' type='tel'></div>").appendTo(bonus_value_container);
-                jQuery('#bonus_submit').fadeIn();
-                jQuery("#bonus-form input").on("keyup", function () {
-                    jQuery('#bonus_submit').fadeIn();
-                });
-            });
-
-            jQuery("#spend-form").submit(function (e) {
-                e.preventDefault();
-                data = jQuery(this).serialize();
-                jQuery.ajax({
-                    type: 'POST',
-                    url: "index.php?option=com_gm_ceiling&task=add_spend&id=<?php echo $this->item->id; ?>",
-                    data: data,
-                    success: function (data) {
-                        if (data == 1) {
-                            jQuery('#extra_spend_submit').fadeOut();
-                        } else {
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: "Ошибка при попытке сохранить доп. затраты."
-                            });
-                        }
-
-                    },
-                    dataType: "text",
-                    timeout: 10000,
-                    error: function () {
-                        var n = noty({
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка при попытке сохранить доп. затраты. Сервер не отвечает"
-                        });
-                    }
-                });
-            });
-
-            jQuery("#penalty-form").submit(function (e) {
-                e.preventDefault();
-                data = jQuery(this).serialize();
-                jQuery.ajax({
-                    type: 'POST',
-                    url: "index.php?option=com_gm_ceiling&task=add_penalty&id=<?php echo $this->item->id; ?>",
-                    data: data,
-                    success: function (data) {
-                        if (data == 1) {
-                            jQuery('#penalty_submit').fadeOut();
-                        } else {
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: "Ошибка при попытке сохранить штрафы."
-                            });
-                        }
-
-                    },
-                    dataType: "text",
-                    timeout: 10000,
-                    error: function () {
-                        var n = noty({
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка при попытке сохранить штрафы. Сервер не отвечает"
-                        });
-                    }
-                });
-            });
-
-            jQuery("#bonus-form").submit(function (e) {
-                e.preventDefault();
-                data = jQuery(this).serialize();
-                jQuery.ajax({
-                    type: 'POST',
-                    url: "index.php?option=com_gm_ceiling&task=add_bonus&id=<?php echo $this->item->id; ?>",
-                    data: data,
-                    success: function (data) {
-                        if (data == 1) {
-                            jQuery('#bonus_submit').fadeOut();
-                        } else {
-                            var n = noty({
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "error",
-                                text: "Ошибка при попытке сохранить штрафы."
-                            });
-                        }
-
-                    },
-                    dataType: "text",
-                    timeout: 10000,
-                    error: function () {
-                        var n = noty({
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка при попытке сохранить штрафы. Сервер не отвечает"
-                        });
-                    }
-                });
-            });
-
         });
 
-    </script>
+        jQuery("#spend-form").submit(function (e) {
+            e.preventDefault();
+            data = jQuery(this).serialize();
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=add_spend&id=<?php echo $this->item->id; ?>",
+                data: data,
+                success: function (data) {
+                    if (data == 1) {
+                        jQuery('#extra_spend_submit').fadeOut();
+                    } else {
+                        var n = noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка при попытке сохранить доп. затраты."
+                        });
+                    }
 
-<?php } ?>
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при попытке сохранить доп. затраты. Сервер не отвечает"
+                    });
+                }
+            });
+        });
+
+        jQuery("#penalty-form").submit(function (e) {
+            e.preventDefault();
+            data = jQuery(this).serialize();
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=add_penalty&id=<?php echo $this->item->id; ?>",
+                data: data,
+                success: function (data) {
+                    if (data == 1) {
+                        jQuery('#penalty_submit').fadeOut();
+                    } else {
+                        var n = noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка при попытке сохранить штрафы."
+                        });
+                    }
+
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при попытке сохранить штрафы. Сервер не отвечает"
+                    });
+                }
+            });
+        });
+
+        jQuery("#bonus-form").submit(function (e) {
+            e.preventDefault();
+            data = jQuery(this).serialize();
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=add_bonus&id=<?php echo $this->item->id; ?>",
+                data: data,
+                success: function (data) {
+                    if (data == 1) {
+                        jQuery('#bonus_submit').fadeOut();
+                    } else {
+                        var n = noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка при попытке сохранить штрафы."
+                        });
+                    }
+
+                },
+                dataType: "text",
+                timeout: 10000,
+                error: function () {
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при попытке сохранить штрафы. Сервер не отвечает"
+                    });
+                }
+            });
+        });
+
+    });
+
+</script>

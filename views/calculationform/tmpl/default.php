@@ -1858,19 +1858,6 @@
             elements.val(e.attr("Type"));
             elements.attr({"clear": "false", "add": "false"});
             parent.find("#ID").val(e.attr("ID"));
-            /*
-            $.each(elements, function (i, v) {
-                v = $(v);
-                var id = v.attr('id');
-                if (typeof id !== 'undefined' && id !== false) {
-                    var attr = e.attr(id);
-                    if (typeof attr !== 'undefined' && attr !== false) {
-                        v.val(attr);
-                        v.attr({"clear": "false", "add": "false"});
-                    }
-                }
-            });
-            */
         }
     }
 
@@ -2157,7 +2144,6 @@
         function change_flag_auto(){
 			jQuery("#flag_auto").val(1);
         }
-		console.log( jQuery("#flag_auto").val());
 		jQuery( "#color_switch" ).click(function(){
 			if(jQuery( "#jform_n2").val() != 0 ) { 
                 change_flag_auto();
@@ -2529,7 +2515,7 @@
 					jQuery("#jform_task").val( "calculate" );
 					data = jQuery( "#form-calculation").serialize();
 					jQuery("#jform_task").val( temp_task );
-					var additional = "del_flag=1&need_mount="+jQuery(".need_mount").val();
+					var additional = "del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val();
 					jQuery.ajax({
 						type: 'POST',
 						url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
@@ -2636,16 +2622,16 @@
 					jQuery("#jform_task").val( temp_task );
 					
 					<?php if($type === "gmcalculator"||$type === "calculator" || ( $type === "gmmanager" && $subtype === "calendar")) { ?>
-						var additional = "&save=1&pdf=1&del_flag=1&need_mount="+jQuery(".need_mount").val();
+						var additional = "&save=1&pdf=1&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val();
 						 
 						<?php } else if ($type === "gmmanager" || $type === "manager" || $type === "guest") {  ?>
-					    var additional = "&save=0&pdf=0&del_flag=1&need_mount="+jQuery(".need_mount").val();
+					    var additional = "&save=0&pdf=0&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val();
 						<?php } else { ?>
 							var additional = "";
 							<?php } ?>
 							jQuery.ajax({
 								type: 'POST',
-								url: "index.php?option=com_gm_ceiling&task=calculate&ajax=1&"+additional,
+								url: "index.php?option=com_gm_ceiling&task=calculate&"+additional,
 								data: data,
 								success: function(data){
 									var html = "",
@@ -2711,10 +2697,10 @@
 						data = jQuery( "#form-calculation").serialize();
 						jQuery("#jform_task").val( temp_task );
 						<?php if($type === "gmcalculator"||$type === "calculator" || ( $type === "gmmanager" && $subtype === "calendar") ) { ?>
-							var additional = "&save=1&pdf=1&del_flag=1&need_mount="+jQuery(".need_mount").val();
+							var additional = "&save=1&pdf=1&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val();
 							
 							<?php } else  if ($type === "gmmanager" || $type === "manager" || $type === "guest"){ ?>
-							var additional = "&save=1&pdf=1&del_flag=1&need_mount="+jQuery(".need_mount").val();
+							var additional = "&save=1&pdf=1&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val();
 							<?php } else { ?>
 								var additional = "";
 								<?php }

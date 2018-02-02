@@ -64,46 +64,50 @@ $status = $status_model->getData();
 		<thead>
 			<tr>
 				<th class='' >
-					<?php echo JHtml::_('grid.sort',  'Создан', 'a.created', $listDirn, $listOrder); ?>
+					<?php //echo JHtml::_('grid.sort',  'Создан', 'a.created', $listDirn, $listOrder); ?>
+                    Создан
 				</th>
 				<th class=''>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_NAME', 'a.client_name', $listDirn, $listOrder); ?>
+					<?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_NAME', 'a.client_name', $listDirn, $listOrder); ?>
+                    Клиент
 				</th>
 				<th class=''>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS', 'a.client_contacts', $listDirn, $listOrder); ?>
+					<?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS', 'a.client_contacts', $listDirn, $listOrder); ?>
+                    Адрес
 				</th>
 			</tr>
             <tr class="row" id="TrClone" data-href="" style="display: none">
                 <td class="one-touch created"></td>
                 <td class="one-touch name"></td>
-                <td class="one-touch phone"></td>
+                <td class="one-touch address"></td>
             </tr>
 		</thead>
 
 		<tbody>
-		<?php foreach ($this->items as $i => $item) : ?>
-			<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-			<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
-				<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
-			<?php endif; ?>
-			<?php if($item->id !== $user->associated_client): ?>
-			<tr class="row<?php echo $i % 2; ?> inform" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
-				<td class="one-touch created">
-					<?php
-						if($item->created == "0000-00-00 00:00:00") {
-							echo "-";
-						} else {
-							$jdate = new JDate($item->created);
-							$created = $jdate->format("d.m.Y H:i");
-							echo $created;
-						}
-					?>
-                    
-				</td>
-				<td class="one-touch name"><?php echo $this->escape($item->client_name); ?></td>
-				<td class="one-touch phone"><?php echo $item->client_contacts; ?></td>
-			</tr>
-			<?php endif; endforeach; ?>
+        <!-- по сути этот кусок кода не нужен, т.к. таблицу формирует jQ...-->
+<!--		--><?php //foreach ($this->items as $i => $item) : ?>
+<!--			--><?php //$canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
+<!--			--><?php //if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
+<!--				--><?php //$canEdit = JFactory::getUser()->id == $item->created_by; ?>
+<!--			--><?php //endif; ?>
+<!--			--><?php //if($item->id !== $user->associated_client): ?>
+<!--			<tr class="row--><?php //echo $i % 2; ?><!-- inform" data-href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?><!--">-->
+<!--				<td class="one-touch created">-->
+<!--					--><?php
+//						if($item->created == "0000-00-00 00:00:00") {
+//							echo "-";
+//						} else {
+//							$jdate = new JDate($item->created);
+//							$created = $jdate->format("d.m.Y H:i");
+//							echo $created;
+//						}
+//					?>
+<!--                    -->
+<!--				</td>-->
+<!--				<td class="one-touch name">--><?php //echo $this->escape($item->client_name); ?><!--<br>--><?php //echo $item->client_contacts; ?><!--</td>-->
+<!--                <td class="one-touch address"> --><?php //print_r($item); ?><!-- </td>-->
+<!--			</tr>-->
+<!--			--><?php //endif; endforeach; ?>
 		</tbody>
 	</table>
 
@@ -117,9 +121,9 @@ $status = $status_model->getData();
 <script type="text/javascript">
 
 	jQuery(document).ready(function () {
-	    if(jQuery("#filter_search").val() == '') {
+	   // if(jQuery("#filter_search").val() == '') {
             jQuery("#select_status").change();
-        }
+        //}
 		jQuery('.delete-button').click(deleteItem);
 	});
 
@@ -147,11 +151,13 @@ $status = $status_model->getData();
     jQuery("#select_status").change(function ()
     {
         var status = jQuery("#select_status").val();
+        var search = jQuery("#filter_search").val();
         jQuery.ajax({
             type: "POST",
             url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
             data: {
-                status: status
+                status: status,
+                search: search
             },
             dataType: "json",
             async: true,
@@ -163,11 +169,13 @@ $status = $status_model->getData();
                 var text='';
                 for(i=0;i<data.length;i++){
                     var tr = $("#TrClone").clone();
+
                     tr.show();
                     tr.find(".created").text(data[i].created);
                     tr.find(".name").text(data[i].client_name);
                     if (data[i].client_contacts != null)
-                    tr.find(".phone").text(data[i].client_contacts);
+                    tr.find(".name").text(data[i].client_contacts + ' ' + data[i].client_name);
+                    tr.find(".address").text(data[i].address);
                     tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
                     list.append(tr);
                 }
