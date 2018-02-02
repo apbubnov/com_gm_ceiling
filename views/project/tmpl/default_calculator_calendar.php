@@ -2430,6 +2430,7 @@ var $ = jQuery;
 
         //если сессия есть, то выдать дату, которая записана в сессии монтажникам
         var datesession = jQuery("#jform_project_mounting_date").val();  
+        console.log(datesession);
         if (datesession != undefined) {
             jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
         }
