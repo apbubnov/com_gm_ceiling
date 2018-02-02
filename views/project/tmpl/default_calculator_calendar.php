@@ -2313,19 +2313,9 @@ var $ = jQuery;
                 }
             });
             if (date == datesession.substr(0, 10)) {
-                var timesession = jQuery("#jform_project_mounting_date").val().substr(11);
                 var mountersession = jQuery("#project_mounter").val();
+                console.log(timesession);
                 setTimeout(function() {
-                    // время
-                    var timeall = document.getElementById('hours').options;
-                    for (var i = 0; i < timeall.length; i++) {
-                        if (timesession != undefined) {
-                            if (timeall[i].value == timesession) {
-                                document.getElementById('hours').disabled = false;
-                                timeall[i].selected = true;
-                            }
-                        }
-                    }
                     // бригада
                     var mounterall = document.getElementById('mounters').options;
                     for (var i = 0; i < mounterall.length; i++) {
