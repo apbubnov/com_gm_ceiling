@@ -34,6 +34,19 @@ function double_margin($value, $margin1, $margin2)
     return $return;
 }
 
+/* моржа для дилера */
+function dealer_margin($price, $margin, $value, $type) {
+    $result = 0;
+    switch ($type)
+    {
+        case 0: $result = $price; break;
+        case 1: $result = $value; break;
+        case 2: $result = $price + $value; break;
+        case 3: $result = $price + $price * floatval($value) / 100; break;
+    }
+    return margin($result, $margin);
+}
+
 class Gm_ceilingHelpersGm_ceiling
 {
     /**

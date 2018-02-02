@@ -124,8 +124,6 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             $answer->message = "Обновление произошло успешно!";
             $answer->elements = [];
 
-            print_r($user->addComponentsPrice(["price" => "15"]));
-
             if (empty($dealer)) {
                 $oldPrice = $model->getPrice($id);
                 $newPrice = $oldPrice;
@@ -168,5 +166,14 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
 
     private function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
     private function double_margin($value, $margin1, $margin2) { return $this->margin($this->margin($value, $margin1), $margin2); }
-
+    private function dealer_margin($price, $margin, $value, $type) {
+        $result = 0;
+        switch ($type)
+        {
+            case 1: $result = $value; break;
+            case 2: $result = $price + $value; break;
+            case 3: $result = $price + $price * floatval($value) / 100; break;
+        }
+        return margin($result, $margin);
+    }
 }
