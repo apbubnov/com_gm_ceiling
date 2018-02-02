@@ -208,6 +208,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('a.who_calculate = 1');
                     if ($subtype == "calendar") {
                         $query->where('a.project_status = 1');
+                        $query->where("a.project_calculator = '$user->id'");
                         $query->order('a.project_calculation_date');
                     } elseif ($subtype == "projects") {
                         $query->where('a.project_verdict = 1 AND a.project_status BETWEEN 5 AND 15');
