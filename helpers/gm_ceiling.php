@@ -2674,7 +2674,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '<p>&nbsp;</p>
                             <h1>Наряд монтажной бригаде</h1>
                             <h2>Дата: ' . date("d.m.Y") . '</h2>
-                            
+                            <img src="' . iconv('UTF-8', 'UTF-8',$_SERVER['DOCUMENT_ROOT']."/calculation_images/man.svg" ). '" style="width: 100%; max-height: 800px;"/>
                             <table border="0" cellspacing="0" width="100%">
                             <tbody>
                                 <tr>

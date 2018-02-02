@@ -97,7 +97,7 @@ function dealer_margin($price, $margin, $value, $type) {
                 <td><i class="fa fa-bars" aria-hidden="true"></i></td>
                 <td><?=JHtml::_( 'grid.sort', '<i class="fa fa-hashtag" aria-hidden="true"></i>', 'component_id', $listDirn, $listOrder);?></td>
                 <td><?=JHtml::_('grid.sort', 'Наименование', 'component_title', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_('grid.sort', 'Количество', 'component_title', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Количество', 'option_count', $listDirn, $listOrder);?></td>
                 <?if($stock):?>
                 <td>Заказать</td>
                 <td>Цена закупки</td>
