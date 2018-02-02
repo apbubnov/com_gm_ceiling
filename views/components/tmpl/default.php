@@ -104,6 +104,7 @@ function dealer_margin($price, $margin, $value, $type) {
                 <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
                 <td>Посмотреть</td>
                 <?elseif ($managerGM && empty($dealer)):?>
+                <td><?=JHtml::_( 'grid.sort', 'Цена', 'option_price', $listDirn, $listOrder);?></td>
                 <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
                 <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'option_price', $listDirn, $listOrder);?></td>
                 <td>Изменить</td>
@@ -132,8 +133,8 @@ function dealer_margin($price, $margin, $value, $type) {
                 <?elseif ($managerGM && empty($dealer)):?>
                     <td></td>
                     <td></td>
-                    <td>
-                    </td>
+                    <td></td>
+                    <td></td>
                 <?elseif ($managerGM):?>
                     <td></td>
                     <td></td>
@@ -156,6 +157,7 @@ function dealer_margin($price, $margin, $value, $type) {
                         <td></td>
                         <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=component&id=<?=$key_o;?>">Инфо</a></td>
                     <?elseif ($managerGM && empty($dealer)):?>
+                        <td id="GMPrice"><?=$option->price;?></td>
                         <td id="GMPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
                         <td id="DealerPrice"><?=double_margin($option->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
                         <td>
