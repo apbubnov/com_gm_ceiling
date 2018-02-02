@@ -524,9 +524,9 @@ class Gm_ceilingHelpersGm_ceiling
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
-                throw new Exception("123123123");
+               
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
-                $data['id'] = $ajax_return['id'];
+                //$data['id'] = $ajax_return['id'];
                 $filename = md5("calculation_sketch" . $ajax_return['id']);
                 $cut_filename = md5("cut_sketch" . $ajax_return['id']);
                 
