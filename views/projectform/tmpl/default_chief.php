@@ -42,14 +42,24 @@
     $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
     $mount_transport = $mountModel->getDataAll();
 
-    if($this->item->transport == 0 ) $sum_transport = 0;
-    if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-    if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
-    $min = 100;
-    foreach($calculations as $d) {
-        if($d->discount < $min) $min = $d->discount;
+    if ($this->item->transport == 0 ) {
+        $sum_transport = 0;
     }
-    if ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
+    if ($this->item->transport == 1 ) {
+        $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+    }
+    if ($this->item->transport == 2 ) {
+        $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
+    }
+    $min = 100;
+    foreach ($calculations as $d) {
+        if ($d->discount < $min) {
+            $min = $d->discount;
+        }
+    }
+    if ($min != 100) {
+        $sum_transport = $sum_transport * ((100 - $min)/100);
+    }
     if ($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
         $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
     }
@@ -74,19 +84,24 @@
         $month2++;
         $year2 = $year1;
     }
+    if ($user->dealer_id == 1) {
+        $dealer_for_calendar = $userId;
+    } else {
+        $dealer_for_calendar = $user->dealer_id;
+    }
     if ($this->item->project_status == 1) {
         $whatCalendar = 0;
-        $FlagCalendar = [3, $user->dealer_id];
+        $FlagCalendar = [3, $dealer_for_calendar];
     } elseif ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) {
         $whatCalendar = 1;
-        $FlagCalendar = [2, $user->dealer_id];
+        $FlagCalendar = [2, $dealer_for_calendar];
     }
     $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
     $calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
     //----------------------------------------------------------------------------------
 
     // все бригады
-    $Allbrigades = $model->FindAllbrigades($user->dealer_id);
+    $Allbrigades = $model->FindAllbrigades($dealer_for_calendar);
     $AllMounters = [];
     if (count($Allbrigades) == 0) {
         array_push($Allbrigades, ["id"=>$userId, "name"=>$user->get('name')]);
@@ -109,11 +124,7 @@
     //----------------------------------------------------------------------------------
 
     // все замерщики
-    if ($user->dealer_id == 1 && !in_array("14", $user->groups)) {
-        $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
-    } else {
-        $AllGauger = $model->FindAllGauger($user->dealer_id, 21);
-    }
+    $AllGauger = $model->FindAllGauger($dealer_for_calendar, 21);
     //----------------------------------------------------------------------------------
 
     $mount_sum = 0;
@@ -221,7 +232,6 @@
                     ?>
                     <tr class="section_ceilings">
                         <td class="include_calculation">
-
                             <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
                             <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
                             <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
@@ -253,7 +263,7 @@
                     </tr>
                     <?php if($calculation->discount > 0) $kol++;} ?>
                     <tr>
-                        <th>Общая S/общий P :</th>
+                        <th>Общая S/общий P:</th>
                         <th id="total_square">
                             <?php echo $total_square; ?>м<sup>2</sup> /
                         </th>
@@ -262,9 +272,7 @@
                         </th>
                     </tr>
                     <tr>
-                        <th>
-                            Транспортные расходы
-                        </th>
+                        <th>Транспортные расходы</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -1151,7 +1159,7 @@
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
             data: {
                 id: <?php echo $userId; ?>,
-                id_dealer: <?php echo $user->dealer_id; ?>,
+                id_dealer: <?php echo $dealer_for_calendar; ?>,
                 flag: <?php if ($whatCalendar == 0) { echo 3; } else { echo 2; } ?>,
                 month: month,
                 year: year,
@@ -1191,7 +1199,7 @@
                 id: <?php echo $userId; ?>,
                 month: month,
                 year: year,
-                id_dealer: <?php echo $user->dealer_id; ?>,
+                id_dealer: <?php echo $dealer_for_calendar; ?>,
                 flag: <?php if ($whatCalendar == 0) { echo 3; } else { echo 2; } ?>,
             },
             success: function (msg) {
@@ -1356,7 +1364,7 @@
                     url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
                     data: {
                         date: date,
-                        dealer: <?php echo $user->dealer_id; ?>,
+                        dealer: <?php echo $dealer_for_calendar; ?>,
                     },
                     success: function(data) {
                         Array.prototype.diff = function(a) {
@@ -1434,7 +1442,7 @@
                     url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyMounters",
                     data: {
                         date: date,
-                        dealer: <?php echo $user->dealer_id; ?>,
+                        dealer: <?php echo $dealer_for_calendar; ?>,
                     },
                     success: function(data) {
                         Array.prototype.diff = function(a) {
