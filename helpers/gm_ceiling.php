@@ -3276,7 +3276,7 @@ class Gm_ceilingHelpersGm_ceiling
     //Печатаем подготовленные данные в PDF
     public static function save_pdf($html, $filename, $mode, $type = null){
         try{
-            throw new Exception("asdasdasdasdasd");
+            throw new Exception($filename);
             $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->list_indent_first_level = 0;
