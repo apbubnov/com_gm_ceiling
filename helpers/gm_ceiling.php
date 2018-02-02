@@ -2767,8 +2767,8 @@ class Gm_ceilingHelpersGm_ceiling
             
             
             $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
-            throw new Exception("Error Processing Request", 1);
-            $filename = md5($calc_id . "mount_single") . ".pdf";
+
+            $filename = md5($data['id'] . "mount_single") . ".pdf";
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
             self::save_pdf($html, $sheets_dir . $filename, "A4");
         }
