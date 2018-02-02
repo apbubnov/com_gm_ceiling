@@ -195,7 +195,7 @@ if (empty($list['direction']))
                 }
 
                 if ($canvas_id != $item->canvas_id) {
-                    if (isset($option_id)) {
+                    if (isset($canvas_id)) {
                         $tempOption = $result[$canvas_id];
                         foreach ($tempOption->rollers as $v) {
                             if (empty($tempOption->pprice) || $v->pprice > $tempOption->pprice) {
@@ -204,7 +204,7 @@ if (empty($list['direction']))
                         }
                         $result[$canvas_id] = $tempOption;
                     }
-                    $option_id = $item->option_id;
+                    $canvas_id = $item->canvas_id;
                 }
             }
 
