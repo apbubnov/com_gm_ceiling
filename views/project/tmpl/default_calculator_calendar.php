@@ -267,7 +267,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 <?/*print_r($Client);*/?>
 
 <link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
-<link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/project/cssstyle.css" />
 
 <div>
     /* Правит - @CEH4TOP */
@@ -585,7 +584,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
 <?php $calculations = $model->getProjectItems($this->item->id);?>
 
-<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
+<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <div class="container">
     <div class="row">
@@ -2431,6 +2430,7 @@ var $ = jQuery;
 
         //если сессия есть, то выдать дату, которая записана в сессии монтажникам
         var datesession = jQuery("#jform_project_mounting_date").val();  
+        console.log(datesession);
         if (datesession != undefined) {
             jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
         }
