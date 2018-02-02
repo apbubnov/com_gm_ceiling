@@ -1078,7 +1078,7 @@
 
     var preloader = '<?=parent::getPreloaderNotJS();?>';
 
-    whatCalendar = <?php echo $whatCalendar ?>
+    whatCalendar = <?php echo $whatCalendar; ?>
     // листание календаря
     month_old1 = 0;
     year_old1 = 0;
