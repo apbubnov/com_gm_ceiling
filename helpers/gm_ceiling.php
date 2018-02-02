@@ -549,11 +549,11 @@ class Gm_ceilingHelpersGm_ceiling
                     self::create_single_mount_estimate(null,$data,$mounting_data);
                 }       
                 //PDF раскроя
-                self::create_cut_pdf(null,$data);
+                //self::create_cut_pdf(null,$data);
                 //для менеджера
-                self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
+               // self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета 
-                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
+                //self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
             }         
             $return = json_encode($ajax_return);
             
@@ -2751,10 +2751,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $calculation_model = self::getModel('calculation');
                 $data = get_object_vars($calculation_model->getData($calc_id));
             }
-            throw new Exception($calc_id);
-           // if(empty($calc_id)){
-            //    $calc_id = $data['id'];
-           // }
+           // throw new Exception($calc_id);
+            if(empty($calc_id)){
+                $calc_id = $data['id'];
+            }
             $project_model = self::getModel('project');
             $project = $project_model->getData($data['project_id']);
             $calculations_model = self::getModel('calculations');
@@ -3286,7 +3286,9 @@ class Gm_ceilingHelpersGm_ceiling
     //Печатаем подготовленные данные в PDF
     public static function save_pdf($html, $filename, $mode, $type = null){
         try{
-            
+            if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename)) {
+                unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+            }
             $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->list_indent_first_level = 0;
