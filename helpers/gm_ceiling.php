@@ -261,7 +261,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'discount' => 'int',
                         'original_name' => 'string',
                         'cuts' => 'string',
-                        'rek' => 'int'
+                        'rek' => 'int',
+                        'proizv' => 'string'
                     )
                 ));
                 $data = $data['jform'];
