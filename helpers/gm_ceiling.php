@@ -2674,7 +2674,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '<p>&nbsp;</p>
                             <h1>Наряд монтажной бригаде</h1>
                             <h2>Дата: ' . date("d.m.Y") . '</h2>
-                            <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch".$data['id']) . ".svg" . '"/>
+                            <img src="' . $_SERVER['DOCUMENT_ROOT'].'/calculation_images/man.svg"'.'style="width: 100%; max-height: 800px;"/>
                             <table border="0" cellspacing="0" width="100%">
                             <tbody>
                                 <tr>
@@ -3289,7 +3289,9 @@ class Gm_ceilingHelpersGm_ceiling
             if (is_file($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename)) {
                 unlink($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename);
             }
+
             $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
+            $mpdf->showImageErrors = true;
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->list_indent_first_level = 0;
             if ($type == "cut") {

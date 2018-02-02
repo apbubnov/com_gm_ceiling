@@ -231,7 +231,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $query2 = $db->getQuery(true);
             $query4 = $db->getQuery(true);
             
-            $query->select('id, project_mounting_date, read_by_mounter, project_status, project_info, gm_chief_note, dealer_chief_note')
+            $query->select('id, project_mounting_date, read_by_mounter, project_status, project_info, gm_chief_note, dealer_chief_note, gm_calculator_note, dealer_calculator_note')
                 ->from('#__gm_ceiling_projects')
                 ->where("project_mounter = '$id' and project_mounting_date between '$date 00:00:00' and '$date 23:59:59'")
                 ->order('project_mounting_date');

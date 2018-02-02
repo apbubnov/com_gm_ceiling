@@ -265,6 +265,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 ?>
 <?=parent::getPreloader();?>
 <?/*print_r($Client);*/?>
+
 <link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
 
 <div>
@@ -583,7 +584,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
 <?php $calculations = $model->getProjectItems($this->item->id);?>
 
-<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
+<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <div class="container">
     <div class="row">
@@ -2312,24 +2313,9 @@ var $ = jQuery;
                 }
             });
             if (date == datesession.substr(0, 10)) {
-                var timesession = jQuery("#jform_project_mounting_date").val().substr(11);
                 var mountersession = jQuery("#project_mounter").val();
+                console.log(timesession);
                 setTimeout(function() {
-                    // время
-                    var timeall = document.getElementById('hours').options;
-                    for (var i = 0; i < timeall.length; i++) {
-                        if (time_mounter != undefined) {
-                            if (timeall[i].value == time_mounter) {
-                                document.getElementById('hours').disabled = false;
-                                timeall[i].selected = true;
-                            }
-                        } else if (timesession != undefined) {
-                            if (timeall[i].value == timesession) {
-                                document.getElementById('hours').disabled = false;
-                                timeall[i].selected = true;
-                            }
-                        }
-                    }
                     // бригада
                     var mounterall = document.getElementById('mounters').options;
                     for (var i = 0; i < mounterall.length; i++) {
@@ -2433,9 +2419,19 @@ var $ = jQuery;
         //------------------------------------------
 
         //если сессия есть, то выдать дату, которая записана в сессии монтажникам
-        var datesession = jQuery("#jform_project_mounting_date").val();  
+        var datesession = jQuery("#jform_project_mounting_date").val();
         if (datesession != undefined) {
-            jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
+            if (datesession.substr(8, 1) == "0") {
+                daytocalendar = datesession.substr(9, 1);
+            } else {
+                daytocalendar = datesession.substr(8, 2);
+            }
+            if (datesession.substr(5, 1) == "0") {
+                monthtocalendar = datesession.substr(6, 1);
+            } else {
+                monthtocalendar = datesession.substr(5, 2);
+            }
+            jQuery("#current-monthD"+daytocalendar+"DM"+monthtocalendar+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC1C").addClass("change");
         }
         //-----------------------------------------------------------
 

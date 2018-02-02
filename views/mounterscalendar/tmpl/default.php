@@ -283,14 +283,24 @@
                             if (<?php echo $dealerId; ?> == 1) {
                                 if(element.gm_chief_note == null || element.gm_chief_note == undefined || element.gm_chief_note == "null") {
                                     note = "";
-                                    } else {
-                                    note = element.gm_chief_note;
-                                    }
+                                } else {
+                                    note = "Примечание НМС: "+element.gm_chief_note;
+                                }
+                                if(element.gm_calculator_note == null || element.gm_calculator_note == undefined || element.gm_calculator_note == "null") {
+                                    note2 = "";
+                                } else {
+                                    note2 = "Примечание замерщика: "+element.gm_calculator_note;
+                                }
                             } else {
                                 if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null") {
-                                note = "";
+                                    note = "";
                                 } else {
-                                note = element.dealer_chief_note;
+                                    note = "Примечание НМС: "+element.dealer_chief_note;
+                                }
+                                if(element.dealer_calculator_note == null || element.dealer_calculator_note == undefined || element.dealer_calculator_note == "null") {
+                                    note2 = "";
+                                } else {
+                                    note2 = "Примечание замерщика: "+element.dealer_calculator_note;
                                 }
                             }
                             // статусы
@@ -330,7 +340,7 @@
                                 salary = 1500;
                             }
                             // рисовка таблицы
-                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'</td><td>'+status+'</td></tr>';
+                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'<br>'+note2+'</td><td>'+status+'</td></tr>';
                             jQuery("#table-mounting").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
