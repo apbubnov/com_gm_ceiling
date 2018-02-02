@@ -266,9 +266,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 <?=parent::getPreloader();?>
 <?/*print_r($Client);*/?>
 
-<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
-
 <link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
+<link type="text/css" rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" />
 
 <div>
     /* Правит - @CEH4TOP */
