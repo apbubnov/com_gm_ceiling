@@ -85,7 +85,7 @@ function dealer_margin($price, $margin, $value, $type) {
         <?endif;?>
     </div>
     <div class="Scroll">
-        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=components'); ?>" method="post"
+        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=canvases'); ?>" method="post"
               name="adminForm" id="adminForm" hidden>
             <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
             <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
@@ -96,7 +96,7 @@ function dealer_margin($price, $margin, $value, $type) {
             <tr class="THead">
                 <td><i class="fa fa-bars" aria-hidden="true"></i></td>
                 <td><?=JHtml::_( 'grid.sort', '<i class="fa fa-hashtag" aria-hidden="true"></i>', 'canvas_id', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_('grid.sort', 'Наименование', 'canvas_title', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Наименование', 'canvas_name', $listDirn, $listOrder);?></td>
                 <td><?=JHtml::_('grid.sort', 'Количество', 'canvas_count', $listDirn, $listOrder);?></td>
                 <?if($stock):?>
                 <td>Заказать</td>
@@ -121,7 +121,7 @@ function dealer_margin($price, $margin, $value, $type) {
         <tbody>
         <?foreach ($this->items as $key_c => $canvas):?>
             <tr class="TBody Level1 <?=($stock)?"Action":""?>" data-component="<?=$key_c;?>" data-level="1">
-                <td><i class="fa fa-caret-down" aria-hidden="true"></i></td>
+                <td><i class="fa <?=($stock)?"fa-caret-down":"fa-caret-right";?>" aria-hidden="true"></i></td>
                 <td><?=$key_c;?></td>
                 <td><?=$canvas->name." ".$canvas->country . " " . $canvas->width . " : " . $canvas->texture_title . " " . $canvas->color_title;?></td>
                 <td><?=$canvas->count;?></td>
@@ -175,7 +175,7 @@ function dealer_margin($price, $margin, $value, $type) {
                     <td></td>
                     <td><?=$roller->pprice;?></td>
                     <td><?=$roller->stock_name;?></td>
-                    <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?=$key_r;?>&roller=<?=$key_r;?>">Инфо</a></td>
+                    <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?=$key_c;?>&roller=<?=$key_r;?>">Инфо</a></td>
                 </tr>
         <?endforeach;?>
         <?endforeach;?>

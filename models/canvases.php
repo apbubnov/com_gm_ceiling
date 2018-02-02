@@ -30,7 +30,7 @@ class Gm_ceilingModelCanvases extends JModelList
     {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'canvas_title', 'canvas_count', 'canvas_price'
+                'canvas_id', 'canvas_name', 'canvas_count', 'canvas_price'
             );
         }
 
@@ -146,7 +146,7 @@ if (empty($list['direction']))
 
             foreach ($items as $item) {
                 $query = $db->getQuery(true);
-                $query->from("`#__gm_ceiling_analytics_canvas`")
+                $query->from("`#__gm_ceiling_analytics_canvases`")
                     ->select("MAX(price) as price")
                     ->where("roller_id = '$item->roller_id'")
                     ->where("status = 1");
@@ -157,7 +157,7 @@ if (empty($list['direction']))
                 $query = $db->getQuery(true);
                 $query->from("`#__gm_ceiling_stocks`")
                     ->select("min_name as name")
-                    ->where("id = '$item->good_stock'");
+                    ->where("id = '$item->roller_stock'");
                 $db->setQuery($query);
                 $item->stock_name = $db->loadObject()->name;
 
@@ -230,16 +230,16 @@ if (empty($list['direction']))
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_analytics_canvases`")
-            ->select("SUM(count) as count")
+            ->select("SUM(quad) as quad")
             ->where("(date_update > '$TempDate->YDateStart' AND date_update < '$TempDate->YDateEnd')")
             ->where("status = '1'")
-            ->where("canvas_if = '$canvas_id'");
+            ->where("canvas_id = '$canvas_id'");
         $db->setQuery($query);
         $YCount = $db->loadObject()->count;
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_analytics_canvases`")
-            ->select("SUM(count) as count")
+            ->select("SUM(quad) as quad")
             ->where("(date_update > '$TempDate->MDateStart' AND date_update < '$TempDate->MDateEnd')")
             ->where("status = '1'")
             ->where("canvas_id = '$canvas_id'");
@@ -248,7 +248,7 @@ if (empty($list['direction']))
 
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_analytics_canvases`")
-            ->select("SUM(count) as count")
+            ->select("SUM(quad) as quad")
             ->where("(date_update > '$TempDate->DateStart' AND date_update < '$TempDate->DateEnd')")
             ->where("status = '1'")
             ->where("canvas_id = '$canvas_id'");
