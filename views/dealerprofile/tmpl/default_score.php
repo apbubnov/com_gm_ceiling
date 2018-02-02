@@ -24,13 +24,22 @@ foreach ($items as $item) {
 }
 $rest = -($total_sum) - $contributed;
 ?>
+<style>
+    input {
+        border: 1px solid #414099;
+        border-radius: 5px;
+    }
 
+</style>
 <?=parent::getButtonBack();?>
 <h2 class = "center">Детализация счета</h2>
 
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=dealermainpage&type=score'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="row-fluid toolbar">
         <div class="span3">
+            <div class = "date-actions" style="text-align: right; padding-bottom: 1em;">
+                Выбрать с <input type = "date" id = "c_date1"> по <input type ="date" id = "c_date2"> <button type="button" class = "btn btn-primary" id = "c_show_all">Показать всё</button>
+            </div>
         </div>
     </div>
     <table class="table table-striped table_cashbox one-touch-view" id="ScoreList">
@@ -39,6 +48,11 @@ $rest = -($total_sum) - $contributed;
             <th class=''>Дата</th>
             <th class=''>Проект</th>
             <th class=''>Сумма</th>
+        </tr>
+        <tr class="row" id="TrClone" data-href="" style="display: none">
+            <td class="one-touch date"></td>
+            <td class="one-touch project"></td>
+            <td class="one-touch sum"></td>
         </tr>
         </thead>
 
@@ -79,3 +93,61 @@ $rest = -($total_sum) - $contributed;
     <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
     <?php echo JHtml::_('form.token'); ?>
 </form>
+<script>
+    jQuery("#c_show_all").click(function ()
+    {
+        var date1 = jQuery("#c_date1").val();
+        var date2 = jQuery("#c_date2").val();
+        jQuery.ajax({
+            type: "POST",
+            url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
+            data: {
+                date1: date1,
+                date2: date2
+            },
+            dataType: "json",
+            async: true,
+            cache: false,
+            success: function (data) {
+                console.log(data);
+                var list = $("#ScoreList tbody");
+                list.empty();
+                for(i=0;i<data.length;i++){
+                    var tr = $("#TrClone").clone();
+
+                    tr.show();
+                    tr.find(".date").text(data[i].data_time);
+                    tr.find(".projects").text(data[i].project_id);
+                    if (data[i].project_id != null){
+                        tr.find(".projects").text(data[i].project_id);
+                        tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
+                    }
+                    tr.find(".sum").text(data[i].sum);
+
+                    list.append(tr);
+                }
+                OpenPage();
+            },
+            timeout: 50000,
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    });
+    function OpenPage() {
+        var e = jQuery("[data-href]");
+        jQuery.each(e, function (i, v) {
+            jQuery(v).click(function () {
+                document.location.href = this.dataset.href;
+            });
+        });
+    }
+</script>
