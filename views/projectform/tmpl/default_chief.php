@@ -1277,7 +1277,7 @@
 
     // показать историю
     function show_comments() {
-        if (isset($this->item->id_client)) {
+        <?php if (isset($this->item->id_client)) { ?>
             var id_client = <?php echo $this->item->id_client;?>;
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=selectComments",
@@ -1307,7 +1307,7 @@
                     });
                 }
             });
-        }        
+        <?php } ?>        
     }
     //------------------------------------------------------
 
