@@ -1034,22 +1034,22 @@
                 </form>
             </div>
             <?php if($user->dealer_type == 0) { ?>
-            <div class="col-xl-6">
-                <div class="comment">
-                    <label style="font-weight: bold;"> История клиента: </label>
-                    <textarea id="comments" class="input-comment" rows=11 readonly style="resize: none; outline: none;"></textarea>
-                    <table>
-                        <tr>
-                            <td><label style="font-weight: bold;"> Добавить комментарий: </label></td>
-                        </tr>
-                        <tr>
-                            <td width = 100%><textarea  style="resize: none;" class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                            <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button></td>
-                        </tr>
-                    </table>
+                <div class="col-xl-6">
+                    <div class="comment">
+                        <label style="font-weight: bold;"> История клиента: </label>
+                        <textarea id="comments" class="input-comment" rows=11 readonly style="resize: none; outline: none;"></textarea>
+                        <table>
+                            <tr>
+                                <td><label style="font-weight: bold;"> Добавить комментарий: </label></td>
+                            </tr>
+                            <tr>
+                                <td width = 100%><textarea  style="resize: none;" class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-            </div>
             <? } ?>
         </div>
     </div>
