@@ -1173,9 +1173,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				$this->setMessage("Данные успешно изменены!");
 			}
 
-			$project_status = $jinput->get('jform_project_status', '0', 'int');
 			// редирект
-			if ($project_status == 1 ) {
+			if ($data->project_status == 1 ) {
 				if($type === "gmchief") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=gaugings', false));
 				} elseif ($type === "chief") { // && $user->dealer_type == 1 && $old_date

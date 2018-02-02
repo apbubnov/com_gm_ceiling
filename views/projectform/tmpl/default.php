@@ -834,7 +834,6 @@
                     <?php else: ?>
                         <input type="hidden" name="jform[modified_by]" value="<?php echo $this->item->modified_by; ?>"/>
                     <?php endif; ?>
-                    <input id="jform_project_status" type="hidden" name="jform_project_status" value="<?php echo $this->item->project_status; ?>"/>
                     <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
                     <input name = "jform[project_new_calc_date]" id = "jform_project_new_calc_date" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date; } ?>" type="hidden">
                     <input name = "jform[project_gauger]" id = "jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type="hidden">
