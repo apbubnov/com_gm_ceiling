@@ -18,12 +18,14 @@ $userId     = $user->get('id');
 
 /* циферки на кнопки */
 $model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-// замеры
+// график замеров
 $answer1 = $model->getDataByStatus("GaugingsGraph");
 // монтажи
 $answer2 = $model->getDataByStatus("Mountings");
 // завершенные монтажи
 $answer3 = $model->getDataByStatus("ComplitedMountings");
+// войти как замерщик
+$answer4 = $model->getDataByStatus("GaugingsGraphNMS");
 //--------------------------------------
 
 ?>
@@ -69,8 +71,8 @@ $answer3 = $model->getDataByStatus("ComplitedMountings");
 		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		<div class="container-for-circl">
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fa fa-sign-in" aria-hidden="true"></i> Войти как замерщик</a>
-			<?php if ($answer1[0]->count != 0) { ?>
-				<div class="circl-digits"><? echo $answer1[0]->count; ?></div>
+			<?php if ($answer4[0]->count != 0) { ?>
+				<div class="circl-digits"><? echo $answer4[0]->count; ?></div>
 			<?php } ?>
 		</div>
 	</div> 
