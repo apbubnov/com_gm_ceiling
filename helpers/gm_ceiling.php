@@ -549,11 +549,11 @@ class Gm_ceilingHelpersGm_ceiling
                     self::create_single_mount_estimate(null,$data,$mounting_data);
                 }       
                 //PDF раскроя
-                //self::create_cut_pdf(null,$data);
+                self::create_cut_pdf(null,$data);
                 //для менеджера
-               // self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
+                self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета 
-                //self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
+                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
             }         
             $return = json_encode($ajax_return);
             
@@ -1488,7 +1488,7 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['n1'] == 28 && $data['n11'] > 0) {
             //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
             $mounting_data[] = array(
-                "title" => "Внутренний вырез для ПВХ",                                                                    //Название
+                "title" => "Внутренний вырез",                                                                    //Название
                 "quantity" => $data['n11'],                                                                //Кол-во
                 "gm_salary" => $results->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                 "gm_salary_total" => $data['n11'] * $results->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
@@ -2608,7 +2608,7 @@ class Gm_ceilingHelpersGm_ceiling
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
-                $data = get_objects_vars($calculation_model->getData($calc_id));
+                $data = get_object_vars($calculation_model->getData($calc_id));
             }
         
             $project_model = self::getModel('project');
@@ -2749,7 +2749,11 @@ class Gm_ceilingHelpersGm_ceiling
         try{
             if(!empty($calc_id)){
                 $calculation_model = self::getModel('calculation');
-                $data = get_objects_vars($calculation_model->getData($calc_id));
+                $data = get_object_vars($calculation_model->getData($calc_id));
+            }
+            throw new Exception($data['id']);
+            if(empty($calc_id)){
+                $calc_id = $data['id'];
             }
             $project_model = self::getModel('project');
             $project = $project_model->getData($data['project_id']);
@@ -2769,7 +2773,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
 
             
-            $filename = md5( "mount_single") . ".pdf";
+            $filename = md5($calc_id."mount_single") . ".pdf";
            
             
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
@@ -2927,7 +2931,9 @@ class Gm_ceilingHelpersGm_ceiling
             $data = $calculation_model->getData($calc_id);
             $data = get_object_vars($data);
         }
-        
+        if(empty($calc_id)){
+            $calc_id = $data['id'];
+        }
         $project_model = self::getModel('project');
         $project = $project_model->getData($data->project_id);
         $canvases_data = self::calculate_canvases($calc_id);
@@ -3008,7 +3014,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody>';
         $html .= '</table>';
         $html .= '<center><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;"/></center>';
-        $filename = md5($data['id'] . 'cutpdf') . '.pdf';
+        $filename = md5($calc_id . 'cutpdf') . '.pdf';
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
     /*функция генерации pdf для менеджера*/
@@ -3018,6 +3024,10 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
         }
+        if(empty($calc_id)){
+            $calc_id = $data['id'];
+        }
+        
         $project_model = self::getModel('project');
         $project = $project_model->getData($data->project_id);
         if(empty($canvases_data)){
@@ -3114,7 +3124,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
         $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 530px;"/> <br>';
-        $filename = md5($data['id'] . "manager") . ".pdf";
+        $filename = md5($calc_id . "manager") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         return 1;
     }
