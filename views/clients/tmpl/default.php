@@ -117,9 +117,9 @@ $status = $status_model->getData();
 <script type="text/javascript">
 
 	jQuery(document).ready(function () {
-	    if(jQuery("#filter_search").val() == '') {
+	   // if(jQuery("#filter_search").val() == '') {
             jQuery("#select_status").change();
-        }
+        //}
 		jQuery('.delete-button').click(deleteItem);
 	});
 
@@ -147,11 +147,13 @@ $status = $status_model->getData();
     jQuery("#select_status").change(function ()
     {
         var status = jQuery("#select_status").val();
+        var search = jQuery("#filter_search").val();
         jQuery.ajax({
             type: "POST",
             url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
             data: {
-                status: status
+                status: status,
+                search: search
             },
             dataType: "json",
             async: true,
