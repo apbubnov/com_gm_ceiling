@@ -1498,7 +1498,6 @@ class Gm_ceilingController extends JControllerLegacy
            
             
             $filter = "texture_id = ".$textures." AND name = '" . $manufacturer . "' AND width = '" . $width . "' AND color_id " . $color . "";
-            throw new Exception($filter);
             $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
             $items = $model->getIdFilteredItems($filter);
             $_SESSION['n3'] = $items[0]->id;
