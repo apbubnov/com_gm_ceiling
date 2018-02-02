@@ -223,7 +223,8 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
                 ->where("recoil_id = $user->id   AND date_time BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'");
 
             $db->setQuery($query);
-            return($db->loadResultList());
+            $result = $db->loadObjectList();
+            return $result;
         }
         catch(Exception $e)
         {
