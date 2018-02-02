@@ -168,6 +168,7 @@ class Gm_ceilingHelpersGm_ceiling
 		$print_components - 0,1 флаг возвращения расчета при вызове в переменную
 	*/
     public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount){
+        throw new Exception("asdasds");
         $jinput = JFactory::getApplication()->input;
         //Получаем прайс-лист комплектующих
         $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
