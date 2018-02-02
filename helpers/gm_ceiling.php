@@ -2772,8 +2772,9 @@ class Gm_ceilingHelpersGm_ceiling
            
             
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-            self::save_pdf($html, $sheets_dir . $filename, "A4");
             throw new Exception("Error Processing Request", 1);
+            self::save_pdf($html, $sheets_dir . $filename, "A4");
+           
             return true;
         }
         catch(Exception $e)
