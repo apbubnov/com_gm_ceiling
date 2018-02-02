@@ -1399,12 +1399,14 @@
                 if (date == datesession_gauger.substr(0, 10)) {
                     var timesession_gauger = jQuery("#jform_project_new_calc_date").val();
                     var gaugersession = jQuery("#jform_project_gauger").val();
-                    console.log(timesession_gauger);
-                    console.log(gaugersession);
                     setTimeout(function() { 
                         var times = jQuery("input[name='choose_time_gauger']");
                         if (timesession_gauger != undefined) {
                             times.each(function(element) {
+                                console.log(timesession_gauger.substr(11));
+                                console.log(jQuery(this).val());
+                                console.log(gaugersession);
+                                console.log(jQuery(this).closest('tr').find("input[name='gauger']").val());
                                 if (timesession_gauger.substr(11) == jQuery(this).val() && gaugersession == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
                                     jQuery(this).prop("checked", true);
                                 }
