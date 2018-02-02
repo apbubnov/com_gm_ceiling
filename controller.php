@@ -3239,9 +3239,9 @@ class Gm_ceilingController extends JControllerLegacy
             $recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             $result =  $recoil_map_project_model->filterDateScore($date1, $date2);
             foreach ($result as $key => $value) {
-                $result[$key]->date_time = date("d.m.Y H:i", strtotime($value->date_time));
-                $result[$key]->itog_sum += $value->sum;
+                $result[$key]->date_time = date("d.m.Y H:i", strtotime($value->date_time));$result->itog_sum += $value->sum;
             }
+
 
             die(json_encode($result));
         }
