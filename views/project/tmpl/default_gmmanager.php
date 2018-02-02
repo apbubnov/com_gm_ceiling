@@ -67,7 +67,7 @@ foreach ($masid as $value) {
         $where .= ", '".$value."'";                
     }
 }
-$AllMounters = $model->FindAllMounters($where);
+//$AllMounters = $model->FindAllMounters($where);
 //----------------------------------------------------------------------------------
 
 ?>
