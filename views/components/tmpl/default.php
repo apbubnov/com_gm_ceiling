@@ -45,12 +45,23 @@ if ($managerGM) {
         $dealer = JFactory::getUser($dealerId);
         $dealer->groups = $dealer->get('groups');
         $dealer->getDealerInfo();
-        // $dealer->price = $model->getDealerPrice($dealerId);
+        $dealer->getComponentsPrice();
     }
 }
 
 function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
 function double_margin($value, $margin1, $margin2) { return margin(margin($value, $margin1), $margin2); }
+function dealer_margin($price, $margin, $value, $type) {
+    $result = 0;
+    switch ($type)
+    {
+        case 0: $result = $price; break;
+        case 1: $result = $value; break;
+        case 2: $result = $price + $value; break;
+        case 3: $result = $price + $price * floatval($value) / 100; break;
+    }
+    return margin($result, $margin);
+}
 ?>
 <link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css?date=<?=date("H.i.s");?>">
 <div class="Page">
@@ -161,7 +172,8 @@ function double_margin($value, $margin1, $margin2) { return margin(margin($value
                         </td>
                     <?elseif ($managerGM):?>
                         <td id="GMPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
-                        <td id="DealerPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
+                        <td id="DealerPrice"><?=dealer_margin($option->price, $dealer->gm_components_margin,
+                                $dealer->ComponentsPrice[$key_o]->value, $dealer->ComponentsPrice[$key_o]->type);?></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>

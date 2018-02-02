@@ -1327,6 +1327,10 @@
 
         window.time_gauger = undefined;
         window.gauger = undefined;
+        window.datetime_gauger = undefined;
+        window.time = undefined;
+        window.mounter = undefined;
+        window.datatime = undefined;
 
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников или замерщиков
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change, .full-day", function() {
@@ -1410,15 +1414,19 @@
                         }
                     }, 200);
                 }
-                if (time_gauger != undefined) {
-                    setTimeout(function() { 
-                        var times = jQuery("input[name='choose_time_gauger']");
-                        times.each(function(element) {
-                            if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
-                                jQuery(this).prop("checked", true);
-                            }
-                        });
-                    }, 200);
+                if (datetime_gauger != undefined) {
+                    if (date == datetime_gauger.substr(0, 10)) {
+                        if (time_gauger != undefined) {
+                            setTimeout(function() { 
+                                var times = jQuery("input[name='choose_time_gauger']");
+                                times.each(function(element) {
+                                    if (time_gauger == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                                        jQuery(this).prop("checked", true);
+                                    }
+                                });
+                            }, 200);
+                        }
+                    }
                 }
             } else {
                 jQuery.ajax({
@@ -1536,13 +1544,58 @@
                         jQuery("#projects_brigade_container").append(table_projects3);
                     }, 200);
                 }
+                // Если перевыбрана дата монтажа, показать ее
+                if (datatime != undefined) {
+                    if (date == datatime.substr(0, 10)) {
+                        setTimeout(function() {
+                            // время
+                            var timeall = document.getElementById('hours').options;
+                            for (var i = 0; i < timeall.length; i++) {
+                                if (time != undefined) {
+                                    if (timeall[i].value == time) {
+                                        document.getElementById('hours').disabled = false;
+                                        timeall[i].selected = true;
+                                    }
+                                }
+                            }
+                            // бригада
+                            var mounterall = document.getElementById('mounters').options;
+                            for (var i = 0; i < mounterall.length; i++) {
+                                if (mounter != undefined) {
+                                    if (mounterall[i].value == mounter) {
+                                        document.getElementById('mounters').disabled = false;
+                                        mounterall[i].selected = true;
+                                    }
+                                }
+                            }
+                            // инфа о бригаде
+                            jQuery("#mounters_names").empty();
+                            AllMounters = <?php echo json_encode($AllMounters) ?>;
+                            AllMounters.forEach(elem => {
+                                if (mounter == elem.id_brigade) {
+                                    jQuery("#mounters_names").append("<p style=\"margin-top: 0; margin-bottom: 0;\">"+elem.name+"</p>");
+                                }
+                            });
+                            // монтажи
+                            jQuery("#projects_brigade_container").empty();
+                            var table_projects3 = '<p style="margin-top: 1em; margin-bottom: 0;"><strong>Монтажи бригады:</strong></p><table id="projects_brigade">';
+                            table_projects3 += '<tr class="caption"><td>Время</td><td>Адрес</td><td>Периметр</td></tr>';
+                            Array.from(DataOfProject).forEach(function(element) {
+                                if (element.project_mounter == mounter) {
+                                    table_projects3 += '<tr><td>'+element.project_mounting_date+'</td><td>'+element.project_info+'</td><td>'+element.n5+'</td></tr>';
+                                }
+                            });
+                            table_projects3 += "</table>";
+                            jQuery("#projects_brigade_container").append(table_projects3);
+                        }, 200);
+                    }
+                }
                 // запрет выбора монтажника, если монтаж в статусе недовыполнен
                 if (<?php echo $this->item->project_status ?> == 17) {
                     setTimeout(function() {
                         var mounter = document.getElementById('mounters').options;
                         for (var i = 0; i < mounter.length; i++) {
                             document.getElementById('mounters').disabled = true;
-                            
                         }
                         console.log(mounter);
                     }, 200);
@@ -1602,9 +1655,9 @@
 
         // получение значений из селектов монтажников
         jQuery("#save-choise-tar").click(function() {
-            var mounter = jQuery("#mounters").val();
-            var time = jQuery("#hours").val();
-            var datatime = date+" "+time;
+            mounter = jQuery("#mounters").val();
+            time = jQuery("#hours").val();
+            datatime = date+" "+time;
             jQuery("#jform_project_mounter").val(mounter);
             jQuery("#jform_project_mounting_date").val(datatime);
             if (jQuery(".change").length == 0) {
