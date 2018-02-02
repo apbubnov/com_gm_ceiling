@@ -3289,7 +3289,9 @@ class Gm_ceilingHelpersGm_ceiling
             if (is_file($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename)) {
                 unlink($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filename);
             }
+
             $mpdf = new mPDF('utf-8', $mode, '8', '', 10, 10, 7, 7, 10, 10);
+            $mpdf->showImageErrors = true;
             $mpdf->SetDisplayMode('fullpage');
             $mpdf->list_indent_first_level = 0;
             if ($type == "cut") {

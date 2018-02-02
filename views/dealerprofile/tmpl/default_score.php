@@ -54,6 +54,10 @@ $rest = -($total_sum) - $contributed;
             <td class="one-touch project"></td>
             <td class="one-touch sum"></td>
         </tr>
+        <tr style="border: 1px solid #414099; display: none;"  id="TrClone2" >
+            <th class="right" colspan="2"> ИТОГО: </th>
+            <th class="center itog"><?= $rest ? round(-$rest,2) : 0; ?> руб.</th>
+        </tr>
         </thead>
 
         <tbody>
@@ -82,7 +86,7 @@ $rest = -($total_sum) - $contributed;
         <?php endforeach; ?>
         <tr style="border: 1px solid #414099">
             <th class="right" colspan="2"> ИТОГО: </th>
-            <th class="center"><?= $rest ? round(-$rest,2) : 0; ?> руб.</th>
+            <th class="center itog"><?= $rest ? round(-$rest,2) : 0; ?> руб.</th>
         </tr>
         </tbody>
     </table>
@@ -113,20 +117,22 @@ $rest = -($total_sum) - $contributed;
                 console.log(data);
                 var list = $("#ScoreList tbody");
                 list.empty();
+                var trItog = $("#TrClone2").clone();
                 for(i=0;i<data.length;i++){
                     var tr = $("#TrClone").clone();
 
                     tr.show();
-                    tr.find(".date").text(data[i].data_time);
-                    tr.find(".projects").text(data[i].project_id);
+                    tr.find(".date").text(data[i].date_time);
                     if (data[i].project_id != null){
-                        tr.find(".projects").text(data[i].project_id);
+                        tr.find(".project").text(data[i].project_id);
                         tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
                     }
                     tr.find(".sum").text(data[i].sum);
 
                     list.append(tr);
                 }
+                trItog.find(".itog").text(data[data.length].itog_sum);
+                list.append(trItog);
                 OpenPage();
             },
             timeout: 50000,
