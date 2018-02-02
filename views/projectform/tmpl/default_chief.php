@@ -1761,43 +1761,45 @@
         jQuery("#add_comment").click(function () {
             var comment = jQuery("#new_comment").val();
             var reg_comment = /[\\\<\>\/\'\"\#]/;
-            var id_client = <?php echo $this->item->id_client;?>;
-            if (reg_comment.test(comment) || comment === "") {
-                alert('Неверный формат примечания!');
-                return;
-            }
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=addComment",
-                data: {
-                    comment: comment,
-                    id_client: id_client
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Комментарий добавлен"
-                    });
-                    jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
-                    show_comments();
-                    jQuery("#new_comment").val("");
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка отправки"
-                    });
+            <?php if (isset($this->item->id_client)) { ?>
+                var id_client = <?php echo $this->item->id_client;?>;
+                if (reg_comment.test(comment) || comment === "") {
+                    alert('Неверный формат примечания!');
+                    return;
                 }
-            });
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addComment",
+                    data: {
+                        comment: comment,
+                        id_client: id_client
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Комментарий добавлен"
+                        });
+                        jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
+                        show_comments();
+                        jQuery("#new_comment").val("");
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка отправки"
+                        });
+                    }
+                });
+            <?php } ?>
         });
         //----------------------------------------------------------------------------------
 
