@@ -2764,6 +2764,8 @@ class Gm_ceilingHelpersGm_ceiling
             for($i=0;$i<count($client_contacts);$i++){
                 $phones .= $client_contacts[$i]->phone . (($i < count($client_contacts) - 1) ? " , " : " ");
             }
+            throw new Exception("Error Processing Request", 1);
+            
             $html = self::create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount);
             $filename = md5($calc_id . "mount_single") . ".pdf";
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
