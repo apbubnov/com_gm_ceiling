@@ -35,7 +35,7 @@ $answer3 = $model->getDataByStatus("ComplitedMountings");
 <div class="start_page">
 	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=gaugings', false); ?>"><i class="fa fa-calculator" aria-hidden="true"></i> График замеров</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=gaugings', false); ?>"><i class="far fa-calendar-alt" aria-hidden="true"></i> График замеров</a>
 			<?php if ($answer1[0]->count != 0) { ?>
 				<div class="circl-digits"><? echo $answer1[0]->count; ?></div>
 			<?php } ?>
@@ -43,7 +43,7 @@ $answer3 = $model->getDataByStatus("ComplitedMountings");
 	</div>
 	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief', false); ?>"><i class="fa fa-clock-o" aria-hidden="true"></i> Монтажи</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmchief', false); ?>"><i class="far fa-calendar-alt" aria-hidden="true"></i> Монтажи</a>
 			<?php if ($answer2[0]->count != 0) { ?>
 				<div class="circl-digits"><?php echo $answer2[0]->count; ?></div>
 			<?php } ?>
@@ -68,7 +68,7 @@ $answer3 = $model->getDataByStatus("ComplitedMountings");
 	</p>
 		<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		<div class="container-for-circl">
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fa fa-sign-in-alt" aria-hidden="true"></i> Войти как замерщик</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); ?>"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Войти как замерщик</a>
 			<?php if ($answer1[0]->count != 0) { ?>
 				<div class="circl-digits"><? echo $answer1[0]->count; ?></div>
 			<?php } ?>
