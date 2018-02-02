@@ -42,14 +42,11 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
     <? endif; ?>
-
     <? if (count($this->items) > 0): ?>
 	<table class="table table-striped one-touch-view" id="projectList">
 		<thead>
 			<tr>
-				<th>
-					
-				</th>
+				<th></th>
 				<th class='center'>
 					<?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
 				</th>
@@ -82,7 +79,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		<tbody>
 			<?php   foreach ($this->items as $i => $item) : ?>
 				<?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-
 				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
 					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 				<?php endif; ?>
@@ -90,9 +86,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
                     <td>
                         <? if ($item->project_status == 10): ?>
-                            <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>"
-                                    type="button">Выполнено
-                            </button>
+                            <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
                         <? endif; ?>
                     </td>
                     <td class="center one-touch">
@@ -134,15 +128,11 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 				<?php// endif; ?>
 			<?php endforeach; ?>
 		</tbody>
-
 	</table>
-
-        <table class="table table-striped one-touch-view" id="projectListMobil">
-            <thead>
+    <table class="table table-striped one-touch-view" id="projectListMobil">
+        <thead>
             <tr>
-                <th>
-
-                </th>
+                <th></th>
                 <th class='center'>
                     <?php echo JHtml::_('grid.sort',  '№', 'a.id', $listDirn, $listOrder); ?>
                 </th>
@@ -159,11 +149,10 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     Бригада
                 </th>
             </tr>
-            </thead>
-            <tbody>
-            <?php   foreach ($this->items as $i => $item) : ?>
+        </thead>
+        <tbody>
+            <?php foreach ($this->items as $i => $item) : ?>
                 <?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-
                 <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
                     <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
                 <?php endif; ?>
@@ -203,15 +192,12 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     </tr>
                 <?php// endif; ?>
             <?php endforeach; ?>
-            </tbody>
-
-        </table>
-
+        </tbody>
+    </table>
 	<input type="hidden" name="task" value=""/>
 	<input type="hidden" name="boxchecked" value="0"/>
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-
 	<?php echo JHtml::_('form.token'); ?>
     <? else: ?>
         <p class="center">
