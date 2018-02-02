@@ -1752,7 +1752,7 @@
                 var email = jQuery("#all-email1").val();
                 var client_id = jQuery("#client_id").val();
                 var dop_file = jQuery("#dop_file").serialize();
-                var testfilename = "<?php echo $json;?>";
+                var testfilename = <?php if (isset($json)) { echo $json;} ?>;
                 var filenames = [];
                 for (var i = 0; i < testfilename.length; i++) {
                     var id = testfilename[i].id;
@@ -1821,7 +1821,7 @@
             });
             jQuery("#send_all_to_email2").click(function () {
                 var email = jQuery("#all-email2").val();
-                var testfilename = "<?php echo $json1;?>";
+                var testfilename = <?php if (isset($json1)) { echo $json1;} ?>;
                 var filenames = [];
                 for (var i = 0; i < testfilename.length; i++) {
                     var id = testfilename[i].id;
