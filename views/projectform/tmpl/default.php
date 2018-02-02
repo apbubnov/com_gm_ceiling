@@ -543,7 +543,6 @@
                     </tr>
                     <? }?>
                 </table>
-                </form>
                 <?php if ($user->dealer_type == 2) { ?>
                     <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
                         формирование заказа
@@ -811,6 +810,7 @@
             <?php } ?>
         </div>
     <?php } ?>
+    </form>
     <div class="container">
         <div class="row" style="padding-top: 1em;">
             <div class="col-xl-6 item_fields project-edit front-end-edit">
