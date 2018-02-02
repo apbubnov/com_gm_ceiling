@@ -310,7 +310,7 @@ $rest = -($total_sum) - $contributed;
             });
         });
         jQuery("#toProfile").click(function(){
-		    location.href = "index.php?option=com_gm_ceiling&view=dealerprofile";
+		    location.href = "index.php?option=com_gm_ceiling&view=dealerprofile&type=edit";
 	    });
         jQuery("#new_msrmnt_btn").click(function () {
             location.href = "<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>";
