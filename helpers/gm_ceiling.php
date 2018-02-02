@@ -215,7 +215,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'dealer_id' => 'int', //владелец
                         'n1' => 'int', //тип потолка
                         'n2' => 'int', //тип фактуры
-                        'n3' => 'int', //Производитель и ширина
+                        'n3' => 'string', //Производитель и ширина
                         'n4' => 'float', //Площадь
                         'n5' => 'float', //Периметр
                         'n6' => 'int', //Со вставкой
@@ -261,15 +261,15 @@ class Gm_ceilingHelpersGm_ceiling
                         'discount' => 'int',
                         'original_name' => 'string',
                         'cuts' => 'string',
-                        'rek' => 'int'
+                        'rek' => 'int',
+                        'proizv' => 'string'
                     )
                 ));
                 $data = $data['jform'];
                 
                 $color = $data['color'];
-                $color_filter = $color ? "= " .$color : "IS NULL";   
-                throw new Exception("n2 - $data['n2'],proizv - $data['proizv'],width- $data['n3']");         
-                $filter = "texture_id = ".$data['n2']." AND name = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
+                $color_filter = $color ? "= " .$color : "IS NULL";       
+                $filter = "texture_id = ".$data['n2']." and `name` = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
                 $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
                 $items = $model->getIdFilteredItems($filter);
                 if(count($items)>0){
@@ -524,8 +524,9 @@ class Gm_ceilingHelpersGm_ceiling
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
+               
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
-                $data['id'] = $ajax_return['id'];
+                //$data['id'] = $ajax_return['id'];
                 $filename = md5("calculation_sketch" . $ajax_return['id']);
                 $cut_filename = md5("cut_sketch" . $ajax_return['id']);
                 
