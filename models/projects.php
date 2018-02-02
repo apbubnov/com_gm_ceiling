@@ -374,7 +374,7 @@ class Gm_ceilingModelProjects extends JModelList
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
 
-            // замерщик (график замеров), НМС (замеры), дилер (замерщик)
+            // замерщик (график замеров), дилер (замерщик), НМС (график замеров)
             if ($status == "GaugingsGraph") {
                 $groups = $user->groups;
                 if (in_array("12", $groups) || in_array("14", $groups) || in_array("17", $groups)) {
@@ -392,6 +392,12 @@ class Gm_ceilingModelProjects extends JModelList
                         ->from('#__gm_ceiling_projects as projects')
                         ->where("projects.project_status = '1' and projects.project_calculator  = '$userId'");
                 }
+            } else
+            // НМС (войти как замерщик)
+            if ($status == "GaugingsGraphNMS") {
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
+                    ->where("projects.project_status = '1' and projects.project_calculator  = '$userId'");
             } else
             // НМС (монтажи)
             if ($status == "Mountings") {
