@@ -1330,11 +1330,13 @@
     // ------------------------------------------------------------------------
 
     // при нажатии на энтер добавляется коммент
-    document.getElementById('new_comment').onkeydown = function (e) {
-        if (e.keyCode === 13) {
-            document.getElementById('add_comment').click();
+    <?php if ($user->dealer_type != 1) { ?>
+        document.getElementById('new_comment').onkeydown = function (e) {
+            if (e.keyCode === 13) {
+                document.getElementById('add_comment').click();
+            }
         }
-    }
+    <?php } ?>
     // ----------------------------------------------------------------------
 
     jQuery(document).ready(function () {
