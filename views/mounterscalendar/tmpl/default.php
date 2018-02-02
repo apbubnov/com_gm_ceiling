@@ -283,14 +283,24 @@
                             if (<?php echo $dealerId; ?> == 1) {
                                 if(element.gm_chief_note == null || element.gm_chief_note == undefined || element.gm_chief_note == "null") {
                                     note = "";
-                                    } else {
-                                    note = element.gm_chief_note;
-                                    }
+                                } else {
+                                    note = "Примечание НМС: "+element.gm_chief_note;
+                                }
+                                if(element.gm_calculator_note == null || element.gm_calculator_note == undefined || element.gm_calculator_note == "null") {
+                                    note += "";
+                                } else {
+                                    note += "Примечание замерщика: "+element.gm_calculator_note+"</br>";
+                                }
                             } else {
                                 if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null") {
-                                note = "";
+                                    note = "";
                                 } else {
-                                note = element.dealer_chief_note;
+                                    note = "Примечание НМС: "+element.dealer_chief_note;
+                                }
+                                if(element.dealer_calculator_note == null || element.dealer_calculator_note == undefined || element.dealer_calculator_note == "null") {
+                                    note += "";
+                                } else {
+                                    note += "Примечание замерщика: "+element.dealer_calculator_note+"</br>";
                                 }
                             }
                             // статусы
