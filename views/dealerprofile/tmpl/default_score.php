@@ -131,8 +131,8 @@ $rest = -($total_sum) - $contributed;
 
                     list.append(tr);
                 }
-                trItog.find(".itog").text(data[data.length - 1].itog_sum);
-                list.append(trItog);
+                //trItog.find(".itog").text(data[data.length - 1].itog_sum);
+                //list.append(trItog);
                 OpenPage();
             },
             timeout: 50000,
