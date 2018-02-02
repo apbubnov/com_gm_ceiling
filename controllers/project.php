@@ -1412,14 +1412,17 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if($check == 1) $result = "Договор закрыт!";
 			if($check == 0) $result = "Договор пока не закрыт из-за недовыполненного монтажа!";
             //throw new Exception("1");
-			if($map_model->exist($project_id)==1){
-                $map_model->updateSum($project_id,$sum);
-                $recoil_id = $map_model->getRecoilId($project_id)->recoil_id;
-                $model_recoil =  $this->getModel('recoil', 'Gm_ceilingModel');
-                $recoil = $model_recoil->getRecoilInfo($recoil_id);
-                $result = "Заказ от откатника: ".$recoil->name.";Телефон: ".$recoil->username;
-               
+            if($user->dealer_type != 1) {
+                if($map_model->exist($project_id)==1){
+                    $map_model->updateSum($project_id,$sum);
+                    $recoil_id = $map_model->getRecoilId($project_id)->recoil_id;
+                    $model_recoil =  $this->getModel('recoil', 'Gm_ceilingModel');
+                    $recoil = $model_recoil->getRecoilInfo($recoil_id);
+                    $result = "Заказ от откатника: ".$recoil->name.";Телефон: ".$recoil->username;
+
+                }
             }
+
             // если проект был недовыолнен, а сейчас выполнен, то плюсовать сумму ранее записанную в переменнные  new
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$table = $model->getTable();

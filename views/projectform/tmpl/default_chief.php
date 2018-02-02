@@ -1029,14 +1029,20 @@
                     <?php } ?>
                     <div class="control-group">
                         <div class="controls">
-                            <?php if ($this->canSave): ?>
-                                <button type="submit" class="validate btn btn-primary">Сохранить</button>
-                            <?php endif; ?>
-                            <a class="btn btn-success"
-                                href="<?php if ($this->item->project_status == 4)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects');
-                                elseif ($userId == $user->dealer_id)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief');
-                                else echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>"
-                                title="">Вернуться к монтажам</a>
+                            <button type="submit" class="validate btn btn-primary">Сохранить</button>
+                            <?php if ($whatCalendar == 0) { ?>
+                                <a class="btn btn-success"
+                                    href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings'); ?>"
+                                    title="">Вернуться к замерам
+                                </a>
+                            <?php } else { ?>
+                                <a class="btn btn-success"
+                                    href="<?php if ($this->item->project_status == 4)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects');
+                                    elseif ($userId == $user->dealer_id)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief');
+                                    else echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>"
+                                    title="">Вернуться к монтажам
+                                </a>
+                            <?php } ?>
                         </div>
                     </div>
                 </form>
@@ -1271,35 +1277,37 @@
 
     // показать историю
     function show_comments() {
-        var id_client = <?php echo $this->item->id_client;?>;
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=selectComments",
-            data: {
-                id_client: id_client
-            },
-            dataType: "json",
-            async: true,
-            success: function (data) {
-                var comments_area = document.getElementById('comments');
-                comments_area.innerHTML = "";
-                var date_t;
-                for (var i = 0; i < data.length; i++) {
-                    date_t = new Date(data[i].date_time);
-                    comments_area.innerHTML += formatDate(date_t) + "\n" + data[i].text + "\n----------\n";
+        <?php if (isset($this->item->id_client)) { ?>
+            var id_client = <?php echo $this->item->id_client;?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=selectComments",
+                data: {
+                    id_client: id_client
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var comments_area = document.getElementById('comments');
+                    comments_area.innerHTML = "";
+                    var date_t;
+                    for (var i = 0; i < data.length; i++) {
+                        date_t = new Date(data[i].date_time);
+                        comments_area.innerHTML += formatDate(date_t) + "\n" + data[i].text + "\n----------\n";
+                    }
+                    comments_area.scrollTop = comments_area.scrollHeight;
+                },
+                error: function (data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка вывода примечаний"
+                    });
                 }
-                comments_area.scrollTop = comments_area.scrollHeight;
-            },
-            error: function (data) {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка вывода примечаний"
-                });
-            }
-        });
+            });
+        <?php } ?>        
     }
     //------------------------------------------------------
 
@@ -1322,11 +1330,13 @@
     // ------------------------------------------------------------------------
 
     // при нажатии на энтер добавляется коммент
-    document.getElementById('new_comment').onkeydown = function (e) {
-        if (e.keyCode === 13) {
-            document.getElementById('add_comment').click();
+    <?php if ($user->dealer_type != 1) { ?>
+        document.getElementById('new_comment').onkeydown = function (e) {
+            if (e.keyCode === 13) {
+                document.getElementById('add_comment').click();
+            }
         }
-    }
+    <?php } ?>
     // ----------------------------------------------------------------------
 
     jQuery(document).ready(function () {
@@ -1753,43 +1763,45 @@
         jQuery("#add_comment").click(function () {
             var comment = jQuery("#new_comment").val();
             var reg_comment = /[\\\<\>\/\'\"\#]/;
-            var id_client = <?php echo $this->item->id_client;?>;
-            if (reg_comment.test(comment) || comment === "") {
-                alert('Неверный формат примечания!');
-                return;
-            }
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=addComment",
-                data: {
-                    comment: comment,
-                    id_client: id_client
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Комментарий добавлен"
-                    });
-                    jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
-                    show_comments();
-                    jQuery("#new_comment").val("");
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка отправки"
-                    });
+            <?php if (isset($this->item->id_client)) { ?>
+                var id_client = <?php echo $this->item->id_client;?>;
+                if (reg_comment.test(comment) || comment === "") {
+                    alert('Неверный формат примечания!');
+                    return;
                 }
-            });
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=addComment",
+                    data: {
+                        comment: comment,
+                        id_client: id_client
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "success",
+                            text: "Комментарий добавлен"
+                        });
+                        jQuery("#comments_id").val(jQuery("#comments_id").val() + data + ";");
+                        show_comments();
+                        jQuery("#new_comment").val("");
+                    },
+                    error: function (data) {
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка отправки"
+                        });
+                    }
+                });
+            <?php } ?>
         });
         //----------------------------------------------------------------------------------
 
@@ -1814,57 +1826,59 @@
                 var email = jQuery("#all-email1").val();
                 var client_id = jQuery("#client_id").val();
                 var dop_file = jQuery("#dop_file").serialize();
-                var testfilename = <?php if (isset($json)) { echo $json;} ?>;
-                var filenames = [];
-                for (var i = 0; i < testfilename.length; i++) {
-                    var id = testfilename[i].id;
-                    var el = jQuery("#section_estimate_" + id);
-                    if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-                }
-                var formData = new FormData();
-                jQuery.each(jQuery('#dopfile')[0].files, function (i, file) {
-                    formData.append('dopfile', file)
-                });
-                formData.append('filenames', JSON.stringify(filenames));
-                formData.append('email', email);
-                formData.append('type', 0);
-                formData.append('client_id', client_id);
-                jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=send_estimate",
-                    data: formData, /*{
-                        filenames: JSON.stringify(filenames),
-                        email: email,
-                        type: 0,
-                        client_id: client_id,
-                        dop_file : serialize
-                    },*/
-                    type: "POST",
-                    dataType: 'json',
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    success: function (data) {
-                        console.log(data);
-                        var n = noty({
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "success",
-                            text: "Сметы отправлены!"
-                        });
-
-                    },
-                    error: function (data) {
-                        console.log(data);
-                        var n = noty({
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "ошибка отправки"
-                        });
+                <?php if (isset($json)) { ?>
+                    var testfilename = <?php echo $json; ?>;
+                    var filenames = [];
+                    for (var i = 0; i < testfilename.length; i++) {
+                        var id = testfilename[i].id;
+                        var el = jQuery("#section_estimate_" + id);
+                        if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
                     }
-                });
+                    var formData = new FormData();
+                    jQuery.each(jQuery('#dopfile')[0].files, function (i, file) {
+                        formData.append('dopfile', file)
+                    });
+                    formData.append('filenames', JSON.stringify(filenames));
+                    formData.append('email', email);
+                    formData.append('type', 0);
+                    formData.append('client_id', client_id);
+                    jQuery.ajax({
+                        url: "index.php?option=com_gm_ceiling&task=send_estimate",
+                        data: formData, /*{
+                            filenames: JSON.stringify(filenames),
+                            email: email,
+                            type: 0,
+                            client_id: client_id,
+                            dop_file : serialize
+                        },*/
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        success: function (data) {
+                            console.log(data);
+                            var n = noty({
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "success",
+                                text: "Сметы отправлены!"
+                            });
+
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            var n = noty({
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "ошибка отправки"
+                            });
+                        }
+                    });
+                <?php } ?>
             });
             var flag2 = 0;
             jQuery("#sh_mount").click(function () {
@@ -1883,56 +1897,57 @@
             });
             jQuery("#send_all_to_email2").click(function () {
                 var email = jQuery("#all-email2").val();
-                var testfilename = <?php if (isset($json1)) { echo $json1;} ?>;
-                var filenames = [];
-                for (var i = 0; i < testfilename.length; i++) {
-                    var id = testfilename[i].id;
-                    var el = jQuery("#section_mount_" + id);
-                    if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-                }
-                console.log(filenames);
-                var formData = new FormData();
-                jQuery.each(jQuery('#dopfile1')[0].files, function (i, file) {
-                    formData.append('dopfile1', file)
-                });
-                formData.append('filenames', JSON.stringify(filenames));
-                formData.append('email', email);
-                formData.append('type', 1);
-                //formData.append('client_id', client_id);
-                jQuery.ajax({
-                    url: "index.php?option=com_gm_ceiling&task=send_estimate",
-                    data: formData,/* {
-                        filenames: JSON.stringify(filenames),
-                        email: email,
-                        type: 1
-                    },*/
-                    type: "POST",
-                    dataType: 'json',
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    success: function (data) {
-                        console.log(data);
-                        var n = noty({
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "success",
-                            text: "Наряды на монтаж отправлены!"
-                        });
-
-                    },
-                    error: function (data) {
-                        console.log(data);
-                        var n = noty({
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "ошибка отправки"
-                        });
+                <?php if (isset($json1)) { ?>
+                    var testfilename = <?php echo $json1; ?>;
+                    var filenames = [];
+                    for (var i = 0; i < testfilename.length; i++) {
+                        var id = testfilename[i].id;
+                        var el = jQuery("#section_mount_" + id);
+                        if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
                     }
-                });
+                    var formData = new FormData();
+                    jQuery.each(jQuery('#dopfile1')[0].files, function (i, file) {
+                        formData.append('dopfile1', file)
+                    });
+                    formData.append('filenames', JSON.stringify(filenames));
+                    formData.append('email', email);
+                    formData.append('type', 1);
+                    //formData.append('client_id', client_id);
+                    jQuery.ajax({
+                        url: "index.php?option=com_gm_ceiling&task=send_estimate",
+                        data: formData,/* {
+                            filenames: JSON.stringify(filenames),
+                            email: email,
+                            type: 1
+                        },*/
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        success: function (data) {
+                            console.log(data);
+                            var n = noty({
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "success",
+                                text: "Наряды на монтаж отправлены!"
+                            });
+
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            var n = noty({
+                                theme: 'relax',
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "ошибка отправки"
+                            });
+                        }
+                    });
+                <?php } ?>
             });
         jQuery("input[name='transport']").click(function () {
             var transport = jQuery("input[name='transport']:checked").val();
