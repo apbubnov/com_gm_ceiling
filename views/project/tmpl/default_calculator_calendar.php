@@ -2321,7 +2321,7 @@ var $ = jQuery;
                     // время
                     var timeall = document.getElementById('hours').options;
                     for (var i = 0; i < timeall.length; i++) {
-                        else if (timesession != undefined) {
+                        if (timesession != undefined) {
                             if (timeall[i].value == timesession) {
                                 document.getElementById('hours').disabled = false;
                                 timeall[i].selected = true;
