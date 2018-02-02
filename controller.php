@@ -3236,11 +3236,10 @@ class Gm_ceilingController extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $date1 = $jinput->get('date1', '0000-00-00 00:00:00', 'datetime');
             $date2 = $jinput->get('date2', '0000-00-00 00:00:00', 'datetime');
-            print_r("$date1 date $date2" ); exit;
             $recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             $result =  $recoil_map_project_model->filterDateScore($date1, $date2);
             foreach ($result as $key => $value) {
-                $result[$key]->created = date("d.m.Y H:i", strtotime($value->created));
+                $result[$key]->date_time = date("d.m.Y H:i", strtotime($value->date_time));
             }
 
             die(json_encode($result));

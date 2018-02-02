@@ -100,7 +100,7 @@ $rest = -($total_sum) - $contributed;
         var date2 = jQuery("#c_date2").val();
         jQuery.ajax({
             type: "POST",
-            url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
+            url: "/index.php?option=com_gm_ceiling&task=filterDateScore",
             data: {
                 date1: date1,
                 date2: date2
