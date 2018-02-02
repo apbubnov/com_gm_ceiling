@@ -898,7 +898,7 @@
                             <?php if ($this->item->project_status == 1) { ?>
                                 <th>Дата замера</th>
                                 <td>
-                                    <?php if ($this->item->project_mounting_date == "0000-00-00 00:00:00") { ?>
+                                    <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
                                         -
                                     <?php } else { ?>
                                         <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
