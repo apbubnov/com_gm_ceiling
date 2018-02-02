@@ -289,7 +289,7 @@
                                 if(element.gm_calculator_note == null || element.gm_calculator_note == undefined || element.gm_calculator_note == "null") {
                                     note += "";
                                 } else {
-                                    note += "Примечание замерщика: "+element.gm_calculator_note+"\n";
+                                    note += "Примечание замерщика: "+element.gm_calculator_note+"</br>";
                                 }
                             } else {
                                 if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null") {
@@ -300,7 +300,7 @@
                                 if(element.dealer_calculator_note == null || element.dealer_calculator_note == undefined || element.dealer_calculator_note == "null") {
                                     note += "";
                                 } else {
-                                    note += "Примечание замерщика: "+element.dealer_calculator_note+"\n";
+                                    note += "Примечание замерщика: "+element.dealer_calculator_note+"</br>";
                                 }
                             }
                             // статусы
