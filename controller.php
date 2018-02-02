@@ -1545,8 +1545,10 @@ class Gm_ceilingController extends JControllerLegacy
                 )
             ));
             $data1 = $data1['jform'];
-            if(!empty($data1)) $this->texturesId($data1['n2'],$data1['proizv'],$data1['n3'],$data1['color']);
-
+            throw new Exception(implode('|',$data1));
+            if(!empty($data1)){
+                $this->texturesId($data1['n2'],$data1['proizv'],$data1['n3'],$data1['color']);
+            } 
             $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount);
             die($result);
          }
