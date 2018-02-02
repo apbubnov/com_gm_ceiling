@@ -1370,9 +1370,9 @@
                                 var emptytd = 0;
                                 Array.from(data).forEach(function(elementProject) {
                                     if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
-                                        var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                                        var timesession_gauger = jQuery("#jform_new_project_calculation_daypart").val();
                                         var gaugersession = jQuery("#jform_project_gauger").val();
-                                        if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                        if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession_gauger.substr(11)) {
                                             TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
                                         } else {
                                             TableForSelect += '<tr><td></td>';
