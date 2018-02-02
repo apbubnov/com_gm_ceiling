@@ -214,12 +214,14 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 
     function filterDateScore($date1, $date2){
         try{
+            $user = JFactory::getUser();
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
                 ->select("*")
                 ->from('`#__gm_ceiling_recoil_map_project`')
-                ->where("date_time BETWEEN $date1 AND $date2");
+                ->where("recoil_id = $user->id   AND date_time BETWEEN '$date1 00:00:00' AND '$date2 23:59:59'");
+
             $db->setQuery($query);
             return($db->loadResultList());
         }
