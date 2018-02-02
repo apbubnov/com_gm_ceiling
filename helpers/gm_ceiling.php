@@ -543,6 +543,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //Пошла печать PDF
             if ($pdf == 1) {
+                throw new Exception("123123");
                 //наряд монтажной бригаде
                 if($need_mount){
                     self::create_single_mount_estimate(null,$data,$mounting_data);
