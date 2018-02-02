@@ -140,15 +140,25 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                     }
                     $answer->elements[] = (object) [
                         "name" => ".Level2[data-option='$v->id'] #GMPrice",
-                        "value" => $this->margin($newPrice[$k]->price, $userDealer->gm_components_margin)];
+                        "value" => self::margin($newPrice[$k]->price, $userDealer->gm_components_margin)];
                     $answer->elements[] = (object) [
                         "name" => ".Level2[data-option='$v->id'] #DealerPrice",
-                        "value" => $this->double_margin($newPrice[$k]->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin)];
+                        "value" => self::double_margin($newPrice[$k]->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin)];
                 }
                 $model->setPrice($newPrice);
             }
             else {
-                $dealer->set
+                $oldPrice = $model->getPrice($id);
+                foreach ($oldPrice as $k => $v) {
+                    $dealer->setComponentsPrice(["value" => $number, "type" => $type], $v->id);
+
+                    $answer->elements[] = (object) [
+                        "name" => ".Level2[data-option='$v->id'] #GMPrice",
+                        "value" => self::margin($oldPrice[$k]->price, $userDealer->gm_components_margin)];
+                    $answer->elements[] = (object) [
+                        "name" => ".Level2[data-option='$v->id'] #DealerPrice",
+                        "value" => self::dealer_margin($oldPrice[$k]->price, $userDealer->gm_components_margin, $number, $type)];
+                }
             }
 
             die(json_encode($answer));
@@ -163,7 +173,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
     }
 
     private function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
-    private function double_margin($value, $margin1, $margin2) { return $this->margin($this->margin($value, $margin1), $margin2); }
+    private function double_margin($value, $margin1, $margin2) { return self::margin(self::margin($value, $margin1), $margin2); }
     private function dealer_margin($price, $margin, $value, $type) {
         $result = 0;
         switch ($type)
@@ -172,6 +182,6 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             case 2: $result = $price + $value; break;
             case 3: $result = $price + $price * floatval($value) / 100; break;
         }
-        return margin($result, $margin);
+        return self::margin($result, $margin);
     }
 }
