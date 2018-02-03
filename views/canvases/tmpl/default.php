@@ -354,7 +354,7 @@ function dealer_margin($price, $margin, $value, $type) {
 
         jQuery.ajax({
             type: 'POST',
-            url: Data.Ajax + "components.UpdatePrice",
+            url: Data.Ajax + "canvases.UpdatePrice",
             data: values,
             cache: false,
             async: false,

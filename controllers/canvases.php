@@ -196,10 +196,10 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                             break;
                     }
                     $answer->elements[] = (object) [
-                        "name" => ".Level2[data-option='$v->id'] #GMPrice",
+                        "name" => ".Level1[data-option='$v->id'] #GMPrice",
                         "value" => self::margin($newPrice[$k]->price, $userDealer->gm_canvases_margin)];
                     $answer->elements[] = (object) [
-                        "name" => ".Level2[data-option='$v->id'] #DealerPrice",
+                        "name" => ".Level1[data-option='$v->id'] #DealerPrice",
                         "value" => self::double_margin($newPrice[$k]->price, $userDealer->gm_canvases_margin, $userDealer->dealer_canvases_margin)];
                 }
                 $model->setPrice($newPrice);
