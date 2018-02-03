@@ -689,12 +689,19 @@ if (empty($list['direction']))
     public function setPrice($data) {
         try
         {
+            if (gettype($data) == "object")
+                $data = [$data];
+
             $db = $this->getDbo();
-            $query = $db->getQuery(true);
-            $query->update("`#__gm_ceiling_canvases`")
-                ->set("price = '$data->price'")
-                ->where("id = '$data->id'");
-            $db->setQuery($query);
+            $querySTR = "";
+            foreach ($data as $v) {
+                $query = $db->getQuery(true);
+                $query->update("`#__gm_ceiling_canvases`")
+                    ->set("price = '$v->price'")
+                    ->where("id = '$v->id'");
+                $querySTR .= ((string) $query) . "; ";
+            }
+            $db->setQuery($querySTR);
             $db->execute();
         }
         catch(Exception $e)
