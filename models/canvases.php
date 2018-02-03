@@ -692,8 +692,8 @@ if (empty($list['direction']))
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->update("`#__gm_ceiling_canvases`")
-                ->set("price = $data->price")
-                ->where("id = $data->id");
+                ->set("price = '$data->price'")
+                ->where("id = '$data->id'");
             $db->setQuery($query);
             $db->execute();
         }

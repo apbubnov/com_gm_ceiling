@@ -126,7 +126,7 @@ function dealer_margin($price, $margin, $value, $type) {
         </thead>
         <tbody>
         <?foreach ($this->items as $key_c => $canvas):?>
-            <tr class="TBody Level1 <?=($stock && $canvas->count > 0)?"Action":""?>" data-component="<?=$key_c;?>" data-level="1">
+            <tr class="TBody Level1 <?=($stock && $canvas->count > 0)?"Action":""?>" data-canvas="<?=$key_c;?>" data-level="1">
                 <td><i class="fa <?=($stock && $canvas->count > 0)?"fa-caret-down":"fa-caret-right";?>" aria-hidden="true"></i></td>
                 <td><?=$key_c;?></td>
                 <td><?=$canvas->country;?></td>
@@ -179,8 +179,8 @@ function dealer_margin($price, $margin, $value, $type) {
                 <?endif;?>
             </tr>
         <? if ($stock && $canvas->count > 0) foreach ($canvas->rollers as $key_r => $roller):?>
-                <tr class="TBody Level2" style="display: none;" data-component="<?=$key_r;?>"
-                    data-option="<?=$key_r;?>" data-level="2">
+                <tr class="TBody Level2" style="display: none;" data-canvas="<?=$key_r;?>"
+                    data-roller="<?=$key_r;?>" data-level="2">
                     <td><i class="fa fa-caret-right" aria-hidden="true"></i></td>
                     <td><?=$key_r;?></td>
                     <td></td>
