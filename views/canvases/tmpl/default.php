@@ -161,7 +161,7 @@ function dealer_margin($price, $margin, $value, $type) {
                 <?elseif ($managerGM):?>
                     <td id="GMPrice"><?=margin($canvas->price, $dealer->gm_components_margin);?></td>
                     <td id="DealerPrice"><?=dealer_margin($canvas->price, $dealer->gm_components_margin,
-                            $dealer->ComponentsPrice[$key_c]->value, $dealer->ComponentsPrice[$key_c]->type);?></td>
+                            $dealer->CanvasesPrice[$key_c]->value, $dealer->CanvasesPrice[$key_c]->type);?></td>
                     <td>
                         <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_c;?>">
                             <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
