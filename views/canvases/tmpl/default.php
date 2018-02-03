@@ -69,9 +69,11 @@ function dealer_margin($price, $margin, $value, $type) {
     </div>
     <div class="Actions">
         <?=parent::getButtonBack();?>
+        <?if ($stock): ?>
         <button type="button" class="Current ActionTR" id="ActionTR">
             <i class="fa fa-caret-down" aria-hidden="true"></i> <span>Раскрыть все</span>
         </button>
+        <?endif;?>
         <?if ($managerGM):?>
         <form class="FormSimple UpdatePrice MarginLeft">
             <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
@@ -96,7 +98,11 @@ function dealer_margin($price, $margin, $value, $type) {
             <tr class="THead">
                 <td><i class="fa fa-bars" aria-hidden="true"></i></td>
                 <td><?=JHtml::_( 'grid.sort', '<i class="fa fa-hashtag" aria-hidden="true"></i>', 'canvas_id', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Страна', 'canvas_country', $listDirn, $listOrder);?></td>
                 <td><?=JHtml::_('grid.sort', 'Наименование', 'canvas_name', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Ширина', 'canvas_width', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Фактура', 'texture_title', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_('grid.sort', 'Цвет', 'color_title', $listDirn, $listOrder);?></td>
                 <td><?=JHtml::_('grid.sort', 'Количество', 'canvas_count', $listDirn, $listOrder);?></td>
                 <?if($stock):?>
                 <td>Заказать</td>
@@ -123,7 +129,14 @@ function dealer_margin($price, $margin, $value, $type) {
             <tr class="TBody Level1 <?=($stock && $canvas->count > 0)?"Action":""?>" data-component="<?=$key_c;?>" data-level="1">
                 <td><i class="fa <?=($stock && $canvas->count > 0)?"fa-caret-down":"fa-caret-right";?>" aria-hidden="true"></i></td>
                 <td><?=$key_c;?></td>
-                <td><?=$canvas->name." ".$canvas->country . " " . $canvas->width . " : " . $canvas->texture_title . " " . $canvas->color_title;?></td>
+                <td><?=$canvas->country;?></td>
+                <td><?=$canvas->name;?></td>
+                <td><?=$canvas->width;?></td>
+                <td><?=$canvas->texture_title;?></td>
+                <td class="Color" style="
+                        background-color: #<?=$canvas->color_hex;?>;
+                        background-image: url('<?=$canvas->color_file;?>');
+                        "><?=$canvas->color_title;?></td>
                 <td><?=$canvas->count;?></td>
                 <?if($stock):?>
                     <td><?=$canvas->ocount;?></td>
@@ -170,7 +183,11 @@ function dealer_margin($price, $margin, $value, $type) {
                     data-option="<?=$key_r;?>" data-level="2">
                     <td><i class="fa fa-caret-right" aria-hidden="true"></i></td>
                     <td><?=$key_r;?></td>
-                    <td>#<?=$roller->barcode;?> @<?=$roller->article;?></td>
+                    <td></td>
+                    <td>Штрих код:</td>
+                    <td><?=$roller->barcode;?></td>
+                    <td>Артикль:</td>
+                    <td><?=$roller->article;?></td>
                     <td><?=$roller->quad;?></td>
                     <td></td>
                     <td><?=$roller->pprice;?></td>
@@ -182,7 +199,7 @@ function dealer_margin($price, $margin, $value, $type) {
         </tbody>
         <tfoot>
         <tr>
-            <td colspan="9"></td>
+            <td colspan="12"></td>
         </tr>
         </tfoot>
     </table>

@@ -140,6 +140,45 @@ body {
     border-right: 1px solid rgb(64, 65, 154);
 }
 
+.Page .Body tr td.Color {
+    position: relative;
+    background: center no-repeat;
+    background-size: cover;
+    text-shadow: 1px 1px 2px white, -1px 1px 2px white, 1px -1px 2px white, -1px -1px 2px white;
+    font-weight: bold;
+}
+
+.Page .Body tr td.Color:hover:before {
+    position: absolute;
+    left: -150%;
+    top: calc(-200% - 5px);
+    content: ' ';
+    width: 400%;
+    height: 200%;
+    background: center no-repeat;
+    background-size: cover;
+    background-color: inherit;
+    background-image: inherit;
+    border-radius: 5px;
+    border: 1px solid rgb(64, 65, 154);
+    z-index: 10;
+}
+
+.Page .Body tr td.Color:hover:after {
+    content: '▼';
+    position: absolute;
+    left: 0;
+    top: -6px;
+    width: 100%;
+    height: 10px;
+    line-height: 10px;
+    vertical-align: bottom;
+    overflow: hidden;
+    font-size: 100%;
+    color: rgb(64, 65, 154);
+    text-shadow: none;
+}
+
 .Page .Body thead tr td:not(:last-child) {
     border-right: 1px solid rgba(255, 255, 255, .5);
 }

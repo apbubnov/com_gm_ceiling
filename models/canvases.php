@@ -30,7 +30,8 @@ class Gm_ceilingModelCanvases extends JModelList
     {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
-                'canvas_id', 'canvas_name', 'canvas_count', 'canvas_price'
+                'canvas_id', 'canvas_name', 'canvas_count', 'canvas_price', 'canvas_country', 'canvas_width',
+                'texture_title', 'color_title'
             );
         }
 
@@ -170,9 +171,9 @@ if (empty($list['direction']))
                     $canvas->count = $item->canvas_count;
                     $canvas->texture_title = $item->texture_title;
                     $canvas->texture_colored = $item->texture_colored;
-                    $canvas->color_title = $item->color_title;
+                    $canvas->color_title = (strpos($item->texture_title, "бел"))?303:$item->color_title;
                     $canvas->color_file = $item->color_file;
-                    $canvas->color_hex = $item->color_hex;
+                    $canvas->color_hex = ($canvas->color_title == 303)?"FFFFFF":$item->color_hex;
                     $canvas->ocount = self::getOCount($item->canvas_id);
                     $canvas->rollers = [];
 

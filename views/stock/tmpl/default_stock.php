@@ -32,10 +32,10 @@ if (!(array_search('19', $userGroup) || array_search('18', $userGroup))) header(
 <div class="start_page">
     <h3>На складе</h3>
     <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=canvases&type=stock', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Полотна</a>
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=canvases', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Полотна</a>
     </p>
     <p class="center">
-        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=components&type=stock', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Компоненты</a>
+        <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=components', false, 2); ?>"><i class="fa fa-bars" aria-hidden="true"></i> Компоненты</a>
     </p>
     <p class="center">
         <?= parent::getButtonBack(); ?>
