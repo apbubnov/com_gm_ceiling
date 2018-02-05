@@ -75,11 +75,15 @@ $status = $status_model->getData();
 					<?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS', 'a.client_contacts', $listDirn, $listOrder); ?>
                     Адрес
 				</th>
+                <th>
+                    Статус
+                </th>
 			</tr>
             <tr class="row" id="TrClone" data-href="" style="display: none">
                 <td class="one-touch created"></td>
                 <td class="one-touch name"></td>
                 <td class="one-touch address"></td>
+                <td class="one-touch status"></td>
             </tr>
 		</thead>
 
@@ -172,10 +176,23 @@ $status = $status_model->getData();
 
                     tr.show();
                     tr.find(".created").text(data[i].created);
-                    tr.find(".name").text(data[i].client_name);
                     if (data[i].client_contacts != null)
-                    tr.find(".name").text(data[i].client_contacts + ' ' + data[i].client_name);
-                    tr.find(".address").text(data[i].address);
+                    {
+                        tr.find(".name").text(data[i].client_contacts + ' ' + data[i].client_name);
+                    }
+                    else
+                    {
+                        tr.find(".name").text(data[i].client_name);
+                    }
+                    if (data[i].address != null)
+                    {
+                        tr.find(".address").text(data[i].address);
+                    }
+                    else
+                    {
+                        tr.find(".address").text('-');
+                    }
+                    tr.find(".status").text(data[i].status);
                     tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
                     list.append(tr);
                 }
