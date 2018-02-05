@@ -2986,7 +2986,9 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= ' </tbody>';
         $html .= '</table>';
-        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%;"/>';
+        $html .= '<div align="center" style="width: 100%">';
+        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 800px;"/>';
+        $html .= '</div>';
         $html .= "<pagebreak />";
         $html .= $html;
         $html .= '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Раскрой № _________</h1>';
@@ -3022,7 +3024,9 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';
-        $html .= '<center><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%;"/></center>';
+        $html .= '<div align="center" style="width: 100%;">';
+        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%; min-height: 800px;"/>';
+        $html .= '</div>';
         $filename = md5($calc_id . 'cutpdf') . '.pdf';
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
