@@ -154,7 +154,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                     $DealerPrice = self::dealer_margin($oldPrice[$k]->price, $userDealer->gm_components_margin, $number, $type);
                     $PPrice = $model->MinPriceOption($v->id);
 
-                    if (floatval($DealerPrice) < $PPrice) $flag++;
+                    if (floatval($DealerPrice) < floatval($PPrice)) $flag++;
                     else {
                         $dealer->setComponentsPrice(["value" => $number, "type" => $type], $v->id);
 
