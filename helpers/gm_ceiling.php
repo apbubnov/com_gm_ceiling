@@ -3298,7 +3298,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $mpdf->SetImportUse();
                 foreach ($html as $index => $value) {
                     if (substr($value, -4, 4) == ".pdf") {
-                        if (file_exists($value)) continue;
+                        if (!file_exists($value)) continue;
 
                         $page = $mpdf->SetSourceFile($value);
                         for ($i = 1; $i <= $page; $i++) {
