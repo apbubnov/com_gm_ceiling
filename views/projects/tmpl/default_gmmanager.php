@@ -38,22 +38,27 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 		<thead>
 			<tr>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+					<?php //echo JHtml::_('grid.sort',  'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+					Номер договора
 				</th>
 <!--				<th class='center'>-->
 <!--					--><?php //echo JHtml::_('grid.sort',  'Статус', 'a.project_status', $listDirn, $listOrder); ?>
 <!--				</th>-->
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Дата и время начала монтажа', 'a.project_mounting_from', $listDirn, $listOrder); ?>
+					<?php //echo JHtml::_('grid.sort',  'Дата и время начала монтажа', 'a.project_mounting_from', $listDirn, $listOrder); ?>
+					Дата и время начала монтажа
 				</th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+					<?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+					Адрес
 				</th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
+					<?php //echo JHtml::_('grid.sort',  'Телефоны', 'a.client_contacts', $listDirn, $listOrder); ?>
+					Телефоны
 				</th>
 				<th class='center'>
-					<?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+					<?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_CLIENT_ID', 'a.client_id', $listDirn, $listOrder); ?>
+					Клиент
 				</th>
 				<th class="center">
 					Дилер
