@@ -2553,47 +2553,6 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
-    public function getImage() {
-        try {
-            $app = JFactory::getApplication();
-
-            $type = $app->input->get('type', null, 'string');
-            $calculation = $app->input->get('calc', null, 'int');
-
-            if (empty($type) || empty($calculation))
-                die(json_encode(["status" => "error", "message" => "Не все параметры переданы!"]));
-
-            $model = $this->getModel('Calculation', 'Gm_ceilingModel');
-            $image = ((array)$model->getImage($calculation, $type))[$type];
-
-            header('Content-Type: image/png');
-            header('Cache-control: no-cache, no-store');
-            echo $image;
-            exit;
-        } catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
-        }
-    }
-
-    public function getImagePNG()
-    {
-        $app = JFactory::getApplication();
-        $id = $app->input->getInt('id', 0);
-        $svg = file_get_contents("http://" . $_SERVER["SERVER_NAME"] . "/calculation_images/man.svg");
-        $image = new Imagick();
-        $image->setResolution(800, 800);
-        $image->readImageBlob($svg);
-        $image->setImageFormat("png32");
-        $image->scaleImage(400, 400);
-        $image = $image->flattenImages();
-        header("Content-type: image/png");
-        echo($image);
-        exit();
-    }
-
     public function UpdateCutData()
     {
         try {
