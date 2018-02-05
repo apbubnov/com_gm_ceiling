@@ -1325,10 +1325,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <td><b>Отправить общую смету <b></td>
                 <td>
                     <?php
-                    $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                    $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf";
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                     <?php } else { ?>
-                        -
+                        <span data-href="<?=$path;?>">-</span>
                     <?php }
                     $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
                     $json2 = json_encode($pdf_names); ?>
