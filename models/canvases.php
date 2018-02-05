@@ -261,6 +261,7 @@ if (empty($list['direction']))
         $query->from("`#__gm_ceiling_analytics_canvases`")
             ->select("MAX(price) as price")
             ->where("canvas_id = '$canvas_id'")
+            ->where("roller_id IS NOT NULL")
             ->where("status = 1");
         $db->setQuery($query);
         $pprice = $db->loadObject()->price;

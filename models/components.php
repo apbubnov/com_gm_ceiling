@@ -379,6 +379,7 @@ class Gm_ceilingModelComponents extends JModelList
         $query->from("`#__gm_ceiling_analytics_components`")
             ->select("MAX(price) as price")
             ->where("option_id = '$option_id'")
+            ->where("good_id IS NOT NULL")
             ->where("status = 1");
         $db->setQuery($query);
         $pprice = $db->loadObject()->price;
