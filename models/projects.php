@@ -890,7 +890,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->join("LEFT", "`#__gm_ceiling_clients_contacts` as `phone` ON `phone`.`client_id` = `client`.`id`")
                 ->join("LEFT", "`#__gm_ceiling_projects` as `p` ON p.client_id = `client`.`id`")
                 ->join("LEFT", "`#__users` as `u` ON `client`.`dealer_id` = `u`.`id`")
-                ->select("`p`.`project_info` as `address`")
+                ->select("`p`.`project_info` as `address`, `p`.`project_status` as `status`")
                 ->select("`client`.`client_name` as `client_name`, `client`.`created`, `client`.`id` as `client_id`")
                 ->select("GROUP_CONCAT(distinct `phone`.`phone` SEPARATOR ', ') as `client_contacts`")
                 ->where("`u`.`associated_client` != `client`.`id`")
