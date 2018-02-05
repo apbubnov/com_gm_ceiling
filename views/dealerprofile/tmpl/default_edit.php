@@ -40,7 +40,7 @@ $mount = $model_mount->getDataAll();
 	<div class="col-md-4">
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin"> Укажите, какой процент прибыли от заказа Вы желаете получать (от комплектующих)</label>
+				<label id="jform_dealer_components_margin-lbl" for="jform_dealer_components_margin">Укажите, какой процент прибыли от заказа Вы желаете получать (от комплектующих)</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[dealer_components_margin]" id="jform_dealer_components_margin" value=<?php echo ($margin->dealer_components_margin)?$margin->dealer_components_margin:0 ?> class="required"style="width:100%;" size="3" required aria-required="true" />	
@@ -63,7 +63,7 @@ $mount = $model_mount->getDataAll();
 	<div class="col-md-4">
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_mp1-lbl" for="jform_mp1" >	Монтаж</label>
+				<label id="jform_mp1-lbl" for="jform_mp1" >Монтаж</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[mp1]" id="jform_mp1" value=<?php echo ($mount->mp1)?$mount->mp1:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
@@ -71,7 +71,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_mp31-lbl" for="jform_mp31" >	Монтаж, если выбран потолочный багет</label>
+				<label id="jform_mp31-lbl" for="jform_mp31" >Монтаж (потолочный багет)</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[mp31]" id="jform_mp31" value=<?php echo ($mount->mp31)?$mount->mp31:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
@@ -79,7 +79,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_mp32-lbl" for="jform_mp32" >	Монтаж, если выбран алюминиевый багет</label>
+				<label id="jform_mp32-lbl" for="jform_mp32" >Монтаж (алюминиевый багет)</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[mp32]" id="jform_mp32" value=<?php echo ($mount->mp32)?$mount->mp32:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
@@ -95,7 +95,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_mp3-lbl" for="jform_mp3" >	Люстра большая</label>
+				<label id="jform_mp3-lbl" for="jform_mp3" >Люстра большая</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[mp3]" id="jform_mp3" value=<?php echo ($mount->mp3)?$mount->mp3:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
@@ -103,7 +103,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_mp4-lbl" for="jform_mp4" class="hasTooltip required">	Установка светильников</label>
+				<label id="jform_mp4-lbl" for="jform_mp4" class="hasTooltip required">Установка светильников</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[mp4]" id="jform_mp4" value=<?php echo ($mount->mp4)?$mount->mp4:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
@@ -111,7 +111,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_mp5-lbl" for="jform_mp5" >	Светильники квадратные</label>
+				<label id="jform_mp5-lbl" for="jform_mp5" >Светильники квадратные</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[mp5]" id="jform_mp5" value=<?php echo ($mount->mp5)?$mount->mp5:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
@@ -135,7 +135,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 		<div class="control-group">
 			<div class="control-label">
-				<label id="jform_mp8-lbl" for="jform_mp8" >	Обвод трубы D < 120мм</label>
+				<label id="jform_mp8-lbl" for="jform_mp8" >Обвод трубы D < 120мм</label>
 			</div>
 			<div class="controls">
 				<input type="text" name="jform[mp8]" id="jform_mp8" value=<?php echo ($mount->mp8)?$mount->mp8:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />			
