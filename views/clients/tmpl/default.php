@@ -192,7 +192,15 @@ $status = $status_model->getData();
                     {
                         tr.find(".address").text('-');
                     }
-                    tr.find(".status").text(data[i].status);
+                    if (data[i].status != null)
+                    {
+                        tr.find(".status").text(data[i].status);
+                    }
+                    else
+                    {
+                        tr.find(".status").text('-');
+                    }
+                    
                     tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
                     list.append(tr);
                 }
