@@ -233,7 +233,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             
             $query->select('id, project_mounting_date, read_by_mounter, project_status, project_info, gm_chief_note, dealer_chief_note, gm_calculator_note, dealer_calculator_note')
                 ->from('#__gm_ceiling_projects')
-                ->where("project_mounter = '$id' and project_mounting_date between '$date 00:00:00' and '$date 23:59:59'")
+                ->where("project_mounter = '$id' and `project_status` > 3 and project_mounting_date between '$date 00:00:00' and '$date 23:59:59'")
                 ->order('project_mounting_date');
             $db->setQuery($query);
             $items = $db->loadObjectList();
@@ -241,7 +241,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $query2->select('calculations.project_id, calculations.n5, calculations.mounting_sum')
                 ->from('#__gm_ceiling_calculations as calculations')
                 ->innerJoin('#__gm_ceiling_projects as projects ON calculations.project_id = projects.id')
-                ->where("projects.project_mounter = '$id' and projects.project_mounting_date between '$date 00:00:00' and '$date 23:59:59'");
+                ->where("projects.project_mounter = '$id' and projects.`project_status` > 3 and projects.project_mounting_date between '$date 00:00:00' and '$date 23:59:59'");
             $db->setQuery($query2);
             $items2 = $db->loadObjectList();
 

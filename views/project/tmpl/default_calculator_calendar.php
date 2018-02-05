@@ -2536,7 +2536,7 @@ var $ = jQuery;
             }
             else
                 jQuery(this).attr("type", "submit");
-            jQuery("input[name='project_status']").val(4);
+            jQuery("input[name='project_status']").val(5);
             jQuery("input[name='project_verdict']").val(1);
         });
         $tmp_accept = 0; $tmp_refuse = 0;

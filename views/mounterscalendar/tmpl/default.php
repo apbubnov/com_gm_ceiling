@@ -84,7 +84,7 @@
         </table>
     </div>
     <div id="modal-window-with-table">
-        <button type="button" id="close-modal-window" onclick="CloseModalWindow();"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <button type="button" id="close-modal-window"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="window-with-table">
             <table id="table-mounting"></table>
         </div>

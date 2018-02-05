@@ -889,12 +889,12 @@ class Gm_ceilingModelProjects extends JModelList
             $query->from("`#__gm_ceiling_clients` as `client`")
                 ->join("LEFT", "`#__gm_ceiling_clients_contacts` as `phone` ON `phone`.`client_id` = `client`.`id`")
                 ->join("LEFT", "(SELECT * FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) as `p` ON `p`.`client_id` = `client`.`id`")
-                ->join("LEFT", "`#__users` as `u` ON `client`.`dealer_id` = `u`.`id`")
+                ->join("LEFT", "`#__users` as `u` ON `client`.`id` = `u`.`associated_client`")
                 ->join("LEFT", "`#__gm_ceiling_status` as `s` ON `p`.`project_status` = `s`.`id`")
                 ->select("`p`.`project_info` as `address`, `s`.`title` as `status`")
                 ->select("`client`.`client_name` as `client_name`, `client`.`created`, `client`.`id` as `client_id`")
                 ->select("GROUP_CONCAT(distinct `phone`.`phone` SEPARATOR ', ') as `client_contacts`")
-                ->where("`u`.`associated_client` != `client`.`id`")
+                ->where("`u`.`associated_client` IS NULL")
                 ->order("`client`.`id` DESC")
                 ->group("`client`.`id`");
 
@@ -908,6 +908,7 @@ class Gm_ceilingModelProjects extends JModelList
                 $query->where(' client.dealer_id = '. $user->dealer_id . ' and (client.client_name like \'%'.$search.'%\' or phone.phone like \'%'.$search.'%\')');
           // print_r((string)$query); exit;
             $db->setQuery($query);
+            
             $result = $db->loadObjectList();
             return $result;
         }
