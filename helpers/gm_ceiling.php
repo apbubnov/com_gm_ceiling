@@ -552,17 +552,20 @@ class Gm_ceilingHelpersGm_ceiling
             }
             //Пошла печать PDF
             if ($pdf == 1) {
-               
+
+                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
+                self::create_client_common_estimate($data["project_id"], $need_mount);
                 //наряд монтажной бригаде
                 if($need_mount){
                     self::create_single_mount_estimate(null,$data,$mounting_data);
-                }       
+                    self::create_common_estimate_mounters($data["project_id"]);
+                }
+                self::create_estimate_of_consumables($data["project_id"]);
                 //PDF раскроя
                 self::create_cut_pdf(null,$data);
                 //для менеджера
                 self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
-                //клиентская смета 
-                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
+                //клиентская смета
             }         
             $return = json_encode($ajax_return);
             
