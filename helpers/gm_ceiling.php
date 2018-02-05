@@ -195,9 +195,11 @@ class Gm_ceilingHelpersGm_ceiling
                 //Загружаем из БД
                 $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
                 $calculation_data = $calculation_model->getData($calculation_id);
+
                 foreach ($calculation_data as $key => $item) {
                     $data[$key] = $item;
                 }
+
                 //throw  new Exception("Test", 3);
                 $data['n1'] = $calculation_data->n1_id;
                 $data['n2'] = $calculation_data->n2_id;
@@ -505,6 +507,15 @@ class Gm_ceilingHelpersGm_ceiling
                 $data['calculation_title'] = "Потолок 1";
             //Сохранение калькуляции
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
+
+            /*Временный костыль*/
+            $temp_calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $temp_calculation_data = $temp_calculation_model->getData($data["id"]);
+            $data["calc_data"] = $temp_calculation_data->calc_data;
+            $data["cut_data"] = $temp_calculation_data->cut_data;
+            $data['original_sketch'] = $temp_calculation_data->original_sketch;
+            /*-----------------------------------------------------------------------------*/
+
             if ($save == 1) {
                 $tmp_filename = $data['sketch_name'];
                 $tmp_cut_filename = $data['cut_name'];
@@ -544,11 +555,11 @@ class Gm_ceilingHelpersGm_ceiling
                     self::create_single_mount_estimate(null,$data,$mounting_data);
                 }       
                 //PDF раскроя
-                //self::create_cut_pdf(null,$data);
+                self::create_cut_pdf(null,$data);
                 //для менеджера
-               // self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
+                self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета 
-                //self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data); 
+                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
             }         
             $return = json_encode($ajax_return);
             
