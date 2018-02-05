@@ -551,21 +551,16 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             //Пошла печать PDF
-            if ($pdf == 1) {
-
-                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
-                self::create_client_common_estimate($data["project_id"], $need_mount);
-                //наряд монтажной бригаде
+            if ($pdf == 1) {//наряд монтажной бригаде
                 if($need_mount){
                     self::create_single_mount_estimate(null,$data,$mounting_data);
-                    self::create_common_estimate_mounters($data["project_id"]);
                 }
-                self::create_estimate_of_consumables($data["project_id"]);
                 //PDF раскроя
                 self::create_cut_pdf(null,$data);
                 //для менеджера
                 self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета
+                self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
             }         
             $return = json_encode($ajax_return);
             
@@ -579,6 +574,7 @@ class Gm_ceilingHelpersGm_ceiling
              throw new Exception('Ошибка!', 500);
         }
     }
+
     public static function create_client_single_estimate($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
     $mounting_data = null){
         $html = self::create_client_single_estimate_html($need_mount,$calc_id,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
@@ -718,7 +714,7 @@ class Gm_ceilingHelpersGm_ceiling
            return $html; 
     }
 
-    public static function create_client_common_estimate($project_id,$need_mount){
+    public static function create_client_common_estimate($project_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
@@ -787,11 +783,13 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p><br>';
         $html .= "<pagebreak />";
         foreach($calculations as $calc){
+            $need_mount = ($calc->mounting_sum > 0);
             $html .= self::create_client_single_estimate_html($need_mount,$calc->id);
         }
         $filename = md5($project->id . "client_common") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
     }
+
     public static function calculate_components($calc_id=null,$data=null,$del_flag=0){ 
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
