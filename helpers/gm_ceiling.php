@@ -2744,6 +2744,14 @@ class Gm_ceilingHelpersGm_ceiling
 
                     $html .= '</tbody></table>';
                 }
+
+                /*Новый костыль*/
+                if ($data["n16"])
+                    $html = str_replace("Шторный карниз", "Шторный карниз / Скрытый", $html);
+                else
+                    $html = str_replace("Шторный карниз", "Шторный карниз / Обычный", $html);
+                /****************************/
+
                 return $html;
             }
             catch(Exception $e)
