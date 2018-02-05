@@ -1275,42 +1275,6 @@
     }
     //------------------------------------------
 
-    // показать историю
-    function show_comments() {
-        <?php if (isset($this->item->id_client)) { ?>
-            var id_client = <?php echo $this->item->id_client;?>;
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=selectComments",
-                data: {
-                    id_client: id_client
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    var comments_area = document.getElementById('comments');
-                    comments_area.innerHTML = "";
-                    var date_t;
-                    for (var i = 0; i < data.length; i++) {
-                        date_t = new Date(data[i].date_time);
-                        comments_area.innerHTML += formatDate(date_t) + "\n" + data[i].text + "\n----------\n";
-                    }
-                    comments_area.scrollTop = comments_area.scrollHeight;
-                },
-                error: function (data) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка вывода примечаний"
-                    });
-                }
-            });
-        <?php } ?>        
-    }
-    //------------------------------------------------------
-
     // форматирование даты для вывода
     function formatDate(date) {
         var dd = date.getDate();
