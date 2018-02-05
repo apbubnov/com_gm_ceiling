@@ -16,6 +16,11 @@ $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
+
+Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+
 $project_total = 0;
 $project_total_discount = 0;
 $total_square = 0;
@@ -1329,7 +1334,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                     <?php } else { ?>
-                        <span data-href="<?=$path;?>">-</span>
+                        <span data-href="<?=$path;?>">-
                     <?php }
                     $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
                     $json2 = json_encode($pdf_names); ?>
