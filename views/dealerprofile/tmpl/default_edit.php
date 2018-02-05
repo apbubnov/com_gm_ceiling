@@ -149,6 +149,22 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[mp9]" id="jform_mp9" value=<?php echo ($mount->mp9)?$mount->mp9:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />			
 			</div>
 		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp10-lbl" for="jform_mp10" >Вставка</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp10]" id="jform_mp10" value=<?php echo ($mount->mp10)?$mount->mp10:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_mp11-lbl" for="jform_mp11" >Шторный карниз на полотно</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[mp11]" id="jform_mp11" value=<?php echo ($mount->mp11)?$mount->mp11:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+			</div>
+		</div>
 	</div>
 	<div class = "col-md-4">
 		<div class="control-group">
@@ -263,9 +279,6 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[mp25]" id="jform_mp25" value=<?php echo $mount->mp25?$mount->mp25:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 			</div>
 		</div>
-		
-	</div>
-	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_mp26-lbl" for="jform_mp26" >Переход уровня по кривой с нишей </label>
@@ -274,6 +287,8 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[mp26]" id="jform_mp26" value=<?php echo $mount->mp26?$mount->mp26:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 			</div>
 		</div>
+	</div>
+	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_mp27-lbl" for="jform_mp27" >Слив воды </label>
