@@ -16,8 +16,8 @@ defined('_JEXEC') or die;
  */
 
 /* включаем библиотеку для формирования PDF */
-include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
-//include($_SERVER['DOCUMENT_ROOT'] . "/mpdf_test/mpdf.php");
+//include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/mpdf_test/mpdf.php");
 
 /* функция для применения маржи */
 function margin($value, $margin)
@@ -3295,10 +3295,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_documents.css');
             }
             if (gettype($html) == "array") {
-               
                 $mpdf->SetImportUse();
                 foreach ($html as $index => $value) {
-                    if (substr($value, -4, 4) == ".pdf") {
+                    if (substr($value, -4, 4) == ".pdf" && file_exists($value)) {
                         $page = $mpdf->SetSourceFile($value);
                         for ($i = 1; $i <= $page; $i++) {
                             $mpdf->AddPage("P");
