@@ -24,12 +24,11 @@ $mount = $model_mount->getDataAll();
 <?if(!$user->getDealerInfo()->update_check) { $user->setDealerInfo(["update_check" => true]);}?>
 <?=parent::getButtonBack();?>
 <form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
-	<h2>
+	<h3>
 		Редактирование маржинальности и прайса монтажа
-	</h2>
-
-	<div class = "col-md-4">
-	<div class="control-group">
+	</h3>
+	<div>
+		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_dealer_canvases_margin-lbl" for="jform_dealer_canvases_margin" class="hasTooltip required" >Укажите, какой процент прибыли от заказа Вы желаете получать (от полотен)</label>
 			</div>
@@ -53,6 +52,8 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo ($margin->dealer_mounting_margin)?$margin->dealer_mounting_margin:0 ?> class="required" style="width:100%;"size="3" required aria-required="true" />				
 			</div>
 		</div>
+	</div>
+	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
 				<label id="jform_mp1-lbl" for="jform_mp1" >	Монтаж</label>
