@@ -149,16 +149,28 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             }
             else {
                 $oldPrice = $model->getPrice($id);
+                $flag = 0;
                 foreach ($oldPrice as $k => $v) {
-                    $dealer->setComponentsPrice(["value" => $number, "type" => $type], $v->id);
+                    $DealerPrice = self::dealer_margin($oldPrice[$k]->price, $userDealer->gm_components_margin, $number, $type);
+                    $PPrice = $model->MinPriceOption($v->id);
 
-                    $answer->elements[] = (object) [
-                        "name" => ".Level2[data-option='$v->id'] #GMPrice",
-                        "value" => self::margin($oldPrice[$k]->price, $userDealer->gm_components_margin)];
-                    $answer->elements[] = (object) [
-                        "name" => ".Level2[data-option='$v->id'] #DealerPrice",
-                        "value" => self::dealer_margin($oldPrice[$k]->price, $userDealer->gm_components_margin, $number, $type)];
+                    if (floatval($DealerPrice) < $PPrice) $flag++;
+                    else {
+                        $dealer->setComponentsPrice(["value" => $number, "type" => $type], $v->id);
+
+                        $answer->elements[] = (object) [
+                            "name" => ".Level2[data-option='$v->id'] #GMPrice",
+                            "value" => self::margin($oldPrice[$k]->price, $userDealer->gm_components_margin)];
+                        $answer->elements[] = (object) [
+                            "name" => ".Level2[data-option='$v->id'] #DealerPrice",
+                            "value" => $DealerPrice];
+                    }
                 }
+                if ($flag == 1)
+                    die(json_encode(["status" => "error", "message" => "Цена для дилера не должна быть ниже себестоймости."]));
+                else if ($flag > 1)
+                    die(json_encode(["status" => "error", "message" => "Цена для дилера не должна быть ниже себестоймости. 
+                    Поэтому к некоторым компонентам новый прайс был не пременен."]));
             }
 
             die(json_encode($answer));

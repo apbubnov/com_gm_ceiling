@@ -252,13 +252,7 @@ class Gm_ceilingModelComponents extends JModelList
             $good_id = null;
 
             foreach ($items as $item) {
-                $query = $db->getQuery(true);
-                $query->from("`#__gm_ceiling_analytics_components`")
-                    ->select("MAX(price) as price")
-                    ->where("good_id = '$item->good_id'")
-                    ->where("status = 1");
-                $db->setQuery($query);
-                $item->pprice = $db->loadObject()->price;
+                $item->pprice = $this->MinPriceGood($item->good_id);
                 $item->pprice = (empty($item->pprice)?"Нет":$item->pprice);
 
                 $query = $db->getQuery(true);
@@ -377,6 +371,30 @@ class Gm_ceilingModelComponents extends JModelList
         $result = ceil((floatval($YCount) + floatval($MCount)) / 2);
         $result -= ($result < $Count)?0:$Count;
         return $result;
+    }
+
+    public function MinPriceOption($option_id) {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_components`")
+            ->select("MAX(price) as price")
+            ->where("option_id = '$option_id'")
+            ->where("status = 1");
+        $db->setQuery($query);
+        $pprice = $db->loadObject()->price;
+        return $pprice;
+    }
+
+    public function MinPriceGood($good_id) {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_components`")
+            ->select("MAX(price) as price")
+            ->where("good_id = '$good_id'")
+            ->where("status = 1");
+        $db->setQuery($query);
+        $pprice = $db->loadObject()->price;
+        return $pprice;
     }
 
     public function getInfoAnalytics($data) {

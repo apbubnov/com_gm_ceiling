@@ -146,13 +146,7 @@ if (empty($list['direction']))
             $roller_id = null;
 
             foreach ($items as $item) {
-                $query = $db->getQuery(true);
-                $query->from("`#__gm_ceiling_analytics_canvases`")
-                    ->select("MAX(price) as price")
-                    ->where("roller_id = '$item->roller_id'")
-                    ->where("status = 1");
-                $db->setQuery($query);
-                $item->pprice = $db->loadObject()->price;
+                $item->pprice = self::MinPriceRoller($item->roller_id);
                 $item->pprice = (empty($item->pprice) ? "Нет" : $item->pprice);
 
                 $query = $db->getQuery(true);
@@ -261,82 +255,29 @@ if (empty($list['direction']))
         return $result;
     }
 
+    private function MinPriceCanvas($canvas_id) {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_canvases`")
+            ->select("MAX(price) as price")
+            ->where("canvas_id = '$canvas_id'")
+            ->where("status = 1");
+        $db->setQuery($query);
+        $pprice = $db->loadObject()->price;
+        return $pprice;
+    }
 
-
-        /*
-        $items = parent::getItems();
-        $user = JFactory::getUser();
-        $dealer = JFactory::getUser($user->dealer_id);
-        $dealerInfo  = $dealer->getDealerInfo();
-        $dealer_canvases_margin = $dealerInfo->dealer_canvases_margin;
-        $gm_canvases_margin = $dealerInfo->gm_canvases_margin;
-
-        $result = array();
-        foreach ($items as $item)
-        {
-            $item->color_title = (!empty($item->color_title))?$item->color_title:'303';
-            $item->color_hex = (!empty($item->color_hex))?"#".$item->color_hex:"#FFFFFF";
-            $item->color_file = (!empty($item->color_file))?'/'.$item->color_file:null;
-            $item->quad = (!empty($item->quad))?$item->quad:0;
-            $item->client_price = round((100 * $item->price)/(100 - $gm_canvases_margin - $dealer_canvases_margin - $gm_canvases_margin * $dealer_canvases_margin),2);
-
-            $idFTC = $item->name.$item->country.$item->texture_title.$item->color_title;
-            if (empty($result[$idFTC]))
-            {
-                $result[$idFTC] = array();
-                $result[$idFTC]['full_name'] = $item->name." ".$item->country;
-                $result[$idFTC]['texture_title'] = $item->texture_title;
-                $result[$idFTC]['color_title'] = $item->color_title;
-                $result[$idFTC]['color_hex'] = $item->color_hex;
-                $result[$idFTC]['color_file'] = $item->color_file;
-                $result[$idFTC]['lenght'] = 0;
-                $result[$idFTC]['count'] = 0;
-                $result[$idFTC]['sum_pp'] = 0;
-                $result[$idFTC]['purchasing_price'] = 0;
-                $result[$idFTC]['price'] = 0;
-                $result[$idFTC]['client_price'] = 0;
-
-                $result[$idFTC]['child'] = array();
-            }
-            if (empty($result[$idFTC]['child'][$item->width]))
-            {
-                $result[$idFTC]['child'][$item->width] = array();
-                $result[$idFTC]['child'][$item->width]['id'] = $item->canvas_id;
-                $result[$idFTC]['child'][$item->width]['stock'] = $item->stock;
-                $result[$idFTC]['child'][$item->width]['width'] = $item->width;
-                $result[$idFTC]['child'][$item->width]['lenght'] = $item->quad;
-                $result[$idFTC]['lenght'] += $item->quad;
-                $result[$idFTC]['child'][$item->width]['count'] = $item->count;
-                $result[$idFTC]['count'] += $item->count;
-                $result[$idFTC]['child'][$item->width]['purchasing_price'] = ($item->purchasing_price != 'Неизвестно')?$item->purchasing_price*$item->count:$item->purchasing_price;
-                $result[$idFTC]['child'][$item->width]['one_purchasing_price'] = $item->purchasing_price;
-                $result[$idFTC]['sum_pp'] += ($item->purchasing_price != 'Неизвестно')?$item->purchasing_price*$item->count:0;
-                $result[$idFTC]['purchasing_price'] = ($result[$idFTC]['sum_pp'] <= 0)?'Неизвестно':$result[$idFTC]['sum_pp'];
-                $result[$idFTC]['child'][$item->width]['price'] = $item->price*$item->count;
-                $result[$idFTC]['child'][$item->width]['client_price'] = $item->client_price*$item->count;
-                $result[$idFTC]['price'] += ($item->count > 0)?$item->price*$item->count:0;
-                $result[$idFTC]['client_price'] += ($item->count > 0)?$item->client_price*$item->count:0;
-                $result[$idFTC]['child'][$item->width]['one_price'] = $item->price;
-                $result[$idFTC]['child'][$item->width]['one_client_price'] = $item->client_price;
-
-
-                if (!empty($item->roller_id))
-                    $result[$idFTC]['child'][$item->width]['child'] = array();
-            }
-            if (!empty($item->roller_id) && empty($result[$idFTC]['child'][$item->width]['child'][$item->roller_id]))
-            {
-                $result[$idFTC]['child'][$item->width]['child'][$item->roller_id] = array();
-                $result[$idFTC]['child'][$item->width]['child'][$item->roller_id]['id'] = $item->roller_id;
-                $result[$idFTC]['child'][$item->width]['child'][$item->roller_id]['lenght'] = $item->quad;
-                $result[$idFTC]['child'][$item->width]['child'][$item->roller_id]['price'] = $item->price;
-                $result[$idFTC]['child'][$item->width]['child'][$item->roller_id]['client_price'] = $item->client_price;
-                $result[$idFTC]['child'][$item->width]['child'][$item->roller_id]['stock'] = $item->stock;
-
-            }
-        }
-        return $result;
-
-    }*/
+    private function MinPriceRoller($roller_id) {
+        $db = $this->getDbo();
+        $query = $db->getQuery(true);
+        $query->from("`#__gm_ceiling_analytics_canvases`")
+            ->select("MAX(price) as price")
+            ->where("roller_id = '$roller_id'")
+            ->where("status = 1");
+        $db->setQuery($query);
+        $pprice = $db->loadObject()->price;
+        return $pprice;
+    }
 
     //KM_CHANGED START
 

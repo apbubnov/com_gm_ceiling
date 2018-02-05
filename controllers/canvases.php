@@ -206,16 +206,28 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
             }
             else {
                 $oldPrice = $model->getPrice($id);
+                $flag = 0;
                 foreach ($oldPrice as $k => $v) {
-                    $dealer->setCanvasesPrice(["value" => $number, "type" => $type], $v->id);
+                    $DealerPrice = self::dealer_margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin, $number, $type);
+                    $PPrice = $model->MinPriceCanvas($v->id);
 
-                    $answer->elements[] = (object) [
-                        "name" => ".Level1[data-canvas='$v->id'] #GMPrice",
-                        "value" => self::margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin)];
-                    $answer->elements[] = (object) [
-                        "name" => ".Level1[data-canvas='$v->id'] #DealerPrice",
-                        "value" => self::dealer_margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin, $number, $type)];
+                    if ($DealerPrice < $PPrice) $flag++;
+                    else {
+                        $dealer->setCanvasesPrice(["value" => $number, "type" => $type], $v->id);
+
+                        $answer->elements[] = (object) [
+                            "name" => ".Level1[data-canvas='$v->id'] #GMPrice",
+                            "value" => self::margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin)];
+                        $answer->elements[] = (object) [
+                            "name" => ".Level1[data-canvas='$v->id'] #DealerPrice",
+                            "value" => $DealerPrice];
+                    }
                 }
+                if ($flag == 1)
+                    die(json_encode(["status" => "error", "message" => "Цена для дилера не должна быть ниже себестоймости."]));
+                else if ($flag > 1)
+                    die(json_encode(["status" => "error", "message" => "Цена для дилера не должна быть ниже себестоймости. 
+                    Поэтому к некоторым полотнам новый прайс был не пременен."]));
             }
 
             die(json_encode($answer));
