@@ -255,7 +255,7 @@ if (empty($list['direction']))
         return $result;
     }
 
-    private function MinPriceCanvas($canvas_id) {
+    public function MinPriceCanvas($canvas_id) {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_analytics_canvases`")
@@ -267,7 +267,7 @@ if (empty($list['direction']))
         return $pprice;
     }
 
-    private function MinPriceRoller($roller_id) {
+    public function MinPriceRoller($roller_id) {
         $db = $this->getDbo();
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_analytics_canvases`")
