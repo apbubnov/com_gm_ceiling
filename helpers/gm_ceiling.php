@@ -16,8 +16,8 @@ defined('_JEXEC') or die;
  */
 
 /* включаем библиотеку для формирования PDF */
-include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
-//include($_SERVER['DOCUMENT_ROOT'] . "/mpdf_test/mpdf.php");
+//include($_SERVER['DOCUMENT_ROOT'] . "/libraries/mpdf/mpdf.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/mpdf_test/mpdf.php");
 
 /* функция для применения маржи */
 function margin($value, $margin)
@@ -143,18 +143,12 @@ class Gm_ceilingHelpersGm_ceiling
         JFactory::getApplication()->enqueueMessage("Добавлен новый дилер!");
         $margin_model = self::getModel('Dealer_info');
         $mount_model = self::getModel('mount');
-        if ($type == 3)
-        {
+
             $gm_margin = $margin_model->getDataById(1);
             $margin_model->save($gm_margin->dealer_canvases_margin,$gm_margin->dealer_components_margin,$gm_margin->dealer_mounting_margin,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
             $gm_mount = $mount_model->getDataAll(1);
             $gm_mount->user_id = $userID;
             $mount_model->insert($gm_mount);
-        }
-        else
-        {
-            $margin_model->save(0,0,0,0,0,0,$userID,0);
-        }
         
         return $userID;
 
@@ -3301,10 +3295,11 @@ class Gm_ceilingHelpersGm_ceiling
                 $stylesheet = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/libraries/mpdf/gm_documents.css');
             }
             if (gettype($html) == "array") {
-               
                 $mpdf->SetImportUse();
                 foreach ($html as $index => $value) {
                     if (substr($value, -4, 4) == ".pdf") {
+                        if (file_exists($value)) continue;
+
                         $page = $mpdf->SetSourceFile($value);
                         for ($i = 1; $i <= $page; $i++) {
                             $mpdf->AddPage("P");
