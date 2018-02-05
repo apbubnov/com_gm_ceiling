@@ -893,7 +893,7 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select("`p`.`project_info` as `address`")
                 ->select("`client`.`client_name` as `client_name`, `client`.`created`, `client`.`id` as `client_id`")
                 ->select("GROUP_CONCAT(distinct `phone`.`phone` SEPARATOR ', ') as `client_contacts`")
-                ->where("`u`.`associated_client` IS NULL")
+                ->where("`u`.`associated_client` != `client`.`id`")
                 ->group("`client`.`id`");
 
             if($status && !$search)
