@@ -886,13 +886,15 @@ class Gm_ceilingModelProjects extends JModelList
             $user = JFactory::getUser();
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->from("`#__gm_ceiling_clients` as client")
-                ->join("LEFT", "`#__gm_ceiling_clients_contacts` as phone ON phone.client_id = client.id")
-                ->join("LEFT", "`#__gm_ceiling_projects` as p ON p.client_id = client.id")
-                ->select("p.project_info as address")
-                ->select("client.client_name as client_name, client.created as created, client.id as client_id")
-                ->select("GROUP_CONCAT(distinct phone.phone SEPARATOR ', ') as client_contacts")
-                ->group("client.id");
+            $query->from("`#__gm_ceiling_clients` as `client`")
+                ->join("LEFT", "`#__gm_ceiling_clients_contacts` as `phone` ON `phone`.`client_id` = `client`.`id`")
+                ->join("LEFT", "`#__gm_ceiling_projects` as `p` ON p.client_id = `client`.`id`")
+                ->join("LEFT", "`#__users` as `u` ON `client`.`dealer_id` = `u`.`id`")
+                ->select("`p`.`project_info` as `address`")
+                ->select("`client`.`client_name` as `client_name`, `client`.`created`, `client`.`id` as `client_id`")
+                ->select("GROUP_CONCAT(distinct `phone`.`phone` SEPARATOR ', ') as `client_contacts`")
+                ->where("`u`.`associated_client` IS NULL")
+                ->group("`client`.`id`");
 
             if($status && !$search)
                 $query->where('p.project_status = '. $status . ' and client.dealer_id = '. $user->dealer_id);
