@@ -27,6 +27,7 @@ $mount = $model_mount->getDataAll();
 	<h3>
 		Редактирование маржинальности
 	</h3>
+	<div class="row" align="center">
 	<div class = "col-md-4">
 		<div class="control-group">
 			<div class="control-label">
@@ -52,6 +53,7 @@ $mount = $model_mount->getDataAll();
 				<input type="text" name="jform[dealer_mounting_margin]" id="jform_dealer_mounting_margin" value=<?php echo ($margin->dealer_mounting_margin)?$margin->dealer_mounting_margin:0 ?> class="required" style="width:100%;"size="3" required aria-required="true" />				
 			</div>
 		</div>
+	</div>
 	</div>
 	<h3>
 		Редактирование прайса монтажа
