@@ -509,11 +509,14 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
 
             /*Временный костыль*/
-            $temp_calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-            $temp_calculation_data = $temp_calculation_model->getData($data["id"]);
-            $data["calc_data"] = $temp_calculation_data->calc_data;
-            $data["cut_data"] = $temp_calculation_data->cut_data;
-            $data['original_sketch'] = $temp_calculation_data->original_sketch;
+            if (!empty($data["id"]))
+            {
+                $temp_calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                $temp_calculation_data = $temp_calculation_model->getData($data["id"]);
+                $data["calc_data"] = $temp_calculation_data->calc_data;
+                $data["cut_data"] = $temp_calculation_data->cut_data;
+                $data['original_sketch'] = $temp_calculation_data->original_sketch;
+            }
             /*-----------------------------------------------------------------------------*/
 
             if ($save == 1) {
