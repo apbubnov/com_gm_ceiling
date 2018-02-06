@@ -409,7 +409,7 @@ $AllMounters = $model->FindAllMounters($where);
             </div>
         </div>
     </div>
-    <? if ((int)$status[0]->project_status == 22) { ?>
+    <? if ((int)$status[0]->project_status > 4) { ?>
         <form id="form-project"
               action="/index.php?option=com_gm_ceiling&task=project.return&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
@@ -421,6 +421,9 @@ $AllMounters = $model->FindAllMounters($where);
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
             <button type="button" id = "run" class="btn btn-primary">
                 Запустить
+            </button>
+            <button type="button" id = "otkat" class="btn btn-primary">
+                Вернуть заказ дилеру
             </button>
             <div id="modal_window_container" class = "modal_window_container">
                 <button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
