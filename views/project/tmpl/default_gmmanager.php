@@ -193,7 +193,7 @@ $AllMounters = $model->FindAllMounters($where);
                                 <?php echo $calculation->canvases_sum; ?> руб.
                             </td>
                             <td>
-                                <?php $path = "/costsheets/" . md5($calculation->id . "-4") . ".pdf"; ?>
+                                <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary"
                                        target="_blank">Посмотреть</a>
@@ -203,7 +203,7 @@ $AllMounters = $model->FindAllMounters($where);
                             </td>
                             </td>
                             <td>
-                                <?php $path = "/costsheets/" . md5($calculation->id."cutpdf".-2) . ".pdf"; ?>
+                                <?php $path = "/costsheets/".md5($calculation->id."cutpdf").".pdf"; ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary"
                                        target="_blank">Посмотреть раскрой</a>
@@ -304,7 +304,7 @@ $AllMounters = $model->FindAllMounters($where);
                     <tr>
                         <th>Общая себестоимость расходников</th>
                         <td>
-                            <?php $path = "/costsheets/" . md5($this->item->id . "-8") . ".pdf"; ?>
+                            <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <?php echo $total_components_sum - $baget2 + $itog - $brus2 + $itog2 - $price_provod + $price_provod1; ?>
                             руб.
@@ -313,7 +313,7 @@ $AllMounters = $model->FindAllMounters($where);
                             <?php } ?>
                         </td>
                         <td>
-                            <?php $path = "/costsheets/" . md5($this->item->id . "-8") . ".pdf"; ?>
+                            <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                             <?php } else { ?>
@@ -333,7 +333,7 @@ $AllMounters = $model->FindAllMounters($where);
                                 <?php echo $calculation->mounting_sum; ?> руб.
                             </td>
                             <td>
-                                <?php $path = "/costsheets/" . md5($calculation->id . "-2") . ".pdf"; ?>
+                                <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary"
                                        target="_blank">Посмотреть</a>
@@ -347,12 +347,12 @@ $AllMounters = $model->FindAllMounters($where);
                 <td><b>Общий наряд на монтаж <b></td>
                 <td>
                     <?php
-                    $path = "/costsheets/" . md5($this->item->id . "-10") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                    $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                     <?php } else { ?>
                         -
                     <?php }
-                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "-10") . ".pdf", "id" => $this->item->id);
+                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
                     $json2 = json_encode($pdf_names); ?>
                 </td>
                 <td></td>
@@ -409,7 +409,7 @@ $AllMounters = $model->FindAllMounters($where);
             </div>
         </div>
     </div>
-    <? if ((int)$status[0]->project_status > 4) { ?>
+    <? if ((int)$status[0]->project_status == 22) { ?>
         <form id="form-project"
               action="/index.php?option=com_gm_ceiling&task=project.return&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
@@ -421,9 +421,6 @@ $AllMounters = $model->FindAllMounters($where);
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
             <button type="button" id = "run" class="btn btn-primary">
                 Запустить
-            </button>
-            <button type="button" id = "otkat" class="btn btn-primary">
-                Вернуть заказ дилеру
             </button>
             <div id="modal_window_container" class = "modal_window_container">
                 <button type="button" id="close" class = "close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
