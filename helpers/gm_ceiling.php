@@ -765,11 +765,14 @@ class Gm_ceilingHelpersGm_ceiling
                             <th class="center">Стоимость, руб.</th>
                         </tr>';
         foreach ($calculations as $calc) {
+            $calc_itog_sum = double_margin($calc->components_sum, $project->gm_components_margin, $project->dealer_components_margin);
+            $calc_itog_sum += double_margin($calc->canvases_sum, $project->gm_canvases_margin, $project->dealer_canvases_margin);
+            $calc_itog_sum += double_margin($calc->mounting_sum, $project->gm_mounting_margin, $project->dealer_mounting_margin);
             $html .= '<tr>';
             $html .= '<td>' . $calc->calculation_title . '</td>';
             $html .= '<td class="center">' . $calc->n4 . '</td>';
             $html .= '<td class="center">' . $calc->n5 . '</td>';
-            $html .= '<td class="center">' . ($calc->mounting_sum + $calc->canvases_sum + $calc->components_sum) . '</td>';
+            $html .= '<td class="center">' . $calc_itog_sum . '</td>';
             $html .= '</tr>';
             $sum += $calc->mounting_sum + $calc->canvases_sum + $calc->components_sum;
         }
@@ -802,7 +805,6 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= self::create_client_single_estimate_html($need_mount,$calc->id);
             */
         }
-        print_r($array);
         $filename = md5($project->id . "client_common") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($array, $sheets_dir . $filename, "A4");
     }
