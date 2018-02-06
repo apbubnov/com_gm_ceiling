@@ -453,6 +453,9 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
 
+            //счиатем работы ГМ
+            $guild_data = self::calculate_guild_jobs(null,$data);
+            $data["guild_data"] = $guild_data;
             //cчитаем полотно
             $canvases_data = self::calculate_canvases(null,$data);
             //считаем обрезки
@@ -460,9 +463,7 @@ class Gm_ceilingHelpersGm_ceiling
             //считаем комплектующие
             $components_data = self::calculate_components(null,$data,$del_flag);
             //считаем монтаж
-            $mounting_data = self::calculate_mount($del_flag,null,$data);   
-            //счиатем работы ГМ     
-            $guild_data = self::calculate_guild_jobs(null,$data);
+            $mounting_data = self::calculate_mount($del_flag,null,$data);
             //Итоговая сумма компонентов
             $total_sum = 0;
             //Прибавляем к подсчету комплектующие
@@ -477,7 +478,6 @@ class Gm_ceilingHelpersGm_ceiling
             $total_with_gm_dealer_margin  = $mounting_data['total_with_gm_dealer_margin'];
             $total_with_gm_dealer_margin_guild = $mounting_data['total_with_gm_dealer_margin_guild'];
             $total_gm_mounting = $mounting_data['total_gm_mounting'];
-            $total_gm_guild = $guild_data['total_gm_guild'];
             //Получаем скидку
             $new_discount = $data['discount'];
             //Сюда забиваем ответ в JSON
@@ -488,7 +488,7 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['components_sum'] = $components_sum;
             $ajax_return['mounting_sum'] = $total_gm_mounting;
             $ajax_return['mounting_arr'] = $data;
-            $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $total_gm_guild;
+            $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'];
             $data['components_sum'] = $components_sum;
             $data['mounting_sum'] = $total_gm_mounting;
             $data['project_discount'] = $dealer->discount;
@@ -1300,23 +1300,26 @@ class Gm_ceilingHelpersGm_ceiling
         //Получаем прайс-лист полотен
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $canvases_list = $canvases_model->getFilteredItemsCanvas();
-        foreach ($canvases_list as $i => $canvas) {
+        $canvases = [];
+        foreach ($canvases_list as $i => $canvas)
             $canvases[$canvas->id] = $canvas;
-        }
+
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
-            $canvases_data['title'] = $canvases[$data['n3_id']]->texture_title . ", " . $canvases[$data['n3_id']]->name . " " . $canvases[$data['n3_id']]->width; //Название фактуры и полотна
+            $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
             $canvases_data['quantity'] = $data['n4'];                                                                        //Кол-во
-            $canvases_data['self_price'] = round($canvases[$data['n3_id']]->price, 2);                                    //Себестоимость
+
+            $total_gm_guild = $data['guild_data']['total_gm_guild'];
+            $canvases_data['self_price'] = round($canvases[$data['n3']]->price + $total_gm_guild, 2);                                    //Себестоимость
             $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                            //Кол-во * Себестоимость
 
             //Стоимость с маржой ГМ (для дилера)
-            $canvases_data['gm_price'] = margin($canvases[$data['n3_id']]->price, $gm_canvases_margin);
+            $canvases_data['gm_price'] = margin($canvases_data['self_price'], $gm_canvases_margin);
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
 
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $canvases_data['dealer_price'] = double_margin($canvases[$data['n3_id']]->price, $gm_canvases_margin, $dealer_canvases_margin);
+            $canvases_data['dealer_price'] = margin($canvases_data['gm_price'], $dealer_canvases_margin);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
         }
