@@ -193,7 +193,7 @@ $AllMounters = $model->FindAllMounters($where);
                                 <?php echo $calculation->canvases_sum; ?> руб.
                             </td>
                             <td>
-                                <?php $path = "/costsheets/" . md5($calculation->id . "-4") . ".pdf"; ?>
+                                <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary"
                                        target="_blank">Посмотреть</a>
@@ -203,7 +203,7 @@ $AllMounters = $model->FindAllMounters($where);
                             </td>
                             </td>
                             <td>
-                                <?php $path = "/costsheets/" . md5($calculation->id."cutpdf".-2) . ".pdf"; ?>
+                                <?php $path = "/costsheets/".md5($calculation->id."cutpdf").".pdf"; ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary"
                                        target="_blank">Посмотреть раскрой</a>
