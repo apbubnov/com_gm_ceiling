@@ -1051,7 +1051,7 @@ $AllMounters = $model->FindAllMounters($where);
                     type: 'POST',
                     url: "index.php?option=com_gm_ceiling&task=project.updateProjectStatus",
                     data: {
-                        id: <?php echo $this->item->id; ?>,
+                        project_id: <?php echo $this->item->id; ?>,
                         status: 4
                     },
                     success: function (data) {
