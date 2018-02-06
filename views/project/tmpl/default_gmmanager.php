@@ -72,7 +72,7 @@ $AllMounters = $model->FindAllMounters($where);
 
 ?>
 
-<button class="btn btn-primary" id="btn_back">Назад</button>
+<button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
 

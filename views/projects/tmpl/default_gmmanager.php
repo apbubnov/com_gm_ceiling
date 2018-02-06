@@ -25,7 +25,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 ?>
-<button class="btn btn-primary" id="btn_back">Назад</button>
+<button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
 <h2 class = "center">Запущенные в производство</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager'); ?>" method="post"
       name="adminForm" id="adminForm">
