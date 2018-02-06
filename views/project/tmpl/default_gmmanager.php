@@ -870,16 +870,11 @@ $AllMounters = $model->FindAllMounters($where);
                 jQuery("#mounting_date_control").show();
             });
 
-        <?php if (($dealer->dealer_type == 0 || $dealer->dealer_type == 1) && $user->dealer_id != $dealer->dealer_id)
-            { ?>
-            
-        <?php } else {?>
             jQuery("#refuse_project").click(function () {
                 jQuery("input[name='project_verdict']").val(0);
                 jQuery(".project_activation").show();
                 jQuery("#mounting_date_control").hide();
             });
-            <?php } ?>
         });
 
         // листание календаря
@@ -1049,17 +1044,22 @@ $AllMounters = $model->FindAllMounters($where);
         }
         //------------------------------------------
 
-        var temp = 0;
-        jQuery("#refuse").click(function () {
-            if (!temp) {
-                jQuery(".refuse").show();
-                temp = 1;
-            }
-            else {
-                jQuery(".refuse").hide();
-                temp = 0;
-            }
-        });
+        <?php if (($dealer->dealer_type == 0 || $dealer->dealer_type == 1) && $user->dealer_id != $dealer->dealer_id)
+            { ?>
+            
+        <?php } else {?>
+            var temp = 0;
+            jQuery("#refuse").click(function () {
+                if (!temp) {
+                    jQuery(".refuse").show();
+                    temp = 1;
+                }
+                else {
+                    jQuery(".refuse").hide();
+                    temp = 0;
+                }
+            });
+        <?php } ?>
 
         function send_ajax(id) {
             jQuery.ajax({
