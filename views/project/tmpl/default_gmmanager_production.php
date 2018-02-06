@@ -714,11 +714,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
                     <td><?php echo $calculation->calculation_title; ?></td>
                     <td>
-                        <?php
-                        $path = "/costsheets/" . md5($calculation->id . "-0-0") . ".pdf";
-
-                        $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-0-0") . ".pdf", "id" => $calculation->id);
-                        ?>
+                        <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
+                        <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id); ?>
                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                         <?php } else { ?>
