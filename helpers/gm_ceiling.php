@@ -503,6 +503,9 @@ class Gm_ceilingHelpersGm_ceiling
             {
                 $temp_calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
                 $temp_calculation_data = $temp_calculation_model->getData($data["id"]);
+                if (empty($data["n1"])) $data["n1"] = $temp_calculation_data->n1;
+                if (empty($data["n2"])) $data["n2"] = $temp_calculation_data->n2;
+                if (empty($data["n3"])) $data["n3"] = $temp_calculation_data->n3;
                 if (empty($data["calc_data"])) $data["calc_data"] = $temp_calculation_data->calc_data;
                 if (empty($data["cut_data"])) $data["cut_data"] = $temp_calculation_data->cut_data;
                 if (empty($data["original_sketch"])) $data['original_sketch'] = $temp_calculation_data->original_sketch;
