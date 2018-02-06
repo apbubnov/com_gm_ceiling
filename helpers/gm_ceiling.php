@@ -263,7 +263,7 @@ class Gm_ceilingHelpersGm_ceiling
                     )
                 ));
                 $data = $data['jform'];
-                
+
                 $color = $data['color'];
                 $color_filter = $color ? "= " .$color : "IS NULL";       
                 $filter = "texture_id = ".$data['n2']." and `name` = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
@@ -276,6 +276,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if($data['n2'] == 0) {
                     $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;
                 }
+
                 //ecola
                 $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
                 $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -451,6 +452,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $dealer = JFactory::getUser($data->dealer_id);
                 }
             }
+
             //cчитаем полотно
             $canvases_data = self::calculate_canvases(null,$data);
             //считаем обрезки
@@ -507,6 +509,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $data['calculation_title'] = "Потолок 1";
             //Сохранение калькуляции
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
+
+
 
             /*Временный костыль*/
             if (!empty($data["id"]))
