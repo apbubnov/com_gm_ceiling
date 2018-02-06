@@ -1084,6 +1084,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
     {
         try
         {
+            print_r($data); echo "/n" . $del_flag;
             $db = $this->getDbo();
             $user = JFactory::getUser();
             if (empty($user->id)) $user->id = 2;
