@@ -19,11 +19,7 @@ $dealerInfo = $user->getDealerInfo();
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 
-$userPhone = substr_replace($user->username, "+7", 0, 1);
-$userPhone = substr_replace($userPhone, " (", 2, 0);
-$userPhone = substr_replace($userPhone, ") ", 7, 0);
-$userPhone = substr_replace($userPhone, "-", 12, 0);
-$userPhone = substr_replace($userPhone, "-", 15, 0);
+$userPhone = preg_replace('/[\(\)\-\+\s]/', '', $userPhone);
 
 $clientId = $model->getItemsByOwnerID($userId, $userPhone);
 
@@ -382,11 +378,5 @@ $rest = -($total_sum) - $contributed;
             jQuery(".modal_window_container").hide();
             jQuery(".modal_window").hide();
         }
-    });
-
-    jQuery(".btn-acct").click(function(){
-        jQuery(".close_btn").show();
-        jQuery("#modal_window_container").show();
-        jQuery("#modal_window_acct").show("slow");
     });
 </script>
