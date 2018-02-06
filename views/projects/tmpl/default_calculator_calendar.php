@@ -54,20 +54,25 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         <thead>
         <tr>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Номер договора', 'a.id', $listDirn, $listOrder); ?>
+                Номер договора
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Дата и время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Дата и время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
+                Дата и время замера
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+                Адрес
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
+                Примечание
             </th>
             <?if (in_array("16", $groups)):?>
                 <th class="center">
-                    <?= JHtml::_('grid.sort', 'Дилер', 'dealer_name', $listDirn, $listOrder); ?>
+                    <?php //JHtml::_('grid.sort', 'Дилер', 'dealer_name', $listDirn, $listOrder); ?>
+                    Дилер
                 </th>
             <?endif;?>
         </tr>
@@ -93,7 +98,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <? endif; ?>
                 </td>
                 <td class="center one-touch"><?= $item->address; ?></td>
-                <td class="center one-touch"><?= $item->client_contacts; ?><br><?= $item->client_name; ?></td>
+                <td class="center one-touch"><?= $item->project_note; ?></td>
                 <?if (in_array("16", $groups)):?>
                     <td class="center one-touch"><?= $item->dealer_name; ?></td>
                 <?endif;?>
@@ -106,16 +111,20 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         <thead>
         <tr>
             <th class='center'>
-                <?= JHtml::_('grid.sort', '№', 'a.id', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', '№', 'a.id', $listDirn, $listOrder); ?>
+                Номер договора
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Дата/Время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Дата/Время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
+                Дата/Время замера
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+                Адрес
             </th>
             <th class='center'>
-                <?= JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
+                Примечание
             </th>
         </tr>
         </thead>
@@ -139,7 +148,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <? endif; ?>
                 </td>
                 <td class="center one-touch"><?= $item->address; ?></td>
-                <td class="center one-touch"><?= $item->client_contacts; ?><br><?php echo $item->client_name; ?></td>
+                <td class="center one-touch"><?= $item->project_note; ?></td>
             </tr>
         <? endforeach; ?>
         </tbody>
