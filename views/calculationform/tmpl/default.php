@@ -193,7 +193,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
 					<div class="form-group">
-						<select id="jform_n3" name="jform[n3]" class="form-control inputbox " disabled=""><option value="" selected="">- Выберите ширину материала -</option></select>
+						<select id="jform_n3" name="jform[n3]" class="form-control inputbox " disabled=""><option value="<?php echo $this->item->n2; ?>" selected="">- Выберите ширину материала -</option></select>
 					</div>
 				</div>
 			</div>

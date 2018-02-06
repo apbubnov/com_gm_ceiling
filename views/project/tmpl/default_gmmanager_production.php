@@ -489,9 +489,14 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 $JS_Calcs_Sum = array();
 
                 foreach ($calculations as $calculation) {
+
                     $dealer_canvases_sum = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
                     $dealer_components_sum = double_margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/, $this->item->dealer_components_margin);
                     $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
+
+                    echo $dealer_canvases_sum . " - " . $calculation->canvases_sum . " - " . $this->item->dealer_canvases_margin . "<br>";
+                    echo $dealer_components_sum . " - " . $calculation->components_sum . " - " . $this->item->dealer_components_margin . "<br>";
+                    echo $dealer_gm_mounting_sum . " - " . $calculation->mounting_sum . " - " . $this->item->dealer_mounting_margin . "<br>";
 
                     //$calculation_total_discount = $calculation_total * ((100 - $this->item->project_discount) / 100);
 
@@ -714,8 +719,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
                     <td><?php echo $calculation->calculation_title; ?></td>
                     <td>
-                        <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
-                        <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id); ?>
+                        <?php $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf"; ?>
                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                         <?php } else { ?>
