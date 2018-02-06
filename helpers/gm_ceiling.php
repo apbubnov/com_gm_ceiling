@@ -503,17 +503,12 @@ class Gm_ceilingHelpersGm_ceiling
                 $query = 'SELECT `id`, `calculation_title` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
                 $db->setQuery($query);
                 $calculations = $db->loadObjectList();
-                if (count($calculations) < 1) {
-                    $data['calculation_title'] = "Потолок 1";
-                } else {
-                    $k = []; $number = 1;
-                    foreach ($calculations as $calculation) {
-                        $calculation_title = $calculation->calculation_title;
-                        $k[] = intval(str_replace("Потолок ", "", $calculation_title));
-                    }
-                    while(in_array($number, $k)) $number += 1;
-                    $data['calculation_title'] = "Потолок " . $number;
+                $indexes = []; $index = 1;
+                foreach ($calculations as $calculation) {
+                    $indexes[] = intval(str_replace("Потолок ", "", $calculation->calculation_title));
+                    if (in_array($index, $indexes)) $index++;
                 }
+                $data['calculation_title'] = "Потолок $index";
             }
             //Сохранение калькуляции
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
