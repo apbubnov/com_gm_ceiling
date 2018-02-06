@@ -517,7 +517,7 @@ $AllMounters = $model->FindAllMounters($where);
             jQuery('#btn_back').click(function(){
                 var l = location.href.replace('project','projects');
                 l = l.replace('run','runprojects');
-                l = l.replace(/&id=[\d]/,'');
+                l = l.replace(/&id=\d+/,'');
                 location.href = l;
             });
             jQuery('#create_pdfs').click(function(){
