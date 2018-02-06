@@ -768,6 +768,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calc_itog_sum = double_margin($calc->components_sum, $project->gm_components_margin, $project->dealer_components_margin);
             $calc_itog_sum += double_margin($calc->canvases_sum, $project->gm_canvases_margin, $project->dealer_canvases_margin);
             $calc_itog_sum += double_margin($calc->mounting_sum, $project->gm_mounting_margin, $project->dealer_mounting_margin);
+            $calc_itog_sum = round($calc_itog_sum * (100 - $calc->discount) / 100, 2);
             $html .= '<tr>';
             $html .= '<td>' . $calc->calculation_title . '</td>';
             $html .= '<td class="center">' . $calc->n4 . '</td>';
@@ -2507,7 +2508,7 @@ class Gm_ceilingHelpersGm_ceiling
         if(empty($res->user_id)) {
             $res->user_id = 1;
         }
-        $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
+        $margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
         if($res) {
             if($transport_type == 1) {
                 $transport_sum = margin($res->transport * $distance_col, $margin);
@@ -2522,8 +2523,8 @@ class Gm_ceilingHelpersGm_ceiling
 
             }
             elseif($transport_type == 2) {
-                $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
+                $transport_sum = ($res->distance  * $distance + $res->transport) * $distance_col;
+                $transport_sum_1 = ($res->distance  * $distance + $res->transport) * $distance_col;
                /*  if($transport_sum < margin($res->transport, $margin))
                   { 
                       $transport_sum = margin($res->transport, $margin);
@@ -2627,7 +2628,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<td class="center">' . $transport['mounter_sum'] . '</td>';
         $html .= '</tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
-        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
+        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['mounter_sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
         //$html .= "<pagebreak />";
         $array = [$html];
