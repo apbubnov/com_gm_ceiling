@@ -106,19 +106,19 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         <thead>
         <tr>
             <th class='center'>
-                <?= //JHtml::_('grid.sort', '№', 'a.id', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', '№', 'a.id', $listDirn, $listOrder); ?>
                 Номер договора
             </th>
             <th class='center'>
-                <?= //JHtml::_('grid.sort', 'Дата/Время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Дата/Время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
                 Дата/Время замера
             </th>
             <th class='center'>
-                <?= //JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
                 Адрес
             </th>
             <th class='center'>
-                <?= //JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
+                <?php //JHtml::_('grid.sort', 'Телефоны', 'client_contacts', $listDirn, $listOrder); ?>
                 Примечание
             </th>
         </tr>
