@@ -72,7 +72,7 @@ $AllMounters = $model->FindAllMounters($where);
 
 ?>
 
-<?= parent::getButtonBack(); ?>
+<button class="btn btn-primary" id="btn_back">Назад</button>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
 
@@ -514,6 +514,9 @@ $AllMounters = $model->FindAllMounters($where);
             }
         });
         jQuery(document).ready(function () {
+            jQuery('#btn_back').click(function(){
+                location.href = "/index.php?option=com_gm_ceiling&task=mainpage"
+            });
             jQuery('#create_pdfs').click(function(){
                 jQuery.ajax({
                     type: 'POST',
@@ -522,7 +525,7 @@ $AllMounters = $model->FindAllMounters($where);
                         id:<?php echo $this->item->id;?>
                     },
                     success: function(data) {
-                        window.location = window.location;
+                        location.reload();
                     },
                     error: function(data) {
                         console.log(data);
