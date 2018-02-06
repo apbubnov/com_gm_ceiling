@@ -1056,7 +1056,7 @@ $AllMounters = $model->FindAllMounters($where);
                     },
                     success: function (data) {
                         console.log(data);
-                        location.reload();
+                        location.href = location.href.replace('&subtype=calendar', '');
                     },
                     dataType: "text",
                     timeout: 10000,
