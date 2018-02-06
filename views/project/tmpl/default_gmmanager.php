@@ -1056,7 +1056,7 @@ $AllMounters = $model->FindAllMounters($where);
                     },
                     success: function (data) {
                         console.log(data);
-                        //location.reload();
+                        location.reload();
                     },
                     dataType: "text",
                     timeout: 10000,

@@ -1648,7 +1648,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         {   
             $jinput = JFactory::getApplication()->input;
             $project_id = $jinput->get('project_id', 0, 'int');
-            $status = $jinput->get('status', '', 'string');
+            $status = $jinput->get('status', 0, 'int');
 
             $model = $this->getModel('Project', 'Gm_ceilingModel');
             $result = $model->newStatus($project_id, $status);
