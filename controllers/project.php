@@ -1641,5 +1641,34 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			throw new Exception('Ошибка!', 500);
 		}
 	}
+
+    public function updateProjectStatus()
+    {
+        try
+        {   
+            $jinput = JFactory::getApplication()->input;
+            $project_id = $jinput->get('project_id', 0, 'int');
+            $status = $jinput->get('status', '', 'string');
+
+            $model = $this->getModel('Project', 'Gm_ceilingModel');
+            $result = $model->newStatus($project_id, $status);
+            die($result);
+            /*
+            if ($return)
+            {
+                $this->setMessage("Проект отправлен в отказы от производства!");
+                $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
+            } else {
+                $this->setMessage("Не удалось отправить проект в отказы от производства!");
+            }*/
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }
 

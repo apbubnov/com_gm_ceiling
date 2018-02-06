@@ -1046,7 +1046,30 @@ $AllMounters = $model->FindAllMounters($where);
 
         <?php if (($dealer->dealer_type == 0 || $dealer->dealer_type == 1) && $user->dealer_id != $dealer->dealer_id)
             { ?>
-            
+            jQuery("#refuse").click(function () {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=project.updateProjectStatus",
+                    data: {
+                        id: <?php echo $this->item->id; ?>,
+                        status: 4
+                    },
+                    success: function (data) {
+                        location.reload();
+                    },
+                    dataType: "text",
+                    timeout: 10000,
+                    error: function () {
+                        var n = noty({
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            });
         <?php } else {?>
             var temp = 0;
             jQuery("#refuse").click(function () {
