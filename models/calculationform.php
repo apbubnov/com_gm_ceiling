@@ -1107,8 +1107,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $n23 = json_decode($data['n23']);
             $n26 = json_decode($data['n26']);
             $n29 = json_decode($data['n29']);
-
-            print_r($n13);
             
             $calculationId = $data['id'];
             $date_created = date("Y-m-d H:i:s");
@@ -1203,6 +1201,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                     }
                     $db->setQuery($query);
                     $db->execute();
+
                 }
 
                 if (!empty($n14)) {
@@ -1410,6 +1409,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                     $db->setQuery($query);
                     $db->execute();
                 }
+
                 if (!empty($n13)) {
                     $query = $db->getQuery(true);
                     $query
@@ -1421,7 +1421,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                             $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
                     }
                     $db->setQuery($query);
-                    $db->execute();
                 }
 
                 if (!empty($n14)) {
