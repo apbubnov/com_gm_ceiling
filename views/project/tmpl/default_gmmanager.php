@@ -1055,11 +1055,13 @@ $AllMounters = $model->FindAllMounters($where);
                         status: 4
                     },
                     success: function (data) {
-                        location.reload();
+                        console.log(data);
+                        //location.reload();
                     },
                     dataType: "text",
                     timeout: 10000,
                     error: function () {
+                        console.log(data);
                         var n = noty({
                             theme: 'relax',
                             layout: 'center',
