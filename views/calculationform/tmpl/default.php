@@ -2742,6 +2742,7 @@
 								save_button.removeClass("loading");
 								save_button.find("span.loading").hide();
 								save_button.find("span.static").show();
+								return false;
 							}
 						});
 							}
