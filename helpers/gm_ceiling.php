@@ -497,20 +497,23 @@ class Gm_ceilingHelpersGm_ceiling
             $data["checked_out_time"] = "00.00.0000 00:00";
             $data["created_by"] = $user->id;
             $data["modified_by"] = $user->id;
-            $db = JFactory::getDBO();
-            $query = 'SELECT `id` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
-            $db->setQuery($query);
-            $calculations = $db->loadObjectList();
-            $k = count($calculations);
-            if ($k > 0) {
-                if (empty($data['calculation_title']))
-                    $data['calculation_title'] = "Потолок " . $k;
-            } else if (empty($data['calculation_title']))
-                $data['calculation_title'] = "Потолок 1";
+            if (empty($data['calculation_title']))
+            {
+                $db = JFactory::getDBO();
+                $query = 'SELECT `id` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
+                $db->setQuery($query);
+                $calculations = $db->loadObjectList();
+                $k = []; $number = 1;
+                foreach ($calculations as $calculation) {
+                    $calculation_name = $calculation->calculation_title;
+                    $index = intval(str_replace("Потолок", "", $calculation_name));
+                    $k[] = $index;
+                }
+                while(in_array($number, $k)) $number++;
+                $data['calculation_title'] = "Потолок " . $k;
+            }
             //Сохранение калькуляции
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
-
-
 
             /*Временный костыль*/
             if (!empty($data["id"]))
