@@ -236,8 +236,8 @@ class Gm_ceilingModelCalculation extends JModelItem
 
 				}
 				//throw new Exception($this->_item->n13, 1);
-				
-				$this->_item->n13 = $this->n13_load($this->_item->id);
+
+
 				$query = $db->getQuery(true);
 				$query
 					->select('client.dealer_id')
@@ -247,14 +247,14 @@ class Gm_ceilingModelCalculation extends JModelItem
 					->where('calc.id  = ' . $this->_item->id);
 				$db->setQuery($query);
 				$this->_item->dealer_id = $db->loadObject()->dealer_id;
-				
+
+                $this->_item->n13 = $this->n13_load($this->_item->id);
 				$this->_item->n14 = $this->n14_load($this->_item->id);
 	            $this->_item->n15 = $this->n15_load($this->_item->id);
 	            $this->_item->n22 = $this->n22_load($this->_item->id);
 	            $this->_item->n23 = $this->n23_load($this->_item->id);
 	            $this->_item->n26 = $this->n26_load($this->_item->id);
 				$this->_item->n29 = $this->n29_load($this->_item->id);
-				
 
 			return $this->_item;
 		}
@@ -284,30 +284,6 @@ class Gm_ceilingModelCalculation extends JModelItem
 
 	        $db->setQuery($query);
 	        $result = $db->loadObjectList();
-	        /*
-	                foreach ($result AS $key => $value)
-	                {
-	                    $type_id = $value->type_id;
-	                    $query = $db->getQuery(true);
-	                    $query -> select('*, components.id AS comp_id')
-	                        ->from('`#__gm_ceiling_type` AS type')
-	                        ->join('LEFT', '`#__gm_ceiling_type_option` AS options ON options.type_id = type.id')
-	                        ->join('LEFT', '`#__gm_ceiling_components` AS components ON options.component_id = components.id')
-	                        ->join('LEFT', '`#__gm_ceiling_components_option` AS com_option ON options.default_comp_option_id = com_option.id')
-	                        ->where('type.id = '.$type_id);
-	                    $db->setQuery($query);
-	                    $result[$key]->type_options = $db->loadObjectList();
-
-	                    foreach ($result[$key]->type_options AS $optKey => $optValue) if ($optValue->comp_id)
-	                    {
-	                        $query = $db->getQuery(true);
-	                        $query -> select('*')
-	                            ->from('`#__gm_ceiling_components_option`')
-	                            ->where('component_id = '.$optValue->comp_id);
-	                        $db->setQuery($query);
-	                        $result[$key]->option[$optKey]->comp_options = $db->loadObjectList();
-	                    }
-	                }*/
 	        return $result;
 	    }
 	    catch(Exception $e)

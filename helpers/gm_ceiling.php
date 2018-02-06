@@ -497,6 +497,20 @@ class Gm_ceilingHelpersGm_ceiling
             $data["checked_out_time"] = "00.00.0000 00:00";
             $data["created_by"] = $user->id;
             $data["modified_by"] = $user->id;
+
+            /*Временный костыль*/
+            if (!empty($data["id"]))
+            {
+                $temp_calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                $temp_calculation_data = $temp_calculation_model->getData($data["id"]);
+                if (empty($data["calc_data"])) $data["calc_data"] = $temp_calculation_data->calc_data;
+                if (empty($data["cut_data"])) $data["cut_data"] = $temp_calculation_data->cut_data;
+                if (empty($data["original_sketch"])) $data['original_sketch'] = $temp_calculation_data->original_sketch;
+                if (empty($data["calculation_title"])) $data['calculation_title'] = $temp_calculation_data->calculation_title;
+                if (empty($data["n13"])) $data['n13'] = json_encode($temp_calculation_data->n13);
+            }
+            /*-----------------------------------------------------------------------------*/
+
             if (empty($data['calculation_title']))
             {
                 $db = JFactory::getDBO();
@@ -506,23 +520,12 @@ class Gm_ceilingHelpersGm_ceiling
                 $indexes = []; $index = 1;
                 foreach ($calculations as $calculation) {
                     $indexes[] = intval(str_replace("Потолок ", "", $calculation->calculation_title));
-                    if (in_array($index, $indexes)) $index++;
+                    if (in_array($index, $indexes)) $index += 1;
                 }
                 $data['calculation_title'] = "Потолок $index";
             }
             //Сохранение калькуляции
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
-
-            /*Временный костыль*/
-            if (!empty($data["id"]))
-            {
-                $temp_calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-                $temp_calculation_data = $temp_calculation_model->getData($data["id"]);
-                $data["calc_data"] = $temp_calculation_data->calc_data;
-                $data["cut_data"] = $temp_calculation_data->cut_data;
-                $data['original_sketch'] = $temp_calculation_data->original_sketch;
-            }
-            /*-----------------------------------------------------------------------------*/
 
             if ($save == 1) {
                 $tmp_filename = $data['sketch_name'];
