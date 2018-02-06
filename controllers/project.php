@@ -1652,15 +1652,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
             $model = $this->getModel('Project', 'Gm_ceilingModel');
             $result = $model->newStatus($project_id, $status);
-            die($result);
-            /*
-            if ($return)
+            //die($result);
+            if ($result)
             {
-                $this->setMessage("Проект отправлен в отказы от производства!");
-                $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
+                $this->setMessage("Проект отправлен в статус договора");
+                $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&task=mainpage', false));
             } else {
-                $this->setMessage("Не удалось отправить проект в отказы от производства!");
-            }*/
+                $this->setMessage("Не удалось отправить проект в статус договора!");
+            }
         }
         catch(Exception $e)
         {
