@@ -110,13 +110,11 @@ $AllMounters = $model->FindAllMounters($where);
             $pdf = 0;
             $print_components = 1;
             $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-
-            if ($counter == count($calculations)) {
-                $flag_last = 1;
-                Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-            }
         }
         Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
+        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+        $client = $client_model->getClientById($this->item->id_client);
+        $dealer = JFactory::getUser($client->dealer_id);
     ?>
 
     <div class="container">
@@ -877,7 +875,6 @@ $AllMounters = $model->FindAllMounters($where);
                 jQuery(".project_activation").show();
                 jQuery("#mounting_date_control").hide();
             });
-
         });
 
         // листание календаря
@@ -1047,17 +1044,22 @@ $AllMounters = $model->FindAllMounters($where);
         }
         //------------------------------------------
 
-        var temp = 0;
-        jQuery("#refuse").click(function () {
-            if (!temp) {
-                jQuery(".refuse").show();
-                temp = 1;
-            }
-            else {
-                jQuery(".refuse").hide();
-                temp = 0;
-            }
-        });
+        <?php if (($dealer->dealer_type == 0 || $dealer->dealer_type == 1) && $user->dealer_id != $dealer->dealer_id)
+            { ?>
+            
+        <?php } else {?>
+            var temp = 0;
+            jQuery("#refuse").click(function () {
+                if (!temp) {
+                    jQuery(".refuse").show();
+                    temp = 1;
+                }
+                else {
+                    jQuery(".refuse").hide();
+                    temp = 0;
+                }
+            });
+        <?php } ?>
 
         function send_ajax(id) {
             jQuery.ajax({
