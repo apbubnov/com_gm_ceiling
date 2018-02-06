@@ -1223,7 +1223,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </td>
                 <td></td>
                 <?php }
-                $json = json_encode($pdf_names); ?>
+                $json = json_encode($pdf_names);
+                $json = (empty($json))?"null":$json;
+            ?>
             </tr>
             <?php if (count($calculations) > 0) { ?>
                 <tr class="section_estimate" style="display:none;">
