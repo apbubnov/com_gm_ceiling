@@ -304,7 +304,7 @@ $AllMounters = $model->FindAllMounters($where);
                     <tr>
                         <th>Общая себестоимость расходников</th>
                         <td>
-                            <?php $path = "/costsheets/" . md5($this->item->id . "-8") . ".pdf"; ?>
+                            <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <?php echo $total_components_sum - $baget2 + $itog - $brus2 + $itog2 - $price_provod + $price_provod1; ?>
                             руб.
@@ -313,7 +313,7 @@ $AllMounters = $model->FindAllMounters($where);
                             <?php } ?>
                         </td>
                         <td>
-                            <?php $path = "/costsheets/" . md5($this->item->id . "-8") . ".pdf"; ?>
+                            <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                             <?php } else { ?>
@@ -333,7 +333,7 @@ $AllMounters = $model->FindAllMounters($where);
                                 <?php echo $calculation->mounting_sum; ?> руб.
                             </td>
                             <td>
-                                <?php $path = "/costsheets/" . md5($calculation->id . "-2") . ".pdf"; ?>
+                                <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary"
                                        target="_blank">Посмотреть</a>
@@ -347,12 +347,12 @@ $AllMounters = $model->FindAllMounters($where);
                 <td><b>Общий наряд на монтаж <b></td>
                 <td>
                     <?php
-                    $path = "/costsheets/" . md5($this->item->id . "-10") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                    $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                     <?php } else { ?>
                         -
                     <?php }
-                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "-10") . ".pdf", "id" => $this->item->id);
+                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
                     $json2 = json_encode($pdf_names); ?>
                 </td>
                 <td></td>
