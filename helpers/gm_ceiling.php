@@ -503,13 +503,17 @@ class Gm_ceilingHelpersGm_ceiling
                 $query = 'SELECT `id`, `calculation_title` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
                 $db->setQuery($query);
                 $calculations = $db->loadObjectList();
-                $k = []; $number = 1;
-                foreach ($calculations as $calculation) {
-                    $calculation_title = $calculation->calculation_title;
-                    $k[] = intval(str_replace("Потолок ", "", $calculation_title));
+                if (count($calculations) < 1) {
+                    $data['calculation_title'] = "Потолок 1";
+                } else {
+                    $k = []; $number = 1;
+                    foreach ($calculations as $calculation) {
+                        $calculation_title = $calculation->calculation_title;
+                        $k[] = intval(str_replace("Потолок ", "", $calculation_title));
+                    }
+                    while(in_array($number, $k)) $number += 1;
+                    $data['calculation_title'] = "Потолок " . $number;
                 }
-                while(in_array($number, $k)) $number += 1;
-                $data['calculation_title'] = "Потолок " . $number;
             }
             //Сохранение калькуляции
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
@@ -539,7 +543,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
                     $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
                 }
-               
+
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
                 $data['id'] = $ajax_return['id'];
                 $filename = md5("calculation_sketch" . $ajax_return['id']);
