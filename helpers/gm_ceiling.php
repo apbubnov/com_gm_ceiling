@@ -774,7 +774,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td class="center">' . $calc->n5 . '</td>';
             $html .= '<td class="center">' . $calc_itog_sum . '</td>';
             $html .= '</tr>';
-            $sum += $calc->mounting_sum + $calc->canvases_sum + $calc->components_sum;
+            $sum += $calc_itog_sum;
         }
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
@@ -784,7 +784,8 @@ class Gm_ceilingHelpersGm_ceiling
                         <tr>
                             <th>Вид транспорта</th>
                             <th class="center">Кол-во км<sup>2</sup>.</th>
-                            <th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th>
+                            <th class="center">Кол-во выездов  </th>
+                            <th class="center">Стоимость, руб.</th>
                         </tr>'; 
         $html .= '<tr>';
         $html .= '<td>' . $transport['transport']. '</td>';
@@ -793,7 +794,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<td class="center">' . $transport['mounter_sum'] . '</td>';
         $html .= '</tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
-        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
+        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['mounter_sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
         //$html .= "<pagebreak />";
         $array = [];
@@ -2473,7 +2474,7 @@ class Gm_ceilingHelpersGm_ceiling
     */
     public static function calculate_transport($project_id,$transport_type=null,$distance=null,$distance_col=null){
         $project_model = self::getModel('Project');
-        if(!empty($project_id) && !empty($transport_type) &&!empty($distance) && !empty($distance_col) ){
+        if(!empty($project_id) && !empty($transport_type) && !empty($distance) && !empty($distance_col) ){
             $data = array(
                 'id'=> $project_id,
                 'transport'=>$transport_type,
@@ -2488,7 +2489,7 @@ class Gm_ceilingHelpersGm_ceiling
             $transport_type = $project->transport;
             $distance = $project->distance;
             $distance_col = $project->distance_col;
-            $client_id = $project->id_client;
+            /*$client_id = $project->id_client;
             if(!empty($client_id)){
                 $client_model = self::getModel('client');
                 $dealer_id = $client_model->getClientById($client_id)->dealer_id;
@@ -2498,9 +2499,9 @@ class Gm_ceilingHelpersGm_ceiling
             }
             else{
                  $dealer_id = 1;
-            }
+            }*/
             $mount_model = self::getModel('mount');
-            $res = $mount_model->getDataAll($dealer_id);
+            $res = $mount_model->getDataAll($project->dealer_id);//$dealer_id);
         }
         $dealer_info_model = self::getModel('Dealer_info');
         if(empty($res->user_id)) {

@@ -58,7 +58,8 @@ foreach ($calculations as $calculation) {
 }
 $sum_transport = 0;  $sum_transport_discount = 0;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$mount_transport = $mountModel->getDataAll();
+
+$mount_transport = $mountModel->getDataAll($this->item->dealer_id);
 
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
