@@ -792,13 +792,19 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
-        $html .= "<pagebreak />";
+        //$html .= "<pagebreak />";
+        $array = [];
+        $array[] = $html;
         foreach($calculations as $calc){
+            $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "client_single") . ".pdf";
+            /*
             $need_mount = ($calc->mounting_sum > 0);
             $html .= self::create_client_single_estimate_html($need_mount,$calc->id);
+            */
         }
+        print_r($array);
         $filename = md5($project->id . "client_common") . ".pdf";
-        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+        Gm_ceilingHelpersGm_ceiling::save_pdf($array, $sheets_dir . $filename, "A4");
     }
 
     public static function calculate_components($calc_id=null,$data=null,$del_flag=0){ 
@@ -2620,13 +2626,15 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
-        $html .= "<pagebreak />";
+        //$html .= "<pagebreak />";
+        $array = [$html];
         foreach($calculations as $calc){
-            $html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
+            $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
+            //$html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
         }
         $filename = md5($project_id . "mount_common") . ".pdf";
         
-        self::save_pdf($html, $sheets_dir . $filename, "A4");
+        self::save_pdf($array, $sheets_dir . $filename, "A4");
     }
     public static function create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount = null){
         try{
