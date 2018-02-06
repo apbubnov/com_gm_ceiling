@@ -508,7 +508,7 @@ class Gm_ceilingHelpersGm_ceiling
                     $calculation_title = $calculation->calculation_title;
                     $k[] = intval(str_replace("Потолок ", "", $calculation_title));
                 }
-                while(in_array($number, $k)) $number++;
+                while(in_array($number, $k)) $number += 1;
                 $data['calculation_title'] = "Потолок " . $number;
             }
             //Сохранение калькуляции
