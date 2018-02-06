@@ -25,7 +25,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 ?>
-<?=parent::getButtonBack();?>
+<button class="btn btn-primary" id="btn_back">Назад</button>
 <h2 class = "center">Запущенные в производство</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager'); ?>" method="post"
       name="adminForm" id="adminForm">
@@ -131,6 +131,9 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 <script type="text/javascript">
 
 	jQuery(document).ready(function () {
+		jQuery('#btn_back').click(function(){
+                location.href = "/index.php?option=com_gm_ceiling&task=mainpage";
+            });
 		jQuery('.delete-button').click(deleteItem);
 	});
 

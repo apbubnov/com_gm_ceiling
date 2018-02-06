@@ -25,7 +25,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 ?>
-<?=parent::getButtonBack();?>
+<button class="btn btn-primary" id="btn_back">Назад</button>
 <h2 class = "center">Запущенные проекты</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects'); ?>" method="post" name="adminForm" id="adminForm">
     <? if (count($this->items) > 0): ?>
@@ -303,6 +303,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
     }
 
     jQuery(document).ready(function () {
+        jQuery('#btn_back').click(function(){
+                location.href = "/index.php?option=com_gm_ceiling&task=mainpage";
+            });
         jQuery(".btn-done").click(function(){
 			var td = jQuery( this ),
 				tr = td.closest("tr");
