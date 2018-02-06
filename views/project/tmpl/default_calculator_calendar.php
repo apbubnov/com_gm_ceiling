@@ -2067,9 +2067,10 @@ var $ = jQuery;
 
     jQuery(document).ready(function () {
         $("#modal_window_container #ok").click(function() { click_ok(this); });
-        <?php if($user->dealer_type == 0) { ?>
+        if (document.getElementById('comments'))
+        {
             show_comments();
-        <?php } ?>
+        }
         trans();
         // для истории и добавления комментария
         function formatDate(date) {
@@ -2095,7 +2096,6 @@ var $ = jQuery;
             return dd + '.' + mm + '.' + yy + ' ' + hh + ':' + ii + ':' + ss;
         }
 
-    <?php if($user->dealer_type == 0) { ?>
         function show_comments() {
             var id_client = <?php echo $this->item->id_client;?>;
             jQuery.ajax({
@@ -2171,7 +2171,6 @@ var $ = jQuery;
                 }
             });
         });
-    <?php } ?>
 
         jQuery("#add_birthday").click(function () {
             var birthday = jQuery("#jform_birthday").val();
