@@ -1629,6 +1629,7 @@ class Gm_ceilingModelProject extends JModelItem
 	        $db->setQuery($query);
 	        $res = $db->execute();
 	        if (empty($res)) throw new Exception("Error in model/project/newStatus! An error occurred while changing the entity in the database.", 5);
+	        return true;
 	    }
 	    catch(Exception $e)
         {
