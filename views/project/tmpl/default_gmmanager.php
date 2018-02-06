@@ -515,7 +515,7 @@ $AllMounters = $model->FindAllMounters($where);
         });
         jQuery(document).ready(function () {
             jQuery('#btn_back').click(function(){
-                location.href = "/index.php?option=com_gm_ceiling&task=mainpage"
+                location.href = location.href.replace('project','projects');
             });
             jQuery('#create_pdfs').click(function(){
                 jQuery.ajax({
