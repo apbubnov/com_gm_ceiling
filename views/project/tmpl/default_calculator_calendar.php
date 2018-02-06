@@ -1224,7 +1224,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <td></td>
                 <?php }
                 $json = json_encode($pdf_names);
-                $json = (empty($json))?"null":$json;
             ?>
             </tr>
             <?php if (count($calculations) > 0) { ?>
@@ -2752,7 +2751,7 @@ var $ = jQuery;
         var email = jQuery("#all-email1").val();
         var client_id = jQuery("#client_id").val();
         var dop_file = jQuery("#dop_file").serialize();
-        var testfilename = <?php echo $json;?>;
+        var testfilename = <?php echo (empty($json))?"null":$json;?>;
         var filenames = [];
         for (var i = 0; i < testfilename.length; i++) {
             var id = testfilename[i].id;
@@ -2812,7 +2811,7 @@ var $ = jQuery;
 
     jQuery("#send_all_to_email2").click(function () {
         var email = jQuery("#all-email2").val();
-        var testfilename = <?php echo $json1;?>;
+        var testfilename = <?php echo (empty($json1))?"null":$json1;?>;
         var filenames = [];
         for (var i = 0; i < testfilename.length; i++) {
             var id = testfilename[i].id;
@@ -2868,7 +2867,7 @@ var $ = jQuery;
         var email = jQuery("#all-email3").val();
         var id  = jQuery("#project_id").val();
         var client_id = jQuery("#client_id").val();
-        var testfilename = <?php echo $json2;?>;
+        var testfilename = <?php echo (empty($json2))?"null":$json2;?>;
         //        for (var i = 0; i < testfilename.length; i++) {
         //            var id = testfilename[i].id;
         //            var el = jQuery("#section_mount_" + id);
