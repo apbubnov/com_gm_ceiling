@@ -153,9 +153,9 @@
 
     </div>
 <? } ?>
-<div id="orders-container-tar">
+
     <p class="caption-tar">Заказы</p>
-    <table id="table-orders-tar" class="table table-striped one-touch-view">
+    <table class="table table-striped table_cashbox one-touch-view">
         <tr>
             <td>Номер</td>
             <td>Дата</td>
@@ -189,7 +189,7 @@
     <div id="add-gauging-container-tar">
         <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
     </div>
-</div>
+
 <div id="modal-window-container-tar">
 		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-call-tar">
