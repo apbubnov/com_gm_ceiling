@@ -2872,6 +2872,7 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['self_total'] = 0;                                                            //В чем измеряется
             $component_item['id'] = $components[$key]->id;                                                //ID
             $component_item['quantity'] = 0;
+            //$component_item['rounding'] = $components[$key]->count_sale; // Значение для округления со склада
 
             $print_data[] = $component_item;
         }
@@ -2881,6 +2882,7 @@ class Gm_ceilingHelpersGm_ceiling
                 if ($component['stack'] == 0) {
                     $new_component = $component;
                     $new_component['self_total'] = $print_data[$key]['self_total'] + $new_component['self_total'];
+                    //$new_component['quantity'] = self::rounding($print_data[$key]['quantity'] + $new_component['quantity'], $print_data[$key]['rounding']); // Округление
                     $new_component['quantity'] = $print_data[$key]['quantity'] + $new_component['quantity'];
                     $print_data[$key] = $new_component;
                 }
@@ -2959,6 +2961,7 @@ class Gm_ceilingHelpersGm_ceiling
         //округляем провод
         $print_data[$it_4]['quantity'] = ceil($print_data[$it_4]['quantity']);
         $print_data[$it_4]['self_total'] = $print_data[$it_4]['self_price'] * $print_data[$it_4]['quantity'];
+
 
         $price_itog = 0;
         foreach ($print_data as $key => $item) {
