@@ -158,11 +158,11 @@
     <table class="table table-striped table_cashbox one-touch-view">
         <thead>
         <tr class = "row">
-            <td>Номер</td>
-            <td>Дата</td>
-            <td>Сумма</td>
-            <td>Примечание</td>
-            <td>Статус</td>
+            <th>Номер</th>
+            <th>Дата</th>
+            <th>Сумма</th>
+            <th>Примечание</th>
+            <th>Статус</th>
         </tr>
         </thead>
         <tbody>
