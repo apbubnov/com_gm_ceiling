@@ -157,7 +157,7 @@
     <p class="caption-tar">Заказы</p>
     <table class="table table-striped table_cashbox one-touch-view">
         <thead>
-        <tr class = "row">
+        <tr>
             <th>Номер</th>
             <th>Дата</th>
             <th>Сумма</th>
