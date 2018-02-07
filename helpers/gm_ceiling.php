@@ -2512,8 +2512,8 @@ class Gm_ceilingHelpersGm_ceiling
         $margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
         if($res) {
             if($transport_type == 1) {
-                $transport_sum = margin($res->transport * $distance_col, $margin);
-                $transport_sum_1 = $res->transport * $distance_col;
+                $transport_sum = double_margin($res->transport * $distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
+                $transport_sum_1 = double_margin($res->transport * $distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
                 $result = array(
                     'transport' => 'Транспорт по городу',
                     'distance' => '-',
@@ -2564,6 +2564,8 @@ class Gm_ceilingHelpersGm_ceiling
                 $transport_sum = $transport_sum * ((100 - $min)/100);
                 $transport_sum_1 = $transport_sum_1 * ((100 - $min)/100);
             }
+            $result['client_sum'] = $transport_sum;
+            $result['mounter_sum'] = $transport_sum_1;
         }
         return $result;
     }
