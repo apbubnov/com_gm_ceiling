@@ -2983,7 +2983,7 @@ class Gm_ceilingHelpersGm_ceiling
         $project = $project_model->getData($data['project_id']);
         $canvases_data = self::calculate_canvases($calc_id);
 
-        $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок № _________</h1>';
+        $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок ' . $data["calculation_title"] . '</h1>';
         $html .= '<table>';
         $html .= '<tbody>';
         $html .= '<tr>';
@@ -3029,7 +3029,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</div>';
         $html .= "<pagebreak />";
         $html .= $html;
-        $html .= '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Раскрой № _________</h1>';
+        $html .= '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Раскрой ' . $data["calculation_title"] . '</h1>';
         $html .= '<table>';
         $html .= '<tbody>';
         $html .= '<tr>';
