@@ -1377,6 +1377,7 @@
             if (document.getElementById('jform_project_mounting_date_old').value == '00-00-00 00:00:00'
                 && project_status != 1 && project_status != 17)
             {
+                alert();
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
