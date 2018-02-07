@@ -1102,10 +1102,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 	public function approve()
 	{
 		try
-		// Initialise variables.
 		{
 			$app = JFactory::getApplication();
-			// Checking if the user can remove object
 			$user = JFactory::getUser();
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$jinput = JFactory::getApplication()->input;
