@@ -331,6 +331,11 @@
 
     jQuery(document).ready(function ()
     {
+        if (screen.width <= '1024') {
+            jQuery('#table_projects').css('font-size', '10px');
+            jQuery('td').css('padding', '0.25rem');
+        }
+        
         jQuery('#new_phone').mask('+7(999) 999-9999');
         <?php if($user->dealer_type != 1) { ?>
         document.getElementById('calls-tar').scrollTop = 9999;
@@ -517,6 +522,7 @@
     jQuery(window).resize(function(){
         if (screen.width <= '1024') {
             jQuery('#table_projects').css('font-size', '10px');
+            jQuery('td').css('padding', '0.25rem');
         }
     });
 
