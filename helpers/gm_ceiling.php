@@ -600,6 +600,9 @@ class Gm_ceilingHelpersGm_ceiling
     $mounting_data = null){
         $user = JFactory::getUser();
         $dealer = JFactory::getUser($user->dealer_id);
+
+        print_r($data);
+
         if(empty($canvases_data)){
             $canvases_data = self::calculate_canvases($calc_id);
         }

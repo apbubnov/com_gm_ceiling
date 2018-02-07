@@ -1981,4 +1981,24 @@ class Gm_ceilingModelProject extends JModelItem
         return $results;
     }
 
+    public function getMarginProject($project_id, $calculate_id)
+    {
+        if (empty($project_id) && empty($calculate_id))
+            return null;
+
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('`gm_canvases_margin`, `gm_components_margin`, `gm_mounting_margin`, `dealer_canvases_margin`, `dealer_components_margin`, `dealer_mounting_margin`')
+            ->from('`#__gm_ceiling_projects`');
+
+        if (empty($project_id))
+            $query->join('`#__gm_ceiling_calculation` as calc ON calc.project_id = id')
+                ->where("calc.id = '$calculate_id''");
+        else
+            $query->where("id = '$project_id'");
+
+        $db->setQuery($query);
+        return $db->loadObject();
+    }
+
 }
