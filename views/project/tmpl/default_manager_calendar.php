@@ -73,8 +73,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 
 
 ?>
+<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
 
 <?= parent::getButtonBack(); ?>
 
@@ -421,16 +421,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                             Отказ от замера
                         </a>
                     </td>
-                </tr>
-                <tr>
-                    <td colspan=3>
-                        <div id="call" class="call" style="display:none;">
-                            <br>
-                            <input name="call_comment" id="call_comment" placeholder="Введите примечание">
-                            <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
-                                        class="fa fa-floppy-o" aria-hidden="true"></i></button>
-                        </div>
-                    <td>
                 </tr>
             </table>
         <?php } ?>
@@ -884,57 +874,30 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 
         jQuery("#rec_to_measurement").click(function () {
             jQuery("#project_status").val(1);
-            jQuery("#call").toggle();
+            if (jQuery("#jform_project_gauger").val() == 0)
+            {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Укажите время замера"
+                });
+            }
+            else
+            {
+                jQuery("#form-client").submit();
+            }
         });
 
         jQuery("#refuse_project").click(function () {
             jQuery("#project_status").val(2);
-            jQuery("#call").toggle();
+            jQuery("#form-client").submit();
         });
 
         jQuery("#accept_changes").click(function () {
             jQuery("input[name='data_change']").val(1);
-        });
-
-        jQuery("#add_call_and_submit").click(function () {
-            if (jQuery("#project_status").val() == 1) {
-                if (jQuery("#jform_project_gauger").val() == 0) {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Укажите время замера"
-                    });
-                } else if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){
-                    jQuery("#form-client").submit();
-                }
-                else {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Укажите рекламу"
-                    });
-                }
-            } else if (jQuery("#project_status").val() == 2) {
-                if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){
-                    jQuery("#form-client").submit();
-                }
-                else {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Укажите рекламу"
-                    });
-                }
-            }
         });
 
         jQuery("#change_discount").click(function () {
