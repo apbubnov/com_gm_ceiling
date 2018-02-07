@@ -26,9 +26,9 @@ $dealer = JFactory::getUser($user->dealer_id);
 <div class="start_page">
 
 <h2 class="center">Прайсы</h2>
-<p class ="center"><a class ="btn btn-large btn-warning" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=canvases', false, 2); ?>" id ="canvases"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Прайс полотен</a></p>
-<p class ="center"><a class ="btn btn-large btn-success" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=components', false, 2); ?>" id ="components"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Прайс комплектующих</a></p>
+<p class ="center"><a class ="btn btn-large btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=canvases', false, 2); ?>" id ="canvases" style="width: 220px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Прайс полотен</a></p>
+<p class ="center"><a class ="btn btn-large btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=components', false, 2); ?>" id ="components" style="width: 220px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Прайс комплектующих</a></p>
 <?php if($user->dealer_type!= 2 && !$user->guest){?>
-<p class ="center"><a class ="btn btn-large btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=mount', false, 2); ?>" id ="mount"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Прайс монтажа</a></p>
+<p class ="center"><a class ="btn btn-large btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=mount', false, 2); ?>" id ="mount" style="width: 220px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Прайс монтажа</a></p>
 <?php }?> 
 </div>

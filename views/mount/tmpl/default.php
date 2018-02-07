@@ -187,6 +187,7 @@ $mount = array(
                 }
 
                 var n = noty({
+                	timeout: 2000,
                     theme: 'relax',
                     modal: true,
                     layout: 'center',
