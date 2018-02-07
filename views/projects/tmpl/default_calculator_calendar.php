@@ -98,7 +98,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                     <? endif; ?>
                 </td>
                 <td class="center one-touch"><?= $item->address; ?></td>
-                <td class="center one-touch"><?= $item->project_note.$item->gm_manager_note;; ?></td>
+                <td class="center one-touch"><?= $item->project_note.$item->gm_manager_note; ?></td>
                 <?if (in_array("16", $groups)):?>
                     <td class="center one-touch"><?= $item->dealer_name; ?></td>
                 <?endif;?>
