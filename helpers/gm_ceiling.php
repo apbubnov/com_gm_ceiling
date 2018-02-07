@@ -484,11 +484,11 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return = array();
             $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
             $ajax_return['project_discount'] = $new_discount;
-            $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $guild_data['total_dealer_guild'];
+            $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $data["guild_data"]["total_gm_guild"];
             $ajax_return['components_sum'] = $components_sum;
             $ajax_return['mounting_sum'] = $total_gm_mounting;
             $ajax_return['mounting_arr'] = $data;
-            $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'];
+            $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $data["guild_data"]["total_gm_guild"];
             $data['components_sum'] = $components_sum;
             $data['mounting_sum'] = $total_gm_mounting;
             $data['project_discount'] = $dealer->discount;
