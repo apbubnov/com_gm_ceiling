@@ -156,12 +156,12 @@
     
     <p class="caption-tar">Заказы</p>
     <table class="table table-striped table_cashbox one-touch-view">
-        <tr class = "row">
-            <th>Номер</th>
-            <th>Дата</th>
-            <th>Сумма</th>
-            <th>Примечание</th>
-            <th>Статус</th>
+        <tr class="row">
+            <th class="one-touch">Номер</th>
+            <th class="one-touch">Дата</th>
+            <th class="one-touch">Сумма</th>
+            <th class="one-touch">Примечание</th>
+            <th class="one-touch">Статус</th>
         </tr>
         <?php foreach($projects as $item):?>
 
@@ -170,16 +170,16 @@
                 elseif($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
                 else echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
                 else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
-                <td><?php echo $item->id;?></td>
-                <td>
+                <td class="one-touch"><?php echo $item->id;?></td>
+                <td class="one-touch">
                     <?php 
                         $date = new DateTime($item->created);
                         echo $date->Format('d.m.Y');
                     ?>
                 </td>
-                <td><?php echo $item->project_sum;?></td>
-                <td><?php echo $item->gm_manager_note; ?></td>
-                <td><?php echo $item->status; ?></td>
+                <td class="one-touch"><?php echo $item->project_sum;?></td>
+                <td class="one-touch"><?php echo $item->gm_manager_note; ?></td>
+                <td class="one-touch"><?php echo $item->status; ?></td>
             </tr>
 
         <?php endforeach;?>
