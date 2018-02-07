@@ -484,7 +484,7 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return = array();
             $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
             $ajax_return['project_discount'] = $new_discount;
-            $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'];
+            $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $guild_data['total_dealer_guild'];
             $ajax_return['components_sum'] = $components_sum;
             $ajax_return['mounting_sum'] = $total_gm_mounting;
             $ajax_return['mounting_arr'] = $data;
@@ -601,8 +601,6 @@ class Gm_ceilingHelpersGm_ceiling
         $user = JFactory::getUser();
         $dealer = JFactory::getUser($user->dealer_id);
 
-        print_r($data);
-
         if(empty($canvases_data)){
             $canvases_data = self::calculate_canvases($calc_id);
         }
@@ -636,7 +634,8 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $total_with_gm_dealer_margin = $mounting_data['total_with_gm_dealer_margin'];
         $total_with_gm_dealer_margin_guild = $mount_data['total_with_gm_dealer_margin_guild'];
-        $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild, 2);
+        $guild_data_itog = $data['guild_data']['total_dealer_guild'];
+        $new_total = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild + $guild_data_itog, 2);
         $new_total_discount = round($new_total * (1 - ($data['discount'] / 100)), 2);
         $html = '<h1>Смета по материалам и комплектующим</h1>';
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
@@ -695,17 +694,13 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '</tr>';
                 }
             }
-            $guild_data_itog = 0;
             foreach ($guild_data as $item) {
-                $item['dealer_salary'] = $item['gm_salary'];
-                $item['dealer_salary_total'] = $item['gm_salary_total'];
                 $html .= '<tr>';
                 $html .= '<td>' . $item['title'] . '</td>';
                 $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
                 $html .= '<td class="center">' . $item['dealer_salary_total']. '</td>';
                 $html .= '</tr>';
-                $guild_data_itog += $item['dealer_salary_total'];
             }
             $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild + $guild_data_itog, 2) . '</th></tr>';
             $html .= '</tbody></table><p>&nbsp;</p>';
@@ -1414,27 +1409,33 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $results = $mount_model->getDataAll($dealer_id);
 
+        $margin = self::get_margin($data['project_id']);
+
         $guild_data = array();
         if ($data['n1'] == 28 && $data['n9'] > 4) {
             //Обработка 1 угла
+            $gm_mp20 = margin($results->mp20, $margin['gm_canvases_margin']);
+            $dealer_mp20 = margin($gm_mp20, $margin['dealer_canvases_margin']);
             $guild_data[] = array(
                 "title" => "Обработка 1 угла",                                                                //Название
                 "quantity" => $data['n9'] - 4,                                                                //Кол-во
-                "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                "gm_salary" => $gm_mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => ($data['n9'] - 4) * $gm_mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $dealer_mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => ($data['n9'] - 4) * $dealer_mp20                                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
         if ( $data['n31'] > 0) {  
             //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
+            $gm_mp22 = margin($results->mp22, $margin['gm_canvases_margin']);
+            $dealer_mp22 = margin($gm_mp22, $margin['dealer_canvases_margin']);
             $guild_data[] = array(
                 "title" => "Внутренний вырез(в цеху)",                                                                    //Название
                 "quantity" => $data['n31'],                                                                //Кол-во
-                "gm_salary" => $results->mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                "gm_salary_total" => $data['n31'] * $results->mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                "dealer_salary" => $results->mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                "dealer_salary_total" => $data['n31'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                "gm_salary" => $gm_mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['n31'] * $gm_mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $dealer_mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['n31'] * $dealer_mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
 
