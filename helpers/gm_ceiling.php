@@ -1329,12 +1329,13 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases_data['quantity'] = $data['n4'];
 
             $total_gm_guild = $data['guild_data']['total_gm_guild'];
+
             if (empty($calc_id)):
                 $canvases_data['self_price'] = round($canvases[$data['n3']]->price + $total_gm_guild, 2);                                    //Себестоимость
                 $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                            //Кол-во * Себестоимость
             else:
-                $canvases_data['self_price'] = round($data["canvases_sum"] / $data["n4"], 2);                                    //Себестоимость
-                $canvases_data['self_total'] = round($data["canvases_sum"], 2);                            //Кол-во * Себестоимость
+                $canvases_data['self_price'] = round(($data["canvases_sum"] - $total_gm_guild) / $data["n4"], 2);                                    //Себестоимость
+                $canvases_data['self_total'] = round($data["canvases_sum"] - $total_gm_guild, 2);                            //Кол-во * Себестоимость
             endif;
 
             //Стоимость с маржой ГМ (для дилера)
