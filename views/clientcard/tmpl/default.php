@@ -155,13 +155,13 @@
 <? } ?>
 <div id="orders-container-tar">
     <p class="caption-tar">Заказы</p>
-    <table id="table-orders-tar" class="table table-striped one-touch-view">
+    <table class="table table-striped table_cashbox one-touch-view" id="table_projects">
         <tr>
-            <td>Номер</td>
-            <td>Дата</td>
-            <td>Сумма</td>
-            <td>Примечание</td>
-            <td>Статус</td>
+            <th>Номер</th>
+            <th>Дата</th>
+            <th>Сумма</th>
+            <th>Примечание</th>
+            <th>Статус</th>
         </tr>
      
         <?php foreach($projects as $item):?>
@@ -488,33 +488,37 @@
         });
     }
     document.getElementById('add_phone').onclick = function()
-        {
-            var client_id = <?php echo $client->id; ?>;
-            jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=client.addPhone",
-                data: {
-                    client_id: client_id,
-                    phone: document.getElementById('new_phone').value
-                },
-                dataType: "json",
-                async: false,
-                success: function(data) {
-                    location.reload();
-                },
-                error: function(data) {
-                    console.log(data);
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
-                }
-            });
+    {
+        var client_id = <?php echo $client->id; ?>;
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=client.addPhone",
+            data: {
+                client_id: client_id,
+                phone: document.getElementById('new_phone').value
+            },
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                location.reload();
+            },
+            error: function(data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    }
+    $(window).resize(function(){
+        if (screen.width <= '1024') {
+            jQuery('#table_projects').css('font-size', '10px');
         }
-
+    });
 
 
 </script>
