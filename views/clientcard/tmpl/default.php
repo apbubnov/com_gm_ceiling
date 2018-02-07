@@ -153,53 +153,9 @@
 
     </div>
 <? } ?>
-    <table class="table table-striped table_cashbox one-touch-view" id="clientList">
-        <thead>
-            <tr>
-                <th>Номер</th>
-            <th>Дата</th>
-            <th>Сумма</th>
-            <th>Примечание</th>
-            <th>Статус</th>
-            </tr>
-            <tr class="row" id="TrClone" data-href="" style="display: none">
-                <td class="one-touch created"></td>
-                <td class="one-touch name"></td>
-                <td class="one-touch address"></td>
-                <td class="one-touch status"></td>
-            </tr>
-        </thead>
-
-        <tbody>
-        <!-- по сути этот кусок кода не нужен, т.к. таблицу формирует jQ...-->
-<!--        --><?php //foreach ($this->items as $i => $item) : ?>
-<!--            --><?php //$canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-<!--            --><?php //if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
-<!--                --><?php //$canEdit = JFactory::getUser()->id == $item->created_by; ?>
-<!--            --><?php //endif; ?>
-<!--            --><?php //if($item->id !== $user->associated_client): ?>
-<!--            <tr class="row--><?php //echo $i % 2; ?><!-- inform" data-href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?><!--">-->
-<!--                <td class="one-touch created">-->
-<!--                    --><?php
-//                      if($item->created == "0000-00-00 00:00:00") {
-//                          echo "-";
-//                      } else {
-//                          $jdate = new JDate($item->created);
-//                          $created = $jdate->format("d.m.Y H:i");
-//                          echo $created;
-//                      }
-//                  ?>
-<!--                    -->
-<!--                </td>-->
-<!--                <td class="one-touch name">--><?php //echo $this->escape($item->client_name); ?><!--<br>--><?php //echo $item->client_contacts; ?><!--</td>-->
-<!--                <td class="one-touch address"> --><?php //print_r($item); ?><!-- </td>-->
-<!--            </tr>-->
-<!--            --><?php //endif; endforeach; ?>
-        </tbody>
-    </table>
+    
     <p class="caption-tar">Заказы</p>
     <table class="table table-striped table_cashbox one-touch-view" id="clientList">
-        <thead>
         <tr>
             <th>Номер</th>
             <th>Дата</th>
@@ -207,15 +163,6 @@
             <th>Примечание</th>
             <th>Статус</th>
         </tr>
-        <tr class="row" id="TrClone" data-href="" style="display: none">
-            <td class="one-touch created"></td>
-            <td class="one-touch name"></td>
-            <td class="one-touch address"></td>
-            <td class="one-touch status"></td>
-            <td class="one-touch status"></td>
-        </tr>
-        </thead>
-        <tbody>
         <?php foreach($projects as $item):?>
 
             <tr class = "row" data-href="<?php if($user->dealer_type == 1) {
@@ -223,20 +170,19 @@
                 elseif($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
                 else echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
                 else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
-                <td class="one-touch"><?php echo $item->id;?></td>
-                <td class="one-touch">
+                <td><?php echo $item->id;?></td>
+                <td>
                     <?php 
                         $date = new DateTime($item->created);
                         echo $date->Format('d.m.Y');
                     ?>
                 </td>
-                <td class="one-touch"><?php echo $item->project_sum;?></td>
-                <td class="one-touch"><?php echo $item->gm_manager_note; ?></td>
-                <td class="one-touch"><?php echo $item->status; ?></td>
+                <td><?php echo $item->project_sum;?></td>
+                <td><?php echo $item->gm_manager_note; ?></td>
+                <td><?php echo $item->status; ?></td>
             </tr>
 
         <?php endforeach;?>
-        </tbody>
     </table>
     <div id="add-gauging-container-tar">
         <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
