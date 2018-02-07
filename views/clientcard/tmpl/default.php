@@ -156,21 +156,11 @@
     <table class="table table-striped table_cashbox one-touch-view" id="clientList">
         <thead>
             <tr>
-                <th class='' >
-                    <?php //echo JHtml::_('grid.sort',  'Создан', 'a.created', $listDirn, $listOrder); ?>
-                    Создан
-                </th>
-                <th class=''>
-                    <?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_NAME', 'a.client_name', $listDirn, $listOrder); ?>
-                    Клиент
-                </th>
-                <th class=''>
-                    <?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS', 'a.client_contacts', $listDirn, $listOrder); ?>
-                    Адрес
-                </th>
-                <th>
-                    Статус
-                </th>
+                <th>Номер</th>
+            <th>Дата</th>
+            <th>Сумма</th>
+            <th>Примечание</th>
+            <th>Статус</th>
             </tr>
             <tr class="row" id="TrClone" data-href="" style="display: none">
                 <td class="one-touch created"></td>
