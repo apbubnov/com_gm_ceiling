@@ -1323,12 +1323,19 @@ class Gm_ceilingHelpersGm_ceiling
 
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
-            $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
-            $canvases_data['quantity'] = $data['n4'];                                                                        //Кол-во
+            if (empty($calc_id)) $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
+            else $canvases_data['title'] = $data['n3'] . ", " . $data['n2'] . " " . $data['color']; //Название фактуры и полотна
+
+            $canvases_data['quantity'] = $data['n4'];
 
             $total_gm_guild = $data['guild_data']['total_gm_guild'];
-            $canvases_data['self_price'] = round($canvases[$data['n3']]->price + $total_gm_guild, 2);                                    //Себестоимость
-            $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                            //Кол-во * Себестоимость
+            if (empty($calc_id)):
+                $canvases_data['self_price'] = round($canvases[$data['n3']]->price + $total_gm_guild, 2);                                    //Себестоимость
+                $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                            //Кол-во * Себестоимость
+            else:
+                $canvases_data['self_price'] = round($data["canvases_sum"] / $data["n4"], 2);                                    //Себестоимость
+                $canvases_data['self_total'] = round($data["canvases_sum"], 2);                            //Кол-во * Себестоимость
+            endif;
 
             //Стоимость с маржой ГМ (для дилера)
             $canvases_data['gm_price'] = margin($canvases_data['self_price'], $gm_canvases_margin);
@@ -1396,20 +1403,18 @@ class Gm_ceilingHelpersGm_ceiling
             $dealer_id = 1;
         }
         $results = $mount_model->getDataAll($dealer_id);
-        
+
         $guild_data = array();
         if ($data['n1'] == 28 && $data['n9'] > 4) {
             //Обработка 1 угла
-            if ($data['n9']) {
-                $guild_data[] = array(
-                    "title" => "Обработка 1 угла",                                                                //Название
-                    "quantity" => $data['n9'] - 4,                                                                //Кол-во
-                    "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                    "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                    "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                    "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                );
-            }
+            $guild_data[] = array(
+                "title" => "Обработка 1 угла",                                                                //Название
+                "quantity" => $data['n9'] - 4,                                                                //Кол-во
+                "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+            );
         }
         if ( $data['n31'] > 0) {  
             //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
@@ -1422,20 +1427,16 @@ class Gm_ceilingHelpersGm_ceiling
                 "dealer_salary_total" => $data['n31'] * $results->mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
-        
-        foreach ($guild_data as $guild) {
-            $total_gm_guild += $guild['gm_salary_total'];
-            $total_dealer_guild += $guild['dealer_salary_total'];
-            $total_with_gm_margin_guild += $guild['total_with_gm_margin'];
-            $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
-            $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
-        }
+
+        $result = [];
         $result['guild_data'] = $guild_data;
-        $result['total_gm_guild'] = $total_gm_guild;
-        $result['total_dealer_guild'] = $total_dealer_guild;
-        $result['total_with_gm_margin_guild'] = $total_with_gm_margin_guild;
-        $result['total_with_gm_dealer_margin_guild'] = $total_with_gm_dealer_margin_guild;
-        $result['total_with_dealer_margin_guild'] = $total_with_dealer_margin_guild;
+        foreach ($guild_data as $guild) {
+            $result['total_gm_guild'] += $guild['gm_salary_total'];
+            $result['total_dealer_guild'] += $guild['dealer_salary_total'];
+            $result['total_with_gm_margin_guild'] += $guild['total_with_gm_margin'];
+            $result['total_with_gm_dealer_margin_guild'] += $guild['total_with_gm_dealer_margin'];
+            $result['total_with_dealer_margin_guild'] += $guild['total_with_dealer_margin'];
+        }
         return $result;
     }
     /* 	основная функция для расчета стоимости монтажа
@@ -2979,8 +2980,9 @@ class Gm_ceilingHelpersGm_ceiling
             $calc_id = $data['id'];
         }
         $project_model = self::getModel('project');
-        $project = $project_model->getData($data->project_id);
+        $project = $project_model->getData($data['project_id']);
         $canvases_data = self::calculate_canvases($calc_id);
+
         $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок № _________</h1>';
         $html .= '<table>';
         $html .= '<tbody>';
@@ -2993,6 +2995,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';               
         $html .= '</tr>';
         $html .= '<tr>';
+
         if ($data['color'] > 0) {
             $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
             $color = $color_model->getData($data['color']);
@@ -3087,13 +3090,13 @@ class Gm_ceilingHelpersGm_ceiling
         if(empty($guild_data)){
             $guild_data = self::calculate_guild_jobs($calc_id)['guild_data'];
         }
-        foreach ($guild_data as $guild) {
+        /*foreach ($guild_data as $guild) {
             $total_gm_guild += $guild['gm_salary_total'];
             $total_dealer_guild += $guild['dealer_salary_total'];
             $total_with_gm_margin_guild += $guild['total_with_gm_margin'];
             $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
             $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
-        }
+        }*/
         $html = '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         if (isset($project->id)) {
@@ -3150,7 +3153,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</tr>';
         }
         $price = 0;
-        foreach ($guild_data as $item) {
+        foreach ($guild_data["guild_data"] as $item) {
             $html .= '<tr>';
             $html .= '<td>' . $item['title'] . '</td>';
             $html .= '<td>' . round($item['gm_salary'], 2) . '</td>';

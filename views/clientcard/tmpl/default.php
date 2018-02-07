@@ -332,8 +332,9 @@
     jQuery(document).ready(function ()
     {
         jQuery('#new_phone').mask('+7(999) 999-9999');
-
+        <?php if($user->dealer_type != 1) { ?>
         document.getElementById('calls-tar').scrollTop = 9999;
+        <?}?>
 
         document.getElementById('add_email').onclick = function()
         {
