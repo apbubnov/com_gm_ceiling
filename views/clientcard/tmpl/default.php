@@ -208,7 +208,7 @@
         </tbody>
     </table>
     <p class="caption-tar">Заказы</p>
-    <table class="table table-striped table_cashbox one-touch-view">
+    <table class="table table-striped table_cashbox one-touch-view" id="clientList">
         <thead>
         <tr>
             <th>Номер</th>
