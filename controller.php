@@ -2692,7 +2692,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $send = $mailer->Send();
                 
                 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-                $result = $users_model->addCommercialOfferCode($user_id, $code);
+                $result = $users_model->addCommercialOfferCode($user_id, $code, $user->id);
 
                 $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
                 $client_id = JFactory::getUser($user_id)->associated_client;
