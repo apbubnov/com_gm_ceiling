@@ -153,41 +153,43 @@
 
     </div>
 <? } ?>
-    
+<div id="orders-container-tar">
     <p class="caption-tar">Заказы</p>
-    <table class="table table-striped table_cashbox one-touch-view">
-        <tr class="row">
-            <th class="one-touch">Номер</th>
-            <th class="one-touch">Дата</th>
-            <th class="one-touch">Сумма</th>
-            <th class="one-touch">Примечание</th>
-            <th class="one-touch">Статус</th>
+    <table id="table-orders-tar" class="table table-striped one-touch-view">
+        <tr>
+            <td>Номер</td>
+            <td>Дата</td>
+            <td>Сумма</td>
+            <td>Примечание</td>
+            <td>Статус</td>
         </tr>
+     
         <?php foreach($projects as $item):?>
 
-            <tr data-href="<?php if($user->dealer_type == 1) {
+            <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) {
                 if($item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
                 elseif($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
                 else echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
                 else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
-                <td class="one-touch created"><?php echo $item->id;?></td>
-                <td class="one-touch">
+                <td><?php echo $item->id;?></td>
+                <td>
                     <?php 
                         $date = new DateTime($item->created);
                         echo $date->Format('d.m.Y');
                     ?>
                 </td>
-                <td class="one-touch"><?php echo $item->project_sum;?></td>
-                <td class="one-touch"><?php echo $item->gm_manager_note; ?></td>
-                <td class="one-touch"><?php echo $item->status; ?></td>
+                <td><?php echo $item->project_sum;?></td>
+                <td><?php echo $item->gm_manager_note; ?></td>
+                <td><?php echo $item->status; ?></td>
             </tr>
 
         <?php endforeach;?>
+   
     </table>
     <div id="add-gauging-container-tar">
         <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
     </div>
-
+</div>
 <div id="modal-window-container-tar">
 		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
 		<div id="modal-window-call-tar">
