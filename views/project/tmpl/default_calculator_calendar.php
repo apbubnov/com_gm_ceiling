@@ -695,7 +695,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <table class="table">
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><?php echo $this->item->client_id; ?></td>
+                            <td><a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>"><?php echo $this->item->client_id; ?></a></td>
                             <td>
                                 <div class="FIO" style="display: none;">
                                     <label id="jform_client_name-lbl" for="jform_client_name">ФИО клиента<span
@@ -720,7 +720,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
                             <?php $phone = $model->getClientPhones($this->item->id_client); ?>
                             <td><?php foreach ($phone AS $contact) {
-                                    echo $contact->client_contacts;
+                                    echo "<a href='tel:$contact->client_contacts'>$contact->client_contacts</a>";
                                     echo "<br>";
                                 } ?></td>
                             <td>
@@ -738,7 +738,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
                                 $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
                                 foreach ($contact_email AS $contact) {
-                                    echo $contact->contact;
+                                    echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
                                     echo "<br>";
                                 } ?>
                             </td>
@@ -762,7 +762,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     ?>
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                            <td><?php echo $this->item->project_info; ?></td>
+                            <td><a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>"><?=$this->item->project_info;?></a></td>
                             <td >
                                 <div class="Address" style="display: none; position:relative;">
                                     <label id="jform_address_lbl" for="jform_address">Адрес<span
