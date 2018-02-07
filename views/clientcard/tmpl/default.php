@@ -217,6 +217,13 @@
             <th>Примечание</th>
             <th>Статус</th>
         </tr>
+        <tr class="row" id="TrClone" data-href="" style="display: none">
+            <td class="one-touch created"></td>
+            <td class="one-touch name"></td>
+            <td class="one-touch address"></td>
+            <td class="one-touch status"></td>
+            <td class="one-touch status"></td>
+        </tr>
         </thead>
         <tbody>
         <?php foreach($projects as $item):?>
