@@ -929,18 +929,32 @@
                             <?php } else if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status != 17) { ?>
                                 <th>Дата монтажа</th>
                                 <td>
-                                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
-                                    <?php echo $jdate->format('d.m.Y H:i'); ?>
+                            <?php
+                                if ($this->item->project_mounting_date == "0000-00-00 00:00:00")
+                                {
+                                    echo '-';
+                                }
+                                else
+                                {
+                                    $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date));
+                                    echo $jdate->format('d.m.Y H:i');
+                                }
+                            ?>
                                 </td>
                             <?php } else { ?>
                                 <th>Удобная дата монтажа для клиента</th>
                                 <td>
-                                    <?php if ($this->item->project_mounting_date == "0000-00-00 00:00:00") { ?>
-                                        -
-                                    <?php } else { ?>
-                                        <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
-                                        <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                    <?php } ?>
+                            <?php
+                                if ($this->item->project_mounting_date == "0000-00-00 00:00:00")
+                                {
+                                    echo '-';
+                                }
+                                else
+                                {
+                                    $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date));
+                                    echo $jdate->format('d.m.Y H:i');
+                                }
+                            ?>
                                 </td>
                             <?php } ?>
                         </tr>
