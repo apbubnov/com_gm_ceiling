@@ -1421,6 +1421,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                             $query->values($calculationId . ', ' . $value[0] . ', ' . $value[1] . ', ' . $value[2]);
                     }
                     $db->setQuery($query);
+                    $db->execute();
                 }
 
                 if (!empty($n14)) {

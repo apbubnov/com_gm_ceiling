@@ -497,37 +497,38 @@ class Gm_ceilingHelpersGm_ceiling
             $data["checked_out_time"] = "00.00.0000 00:00";
             $data["created_by"] = $user->id;
             $data["modified_by"] = $user->id;
-            if (empty($data['calculation_title']))
-            {
-                $db = JFactory::getDBO();
-                $query = 'SELECT `id`, `calculation_title` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
-                $db->setQuery($query);
-                $calculations = $db->loadObjectList();
-                if (count($calculations) < 1) {
-                    $data['calculation_title'] = "Потолок 1";
-                } else {
-                    $k = []; $number = 1;
-                    foreach ($calculations as $calculation) {
-                        $calculation_title = $calculation->calculation_title;
-                        $k[] = intval(str_replace("Потолок ", "", $calculation_title));
-                    }
-                    while(in_array($number, $k)) $number += 1;
-                    $data['calculation_title'] = "Потолок " . $number;
-                }
-            }
-            //Сохранение калькуляции
-            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
 
             /*Временный костыль*/
             if (!empty($data["id"]))
             {
                 $temp_calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
                 $temp_calculation_data = $temp_calculation_model->getData($data["id"]);
-                $data["calc_data"] = $temp_calculation_data->calc_data;
-                $data["cut_data"] = $temp_calculation_data->cut_data;
-                $data['original_sketch'] = $temp_calculation_data->original_sketch;
+                if (empty($data["n1"])) $data["n1"] = $temp_calculation_data->n1;
+                if (empty($data["n2"])) $data["n2"] = $temp_calculation_data->n2;
+                if (empty($data["n3"])) $data["n3"] = $temp_calculation_data->n3;
+                if (empty($data["calc_data"])) $data["calc_data"] = $temp_calculation_data->calc_data;
+                if (empty($data["cut_data"])) $data["cut_data"] = $temp_calculation_data->cut_data;
+                if (empty($data["original_sketch"])) $data['original_sketch'] = $temp_calculation_data->original_sketch;
+                if (empty($data["calculation_title"])) $data['calculation_title'] = $temp_calculation_data->calculation_title;
+                if (empty($data["n13"])) $data['n13'] = json_encode($temp_calculation_data->n13);
             }
             /*-----------------------------------------------------------------------------*/
+
+            if (empty($data['calculation_title']))
+            {
+                $db = JFactory::getDBO();
+                $query = 'SELECT `id`, `calculation_title` FROM `#__gm_ceiling_calculations` WHERE `project_id` = ' . (int)$data['project_id'] . ' AND `calculation_title` LIKE  \'%Потолок%\'';
+                $db->setQuery($query);
+                $calculations = $db->loadObjectList();
+                $indexes = []; $index = 1;
+                foreach ($calculations as $calculation) {
+                    $indexes[] = intval(str_replace("Потолок ", "", $calculation->calculation_title));
+                    if (in_array($index, $indexes)) $index += 1;
+                }
+                $data['calculation_title'] = "Потолок $index";
+            }
+            //Сохранение калькуляции
+            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
 
             if ($save == 1) {
                 $tmp_filename = $data['sketch_name'];
@@ -764,13 +765,17 @@ class Gm_ceilingHelpersGm_ceiling
                             <th class="center">Стоимость, руб.</th>
                         </tr>';
         foreach ($calculations as $calc) {
+            $calc_itog_sum = double_margin($calc->components_sum, $project->gm_components_margin, $project->dealer_components_margin);
+            $calc_itog_sum += double_margin($calc->canvases_sum, $project->gm_canvases_margin, $project->dealer_canvases_margin);
+            $calc_itog_sum += double_margin($calc->mounting_sum, $project->gm_mounting_margin, $project->dealer_mounting_margin);
+            $calc_itog_sum = round($calc_itog_sum * (100 - $calc->discount) / 100, 2);
             $html .= '<tr>';
             $html .= '<td>' . $calc->calculation_title . '</td>';
             $html .= '<td class="center">' . $calc->n4 . '</td>';
             $html .= '<td class="center">' . $calc->n5 . '</td>';
-            $html .= '<td class="center">' . ($calc->mounting_sum + $calc->canvases_sum + $calc->components_sum) . '</td>';
+            $html .= '<td class="center">' . $calc_itog_sum . '</td>';
             $html .= '</tr>';
-            $sum += $calc->mounting_sum + $calc->canvases_sum + $calc->components_sum;
+            $sum += $calc_itog_sum;
         }
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
@@ -780,7 +785,8 @@ class Gm_ceilingHelpersGm_ceiling
                         <tr>
                             <th>Вид транспорта</th>
                             <th class="center">Кол-во км<sup>2</sup>.</th>
-                            <th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th>
+                            <th class="center">Кол-во выездов  </th>
+                            <th class="center">Стоимость, руб.</th>
                         </tr>'; 
         $html .= '<tr>';
         $html .= '<td>' . $transport['transport']. '</td>';
@@ -789,15 +795,20 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<td class="center">' . $transport['mounter_sum'] . '</td>';
         $html .= '</tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
-        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
+        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['mounter_sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
-        $html .= "<pagebreak />";
+        //$html .= "<pagebreak />";
+        $array = [];
+        $array[] = $html;
         foreach($calculations as $calc){
+            $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "client_single") . ".pdf";
+            /*
             $need_mount = ($calc->mounting_sum > 0);
             $html .= self::create_client_single_estimate_html($need_mount,$calc->id);
+            */
         }
         $filename = md5($project->id . "client_common") . ".pdf";
-        Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
+        Gm_ceilingHelpersGm_ceiling::save_pdf($array, $sheets_dir . $filename, "A4");
     }
 
     public static function calculate_components($calc_id=null,$data=null,$del_flag=0){ 
@@ -2464,7 +2475,7 @@ class Gm_ceilingHelpersGm_ceiling
     */
     public static function calculate_transport($project_id,$transport_type=null,$distance=null,$distance_col=null){
         $project_model = self::getModel('Project');
-        if(!empty($project_id) && !empty($transport_type) &&!empty($distance) && !empty($distance_col) ){
+        if(!empty($project_id) && !empty($transport_type) && !empty($distance) && !empty($distance_col) ){
             $data = array(
                 'id'=> $project_id,
                 'transport'=>$transport_type,
@@ -2479,7 +2490,7 @@ class Gm_ceilingHelpersGm_ceiling
             $transport_type = $project->transport;
             $distance = $project->distance;
             $distance_col = $project->distance_col;
-            $client_id = $project->id_client;
+            /*$client_id = $project->id_client;
             if(!empty($client_id)){
                 $client_model = self::getModel('client');
                 $dealer_id = $client_model->getClientById($client_id)->dealer_id;
@@ -2489,15 +2500,15 @@ class Gm_ceilingHelpersGm_ceiling
             }
             else{
                  $dealer_id = 1;
-            }
+            }*/
             $mount_model = self::getModel('mount');
-            $res = $mount_model->getDataAll($dealer_id);
+            $res = $mount_model->getDataAll($project->dealer_id);//$dealer_id);
         }
         $dealer_info_model = self::getModel('Dealer_info');
         if(empty($res->user_id)) {
             $res->user_id = 1;
         }
-        $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
+        $margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
         if($res) {
             if($transport_type == 1) {
                 $transport_sum = margin($res->transport * $distance_col, $margin);
@@ -2512,8 +2523,8 @@ class Gm_ceilingHelpersGm_ceiling
 
             }
             elseif($transport_type == 2) {
-                $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
+                $transport_sum = ($res->distance  * $distance + $res->transport) * $distance_col;
+                $transport_sum_1 = ($res->distance  * $distance + $res->transport) * $distance_col;
                /*  if($transport_sum < margin($res->transport, $margin))
                   { 
                       $transport_sum = margin($res->transport, $margin);
@@ -2617,15 +2628,17 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<td class="center">' . $transport['mounter_sum'] . '</td>';
         $html .= '</tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
-        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['sum'] + $sum, 2) . ' руб.</div>';
+        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['mounter_sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
-        $html .= "<pagebreak />";
+        //$html .= "<pagebreak />";
+        $array = [$html];
         foreach($calculations as $calc){
-            $html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
+            $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
+            //$html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
         }
         $filename = md5($project_id . "mount_common") . ".pdf";
         
-        self::save_pdf($html, $sheets_dir . $filename, "A4");
+        self::save_pdf($array, $sheets_dir . $filename, "A4");
     }
     public static function create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount = null){
         try{

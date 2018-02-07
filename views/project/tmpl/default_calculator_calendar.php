@@ -58,7 +58,8 @@ foreach ($calculations as $calculation) {
 }
 $sum_transport = 0;  $sum_transport_discount = 0;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$mount_transport = $mountModel->getDataAll();
+
+$mount_transport = $mountModel->getDataAll($this->item->dealer_id);
 
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
@@ -82,17 +83,9 @@ $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations1 = $calculationsModel->getProjectItems($this->item->id);
 $components_data = array();
 $project_sum = 0;
-$counter = 0;
+$counter = 0;/*
 foreach ($calculations1 as $calculation) {
     $counter++;
-    $from_db = 1;
-    $save = 1;
-    $ajax = 0;
-    $pdf = 1;
-    $print_components = 0;
-    if($calculation->mounting_sum == 0) $need_mount = 0;
-    else $need_mount = 1;
-    Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
     $from_db = 1;
     $save = 0;
     $ajax = 0;
@@ -107,7 +100,7 @@ foreach ($calculations1 as $calculation) {
         Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
     }
 }
-
+*/
 // календарь
 $month1 = date("n");
 $year1 = date("Y");
