@@ -568,6 +568,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 		try{
 			$app = JFactory::getApplication();
 			$user = JFactory::getUser();
+            $groups = $user->get('groups');
 			//получение нужных моделей
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
 			$client_history_model = $this->getModel('Client_history', 'Gm_ceilingModel');
@@ -721,7 +722,15 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$this->setMessage("Проект сформирован");
 						Gm_ceilingHelpersGm_ceiling::notify($data, 7);
 					}
-					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
+					
+                    if (in_array('16', $groups))
+                    {
+                        $this->setRedirect("/index.php?option=com_gm_ceiling&view=project&type=gmmanager&id=$project_id", false);
+                    }
+                    else
+                    {
+                        $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
+                    }
 			}
 		}
 		catch(Exception $e)
