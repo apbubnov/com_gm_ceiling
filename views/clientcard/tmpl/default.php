@@ -514,7 +514,7 @@
             }
         });
     }
-    $(window).resize(function(){
+    jQuery(window).resize(function(){
         if (screen.width <= '1024') {
             jQuery('#table_projects').css('font-size', '10px');
         }
