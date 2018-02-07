@@ -184,11 +184,13 @@ $AllMounters = $model->FindAllMounters($where);
                     $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
                     $mount = $mount_model->getDataAll();
                     ?>
-                    <?php foreach ($calculations as $calculation) { ?>
+                    <?php foreach ($calculations as $calculation) {
+                        $guild_data = Gm_ceilingHelpersGm_ceiling::calculate_guild_jobs($calculation->id);
+                        ?>
                         <tr>
                             <th><?php echo $calculation->calculation_title; ?></th>
                             <td>
-                                <?php echo $calculation->canvases_sum; ?> руб.
+                                <?php echo $calculation->canvases_sum + $guild_data['total_gm_guild']; ?> руб.
                             </td>
                             <td>
                                 <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
