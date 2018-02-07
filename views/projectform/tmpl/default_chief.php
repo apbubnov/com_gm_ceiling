@@ -1373,7 +1373,9 @@
         //---------------------------------------------------------
 
         jQuery('btn_submit').click(function(){
-            if (document.getElementById('jform_project_mounting_date_old').value == '')
+            var project_status = <?= $this->item->project_status; ?>;
+            if (document.getElementById('jform_project_mounting_date_old').value == '00-00-00 00:00:00'
+                && project_status != 1 && project_status != 17)
             {
                 var n = noty({
                     timeout: 2000,
@@ -1386,7 +1388,7 @@
             }
             else
             {
-
+                document.getElementById('form-project').submit();
             }
         });
 
