@@ -2059,6 +2059,10 @@ var $ = jQuery;
     //------------------------------------------
 
     jQuery(document).ready(function () {
+        if (screen.width <= '1024') {
+            jQuery('table').css('font-size', '10px');
+            jQuery('td').css('padding', '0.10rem');
+        }
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         if (document.getElementById('comments'))
         {
