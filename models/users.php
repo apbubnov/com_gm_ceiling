@@ -82,7 +82,7 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
-	function addCommercialOfferCode($user_id, $code)
+	function addCommercialOfferCode($user_id, $code, $manager_id)
 	{
 		try
 		{
@@ -95,8 +95,8 @@ class Gm_ceilingModelUsers extends JModelList
 
 			$query = $db->getQuery(true);
 			$query->insert('`rgzbn_users_commercial_offer`');
-			$query->columns('`user_id`,`code`');
-			$query->values("$user_id, '$code'");
+			$query->columns('`user_id`,`code`,`manager_id`');
+			$query->values("$user_id, '$code', $manager_id");
 			$db->setQuery($query);
 			$db->execute();
 			
@@ -130,10 +130,18 @@ class Gm_ceilingModelUsers extends JModelList
 			if ($item->status == 0)
 			{
 				$client_id = JFactory::getUser($item->user_id)->associated_client;
-
+				if (!empty($item->manager_id))
+				{
+					$manager_id = $item->manager_id;
+				}
+				else
+				{
+					$manager_id = 1;
+				}
+				
 				$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
 				$callback_model->save(date('Y-m-d H:i:s'),'Просмотрено коммерческое предложение',
-					$client_id,1);
+					$client_id,$manager_id);
 
 				$query = $db->getQuery(true);
 				$query->update('`rgzbn_users_commercial_offer`');
