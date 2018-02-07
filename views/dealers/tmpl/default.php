@@ -123,6 +123,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
 
         var sum = JSON.parse('<?php echo json_encode($sum); ?>');
+        <?
+        foreach ($dealers as $key => $value) {
+            $value->name = str_replace('"', '\\"', $value->name);
+            $dealers[$key] = $value;
+        }
+        ?>
         var dealers = JSON.parse('<?php echo json_encode($dealers); ?>');
         console.log(sum, dealers);
 
@@ -132,10 +138,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#modal_window_create").show("slow");
         });
 
-        jQuery(".SelectPrice").change(function () {
+        function ChangeSelectPrice() {
             location.href = this.value;
             jQuery(".SelectPrice option:first-child").prop("selected", true);
-        });
+        }
+
+        jQuery(".SelectPrice").change(ChangeSelectPrice);
 
         jQuery(document).click(function(e){
             var target = e.target;
@@ -296,10 +304,16 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].created + '</td>';
-                        html += '<td><button class="btn btn-primary btn-done" user_id="' + data[i].dealer_id + '" type="button"> Внести сумму </button></td></tr>';
+                        html += '<td><button class="btn btn-primary btn-done" user_id="' + data[i].dealer_id + '" type="button"> Внести сумму </button></td>';
+                        html += '<td><select class="SelectPrice" autocomplete="off">\n' +
+                            '<option disabled selected>Прайс:</option>\n' +
+                            '<option value="/index.php?option=com_gm_ceiling&view=components&dealer=' + data[i].dealer_id + '">Компонентов</option>\n' +
+                            '<option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=' + data[i].dealer_id + '">Полотен</option>\n' +
+                            '</select></td></tr>';
                     }
                     tbody.innerHTML = html;
                     html = '';
+                    jQuery(".SelectPrice").change(ChangeSelectPrice);
                 },
                 dataType: "json",
                 async: false,
