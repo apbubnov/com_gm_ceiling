@@ -3170,7 +3170,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td></td>';
             $html .= '</tr>';
         }
-        $price_itog = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $total_gm_guild;
+        $price_itog = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $guild_data["total_gm_guild"];
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
