@@ -609,9 +609,12 @@ class Gm_ceilingHelpersGm_ceiling
         if(empty($components_data)){
             $components_data = self::calculate_components($calc_id,null,0);
         }
+
         if(empty($guild_data)){
             $guild_data = self::calculate_guild_jobs($calc_id)['guild_data'];
         }
+        else $guild_data = $guild_data['guild_data'];
+
         if(empty($mounting_data)){
             $mounting_data = self::calculate_mount(0,$calc_id,null);
         }
@@ -619,7 +622,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
         }
-        $guild_data = $guild_data['guild_data'];
+
         $components_sum = 0;
         $gm_components_sum = 0;
         $dealer_components_sum = 0;
@@ -689,16 +692,19 @@ class Gm_ceilingHelpersGm_ceiling
                     $html .= '</tr>';
                 }
             }
+            $guild_data_itog = 0;
             foreach ($guild_data as $item) {
+                $item['dealer_salary'] = $item['gm_salary'];
+                $item['dealer_salary_total'] = $item['gm_salary_total'];
                 $html .= '<tr>';
                 $html .= '<td>' . $item['title'] . '</td>';
-                $html .= '<td class="center">' . round($item['gm_salary'] * 2, 2) . '</td>';
+                $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                $html .= '<td class="center">' . $item['gm_salary_total'] * 2 . '</td>';
+                $html .= '<td class="center">' . $item['dealer_salary_total']. '</td>';
                 $html .= '</tr>';
-
+                $guild_data_itog += $item['dealer_salary_total'];
             }
-            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild, 2) . '</th></tr>';
+            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild + $guild_data_itog, 2) . '</th></tr>';
             $html .= '</tbody></table><p>&nbsp;</p>';
             if ($need_mount) {
                 $html .= '<h1>Смета по монтажным работам</h1>
@@ -1331,7 +1337,7 @@ class Gm_ceilingHelpersGm_ceiling
             $total_gm_guild = $data['guild_data']['total_gm_guild'];
 
             if (empty($calc_id)):
-                $canvases_data['self_price'] = round($canvases[$data['n3']]->price + ($total_gm_guild / $data['n4']), 2);                                    //Себестоимость
+                $canvases_data['self_price'] = round($canvases[$data['n3']]->price, 2);                                    //Себестоимость
                 $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                            //Кол-во * Себестоимость
             else:
                 $canvases_data['self_price'] = round($data["canvases_sum"] / $data["n4"], 2);                                    //Себестоимость
