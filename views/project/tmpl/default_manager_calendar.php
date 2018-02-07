@@ -387,6 +387,15 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 </td>
                             </tr>
                             <tr>
+                                <th>Примечание</th>
+                                <td>
+                                    <input name="gmmanager_note" id="gmmanager_note" class="inputactive"
+                                        value="<?php if (isset($_SESSION['manager_comment'])) {
+                                        echo $_SESSION['manager_comment'];
+                                        } else echo $this->item->gm_manager_note; ?>">
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Дата и время замера</th>
                                 <td>
                                     <div id="calendar-container">
