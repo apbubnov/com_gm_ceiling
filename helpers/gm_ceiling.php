@@ -1187,8 +1187,9 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['n21'] > 0) {
             $component_count[$items_2[0]->id] += $data['n21'] * 2;
         }
-        //Брус до 0,5 и багет 2.5м считается кусками, которые потребуются выложить весь периметр
 
+        //Брус до 0,5 и багет 2.5м считается кусками, которые потребуются выложить весь периметр
+/* Округление перенесено
             if ($data['n28'] == 0) $component_count[$items_11[0]->id] = self::rounding($component_count[$items_11[0]->id], 2.5);
             elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] = self::rounding($component_count[$items_236[0]->id], 2.5);
             elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] = self::rounding($component_count[$items_239[0]->id], 2.5);
@@ -1204,7 +1205,7 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[655] = self::rounding($component_count[655], 2.5);
             $component_count[656] = self::rounding($component_count[656], 2.5);
             $component_count[$items_4[0]->id] = ceil($component_count[$items_4[0]->id]);
-
+*/
        
 
         //просчет доп компонентов со склада
@@ -1226,11 +1227,12 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['title'] = $components[$key]->full_name;//. " ".$components[$key]->title ; 								//Название комплектующего
             $component_item['unit'] = $components[$key]->component_unit;                                //В чем измеряется
             $component_item['id'] = $components[$key]->id;                                                //ID
-            if ($component_item['unit'] == "шт.") {
+            $component_item['quantity'] = self::rounding($cost, $components[$key]->count_sale); // Округление
+            /*if ($component_item['unit'] == "шт.") {
                 $component_item['quantity'] = ceil($cost);                                                //Кол-во
             } else {
                 $component_item['quantity'] = $component_count[$key];
-            }
+            }*/
             $component_item['stack'] = 0;                                                                //Флаг, складывать ли этот компонент при сложении калькуляций
 
             $component_item['self_price'] = $components[$key]->price;                            //Себестоимость
@@ -2872,7 +2874,7 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['self_total'] = 0;                                                            //В чем измеряется
             $component_item['id'] = $components[$key]->id;                                                //ID
             $component_item['quantity'] = 0;
-            //$component_item['rounding'] = $components[$key]->count_sale; // Значение для округления со склада
+            $component_item['rounding'] = $components[$key]->count_sale; // Значение для округления со склада
 
             $print_data[] = $component_item;
         }
@@ -2882,8 +2884,8 @@ class Gm_ceilingHelpersGm_ceiling
                 if ($component['stack'] == 0) {
                     $new_component = $component;
                     $new_component['self_total'] = $print_data[$key]['self_total'] + $new_component['self_total'];
-                    //$new_component['quantity'] = self::rounding($print_data[$key]['quantity'] + $new_component['quantity'], $print_data[$key]['rounding']); // Округление
-                    $new_component['quantity'] = $print_data[$key]['quantity'] + $new_component['quantity'];
+                    $new_component['quantity'] = self::rounding($print_data[$key]['quantity'] + $new_component['quantity'], $print_data[$key]['rounding']); // Округление
+                    //$new_component['quantity'] = $print_data[$key]['quantity'] + $new_component['quantity'];
                     $print_data[$key] = $new_component;
                 }
             }
@@ -2897,7 +2899,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
         }
-
+/*
         $i = 0;
         foreach ($print_data as $data) {
             if ($data['title'] == "Багет ПВХ (2,5 м)") $it_11 = $i;
@@ -2961,7 +2963,7 @@ class Gm_ceilingHelpersGm_ceiling
         //округляем провод
         $print_data[$it_4]['quantity'] = ceil($print_data[$it_4]['quantity']);
         $print_data[$it_4]['self_total'] = $print_data[$it_4]['self_price'] * $print_data[$it_4]['quantity'];
-
+*/
 
         $price_itog = 0;
         foreach ($print_data as $key => $item) {
