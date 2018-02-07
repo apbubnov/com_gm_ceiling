@@ -1270,8 +1270,8 @@ class Gm_ceilingModelProject extends JModelItem
             
             $query->select(' map.id_brigade, mounters.name')
                 ->from('#__gm_ceiling_mounters as mounters')
-                ->innerJoin('#__gm_ceiling_mounters_map as map ON mounters.id = map.id_mounter')
-                ->where("map.id_brigade in ($where)");
+                ->innerJoin('#__gm_ceiling_mounters_map as map ON mounters.id = map.id_mounter');
+            if (!empty($where)) $query->where("map.id_brigade in ($where)");
             $db->setQuery($query);
             
             $items = $db->loadObjectList();
