@@ -156,6 +156,7 @@
 
     <p class="caption-tar">Заказы</p>
     <table class="table table-striped table_cashbox one-touch-view">
+        <thead>
         <tr>
             <td>Номер</td>
             <td>Дата</td>
@@ -163,10 +164,11 @@
             <td>Примечание</td>
             <td>Статус</td>
         </tr>
-     
+        </thead>
+        <tbody>
         <?php foreach($projects as $item):?>
 
-            <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) {
+            <tr data-href="<?php if($user->dealer_type == 1) {
                 if($item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
                 elseif($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
                 else echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
@@ -184,7 +186,7 @@
             </tr>
 
         <?php endforeach;?>
-   
+        </tbody>
     </table>
     <div id="add-gauging-container-tar">
         <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
