@@ -150,7 +150,7 @@ class Gm_ceilingModelUsers extends JModelList
 				$db->setQuery($query);
 				$db->execute();
 			}
-			return $item->id;
+			return $item;
 		}
 		catch(Exception $e)
         {
