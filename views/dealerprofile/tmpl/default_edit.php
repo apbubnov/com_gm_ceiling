@@ -23,6 +23,13 @@ $mount = $model_mount->getDataAll();
 ?>
 <?if(!$user->getDealerInfo()->update_check) { $user->setDealerInfo(["update_check" => true]);}?>
 <?=parent::getButtonBack();?>
+<form action="http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage" method="post" id="login-form" class="form-vertical" style="display: inline-block; margin-left: 10px;">
+	<div class="logout-button">
+		<input type="submit" name="Submit" class="btn btn-primary" value="Выйти">
+		<input type="hidden" name="option" value="com_users">
+		<input type="hidden" name="task" value="user.logout">
+	</div>
+</form>
 <form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
 	<h3>
 		Редактирование маржинальности

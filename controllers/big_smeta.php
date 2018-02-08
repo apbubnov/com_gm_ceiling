@@ -268,7 +268,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             }
             else
             {
-                $this->setRedirect(JRoute::_('/files/KP_DEA.docx', false));
+                $this->setRedirect(JRoute::_('/files/KP_DEA.pdf', false));
             }
         }
         catch(Exception $e)
