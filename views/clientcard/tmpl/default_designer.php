@@ -266,17 +266,12 @@
 		jQuery("#modal_window_client").show("slow");
     });
 
-    jQuery("#cancel").click(function(){
-        jQuery("#close").hide();
-        jQuery("#mv_container").hide();
-		jQuery("#modal_window_fio").hide();
+    jQuery("#edit").click(function() {
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_fio").show("slow");
+        jQuery("#close").show();
     });
 
-    jQuery("#cancel2").click(function(){
-        jQuery("#close").hide();
-        jQuery("#modal_window_container").hide();
-        jQuery("#modal_window_comm").hide();
-    });
     jQuery("#but_comm").click(function (){
         jQuery("#mv_container").show();
         jQuery("#modal_window_comm").show("slow");
@@ -286,6 +281,18 @@
         jQuery("#mv_container").show();
         jQuery("#modal_window_call").show("slow");
         jQuery("#close").show();
+    });
+
+    jQuery("#cancel").click(function(){
+        jQuery("#close").hide();
+        jQuery("#mv_container").hide();
+        jQuery("#modal_window_fio").hide();
+    });
+
+    jQuery("#cancel2").click(function(){
+        jQuery("#close").hide();
+        jQuery("#modal_window_container").hide();
+        jQuery("#modal_window_comm").hide();
     });
 
     jQuery("#update_fio").click(function(){
@@ -326,11 +333,7 @@
             }				
         });
     })
-    jQuery("#edit").click(function() {
-			jQuery("#mv_container").show();
-			jQuery("#modal_window_fio").show("slow");
-			jQuery("#close").show();
-	    });
+    
     jQuery('body').on('click', '.row_project', function(e)
     {
         if (jQuery(this).data('href') !== undefined)
