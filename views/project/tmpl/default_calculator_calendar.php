@@ -493,13 +493,37 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 </div>
 
 <script type="text/javascript">
+    var $ = jQuery,
+        DATA = {};
 
-    jQuery(window).resize(function(){
-        if (screen.width <= '1024') {
-            jQuery('table').css('font-size', '10px');
-            jQuery('td').css('padding', '0.10rem');
-        }
-    });
+    $(document).ready(Init);
+    $(window).resize(Resize);
+
+    function Init() {
+        DATA.Window = null;
+
+        DATA.Massage = {};
+        DATA.Massage.Note = $(".Page .Body .Messages textarea.Note");
+        DATA.Massage.Add = DATA.Massage.Note.siblings(".AddNote");
+
+        DATA.Page = $(".Page");
+        DATA.Page.Navigation = DATA.Page.find(".Navigation");
+        DATA.Page.Navigation.Tabs = DATA.Page.Navigation.find(".Tabs");
+        DATA.Page.Navigation.Tab = DATA.Page.Navigation.Tabs.find(".Tab");
+        DATA.Page.Navigation.TabLabel = DATA.Page.Navigation.Tabs.find(".TabLabel");
+        DATA.Page.Navigation.WindowTab = DATA.Page.Navigation.Tabs.find(".WindowTab");
+        DATA.Page.Navigation.WindowTab.Table = DATA.Page.Navigation.WindowTab.find("table");
+
+        AddActions();
+        Resize();
+    }
+
+    function Resize() {
+        console.log(DATA.Window);
+        if ($(window).width() < 767 && DATA.Window !== "Mobile") MobileWindow();
+        else if ($(window).width() >= 767 && DATA.Window !== "Desktop") DesktopWindow();
+        ResizeNote();
+    }
 
     function MobileWindow() {
         $.each(DATA.Page.Navigation.TabLabel, function (index, value) {
@@ -2033,6 +2057,13 @@ var $ = jQuery;
         return process;
     };
     //------------------------------------------
+
+    jQuery(window).resize(function(){
+        if (screen.width <= '1024') {
+            jQuery('table').css('font-size', '10px');
+            jQuery('td').css('padding', '0.10rem');
+        }
+    });
 
     jQuery(document).ready(function () {
         if (screen.width <= '1024') {

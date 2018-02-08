@@ -276,8 +276,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
     <? else: ?>
         <p class="center">
         <h3>У вас еще нет заказов!</h3>
-        </p>
-        <button id="new_order_btn" class="btn btn-primary" type="button">Сделайте заказ прямо сейчас</button>
     <? endif; ?>
 </form>
 
