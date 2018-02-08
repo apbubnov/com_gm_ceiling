@@ -958,9 +958,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     <div class="tab-pane <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" id="summary" role="tabpanel">
         <table id="table1" class="table table-striped one-touch-view">
             <tr>
-                <th class="section_header" id="sh_ceilings">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
-                <th></th>
-                <th></th>
+                <th colspan="3" class="section_header" id="sh_ceilings">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
             </tr>
             <?php $project_total = 0;
             $project_total_discount = 0;
@@ -1007,7 +1005,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 ?>
 
                 <tr class="section_ceilings">
-                    <td class="include_calculation">
+                    <td class="include_calculation" colspan="3">
                         <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox'
                                 checked="checked">
                         <input name='calculation_total[<?php echo $calculation->id; ?>]'
@@ -1026,17 +1024,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 value='<?php echo $project_total_1; ?>' type='hidden'>
                         <input name='canvas[<?php echo $calculation->id; ?>]'
                                 value='<?php echo $canvas; ?>' type='hidden'>        
-                        <?php echo $calculation->calculation_title; ?>
+                        <span><?php echo $calculation->calculation_title; ?></span>
                     </td>
-                    <td></td>
-                    <td></td>
                 </tr>
                 <tr class="section_ceilings" id="">
                     <td>S/P :</td>
-                    <td>
+                    <td colspan="2">
                         <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
                     </td>
-                    <td></td>
                 </tr>
                 <tr class="section_ceilings">
                     <?php if ($calculation->discount != 0) { ?>
@@ -1047,8 +1042,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         </td>
                     <?php } else { ?>
                         <td>Итого</td>
-                        <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб.</td>
-                        <td></td>
+                        <td colspan="2" id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб.</td>
                     <?php } ?>
 
                 </tr>
@@ -1066,14 +1060,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </th>
             </tr>
             <tr>
-                <th>
+                <th colspan="3">
                 Транспортные расходы
                 </th>
-                <th></th>
-                <th></th>
             </tr>
             <tr>
-                <td style="width: 45%;">
+                <td colspan="3">
 
                <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
                <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
@@ -1129,8 +1121,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </div>
                <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
                 </td>
-                <th></th>
-                <th></th>
             </tr>
             <tr>
                <?
@@ -1142,16 +1132,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 $project_total = $project_total + $sum_transport;
                 $project_total_discount = $project_total_discount + $sum_transport;
                 ?>
-                <th> Транспорт</th>
+                <th colspan="2"> Транспорт</th>
                 <td id="transport_sum"> <?=$sum_transport;?> руб. </td>
                 <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
-                <td></td>
             </tr>
             <tr>
 
                 <?php if ($kol > 0) { ?>
-                    <th>Итого/ - %:
-                    </th>
+                    <th>Итого/ - %:</th>
                     <th id="project_total"><span class="sum"><?php echo round($project_total, 0); ?></span> руб. /</th>
                     <th id="project_total_discount">
                         <span class="sum">
@@ -1165,7 +1153,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <?php }
                 else { ?>
                 <th>Итого</th>
-                <th id="project_total">
+                <th id="project_total" colspan="2">
                 <span class="sum">
                     <?php
                     if ($this->item->new_project_sum == 0) {
@@ -1194,14 +1182,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
                 </tr><? } ?>
             <tr>
-                <th class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
+                <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
                                                                         aria-hidden="true"></i></th>
-                <td></td>
-                <td></td>
             </tr>
             <?php foreach ($calculations as $calculation) { ?>
             <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                <td><?php echo $calculation->calculation_title; ?></td>
+                <td colspan="2"><?php echo $calculation->calculation_title; ?></td>
                 <td>
                     <?php
                     $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
@@ -1214,19 +1200,16 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         -
                     <?php } ?>
                 </td>
-                <td></td>
                 <?php }
                 $json = json_encode($pdf_names);
             ?>
             </tr>
             <?php if (count($calculations) > 0) { ?>
                 <tr class="section_estimate" style="display:none;">
-                    <td><b>Отправить все сметы <b></td>
-                    <td></td>
-                    <td></td>
+                    <td colspan="3"><b>Отправить все сметы <b></td>
                 </tr>
                 <tr class="section_estimate" style="display:none;">
-                    <td>
+                    <td colspan="2">
                         <div class="email-all" style="float: left;">
                             <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;"
                                 placeholder="Адрес эл.почты" type="text">
@@ -1253,23 +1236,18 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
                         <button class="btn btn-primary" id="send_all_to_email1" type="button">Отправить</button>
                     </td>
-                    <td>
-
-                    </td>
                 </tr>
 
             <?php } ?>
 
             <?php if ($this->item->project_mounter != 'Монтажная бригада ГМ') { ?>
                 <tr>
-                    <th id="sh_mount"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
-                    <td></td>
-                    <td></td>
+                    <th id="sh_mount" colspan="3"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                 </tr>
 
                 <?php foreach ($calculations as $calculation) { ?>
                     <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
-                    <td><?php echo $calculation->calculation_title; ?></td>
+                    <td colspan="2"><?php echo $calculation->calculation_title; ?></td>
                     <td>
                         <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
                         <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id); ?>
@@ -1279,19 +1257,16 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             После договора
                         <?php } ?>
                     </td>
-                    <td></td>
 
                 <?php }
                 $json1 = json_encode($pdf_names_mount); ?>
                 </tr>
                 <?php if (count($calculations) > 0) { ?>
                     <tr class="section_mount" style="display:none;">
-                        <td><b>Отправить все наряды на монтаж<b></td>
-                        <td></td>
-                        <td></td>
+                        <td colspan="3"><b>Отправить все наряды на монтаж<b></td>
                     </tr>
                     <tr class="section_mount" style="display:none;">
-                        <td>
+                        <td colspan="2">
                             <div class="email-all" style="float: left;">
                                 <input name="all-email" id="all-email2" class="form-control" style="width:200px;"
                                         value="" placeholder="Адрес эл.почты" type="text">
@@ -1314,14 +1289,13 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <td>
                             <button class="btn btn-primary" id="send_all_to_email2" type="button">Отправить</button>
                         </td>
-                        <td></td>
                     </tr>
                 <?php } ?>
             <? } ?>
             <!-------------------------------- Общая смета для клиента ------------------------------------------>
 
             <tr>
-                <td><b>Отправить общую смету <b></td>
+                <td colspan="2"><b>Отправить общую смету <b></td>
                 <td>
                     <?php
                     $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf";
@@ -1333,11 +1307,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
                     $json2 = json_encode($pdf_names); ?>
                 </td>
-                <td></td>
             </tr>
             <?  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
             <tr >
-                <td>
+                <td colspan="2">
                     <div class="email-all" style="float: left;">
                         <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;"
                                 placeholder="Адрес эл.почты" type="text">
@@ -1360,18 +1333,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             });</script>
                     </div>
                 </td>
-                <td>
-
-                    <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
-                </td>
-                <td>
-
-                </td>
+                <td><button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button></td>
             </tr>
             <? }?>
             <!-- общий наряд на монтаж--> 
              <tr>
-                <td><b>Общий наряд на монтаж <b></td>
+                <td colspan="2"><b>Общий наряд на монтаж <b></td>
                 <td>
                     <?php
                     $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
@@ -1382,13 +1349,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
                     $json2 = json_encode($pdf_names); ?>
                 </td>
-                <td></td>
             </tr>
             <tr>
-                <td>
+                <td colspan="3">
                     <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                 </td>
-                <td></td><td></td>
             </tr>
 
             
@@ -1718,11 +1683,13 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </button>
 
         <table id="mounter_wraper" <?if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
-            <tr>
+            <t>
+                <td colspan="6">
                 <h4 id="title" style="display: none;">
                     Назначить монтажную бригаду
                 </h4>
-            </tr>
+                </td>
+                </tr>
                 <!--                <tr>-->
                 <!--                    <td>-->
                 <!--                        <button class="btn btn-primary" id="mounter_prev" type="button"> <<</button>-->
@@ -1735,17 +1702,15 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <!--                    </td>-->
                 <!--                </tr>-->
             <tr>
-            </tr>
-            <tr>
                 <td>
                     <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                 </td>
-                <td>
+                <td colspan="2">
                     <div id="calendar1">
                         <?php echo $calendar1; ?>
                     </div>
                 </td>
-                <td>
+                <td colspan="2">
                     <div id="calendar2">
                         <?php echo $calendar2; ?>
                     </div>
@@ -1755,7 +1720,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </td>
             </tr>
             <tr>
-                <td>
+                <td colspan="6">
                     <label id="jform_chief_note-lbl" for="jform_chief_note" class="">
                         Примечание к монтажу
                     </label>
@@ -1764,12 +1729,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </td>
             </tr>
             <tr>
-                <td>
+                <td colspan="3">
                     <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
                         производство
                     </button>
                 </td>
-                <td>
+                <td colspan="3">
                     <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
                     </button>
                 </td>
@@ -1778,8 +1743,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 <!--                        href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?><!--">-->
 <!--                        Перейти к монтажам </a>-->
 <!--                </td>-->
-                <td>
-                </td>
             </tr>
             <?php } ?>
         </table>
@@ -1843,6 +1806,34 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </p>
         </div>
     </div>
+
+    <style>
+        @media (max-width: 1024px) {
+            .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul * {
+                font-size: 10px !important;
+                padding: .1rem !important;
+                width: auto !important;
+                margin: 0 !important;
+            }
+
+            .project_activation div, .tab-content div {
+                display: inline-block;
+                width: auto;
+                float: left;
+            }
+
+            ul, .tab-content {
+                margin: 0 -30px !important;
+                width: calc(100% + 60px) !important;
+            }
+            .tab-content .file_data {
+                min-width: auto !important;
+            }
+            .tab-content .file_upload {
+                width: 15px !important;
+            }
+        }
+    </style>
 
 <script type="text/javascript">
 var $ = jQuery;
@@ -2058,18 +2049,8 @@ var $ = jQuery;
     };
     //------------------------------------------
 
-    jQuery(window).resize(function(){
-        if (screen.width <= '1024') {
-            jQuery('table').css('font-size', '10px');
-            jQuery('td').css('padding', '0.10rem');
-        }
-    });
-
     jQuery(document).ready(function () {
-        if (screen.width <= '1024') {
-            jQuery('table').css('font-size', '10px');
-            jQuery('td').css('padding', '0.10rem');
-        }
+
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         if (document.getElementById('comments'))
         {
