@@ -340,6 +340,11 @@
         });
     });
 
+    function rb_email_click(elem)
+    {
+        jQuery("#email_comm").val(elem.value);
+    }
+
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
