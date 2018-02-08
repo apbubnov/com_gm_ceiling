@@ -391,16 +391,23 @@ if (count($AllGauger) == 0) {
         Today(day, NowMonth, NowYear);
 
 		jQuery("#calculate_button").click(function(){
-			if(jQuery("#jform_project_calculation_date").val()!="" && jQuery("#jform_project_calculation_daypart").val()!="" && jQuery("#jform_project_calculator").val()!=""){
+			if(jQuery("#jform_project_calculation_date").val()!=""
+                && jQuery("#jform_project_calculation_daypart").val()!=""
+                && jQuery("#jform_project_calculator").val()!=""
+                && jQuery("#jform_project_info").val()!=""
+                && jQuery("#jform_project_info_house").val()!=""
+                && (jQuery("#client_id").val()!="0" || jQuery("#jform_client_name").val()!=""))
+            {
 				jQuery("#calculate_form").submit();
 			}
 			else{
 				var n = noty({
 					theme: 'relax',
+                    timeout: 2000,
 					layout: 'center',
 					maxVisible: 5,
 					type: "error",
-					text: "Не выбрана дата замера и замерщик!"
+					text: "Введены не все данные!"
 				});
 			}
 		});

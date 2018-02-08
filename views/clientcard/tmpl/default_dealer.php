@@ -43,6 +43,7 @@
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
+    <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
 
@@ -183,17 +184,10 @@
         <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
     </div>
 </div>
-<div id="modal-window-container-tar">
-    <button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-    <div id="modal-window-call-tar">
-        <h6>Введите новое ФИО клиента</h6>
-        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
-        <p><button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
-    </div>
-</div>
-<div id="modal-window-container">
-    <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-    <div id="modal-window-1-tar">
+
+<div id="mv_container" class="modal_window_container">
+    <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal_window_client" class="modal_window">
         <form action="/index.php?option=com_gm_ceiling&task=clientform.save" method="post" enctype="multipart/form-data">
             <p><strong>Создание нового клиента</strong></p>
             <p>ФИО:</p>
@@ -204,52 +198,72 @@
             <p><button type="submit" id="save_client" class="btn btn-primary">ОК</button></p>
         </form>
     </div>
+    <div id="modal_window_fio" class="modal_window">
+        <h6>Введите новое ФИО клиента</h6>
+        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
+        <p><button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+    </div>
+    <div id="modal_window_comm" class="modal_window">
+        <? if (!empty($dop_contacts)) { ?>
+        <div style="margin-top: 10px;">
+        <? foreach ($dop_contacts AS $contact) {?>
+            <input type="radio" name='rb_email' value='<? echo $contact->contact; ?>' onclick='rb_email_click(this)'><? echo $contact->contact; ?><br>
+        <? }?>
+        </div>
+        <? } ?>
+        <h6 style = "margin-top:10px">Введите почту</h6>
+        <p><input type="text" id="email_comm" placeholder="Почта" required></p>
+        <p><button type="button" id="send_comm" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
+    </div>
 </div>
 
 <script>
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close-tar").hide();
-            jQuery("#modal-window-container-tar").hide();
-            jQuery("#modal-window-call-tar").hide();
-        }
-        var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
-        if (!div1.is(e.target) // если клик был не по нашему блоку
-            && div1.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close2-tar").hide();
-            jQuery("#modal-window-container2-tar").hide();
-            jQuery("#modal-window-enroll-tar").hide();
-        }
-        var div2 = jQuery("#modal-window-registration-tar"); // тут указываем ID элемента
-        if (!div2.is(e.target) // если клик был не по нашему блоку
-            && div2.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close3-tar").hide();
-            jQuery("#modal-window-container3-tar").hide();
-            jQuery("#modal-window-registration-tar").hide();
-        }
-        var div3 = jQuery("#modal-window-1-tar"); // тут указываем ID элемента
-        if (!div3.is(e.target) // если клик был не по нашему блоку
-            && div3.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close4-tar").hide();
-            jQuery("#modal-window-container").hide();
-            jQuery("#modal-window-1-tar").hide();
+        var div = jQuery("#modal_window_fio"); // тут указываем ID элемента
+        var div2 = jQuery("#modal_window_client");
+        var div3 = jQuery("#modal_window_comm");
+        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
+            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 
+            && div3.has(e.target).length === 0) {
+            jQuery("#close").hide();
+            jQuery("#mv_container").hide();
+            jQuery("#modal_window_fio").hide();
+            jQuery("#modal_window_client").hide();
+            jQuery("#modal_window_comm").hide();
+            jQuery("#modal_window_call").hide();
         }
     });
 
     jQuery("#new_client").click(function(){
-        jQuery("#close4-tar").show();
-		jQuery("#modal-window-container").show();
-		jQuery("#modal-window-1-tar").show("slow");
+        jQuery("#close").show();
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_client").show("slow");
     });
 
+    jQuery("#edit").click(function() {
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_fio").show("slow");
+        jQuery("#close").show();
+    });
+
+    jQuery("#but_comm").click(function (){
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_comm").show("slow");
+        jQuery("#close").show();
+    });
 
     jQuery("#cancel").click(function(){
-        jQuery("#close-tar").hide();
-		jQuery("#modal-window-container-tar").hide();
-		jQuery("#modal-window-call-tar").hide();
-    })
+        jQuery("#close").hide();
+        jQuery("#mv_container").hide();
+        jQuery("#modal_window_fio").hide();
+    });
+
+    jQuery("#cancel2").click(function(){
+        jQuery("#close").hide();
+        jQuery("#modal_window_container").hide();
+        jQuery("#modal_window_comm").hide();
+    });
+
     jQuery("#update_fio").click(function(){
         jQuery.ajax({
             type: 'POST',
@@ -288,11 +302,7 @@
             }				
         });
     })
-    jQuery("#edit").click(function() {
-			jQuery("#modal-window-container-tar").show();
-			jQuery("#modal-window-call-tar").show("slow");
-			jQuery("#close-tar").show();
-	    });
+
     jQuery('body').on('click', '.row_project', function(e)
     {
         if (jQuery(this).data('href') !== undefined)
@@ -335,8 +345,49 @@
         document.getElementById('calls-tar').scrollTop = 9999;
         jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
 
+        jQuery("#send_comm").click(function(){
+            var user_id = <?php echo $client->dealer_id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
+                data: {
+                    user_id: user_id,
+                    email: jQuery("#email_comm").val()
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Коммерческое предложение отправленно"
+                    });
+                    jQuery("#close").hide();
+                    jQuery("#mv_container").hide();
+                    jQuery("#modal_window_comm").hide();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
         document.getElementById('add_email').onclick = function()
         {
+            if (document.getElementById('new_email').value == "")
+            {
+                return;
+            }
             var client_id = <?php echo $client->id; ?>;
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=addemailtoclient",
