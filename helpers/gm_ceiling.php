@@ -832,6 +832,10 @@ class Gm_ceilingHelpersGm_ceiling
             $n23 = $data['n23'];
             $n15 = $data['n15'];
         }
+
+        $dealer_info = JFactory::getUser($data['dealer_id']);
+        $dealer_info_components = $dealer_info->getComponentsPrice();
+
         $margins = self::get_margin($data['project_id']);
         $gm_components_margin = $margins['gm_components_margin'];
         $dealer_components_margin = $margins['dealer_components_margin'];
@@ -1244,8 +1248,9 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
 
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $component_item['dealer_price'] = double_margin($components[$key]->price, $gm_components_margin, $dealer_components_margin);
-            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            //$component_item['dealer_price'] = double_margin($components[$key]->price, $gm_components_margin, $dealer_components_margin);
+            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+                //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
 
             $components_data[] = $component_item;

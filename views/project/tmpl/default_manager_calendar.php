@@ -132,10 +132,10 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 			<p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
 	    </div>
     </div>
+    <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
 <div class="container">
     <div class="row">
         <div class="item_fields">
-            <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
             <form id="form-client"
                   action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar"
                   method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
@@ -180,7 +180,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                 <input id="emails" name="emails" value="" type="hidden">
                 <input name="without_advt" value="1" type="hidden">
                 <div class="row">
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <table class="table">
                             <tr>
                                 <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
@@ -418,7 +418,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                 </div>
         </div>
         <?php if ($this->item->project_verdict == 0) { ?>
-            <table>
+            <table class="TabelAction">
                 <tr>
                     <td>
                         <a class="btn  btn-primary" id="rec_to_measurement">
@@ -459,6 +459,37 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         </p>
     </div>
 </div>
+
+<style>
+    @media (max-width: 1024px) {
+        .component-content, .component-content * {
+            font-size: 10px !important;
+        }
+
+        table, table *:not(label) {
+            padding: .1rem !important;
+        }
+/*
+        table, table * {
+            font-size: 10px !important;
+            padding: .1rem !important;
+            width: auto !important;
+            margin: 0 !important;
+            text-align: center !important;
+        }*/
+
+        .container {
+            margin: 0 -30px !important;
+            width: calc(100% + 60px) !important;
+            max-width: none !important;
+        }
+
+        .TabelAction {
+            margin: 0 30px !important;
+            width: calc(100% - 60px) !important;
+        }
+    }
+</style>
 
 <script language="JavaScript">
 
