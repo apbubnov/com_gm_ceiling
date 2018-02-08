@@ -87,7 +87,7 @@ $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations1 = $calculationsModel->getProjectItems($this->item->id);
 $components_data = array();
 $project_sum = 0;
-$counter = 0;
+$counter = 0;/*
 foreach ($calculations1 as $calculation) {
     $counter++;
     $from_db = 1;
@@ -109,9 +109,9 @@ foreach ($calculations1 as $calculation) {
     $project_sum += margin($calculation->mounting_sum, $this->item->gm_mounting_margin);
     if ($counter == count($calculations1)) {
         $flag_last = 1;
-        Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
+        //Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
     }
-}
+}*/
 
 // календарь
 $month = date("n");

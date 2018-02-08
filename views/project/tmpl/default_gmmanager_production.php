@@ -32,9 +32,6 @@ $calculations = $model->getProjectItems($this->item->id);
 //$need_mount = 1;
 
 foreach ($calculations as $calculation) {
-
-    $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
-    $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
     $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
 
     $calculation->dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
@@ -88,7 +85,7 @@ $calculations1 = $calculationsModel->getProjectItems($this->item->id);
 $components_data = array();
 $project_sum = 0;
 $counter = 0;
-foreach ($calculations1 as $calculation) {
+/*foreach ($calculations1 as $calculation) {
     $counter++;
     $from_db = 1;
     $save = 1;
@@ -111,7 +108,7 @@ foreach ($calculations1 as $calculation) {
         $flag_last = 1;
         Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, 0, $need_mount);
     }
-}
+}*/
 
 // календарь
 $month = date("n");
@@ -490,13 +487,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 
                 foreach ($calculations as $calculation) {
 
-                    $dealer_canvases_sum = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
-                    $dealer_components_sum = double_margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/, $this->item->dealer_components_margin);
+                    $dealer_canvases_sum = $calculation->dealer_canvases_sum;
+                    $dealer_components_sum = $calculation->dealer_components_sum;
                     $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-
-                    echo $dealer_canvases_sum . " - " . $calculation->canvases_sum . " - " . $this->item->dealer_canvases_margin . "<br>";
-                    echo $dealer_components_sum . " - " . $calculation->components_sum . " - " . $this->item->dealer_components_margin . "<br>";
-                    echo $dealer_gm_mounting_sum . " - " . $calculation->mounting_sum . " - " . $this->item->dealer_mounting_margin . "<br>";
 
                     //$calculation_total_discount = $calculation_total * ((100 - $this->item->project_discount) / 100);
 

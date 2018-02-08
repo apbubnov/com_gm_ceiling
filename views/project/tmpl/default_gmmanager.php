@@ -94,7 +94,7 @@ $AllMounters = $model->FindAllMounters($where);
         $components_data = array();
         $project_sum = 0;
         $counter = 0;
-        foreach ($calculations as $calculation) {
+        /*foreach ($calculations as $calculation) {
             $counter++;
             $from_db = 1;
             $save = 1;
@@ -110,7 +110,7 @@ $AllMounters = $model->FindAllMounters($where);
             $pdf = 0;
             $print_components = 1;
             $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-        }
+        }*/
         Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
         $client = $client_model->getClientById($this->item->id_client);
