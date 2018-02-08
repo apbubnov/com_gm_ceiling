@@ -1336,6 +1336,8 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 $query->set('calc.components_sum = ' . $data['components_sum']);
                 $query->set('calc.canvases_sum = ' . $data['canvases_sum']);
                 $query->set('calc.mounting_sum = ' . $data['mounting_sum']);
+                $query->set('calc.dealer_components_sum = ' . $data['dealer_components_sum']);
+                $query->set('calc.dealer_canvases_sum = ' . $data['dealer_canvases_sum']);
                /* $query->set('calc.transport = ' . $data['transport']);*/
                 $query->set('calc.dop_krepezh = ' . $data['dop_krepezh']);
                 $query->set('calc.extra_components = ' . $db->quote($data['extra_components']));
