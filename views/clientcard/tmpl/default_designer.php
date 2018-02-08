@@ -388,7 +388,8 @@
                 url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
                 data: {
                     user_id: user_id,
-                    email: jQuery("#email_comm").val()
+                    email: jQuery("#email_comm").val(),
+                    dealer_type: 3
                 },
                 dataType: "json",
                 async: false,

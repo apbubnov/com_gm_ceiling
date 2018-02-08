@@ -2641,18 +2641,19 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
-    public function sendCommercialOffer($user_id = null, $email = null){
+    public function sendCommercialOffer($user_id = null, $email = null, $dealer_type = null){
         try
         {
             $user = JFactory::getUser();
             $groups = $user->get('groups');
             if (in_array("16", $groups))
             {
-                if (is_null($user_id) || is_null($email))
+                if (is_null($user_id) || is_null($email) || is_null($dealer_type))
                 {
                     $jinput = JFactory::getApplication()->input;
                     $user_id = $jinput->get('user_id', null, 'INT');
                     $email = $jinput->get('email', null, 'STRING');
+                    $dealer_type = $jinput->get('dealer_type', null, 'STRING');
                     $die_bool = true;
                 }
                 else
@@ -2682,7 +2683,14 @@ class Gm_ceilingController extends JControllerLegacy
                 $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
                 $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
                 $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
-                $body .= '<p>Тел.: +7(473)2122359</p>';
+                if ($dealer_type == 3)
+                {
+                    $body .= '<p>Тел.: +7(473)212-23-59</p>';
+                }
+                elseif ($dealer_type == 1)
+                {
+                    $body .= '<p>Тел.: +7(473)212-34-01</p>';
+                }
                 $body .= '<p>Почта: gm-partner@mail.ru</p>';
                 $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
                 $body .= '</div></td></tr></table>';
@@ -2737,10 +2745,11 @@ class Gm_ceilingController extends JControllerLegacy
                 foreach ($items as $i => $item)
                 {
                     $client_id = JFactory::getUser($item->user_id)->associated_client;
+                    $dealer_type = JFactory::getUser($item->user_id)->dealer_type;
                     $emails = $dop_contacts_model->getEmailByClientID($client_id);
                     foreach ($emails as $j => $email)
                     {
-                        $this->sendCommercialOffer($item->user_id, $email->contact);
+                        $this->sendCommercialOffer($item->user_id, $email->contact, $dealer_type);
                         $count++;
                     }
                 }
