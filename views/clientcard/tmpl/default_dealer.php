@@ -43,6 +43,7 @@
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
+    <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
 
