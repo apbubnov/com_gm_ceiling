@@ -122,6 +122,23 @@ $status = $status_model->getData();
 	<?php echo JHtml::_('form.token'); ?>
 </form>
 
+<style>
+    @media (max-width: 1024px) {
+        table, table *  {
+            font-size: 10px !important;
+            padding: .1rem !important;
+            width: auto !important;
+            margin: 0 !important;
+        }
+
+        table {
+            margin: 0 -30px !important;
+            width: calc(100% + 60px) !important;
+            max-width: none !important;
+        }
+    }
+</style>
+
 <script type="text/javascript">
 
 	jQuery(document).ready(function () {
@@ -139,15 +156,6 @@ $status = $status_model->getData();
 	}
 
     var $ = jQuery;
-    $(window).resize(function(){
-        if (screen.width <= '1024') {
-            jQuery('#clientList').css('font-size', '10px');
-            jQuery('#search').css('display', 'block');
-            jQuery('.span9').css('display', 'none');
-        }
-        else {
-        }
-    });
 
     // вызовем событие resize
     $(window).resize();

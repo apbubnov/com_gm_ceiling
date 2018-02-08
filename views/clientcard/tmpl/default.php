@@ -40,6 +40,7 @@
         }
     }
 ?>
+<div class="Page">
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
     <p>
@@ -153,6 +154,7 @@
 
     </div>
 <? } ?>
+</div>
 <div id="orders-container-tar">
     <p class="caption-tar">Заказы</p>
     <table class="table table-striped table_cashbox one-touch-view" id="table_projects">
@@ -198,6 +200,28 @@
 			<p><button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
 		</div>
 	</div>
+
+
+<style>
+    @media (max-width: 1024px) {
+        .Page, .Page * {
+            font-size: 10px !important;
+        }
+        table, table * {
+            font-size: 10px !important;
+            padding: .1rem !important;
+            width: auto !important;
+            margin: 0 !important;
+            text-align: center !important;
+        }
+
+        table {
+            margin: 0 -30px !important;
+            width: calc(100% + 60px) !important;
+            max-width: none !important;
+        }
+    }
+</style>
 
 <script>
     	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
@@ -331,11 +355,6 @@
 
     jQuery(document).ready(function ()
     {
-        if (screen.width <= '1024') {
-            jQuery('#table_projects').css('font-size', '10px');
-            jQuery('td').css('padding', '0.25rem');
-        }
-        
         jQuery('#new_phone').mask('+7(999) 999-9999');
         <?php if($user->dealer_type != 1) { ?>
         document.getElementById('calls-tar').scrollTop = 9999;
@@ -519,12 +538,4 @@
             }
         });
     }
-    jQuery(window).resize(function(){
-        if (screen.width <= '1024') {
-            jQuery('#table_projects').css('font-size', '10px');
-            jQuery('td').css('padding', '0.25rem');
-        }
-    });
-
-
 </script>

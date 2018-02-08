@@ -584,7 +584,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-<div class="container">
+<div class="container ClientContainer">
     <div class="row">
             <div class="col-12 item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
@@ -1809,7 +1809,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
     <style>
         @media (max-width: 1024px) {
-            .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul * {
+            .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul *, .ClientContainer, .ClientContainer *  {
                 font-size: 10px !important;
                 padding: .1rem !important;
                 width: auto !important;
@@ -1831,6 +1831,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             }
             .tab-content .file_upload {
                 width: 15px !important;
+            }
+
+            .section_content img {
+                width: 100% !important;
             }
         }
     </style>
