@@ -340,6 +340,11 @@
         });
     });
 
+    function rb_email_click(elem)
+    {
+        jQuery("#email_comm").val(elem.value);
+    }
+
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
@@ -351,7 +356,8 @@
                 url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
                 data: {
                     user_id: user_id,
-                    email: jQuery("#email_comm").val()
+                    email: jQuery("#email_comm").val(),
+                    dealer_type: 1
                 },
                 dataType: "json",
                 async: false,
