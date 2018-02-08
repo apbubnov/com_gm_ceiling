@@ -403,6 +403,7 @@ if (count($AllGauger) == 0) {
 			else{
 				var n = noty({
 					theme: 'relax',
+                    timeout: 2000,
 					layout: 'center',
 					maxVisible: 5,
 					type: "error",
