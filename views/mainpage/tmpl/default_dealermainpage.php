@@ -16,6 +16,9 @@ JHtml::_('behavior.multiselect');
 $user = JFactory::getUser();
 $userId = $user->get('id');
 $dealerInfo = $user->getDealerInfo();
+$user_group = $user->groups;
+$_SESSION['user_group'] = $user_group;
+$_SESSION['dealer_type'] = $user->dealer_type;
 
 $model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
 

@@ -261,7 +261,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $code = $jinput->get('code', null, 'STRING');
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $result  = $users_model->acceptCommercialOfferCode($code);
-            $type = JFactory::getUser($result->user_id);
+            $type = JFactory::getUser($result->user_id)->dealer_type;
             if ($type == 3)
             {
                 $this->setRedirect(JRoute::_('/files/KP_OTD.pdf', false));

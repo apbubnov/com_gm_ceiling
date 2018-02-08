@@ -56,6 +56,8 @@ class Gm_ceilingController extends JControllerLegacy
             if ($type == NULL) {
                 $user = JFactory::getUser();
                 $groups = $user->get('groups');
+                $_SESSION['user_group'] = $groups;
+                $_SESSION['dealer_type'] = $user->dealer_type;
                 if ($task == "mainpage") {
                     if (!$user->guest) {
                         if (in_array("13", $groups)) {
