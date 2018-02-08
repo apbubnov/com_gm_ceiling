@@ -2998,7 +2998,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td>' . $item['title'] . '</td>';
                 $html .= '<td class="center">' . $item['unit'] . '</td>';
                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                $html .= '<td class="center">' . round($item['dealer_total'], 2) . '</td>';
+                $html .= '<td class="center">' . round($item['self_total'], 2) . '</td>';
                 $html .= '</tr>';
                 $price_itog += $item['self_total'];
             }
