@@ -486,10 +486,13 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['project_discount'] = $new_discount;
             $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $data["guild_data"]["total_gm_guild"];
             $ajax_return['components_sum'] = $components_sum;
+            $ajax_return['dealer_components_sum'] = $dealer_components_sum;
             $ajax_return['mounting_sum'] = $total_gm_mounting;
             $ajax_return['mounting_arr'] = $data;
             $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $data["guild_data"]["total_gm_guild"];
             $data['components_sum'] = $components_sum;
+            $data['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data["guild_data"]["total_gm_guild"];
+            $data['dealer_components_sum'] = $dealer_components_sum;
             $data['mounting_sum'] = $total_gm_mounting;
             $data['project_discount'] = $dealer->discount;
             $data["state"] = 1;
@@ -1239,16 +1242,19 @@ class Gm_ceilingHelpersGm_ceiling
             }*/
             $component_item['stack'] = 0;                                                                //Флаг, складывать ли этот компонент при сложении калькуляций
 
-            $component_item['self_price'] = $components[$key]->price;                            //Себестоимость
+            //$component_item['self_price'] = dealer_margin($components[$key]->price, 0, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);                            //Себестоимость
+            $component_item['self_price'] = $components[$key]->price;
             $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
 
             //Стоимость с маржой ГМ (для дилера)
-            $component_item['gm_price'] = margin($components[$key]->price, $gm_components_margin);
+            //$component_item['gm_price'] = margin($components[$key]->price, $gm_components_margin);
+            $component_item['gm_price'] = margin($component_item['self_price'], $gm_components_margin);
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
 
             //Стоимость с маржой ГМ и дилера (для клиента)
             //$component_item['dealer_price'] = double_margin($components[$key]->price, $gm_components_margin, $dealer_components_margin);
+            //$component_item['dealer_price'] = margin($component_item['gm_price'], $dealer_components_margin);
             $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
@@ -1275,7 +1281,9 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
 
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $component_item['dealer_price'] = double_margin($component_item['self_price'], $gm_components_margin, $dealer_components_margin);
+            //$component_item['dealer_price'] = double_margin($component_item['self_price'], $gm_components_margin, $dealer_components_margin);
+            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
 
