@@ -406,7 +406,7 @@ if (count($AllGauger) == 0) {
 					layout: 'center',
 					maxVisible: 5,
 					type: "error",
-					text: "Не выбрана дата замера и замерщик!"
+					text: "Введены не все данные!"
 				});
 			}
 		});
