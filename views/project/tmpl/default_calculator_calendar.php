@@ -975,8 +975,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             $JS_Calcs_Sum = array();
 
             foreach ($calculations as $calculation) {
-                $dealer_canvases_sum = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
-                $dealer_components_sum = double_margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/, $this->item->dealer_components_margin);
+                $dealer_canvases_sum = $calculation->dealer_canvases_sum;
+                $dealer_components_sum = $calculation->dealer_components_sum;
                 $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
 
                 //$calculation_total_discount = $calculation_total * ((100 - $this->item->project_discount) / 100);

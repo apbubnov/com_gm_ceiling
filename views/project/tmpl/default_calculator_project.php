@@ -19,8 +19,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations = $model->getProjectItems($this->item->id);
 $project_id = $this->item->id;
 foreach($calculations as $calculation) {
-	$calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, $this->item->gm_canvases_margin, $this->item->dealer_canvases_margin);
-	$calculation->dealer_components_sum = double_margin($calculation->components_sum, $this->item->gm_components_margin, $this->item->dealer_components_margin);
 	$calculation->dealer_gm_mounting_sum = double_margin($calculation->gm_mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
 
 	$calculation->calculation_total = round($calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum ,2);
@@ -107,8 +105,8 @@ else  $sb_project_id = 0;
                 $sum_transport_discount_total = 0;
                 $sum_transport_total = 0;
                 foreach ($calculations as $calculation) { ?>
-                    <?php $dealer_canvases_sum = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin); ?>
-                    <?php $dealer_components_sum = double_margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/, $this->item->dealer_components_margin); ?>
+                    <?php $dealer_canvases_sum = $calculation->dealer_canvases_sum; ?>
+                    <?php $dealer_components_sum = $calculation->dealer_components_sum; ?>
                     <?php $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin); ?>
                     <?php $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum; ?>
                     <?php $calculation_total_discount = $calculation_total * ((100 - $this->item->project_discount) / 100); ?>
