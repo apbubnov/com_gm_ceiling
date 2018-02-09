@@ -12,8 +12,8 @@ defined('_JEXEC') or die;
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
-$users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-$result_users = $users_model->getDesigners();
+$clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+$result_clients = $clients_model->getDesignersByClientName('');
 ?>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
@@ -43,14 +43,23 @@ $result_users = $users_model->getDesigners();
         </thead>
         <tbody id="tbody_designers">
         	<?php
-        		foreach ($result_users as $key => $value)
+        		foreach ($result_clients as $key => $value)
         		{
                     if ($value->refused_to_cooperate == 0)
                     {
+                        $color = '';
+                        if (is_null($value->call_id) && ($value->project_status == 0 || $value->project_status == 2))
+                        {
+                            $color = 'style="background-color: Orange;"';
+                        }
+                        else
+                        {
+                            $color = 'style="background-color: PaleGreen;"';
+                        }
         	?>
-                    <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.(int) $value->associated_client); ?>">
+                    <tr class="row<?php echo $i % 2; ?>" <?= $color ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.(int) $value->id); ?>">
     		            <td>
-    		               <?php echo $value->name; ?>
+    		               <?php echo $value->client_name; ?>
     		            </td>
                         <td>
                            <?php echo $value->client_contacts; ?>
