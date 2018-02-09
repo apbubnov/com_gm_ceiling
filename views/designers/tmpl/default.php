@@ -166,9 +166,23 @@ $result_users = $users_model->getDesigners();
                     var tbody = document.getElementById('tbody_designers');
                     tbody.innerHTML = '';
                     var html = '';
+                    var color;
                     for(var i in data)
                     {
-                        html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
+                        color = '';
+                        if (data[i].refused_to_cooperate == 1)
+                        {
+                            color = 'style="background-color: \'brown\';"';
+                        }
+                        else if (data[i].call_id == null && (data[i].project_status == 0 || data[i].project_status == 2))
+                        {
+                            color = 'style="background-color: \'red\';"';
+                        }
+                        else
+                        {
+                            color = 'style="background-color: \'green\';"';
+                        }
+                        html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].created + '</td></tr>';

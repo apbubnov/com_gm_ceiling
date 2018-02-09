@@ -351,10 +351,12 @@ if (empty($list['direction']))
 			$client_name = $db->escape($client_name);
 			$query = $db->getQuery(true);
 			$query
-				->select("`c`.*, GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`")
+				->select("`c`.*, GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_status`, `calls`.`id` AS `call_id`, `u`.`refused_to_cooperate`")
 				->from("`#__gm_ceiling_clients` as `c`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
-				->innerJoin('`rgzbn_users` AS `u` ON `c`.`id` = `u`.`associated_client`')
+				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
+				->leftJoin('(SELECT `id`,`client_id`,`project_status` FROM `#__gm_ceiling_projects` ORDER BY `id`) AS `p` ON `c`.`id` = `p`.`client_id`')
+				->leftJoin('`#__gm_ceiling_callback` AS `calls` ON `c`.`id` = `calls`.`client_id`')
 				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND `u`.`dealer_type` = 3")
 				->order('`c`.`id` DESC')
 				->group('`c`.`id`');
