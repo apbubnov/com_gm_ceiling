@@ -2837,7 +2837,7 @@ class Gm_ceilingController extends JControllerLegacy
             $components_data = array();
             $project_sum = 0;
             $counter = 0;
-        foreach ($calculations1 as $calculation) {
+        /*foreach ($calculations1 as $calculation) {
             $counter++;
             $from_db = 1;
             $save = 1;
@@ -2861,7 +2861,7 @@ class Gm_ceilingController extends JControllerLegacy
                 Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
 
             }
-        } 
+        } */
        Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
        
             
