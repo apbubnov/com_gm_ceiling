@@ -351,7 +351,7 @@ if (empty($list['direction']))
 			$client_name = $db->escape($client_name);
 			$query = $db->getQuery(true);
 			$query
-				->select("`c`.*, GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_status`, `calls`.`id` AS `call_id`, `u`.`refused_to_cooperate`")
+				->select("`c`.*, GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_status`, `calls`.`id` AS `call_id`, `u`.`refused_to_cooperate`")
 				->from("`#__gm_ceiling_clients` as `c`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
