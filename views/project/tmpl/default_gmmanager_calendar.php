@@ -31,7 +31,10 @@
     $_SESSION['user_group'] = $user_group;
     $_SESSION['dop_num'] = $dop_num;
 
-    
+Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+
     $project_total = 0;
     $project_total_discount = 0;
     $total_square = 0;

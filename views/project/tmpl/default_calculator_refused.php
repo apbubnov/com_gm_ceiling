@@ -14,6 +14,10 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 	$canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
 
+Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+
 $project_total = 0;
 $project_total_discount = 0;
 
