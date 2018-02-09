@@ -815,9 +815,9 @@
         </div>
     <?php } ?>
     </form>
-    <div class="container">
+    <div class="container containerMobile">
         <div class="row" style="padding-top: 1em;">
-            <div class="col-xl-6 item_fields project-edit front-end-edit">
+            <div class="col-12 item_fields project-edit front-end-edit">
                 <form id="form-project" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=project.approve'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                     <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>"/>
@@ -1088,7 +1088,7 @@
 
 <style>
     @media (max-width: 1024px) {
-        .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul *, .ClientContainer, .ClientContainer *  {
+        .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul *, .containerMobile, .containerMobile *  {
             font-size: 10px !important;
             padding: .1rem !important;
             width: auto !important;
