@@ -918,7 +918,10 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 
         jQuery("#rec_to_measurement").click(function () {
             jQuery("#project_status").val(1);
-            if (jQuery("#jform_project_gauger").val() == 0)
+            if (jQuery("#jform_project_gauger").val() == 0
+                || jQuery("#jform_client_name").val() == ''
+                || jQuery("#jform_address").val() == ''
+                || jQuery("#jform_house").val() == '')
             {
                 var n = noty({
                     timeout: 2000,
@@ -926,7 +929,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     layout: 'center',
                     maxVisible: 5,
                     type: "error",
-                    text: "Укажите время замера"
+                    text: "Введенны не все данные!"
                 });
             }
             else
@@ -937,7 +940,21 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 
         jQuery("#refuse_project").click(function () {
             jQuery("#project_status").val(2);
-            jQuery("#form-client").submit();
+            if (jQuery("#jform_client_name").val() == '')
+            {
+              var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Пустое имя!"
+                });
+            }
+            else
+            {
+              jQuery("#form-client").submit();
+            }
         });
 
         jQuery("#accept_changes").click(function () {
