@@ -50,7 +50,7 @@ $result_clients = $clients_model->getDesignersByClientName('');
                         $color = '';
                         if (is_null($value->call_id) && (is_null($value->project_status) || $value->project_status == 0 || $value->project_status == 2))
                         {
-                            $color = 'style="background-color: Orange;"';
+                            $color = 'style="background-color: DarkSalmon;"';
                         }
                         else
                         {
@@ -185,7 +185,7 @@ $result_clients = $clients_model->getDesignersByClientName('');
                         }
                         else if (data[i].call_id == null && (data[i].project_status == null || data[i].project_status == 0 || data[i].project_status == 2))
                         {
-                            color = 'style="background-color: Orange;"';
+                            color = 'style="background-color: DarkSalmon;"';
                         }
                         else
                         {
