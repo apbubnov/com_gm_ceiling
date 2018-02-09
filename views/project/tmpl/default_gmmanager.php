@@ -194,7 +194,7 @@ $AllMounters = $model->FindAllMounters($where);
                         <tr>
                             <th><?php echo $calculation->calculation_title; ?></th>
                             <td>
-                                <?php echo $calculation->canvases_sum + $guild_data['total_gm_guild']; ?> руб.
+                                <?php echo $calculation->canvases_sum; ?> руб.
                             </td>
                             <td>
                                 <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
