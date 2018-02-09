@@ -765,8 +765,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                         <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                         <td><?php echo $calculation->calculation_title; ?></td>
                         <td>
-                            <?php $path = "/costsheets/" . md5($calculation->id . "-2") . ".pdf"; ?>
-                            <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-2") . ".pdf", "id" => $calculation->id); ?>
+                            <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
+                            <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id); ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                             <?php } else { ?>
@@ -814,12 +814,12 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     <td><b>Отправить общую смету <b></td>
                     <td>
                         <?php
-                        $path = "/costsheets/" . md5($this->item->id . "-9") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                        $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                         <?php } else { ?>
                             -
                         <?php }
-                        $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "-9") . ".pdf", "id" => $this->item->id);
+                        $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
                         $json2 = json_encode($pdf_names); ?>
                     </td>
                     <td></td>
@@ -862,12 +862,12 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                         <td><b>Общий наряд на монтаж <b></td>
                         <td>
                             <?php
-                            $path = "/costsheets/" . md5($this->item->id . "-10") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                            $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                             <?php } else { ?>
                                 -
                             <?php }
-                            $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "-10") . ".pdf", "id" => $this->item->id);
+                            $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
                             $json2 = json_encode($pdf_names); ?>
                         </td>
                         <td></td>

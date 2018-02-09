@@ -136,7 +136,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 							<?=$calculation->components_sum;?> руб.
 						</td>
 						<td>
-							<?$path = "/costsheets/" . md5($calculation->id . "-0-0") . ".pdf";?>
+							<?$path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";?>
 							<?if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {?>
 								<a href="<?=$path;?>" class="btn btn-mini" target="_blank">Посмотреть</a>
 							<?} else {?>
@@ -155,7 +155,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 							<?=$calculation->gm_mounting_sum;?> руб.
 						</td>
 						<td>
-							<?$path = "/costsheets/" . md5($calculation->id . "-1-2") . ".pdf";?>
+							<?$path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";?>
 							<?if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) {?>
 								<a href="<?=$path;?>" class="btn btn-mini" target="_blank">Посмотреть</a>
 							<?} else {?>

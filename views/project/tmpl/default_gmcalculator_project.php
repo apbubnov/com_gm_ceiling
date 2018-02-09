@@ -225,9 +225,9 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                         <td><?php echo $calculation->calculation_title; ?></td>
                         <td>
                             <?php
-                            $path = "/costsheets/" . md5($calculation->id . "-0-0") . ".pdf";
+                            $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
 
-                            $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-0-0") . ".pdf", "id" => $calculation->id);
+                            $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
                             ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
@@ -248,8 +248,8 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                     <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                         <td><?php echo $calculation->calculation_title; ?></td>
                         <td>
-                            <?php $path = "/costsheets/" . md5($calculation->id . "-2") . ".pdf"; ?>
-                            <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "-2") . ".pdf", "id" => $calculation->id); ?>
+                            <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
+                            <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id); ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                             <?php } else { ?>

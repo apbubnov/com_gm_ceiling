@@ -76,7 +76,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                             <?php echo $calculation->canvases_sum;?> руб.
                         </td>
                         <td>
-                            <?php $path = "/costsheets/" . md5($calculation->id . "-4") . ".pdf"; ?>
+                            <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
                             <?php if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                             <?php } else { ?>
@@ -140,7 +140,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                         <?php echo  $total_components_sum  - $baget2 + $itog; ?> руб.
                     </td>
                     <td>
-                        <?php $path = "/costsheets/" . md5($this->item->id . "-8") . ".pdf"; ?>
+                        <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
                         <?php if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { ?>
                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                         <?php } else { ?>
@@ -160,7 +160,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                             <?php echo $calculation->mounting_sum ; ?> руб.
                         </td>
                         <td>
-                            <?php $path = "/costsheets/" . md5($calculation->id . "-2") . ".pdf"; ?>
+                            <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
                             <?php if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                             <?php } else { ?>

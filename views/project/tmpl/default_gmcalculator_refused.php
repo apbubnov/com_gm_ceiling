@@ -139,7 +139,7 @@ $project_total_discount = round($project_total_discount, 2);
 							<?php echo $calculation->calculation_total_discount; ?> руб.
 						</td>
 						<td>
-							<?php $path = "/costsheets/" . md5($calculation->id . "-0-0") . ".pdf"; ?>
+							<?php $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf"; ?>
 							<?php if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { ?>
 								<a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
 							<?php } else { ?>
