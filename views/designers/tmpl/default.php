@@ -48,7 +48,7 @@ $result_clients = $clients_model->getDesignersByClientName('');
                     if ($value->refused_to_cooperate == 0)
                     {
                         $color = '';
-                        if (is_null($value->call_id) && ($value->project_status == 0 || $value->project_status == 2))
+                        if (is_null($value->call_id) && (is_null($value->project_status) || $value->project_status == 0 || $value->project_status == 2))
                         {
                             $color = 'style="background-color: Orange;"';
                         }
@@ -183,7 +183,7 @@ $result_clients = $clients_model->getDesignersByClientName('');
                         {
                             color = 'style="background-color: DarkGrey;"';
                         }
-                        else if (data[i].call_id == null && (data[i].project_status == 0 || data[i].project_status == 2))
+                        else if (data[i].call_id == null && (data[i].project_status == null || data[i].project_status == 0 || data[i].project_status == 2))
                         {
                             color = 'style="background-color: Orange;"';
                         }
