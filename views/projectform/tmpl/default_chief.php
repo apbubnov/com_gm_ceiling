@@ -176,8 +176,7 @@
             <div class="tab-pane active" id="calculationAll" role="tabpanel">
                 <table>
                     <tr>
-                        <th class="section_header" id="sh_ceilings">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
-                        <th></th>
+                        <th class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?php
                         $project_total = 0;
@@ -242,7 +241,7 @@
                             $JS_Calcs_Sum[] = round($calculation_total, 0);
                     ?>
                     <tr class="section_ceilings">
-                        <td class="include_calculation">
+                        <td class="include_calculation" colspan="3">
                             <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
                             <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
                             <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
@@ -256,8 +255,7 @@
                     </tr>
                     <tr class="section_ceilings" id="">
                         <td>S/P :</td>
-                        <td><?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м</td>
-                        <td></td>
+                        <td colspan="2"><?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м</td>
                     </tr>
                     <tr class="section_ceilings">
                         <?php if ($calculation->discount != 0) { ?>
@@ -268,8 +266,7 @@
                             </td>
                         <?php } else { ?>
                             <td>Итого</td>
-                            <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб.</td>
-                            <td></td>
+                            <td id="calculation_total" colspan="2"> <?php echo round($calculation_total, 0); ?> руб.</td>
                         <?php } ?>
                     </tr>
                     <?php if($calculation->discount > 0) $kol++;} ?>
@@ -283,12 +280,10 @@
                         </th>
                     </tr>
                     <tr>
-                        <th>Транспортные расходы</th>
-                        <th></th>
-                        <th></th>
+                        <th colspan="3">Транспортные расходы</th>
                     </tr>
                     <tr>
-                        <td style="width: 45%;">
+                        <td style="width: 45%;" colspan="3">
                             <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
                             <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
                                 <div class="col-sm-4">
@@ -335,8 +330,6 @@
                             </div>
                             <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
                         </td>
-                        <th></th>
-                        <th></th>
                     </tr>
                     <tr>
                         <?
@@ -348,15 +341,13 @@
                             $project_total = $project_total + $sum_transport;
                             $project_total_discount = $project_total_discount + $sum_transport;
                         ?>
-                        <th> Транспорт</th>
-                        <td id="transport_sum"> <?=$sum_transport;?> руб.</td>
+                        <th>Транспорт</th>
+                        <td colspan="2" id="transport_sum"> <?=$sum_transport;?> руб.</td>
                         <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
-                        <td></td>
                     </tr>
                     <tr>
                         <?php if ($kol > 0) { ?>
-                            <th>Итого/ - %:
-                            </th>
+                            <th>Итого/ - %:</th>
                             <th id="project_total"><span class="sum"><?php echo round($project_total, 0); ?></span> руб. /</th>
                             <th id="project_total_discount">
                             <span class="sum">
@@ -368,7 +359,7 @@
                         <?php }
                         else { ?>
                         <th>Итого</th>
-                        <th id="project_total">
+                        <th id="project_total" colspan="2">
                         <span class="sum">
                             <?php
                             if ($this->item->new_project_sum == 0) {
@@ -387,19 +378,18 @@
                     </tr>
                     <?php if ($user->dealer_type != 2) { ?>
                         <tr>
-                        <td></td>
                         <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
                         <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
                         <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
                         </tr>
                     <? } ?>
                     <tr>
-                        <th class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                        <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?php foreach ($calculations as $calculation) { ?>
                     <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
                         <td><?php echo $calculation->calculation_title; ?></td>
-                        <td>
+                        <td colspan="2">
                             <?php
                             $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
 
@@ -416,10 +406,10 @@
                     </tr>
                     <?php if (count($calculations) > 0) { ?>
                         <tr class="section_estimate" style="display:none;">
-                            <td><b>Отправить все сметы <b></td>
+                            <td colspan="3"><b>Отправить все сметы <b></td>
                         </tr>
                         <tr class="section_estimate" style="display:none;">
-                            <td>
+                            <td colspan="2">
                                 <div class="email-all" style="float: left;">
                                     <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;"
                                         placeholder="Адрес эл.почты" type="text">
@@ -449,12 +439,12 @@
                     <?php } ?>
                     <?php if ($this->item->project_mounter != 'Монтажная бригада ГМ') { ?>
                         <tr>
-                            <th id="sh_mount"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                            <th id="sh_mount" colspan="3"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                         </tr>
                         <?php foreach ($calculations as $calculation) { ?>
                             <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                             <td><?php echo $calculation->calculation_title; ?></td>
-                            <td>
+                            <td colspan="2">
                                 <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
                                 <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id); ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
@@ -468,10 +458,10 @@
                         </tr>
                         <?php if (count($calculations) > 0) { ?>
                             <tr class="section_mount" style="display:none;">
-                                <td><b>Отправить все наряды на монтаж<b></td>
+                                <td colspan="3"><b>Отправить все наряды на монтаж<b></td>
                             </tr>
                             <tr class="section_mount" style="display:none;">
-                                <td>
+                                <td colspan="2">
                                     <div class="email-all" style="float: left;">
                                         <input name="all-email" id="all-email2" class="form-control" style="width:200px;"
                                                 value="" placeholder="Адрес эл.почты" type="text">
@@ -500,7 +490,7 @@
                     <!-------------------------------- Общая смета для клиента ------------------------------------------>
                     <tr>
                         <td><b>Отправить общую смету <b></td>
-                        <td>
+                        <td colspan="2">
                             <?php
                             $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
@@ -514,7 +504,7 @@
                     </tr>
                     <?  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                         <tr >
-                            <td>
+                            <td colspan="2">
                                 <div class="email-all" style="float: left;">
                                     <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;"
                                         placeholder="Адрес эл.почты" type="text">
@@ -538,17 +528,13 @@
                                 </div>
                             </td>
                             <td>
-
                                 <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
-                            </td>
-                            <td>
-
                             </td>
                         </tr>
                         <!-- общий наряд на монтаж--> 
                     <tr>
                     <td><b>Общий наряд на монтаж <b></td>
-                    <td>
+                    <td colspan="2">
                         <?php
                         $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
@@ -558,7 +544,6 @@
                         $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
                         $json2 = json_encode($pdf_names); ?>
                     </td>
-                    <td></td>
                     </tr>
                     <? }?>
                 </table>
