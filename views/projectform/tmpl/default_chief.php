@@ -1101,6 +1101,38 @@
     </div>
 <?php } ?>
 
+<style>
+    @media (max-width: 1024px) {
+        .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul *, .ClientContainer, .ClientContainer *  {
+            font-size: 10px !important;
+            padding: .1rem !important;
+            width: auto !important;
+            margin: 0 !important;
+        }
+
+        .project_activation div, .tab-content div {
+            display: inline-block;
+            width: auto;
+            float: left;
+        }
+
+        ul, .tab-content {
+            margin: 0 -30px !important;
+            width: calc(100% + 60px) !important;
+        }
+        .tab-content .file_data {
+            min-width: auto !important;
+        }
+        .tab-content .file_upload {
+            width: 15px !important;
+        }
+
+        .section_content img {
+            width: 100% !important;
+        }
+    }
+</style>
+
 <script>
 
     var preloader = '<?=parent::getPreloaderNotJS();?>';
