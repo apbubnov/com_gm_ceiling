@@ -103,9 +103,9 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
         <div class="tab-pane active" id="summary" role="tabpanel">
             <table class="table calculation_sum">
                 <tr>
-                    <th class="section_header" id="sh_ceilings">Потолки <i class="fa fa-sort-desc"
-                                                                           aria-hidden="true"></i></th>
-                    <th></th>
+                    <th colspan="3" class="section_header" id="sh_ceilings">
+                        Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                    </th>
                 </tr>
                 <?php $project_total = 0;
                 $project_total_discount = 0;
@@ -201,6 +201,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                         <?php echo $total_perimeter; ?> м
                     </th>
                 </tr>
+                <?if($tmp != 0):?>
                 <tr>
                     <? if ($tmp == 1 && $sum_transport_discount_total != 0) { ?>
                         <th> Транспорт / - %</th>
@@ -220,6 +221,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                         <td></td>
                     <? } ?>
                 </tr>
+                <?endif;?>
                 <tr>
 
                     <?php if ($kol > 0) { ?>
@@ -241,18 +243,18 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                     else { ?>
                     <th colspan="2">Итого</th>
                     <th id="project_total">
-                <span class="sum">
-                    <?php
-                    if ($this->item->new_project_sum == 0) {
-                        if ($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0) {
-                            $project_total = 3500;
+                    <span class="sum">
+                        <?php
+                        if ($this->item->new_project_sum == 0) {
+                            if ($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0) {
+                                $project_total = 3500;
+                            }
+                            echo round($project_total_discount, 2);
+                        } else {
+                            echo round($this->item->new_project_sum, 2);
                         }
-                        echo round($project_total_discount, 2);
-                    } else {
-                        echo round($this->item->new_project_sum, 2);
-                    }
-                    } ?>
-            </span>
+                        } ?>
+                    </span>
                         <span class="dop" style="font-size: 9px;">
                 <? if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
                     * минимальная сумма заказа 3500р.<? } ?>
@@ -260,15 +262,13 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                     </th>
                 </tr>
                 <tr>
-                    <th class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
+                    <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
                                                                           aria-hidden="true"></i></th>
                 </tr>
-                <?php foreach ($calculations
-
-                               as $calculation) { ?>
+                <?php foreach ($calculations as $calculation) { ?>
                 <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
                     <td><?php echo $calculation->calculation_title; ?></td>
-                    <td>
+                    <td colspan="2">
                         <?php
                         $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
 
@@ -280,8 +280,8 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                             -
                         <?php } ?>
                     </td>
-                    <?php } ?>
                 </tr>
+                 <?php } ?>
                 <?php if ($this->item->project_mounter != 'Монтажная бригада ГМ') { ?>
                 <tr>
                     <th id="sh_mount"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
@@ -307,12 +307,39 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                     <? } ?>
                 </tr>
                 <tr>
-                    <th colspan="2">Стоймость работ "Гильдии Мастеров"</th>
+                    <th colspan="2"> Стоймость работ и комплектующих "Гильдии Мастеров"</th>
                     <td>
                         <?= abs(floatval($recoil_map_project->sum)); ?>
                     </td>
                 </tr>
-
+                <tr class="head_comsumables" style="cursor: pointer;">
+                    <th colspan="3">
+                        Накладные <i class="fa fa-sort-asc" aria-hidden="true"></i>
+                    </th>
+                </tr>
+                <?foreach ($calculations as $calculation):?>
+                <tr class="section_comsumables">
+                    <th><?=$calculation->calculation_title;?></th>
+                    <td>
+                        <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
+                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                            <a href="<?php echo $path; ?>" class="btn btn-secondary"
+                               target="_blank" >Потолок</a>
+                        <?php } else { ?>
+                            -
+                        <?php } ?>
+                    </td>
+                    <td>
+                        <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
+                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                            <a href="<?php echo $path; ?>" class="btn btn-secondary"
+                               target="_blank">Комплектующие</a>
+                        <?php } else { ?>
+                            -
+                        <?php } ?>
+                    </td>
+                </tr>
+                <?endforeach;?>
             </table>
         </div>
         <?php foreach ($calculations as $k => $calculation) { ?>
@@ -535,7 +562,23 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
     </div>
 
     <script>
+        var $ = jQuery;
         jQuery(document).ready(function () {
+            $(".head_comsumables").click(function () {
+                e = $(this);
+                if (e.val() === "") e.val(true);
+                if (e.val() === false) {
+                    e.find("i").removeClass("fa-sort-desc").addClass("fa-sort-asc");
+                    $(".section_comsumables").show();
+                } else {
+                    e.find("i").removeClass("fa-sort-asc").addClass("fa-sort-desc");
+                    $(".section_comsumables").hide();
+                }
+                e.val(!e.val());
+            });
+
+
+
             var id = "<? echo $sb_project_id; ?>";
             orderId = id != 0 ? id : "";
             jQuery.ajax({
