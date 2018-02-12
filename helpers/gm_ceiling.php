@@ -3107,7 +3107,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody>';
         $html .= '</table>';
         $html .= '<div align="center" style="width: 100%;">';
-        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%; min-height: 800px;"/>';
+        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 700px;"/>';
         $html .= '</div>';
         $filename = md5($calc_id . 'cutpdf') . '.pdf';
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
