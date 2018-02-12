@@ -80,6 +80,32 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	function getDataForProject($project_id = null) {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+
+        $query
+            ->select('recoil_id')
+            ->select('date_time')
+            ->select('sum')
+            ->from('#__gm_ceiling_recoil_map_project');
+
+        if (empty($project_id))
+            $query->where("project_id IS NOT NULL");
+        else
+            $query->where("project_id = '$project_id'");
+
+        $db->setQuery($query);
+
+        $items = null;
+        if (empty($project_id))
+            $items = $db->loadObjectList();
+        else
+            $items = $db->loadObject();
+
+        return $items;
+    }
 	
 
 	function save($id_recoil,$id_project,$sum)
