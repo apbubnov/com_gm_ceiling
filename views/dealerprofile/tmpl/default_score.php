@@ -54,12 +54,7 @@ $rest = -($total_sum) - $contributed;
             <td class="one-touch project"></td>
             <td class="one-touch sum"></td>
         </tr>
-        <tr style="border: 1px solid #414099; display: none;"  id="TrClone2" >
-            <th class="right title" colspan="2"> ИТОГО: </th>
-            <th class="center itog"></th>
-        </tr>
         </thead>
-
         <tbody>
         <?php foreach ($items as $i => $item) : ?>
             <?php $canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
@@ -84,11 +79,13 @@ $rest = -($total_sum) - $contributed;
                 <td class="one-touch"> <?php echo $item->sum; ?> </td>
             </tr>
         <?php endforeach; ?>
-        <tr style="border: 1px solid #414099">
-            <th class="right" colspan="2"> ИТОГО: </th>
-            <th class="center itog"><?= $rest ? round(-$rest,2) : 0; ?> руб.</th>
-        </tr>
         </tbody>
+        <tfoot>
+            <tr style="border: 1px solid #414099">
+                <th class="right" colspan="2"> ИТОГО: </th>
+                <th class="center itog"><span><?= $rest ? round(-$rest,2) : 0; ?></span> руб.</th>
+            </tr>
+        </tfoot>
     </table>
 
     <input type="hidden" name="task" value=""/>
@@ -103,51 +100,66 @@ $rest = -($total_sum) - $contributed;
     {
         var date1 = jQuery("#c_date1").val();
         var date2 = jQuery("#c_date2").val();
-        jQuery.ajax({
-            type: "POST",
-            url: "/index.php?option=com_gm_ceiling&task=filterDateScore",
-            data: {
-                date1: date1,
-                date2: date2
-            },
-            dataType: "json",
-            async: true,
-            cache: false,
-            success: function (data) {
-                console.log(data);
-                var list = $("#ScoreList tbody");
-                list.empty();
-                var trItog = $("#TrClone2").clone();
-                for(i=0;i<data.length;i++){
-                    var tr = $("#TrClone").clone();
-
-                    tr.show();
-                    tr.find(".date").text(data[i].date_time);
-                    if (data[i].project_id != null){
-                        tr.find(".project").text(data[i].project_id);
-                        tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
+        if(date1 <= date2) {
+            jQuery.ajax({
+                type: "POST",
+                url: "/index.php?option=com_gm_ceiling&task=filterDateScore",
+                data: {
+                    date1: date1,
+                    date2: date2
+                },
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (data) {
+                    console.log(data);
+                    var list = $("#ScoreList tbody");
+                    var itog = 0;
+                    list.empty();
+                    var trFoot = $("#ScoreList tfoot")
+                    var trItog = $("#TrClone2").clone();
+                    for(i=0;i<data.length;i++){
+                        var tr = $("#TrClone").clone();
+                        tr.show();
+                        tr.find(".date").text(data[i].date_time);
+                        if (data[i].project_id != null){
+                            tr.find(".project").text(data[i].project_id);
+                            tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
+                        }
+                        else tr.find(".project").text("-");
+                        tr.find(".sum").text(data[i].sum);
+                        itog += parseFloat(data[i].sum);
+                        list.append(tr);
                     }
-                    tr.find(".sum").text(data[i].sum);
-
-                    list.append(tr);
+                    trFoot.find(".itog span").text(itog);
+                    list.append(trItog);
+                    OpenPage();
+                },
+                timeout: 50000,
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
                 }
-                trItog.find(".title").text("ИТОГО");
-                list.append(trItog);
-                OpenPage();
-            },
-            timeout: 50000,
-            error: function (data) {
-                console.log(data);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
-            }
-        });
+            });
+        }
+        else {
+            noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Дата начала не должна превышать дату конца!"
+            });
+        }
+
     });
     function OpenPage() {
         var e = jQuery("[data-href]");
