@@ -1943,7 +1943,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
         jQuery("#refuse_partnership").click(function () {
             jQuery("#project_status").val(15);
-            if(jQuery("#selected_advt").val() == 0 && jQuery("advt_id") == ""){
+            if(jQuery("#selected_advt").val() == 0 && jQuery("#advt_id").val() == ""){
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -1978,7 +1978,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                         type: "error",
                         text: "Укажите время замера"
                     });
-                } else if(jQuery("#selected_advt").val() == 0 && jQuery("advt_id") == ""){
+                } else if(jQuery("#selected_advt").val() == 0 && jQuery("#advt_id").val() == ""){
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -1992,7 +1992,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                     jQuery("#form-client").submit();
                 }
             } else if (jQuery("#project_status").val() == 2) {
-                if(jQuery("#selected_advt").val() == 0 && jQuery("advt_id") == ""){
+                if(jQuery("#selected_advt").val() == 0 && jQuery("#advt_id").val() == ""){
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
