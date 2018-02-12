@@ -214,7 +214,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                 <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
-                    <input name="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
+                    <input name="advt_id" id="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
                     <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
                     <input name="status" id="project_status" value="" type="hidden">
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
@@ -1384,7 +1384,11 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
     }
     //------------------------------------------
 
-    jQuery(document).ready(function () {
+    jQuery(document).ready(function() {
+        if (jQuery("#selected_advt"))
+        {
+            jQuery("#selected_advt").val(jQuery("#advt_choose").val());
+        }
 
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         
@@ -1939,10 +1943,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
         jQuery("#refuse_partnership").click(function () {
             jQuery("#project_status").val(15);
-            if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){
-                jQuery("#form-client").submit();
-            }
-            else {
+            if(jQuery("#selected_advt").val() == 0 && jQuery("advt_id") == ""){
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -1951,6 +1952,9 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                     type: "error",
                     text: "Укажите рекламу"
                 });
+            }
+            else {
+                jQuery("#form-client").submit();
             }
         });
 
@@ -1974,10 +1978,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                         type: "error",
                         text: "Укажите время замера"
                     });
-                } else if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){
-                    jQuery("#form-client").submit();
-                }
-                else {
+                } else if(jQuery("#selected_advt").val() == 0 && jQuery("advt_id") == ""){
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -1986,12 +1987,12 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                         type: "error",
                         text: "Укажите рекламу"
                     });
+                }
+                else {
+                    jQuery("#form-client").submit();
                 }
             } else if (jQuery("#project_status").val() == 2) {
-                if(jQuery("#selected_advt").val() != 0||jQuery("advt_id")!=""){
-                    jQuery("#form-client").submit();
-                }
-                else {
+                if(jQuery("#selected_advt").val() == 0 && jQuery("advt_id") == ""){
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
@@ -2000,6 +2001,9 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                         type: "error",
                         text: "Укажите рекламу"
                     });
+                }
+                else {
+                    jQuery("#form-client").submit();
                 }
             }
         });
