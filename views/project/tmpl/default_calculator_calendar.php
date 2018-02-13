@@ -113,13 +113,21 @@ if ($month1 == 12) {
     $month2++;
     $year2 = $year1;
 }
-$FlagCalendar = [2, $user->dealer_id];
+if ($user->dealer_type == 1 && $user->dealer_mounters == 1) {
+    $FlagCalendar = [2, 1];
+} else {
+    $FlagCalendar = [2, $user->dealer_id];
+}
 $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
 $calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
 //----------------------------------------------------------------------------------
 
 // все бригады
-$Allbrigades = $model->FindAllbrigades($user->dealer_id);
+if ($user->dealer_type == 1 && $user->dealer_mounters == 1) {
+    $Allbrigades = $model->FindAllbrigades(1);
+} else {
+    $Allbrigades = $model->FindAllbrigades($user->dealer_id);
+}
 $AllMounters = [];
 if (count($Allbrigades) == 0) {
     array_push($Allbrigades, ["id"=>$userId, "name"=>$user->get('name')]);
@@ -261,6 +269,7 @@ $Transport = $mount_model->getDataAll();
 $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
 
 ?>
+
 <?=parent::getPreloader();?>
 <?/*print_r($Client);*/?>
 
@@ -561,8 +570,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         this.dataset.show = show;
     }
 </script>
+
 <?endif;?>
+
 <?if(true):?>
+
 <style>
     @media screen and (max-width: 500px) {
         #table1 {
@@ -574,6 +586,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         }
     }
 </style>
+
 <?= parent::getButtonBack(); ?>
 
 <h2 class="center">Просмотр проекта</h2>
@@ -1854,7 +1867,6 @@ var $ = jQuery;
         }
     });
 
-
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
         jQuery('#modal_window_container').addClass("submit");
@@ -1967,7 +1979,7 @@ var $ = jQuery;
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
             data: {
                 id: <?php echo $userId; ?>,
-                id_dealer: <?php echo $user->dealer_id; ?>,
+                id_dealer: <?php if ($user->dealer_type == 1 && $user->dealer_mounters == 1) { echo 1; } else { echo $user->dealer_id; } ?>,
                 flag: 2,
                 month: month,
                 year: year,
@@ -1998,7 +2010,7 @@ var $ = jQuery;
                 id: <?php echo $userId; ?>,
                 month: month,
                 year: year,
-                id_dealer: <?php echo $user->dealer_id; ?>,
+                id_dealer: <?php if ($user->dealer_type == 1 && $user->dealer_mounters == 1) { echo 1; } else { echo $user->dealer_id; } ?>,
                 flag: 2,
             },
             success: function (msg) {
@@ -2196,7 +2208,6 @@ var $ = jQuery;
                 }
             });
         });
-        
 
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
@@ -2221,7 +2232,7 @@ var $ = jQuery;
                 url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyMounters",
                 data: {
                     date: date,
-                    dealer: <?php echo $user->dealer_id; ?>,
+                    dealer: <?php if ($user->dealer_type == 1 && $user->dealer_mounters == 1) { echo 1; } else { echo $user->dealer_id; } ?>,
                 },
                 success: function(data) {
                     window.DataOfProject = JSON.parse(data);
