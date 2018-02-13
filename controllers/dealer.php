@@ -80,9 +80,10 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 	        $phone = $jinput->get('phone', null, 'STRING');
 			//Создание клиента
 			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
-			$client_data['client_name'] = $name;
+			$client_data['client_name'] = preg_replace('\'\'\"\"', '', $name);
 			$client_data['manager_id'] = $user->id;
 			$client_data['client_contacts'] = $phone;
+
 			$client_id = $clientform_model->save($client_data);
 			if ($client_id == 'client_found')
 			{
