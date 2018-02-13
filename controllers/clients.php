@@ -44,4 +44,23 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	public function searchClients($search)
+	{
+		try
+		{
+            $jinput = JFactory::getApplication()->input;
+            $search = $jinput->get('search_text', '', 'STRING');
+            $model_clients = $this->getModel('clients', 'Gm_ceilingModel');
+            $result = $model->searchClients($search);
+			return $result;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }
