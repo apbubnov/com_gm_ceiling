@@ -83,6 +83,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 			$client_data['client_name'] = $name;
 			$client_data['manager_id'] = $user->id;
 			$client_data['client_contacts'] = $phone;
+
 			$client_id = $clientform_model->save($client_data);
 			if ($client_id == 'client_found')
 			{
