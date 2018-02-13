@@ -373,6 +373,38 @@ if (empty($list['direction']))
         }
 	}
 
+	public function searchClients($search)
+	{
+		try
+		{
+			$user = JFactory::getUser();
+			$db    = JFactory::getDbo();
+			$search = $db->escape($search);
+			$query = $db->getQuery(true);
+			$query
+				->select("`c`.*, GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_info`, `u`.`dealer_type`")
+				->from("`#__gm_ceiling_clients` as `c`")
+				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
+				->leftJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
+				->leftJoin('(SELECT `id`,`client_id`,`project_status`,`project_info` FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) AS `p` ON `c`.`id` = `p`.`client_id`')
+				->where("`c`.`client_name` LIKE '%$search%' OR
+					`b`.`phone` LIKE '%$search%' OR
+					`p`.`project_info` LIKE '%$search%'")
+				->group('`c`.`id`')
+				->order('`c`.`id` DESC');
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			return $items;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 	public function getItem($id)
     {
     	try
