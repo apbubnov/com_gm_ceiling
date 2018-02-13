@@ -53,7 +53,7 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
             $search = $jinput->get('search_text', '', 'STRING');
             $model_clients = $this->getModel('clients', 'Gm_ceilingModel');
             $result = $model_clients->searchClients($search);
-			return json_encode($result);
+			return json_decode($result);
 		}
 		catch(Exception $e)
         {
