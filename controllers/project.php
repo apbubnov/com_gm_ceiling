@@ -554,6 +554,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					}
                 }
             }
+            unset($_SESSION['FIO'],$_SESSION['address'],$_SESSION['house'],$_SESSION['bdq'],$_SESSION['apartment'],$_SESSION['porch'],$_SESSION['floor'],$_SESSION['code'],$_SESSION['date'],$_SESSION['time'],$_SESSION['phones'],$_SESSION['manager_comment'],$_SESSION['comments'],$_SESSION['url'],$_SESSION['gauger']);
         }
 		catch(Exception $e)
         {
