@@ -110,6 +110,7 @@ $_SESSION['dop_num'] = $dop_num;
                 async: false,
                 timeout: 20000,
                 error: function(data){
+                    console.log(data);
                     var n = noty({
                         timeout: 2000,
                         theme: 'relax',
