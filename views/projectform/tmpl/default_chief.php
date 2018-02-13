@@ -962,15 +962,15 @@
                             <td><?php echo $this->item->project_info; ?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_MANAGER_NOTE'); ?></th>
+                            <th>Примечание менеджера</th>
                             <td><?php echo $this->item->gm_manager_note; ?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CALCULATOR_NOTE'); ?></th>
+                            <th>Примечание замерщика</th>
                             <td><?php echo $this->item->gm_calculator_note; ?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CHIEF_NOTE'); ?></th>
+                            <th>Примечание начальника МС</th>
                             <td><textarea name="jform[gm_chief_note]" id="jform_gm_chief_note" placeholder="Примечание начальника МС ГМ" aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea></td>
                         </tr>
                         <tr>
