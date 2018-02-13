@@ -1308,7 +1308,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     $json2 = json_encode($pdf_names); ?>
                 </td>
             </tr>
-            <?  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+            <? if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
             <tr >
                 <td colspan="2">
                     <div class="email-all" style="float: left;">
@@ -1336,6 +1336,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <td><button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button></td>
             </tr>
             <? }?>
+            <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
             <!-- общий наряд на монтаж--> 
              <tr>
                 <td colspan="2"><b>Общий наряд на монтаж <b></td>
@@ -1350,6 +1351,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     $json2 = json_encode($pdf_names); ?>
                 </td>
             </tr>
+            <?php } ?>
             <tr>
                 <td colspan="3">
                     <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
