@@ -1185,15 +1185,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if ($data->project_status == 1 ) {
 				if($type === "gmchief") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=gaugings', false));
-				} elseif ($type === "chief") { // && $user->dealer_type == 1 && $old_date
+				} elseif ($type === "chief") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings', false));
-				} //else {
-					//$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
-				//}
+				}
 			} else {
 				if($type === "gmchief") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
 				} elseif ($type === "chief" && $user->dealer_type == 1 && $old_date) {
+					//тут нужна проверка в неназначенные или в назначенные редиректить
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
 				} else {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
