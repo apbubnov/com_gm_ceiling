@@ -1172,6 +1172,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if ($data->project_mounter != $old_mounter) {
 				$model->AddComment(2, $data);
 			}
+			// оповещение менеджерам
+			if ($user->dealer_type == 1 && $data->project_mounting_date != $data->old_date) {
+				Gm_ceilingHelpersGm_ceiling::notify($data, 12);
+			}
 
             $return = $model->approve($data);
             

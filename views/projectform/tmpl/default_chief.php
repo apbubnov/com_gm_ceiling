@@ -971,7 +971,7 @@
                         </tr>
                         <tr>
                             <th>Примечание начальника МС</th>
-                            <td><textarea name="jform[gm_chief_note]" id="jform_gm_chief_note" placeholder="Примечание начальника МС ГМ" aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea></td>
+                            <td><textarea name="jform[gm_chief_note]" id="jform_gm_chief_note" placeholder="Примечание начальника МС" aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea></td>
                         </tr>
                         <tr>
                             <?php if ($this->item->project_status <= 4) { ?>

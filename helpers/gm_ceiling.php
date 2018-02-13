@@ -3775,39 +3775,25 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Замер отменен');
             $mailer->setBody($body);
             $mailer->addRecipient($user->email);
-        } elseif ($type == 10) {
-            // уведомление о изменении даты замера
-            $user = JFactory::getUser($data->project_calculator);
+        } elseif ($type == 12) {
+            // уведомление для менеджеров о изменении даты монтажа от дилеров
+            $user = JFactory::getUser($data->read_by_manager);
             $dopinfo = $client->getInfo($data->id_client);
             
-            $body = "Здравствуйте, " . $user->name . ". У договора " . $data->id . " изменилась дата(время) замера!\n\n";
+            $body = "Здравствуйте, " . $user->name . ". У договора (дилера) " . $data->id . " изменилась дата(время) монтажа!\n\n";
             $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
             $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
             $body .= "Адрес: " . $data->project_info . "\n";
-            $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
-            if ($data->old_date_gauger != "0000-00-00 00:00:00") {
-            $body .= "Старая дата и время замера: " . $jdate1->format('d.m.Y H:i') . "\n";
+            $jdate1 = new JDate(JFactory::getDate($data->old_date));
+            if ($data->old_date != "0000-00-00 00:00:00") {
+            $body .= "Старая дата и время монтажа: " . $jdate1->format('d.m.Y H:i') . "\n";
             }
             $jdate = new JDate(JFactory::getDate($data->project_calculation_date));
             if ($data->project_calculation_date != "0000-00-00 00:00:00") {
-                $body .= "Новая дата и время замера: " . $jdate->format('d.m.Y H:i') . "\n";
+                $body .= "Новая дата и время монтажа: " . $jdate->format('d.m.Y H:i') . "\n";
             }
-            $body .= "Примечание менеджера ГМ: " . $data->gm_manager_note . "\n";
             $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
-            $mailer->setSubject('Изменена дата(время) замера');
-            $mailer->setBody($body);
-            $mailer->addRecipient($user->email);
-        } elseif ($type == 11) {
-            // уведомление о изменнеии замерщика
-            $user = JFactory::getUser($data->project_calculator);
-            $dopinfo = $client->getInfo($data->id_client);
-
-            $jdate1 = new JDate(JFactory::getDate($data->old_date_gauger));
-            $body = "Здравствуйте, " . $user->name . ". замер договора " . $data->id . " на время:  " . $jdate1->format('d.m.Y H:i') . "  был отменен !\n\n";
-            $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
-            $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
-            $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
-            $mailer->setSubject('Замер отменен');
+            $mailer->setSubject('Изменена дата(время) монтажа дилера');
             $mailer->setBody($body);
             $mailer->addRecipient($user->email);
         }
