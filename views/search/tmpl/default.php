@@ -98,6 +98,14 @@ $_SESSION['dop_num'] = $dop_num;
                             html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&id=' + data[i].id + '">';
                             d_type = 'Клиент';
                         }
+                        if (data[i].project_info == null)
+                        {
+                            data[i].project_info = '-';
+                        }
+                        if (data[i].client_contacts == null)
+                        {
+                            data[i].client_contacts = '-';
+                        }
                         html += '<td>' + data[i].created + '</td>';
                         html += '<td>' + data[i].client_name + '<br>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].project_info + '</td>';
