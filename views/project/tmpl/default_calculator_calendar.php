@@ -1240,7 +1240,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
             <?php } ?>
 
-            <?php if ($this->item->project_mounter != 'Монтажная бригада ГМ') { ?>
+            <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                 <tr>
                     <th id="sh_mount" colspan="3"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                 </tr>
