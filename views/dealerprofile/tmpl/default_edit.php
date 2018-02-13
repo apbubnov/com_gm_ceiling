@@ -67,6 +67,7 @@ $mount = $model_mount->getDataAll();
 			</div>
 		</div>
 	</div>
+	<?php if ($user->dealer_type == 1 && $user->dealer_mounters == 0): ?>
 	<h3>
 		Редактирование прайса монтажа
 	</h3>
@@ -388,6 +389,7 @@ $mount = $model_mount->getDataAll();
 			</div>
 		</div>
 	</div>
+	<?php endif ?>
 	<div  class = "col-md-12" style="margin-top:15px;">
 		<div  class = "col-md-4">
 		</div>
