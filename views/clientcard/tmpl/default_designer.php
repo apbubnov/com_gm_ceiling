@@ -514,7 +514,7 @@
 
 
     jQuery("#back_btn").click(function (){
-        location.href = '/index.php?option=com_gm_ceiling&view=designers';
+        history.go(-1);
     });
 
     jQuery("#add_comment").click(function ()
