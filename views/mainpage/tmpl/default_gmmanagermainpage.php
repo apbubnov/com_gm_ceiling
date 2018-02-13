@@ -21,6 +21,7 @@ $dop_num = $dop_num_model->getData($userId)->dop_number;
 $_SESSION['user_group'] = $user_group;
 $_SESSION['dop_num'] = $dop_num;
 ?>
+
 <style>
 	.columns-tar {
 		display: inline-block;
@@ -106,6 +107,9 @@ $_SESSION['dop_num'] = $dop_num;
 		</p>
 		<p>
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=colors', false); ?>"><i class="fa fa-eyedropper" aria-hidden="true"></i> Цвета полотен</a>
+		</p>
+		<p>
+			<a class="btn btn-large btn-primary" href=""><i class="fa fa-search"></i> Поиск</a>
 		</p>
 	</div>
 </div>
