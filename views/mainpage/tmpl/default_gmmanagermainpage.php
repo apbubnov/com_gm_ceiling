@@ -21,6 +21,7 @@ $dop_num = $dop_num_model->getData($userId)->dop_number;
 $_SESSION['user_group'] = $user_group;
 $_SESSION['dop_num'] = $dop_num;
 ?>
+
 <style>
 	.columns-tar {
 		display: inline-block;
@@ -54,6 +55,9 @@ $_SESSION['dop_num'] = $dop_num;
 		</p>
 		<p>
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fa fa-usd" aria-hidden="true"></i> Касса</a>
+		</p>
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=search', false); ?>"><i class="fa fa-search"></i> Поиск</a>
 		</p>
 		<!-- <p>
 			<a class="btn btn-large btn-primary" href="<?php //echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=clientorders', false); ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Клиентские заказы</a>
