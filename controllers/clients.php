@@ -52,7 +52,7 @@ class Gm_ceilingControllerClients extends Gm_ceilingController
             $jinput = JFactory::getApplication()->input;
             $search = $jinput->get('search_text', '', 'STRING');
             $model_clients = $this->getModel('clients', 'Gm_ceilingModel');
-            $result = $model->searchClients($search);
+            $result = $model_clients->searchClients($search);
 			return $result;
 		}
 		catch(Exception $e)
