@@ -282,7 +282,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                     </td>
                 </tr>
                  <?php } ?>
-                <?php if ($this->item->project_mounter != 'Монтажная бригада ГМ') { ?>
+                <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                 <tr>
                     <th id="sh_mount"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                 </tr>
@@ -304,7 +304,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
 
                     <?php }
                     $json = json_encode($pdf_names_mount); ?>
-                    <? } ?>
+                    <?php } ?>
                 </tr>
                 <tr>
                     <th colspan="2"> Стоймость работ и комплектующих "Гильдии Мастеров"</th>

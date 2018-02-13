@@ -437,7 +437,7 @@
                             </td>
                         </tr>
                     <?php } ?>
-                    <?php if ($this->item->project_mounter != 'Монтажная бригада ГМ') { ?>
+                    <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                         <tr>
                             <th id="sh_mount" colspan="3"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                         </tr>
@@ -531,6 +531,7 @@
                                 <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
                             </td>
                         </tr>
+                    <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                         <!-- общий наряд на монтаж--> 
                     <tr>
                     <td><b>Общий наряд на монтаж <b></td>
@@ -545,7 +546,7 @@
                         $json2 = json_encode($pdf_names); ?>
                     </td>
                     </tr>
-                    <? }?>
+                    <?php } } ?>
                 </table>
                 <?php if ($user->dealer_type == 2) { ?>
                     <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
