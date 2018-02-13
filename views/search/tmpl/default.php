@@ -68,6 +68,12 @@ $_SESSION['dop_num'] = $dop_num;
 
 <script type="text/javascript">
 	jQuery(document).ready(function(){
+        jQuery('body').on('click', 'tr', function(e)
+        {
+            if(jQuery(this).data('href')!=""){
+                document.location.href = jQuery(this).data('href');
+            } 
+        });
         jQuery('#btn_search').click(function(){
             jQuery.ajax({
                 type: 'POST',
