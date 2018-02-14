@@ -1158,7 +1158,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                      <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
                     if($dealer_canvases_sum == 0 && $project_total_discount < 2500) $project_total_discount = 2500;
                     elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) { $project_total_discount = 2500; echo round($project_total_discount, 0);  ?> руб.</th> <?}
-                    elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { $project_total_discount =  $min_project_sum; echo round($project_total_discount, 0);  ?> руб.</th>
+                    elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { if($min_project_sum>0){$project_total_discount =  $min_project_sum;} echo round($project_total_discount, 0);  ?> руб.</th>
                         </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                     <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
 
@@ -1170,7 +1170,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <?php
                     if ($this->item->new_project_sum == 0) {
                         if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
-                        elseif($project_total <  $min_project_sum && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total =  $min_project_sum; }
+                        elseif($project_total <  $min_project_sum && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  {  if($min_project_sum>0){$project_total =  $min_project_sum;} }
                         
                         echo round($project_total, 2);
                     } else {
