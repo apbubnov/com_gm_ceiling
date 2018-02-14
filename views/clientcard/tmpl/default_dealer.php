@@ -44,6 +44,7 @@
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
     <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
+    <button class="btn btn-primary" type="button" id="but_login">Предоставить доступ</button>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
 
@@ -215,6 +216,18 @@
         <p><input type="text" id="email_comm" placeholder="Почта" required></p>
         <p><button type="button" id="send_comm" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
     </div>
+    <div id="modal_window_login" class="modal_window">
+        <? if (!empty($dop_contacts)) { ?>
+        <div style="margin-top: 10px;">
+        <? foreach ($dop_contacts AS $contact) {?>
+            <input type="radio" name='rb_email_l' value='<? echo $contact->contact; ?>' onclick='rb_email_l_click(this)'><? echo $contact->contact; ?><br>
+        <? }?>
+        </div>
+        <? } ?>
+        <h6 style = "margin-top:10px">Введите почту</h6>
+        <p><input type="text" id="email_login" placeholder="Почта" required></p>
+        <p><button type="button" id="send_login" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel3" class="btn btn-primary">Отмена</button></p>
+    </div>
 </div>
 
 <script>
@@ -231,6 +244,7 @@
             jQuery("#modal_window_client").hide();
             jQuery("#modal_window_comm").hide();
             jQuery("#modal_window_call").hide();
+            jQuery("#modal_window_login").hide();
         }
     });
 
@@ -252,6 +266,12 @@
         jQuery("#close").show();
     });
 
+    jQuery("#but_login").click(function (){
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_login").show("slow");
+        jQuery("#close").show();
+    });
+
     jQuery("#cancel").click(function(){
         jQuery("#close").hide();
         jQuery("#mv_container").hide();
@@ -260,8 +280,14 @@
 
     jQuery("#cancel2").click(function(){
         jQuery("#close").hide();
-        jQuery("#modal_window_container").hide();
+        jQuery("#mv_container").hide();
         jQuery("#modal_window_comm").hide();
+    });
+
+    jQuery("#cancel2").click(function(){
+        jQuery("#close").hide();
+        jQuery("#mv_container").hide();
+        jQuery("#modal_window_login").hide();
     });
 
     jQuery("#update_fio").click(function(){
@@ -345,6 +371,11 @@
         jQuery("#email_comm").val(elem.value);
     }
 
+    function rb_email_1_click(elem)
+    {
+        jQuery("#email_login").val(elem.value);
+    }
+
     jQuery(document).ready(function ()
     {
         document.getElementById('calls-tar').scrollTop = 9999;
@@ -373,6 +404,43 @@
                     jQuery("#close").hide();
                     jQuery("#mv_container").hide();
                     jQuery("#modal_window_comm").hide();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+
+        jQuery("#send_login").click(function(){
+            var user_id = <?php echo $client->dealer_id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=sendLogin",
+                data: {
+                    user_id: user_id,
+                    email: jQuery("#email_login").val()
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Логин и пароль отправлен"
+                    });
+                    jQuery("#close").hide();
+                    jQuery("#mv_container").hide();
+                    jQuery("#modal_window_login").hide();
                 },
                 error: function(data) {
                     console.log(data);
