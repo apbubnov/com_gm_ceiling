@@ -389,6 +389,19 @@ $mount = $model_mount->getDataAll();
 			</div>
 		</div>
 	</div>
+	<h3>
+		Минимальная сумма заказа
+	</h3>
+	<div class="col-md-4">
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_min_sum-lbl" for="jform_min_sum" >Минимальная сумма</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[min_sum]" id="jform_min_sum" value=<?php echo ($mount->min_sum)?$mount->min_sum:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+	</div>
 	<?php endif ?>
 	<div  class = "col-md-12" style="margin-top:15px;">
 		<div  class = "col-md-4">

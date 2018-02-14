@@ -1172,6 +1172,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if ($data->project_mounter != $old_mounter) {
 				$model->AddComment(2, $data);
 			}
+			// оповещение менеджерам
+			if ($user->dealer_type == 1 && $data->project_mounting_date != $data->old_date) {
+				Gm_ceilingHelpersGm_ceiling::notify($data, 12);
+			}
 
             $return = $model->approve($data);
             
@@ -1185,16 +1189,18 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if ($data->project_status == 1 ) {
 				if($type === "gmchief") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief&subtype=gaugings', false));
-				} elseif ($type === "chief") { // && $user->dealer_type == 1 && $old_date
+				} elseif ($type === "chief") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings', false));
-				} //else {
-					//$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
-				//}
+				}
 			} else {
 				if($type === "gmchief") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
 				} elseif ($type === "chief" && $user->dealer_type == 1 && $old_date) {
-					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
+					if (($data->project_status >= 5 && $data->project_status <= 10) && $data->project_status != "0000-00-00 00:00:00") {
+						$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
+					} else {
+						$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
+					}
 				} else {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
 				}

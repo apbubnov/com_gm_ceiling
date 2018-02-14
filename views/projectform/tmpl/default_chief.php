@@ -92,6 +92,9 @@
         $FlagCalendar = [3, $dealer_for_calendar];
     } elseif ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) {
         $whatCalendar = 1;
+        if ($user->dealer_type == 1 && $user->dealer_mounters == 1) {
+            $dealer_for_calendar = 1;
+        }
         $FlagCalendar = [2, $dealer_for_calendar];
     }
     $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
@@ -959,16 +962,16 @@
                             <td><?php echo $this->item->project_info; ?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_MANAGER_NOTE'); ?></th>
+                            <th>Примечание менеджера</th>
                             <td><?php echo $this->item->gm_manager_note; ?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_CALCULATOR_NOTE'); ?></th>
+                            <th>Примечание замерщика</th>
                             <td><?php echo $this->item->gm_calculator_note; ?></td>
                         </tr>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_GM_CHIEF_NOTE'); ?></th>
-                            <td><textarea name="jform[gm_chief_note]" id="jform_gm_chief_note" placeholder="Примечание начальника МС ГМ" aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea></td>
+                            <th>Примечание начальника МС</th>
+                            <td><textarea name="jform[gm_chief_note]" id="jform_gm_chief_note" placeholder="Примечание начальника МС" aria-invalid="false"><?php echo $this->item->gm_chief_note; ?></textarea></td>
                         </tr>
                         <tr>
                             <?php if ($this->item->project_status <= 4) { ?>
@@ -1382,8 +1385,7 @@
         window.datatime = undefined;
 
         // показать историю
-        if (document.getElementById('comments'))
-        {
+        if (document.getElementById('comments')) {
             show_comments();
         }
         //---------------------------------------------------------

@@ -36,7 +36,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
         width: 5%;
     }
 </style>
-<h3 class="center">Не назначенные на монтаж</h3>
+<h3 class="center">Не назначенные на монтаж или не запущенные в производство</h3>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects'); ?>" method="post"
       name="adminForm" id="adminForm">
 	  <? if (count($this->items) > 0 && empty($this->items->project_mounter)): ?>

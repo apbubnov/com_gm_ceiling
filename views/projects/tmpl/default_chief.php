@@ -28,7 +28,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
 ?>
 <?= parent::getButtonBack(); ?>
-<? if ($user->dealer_type != 2): ?><h2 class="center">Монтажи</h2><? else: ?><h2 class="center">Заказы</h2><? endif; ?>
+<? if ($user->dealer_type != 2): ?><h2 class="center">Назначенные на монтаж и запущенные в производство</h2><? else: ?><h2 class="center">Заказы</h2><? endif; ?>
 <style>
     #projectList th:nth-child(1) {
         width: 1%;
