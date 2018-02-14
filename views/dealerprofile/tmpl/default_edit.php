@@ -389,6 +389,19 @@ $mount = $model_mount->getDataAll();
 			</div>
 		</div>
 	</div>
+	<h3>
+		Минимальная сумма монтажа
+	</h3>
+	<div class="col-md-4">
+		<div class="control-group">
+			<div class="control-label">
+				<label id="jform_min_mount-lbl" for="jform_min_mount" >Монтаж</label>
+			</div>
+			<div class="controls">
+				<input type="text" name="jform[min_mount]" id="jform_min_mount" value=<?php echo ($mount->min_mount)?$mount->min_mount:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
+			</div>
+		</div>
+	</div>
 	<?php endif ?>
 	<div  class = "col-md-12" style="margin-top:15px;">
 		<div  class = "col-md-4">
