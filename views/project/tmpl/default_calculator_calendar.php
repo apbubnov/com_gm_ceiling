@@ -333,8 +333,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <td id="ClientCalcDate"><?=$Client->calc_date->date;?></td>
                 </tr>
                 <tr>
-                    <th class="ClientNote">Примечание клиента:</th>
-                    <td id="ClientNote"><?=$Client->project_note;?></td>
+                    <th class="ClientNote">Примечание менеджера:</th>
+                    <td id="ClientNote"><?=$Client->dealer_manager_note;?></td>
                 </tr>
                 <tr>
                     <th class="ClientCalcTime">Время замера:</th>
@@ -855,9 +855,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </td>
                         </tr>
                         <tr>
-                            <th>Примечание клиента</th>
+                            <th>Примечание менеджера</th>
                             <td>
-                                <?php echo $this->item->project_note; ?>
+                                <?php echo $this->item->dealer_manager_note; ?>
                             </td>
                             <td>
                                 <button type="submit" id="accept_changes" class="btn btn btn-success"

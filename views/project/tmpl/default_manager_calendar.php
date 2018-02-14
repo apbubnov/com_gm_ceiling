@@ -393,10 +393,10 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                             <tr>
                                 <th>Примечание</th>
                                 <td>
-                                    <input name="gmmanager_note" id="gmmanager_note" class="inputactive"
+                                    <input name="manager_note" id="manager_note" class="inputactive"
                                         value="<?php if (isset($_SESSION['manager_comment'])) {
                                         echo $_SESSION['manager_comment'];
-                                        } else echo $this->item->gm_manager_note; ?>">
+                                        } else echo $this->item->manager_note; ?>">
                                 </td>
                             </tr>
                             <tr>
@@ -989,7 +989,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                     code: jQuery("#jform_code").val(),
                     date: jQuery("#jform_project_new_calc_date").val(),
                     time: jQuery("#jform_new_project_calculation_daypart").val(),
-                    manager_comment: jQuery("#gmmanager_note").val(),
+                    manager_comment: jQuery("#manager_note").val(),
                     client_name: jQuery("#jform_client_name").val(),
                     phones: phones,
                     comments: jQuery("#comments_id").val(),

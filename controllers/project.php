@@ -281,8 +281,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if (!empty($code)) $address .= ", код: " . $code;
 
                 $cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
-                $manager_comment = $jinput->get('gmmanager_note', '', 'STRING');
-
+                $gmmanager_comment = $jinput->get('gmmanager_note', null, 'STRING');
+                $manager_comment = $jinput->get('manager_note', null, 'STRING');
 
                 if ($client_id == 1 && $isDiscountChange == 0)
                 {
@@ -337,7 +337,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     }
                     if ($call_type == "client") {
                         //обновление созданного проекта
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
+                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
 						if (!empty($answer))
 						{
 							$client_history_model->save($client_id, "Проект № " . $project_id . " " . $answer);
@@ -355,7 +355,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         }
                     } elseif ($call_type == "promo") {
                         $client_history_model->save($client_id, "Клиент помечен как реклама.");
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 21, $api_phone_id, $user->id, $gauger);
+                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 21, $api_phone_id, $user->id, $gauger);
                         $this->setMessage("Клиент помечен как реклама");
                         $status = 21;
                     } elseif ($call_type == "dealer") {
@@ -388,7 +388,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $gm_mounting_margin = $info_model->getMargin('gm_mounting_margin', $userID);
 
                         $client_history_model->save($client_id, "Клиент переведен в дилеры.");
-                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 20, $api_phone_id, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
+                        $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 20, $api_phone_id, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
                             $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
                         $status = 20;
                     }
@@ -452,10 +452,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $rep_proj = $rep_model->getDataByProjectId($project_id);
                         if (empty($rep_proj) || $without_advt == 1) {
                             // условия на статус
-                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
+                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, $status, $api_phone_id, $user->id, $gauger);
                         } else {
                             // условия на статус
-                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, $status, 10, $user->id, $gauger);
+                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, $status, 10, $user->id, $gauger);
                             $rep_upd = $rep_model->update($project_id, $api_phone_id);
                         }
 
@@ -480,9 +480,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                         $rep_proj = $rep_model->getDataByProjectId($project_id);
                         if (empty($rep_proj) || $without_advt == 1) {
-                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 21, $api_phone_id, $user->id, $gauger);
+                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 21, $api_phone_id, $user->id, $gauger);
                         } else {
-                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 21, 10, $user->id, $gauger);
+                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 21, 10, $user->id, $gauger);
                             $rep_upd = $rep_model->update($project_id, $api_phone_id);
                         }
 
@@ -516,10 +516,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $rep_model = Gm_ceilingHelpersGm_ceiling::getModel('repeatrequest');
                         $rep_proj = $rep_model->getDataByProjectId($project_id);
                         if (empty($rep_proj) || $without_advt == 1) {
-                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 20, $api_phone_id, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
+                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 20, $api_phone_id, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
                                 $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
                         } else {
-                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $manager_comment, 20, 10, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
+                            $model->update_project_after_call($project_id, $client_id, $date_time, $address, $gmmanager_comment, $manager_comment, 20, 10, $user->id, $gauger, $dealer_canvases_margin, $dealer_components_margin,
                                 $dealer_mounting_margin, $gm_canvases_margin, $gm_components_margin, $gm_mounting_margin);
                             $rep_upd = $rep_model->update($project_id, $api_phone_id);
                         }
@@ -536,7 +536,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $data_notify['project_info'] = $address;
                     $data_notify['project_calculation_date'] = $date;
                     $data_notify['project_calculation_daypart'] = $time;
-                    $data_notify['project_note'] = $manager_comment;
+                    $data_notify['project_note'] = $gmmanager_comment;
                     Gm_ceilingHelpersGm_ceiling::notify($data_notify, 0);
                 }
                 if ($data->project_status != $status) {

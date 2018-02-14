@@ -120,10 +120,10 @@ if (count($AllGauger) == 0) {
 	</div>
 	<div class="control-group">
 		<div class="control-label">
-			<label id="jform_project_note-lbl" for="jform_project_note" class="required">Примечание</label>
+			<label id="jform_dealer_manager_note-lbl" for="jform_dealer_manager_note" class="required">Примечание</label>
 		</div>
 		<div class="controls">
-			<input name="jform[project_note]" id="jform_project_note" value="" style="width:100%; margin-bottom:1em;" placeholder="Примечание" type="text">
+			<input name="jform[dealer_manager_note]" id="jform_dealer_manager_note" value="" style="width:100%; margin-bottom:1em;" placeholder="Примечание" type="text">
 		</div>
 	</div>
 	<div class="control-group" style="margin-bottom: 1em;">
