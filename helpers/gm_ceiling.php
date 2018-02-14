@@ -571,10 +571,11 @@ class Gm_ceilingHelpersGm_ceiling
             //Пошла печать PDF
             if ($pdf == 1) {//наряд монтажной бригаде
                 if($need_mount){
+                    throw new Exception("qwer");
                     self::create_single_mount_estimate(null,$data,$mounting_data);
                 }
                 //PDF раскроя
-                throw new Exception("qwer");
+                
                 self::create_cut_pdf(null,$data);
                 //для менеджера
                 
