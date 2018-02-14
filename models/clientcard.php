@@ -132,7 +132,7 @@ class Gm_ceilingModelClientcard extends JModelList
 			$query
 				->select('`a`.*')
 				->select('`b`.`title` as `status`')
-				->from('`#__gm_ceiling_projects` AS `a`'))
+				->from('`#__gm_ceiling_projects` AS `a`')
 				->innerJoin('`#__gm_ceiling_status` AS `b` ON `a`.`project_status` = `b`.`id`')
 				->where($db->quoteName('`a`.`client_id`') . ' = ' . $db->quote($db->escape($id)));
 			$db->setQuery($query);
