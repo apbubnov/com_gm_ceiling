@@ -371,7 +371,7 @@
         jQuery("#email_comm").val(elem.value);
     }
 
-    function rb_email_1_click(elem)
+    function rb_email_l_click(elem)
     {
         jQuery("#email_login").val(elem.value);
     }
