@@ -2999,9 +2999,9 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 });
                 var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
                 var sum_total = Float(calc_total + transport_sum);
-                if(canvas == 0) sum = min_components_sum;
+                if(canvas == 0) if(min_components_sum>0){sum = min_components_sum;}
                 else if(sum < min_project_sum ) sum = min_project_sum;
-                if(canvas == 0) sum_total = min_components_sum;
+                if(canvas == 0) if(min_components_sum>0){sum_total = min_components_sum};
                 else if(sum_total < min_project_sum ) sum_total = min_project_sum;
                 jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
                 //jQuery("#project_total").text(sum  + " руб.");
