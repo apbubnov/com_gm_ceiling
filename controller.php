@@ -2769,6 +2769,77 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+     public function sendLogin(){
+        try
+        {
+            $user = JFactory::getUser();
+            $groups = $user->get('groups');
+            if (in_array("16", $groups))
+            {
+                $jinput = JFactory::getApplication()->input;
+                $user_id = $jinput->get('user_id', null, 'INT');
+                $email = $jinput->get('email', null, 'STRING');
+
+                if (empty($email))
+                {
+                    throw new Exception('empty email');
+                }
+
+                $server_name = $_SERVER['SERVER_NAME'];
+                $site = "http://$server_name/index.php?option=com_gm_ceiling&view=login";
+                $dealer = JFactory::getUser($user_id);
+
+                // письмо
+                $mailer = JFactory::getMailer();
+                $config = JFactory::getConfig();
+                $sender = array(
+                    $config->get('mailfrom'),
+                    $config->get('fromname')
+                );
+                $mailer->setSender($sender);
+                $mailer->addRecipient($email);
+                $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
+                $body .= '<body style="margin: 10px;">';
+                $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
+                $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
+                $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
+                $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
+
+                $body .= '<p>Тел.: +7(473)212-34-01</p>';
+
+                $body .= '<p>Почта: gm-partner@mail.ru</p>';
+                $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
+                $body .= '</div></td></tr></table>';
+                $body .= "<div style=\"width: 100%\">Ссылка для входа в кабинет: <a href=\"$site\">войти</a><br>
+                        Логин: $dealer->username<br>Пароль: $dealer->username<br></div></body>";
+                $mailer->setSubject('Доступ в кабинет');
+                $mailer->isHtml(true);
+                $mailer->Encoding = 'base64';
+                $mailer->setBody($body);
+                $send = $mailer->Send();
+                
+                $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                $result = $users_model->updateEmail($user_id, $email);
+
+                $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+                $client_id = $dealer->associated_client;
+                $email_id = $dop_contacts_model->save($client_id, 1, $email);
+
+                die(json_encode($result));
+            }
+            else
+            {
+                throw new Exception('Not GmManager', 403);
+            }
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function createPdfs(){
         try{
         $jinput = JFactory::getApplication()->input;

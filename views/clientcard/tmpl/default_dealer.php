@@ -285,7 +285,7 @@
         jQuery("#modal_window_comm").hide();
     });
 
-    jQuery("#cancel2").click(function(){
+    jQuery("#cancel3").click(function(){
         jQuery("#close").hide();
         jQuery("#mv_container").hide();
         jQuery("#modal_window_login").hide();
