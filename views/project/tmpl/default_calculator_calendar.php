@@ -1856,7 +1856,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
 <script type="text/javascript">
 var $ = jQuery;
-
+var min_project_sum = <?php echo  $min_project_sum;?>;
+var min_components_sum = <?php echo $min_components_sum;?>;
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_del"); // тут указываем ID элемента
         if (!div.is(e.target) // если клик был не по нашему блоку
@@ -2068,8 +2069,7 @@ var $ = jQuery;
     //------------------------------------------
 
     jQuery(document).ready(function () {
-        var  min_project_sum = <?php echo  $min_project_sum;?>;
-        var min_components_sum = <?php echo $min_components_sum;?>;
+        
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         if (document.getElementById('comments'))
         {
