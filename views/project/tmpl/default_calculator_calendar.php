@@ -59,8 +59,8 @@ $sum_transport = 0;  $sum_transport_discount = 0;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-$min_project_sum = $mount_transport->min_sum;
-$min_components_sum = $mount_transport->min_components_sum;
+$min_project_sum = (empty($mount_transport->min_sum))? 0 : $mount_transport->min_sum;
+$min_components_sum = (empty($mount_transport->min_components_sum))?0:$mount_transport->min_components_sum;
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
 if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
