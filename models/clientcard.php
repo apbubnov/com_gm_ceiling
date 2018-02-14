@@ -130,14 +130,11 @@ class Gm_ceilingModelClientcard extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
-				->select('a.id')
-				->select('a.created')
-				->select('a.project_sum')
-				->select('a.gm_manager_note')
-				->select('b.title as status')
-				->from($db->quoteName('#__gm_ceiling_projects', 'a'))
-				->innerJoin('#__gm_ceiling_status as b ON a.project_status = b.id')
-				->where($db->quoteName('a.client_id') . ' = ' . $db->quote($db->escape($id)));
+				->select('`a`.*')
+				->select('`b`.`title` as `status`')
+				->from($db->quoteName('`#__gm_ceiling_projects`', '`a`'))
+				->innerJoin('`#__gm_ceiling_status` as `b` ON `a`.`project_status` = `b`.`id`')
+				->where($db->quoteName('`a`.`client_id`') . ' = ' . $db->quote($db->escape($id)));
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;

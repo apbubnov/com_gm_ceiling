@@ -181,7 +181,25 @@
                     ?>
                 </td>
                 <td><?php echo $item->project_sum;?></td>
-                <td><?php echo $item->gm_manager_note; ?></td>
+                <?php
+                    $note = '';
+                    if ($item->project_status < 3)
+                    {
+                        if (!empty($item->gm_manager_note))
+                        {
+                            $note .= $item->gm_manager_note.'<br>';
+                        }
+                        if (!empty($item->dealer_manager_note))
+                        {
+                            $note .= $item->dealer_manager_note.'<br>';
+                        }
+                        if (!empty($item->project_note))
+                        {
+                            $note .= $item->project_note.'<br>';
+                        }
+                    }
+                ?>
+                <td><?php echo $note; ?></td>
                 <td><?php echo $item->status; ?></td>
             </tr>
 
