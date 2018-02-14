@@ -996,6 +996,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							$project_data->api_phone_id = 10;
 
 							unset($project_data->id);
+							unset($project_data->project_mounting_date);
 							$project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
 							$refuse_id = $project_model->save(get_object_vars($project_data));
 							
