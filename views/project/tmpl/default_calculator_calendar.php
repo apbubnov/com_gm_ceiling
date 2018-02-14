@@ -1158,7 +1158,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                      <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
                     if($dealer_canvases_sum == 0 && $project_total_discount < 2500) $project_total_discount = 2500;
                     elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) { $project_total_discount = 2500; echo round($project_total_discount, 0);  ?> руб.</th> <?}
-                    elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
+                    elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { $project_total_discount =  $min_project_sum; echo round($project_total_discount, 0);  ?> руб.</th>
                         </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                     <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
 
@@ -2980,6 +2980,7 @@ var $ = jQuery;
         var distance_col = jQuery("#distance_col").val();
         var distance_col_1 = jQuery("#distance_col_1").val();
         var form = jQuery("#form-client").serialize();
+        var  min_project_sum = <?php echo  $min_project_sum;?>;
         // alert(distance_col);
         jQuery.ajax({
             type: 'POST',
@@ -2998,9 +2999,9 @@ var $ = jQuery;
                 var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
                 var sum_total = Float(calc_total + transport_sum);
                 if(canvas == 0) sum = 2500;
-                else if(sum < 3500 ) sum = 3500;
+                else if(sum < min_project_sum ) sum = min_project_sum;
                 if(canvas == 0) sum_total = 2500;
-                else if(sum_total < 3500 ) sum_total = 3500;
+                else if(sum_total < min_project_sum ) sum_total = min_project_sum;
                 jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
                 //jQuery("#project_total").text(sum  + " руб.");
                 if(canvas == 0) {
@@ -3013,9 +3014,9 @@ var $ = jQuery;
                 }
                 else {
                     jQuery("#project_total span.sum").text(sum_total);
-                    jQuery("#project_total span.dop").html((sum_total <= 3500)?" * минимальная сумма заказа 3500р.":"");
+                    jQuery("#project_total span.dop").html((sum_total <= min_project_sum)?" * минимальная сумма заказа"+min_project_sum+"р.":"");
                     jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                    jQuery("#project_total_discount span.dop").html((sum <= 3500)?" * минимальная сумма заказа 3500р.":"");
+                    jQuery("#project_total_discount span.dop").html((sum <= min_project_sum)?" * минимальная сумма заказа"+min_project_sum+".":"");
                     jQuery("#project_sum_transport").val(sum);
                     jQuery(" #project_sum").val(sum);
                 }
