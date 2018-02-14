@@ -12,7 +12,6 @@ $user = JFactory::getUser();
 $userId = $user->get('id');
 $userName = $user->get('username');
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
@@ -60,7 +59,7 @@ $sum_transport = 0;  $sum_transport_discount = 0;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-
+$min_project_sum = $mount_transport->min_sum;
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
 if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
@@ -1160,7 +1159,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     if($dealer_canvases_sum == 0 && $project_total_discount < 2500) $project_total_discount = 2500;
                     elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) { $project_total_discount = 2500; echo round($project_total_discount, 0);  ?> руб.</th> <?}
                     elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
-                        </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
+                        </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                     <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
 
                 <?php }
@@ -1182,8 +1181,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <span class="dop" style="font-size: 9px;">
             <? if ($project_total <= 2500 && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
                      * минимальная сумма заказа 2500р.
-                <? elseif ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
-                     * минимальная сумма заказа 3500р.<?endif;?>
+                <? elseif ($project_total <=  $min_project_sum && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
+                     * минимальная сумма заказа <?php echo $min_project_sum;?>.<?endif;?>
                      
                       </span>
                 </th>
