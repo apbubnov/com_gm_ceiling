@@ -567,20 +567,24 @@ class Gm_ceilingHelpersGm_ceiling
                     $canvases_model->saveCuts($ajax_return['id'],$cuts);
                 }
             }
+           
             //Пошла печать PDF
             if ($pdf == 1) {//наряд монтажной бригаде
                 if($need_mount){
+                    throw new Exception(implode('|',$mounting_data));
                     self::create_single_mount_estimate(null,$data,$mounting_data);
                 }
                 //PDF раскроя
+                
                 self::create_cut_pdf(null,$data);
                 //для менеджера
+                
                 self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета
                 self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
             }         
             $return = json_encode($ajax_return);
-            
+           
             return $return;
         }
         catch(Exception $e)
@@ -1345,9 +1349,9 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases = [];
         foreach ($canvases_list as $i => $canvas)
             $canvases[$canvas->id] = $canvas;
-
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
+           
             if (empty($calc_id)) $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
             else $canvases_data['title'] = $data['n3'] . ", " . $data['n2'] . " " . $data['color']; //Название фактуры и полотна
 

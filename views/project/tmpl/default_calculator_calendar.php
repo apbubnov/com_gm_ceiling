@@ -59,8 +59,8 @@ $sum_transport = 0;  $sum_transport_discount = 0;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-$min_project_sum = $mount_transport->min_sum;
-$min_components_sum = $mount_transport->min_components_sum;
+$min_project_sum = (empty($mount_transport->min_sum))? 0 : $mount_transport->min_sum;
+$min_components_sum = (empty($mount_transport->min_components_sum))?0:$mount_transport->min_components_sum;
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
 if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
@@ -733,7 +733,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
                             <?php $phone = $model->getClientPhones($this->item->id_client); ?>
                             <td><?php foreach ($phone AS $contact) {
-                                    echo "<a href='tel:$contact->client_contacts'>$contact->client_contacts</a>";
+                                    echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
                                     echo "<br>";
                                 } ?></td>
                             <td>
@@ -1856,7 +1856,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
 <script type="text/javascript">
 var $ = jQuery;
-
+var min_project_sum = <?php echo  $min_project_sum;?>;
+var min_components_sum = <?php echo $min_components_sum;?>;
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_del"); // тут указываем ID элемента
         if (!div.is(e.target) // если клик был не по нашему блоку
@@ -2068,8 +2069,7 @@ var $ = jQuery;
     //------------------------------------------
 
     jQuery(document).ready(function () {
-        var  min_project_sum = <?php echo  $min_project_sum;?>;
-        var min_components_sum = <?php echo $min_components_sum;?>;
+        
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         if (document.getElementById('comments'))
         {
