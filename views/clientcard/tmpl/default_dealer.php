@@ -235,9 +235,10 @@
         var div = jQuery("#modal_window_fio"); // тут указываем ID элемента
         var div2 = jQuery("#modal_window_client");
         var div3 = jQuery("#modal_window_comm");
-        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target)
+        var div4 = jQuery("#modal_window_login");
+        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 
-            && div3.has(e.target).length === 0) {
+            && div3.has(e.target).length === 0 && div4.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
