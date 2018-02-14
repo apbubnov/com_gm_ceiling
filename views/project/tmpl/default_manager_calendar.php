@@ -429,11 +429,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                             Записать на замер
                         </a>
                     </td>
-                    <td>
-                        <a class="btn  btn-danger" id="refuse_project">
-                            Отказ от замера
-                        </a>
-                    </td>
                 </tr>
             </table>
         <?php } ?>
@@ -935,25 +930,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             else
             {
                 jQuery("#form-client").submit();
-            }
-        });
-
-        jQuery("#refuse_project").click(function () {
-            jQuery("#project_status").val(2);
-            if (jQuery("#jform_client_name").val() == '')
-            {
-              var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Пустое имя!"
-                });
-            }
-            else
-            {
-              jQuery("#form-client").submit();
             }
         });
 
