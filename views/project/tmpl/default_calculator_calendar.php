@@ -2067,7 +2067,7 @@ var $ = jQuery;
     //------------------------------------------
 
     jQuery(document).ready(function () {
-
+        var  min_project_sum = <?php echo  $min_project_sum;?>;
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         if (document.getElementById('comments'))
         {
@@ -2980,7 +2980,6 @@ var $ = jQuery;
         var distance_col = jQuery("#distance_col").val();
         var distance_col_1 = jQuery("#distance_col_1").val();
         var form = jQuery("#form-client").serialize();
-        var  min_project_sum = <?php echo  $min_project_sum;?>;
         // alert(distance_col);
         jQuery.ajax({
             type: 'POST',
@@ -3082,17 +3081,17 @@ var $ = jQuery;
             jQuery("#project_sum").val(project_total_discount);
         }
         else {
-            if(project_total < 3500 && pr_total2 !== 0)  project_total = 3500;
-            if(project_total_discount < 3500 && pr_total2 !== 0)  project_total_discount = 3500;
+            if(project_total < min_project_sum && pr_total2 !== 0)  project_total = min_project_sum;
+            if(project_total_discount < min_project_sum && pr_total2 !== 0)  project_total_discount = min_project_sum;
 
             jQuery("#project_total span.sum").text(project_total.toFixed(2));
-            if (project_total > 3500) { jQuery("#project_total span.dop").html(" "); }
-            if (project_total <= 3500 && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа 3500р."); }
-            if (project_total <= 3500 && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
+            if (project_total > min_project_sum) { jQuery("#project_total span.dop").html(" "); }
+            if (project_total <= min_project_sum && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа"+min_project_sum+"р."); }
+            if (project_total <= min_project_sum && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
             jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
-            if (project_total_discount > 3500) { jQuery("#project_total_discount span.dop").html(" "); }
-            if (project_total_discount <= 3500 && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа 3500р."); }
-            if (project_total_discount <= 3500 && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
+            if (project_total_discount > min_project_sum) { jQuery("#project_total_discount span.dop").html(" "); }
+            if (project_total_discount <= min_project_sum && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа "+min_project_sum+"р."); }
+            if (project_total_discount <= min_project_sum && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
             //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
             jQuery("#project_sum").val(project_total_discount);
         }
