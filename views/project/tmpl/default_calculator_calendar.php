@@ -60,6 +60,7 @@ $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
 $min_project_sum = $mount_transport->min_sum;
+$min_components_sum = $mount_transport->min_components_sum;
 if($this->item->transport == 0 ) $sum_transport = 0;
 if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
 if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
@@ -1156,8 +1157,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <th id="project_total_discount">
                         <span class="sum">
                      <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                    if($dealer_canvases_sum == 0 && $project_total_discount < 2500) $project_total_discount = 2500;
-                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) { $project_total_discount = 2500; echo round($project_total_discount, 0);  ?> руб.</th> <?}
+                    if($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum) if($min_components_sum>0){$project_total_discount = $min_components_sum;}
+                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) { if($min_components_sum>0){$project_total_discount = $min_components_sum;} echo round($project_total_discount, 0);  ?> руб.</th> <?}
                     elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { if($min_project_sum>0){$project_total_discount =  $min_project_sum;} echo round($project_total_discount, 0);  ?> руб.</th>
                         </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                     <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
@@ -1169,7 +1170,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <span class="sum">
                     <?php
                     if ($this->item->new_project_sum == 0) {
-                        if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
+                        if($project_total < $min_components_sum && $project_total > 0 && $dealer_canvases_sum == 0)  { if($min_components_sum>0){$project_total = $min_components_sum;} } 
                         elseif($project_total <  $min_project_sum && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  {  if($min_project_sum>0){$project_total =  $min_project_sum;} }
                         
                         echo round($project_total, 2);
@@ -1179,8 +1180,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 } ?>
             </span>
             <span class="dop" style="font-size: 9px;">
-            <? if ($project_total <= 2500 && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
-                     * минимальная сумма заказа 2500р.
+            <? if ($project_total <= $min_components_sum && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
+                     * минимальная сумма заказа <?php echo $min_components_sum;?>.
                 <? elseif ($project_total <=  $min_project_sum && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
                      * минимальная сумма заказа <?php echo $min_project_sum;?>.<?endif;?>
                      
@@ -2068,6 +2069,7 @@ var $ = jQuery;
 
     jQuery(document).ready(function () {
         var  min_project_sum = <?php echo  $min_project_sum;?>;
+        var min_components_sum = <?php echo $min_components_sum;?>;
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         if (document.getElementById('comments'))
         {
@@ -2997,17 +2999,17 @@ var $ = jQuery;
                 });
                 var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
                 var sum_total = Float(calc_total + transport_sum);
-                if(canvas == 0) sum = 2500;
+                if(canvas == 0) sum = min_components_sum;
                 else if(sum < min_project_sum ) sum = min_project_sum;
-                if(canvas == 0) sum_total = 2500;
+                if(canvas == 0) sum_total = min_components_sum;
                 else if(sum_total < min_project_sum ) sum_total = min_project_sum;
                 jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
                 //jQuery("#project_total").text(sum  + " руб.");
                 if(canvas == 0) {
                     jQuery("#project_total span.sum").text(sum_total);
-                    jQuery("#project_total span.dop").html((sum_total <= 2500)?" * минимальная сумма заказа 2500р.":"");
+                    jQuery("#project_total span.dop").html((sum_total <= min_components_sum)?" * минимальная сумма заказа "+min_components_sum+"р.":"");
                     jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                    jQuery("#project_total_discount span.dop").html((sum <= 2500)?" * минимальная сумма заказа 2500р.":"");
+                    jQuery("#project_total_discount span.dop").html((sum <= min_components_sum)?" * минимальная сумма заказа"+min_components_sum+"р.":"");
                     jQuery("#project_sum_transport").val(sum);
                     jQuery(" #project_sum").val(sum);
                 }
@@ -3066,17 +3068,17 @@ var $ = jQuery;
         //var canvas = jQuery("#canvas").val();
         
         if(canvas == 0) {
-            if(project_total < 2500 && pr_total2 !== 0)  project_total = 2500;
-            if(project_total_discount < 2500 && pr_total2 !== 0)  project_total_discount = 2500;
+            if(project_total < min_components_sum && pr_total2 !== 0)  if(min_components_sum>0){project_total = min_components_sum;}
+            if(project_total_discount < min_components_sum && pr_total2 !== 0)  if(min_components_sum>0){project_total_discount = min_components_sum;}
 
             jQuery("#project_total span.sum").text(project_total.toFixed(2));
-            if (project_total > 2500) { jQuery("#project_total span.dop").html(" "); }
-            if (project_total <= 2500 && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа 2500р."); }
-            if (project_total <= 2500 && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
+            if (project_total > min_components_sum) { jQuery("#project_total span.dop").html(" "); }
+            if (project_total <= min_components_sum && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа "+min_components_sum+"."); }
+            if (project_total <= min_components_sum && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
             jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
-            if (project_total_discount > 2500) { jQuery("#project_total_discount span.dop").html(" "); }
-            if (project_total_discount <= 2500 && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа 2500р."); }
-            if (project_total_discount <= 2500 && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
+            if (project_total_discount > min_components_sum) { jQuery("#project_total_discount span.dop").html(" "); }
+            if (project_total_discount <= min_components_sum && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа "+min_components_sum+"."); }
+            if (project_total_discount <= min_components_sum && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
             //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
             jQuery("#project_sum").val(project_total_discount);
         }
