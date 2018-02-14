@@ -2069,6 +2069,7 @@ var $ = jQuery;
 
     jQuery(document).ready(function () {
         var  min_project_sum = <?php echo  $min_project_sum;?>;
+        var min_components_sum = <?php echo $min_components_sum;?>;
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         if (document.getElementById('comments'))
         {
