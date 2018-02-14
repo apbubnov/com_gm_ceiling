@@ -2786,7 +2786,7 @@ class Gm_ceilingController extends JControllerLegacy
                 }
 
                 $server_name = $_SERVER['SERVER_NAME'];
-                $site = "http://$server_name/index.php?option=com_gm_ceiling&view=login";
+                $site = "http://$server_name/index.php?option=com_users&view=login";
                 $dealer = JFactory::getUser($user_id);
 
                 // письмо
