@@ -580,7 +580,7 @@ class Gm_ceilingHelpersGm_ceiling
                 self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
             }         
             $return = json_encode($ajax_return);
-            
+            throw new Exception("qwer");
             return $return;
         }
         catch(Exception $e)
@@ -1345,7 +1345,6 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases = [];
         foreach ($canvases_list as $i => $canvas)
             $canvases[$canvas->id] = $canvas;
-            throw new Exception("qwer");
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
            
