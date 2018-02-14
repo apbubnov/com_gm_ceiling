@@ -1348,6 +1348,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
+            throw new Exception("qwer");
             if (empty($calc_id)) $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
             else $canvases_data['title'] = $data['n3'] . ", " . $data['n2'] . " " . $data['color']; //Название фактуры и полотна
 
