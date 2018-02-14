@@ -23,6 +23,7 @@ $mount = $model_mount->getDataAll();
 ?>
 <?if(!$user->getDealerInfo()->update_check) { $user->setDealerInfo(["update_check" => true]);}?>
 <?=parent::getButtonBack();?>
+<a href="/index.php?option=com_users&view=profile&layout=edit" class="btn btn-primary">Изменить личные данные</a>
 <form action="/index.php?option=com_gm_ceiling&view=mainpage&type=dealermainpage" method="post" id="login-form" class="form-vertical" style="display: inline-block; margin-left: 10px;">
 	<div class="logout-button">
 		<input type="submit" name="Submit" class="btn btn-primary" value="Выйти">
