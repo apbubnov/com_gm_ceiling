@@ -382,14 +382,15 @@ if (empty($list['direction']))
 			$search = $db->escape($search);
 			$query = $db->getQuery(true);
 			$query
-				->select("`c`.*, GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_info`, `u`.`dealer_type`")
+				->select("`c`.*, GROUP_CONCAT(DISTINCT `b`.`phone` SEPARATOR ', ') AS `client_contacts`, `p`.`project_info`, `u`.`dealer_type`, GROUP_CONCAT(DISTINCT `p`.`id` SEPARATOR ', ') AS `projects_ids`")
 				->from("`#__gm_ceiling_clients` as `c`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->leftJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
 				->leftJoin('(SELECT `id`,`client_id`,`project_status`,`project_info` FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) AS `p` ON `c`.`id` = `p`.`client_id`')
 				->where("`c`.`client_name` LIKE '%$search%' OR
 					`b`.`phone` LIKE '%$search%' OR
-					`p`.`project_info` LIKE '%$search%'")
+					`p`.`project_info` LIKE '%$search%' OR
+					`p`.`id` LIKE '%$search%'")
 				->group('`c`.`id`')
 				->order('`c`.`id` DESC');
 			$db->setQuery($query);
