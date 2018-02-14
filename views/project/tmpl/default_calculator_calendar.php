@@ -733,7 +733,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
                             <?php $phone = $model->getClientPhones($this->item->id_client); ?>
                             <td><?php foreach ($phone AS $contact) {
-                                    echo "<a href='tel:$contact->client_contacts'>$contact->client_contacts</a>";
+                                    echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
                                     echo "<br>";
                                 } ?></td>
                             <td>
