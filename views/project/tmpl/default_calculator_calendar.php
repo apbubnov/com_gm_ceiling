@@ -1170,7 +1170,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <?php
                     if ($this->item->new_project_sum == 0) {
                         if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
-                        elseif($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                        elseif($project_total <  $min_project_sum && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total =  $min_project_sum; }
                         
                         echo round($project_total, 2);
                     } else {
