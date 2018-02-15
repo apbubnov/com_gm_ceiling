@@ -154,7 +154,8 @@ if (count($AllGauger) == 0) {
 </form>
 
 <script>
-    var $ = jQuery;
+    var $ = jQuery,
+        Data = {};
     $(window).resize(function(){
         if (screen.width <= '1024') {
             jQuery('#calculate_form').css('font-size', '13px');
@@ -480,8 +481,18 @@ if (count($AllGauger) == 0) {
 					}					
 				});
 			jQuery('#select_clients').show();
-		});	
+		});
+
+        Data.ProjectInfoYMaps = $("#jform_project_info").siblings("ymaps");
+        Data.ProjectInfoYMaps.click(hideYMaps);
 	});
+
+	function hideYMaps() {
+        setTimeout(function () {
+            Data.ProjectInfoYMaps.hide();
+            $("#jform_project_info_house").focus();
+        }, 75);
+    }
 
     jQuery(function(){
         jQuery('#clients').change(function(){
@@ -502,9 +513,12 @@ if (count($AllGauger) == 0) {
 		input = jQuery('#jform_project_info');
 
 		suggestView.events.add('select', function (e) {
-		var s = e.get('item').value.replace('Россия, ','');
-		input.val(s);
+            var s = e.get('item').value.replace('Россия, ','');
+            input.val(s);
 		});
+
+        Data.ProjectInfoYMaps = $("#jform_project_info").siblings("ymaps");
+        Data.ProjectInfoYMaps.click(hideYMaps);
     }
 	// ---------------------------------
 

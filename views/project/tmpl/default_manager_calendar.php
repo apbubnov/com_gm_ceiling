@@ -492,7 +492,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 
 <script language="JavaScript">
 
-    var $ = jQuery;
+    var $ = jQuery,
+        Data = {};
 
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_del"); // тут указываем ID элемента
@@ -990,7 +991,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             });
 
         });
-
+        Data.ProjectInfoYMaps = $("#jform_address").siblings("ymaps");
+        Data.ProjectInfoYMaps.click(hideYMaps);
 
     });
 
@@ -1116,7 +1118,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                 });
             }
         });
-    })
+    });
 
     jQuery("#jform_project_new_calc_date").change(function () {
         jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
@@ -1205,6 +1207,16 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 		var s = e.get('item').value.replace('Россия, ','');
 		input.val(s);
 		});
+
+        Data.ProjectInfoYMaps = $("#jform_address").siblings("ymaps");
+        Data.ProjectInfoYMaps.click(hideYMaps);
+    }
+
+    function hideYMaps() {
+        setTimeout(function () {
+            Data.ProjectInfoYMaps.hide();
+            $("#jform_house").focus();
+        }, 75);
     }
 
     jQuery("#BackPage").click(function ()
