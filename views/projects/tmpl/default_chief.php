@@ -121,7 +121,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             $mounter = $mounters_model->getEmailMount($item->project_mounter);
                         } ?>
                         <td class="center one-touch"><?= $mounter->name; ?></td>
-                        <td><?= ($item->dealer_chief_note)?$item->dealer_chief_note:$item->gm_chief_note ;  ?></td>
+                        <td class="center one-touch"><?= ($item->dealer_chief_note)?$item->dealer_chief_note:$item->gm_chief_note ;  ?></td>
                     </tr>
                 <? endif; ?>
                 <? endforeach; ?>
