@@ -2687,7 +2687,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
                 $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
                 $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
-                if ($dealer_type == 3)
+                if ($dealer_type == 3 || $dealer_type == 5)
                 {
                     $body .= '<p>Тел.: +7(473)212-23-59</p>';
                 }

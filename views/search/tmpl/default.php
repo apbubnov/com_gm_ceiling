@@ -94,6 +94,11 @@ $_SESSION['dop_num'] = $dop_num;
                             html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
                             d_type = 'Отделочник';
                         }
+                        else if (data[i].dealer_type == 5)
+                        {
+                            html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer2&id=' + data[i].id + '">';
+                            d_type = 'Дизайнер';
+                        }
                         else if (data[i].dealer_type == 1 || data[i].dealer_type == 0)
                         {
                             html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';

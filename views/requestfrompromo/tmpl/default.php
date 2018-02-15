@@ -47,6 +47,10 @@ $_SESSION['dop_num'] = $dop_num;
                 {
                     $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.$item->client_id, false);
                 }
+                elseif ($item->dealer_type == 5)
+                {
+                    $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer2&id='.$item->client_id, false);
+                }
                 elseif (is_null($item->dealer_type))
                 {
                     $href = JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.$item->client_id, false);

@@ -30,7 +30,7 @@
     }
     else
     {
-        if(JFactory::getUser($client->dealer_id)->dealer_type == 3)
+        if(JFactory::getUser($client->dealer_id)->dealer_type == 3 || JFactory::getUser($client->dealer_id)->dealer_type == 5)
         {
             $subtype = 'designer';
         }

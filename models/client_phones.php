@@ -52,7 +52,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 				{
 					return $item;
 				}
-				elseif ($item->client_dealer_id != $dealer_id && $item->dealer_type == 3 && $item->user_dealer_id == $dealer_id)
+				elseif ($item->client_dealer_id != $dealer_id && ($item->dealer_type == 3 || $item->dealer_type == 5) && $item->user_dealer_id == $dealer_id)
 				{
 					return $item;
 				}

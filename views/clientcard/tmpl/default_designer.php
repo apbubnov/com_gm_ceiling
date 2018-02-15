@@ -75,7 +75,7 @@
 <div style="width: 98%;">
 <div style="display: inline-block; width: 48%;">
     <div>
-    <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника/дизайнера: </p>
+    <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта отделочника: </p>
     </div>
     <? if (!empty($dop_contacts)) { ?>
     <div>
@@ -90,7 +90,7 @@
 </div>
 <div style="display: inline-block; width: 48%;">
     <div>
-    <p class = "caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны отделочника/дизайнера: </p>
+    <p class = "caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны отделочника: </p>
     </div>
     <div>
     <?php foreach($client_phones as $item) { ?>
@@ -105,7 +105,7 @@
 </div>
 <div class="row">
     <div class="col-sm-12" id = "calls">
-        <p class="caption-tar">История отделочника/дизайнера</p>
+        <p class="caption-tar">История отделочника</p>
         <div id="calls-tar">
             <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
             
@@ -143,7 +143,7 @@
 
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
-        <p class="caption-tar">Клиенты отделочника/дизайнера</p>
+        <p class="caption-tar">Клиенты отделочника</p>
         <div id="cliens_of_dealer_2">
             <table id="cliens_of_dealer_table" class="table table-striped table_cashbox one-touch-view" cellspacing="0">
                 <tbody>

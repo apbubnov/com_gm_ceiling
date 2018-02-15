@@ -66,6 +66,10 @@ $_SESSION['dop_num'] = $dop_num;
                 {
                     str += '<tr data-href="index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='+(arr_calls[i].client_id-0)+'&call_id='+(arr_calls[i].id-0)+'">';
                 }
+                else if (arr_calls[i].dealer_type == 5)
+                {
+                    str += '<tr data-href="index.php?option=com_gm_ceiling&view=clientcard&type=designer2&id='+(arr_calls[i].client_id-0)+'&call_id='+(arr_calls[i].id-0)+'">';
+                }
                 else if (arr_calls[i].dealer_type == 0 || arr_calls[i].dealer_type == 1)
                 {
                     str += '<tr data-href="index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='+(arr_calls[i].client_id-0)+'&call_id='+(arr_calls[i].id-0)+'">';
