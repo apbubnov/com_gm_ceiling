@@ -523,4 +523,25 @@ if (count($AllGauger) == 0) {
 		});
 
     }
+    var Data = {};
+    function init() {
+        // Подключаем поисковые подсказки к полю ввода.
+        var suggestView = new ymaps.SuggestView('jform_project_info');
+        input = jQuery('#jform_address');
+
+        suggestView.events.add('select', function (e) {
+            var s = e.get('item').value.replace('Россия, ','');
+            input.val(s);
+        });
+
+        Data.ProjectInfoYMaps = $("#jform_address").siblings("ymaps");
+        Data.ProjectInfoYMaps.click(hideYMaps);
+    }
+
+    function hideYMaps() {
+        setTimeout(function () {
+            Data.ProjectInfoYMaps.hide();
+            $("#jform_project_info_house").focus();
+        }, 75);
+    }
 </script>

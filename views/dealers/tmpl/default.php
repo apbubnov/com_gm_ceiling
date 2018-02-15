@@ -123,12 +123,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
 
         var sum = JSON.parse('<?php echo json_encode($sum); ?>');
-        <?
-        foreach ($dealers as $key => $value) {
-            $value->name = str_replace('"', '\\"', $value->name);
-            $dealers[$key] = $value;
-        }
-        ?>
         var dealers = JSON.parse('<?php echo json_encode($dealers); ?>');
         console.log(sum, dealers);
 
