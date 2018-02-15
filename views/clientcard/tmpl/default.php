@@ -183,7 +183,7 @@
                 <td><?php echo $item->project_sum;?></td>
                 <?php
                     $note = '';
-                    if ($item->project_status < 3)
+                    if ($item->project_status < 3 || $item->project_status == 15)
                     {
                         if (!empty($item->gm_manager_note))
                         {
@@ -196,6 +196,39 @@
                         if (!empty($item->project_note))
                         {
                             $note .= $item->project_note.'<br>';
+                        }
+                    }
+                    elseif ($item->project_status == 3 || $item->project_status == 4)
+                    {
+                        if (!empty($item->gm_calculator_note))
+                        {
+                            $note .= $item->gm_calculator_note.'<br>';
+                        }
+                        if (!empty($item->dealer_calculator_note))
+                        {
+                            $note .= $item->dealer_calculator_note.'<br>';
+                        }
+                    }
+                    elseif ($item->project_status > 4 || $item->project_status < 11)
+                    {
+                        if (!empty($item->gm_chief_note))
+                        {
+                            $note .= $item->gm_chief_note.'<br>';
+                        }
+                        if (!empty($item->dealer_chief_note))
+                        {
+                            $note .= $item->dealer_chief_note.'<br>';
+                        }
+                    }
+                    else
+                    {
+                        if (!empty($item->gm_mount_note))
+                        {
+                            $note .= $item->gm_mount_note.'<br>';
+                        }
+                        if (!empty($item->mount_note))
+                        {
+                            $note .= $item->mount_note.'<br>';
                         }
                     }
                 ?>
