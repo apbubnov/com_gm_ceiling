@@ -2848,7 +2848,6 @@ class Gm_ceilingController extends JControllerLegacy
     public function firstSignIn(){
         try
         {
-            throw new Exception('123');
             $jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id',null,'INT');
             $dealer = JFactory::getUser($user_id);
