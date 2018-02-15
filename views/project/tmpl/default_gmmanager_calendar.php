@@ -2994,32 +2994,26 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
     // Подсказки по городам
     ymaps.ready(init);
+    var Data = {};
     function init() {
-		var provider
         // Подключаем поисковые подсказки к полю ввода.
         var suggestView = new ymaps.SuggestView('jform_address');
-		input = jQuery('#jform_address');
+        input = jQuery('#jform_address');
 
-		suggestView.events.add('select', function (e) {
-		var s = e.get('item').value.replace('Россия, ','');
-		input.val(s);
-		});
-		/*,
-           map,
-            placemark;
-        /*function geocode() {
-            // Забираем запрос из поля ввода.
-            var request = $('#jform_project_info').val();
-            // Геокодируем введённые данные.
-            ymaps.geocode(request).then(function (res) {
-                var obj = res.geoObjects.get(0),
-                    error, hint;
+        suggestView.events.add('select', function (e) {
+            var s = e.get('item').value.replace('Россия, ','');
+            input.val(s);
+        });
 
-            }, function (e) {
-                console.log(e)
-            })
+        Data.ProjectInfoYMaps = $("#jform_address").siblings("ymaps");
+        Data.ProjectInfoYMaps.click(hideYMaps);
+    }
 
-        }*/
+    function hideYMaps() {
+        setTimeout(function () {
+            Data.ProjectInfoYMaps.hide();
+            $("#jform_house").focus();
+        }, 75);
     }
 
 </script>

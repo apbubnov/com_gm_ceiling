@@ -3188,8 +3188,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
     }
     ymaps.ready(init);
 
+    var Data = {};
     function init() {
-		var provider
         // Подключаем поисковые подсказки к полю ввода.
         var suggestView = new ymaps.SuggestView('jform_address');
 		input = jQuery('#jform_address');
@@ -3199,6 +3199,15 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 		input.val(s);
 		});
 
+        Data.ProjectInfoYMaps = $("#jform_address").siblings("ymaps");
+        Data.ProjectInfoYMaps.click(hideYMaps);
+    }
+
+    function hideYMaps() {
+        setTimeout(function () {
+            Data.ProjectInfoYMaps.hide();
+            $("#jform_house").focus();
+        }, 75);
     }
  
 </script>

@@ -229,6 +229,11 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::save_pdf($array_html, $sheets_dir . $filename, "A4");
 
             $transport_sum = json_encode(round($transport_sum, 2));
+
+            Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($data->id);
+            Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($data->id);
+            Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($data->id);
+
             die($transport_sum);
         }
         catch(Exception $e)
