@@ -2848,10 +2848,10 @@ class Gm_ceilingController extends JControllerLegacy
     public function firstSignIn(){
         try
         {
+            throw new Exception('123');
             $jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id',null,'INT');
             $dealer = JFactory::getUser($user_id);
-            throw new Exception($user_id);
             $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $client = $client_model->getClientById($dealer->associated_client);
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
