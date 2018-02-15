@@ -1186,7 +1186,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			} else {
 				$this->setMessage("Данные успешно изменены!");
 			}
-            throw new Exception("Error Processing Request", 1);
+
 			// редирект
 			if ($data->project_status == 1 ) {
 				if($type === "gmchief") {
