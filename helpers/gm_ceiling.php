@@ -1488,6 +1488,10 @@ class Gm_ceilingHelpersGm_ceiling
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
         $calculation_model = self::getModel('calculation');
+
+//        $margins = self::get_margin($data['project_id']);
+//        $gm_mounting_margin = $margins['gm_mounting_margin'];
+//        $dealer_mounting_margin = $margins['dealer_mounting_margin'];
        
         if(empty($calc_id)){
             $project_id = $data['project_id'];
@@ -2778,9 +2782,9 @@ class Gm_ceilingHelpersGm_ceiling
                         foreach ($mounting_data as $item) {
                                 $html .= '<tr>';
                                 $html .= '<td>' . $item['title'] . '</td>';
-                                $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
+                                $html .= '<td class="center">' . round($item['price_with_dealer_margin'], 2) . '</td>';
                                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                                $html .= '<td class="center">' . $item['dealer_salary_total'] . '</td>';
+                                $html .= '<td class="center">' . round($item['total_with_dealer_margin'], 2) . '</td>';
                                 $html .= '</tr>';
                         }
                         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($data_mount['total_dealer_mounting'], 2) . '</th></tr>';
