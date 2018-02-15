@@ -2845,6 +2845,25 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public function firstSignIn(){
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $user_id = $jinput->get('user_id',null,'INT');
+            $dealer = JFactory::getUser($user_id);
+            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $client = $client_model->getClientById($dealer->associated_client);
+            $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $callback_model->save(date('Y-m-d H:i:s'),'Дилер вошел первый раз',$client->id,$client->manager_id);
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function createPdfs(){
         try{
         $jinput = JFactory::getApplication()->input;
