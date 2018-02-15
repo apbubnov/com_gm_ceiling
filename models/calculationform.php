@@ -1168,7 +1168,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         . $db->quote($data['extra_components']) . ', '
                         . $db->quote($data['extra_mounting']) . ', '
                         . $db->quote($data['components_stock']) . ', '
-                        . $data['color'] . ', '
+                        . $db->quote($data['color']) . ', '
                         . $db->quote($data['details']) . ', '
                        /*  . $db->quote($data['calc_image']) . ', ' */
                         . $db->quote($data['original_sketch']) . ', '
