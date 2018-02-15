@@ -978,6 +978,9 @@ class Gm_ceilingModelProject extends JModelItem
 				$table->gm_chief_note = $data->gm_chief_note;
 				if ($data->project_mounting_date != "00-00-0000 00:00:00") {
 					$table->project_mounting_date = $data->project_mounting_date;
+					if ($user->dealer_type == 1 && $data->project_status == 4) {
+-						$table->project_status = 5;
+-					}
 					$table->project_mounter = $data->project_mounter;
 				}
 				if ($data->project_calculation_date != "00-00-0000 00:00:00") {
