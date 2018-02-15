@@ -1137,6 +1137,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$subtype = $jinput->get('subtype', '', 'STRING');
 
 			$data->gm_chief_note = $get_data['gm_chief_note'];
+            $data->dealer_chief_note = $get_data['dealer_chief_note'];
 
 			// замеры
 			$data->project_calculation_date = $get_data['project_new_calc_date'];
@@ -1195,7 +1196,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			} else {
 				$this->setMessage("Данные успешно изменены!");
 			}
-
+            throw new Exception("Error Processing Request", 1);
 			// редирект
 			if ($data->project_status == 1 ) {
 				if($type === "gmchief") {
@@ -1206,14 +1207,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			} else {
 				if($type === "gmchief") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
-				} elseif ($type === "chief" && $user->dealer_type == 1 && $old_date) {
-					if (($data->project_status >= 5 && $data->project_status <= 10) && $data->project_status != "0000-00-00 00:00:00") {
-						$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
-					} else {
-						$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects', false));
-					}
 				} else {
-					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief', false));
+					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false));
 				}
 			}
 			
