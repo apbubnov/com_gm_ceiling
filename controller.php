@@ -2855,6 +2855,7 @@ class Gm_ceilingController extends JControllerLegacy
             $client = $client_model->getClientById($dealer->associated_client);
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $callback_model->save(date('Y-m-d H:i:s'),'Дилер вошел первый раз',$client->id,$client->manager_id);
+            die(true);
         }
         catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
