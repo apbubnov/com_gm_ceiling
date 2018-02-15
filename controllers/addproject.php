@@ -139,6 +139,7 @@ class Gm_ceilingControllerAddProject extends Gm_ceilingController
 				$project_data['project_calculation_date'] = $data['project_calculation_date'].' '.$data['project_calculation_daypart'];
 				$project_data['project_mounting_date'] = "0000-00-00 00:00:00";
 				$project_data['project_note'] = $data['project_note'];
+				$project_data['dealer_manager_note'] = $data['dealer_manager_note'];
 				$project_data['dealer_id'] = $user->dealer_id;
 				$project_data['project_calculator'] = $data['project_calculator'];
 				if ($user->dealer_id == 1) {
