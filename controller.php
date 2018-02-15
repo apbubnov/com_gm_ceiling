@@ -2850,6 +2850,7 @@ class Gm_ceilingController extends JControllerLegacy
         {
             $jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id',null,'INT');
+            $cookie = $jinput->get('cookie',null,'STRING');
             $dealer = JFactory::getUser($user_id);
             $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $client = $client_model->getClientById($dealer->associated_client);
