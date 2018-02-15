@@ -2850,13 +2850,14 @@ class Gm_ceilingController extends JControllerLegacy
         {
             $jinput = JFactory::getApplication()->input;
             $user_id = $jinput->get('user_id',null,'INT');
-            $cookie = $jinput->get('cookie',null,'STRING');
+            $cookie = $jinput->get('cookie',null,'ARRAY');
             $dealer = JFactory::getUser($user_id);
             $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
             $client = $client_model->getClientById($dealer->associated_client);
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $callback_model->save(date('Y-m-d H:i:s'),'Дилер вошел первый раз',$client->id,$client->manager_id);
-            setcookie("c5166c3c49bc5409d144062161534f0b", $cookie);
+            foreach ($cookie as $key => $value)
+                setcookie($key, $value);
             die(true);
         }
         catch (Exception $e) {
