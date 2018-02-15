@@ -650,7 +650,8 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= "<h1>Название: " . $data['calculation_title'] . "</h1>";
         $html .= '<table class = "no_border">';
         $html .= '<tr>';
-        $html .= '<td>' . $dealer->name . '</td><td rowspan = "3"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.svg" align="right" width="200" height="200"/></td><td rowspan = "3">'.str_replace(';','; ',$data['calc_data']).'</td>';
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
+            $html .= '<td>' . $dealer->name . '</td><td rowspan = "3"><img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . '.svg" align="right" width="200" height="200"/></td><td rowspan = "3">'.str_replace(';','; ',$data['calc_data']).'</td>';
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<td><h2>Дата: ' . date("d.m.Y") . '</h2></td>';
@@ -2758,9 +2759,10 @@ class Gm_ceilingHelpersGm_ceiling
                 if ($data['mounting_sum'] != 0) {
                     $html .= '<p>&nbsp;</p>
                             <h1>Наряд монтажной бригаде</h1>
-                            <h2>Дата: ' . date("d.m.Y") . '</h2>
-                            <img src="' . $_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . md5("calculation_sketch" . $data['id']) . '.svg' . '" style="width: 100%; max-height: 800px;"/>
-                            <table border="0" cellspacing="0" width="100%">
+                            <h2>Дата: ' . date("d.m.Y") . '</h2>';
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . md5("calculation_sketch" . $data['id']) . '.svg'))
+                        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . md5("calculation_sketch" . $data['id']) . '.svg' . '" style="width: 100%; max-height: 800px;"/> ';
+                    $html .= '<table border="0" cellspacing="0" width="100%">
                             <tbody>
                                 <tr>
                                     <th>Наименование</th>
@@ -2794,9 +2796,10 @@ class Gm_ceilingHelpersGm_ceiling
                 } else {
                     $html .= '<p>&nbsp;</p>
                             <h1>Наряд монтажной бригаде</h1>
-                            <h2>Дата: ' . date("d.m.Y") . '</h2>
-                            <img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 800px;"/>
-                            <table border="0" cellspacing="0" width="100%">
+                            <h2>Дата: ' . date("d.m.Y") . '</h2>';
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
+                        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 800px;"/>';
+                    $html .= '<table border="0" cellspacing="0" width="100%">
                             <tbody>
                                 <tr>
                                     <th>Наименование</th>
@@ -3076,7 +3079,8 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= ' </tbody>';
         $html .= '</table>';
         $html .= '<div align="center" style="width: 100%">';
-        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 800px;"/>';
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
+            $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 800px;"/>';
         $html .= '</div>';
         $html .= "<pagebreak />";
         $html .= $html;
@@ -3114,7 +3118,8 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody>';
         $html .= '</table>';
         $html .= '<div align="center" style="width: 100%;">';
-        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 700px;"/>';
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
+            $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 700px;"/>';
         $html .= '</div>';
         $filename = md5($calc_id . 'cutpdf') . '.pdf';
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
@@ -3225,7 +3230,8 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
-        $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 530px;"/> <br>';
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
+            $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 530px;"/> <br>';
         $filename = md5($calc_id . "manager") . ".pdf";
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         return 1;
