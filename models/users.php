@@ -88,13 +88,42 @@ class Gm_ceilingModelUsers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->delete('`rgzbn_users_commercial_offer`');
+			$query->delete('`#__users_commercial_offer`');
 			$query->where("`user_id` = $user_id");
 			$db->setQuery($query);
 			$db->execute();
 
 			$query = $db->getQuery(true);
-			$query->insert('`rgzbn_users_commercial_offer`');
+			$query->insert('`#__users_commercial_offer`');
+			$query->columns('`user_id`,`code`,`manager_id`');
+			$query->values("$user_id, '$code', $manager_id");
+			$db->setQuery($query);
+			$db->execute();
+			
+			return true;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	function addDealerInstructionCode($user_id, $code, $manager_id)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->delete('`#__users_dealer_instruction`');
+			$query->where("`user_id` = $user_id");
+			$db->setQuery($query);
+			$db->execute();
+
+			$query = $db->getQuery(true);
+			$query->insert('`#__users_dealer_instruction`');
 			$query->columns('`user_id`,`code`,`manager_id`');
 			$query->values("$user_id, '$code', $manager_id");
 			$db->setQuery($query);
@@ -145,6 +174,56 @@ class Gm_ceilingModelUsers extends JModelList
 
 				$query = $db->getQuery(true);
 				$query->update('`rgzbn_users_commercial_offer`');
+				$query->set('`status` = 1');
+				$query->where("`user_id` = $item->user_id");
+				$db->setQuery($query);
+				$db->execute();
+			}
+			return $item;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	function acceptDealerInstructionCode($code)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from('`#__users_dealer_instruction`');
+			$query->where("`code` = '$code'");
+			$db->setQuery($query);
+			$item = $db->loadObject();
+
+			if (empty($item))
+			{
+				throw new Exception('Code not found');
+			}
+			if ($item->status == 0)
+			{
+				$client_id = JFactory::getUser($item->user_id)->associated_client;
+				if (!empty($item->manager_id))
+				{
+					$manager_id = $item->manager_id;
+				}
+				else
+				{
+					$manager_id = 1;
+				}
+				
+				$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+				$callback_model->save(date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'+2 hours')),'Просмотрена инструкция по использованию программы',
+					$client_id,$manager_id);
+
+				$query = $db->getQuery(true);
+				$query->update('`#__users_dealer_instruction`');
 				$query->set('`status` = 1');
 				$query->where("`user_id` = $item->user_id");
 				$db->setQuery($query);

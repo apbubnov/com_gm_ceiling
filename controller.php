@@ -2788,6 +2788,8 @@ class Gm_ceilingController extends JControllerLegacy
                 $server_name = $_SERVER['SERVER_NAME'];
                 $site = "http://$server_name/index.php?option=com_users&view=login";
                 $dealer = JFactory::getUser($user_id);
+                $code = md5($user_id.'dealer_instruction');
+                $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&code=$code";
 
                 // письмо
                 $mailer = JFactory::getMailer();
@@ -2810,7 +2812,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $body .= '<p>Почта: gm-partner@mail.ru</p>';
                 $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
                 $body .= '</div></td></tr></table>';
-                $body .= "<div style=\"width: 100%\">Ссылка для входа в кабинет: <a href=\"$site\">войти</a><br>
+                $body .= "<div style=\"width: 100%\">Инструкция по использованию: <a href=\"$site2\">Посмотреть видео</a><br>Ссылка для входа в кабинет: <a href=\"$site\">Войти</a><br>
                         Логин: $dealer->username<br>Пароль: $dealer->username<br></div></body>";
                 $mailer->setSubject('Доступ в кабинет');
                 $mailer->isHtml(true);
@@ -2818,6 +2820,9 @@ class Gm_ceilingController extends JControllerLegacy
                 $mailer->setBody($body);
                 $send = $mailer->Send();
                 
+                $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                $result = $users_model->addDealerInstructionCode($user_id, $code, $user->id);
+
                 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
                 $result = $users_model->updateEmail($user_id, $email);
 

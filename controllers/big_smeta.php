@@ -279,4 +279,23 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    function dealerInstruction()
+    {
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $code = $jinput->get('code', null, 'STRING');
+            $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $result  = $users_model->acceptCommercialOfferCode($code);
+            
+            $this->setRedirect('https://youtu.be/SliL0bmgTug');
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }
