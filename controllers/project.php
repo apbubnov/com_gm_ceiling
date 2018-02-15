@@ -998,22 +998,19 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $project_data = $model->getData($project_id);
                             $project_data->project_sum = 0;
 						    foreach ($calculations as $calculation)
-						        if (!in_array($calculation->id, $ignored_calculations)) {
+						        if (in_array($calculation->id, $ignored_calculations)) {
                                     if($smeta == 0) $project_data->project_sum += $calculation->dealer_components_sum;
                                     $project_data->project_sum += $calculation->dealer_canvases_sum;
                                     $project_data->project_sum += margin($calculation->mounting_sum, $dealer_mounting_margin);
                                 }
 
-                                print_r($data);
-						    echo "<br><br><br>";
-							$client_id = $data->id_client;
+							$client_id = $data->id_client_num;
 							$project_data->project_status = 3;
 							$project_data->gm_calculator_note = "Не вошедшие в договор №" . $data->id;
 							$project_data->project_verdict = 0;
 							$old_advt = $project_data->api_phone_id; 
 							$project_data->api_phone_id = 10;
 							$project_data->client_id = $client_id;
-							print_r($project_data); exit();
 
 							unset($project_data->id);
 							unset($project_data->project_mounting_date);

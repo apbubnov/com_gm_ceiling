@@ -148,10 +148,10 @@ class Gm_ceilingModelProject extends JModelItem
 							$textValue3[] = $results->id;
 						}
 					}
-
-				$this->_item->client_id = !empty($textValue) ? implode(', ', $textValue) : $this->_item->client_id;
-				$this->_item->dealer_id = !empty($textValue2) ? implode(', ', $textValue2) : $this->_item->dealer_id;
-				$this->_item->id_client =! empty($textValue3) ? implode(', ',$textValue3) : $this->_item->client_id;
+					$this->_item->id_client_num = !empty(intval($this->_item->_client_id))?$this->_item->_client_id:$this->_item->id_client;
+                    $this->_item->client_id = !empty($textValue) ? implode(', ', $textValue) : $this->_item->client_id;
+                    $this->_item->dealer_id = !empty($textValue2) ? implode(', ', $textValue2) : $this->_item->dealer_id;
+                    $this->_item->id_client = !empty($textValue3) ? implode(', ',$textValue3) : $this->_item->client_id;
 				}
 
 				if (isset($this->_item->project_mounter) && $this->_item->project_mounter != '') {
