@@ -2997,47 +2997,34 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                     calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
                     canvas += parseFloat(jQuery("[name='canvas["+jQuery(e).val()+"]']").val());
                 });
-                var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
+
+                var sum = Float(calc_sum + transport_sum);
                 var sum_total = Float(calc_total + transport_sum);
-                if(canvas == 0)
-                {
-                    if(min_components_sum > 0)
-                    {
-                        sum = min_components_sum;
-                    }
-                    else if(sum < min_project_sum)
-                    {
-                        sum = min_project_sum;
-                    }
-                    if(min_components_sum > 0)
-                    {
-                        sum_total = min_components_sum
-                    }
-                    else if(sum_total < min_project_sum)
-                    {
-                        sum_total = min_project_sum;
-                    }
+
+                if (canvas == 0) {
+                    sum = (sum <= min_components_sum)?min_components_sum:sum;
+                    sum_total = (sum_total <= min_components_sum)?min_components_sum:sum_total;
+                } else {
+                    sum = (sum <= min_project_sum)?min_project_sum:sum;
+                    sum_total = (sum_total <= min_project_sum)?min_project_sum:sum_total;
                 }
+                sum = Math.round(sum * 100) / 100;
+                sum_total = Math.round(sum_total * 100) / 100;
+
                 jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
-                //jQuery("#project_total").text(sum  + " руб.");
+                jQuery("#project_total span.sum").text(sum_total);
+                jQuery("#project_total_discount span.sum").text(sum  + " руб.");
+                jQuery("#project_sum_transport").val(sum);
+                jQuery(" #project_sum").val(sum);
+
                 if(canvas == 0) {
-                    jQuery("#project_total span.sum").text(sum_total);
-                    jQuery("#project_total span.dop").html((sum_total <= min_components_sum)?" * минимальная сумма заказа "+min_components_sum+"р.":"");
-                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                    jQuery("#project_total_discount span.dop").html((sum <= min_components_sum)?" * минимальная сумма заказа"+min_components_sum+"р.":"");
-                    jQuery("#project_sum_transport").val(sum);
-                    jQuery(" #project_sum").val(sum);
+                    jQuery("#project_total span.dop").html((sum_total == min_components_sum)?" * минимальная сумма заказа "+min_components_sum+"р.":"");
+                    jQuery("#project_total_discount span.dop").html((sum == min_components_sum)?" * минимальная сумма заказа"+min_components_sum+"р.":"");
                 }
                 else {
-                    jQuery("#project_total span.sum").text(sum_total);
-                    jQuery("#project_total span.dop").html((sum_total <= min_project_sum)?" * минимальная сумма заказа"+min_project_sum+"р.":"");
-                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                    jQuery("#project_total_discount span.dop").html((sum <= min_project_sum)?" * минимальная сумма заказа"+min_project_sum+".":"");
-                    jQuery("#project_sum_transport").val(sum);
-                    jQuery(" #project_sum").val(sum);
+                    jQuery("#project_total span.dop").html((sum_total == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+"р.":"");
+                    jQuery("#project_total_discount span.dop").html((sum == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+".":"");
                 }
-                
-
             },
             dataType: "json",
             timeout: 10000,
