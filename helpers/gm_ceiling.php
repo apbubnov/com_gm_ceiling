@@ -2496,8 +2496,8 @@ class Gm_ceilingHelpersGm_ceiling
         $total_with_gm_dealer_margin = 0;
         $total_with_dealer_margin = 0;
         foreach ($mounting_data as $mounting_item) {
-            $mounting_item['gm_salary_total'] = margin($mounting_item['gm_salary_total'], $gm_canvases_margin);
-            $mounting_item['dealer_salary_total'] = double_margin($mounting_item['dealer_salary_total'], $gm_canvases_margin, $dealer_canvases_margin);
+            $mounting_item['gm_salary_total'] = $mounting_item['gm_salary_total'];
+            $mounting_item['dealer_salary_total'] = $mounting_item['dealer_salary_total'];
             $total_gm_mounting += $mounting_item['gm_salary_total'];
             $total_dealer_mounting += $mounting_item['dealer_salary_total'];
             $total_with_gm_margin += $mounting_item['total_with_gm_margin'];
@@ -2782,9 +2782,9 @@ class Gm_ceilingHelpersGm_ceiling
                         foreach ($mounting_data as $item) {
                                 $html .= '<tr>';
                                 $html .= '<td>' . $item['title'] . '</td>';
-                                $html .= '<td class="center">' . round($item['price_with_dealer_margin'], 2) . '</td>';
+                                $html .= '<td class="center">' . round($item['dealer_salary'], 2) . '</td>';
                                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                                $html .= '<td class="center">' . round($item['total_with_dealer_margin'], 2) . '</td>';
+                                $html .= '<td class="center">' . round($item['dealer_salary_total'], 2) . '</td>';
                                 $html .= '</tr>';
                         }
                         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($data_mount['total_dealer_mounting'], 2) . '</th></tr>';
