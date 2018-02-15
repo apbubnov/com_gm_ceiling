@@ -1186,7 +1186,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			} else {
 				$this->setMessage("Данные успешно изменены!");
 			}
-
+            throw new Exception("Error Processing Request", 1);
 			// редирект
 			if ($data->project_status == 1 ) {
 				if($type === "gmchief") {
@@ -1198,8 +1198,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				if($type === "gmchief") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief', false));
 				} else {
-                    throw new Exception("Error Processing Request", 1);
-                    
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false));
 				}
 			}
