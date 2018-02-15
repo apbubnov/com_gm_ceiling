@@ -999,7 +999,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                             $project_data->project_sum = 0;
 						    foreach ($calculations as $calculation)
 						        if (in_array($calculation->id, $ignored_calculations)) {
-                                    if($smeta == 0) $project_data->project_sum += $calculation->dealer_components_sum;
+                                    $project_data->project_sum += $calculation->dealer_components_sum;
                                     $project_data->project_sum += $calculation->dealer_canvases_sum;
                                     $project_data->project_sum += margin($calculation->mounting_sum, $dealer_mounting_margin);
                                 }

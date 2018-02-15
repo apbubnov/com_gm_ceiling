@@ -223,7 +223,6 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                 </tr>
                 <?endif;?>
                 <tr>
-
                     <?php if ($kol > 0) { ?>
                         <th>Итого/ - %:
                         </th>
@@ -271,8 +270,8 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                     <td colspan="2">
                         <?php
                         $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-
                         $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
+
                         ?>
                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
