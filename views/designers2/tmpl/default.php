@@ -13,14 +13,14 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-$result_clients = $clients_model->getDesignersByClientName('', 3);
+$result_clients = $clients_model->getDesignersByClientName('', 5);
 ?>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
-    <h2 class="center">Отделочники/Дизайнеры</h2>
+    <h2 class="center">Дизайнеры</h2>
     <div style="display:inline-block; width: 48%; text-align: left;">
-        <button type="button" id="new_designer" class="btn btn-primary">Создать Отделочника/дизайнера</button>
+        <button type="button" id="new_designer" class="btn btn-primary">Создать дизайнера</button>
     </div>
     <div style="display:inline-block; width: 48%; text-align: left;">
         <input type="text" id="name_find_designer">
@@ -85,7 +85,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
     <div id="modal-window-container">
         <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="modal-window-1-tar">
-                <p><strong>Создание нового отделочника/дизайнера</strong></p>
+                <p><strong>Создание нового дизайнера</strong></p>
                 <p>ФИО:</p>
                 <p><input type="text" id="fio_designer"></p>
                 <p>Номер телефона:</p>
@@ -128,7 +128,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
                 data: {
                     fio: document.getElementById('fio_designer').value,
                     phone: document.getElementById('designer_contacts').value,
-                    designer_type: 3
+                    designer_type: 5
                 },
                 success: function(data){
                     if (data == 'client_found')
@@ -169,7 +169,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
                 url: "index.php?option=com_gm_ceiling&task=findOldClients",
                 data: {
                     fio: document.getElementById('name_find_designer').value,
-                    flag: 'designers'
+                    flag: 'designers2'
                 },
                 success: function(data){
                     console.log(data);

@@ -342,7 +342,7 @@ if (empty($list['direction']))
         }
 	}
 
-	public function getDesignersByClientName($client_name)
+	public function getDesignersByClientName($client_name,$designer_type)
 	{
 		try
 		{
@@ -357,7 +357,7 @@ if (empty($list['direction']))
 				->innerJoin('`#__users` AS `u` ON `c`.`id` = `u`.`associated_client`')
 				->leftJoin('(SELECT `id`,`client_id`,`project_status` FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) AS `p` ON `c`.`id` = `p`.`client_id`')
 				->leftJoin('`#__gm_ceiling_callback` AS `calls` ON `c`.`id` = `calls`.`client_id`')
-				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND `u`.`dealer_type` = 3")
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND `u`.`dealer_type` = $designer_type")
 				->order('`c`.`id` DESC')
 				->group('`c`.`id`');
 			$db->setQuery($query);

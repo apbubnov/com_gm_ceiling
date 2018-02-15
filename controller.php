@@ -304,7 +304,11 @@ class Gm_ceilingController extends JControllerLegacy
             }
             elseif ($flag == 'designers')
             {
-                $result = $clients_model->getDesignersByClientName($FIO);
+                $result = $clients_model->getDesignersByClientName($FIO, 3);
+            }
+            elseif ($flag == 'designers2')
+            {
+                $result = $clients_model->getDesignersByClientName($FIO, 5);
             }
 
             die(json_encode($result));
