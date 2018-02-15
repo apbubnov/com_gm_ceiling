@@ -977,6 +977,15 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
 						$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
 					}
+
+                    $dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
+                    $gm_canvases_margin = $dealer_info_model->getMargin('gm_canvases_margin',$user->dealer_id);
+                    if($smeta == 0) $gm_components_margin = $dealer_info_model->getMargin('gm_components_margin',$user->dealer_id);
+                    $gm_mounting_margin = $dealer_info_model->getMargin('gm_mounting_margin',$user->dealer_id);
+                    $dealer_canvases_margin = $dealer_info_model->getMargin('dealer_canvases_margin',$user->dealer_id);
+                    if($smeta == 0) $dealer_components_margin = $dealer_info_model->getMargin('dealer_components_margin',$user->dealer_id);
+                    $dealer_mounting_margin = $dealer_info_model->getMargin('dealer_mounting_margin',$user->dealer_id);
+
 					// Check for errors.
 					if ($return === false)
 					{
@@ -986,21 +995,31 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 						if($project_verdict == 1 && count($ignored_calculations) > 0) {
 
+                            $project_data = $model->getData($project_id);
+                            $project_data->project_sum = 0;
+						    foreach ($calculations as $calculation)
+						        if (!in_array($calculation->id, $ignored_calculations)) {
+                                    if($smeta == 0) $project_data->project_sum += $calculation->dealer_components_sum;
+                                    $project_data->project_sum += $calculation->dealer_canvases_sum;
+                                    $project_data->project_sum += margin($calculation->mounting_sum, $dealer_mounting_margin);
+                                }
+
+                                print_r($data);
+						    echo "<br><br><br>";
 							$client_id = $data->id_client;
-							$project_data = $model->getData($project_id);
 							$project_data->project_status = 3;
 							$project_data->gm_calculator_note = "Не вошедшие в договор №" . $data->id;
 							$project_data->project_verdict = 0;
-							$project_data->client_id = 	$client_id;
 							$old_advt = $project_data->api_phone_id; 
 							$project_data->api_phone_id = 10;
+							$project_data->client_id = $client_id;
+							print_r($project_data); exit();
 
 							unset($project_data->id);
 							unset($project_data->project_mounting_date);
 							$project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
 							$refuse_id = $project_model->save(get_object_vars($project_data));
-							
-							
+
 							$repeat_request = Gm_ceilingHelpersGm_ceiling::getModel('RepeatRequest');
 							$repeat_request->save($refuse_id,$old_advt);
 							$client_history_model->save($client_id, "Не вошедшие в договор № ".$project_id." потолки перемещены в проект №".$refuse_id);
@@ -1010,7 +1029,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							}
 						}
 					}
-
 					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 					$calculations = $calculationsModel->getProjectItems($data->id);
 					$components_data = array();
@@ -1025,14 +1043,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$print_components = 1;
 						$del_flag = 0;
 
-						$components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db,$calculation, $save, $ajax, $pdf, $print_components,$del_flag);
-						$dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
-						$gm_canvases_margin = $dealer_info_model->getMargin('gm_canvases_margin',$user->dealer_id);
-						if($smeta == 0) $gm_components_margin = $dealer_info_model->getMargin('gm_components_margin',$user->dealer_id);
-						$gm_mounting_margin = $dealer_info_model->getMargin('gm_mounting_margin',$user->dealer_id);
-						$dealer_canvases_margin = $dealer_info_model->getMargin('dealer_canvases_margin',$user->dealer_id);
-						if($smeta == 0) $dealer_components_margin = $dealer_info_model->getMargin('dealer_components_margin',$user->dealer_id);
-						$dealer_mounting_margin = $dealer_info_model->getMargin('dealer_mounting_margin',$user->dealer_id);
 						foreach($calculations as $calc) {
 							if($smeta == 0) $project_sum += margin($calc->components_sum, $dealer_components_margin);
 							$project_sum += margin($calc->canvases_sum,  $dealer_canvases_margin);
