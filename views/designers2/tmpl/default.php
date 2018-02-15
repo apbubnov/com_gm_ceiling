@@ -57,7 +57,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 5);
                             $color = 'style="background-color: PaleGreen;"';
                         }
         	?>
-                    <tr class="row<?php echo $i % 2; ?>" <?= $color ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.(int) $value->id); ?>">
+                    <tr class="row<?php echo $i % 2; ?>" <?= $color ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer2&id='.(int) $value->id); ?>">
     		            <td>
     		               <?php echo $value->client_name; ?>
     		            </td>
@@ -192,7 +192,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 5);
                         {
                             color = 'style="background-color: PaleGreen;"';
                         }
-                        html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer&id=' + data[i].id + '">';
+                        html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=designer2&id=' + data[i].id + '">';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].created + '</td></tr>';
