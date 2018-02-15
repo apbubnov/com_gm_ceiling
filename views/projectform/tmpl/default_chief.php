@@ -1047,7 +1047,7 @@
                             <button id="btn_submit" type="button" class="validate btn btn-primary">Сохранить и запустить в производство</button>
                         <?php } else if($this->item->project_status == 5) { ?>
                             <button id="btn_submit" type="button" class="validate btn btn-primary">Сохранить</button>
-                        <?php ?>
+                        <?php } ?>
                         </div>
                     </div>
                 </form>
