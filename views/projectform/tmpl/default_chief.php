@@ -142,9 +142,8 @@
     </a>
 <?php } else { ?>
     <a class="btn btn-primary"
-        href="<?php if ($this->item->project_status == 4)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chiefprojects');
-        elseif ($userId == $user->dealer_id)  echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief');
-        else echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>"
+        href="<?php if ($userId == $user->dealer_id) echo JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage');
+            else echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>"
         title="">Вернуться к монтажам
     </a>
 <?php } ?>
