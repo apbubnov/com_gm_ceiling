@@ -158,14 +158,15 @@
 <div id="orders-container-tar">
     <p class="caption-tar">Заказы</p>
     <table class="table table-striped table_cashbox one-touch-view" id="table_projects">
-        <tr>
-            <th>Номер</th>
-            <th>Дата</th>
-            <th>Сумма</th>
-            <th>Примечание</th>
-            <th>Статус</th>
-        </tr>
-     
+        <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Дата</th>
+                <th>Сумма</th>
+                <th>Примечание</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
         <?php foreach($projects as $item):?>
 
             <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) {
