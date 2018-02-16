@@ -38,4 +38,7 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
 	<p class="center">
 		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects', false); ?>"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Запущенные</a>
 	</p>
+	<p class="center">
+		<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=gaugers&type=chief', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Замерщики</a>
+	</p>
 </div>
