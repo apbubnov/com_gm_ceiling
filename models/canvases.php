@@ -108,7 +108,7 @@ if (empty($list['direction']))
             ->select('color.id as color_id, color.title as color_title, color.file as color_file, color.hex as color_hex')
             ->select('texture.id as texture_id, texture.texture_title as texture_title, '
                 . ' texture.texture_colored as texture_colored');
-
+        $query->where('canvas.count > 0');
         $query->group('canvas.country, canvas.name, canvas.width, roller.id');
 
         // Add the list ordering clause.
