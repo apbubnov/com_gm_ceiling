@@ -52,8 +52,15 @@
 
 <script type='text/javascript'>
 
+	// функция валидации емайла
+	function isValidEmailAddress(emailAddress) {
+		var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+		return pattern.test(emailAddress);
+	}
+
 	jQuery(document).ready( function() {
-		// проверка на пустые поля
+
+		// проверка на пустые поля и валидация емайла
 		jQuery("#add-gauger").click(function() {
 			if (jQuery("#name").val() == "" || jQuery("#phone").val() == "" || jQuery("#email").val() == "") {
 				jQuery("#wrong").text("Все поля должны быть заполнены");
@@ -66,6 +73,9 @@
 				if (jQuery("#email").val() == "") {
 					jQuery("#email").css({"border" : "1px solid #ff3d3d"});
 				}
+			} else if (isValidEmailAddress(jQuery("#email").val()) == false) {
+				jQuery("#wrong").text("Введите корректный E-mail");
+				jQuery("#email").css({"border" : "1px solid #ff3d3d"});
 			} else {
 				jQuery("#gauger_form").submit();
 			}
