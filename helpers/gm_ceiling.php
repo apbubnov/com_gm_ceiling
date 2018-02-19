@@ -2918,7 +2918,6 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
         }
-        print_r($components_data);
           foreach ($components_data as $component_array) {
             foreach ($component_array as $key => $component) {
                 if ($component['stack'] == 1) {
