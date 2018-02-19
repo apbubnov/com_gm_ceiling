@@ -3270,6 +3270,7 @@ class Gm_ceilingController extends JControllerLegacy
         try{
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->get('id', null, 'INT');
+            $email = $jinput->get('email', null, 'INT');
             $mailer = JFactory::getMailer();
             $config = JFactory::getConfig();
             $sender = array(
@@ -3282,7 +3283,7 @@ class Gm_ceilingController extends JControllerLegacy
             Gm_ceilingHelpersGm_ceiling::save_pdf($client_estimate, $sheets_dir . $filename, "A4");
 
             $mailer->setSender($sender);
-            $mailer->addRecipient($data['send_email']);
+            $mailer->addRecipient($email);
             $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
             $mailer->setSubject('Подробная смета');
             $mailer->setBody($body);
