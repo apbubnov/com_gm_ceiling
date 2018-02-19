@@ -3270,7 +3270,7 @@ class Gm_ceilingController extends JControllerLegacy
         try{
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->get('id', null, 'INT');
-            $email = $jinput->get('email', null, 'INT');
+            $email = $jinput->get('email', null, 'STRING');
             $mailer = JFactory::getMailer();
             $config = JFactory::getConfig();
             $sender = array(
@@ -3289,7 +3289,7 @@ class Gm_ceilingController extends JControllerLegacy
             $mailer->setBody($body);
             $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
             $send = $mailer->Send();
-            //unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+            unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
             die(true);
         }
         catch(Exception $e)
