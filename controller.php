@@ -2670,9 +2670,10 @@ class Gm_ceilingController extends JControllerLegacy
                     throw new Exception('empty email');
                 }
                 $code = md5($user_id.'commercial_offer');
+                $code_instruction = md5($user_id.'dealer_instruction');
                 $server_name = $_SERVER['SERVER_NAME'];
                 $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
-                $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code";
+                $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code_instruction";
                 // письмо
     			$mailer = JFactory::getMailer();
     			$config = JFactory::getConfig();
