@@ -2672,6 +2672,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $code = md5($user_id.'commercial_offer');
                 $server_name = $_SERVER['SERVER_NAME'];
                 $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
+                $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code";
                 // письмо
     			$mailer = JFactory::getMailer();
     			$config = JFactory::getConfig();
@@ -2698,7 +2699,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $body .= '<p>Почта: gm-partner@mail.ru</p>';
                 $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
                 $body .= '</div></td></tr></table>';
-                $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку на <a href=\"$site\">коммерческое предложение</a>, где Вы можете получить более подробную информацию.</div></body>";
+                $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку на <a href=\"$site\">коммерческое предложение</a>, где Вы можете получить более подробную информацию. А также ссылку на <a href=\"$site\">краткий обзор программы</a>.</div></body>";
                 $mailer->setSubject('Коммерческое предложение');
                 $mailer->isHtml(true);
                 $mailer->Encoding = 'base64';
@@ -2793,7 +2794,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $site = "http://$server_name/index.php?option=com_users&view=login";
                 $dealer = JFactory::getUser($user_id);
                 $code = md5($user_id.'dealer_instruction');
-                $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&code=$code";
+                $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=0&code=$code";
 
                 // письмо
                 $mailer = JFactory::getMailer();
