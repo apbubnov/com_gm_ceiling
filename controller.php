@@ -3277,7 +3277,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $config->get('fromname')
             );
             $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/tmp/';
-            $client_estimate[] = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/". md5($data['id']."client_single") . ".pdf";
+            $client_estimate[] = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/". md5($id."client_single") . ".pdf";
             $filename =  "Подробная смета.pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($client_estimate, $sheets_dir . $filename, "A4");
 
