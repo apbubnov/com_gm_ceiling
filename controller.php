@@ -3285,7 +3285,7 @@ class Gm_ceilingController extends JControllerLegacy
             $mailer->setBody($body);
             $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
             $send = $mailer->Send();
-            unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+            //unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
             die(true);
         }
         catch(Exception $e)
