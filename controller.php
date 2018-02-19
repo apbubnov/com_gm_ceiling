@@ -3269,7 +3269,7 @@ class Gm_ceilingController extends JControllerLegacy
     public function sendClientEstimate(){
         try{
             $jinput = JFactory::getApplication()->input;
-            $id = $jinput->get('calc_id', null, 'INT');
+            $id = $jinput->get('id', null, 'INT');
             $mailer = JFactory::getMailer();
             $config = JFactory::getConfig();
             $sender = array(
