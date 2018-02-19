@@ -2898,63 +2898,35 @@ class Gm_ceilingHelpersGm_ceiling
         foreach ($components_list as $i => $component) {
             $components[$component->id] = $component;
         }
-        $component_count = array();
-        foreach ($components as $key => $value) $component_count[$key] = 0;
-
         $print_data = array();
-        foreach ($component_count as $key => $cost) {
+        foreach ($components as $key => $value) {
             $component_item = array();
-
-            $component_item['title'] = $components[$key]->component_title;                                //Название комплектующего
+            $component_item['title'] = $components[$key]->full_name;                              //Название комплектующего
             $component_item['unit'] = $components[$key]->component_unit;                                //В чем измеряется
-            $component_item['self_total'] = 0;                                                            //В чем измеряется
-            $component_item['id'] = $components[$key]->id;                                                //ID
-            $component_item['quantity'] = 0;
-            $component_item['rounding'] = $components[$key]->count_sale; // Значение для округления со склада
-
+            $component_item['self_total'] = 0;                                                          //себестоимость
+            $component_item['id'] = $components[$key]->id;                                              //ID
+            $component_item['quantity'] = 0;                                                            //Кол-во
+            $component_item['rounding'] = $components[$key]->count_sale;                                // Значение для округления со склада
             $print_data[] = $component_item;
         }
-
         foreach ($components_data as $component_array) {
-            foreach ($component_array as $key => $component) {
+            foreach ($component_array as $key1 => $component) {
                 if ($component['stack'] == 0) {
-                    $new_component = $component;
-                    $new_component['self_total'] = $print_data[$key]['self_total'] + $new_component['self_total'];
-                    $new_component['quantity'] = self::rounding($print_data[$key]['quantity'] + $new_component['quantity'], $print_data[$key]['rounding']); // Округление
-                    //$new_component['quantity'] = $print_data[$key]['quantity'] + $new_component['quantity'];
-                    $print_data[$key] = $new_component;
+                    $print_data[$key1]['self_total'] =  $print_data[$key1]['self_total'] + $component['self_total'];
+                    $print_data[$key1]['quantity'] = self::rounding( $print_data[$key1]['quantity'] + $component['quantity'], $print_data[$key1]['rounding']); // Округление                   
                 }
             }
 
         }
-
-        foreach ($components_data as $component_array) {
+        print_r($components_data);
+          foreach ($components_data as $component_array) {
             foreach ($component_array as $key => $component) {
                 if ($component['stack'] == 1) {
                     $print_data[] = $component;
                 }
             }
-        }
-/*
-        $i = 0;
-        foreach ($print_data as $data) {
-            if ($data['title'] == "Багет ПВХ (2,5 м)") $it_11 = $i;
-            if ($data['title'] == "Багет потолочный аллюм") $it_236 = $i;
-            if ($data['title'] == "Багет стеновой аллюм") $it_239 = $i;
-            if ($data['title'] == "Провод ПВС 2 х 0,75 (20 м)") $it_4 = $i;
-            if ($data['title'] == "Брус 40*50") $it_1 = $i;
-            if ($data['title'] == "Багет для парящих пот аллюм") $it_559 = $i;
-            if ($data['title'] == "Вставка для парящих потолков") $it_38 = $i;
-            if ($data['title'] == "Профиль ПП 75") $it_650 = $i;
-            if ($data['title'] == "Профиль ПЛ 75") $it_651 = $i;
-            if ($data['title'] == "Профиль КП 2") $it_652 = $i;
-            if ($data['title'] == "Профиль НП 5") $it_653 = $i;
-            if ($data['title'] == "Профиль БП 40") $it_654 = $i;
-            if ($data['title'] == "Профиль СП 1") $it_655 = $i;
-            if ($data['title'] == "Профиль СП 2") $it_656 = $i;
-
-            $i++;
-        }*/
+        }  
+        
         $html = '<h1>Расходные материалы</h1>';
         if (isset($project_id)) {
             if ($project_id) {
@@ -2966,44 +2938,9 @@ class Gm_ceilingHelpersGm_ceiling
 		<h2>Дата: ' . date("d.m.Y") . '</h2>
 		<table border="0" cellspacing="0" width="100%">
 		<tbody><tr><th>Наименование</th><th class="center">Ед. изм.</th><th class="center">Кол-во</th><th class="center">Общая стоимость</th></tr>';
-/*
-        $print_data[$it_11]['quantity'] = self::rounding($print_data[$it_11]['quantity'], 2.5);
-        $print_data[$it_236]['quantity'] = self::rounding($print_data[$it_236]['quantity'], 2.5);
-        $print_data[$it_239]['quantity'] = self::rounding($print_data[$it_239]['quantity'], 2.5);
-        $print_data[$it_559]['quantity'] = self::rounding($print_data[$it_559]['quantity'], 2.5);
-        $print_data[$it_38]['quantity'] = self::rounding($print_data[$it_38]['quantity'], 0.5);
-        $print_data[$it_1]['quantity'] = self::rounding($print_data[$it_1]['quantity'], 0.5);
-        $print_data[$it_650]['quantity'] = self::rounding($print_data[$it_650]['quantity'], 2.5);
-        $print_data[$it_651]['quantity'] = self::rounding($print_data[$it_651]['quantity'], 2.5);
-        $print_data[$it_652]['quantity'] = self::rounding($print_data[$it_652]['quantity'], 2.5);
-        $print_data[$it_653]['quantity'] = self::rounding($print_data[$it_653]['quantity'], 2.5);
-        $print_data[$it_654]['quantity'] = self::rounding($print_data[$it_654]['quantity'], 2.5);
-        $print_data[$it_655]['quantity'] = self::rounding($print_data[$it_655]['quantity'], 2.5);
-        $print_data[$it_656]['quantity'] = self::rounding($print_data[$it_656]['quantity'], 2.5);
-
-
-        $print_data[$it_11]['self_total'] = $print_data[$it_11]['self_price'] * $print_data[$it_11]['quantity'];
-        $print_data[$it_236]['self_total'] = $print_data[$it_236]['self_price'] * $print_data[$it_236]['quantity'];
-        $print_data[$it_239]['self_total'] = $print_data[$it_239]['self_price'] * $print_data[$it_239]['quantity'];
-        $print_data[$it_559]['self_total'] = $print_data[$it_559]['self_price'] * $print_data[$it_559]['quantity'];
-        $print_data[$it_38]['self_total'] = $print_data[$it_38]['self_price'] * $print_data[$it_38]['quantity'];
-        $print_data[$it_1]['self_total'] = $print_data[$it_1]['self_price'] * $print_data[$it_1]['quantity'];
-        $print_data[$it_650]['self_total'] = $print_data[$it_650]['self_price'] * $print_data[$it_650]['quantity'];
-        $print_data[$it_651]['self_total'] = $print_data[$it_651]['self_price'] * $print_data[$it_651]['quantity'];
-        $print_data[$it_652]['self_total'] = $print_data[$it_652]['self_price'] * $print_data[$it_652]['quantity'];
-        $print_data[$it_653]['self_total'] = $print_data[$it_653]['self_price'] * $print_data[$it_653]['quantity'];
-        $print_data[$it_654]['self_total'] = $print_data[$it_654]['self_price'] * $print_data[$it_654]['quantity'];
-        $print_data[$it_655]['self_total'] = $print_data[$it_655]['self_price'] * $print_data[$it_655]['quantity'];
-        $print_data[$it_656]['self_total'] = $print_data[$it_656]['self_price'] * $print_data[$it_656]['quantity'];
-
-        //округляем провод
-        $print_data[$it_4]['quantity'] = ceil($print_data[$it_4]['quantity']);
-        $print_data[$it_4]['self_total'] = $print_data[$it_4]['self_price'] * $print_data[$it_4]['quantity'];
-*/
-
         $price_itog = 0;
         foreach ($print_data as $key => $item) {
-            if ($item['quantity'] > 0 && $item['quantity'] > 0.0) {
+            if ($item['quantity'] > 0 || $item['quantity'] > 0.0) {
                 $html .= '<tr>';
                 $html .= '<td>' . $item['title'] . '</td>';
                 $html .= '<td class="center">' . $item['unit'] . '</td>';
