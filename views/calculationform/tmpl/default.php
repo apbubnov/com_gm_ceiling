@@ -2518,8 +2518,10 @@
 					var additional = "del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val();
 					jQuery.ajax({
 						type: 'POST',
-						url: "index.php?option=com_gm_ceiling&task=calculate&send_client_cost=1&" + additional,
-						data: data,
+						url: "index.php?option=com_gm_ceiling&task=sendClientEstimate",
+						data: {
+							id : <?php echo $calc_id;?>
+						},
 						success: function(data){
 							jQuery('#send_email_success').slideDown();
 						},
@@ -2601,7 +2603,6 @@
 			jQuery('#order_button').show();
 			
 			if(jQuery("#form-calculation").validationEngine('validate')) {
-				
 				var calculate_button = jQuery( this );
 				if( !calculate_button.hasClass("loading") ) {
 					calculate_button.addClass("loading");
