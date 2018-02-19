@@ -3287,10 +3287,10 @@ class Gm_ceilingController extends JControllerLegacy
             $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
             $mailer->setSubject('Подробная смета');
             $mailer->setBody($body);
-            $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . "Подробная смета.pdf");
+            $mailer->addAttachment($sheets_dir.$filename);
             $send = $mailer->Send();
             unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
-            die(true);
+            die($send);
         }
         catch(Exception $e)
         {
