@@ -2019,6 +2019,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 
     function update_calendar(month, year,type) {
         var flag = (type == "#g_calendar" ) ? 3 : 2;
+        console.log(flag);
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
