@@ -382,6 +382,10 @@ echo parent::getPreloader();
                         <td><?php echo $this->item->gm_chief_note; ?></td>
                     </tr>
                     <tr>
+                        <th>Замерщик</th>
+                        <td><?php echo JFactory::getUser($this->item->project_calculator)->name; ?></td>
+                    </tr>
+                    <tr>
                         <th>Монтажная бригада</th>
                         <?php $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('project'); ?>
                         <?php $mount = $mount_model->getMount($this->item->id); ?>

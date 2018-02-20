@@ -10,7 +10,6 @@
 defined('_JEXEC') or die;
 $user = JFactory::getUser();
 $user_group = $user->groups;
-$isDealer = (in_array('14',$user_group))? true : false;
 $userId = $user->get('id');
 $userName = $user->get('username');
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
@@ -880,19 +879,17 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </td>
 
                         </tr>
-                        <?php if($isDealer):?>
-                            <?php if(!empty($this->item->project_calculator)):?>
-                                <tr>
-                                    <th>Замерщик</th>
-                                    <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
-                                </tr>
-                            <?php endif;?>
-                            <?php if(!empty($this->item->project_mounter)):?>
-                                <tr>
-                                    <th>Монтажная бригада</th>
-                                    <td><?php echo JFactory::getUser($this->item->project_mounter)->name;?></td>
-                                </tr>
-                            <?php endif;?>
+                        <?php if(!empty($this->item->project_calculator)):?>
+                            <tr>
+                                <th>Замерщик</th>
+                                <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
+                            </tr>
+                        <?php endif;?>
+                        <?php if(!empty($this->item->project_mounter)):?>
+                            <tr>
+                                <th>Монтажная бригада</th>
+                                <td><?php echo JFactory::getUser($this->item->project_mounter)->name;?></td>
+                            </tr>
                         <?php endif;?>
                     </div>
                         <!--<tr>

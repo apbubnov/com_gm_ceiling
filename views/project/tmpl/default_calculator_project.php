@@ -74,6 +74,18 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                             <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
                             <td><?php if ($this->item->project_mounting_date == '0000-00-00 00:00:00') echo "-"; else echo $this->item->project_mounting_date; ?></td>
                         </tr>
+                        <?php if(!empty($this->item->project_calculator)):?>
+                            <tr>
+                                <th>Замерщик</th>
+                                <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
+                            </tr>
+                        <?php endif;?>
+                        <?php if(!empty($this->item->project_mounter)):?>
+                            <tr>
+                                <th>Монтажная бригада</th>
+                                <td><?php echo JFactory::getUser($this->item->project_mounter)->name;?></td>
+                            </tr>
+                        <?php endif;?>
                     </table>
 
                 </form>
