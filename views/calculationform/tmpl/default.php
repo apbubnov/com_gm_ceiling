@@ -2505,7 +2505,7 @@
 			var reg = /^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/;
 			if(reg.test(jQuery("#send_email").val())){
 				if(jQuery("#form-calculation").validationEngine('validate')) {
-					/* jQuery.ajax({
+					 jQuery.ajax({
 						type: 'POST',
 						url: "index.php?option=com_gm_ceiling&task=sendClientEstimate",
 						data: {
@@ -2530,7 +2530,7 @@
 							calculate_button.find("span.loading").hide();
 							calculate_button.find("span.static").show();
 						}					
-					}); */
+					}); 
 				}
 			}
 			else{
