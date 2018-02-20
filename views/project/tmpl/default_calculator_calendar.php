@@ -149,7 +149,16 @@ if (count($Allbrigades) == 0) {
     $AllMounters = $model->FindAllMounters($where);
 }
 //----------------------------------------------------------------------------------
-
+/* замерщики */
+$model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
+$AllGauger = $model->FindAllGauger($user->dealer_id);
+if (count($AllGauger) == 0) {
+    array_push($AllGauger, ["id" => $userId, "name" => $user->name]);
+}
+$month = date("n");
+$ear = date("Y");
+$flagGaugerCalendar = [3, $user->dealer_id];
+$g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $flagGaugerCalendar);
 if(false):
 /***************************************************************************************************************************************************************************************************************************************************/
 /* Клиент */
@@ -828,30 +837,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </td>
                             <td>
                                 <div class="Date" style="display: none;">
-                                    <label id="jform_project_mounting_date-lbl" for="jform_project_new_calc_date">Новая
-                                        дата<span class="star">&nbsp;*</span></label>
-                                    <?php $attribs = array(); ?>
-                                    <?php $attribs['class'] = "controls"; ?>
-                                    <?php echo JHtml::calendar('', 'project_new_calc_date', 'jform_project_new_calc_date', '%d.%m.%Y', $attribs); ?>
-                                    <label id="jform_project_calculation_daypart-lbl"
-                                            for="jform_new_project_calculation_daypart">Удобное время замера</label>
-                                    <select id="jform_new_project_calculation_daypart"
-                                            name="new_project_calculation_daypart" class="form-control inputbox"
-                                            disabled="true">
-                                        <option value="0" selected="">- Выберите время замера -</option>
-                                        <option value="1">9:00-10:00</option>
-                                        <option value="2">10:00-11:00</option>
-                                        <option value="3">11:00-12:00</option>
-                                        <option value="4">12:00-13:00</option>
-                                        <option value="5">13:00-14:00</option>
-                                        <option value="6">14:00-15:00</option>
-                                        <option value="7">15:00-16:00</option>
-                                        <option value="8">16:00-17:00</option>
-                                        <option value="9">17:00-18:00</option>
-                                        <option value="10">18:00-19:00</option>
-                                        <option value="11">19:00-20:00</option>
-                                        <option value="12">20:00-21:00</option>
-                                    </select>
+                                    <?php echo $calendar; ?>
                                 </div>
                             </td>
                         </tr>
