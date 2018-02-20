@@ -93,7 +93,7 @@ function dealer_margin($price, $margin, $value, $type)
             </button>
         <? endif; ?>
         <? if ($managerGM): ?>
-            <form class="FormSimple UpdatePrice MarginLeft">
+            <form class="FormSimple UpdatePrice MarginLeft" data-type="ALL">
                 <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o"
                                                                           aria-hidden="true"></i></label>
                 <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
@@ -117,7 +117,7 @@ function dealer_margin($price, $margin, $value, $type)
             <tr class="THead">
                 <td><i class="fa fa-bars" aria-hidden="true"></i></td>
                 <td><?= JHtml::_('grid.sort', '<i class="fa fa-hashtag" aria-hidden="true"></i>', 'canvas_id', $listDirn, $listOrder); ?></td>
-                <td><?= JHtml::_('grid.sort', 'Наименование', 'canvas_name', $listDirn, $listOrder); ?></td>
+                <td><?= JHtml::_('grid.sort', 'Наименование', 'texture_title', $listDirn, $listOrder); ?></td>
                 <td><?= JHtml::_('grid.sort', 'Цвет', 'color_title', $listDirn, $listOrder); ?></td>
                 <td><?= JHtml::_('grid.sort', 'Количество', 'canvas_count', $listDirn, $listOrder); ?></td>
                 <? if ($stock): ?>
@@ -150,16 +150,16 @@ function dealer_margin($price, $margin, $value, $type)
                             background-color: #<?= $canvasTC->color_hex; ?>;
                             background-image: url('<?= $canvas->color_file; ?>');
                             "><?= $canvasTC->color_title; ?></td>
-                    <td></td>
+                    <td><?= $canvasTC->count; ?></td>
                     <? if ($stock): ?>
-                        <td></td>
+                        <td><?= $canvasTC->ocount; ?></td>
                         <td></td>
                         <td></td>
                         <td></td>
                     <? elseif ($managerGM && empty($dealer)): ?>
-                        <td id="GMPrice"></td>
-                        <td id="GMPrice"></td>
-                        <td id="DealerPrice"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC; ?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
@@ -174,8 +174,8 @@ function dealer_margin($price, $margin, $value, $type)
                             </form>
                         </td>
                     <? elseif ($managerGM): ?>
-                        <td id="GMPrice"></td>
-                        <td id="DealerPrice"></td>
+                        <td></td>
+                        <td></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC; ?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
@@ -200,16 +200,16 @@ function dealer_margin($price, $margin, $value, $type)
                         <td></td>
                         <td title="Страна - Название"><?= $canvaseN->country . " - " . $canvaseN->name; ?></td>
                         <td></td>
-                        <td></td>
+                        <td><?= $canvaseN->count; ?></td>
                         <? if ($stock): ?>
-                            <td></td>
+                            <td><?= $canvaseN->ocount; ?></td>
                             <td></td>
                             <td></td>
                             <td></td>
                         <? elseif ($managerGM && empty($dealer)): ?>
-                            <td id="GMPrice"></td>
-                            <td id="GMPrice"></td>
-                            <td id="DealerPrice"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td>
                                 <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_N; ?>">
                                     <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
@@ -224,8 +224,8 @@ function dealer_margin($price, $margin, $value, $type)
                                 </form>
                             </td>
                         <? elseif ($managerGM): ?>
-                            <td id="GMPrice"></td>
-                            <td id="DealerPrice"></td>
+                            <td></td>
+                            <td></td>
                             <td>
                                 <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_N; ?>">
                                     <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
@@ -254,8 +254,8 @@ function dealer_margin($price, $margin, $value, $type)
                             <td></td>
                             <td><?=$canvas->count;?> шт.</td>
                             <? if ($stock): ?>
-                                <td><?= $canvas->ocount; ?></td>
-                                <td><?= $canvas->pprice; ?></td>
+                                <td><?= $canvas->ocount; ?> шт.</td>
+                                <td><?= $canvas->pprice; ?> руб./м<sup>2</sup></td>
                                 <td></td>
                                 <td>
                                     <a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?= $key_c; ?>">Инфо</a>
@@ -306,9 +306,9 @@ function dealer_margin($price, $margin, $value, $type)
                         <td><?= $roller->id; ?></td>
                         <td title="Штриховой код / Артикль"><?= $roller->barcode; ?> / <?= $roller->article; ?></td>
                         <td></td>
-                        <td><?= $roller->quad; ?> m<sup>2</sup></td>
+                        <td><?= $roller->quad; ?> м<sup>2</sup></td>
                         <td></td>
-                        <td><?= $roller->pprice; ?></td>
+                        <td><?= $roller->pprice; ?> руб./м<sup>2</sup></td>
                         <td><?= $roller->stock_name; ?></td>
                         <td>
                             <a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?= $key_c; ?>&roller=<?= $key_r; ?>">Инфо</a>
@@ -493,9 +493,13 @@ function dealer_margin($price, $margin, $value, $type)
      */
     function UpdatePrice() {
         Data.Preloader.show();
-        var values = JSON.serialize(this);
+        var _this = $(this),
+            TR = _this.closest("tr"),
+            values = JSON.serialize(this);
+
         values.id = this.dataset.id;
         values.dealer = Data.Dealer;
+        values.level = (TR)?TR.data("level"):0;
 
         jQuery.ajax({
             type: 'POST',

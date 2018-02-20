@@ -169,7 +169,7 @@ body {
 .Page .Body tbody tr td.Color:hover:after {
     content: '◀';
     position: absolute;
-    right: -7px;
+    right: -6px;
     top: calc(50% - 5px);
     width: 10px;
     height: 10px;

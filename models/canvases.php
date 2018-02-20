@@ -60,14 +60,14 @@ class Gm_ceilingModelCanvases extends JModelList
         $list = $app->getUserState($this->context . '.list');
 
         if (empty($list['ordering']))
-{
-    $list['ordering'] = 'ordering';
-}
+        {
+            $list['ordering'] = 'ordering';
+        }
 
-if (empty($list['direction']))
-{
-    $list['direction'] = 'asc';
-}
+        if (empty($list['direction']))
+        {
+            $list['direction'] = 'asc';
+        }
 
         if (isset($list['ordering']))
         {
@@ -109,7 +109,6 @@ if (empty($list['direction']))
             ->select('texture.id as texture_id, texture.texture_title as texture_title, '
                 . ' texture.texture_colored as texture_colored');
         $query->where('canvas.count > 0');
-        $query->group('canvas.country, canvas.name, canvas.width, roller.id');
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
@@ -117,6 +116,8 @@ if (empty($list['direction']))
 
         if ($orderCol && $orderDirn) {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
+        } else {
+            $query->order("canvas_id asc, roller_id asc");
         }
 
         $this->setState('list.limit', null);
@@ -142,12 +143,14 @@ if (empty($list['direction']))
 
             $result = [];
 
-            $canvas_id = null;
-            $roller_id = null;
+            $OLD_TC_ID = null;
+            $OLD_N_ID = null;
+            $OLD_CANVAS_ID = null;
+            $OLD_ROLLER_ID = null;
 
-            foreach ($items as $item) {
+            foreach ($items as $key => $item) {
                 $item->pprice = self::MinPriceRoller($item->roller_id);
-                $item->pprice = (empty($item->pprice) ? "Нет" : $item->pprice);
+                $item->pprice = (empty($item->pprice) ? "?" : $item->pprice);
 
                 $query = $db->getQuery(true);
                 $query->from("`#__gm_ceiling_stocks`")
@@ -157,6 +160,7 @@ if (empty($list['direction']))
                 $item->stock_name = $db->loadObject()->name;
 
                 $TC_ID = $item->texture_id . "/" . $item->color_id;
+                if (empty($OLD_TC_ID)) $OLD_TC_ID = $TC_ID;
                 if (empty($result[$TC_ID])) {
                     $canvas = (object)[];
                     $canvas->texture_title = $item->texture_title;
@@ -164,22 +168,30 @@ if (empty($list['direction']))
                     $canvas->color_title = (strpos($item->texture_title, "бел"))?303:$item->color_title;
                     $canvas->color_file = $item->color_file;
                     $canvas->color_hex = ($canvas->color_title == 303)?"FFFFFF":$item->color_hex;
+                    $canvas->count = 0;
+                    $canvas->ocount = "";
                     $canvas->canvases = [];
 
                     $result[$TC_ID] = $canvas;
                 }
 
                 $N_ID = $item->canvas_country . "/" . $item->canvas_name;
+                if (empty($OLD_N_ID)) $OLD_N_ID = $N_ID;
                 if (empty($result[$TC_ID]->canvases[$N_ID])) {
                     $canvas = (object)[];
                     $canvas->country = $item->canvas_country;
                     $canvas->name = $item->canvas_name;
+                    $canvas->count = 0;
+                    $canvas->ocount = "";
                     $canvas->canvases = [];
+
+                    $result[$TC_ID]->count += 1;
 
                     $result[$TC_ID]->canvases[$N_ID] = $canvas;
                 }
 
-                if (empty($result[$TC_ID]->canvases[$N_ID]->canvases[$item->canvas_id])) {
+                $CANVAS_ID = $item->canvas_id;
+                if (empty($result[$TC_ID]->canvases[$N_ID]->canvases[$CANVAS_ID])) {
                     $canvas = (object)[];
                     $canvas->id = $item->canvas_id;
                     $canvas->width = $item->canvas_width;
@@ -188,9 +200,15 @@ if (empty($list['direction']))
                     $canvas->ocount = self::getOCount($item->canvas_id);
                     $canvas->rollers = [];
 
-                    $result[$TC_ID]->canvases[$N_ID]->canvases[$item->canvas_id] = $canvas;
+                    if ($canvas->ocount > 0)
+                        $result[$TC_ID]->ocount =
+                            $result[$TC_ID]->canvases[$N_ID]->ocount = "<i class=\"fa fa-check-circle\"></i>";
+
+                    $result[$TC_ID]->canvases[$N_ID]->count += 1;
+                    $result[$TC_ID]->canvases[$N_ID]->canvases[$CANVAS_ID] = $canvas;
                 }
 
+                $ROLLER_ID = $item->roller_id;
                 $roller = (object)[];
                 $roller->id = $item->roller_id;
                 $roller->barcode = $item->roller_barcode;
@@ -201,24 +219,12 @@ if (empty($list['direction']))
                 $roller->quad = $item->roller_quad;
                 $roller->pprice = $item->pprice;
 
-                $result[$TC_ID]->canvases[$N_ID]->canvases[$item->canvas_id]->rollers[$item->roller_id] = $roller;
+                $result[$TC_ID]->canvases[$N_ID]->canvases[$CANVAS_ID]->rollers[$ROLLER_ID] = $roller;
 
-                /*if ($roller_id != $item->roller_id) {
-                    $roller_id = $item->roller_id;
-                }*/
-
-                /*if ($canvas_id != $item->canvas_id) {
-                    if (isset($canvas_id)) {
-                        $tempOption = $result[$canvas_id];
-                        foreach ($tempOption->rollers as $v) {
-                            if (empty($tempOption->pprice) || $v->pprice > $tempOption->pprice) {
-                                $tempOption->pprice = $v->pprice;
-                            }
-                        }
-                        $result[$canvas_id] = $tempOption;
-                    }
-                    $canvas_id = $item->canvas_id;
-                }*/
+                $tempCanvas = $result[$TC_ID]->canvases[$N_ID]->canvases[$CANVAS_ID];
+                if (empty($tempCanvas->pprice) || floatval($tempCanvas->pprice) < floatval($roller->pprice))
+                    $tempCanvas->pprice = $roller->pprice;
+                $result[$TC_ID]->canvases[$N_ID]->canvases[$CANVAS_ID] = $tempCanvas;
             }
 
             return $result;
@@ -678,13 +684,18 @@ if (empty($list['direction']))
         {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->from("`#__gm_ceiling_canvases`")
-                ->select("id, price");
+            $query->from("`#__gm_ceiling_canvases` as canvas")
+                ->join('LEFT', '`#__gm_ceiling_textures` AS texture ON texture.id = canvas.texture_id')
+                ->join('LEFT', '`#__gm_ceiling_colors` AS color ON color.id = canvas.color_id')
+                ->select("canvas.id, canvas.price");
 
             if (gettype($data) == "array")
-                $query->where("id in (" . implode(", ", $data) . ")");
+                $query->where("canvas.id in (" . implode(", ", $data) . ")");
             else if (gettype($data) == "string" || gettype($data) == "integer")
-                $query->where("id = '$data'");
+                $query->where("canvas.id = '$data'");
+            else if (gettype($data) == "object")
+                foreach ($data as $key => $item)
+                        $query->$key($item);
 
             $db->setQuery($query);
             return $db->loadObjectList();

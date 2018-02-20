@@ -166,8 +166,9 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 }
             }
 
-            $id = $app->input->get('id', null, 'int');
+            $id = $app->input->get('id', null, 'string');
             $price = $app->input->get('Price', null, 'string');
+            $level = $app->input->get('level', null, 'int');
 
             $p = str_replace("%", "", $price);
             $e = str_replace(["+", "-"], "", $p);
@@ -180,7 +181,29 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
             $answer->elements = [];
 
             if (empty($dealer)) {
-                $oldPrice = $model->getPrice($id);
+                $get = (object) [];
+                switch ($level) {
+                    case 1:
+                        $object = str_split("/", $id);
+                        $object[1] = empty($object[1])?"IS NULL":"= '".$object[1]."'";
+                        $get->where = "texture.id = '$object[0]'";
+                        $get->where = "color.id $object[1]";
+                        break;
+                    case 2:
+                        $object = str_split("/", $id);
+                        $get->where = "canvas.country = '$object[0]'";
+                        $get->where = "canvas.name = '$object[1]'";
+                        break;
+                    case 3:
+                        $get = $id;
+                        break;
+                    default:
+                        $get = null;
+                        break;
+                }
+
+
+                $oldPrice = $model->getPrice($get);
                 $newPrice = $oldPrice;
                 foreach ($oldPrice as $k => $v)
                 {
@@ -196,10 +219,10 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                             break;
                     }
                     $answer->elements[] = (object) [
-                        "name" => ".Level1[data-canvas='$v->id'] #GMPrice",
+                        "name" => ".Level3[data-canvas='$v->id'] #GMPrice",
                         "value" => self::margin($newPrice[$k]->price, $userDealer->gm_canvases_margin)];
                     $answer->elements[] = (object) [
-                        "name" => ".Level1[data-canvas='$v->id'] #DealerPrice",
+                        "name" => ".Level3[data-canvas='$v->id'] #DealerPrice",
                         "value" => self::double_margin($newPrice[$k]->price, $userDealer->gm_canvases_margin, $userDealer->dealer_canvases_margin)];
                 }
                 $model->setPrice($newPrice);
