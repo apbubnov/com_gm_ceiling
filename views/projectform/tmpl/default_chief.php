@@ -973,21 +973,20 @@
                             <td><textarea name="jform[dealer_chief_note]" id="jform_dealer_chief_note" placeholder="Примечание начальника МС" aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea></td>
                         </tr>
                         <tr>
-                            <?php if ($this->item->project_status <= 4) { ?>
-                                <th>Замерщик</th>
-                                <?php 
-                                    $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                                    $gauger = $gauger_model->getGauger($this->item->id); 
-                                ?>
-                                <td><?php echo $gauger->name; ?></td>
-                            <?php } else { ?>
-                                <th>Монтажная бригада</th>
-                                <?php 
-                                    $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                                    $mount = $mount_model->getMount($this->item->id); 
-                                ?>
-                                <td><?php echo $mount->name; ?></td>
-                            <?php } ?>
+                            <th>Замерщик</th>
+                            <?php 
+                                $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                                $gauger = $gauger_model->getGauger($this->item->id); 
+                            ?>
+                            <td><?php echo $gauger->name; ?></td>
+                        </tr>
+                        <tr>
+                            <th>Монтажная бригада</th>
+                            <?php 
+                                $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                                $mount = $mount_model->getMount($this->item->id); 
+                            ?>
+                            <td><?php echo $mount->name; ?></td>
                         </tr>
                     </table>
                     <?php if ($this->item->project_status == 1) { ?>

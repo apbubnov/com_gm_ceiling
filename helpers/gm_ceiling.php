@@ -3054,7 +3054,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody>';
         $html .= '</table>';
         $html .= '<div align="center" style="width: 100%;">';
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
+        if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg"))
             $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . md5("cut_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 700px;"/>';
         $html .= '</div>';
         $filename = md5($calc_id . 'cutpdf') . '.pdf';

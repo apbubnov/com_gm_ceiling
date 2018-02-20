@@ -9,6 +9,7 @@
 // No direct access
 defined('_JEXEC') or die;
 $user = JFactory::getUser();
+$user_group = $user->groups;
 $userId = $user->get('id');
 $userName = $user->get('username');
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
@@ -148,7 +149,16 @@ if (count($Allbrigades) == 0) {
     $AllMounters = $model->FindAllMounters($where);
 }
 //----------------------------------------------------------------------------------
-
+/* замерщики */
+$model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
+$AllGauger = $model->FindAllGauger($user->dealer_id);
+if (count($AllGauger) == 0) {
+    array_push($AllGauger, ["id" => $userId, "name" => $user->name]);
+}
+$month = date("n");
+$year = date("Y");
+$flagGaugerCalendar = [3, $user->dealer_id];
+$g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $flagGaugerCalendar);
 if(false):
 /***************************************************************************************************************************************************************************************************************************************************/
 /* Клиент */
@@ -826,31 +836,26 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <?php } ?>
                             </td>
                             <td>
-                                <div class="Date" style="display: none;">
-                                    <label id="jform_project_mounting_date-lbl" for="jform_project_new_calc_date">Новая
-                                        дата<span class="star">&nbsp;*</span></label>
-                                    <?php $attribs = array(); ?>
-                                    <?php $attribs['class'] = "controls"; ?>
-                                    <?php echo JHtml::calendar('', 'project_new_calc_date', 'jform_project_new_calc_date', '%d.%m.%Y', $attribs); ?>
-                                    <label id="jform_project_calculation_daypart-lbl"
-                                            for="jform_new_project_calculation_daypart">Удобное время замера</label>
-                                    <select id="jform_new_project_calculation_daypart"
-                                            name="new_project_calculation_daypart" class="form-control inputbox"
-                                            disabled="true">
-                                        <option value="0" selected="">- Выберите время замера -</option>
-                                        <option value="1">9:00-10:00</option>
-                                        <option value="2">10:00-11:00</option>
-                                        <option value="3">11:00-12:00</option>
-                                        <option value="4">12:00-13:00</option>
-                                        <option value="5">13:00-14:00</option>
-                                        <option value="6">14:00-15:00</option>
-                                        <option value="7">15:00-16:00</option>
-                                        <option value="8">16:00-17:00</option>
-                                        <option value="9">17:00-18:00</option>
-                                        <option value="10">18:00-19:00</option>
-                                        <option value="11">19:00-20:00</option>
-                                        <option value="12">20:00-21:00</option>
-                                    </select>
+                                <div id = "calendar_container"class="Date" style="display: none;position: relative;">
+                                    <div class="btn-small-l">
+                                        <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                    </div>
+                                    <div id = "g_calendar">
+                                        <?php echo $g_calendar; ?>
+                                    </div>
+                                    <div class="btn-small-r">
+                                        <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                                <div id="modal_window_container" class = "modal_window_container">
+                                    <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+                                    <div id="modal_window_g_choose" class = "modal_window">
+                                            <p id="date-modal"></p>
+                                            <p><strong>Выберите время замера (и замерщика):</strong></p>
+                                            <p>
+                                                <table id="projects_gaugers"></table>
+                                            </p>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -878,6 +883,18 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </td>
 
                         </tr>
+                        <?php if(!empty($this->item->project_calculator)):?>
+                            <tr>
+                                <th>Замерщик</th>
+                                <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
+                            </tr>
+                        <?php endif;?>
+                        <?php if(!empty($this->item->project_mounter)):?>
+                            <tr>
+                                <th>Монтажная бригада</th>
+                                <td><?php echo JFactory::getUser($this->item->project_mounter)->name;?></td>
+                            </tr>
+                        <?php endif;?>
                     </div>
                         <!--<tr>
                             <th>Дилер</th>
@@ -1907,8 +1924,46 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 		}
     });
     // -----------------------------------------------------------------------------------------
-
     // листание календаря
+    /* g_calendar */
+    var month_old = 0;
+	var year_old = 0;
+    jQuery("#calendar_container").on("click", "#g_button-next", function () {
+        var month = <?php echo $month; ?>;
+        var year = <?php echo $year; ?>;
+        var type = 'g';
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 12) {
+            month = 1;
+            year++;
+        } else {
+            month++;
+        }
+        month_old = month;
+		year_old = year;
+		update_calendar(month, year,"#g_calendar");
+    });
+    jQuery("#calendar_container").on("click", "#g_button-prev", function () {
+        var month = <?php echo $month; ?>;
+        var year = <?php echo $year; ?>;
+        var type = 'g';
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 1) {
+            month = 12;
+            year--;
+        } else {
+            month--;
+        }
+        month_old = month;
+        year_old = year;
+		update_calendar(month, year,"#g_calendar");
+    });
     month_old1 = 0;
     year_old1 = 0;
     month_old2 = 0;
@@ -1940,8 +1995,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         year_old1 = year1;
         month_old2 = month2;
         year_old2 = year2;
-        update_calendar(month1, year1);
-        update_calendar2(month2, year2);
+        update_calendar(month1, year1,"#calendar1");
+        update_calendar(month2, year2,"#calendar2");
     });
     jQuery("#button-prev").click(function () {
         month1 = <?php echo $month1; ?>;
@@ -1970,24 +2025,27 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         year_old1 = year1;
         month_old2 = month2;
         year_old2 = year2;
-        update_calendar(month1, year1);
-        update_calendar2(month2, year2);
+        update_calendar(month1, year1,"#calendar1");
+        update_calendar(month2, year2,"#calendar2");
     });
 
-    function update_calendar(month, year) {
+    function update_calendar(month, year,type) {
+        var flag = (type == "#g_calendar" ) ? 3 : 2;
+        console.log(flag);
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
             data: {
                 id: <?php echo $userId; ?>,
                 id_dealer: <?php if ($user->dealer_type == 1 && $user->dealer_mounters == 1) { echo 1; } else { echo $user->dealer_id; } ?>,
-                flag: 2,
+                flag: flag,
                 month: month,
                 year: year,
             },
             success: function (msg) {
-                jQuery("#calendar1").empty();
-                jQuery("#calendar1").append(msg);
+                jQuery(type).empty();
+                console.log(msg);
+                jQuery(type).append(msg);
                 Today(day, NowMonth, NowYear);
             },
             dataType: "text",
@@ -2003,35 +2061,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             }
         });
     }
-    function update_calendar2(month, year) {
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-            data: {
-                id: <?php echo $userId; ?>,
-                month: month,
-                year: year,
-                id_dealer: <?php if ($user->dealer_type == 1 && $user->dealer_mounters == 1) { echo 1; } else { echo $user->dealer_id; } ?>,
-                flag: 2,
-            },
-            success: function (msg) {
-                jQuery("#calendar2").empty();
-                jQuery("#calendar2").append(msg);
-                Today(day, NowMonth, NowYear);
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function () {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-                });
-            }
-        });
-    }
+
     //----------------------------------------
 
     //скрыть модальное окно
@@ -2069,7 +2099,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
     //------------------------------------------
 
     jQuery(document).ready(function () {
-        
+        window.time = undefined;
+        window.gauger = undefined;
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         if (document.getElementById('comments'))
         {
@@ -2209,7 +2240,108 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 }
             });
         });
-
+// открытие модального окна с календаря и получение даты и вывода свободных монтажников
+        jQuery("#calendar_container").on("click", ".current-month, .not-full-day, .change", function() {
+            window.idDay = jQuery(this).attr("id");
+            reg1 = "D(.*)D";
+            reg2 = "M(.*)M";
+            reg3 = "Y(.*)Y";
+            if (idDay.match(reg1)[1].length == 1) {
+                d = "0"+idDay.match(reg1)[1];
+            } else {
+                d = idDay.match(reg1)[1];
+            }
+            if (idDay.match(reg2)[1].length == 1) {
+                m = "0"+idDay.match(reg2)[1];
+            } else {
+                m = idDay.match(reg2)[1];
+            }
+            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
+            jQuery("#modal_window_container").show();
+			jQuery("#modal_window_g_choose").show("slow");
+            jQuery("#close-tar").show();
+            jQuery.ajax({
+                type: 'POST',
+                url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
+                data: {
+                    date: date,
+					dealer: <?php if ($user->dealer_id == 1 && in_array("14", $user->groups)) { echo $userId; } else { echo $user->dealer_id; } ?>,
+                },
+                success: function(data) {
+					Array.prototype.diff = function(a) {
+                        return this.filter(function(i) {return a.indexOf(i) < 0;});
+                    };
+					AllGauger = <?php echo json_encode($AllGauger); ?>;
+                    data = JSON.parse(data); // замеры
+                    AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                    var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
+                    AllTime.forEach( elementTime => {
+                        var t = elementTime.substr(0, 2);
+                        t++;
+                        Array.from(AllGauger).forEach(function(elementGauger) {
+                            var emptytd = 0;
+                            Array.from(data).forEach(function(elementProject) {
+								if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                                    var gaugersession = jQuery("#jform_project_gauger").val();
+                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                    } else {
+                                        TableForSelect += '<tr><td></td>';
+                                    }
+                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                    TableForSelect += '<td>'+elementProject.project_info+'</td>';
+                                    emptytd = 1;
+                                }
+                            });
+                            if (emptytd == 0) {
+								TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                TableForSelect += '<td></td>';
+                            }
+                            TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
+                        });
+                    });
+                    jQuery("#projects_gaugers").empty();
+                    jQuery("#projects_gaugers").append(TableForSelect);
+                    jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
+                }
+            });
+			//если было выбрано время, то выдать его
+            if (time != undefined) {
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    times.each(function(element) {
+                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                            jQuery(this).prop("checked", true);
+                        }
+                    });
+                }, 200);
+            }
+        });
+        jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
+			var times = jQuery("input[name='choose_time_gauger']");
+            time = "";
+            gauger = "";
+            times.each(function(element) {
+                if (jQuery(this).prop("checked") == true) {
+                    time = jQuery(this).val();
+                    gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
+                }
+            });
+            jQuery("#jform_project_calculation_daypart").val(time);
+            jQuery("#jform_project_calculation_date").val(date);
+            jQuery("#jform_project_calculator").val(gauger);
+            if (jQuery(".change").length == 0) {
+                jQuery("#"+idDay).attr("class", "change");
+            } else {
+                jQuery(".change").attr("class", "current-month");
+                jQuery("#"+idDay).attr("class", "change");
+            }
+            jQuery("#close-tar").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_choose").hide();
+		});
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");

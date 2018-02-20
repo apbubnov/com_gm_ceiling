@@ -2829,10 +2829,9 @@ class Gm_ceilingController extends JControllerLegacy
                 
                 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
                 $result = $users_model->addDealerInstructionCode($user_id, $code, $user->id);
-
-                $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
                 $result = $users_model->updateEmail($user_id, $email);
-
+                $end_date = date('Y-m-d', strtotime(date('Y-m-d').'+1 months'));
+                $users_model->update_demo_date($user_id,$end_date);
                 $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
                 $client_id = $dealer->associated_client;
                 $email_id = $dop_contacts_model->save($client_id, 1, $email);
