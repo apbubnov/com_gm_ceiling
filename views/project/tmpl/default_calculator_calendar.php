@@ -2256,8 +2256,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 m = idDay.match(reg2)[1];
             }
             window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
-            jQuery("#modal-window-container-tar").show();
-			jQuery("#modal-window-choose-tar").show("slow");
+            jQuery("#modal_window_container").show();
+			jQuery("#modal_window_g_choose").show("slow");
             jQuery("#close-tar").show();
             jQuery.ajax({
                 type: 'POST',
