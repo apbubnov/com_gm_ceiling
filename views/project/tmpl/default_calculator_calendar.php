@@ -836,8 +836,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <?php } ?>
                             </td>
                             <td>
-                                <div class="Date" style="display: none;">
-                                    <?php echo $g_calendar; ?>
+                                <div id = "calendar_container"class="Date" style="display: none;">
+                                    <div class="btn-small-l">
+                                        <button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                    </div>
+                                    <?php echo $calendar; ?>
+                                    <div class="btn-small-r">
+                                        <button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -1906,8 +1912,44 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 		}
     });
     // -----------------------------------------------------------------------------------------
-
     // листание календаря
+    /* g_calendar */
+    month_old = 0;
+	year_old = 0;
+    jQuery("#calendar_container").on("click", "#button-next", function () {
+        month = <?php echo $month; ?>;
+        year = <?php echo $year; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 12) {
+            month = 1;
+            year++;
+        } else {
+            month++;
+        }
+        month_old = month;
+		year_old = year;
+		update_calendar(month, year);
+    });
+    jQuery("#calendar_container").on("click", "#button-prev", function () {
+        month = <?php echo $month; ?>;
+        year = <?php echo $year; ?>;
+        if (month_old != 0) {
+            month = month_old;
+            year = year_old;
+        }
+        if (month == 1) {
+            month = 12;
+            year--;
+        } else {
+            month--;
+        }
+        month_old = month;
+        year_old = year;
+		update_calendar(month, year);
+    });
     month_old1 = 0;
     year_old1 = 0;
     month_old2 = 0;
