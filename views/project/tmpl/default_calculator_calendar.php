@@ -2099,7 +2099,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
     //------------------------------------------
 
     jQuery(document).ready(function () {
-        
+        window.time = undefined;
+        window.gauger = undefined;
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         if (document.getElementById('comments'))
         {
