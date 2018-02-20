@@ -838,11 +838,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <td>
                                 <div id = "calendar_container"class="Date" style="display: none;position: relative;">
                                     <div class="btn-small-l">
-                                        <button id="button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                        <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                                     </div>
                                     <?php echo $g_calendar; ?>
                                     <div class="btn-small-r">
-                                        <button id="button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                        <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                     </div>
                                 </div>
                             </td>
@@ -1914,11 +1914,12 @@ var min_components_sum = <?php echo $min_components_sum;?>;
     // -----------------------------------------------------------------------------------------
     // листание календаря
     /* g_calendar */
-    month_old = 0;
-	year_old = 0;
-    jQuery("#calendar_container").on("click", "#button-next", function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
+    var month_old = 0;
+	var year_old = 0;
+    jQuery("#calendar_container").on("click", "#g_button-next", function () {
+        var month = <?php echo $month; ?>;
+        var year = <?php echo $year; ?>;
+        var type = 'g';
         if (month_old != 0) {
             month = month_old;
             year = year_old;
@@ -1931,11 +1932,12 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         }
         month_old = month;
 		year_old = year;
-		update_calendar(month, year);
+		update_calendar(month, year,"#g_calendar");
     });
-    jQuery("#calendar_container").on("click", "#button-prev", function () {
-        month = <?php echo $month; ?>;
-        year = <?php echo $year; ?>;
+    jQuery("#calendar_container").on("click", "#g_button-prev", function () {
+        var month = <?php echo $month; ?>;
+        var year = <?php echo $year; ?>;
+        var type = 'g';
         if (month_old != 0) {
             month = month_old;
             year = year_old;
@@ -1948,7 +1950,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         }
         month_old = month;
         year_old = year;
-		update_calendar(month, year);
+		update_calendar(month, year,"#g_calendar");
     });
     month_old1 = 0;
     year_old1 = 0;
@@ -1981,8 +1983,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         year_old1 = year1;
         month_old2 = month2;
         year_old2 = year2;
-        update_calendar(month1, year1);
-        update_calendar2(month2, year2);
+        update_calendar(month1, year1,"#calendar1");
+        update_calendar(month2, year2,"#calendar2");
     });
     jQuery("#button-prev").click(function () {
         month1 = <?php echo $month1; ?>;
@@ -2011,24 +2013,25 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         year_old1 = year1;
         month_old2 = month2;
         year_old2 = year2;
-        update_calendar(month1, year1);
-        update_calendar2(month2, year2);
+        update_calendar(month1, year1,"#calendar1");
+        update_calendar(month2, year2,"#calendar2");
     });
 
-    function update_calendar(month, year) {
+    function update_calendar(month, year,type) {
+        var flag = (type == "#g_calendar" ) ? 3 : 2;
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
             data: {
                 id: <?php echo $userId; ?>,
                 id_dealer: <?php if ($user->dealer_type == 1 && $user->dealer_mounters == 1) { echo 1; } else { echo $user->dealer_id; } ?>,
-                flag: 2,
+                flag: flag,
                 month: month,
                 year: year,
             },
             success: function (msg) {
-                jQuery("#calendar1").empty();
-                jQuery("#calendar1").append(msg);
+                jQuery(type).empty();
+                jQuery("type").append(msg);
                 Today(day, NowMonth, NowYear);
             },
             dataType: "text",
