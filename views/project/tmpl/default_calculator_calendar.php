@@ -847,6 +847,16 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                     </div>
                                 </div>
+                                <div id="modal-window-container-tar">
+                                    <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+                                    <div id="modal-window-choose-tar">
+                                            <p id="date-modal"></p>
+                                            <p><strong>Выберите время замера (и замерщика):</strong></p>
+                                            <p>
+                                                <table id="projects_gaugers"></table>
+                                            </p>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -2230,7 +2240,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             });
         });
 // открытие модального окна с календаря и получение даты и вывода свободных монтажников
-jQuery("#calendar_container").on("click", ".current-month, .not-full-day, .change", function() {
+        jQuery("#calendar_container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
             reg1 = "D(.*)D";
             reg2 = "M(.*)M";
