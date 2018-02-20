@@ -2230,7 +2230,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             });
         });
 // открытие модального окна с календаря и получение даты и вывода свободных монтажников
-jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
+jQuery("#calendar_container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
             reg1 = "D(.*)D";
             reg2 = "M(.*)M";
