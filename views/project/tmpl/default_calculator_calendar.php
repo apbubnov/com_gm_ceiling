@@ -837,7 +837,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </td>
                             <td>
                                 <div class="Date" style="display: none;">
-                                    <?php echo $calendar; ?>
+                                    <?php echo $g_calendar; ?>
                                 </div>
                             </td>
                         </tr>
