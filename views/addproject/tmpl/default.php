@@ -241,8 +241,10 @@ if (count($AllGauger) == 0) {
     //скрыть модальное окно
     jQuery(document).mouseup(function (e) {
 		var div = jQuery("#modal-window-choose-tar");
-		if (!div.is(e.target)
-		    && div.has(e.target).length === 0) {
+        var g_div  = jQuery("#modal_window_g_choose")
+		if ((!div.is(e.target)
+		    && div.has(e.target).length === 0) || (!g_div.is(e.target)
+		    && g_div.has(e.target).length === 0)) {
 			jQuery("#close-tar").hide();
 			jQuery("#modal-window-container-tar").hide();
 			jQuery("#modal-window-choose-tar").hide();
