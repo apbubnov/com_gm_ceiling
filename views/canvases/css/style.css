@@ -106,6 +106,7 @@ body {
 }
 
 .Page .Scroll {
+    position: relative;
     overflow: auto;
     overflow-y: hidden;
 }
@@ -224,7 +225,6 @@ body {
 
 @media (max-width: 767px) {
     .Page .Scroll {
-        position: relative;
         left: -30px;
         width: calc(100% + 60px);
     }

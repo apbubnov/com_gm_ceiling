@@ -156,6 +156,25 @@ if (empty($list['direction']))
                 $db->setQuery($query);
                 $item->stock_name = $db->loadObject()->name;
 
+                $TC_ID = $item->texture_id . "." . $item->color_id;
+                if (empty($result[$TC_ID])) {
+                    $canvas = (object)[];
+                    $canvas->name = $item->canvas_name;
+                    $canvas->country = $item->canvas_country;
+                    $canvas->width = $item->canvas_width;
+                    $canvas->price = $item->canvas_price;
+                    $canvas->count = $item->canvas_count;
+                    $canvas->texture_title = $item->texture_title;
+                    $canvas->texture_colored = $item->texture_colored;
+                    $canvas->color_title = (strpos($item->texture_title, "бел"))?303:$item->color_title;
+                    $canvas->color_file = $item->color_file;
+                    $canvas->color_hex = ($canvas->color_title == 303)?"FFFFFF":$item->color_hex;
+                    $canvas->ocount = self::getOCount($item->canvas_id);
+                    $canvas->rollers = [];
+
+                    $result[$TC_ID] = $canvas;
+                }
+
                 if (empty($result[$item->canvas_id])) {
                     $canvas = (object)[];
                     $canvas->name = $item->canvas_name;
