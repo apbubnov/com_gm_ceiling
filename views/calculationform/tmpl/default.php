@@ -2508,7 +2508,7 @@
 						type: 'POST',
 						url: "index.php?option=com_gm_ceiling&task=sendClientEstimate",
 						data: {
-							id : <?php //echo $calc_id;?>,
+							id : <?php echo $calc_id;?>,
 							email : jQuery("#send_email").val()
 						},
 						success: function(data){
