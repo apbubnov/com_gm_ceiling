@@ -48,43 +48,62 @@ if ($managerGM) {
     }
 }
 
-function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
-function double_margin($value, $margin1, $margin2) { return margin(margin($value, $margin1), $margin2); }
-function dealer_margin($price, $margin, $value, $type) {
+function margin($value, $margin)
+{
+    return ($value * 100 / (100 - $margin));
+}
+
+function double_margin($value, $margin1, $margin2)
+{
+    return margin(margin($value, $margin1), $margin2);
+}
+
+function dealer_margin($price, $margin, $value, $type)
+{
     $result = 0;
-    switch ($type)
-    {
-        case 0: $result = $price; break;
-        case 1: $result = $value; break;
-        case 2: $result = $price + $value; break;
-        case 3: $result = $price + $price * floatval($value) / 100; break;
+    switch ($type) {
+        case 0:
+            $result = $price;
+            break;
+        case 1:
+            $result = $value;
+            break;
+        case 2:
+            $result = $price + $value;
+            break;
+        case 3:
+            $result = $price + $price * floatval($value) / 100;
+            break;
     }
     return margin($result, $margin);
 }
+
 ?>
-<link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/canvases/css/style.css?date=<?=date("H.i.s");?>">
+<link rel="stylesheet" type="text/css"
+      href="/components/com_gm_ceiling/views/canvases/css/style.css?date=<?= date("H.i.s"); ?>">
 <div class="Page">
     <div class="Title">
-        Прайс полотен<?=(isset($dealer))?" для $dealer->name #$dealer->id":"";?>.
+        Прайс полотен<?= (isset($dealer)) ? " для $dealer->name #$dealer->id" : ""; ?>.
     </div>
     <div class="Actions">
-        <?=parent::getButtonBack();?>
-        <?if ($stock): ?>
-        <button type="button" class="Current ActionTR" id="ActionTR">
-            <i class="fa fa-caret-down" aria-hidden="true"></i> <span>Раскрыть все</span>
-        </button>
-        <?endif;?>
-        <?if ($managerGM):?>
-        <form class="FormSimple UpdatePrice MarginLeft">
-            <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-            <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
-                   title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
-                   size="5" required>
-            <button type="submit" class="buttonOK">
-                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+        <?= parent::getButtonBack(); ?>
+        <? if ($stock): ?>
+            <button type="button" class="Current ActionTR" id="ActionTR">
+                <i class="fa fa-caret-down" aria-hidden="true"></i> <span>Раскрыть все</span>
             </button>
-        </form>
-        <?endif;?>
+        <? endif; ?>
+        <? if ($managerGM): ?>
+            <form class="FormSimple UpdatePrice MarginLeft">
+                <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o"
+                                                                          aria-hidden="true"></i></label>
+                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
+                       title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                       size="5" required>
+                <button type="submit" class="buttonOK">
+                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </form>
+        <? endif; ?>
     </div>
     <div class="Scroll">
         <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=canvases'); ?>" method="post"
@@ -93,116 +112,126 @@ function dealer_margin($price, $margin, $value, $type) {
             <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
             <?= JHtml::_('form.token'); ?>
         </form>
-    <table class="Body">
-        <thead>
+        <table class="Body">
+            <thead>
             <tr class="THead">
                 <td><i class="fa fa-bars" aria-hidden="true"></i></td>
-                <td><?=JHtml::_( 'grid.sort', '<i class="fa fa-hashtag" aria-hidden="true"></i>', 'canvas_id', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_('grid.sort', 'Страна', 'canvas_country', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_('grid.sort', 'Наименование', 'canvas_name', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_('grid.sort', 'Ширина', 'canvas_width', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_('grid.sort', 'Фактура', 'texture_title', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_('grid.sort', 'Цвет', 'color_title', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_('grid.sort', 'Количество', 'canvas_count', $listDirn, $listOrder);?></td>
-                <?if($stock):?>
-                <td>Заказать</td>
-                <td>Цена закупки</td>
-                <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
-                <td>Посмотреть</td>
-                <?elseif ($managerGM && empty($dealer)):?>
-                <td><?=JHtml::_( 'grid.sort', 'Цена', 'canvas_price', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'canvas_price', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'canvas_price', $listDirn, $listOrder);?></td>
-                <td>Изменить</td>
-                <?elseif ($managerGM):?>
-                <td><?=JHtml::_( 'grid.sort', 'Цена', 'canvas_price', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'canvas_price', $listDirn, $listOrder);?></td>
-                <td>Изменить</td>
-                <?else:?>
-                <td><?=JHtml::_( 'grid.sort', 'Себестоймость', 'canvas_price', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'canvas_price', $listDirn, $listOrder);?></td>
-                <?endif;?>
+                <td><?= JHtml::_('grid.sort', '<i class="fa fa-hashtag" aria-hidden="true"></i>', 'canvas_id', $listDirn, $listOrder); ?></td>
+                <td><?= JHtml::_('grid.sort', 'Страна', 'canvas_country', $listDirn, $listOrder); ?></td>
+                <td><?= JHtml::_('grid.sort', 'Наименование', 'canvas_name', $listDirn, $listOrder); ?></td>
+                <td><?= JHtml::_('grid.sort', 'Ширина', 'canvas_width', $listDirn, $listOrder); ?></td>
+                <td><?= JHtml::_('grid.sort', 'Фактура', 'texture_title', $listDirn, $listOrder); ?></td>
+                <td><?= JHtml::_('grid.sort', 'Цвет', 'color_title', $listDirn, $listOrder); ?></td>
+                <td><?= JHtml::_('grid.sort', 'Количество', 'canvas_count', $listDirn, $listOrder); ?></td>
+                <? if ($stock): ?>
+                    <td>Заказать</td>
+                    <td>Цена закупки</td>
+                    <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
+                    <td>Посмотреть</td>
+                <? elseif ($managerGM && empty($dealer)): ?>
+                    <td><?= JHtml::_('grid.sort', 'Цена', 'canvas_price', $listDirn, $listOrder); ?></td>
+                    <td><?= JHtml::_('grid.sort', 'Цена для дилера', 'canvas_price', $listDirn, $listOrder); ?></td>
+                    <td><?= JHtml::_('grid.sort', 'Цена для клиента', 'canvas_price', $listDirn, $listOrder); ?></td>
+                    <td>Изменить</td>
+                <? elseif ($managerGM): ?>
+                    <td><?= JHtml::_('grid.sort', 'Цена', 'canvas_price', $listDirn, $listOrder); ?></td>
+                    <td><?= JHtml::_('grid.sort', 'Цена для дилера', 'canvas_price', $listDirn, $listOrder); ?></td>
+                    <td>Изменить</td>
+                <? else: ?>
+                    <td><?= JHtml::_('grid.sort', 'Себестоймость', 'canvas_price', $listDirn, $listOrder); ?></td>
+                    <td><?= JHtml::_('grid.sort', 'Цена для клиента', 'canvas_price', $listDirn, $listOrder); ?></td>
+                <? endif; ?>
             </tr>
-        </thead>
-        <tbody>
-        <?foreach ($this->items as $key_c => $canvas):?>
-            <tr class="TBody Level1 <?=($stock && $canvas->count > 0)?"Action":""?>" data-canvas="<?=$key_c;?>" data-level="1">
-                <td><i class="fa <?=($stock && $canvas->count > 0)?"fa-caret-down":"fa-caret-right";?>" aria-hidden="true"></i></td>
-                <td><?=$key_c;?></td>
-                <td><?=$canvas->country;?></td>
-                <td><?=$canvas->name;?></td>
-                <td><?=$canvas->width;?></td>
-                <td><?=$canvas->texture_title;?></td>
-                <td class="Color" style="
-                        background-color: #<?=$canvas->color_hex;?>;
-                        background-image: url('<?=$canvas->color_file;?>');
-                        "><?=$canvas->color_title;?></td>
-                <td><?=$canvas->count;?></td>
-                <?if($stock):?>
-                    <td><?=$canvas->ocount;?></td>
-                    <td><?=$canvas->pprice;?></td>
-                    <td></td>
-                    <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?=$key_c;?>">Инфо</a></td>
-                <?elseif ($managerGM && empty($dealer)):?>
-                    <td id="GMPrice"><?=$canvas->price;?></td>
-                    <td id="GMPrice"><?=margin($canvas->price, $dealer->gm_components_margin);?></td>
-                    <td id="DealerPrice"><?=double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
-                    <td>
-                        <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_c;?>">
-                            <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-                            <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
-                                   title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
-                                   size="5" required>
-                            <button type="submit" class="buttonOK">
-                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button>
-                        </form>
-                    </td>
-                <?elseif ($managerGM):?>
-                    <td id="GMPrice"><?=margin($canvas->price, $dealer->gm_components_margin);?></td>
-                    <td id="DealerPrice"><?=dealer_margin($canvas->price, $dealer->gm_components_margin,
-                            $dealer->CanvasesPrice[$key_c]->value, $dealer->CanvasesPrice[$key_c]->type);?></td>
-                    <td>
-                        <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_c;?>">
-                            <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-                            <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
-                                   title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
-                                   size="5" required>
-                            <button type="submit" class="buttonOK">
-                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button>
-                        </form>
-                    </td>
-                <?else:?>
-                    <td><?=margin($canvas->price, $userDealer->gm_components_margin);?></td>
-                    <td><?=double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
-                <?endif;?>
-            </tr>
-        <? if ($stock && $canvas->count > 0) foreach ($canvas->rollers as $key_r => $roller):?>
-                <tr class="TBody Level2" style="display: none;" data-canvas="<?=$key_r;?>"
-                    data-roller="<?=$key_r;?>" data-level="2">
-                    <td><i class="fa fa-caret-right" aria-hidden="true"></i></td>
-                    <td><?=$key_r;?></td>
-                    <td></td>
-                    <td>Штрих код:</td>
-                    <td><?=$roller->barcode;?></td>
-                    <td>Артикль:</td>
-                    <td><?=$roller->article;?></td>
-                    <td><?=$roller->quad;?></td>
-                    <td></td>
-                    <td><?=$roller->pprice;?></td>
-                    <td><?=$roller->stock_name;?></td>
-                    <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?=$key_c;?>&roller=<?=$key_r;?>">Инфо</a></td>
+            </thead>
+            <tbody>
+            <? foreach ($this->items as $key_c => $canvas): ?>
+                <tr class="TBody Level1 <?= ($stock && $canvas->count > 0) ? "Action" : "" ?>"
+                    data-canvas="<?= $key_c; ?>" data-level="1">
+                    <td><i class="fa <?= ($stock && $canvas->count > 0) ? "fa-caret-down" : "fa-caret-right"; ?>"
+                           aria-hidden="true"></i></td>
+                    <td><?= $key_c; ?></td>
+                    <td><?= $canvas->country; ?></td>
+                    <td><?= $canvas->name; ?></td>
+                    <td><?= $canvas->width; ?></td>
+                    <td><?= $canvas->texture_title; ?></td>
+                    <td class="Color" style="
+                            background-color: #<?= $canvas->color_hex; ?>;
+                            background-image: url('<?= $canvas->color_file; ?>');
+                            "><?= $canvas->color_title; ?></td>
+                    <td><?= $canvas->count; ?></td>
+                    <? if ($stock): ?>
+                        <td><?= $canvas->ocount; ?></td>
+                        <td><?= $canvas->pprice; ?></td>
+                        <td></td>
+                        <td>
+                            <a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?= $key_c; ?>">Инфо</a>
+                        </td>
+                    <? elseif ($managerGM && empty($dealer)): ?>
+                        <td id="GMPrice"><?= $canvas->price; ?></td>
+                        <td id="GMPrice"><?= margin($canvas->price, $dealer->gm_components_margin); ?></td>
+                        <td id="DealerPrice"><?= double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin); ?></td>
+                        <td>
+                            <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
+                                <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
+                                                                                      aria-hidden="true"></i></label>
+                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price"
+                                       placeholder="0"
+                                       title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                                       size="5" required>
+                                <button type="submit" class="buttonOK">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </td>
+                    <? elseif ($managerGM): ?>
+                        <td id="GMPrice"><?= margin($canvas->price, $dealer->gm_components_margin); ?></td>
+                        <td id="DealerPrice"><?= dealer_margin($canvas->price, $dealer->gm_components_margin,
+                                $dealer->CanvasesPrice[$key_c]->value, $dealer->CanvasesPrice[$key_c]->type); ?></td>
+                        <td>
+                            <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
+                                <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
+                                                                                      aria-hidden="true"></i></label>
+                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price"
+                                       placeholder="0"
+                                       title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                                       size="5" required>
+                                <button type="submit" class="buttonOK">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </td>
+                    <? else: ?>
+                        <td><?= margin($canvas->price, $userDealer->gm_components_margin); ?></td>
+                        <td><?= double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin); ?></td>
+                    <? endif; ?>
                 </tr>
-        <?endforeach;?>
-        <?endforeach;?>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="12"></td>
-        </tr>
-        </tfoot>
-    </table>
+                <? if ($stock && $canvas->count > 0) foreach ($canvas->rollers as $key_r => $roller): ?>
+                    <tr class="TBody Level2" style="display: none;" data-canvas="<?= $key_r; ?>"
+                        data-roller="<?= $key_r; ?>" data-level="2">
+                        <td><i class="fa fa-caret-right" aria-hidden="true"></i></td>
+                        <td><?= $key_r; ?></td>
+                        <td></td>
+                        <td>Штрих код:</td>
+                        <td><?= $roller->barcode; ?></td>
+                        <td>Артикль:</td>
+                        <td><?= $roller->article; ?></td>
+                        <td><?= $roller->quad; ?></td>
+                        <td></td>
+                        <td><?= $roller->pprice; ?></td>
+                        <td><?= $roller->stock_name; ?></td>
+                        <td>
+                            <a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?= $key_c; ?>&roller=<?= $key_r; ?>">Инфо</a>
+                        </td>
+                    </tr>
+                <? endforeach; ?>
+            <? endforeach; ?>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="12"></td>
+            </tr>
+            </tfoot>
+        </table>
     </div>
 </div>
 <script type="text/javascript">
@@ -232,13 +261,13 @@ function dealer_margin($price, $margin, $value, $type) {
         Data.Actions.find("#ActionTR").click(AllActionTR);
 
         Data.Forms = Data.Page.find("form");
-        Data.Forms.filter(".UpdatePrice").attr("action","javascript:null;");
+        Data.Forms.filter(".UpdatePrice").attr("action", "javascript:null;");
         Data.Forms.filter(".UpdatePrice").submit(UpdatePrice);
 
         Data.Temp = {};
         Data.Scroll = {};
 
-        Data.Dealer = <?=isset($dealer)?$dealer->id:"null";?>;
+        Data.Dealer = <?=isset($dealer) ? $dealer->id : "null";?>;
 
         ScrollInit();
         ResizeHead();
@@ -248,6 +277,20 @@ function dealer_margin($price, $margin, $value, $type) {
     }
 
     function Resize() {
+        var WW = $(window).width() + 10;
+        console.log(WW);
+
+        var PageScroll = $(".Page .Scroll");
+        if (WW > 767) {
+            var offset = PageScroll.offset(),
+                offsetLeft = (offset.left - 15.0 > 0) ? (offset.left - 15.0) : 0;
+
+            PageScroll.css({
+                "left": (-offsetLeft + "px"),
+                "width": ("calc(100% + " + (offsetLeft * 2) + "px)")
+            });
+        } else PageScroll.removeAttr("style");
+
         ResizeHead();
     }
 
@@ -275,8 +318,12 @@ function dealer_margin($price, $margin, $value, $type) {
         var scrollTop = $(window).scrollTop(),
             offset = Data.Scroll.EHeadTr.offset(),
             has = Data.Scroll.EHeadTrClone.hasClass("Show");
-        if (scrollTop >= offset.top) { if (!has) Data.Scroll.EHeadTrClone.addClass("Show"); }
-        else { if (has) Data.Scroll.EHeadTrClone.removeClass("Show"); }
+        if (scrollTop >= offset.top) {
+            if (!has) Data.Scroll.EHeadTrClone.addClass("Show");
+        }
+        else {
+            if (has) Data.Scroll.EHeadTrClone.removeClass("Show");
+        }
     }
 
     function ActionTR() {
@@ -284,11 +331,16 @@ function dealer_margin($price, $margin, $value, $type) {
             level = parseInt(this.dataset.level),
             data = {};
 
-        switch (level)
-        {
-            case 1: data.title = "component"; break;
-            case 2: data.title = "option"; break;
-            case 3: data.title = "good"; break;
+        switch (level) {
+            case 1:
+                data.title = "component";
+                break;
+            case 2:
+                data.title = "option";
+                break;
+            case 3:
+                data.title = "good";
+                break;
         }
 
         data.id = this.dataset[data.title];
@@ -391,7 +443,7 @@ function dealer_margin($price, $margin, $value, $type) {
         var inputs = $(obj).find("input:not(:disabled)"),
             datas = $(obj).find("[data-JsonSend]").filter("[id]"),
             values = $(obj).find("[data-Send]").filter("[id]"),
-            result = {jsons:{}, values:{}};
+            result = {jsons: {}, values: {}};
 
         $.each(inputs, function (i, v) {
             result[v.name] = v.value;
