@@ -853,7 +853,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             <p id="date-modal"></p>
                                             <p><strong>Выберите время замера (и замерщика):</strong></p>
                                             <p>
-                                                <table id="projects_gaugers"></table>
+                                                <table id="projects_gaugers" class = "table_project_analitic"></table>
                                             </p>
                                     </div>
                                 </div>
