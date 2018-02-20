@@ -847,9 +847,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                     </div>
                                 </div>
-                                <div id="modal-window-container-tar">
+                                <div id="modal_window_container" class = "modal_window_container">
                                     <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-                                    <div id="modal-window-choose-tar">
+                                    <div id="modal_window_g_choose" class = "modal_window_choose_tar">
                                             <p id="date-modal"></p>
                                             <p><strong>Выберите время замера (и замерщика):</strong></p>
                                             <p>
