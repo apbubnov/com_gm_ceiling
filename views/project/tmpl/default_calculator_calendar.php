@@ -156,7 +156,7 @@ if (count($AllGauger) == 0) {
     array_push($AllGauger, ["id" => $userId, "name" => $user->name]);
 }
 $month = date("n");
-$ear = date("Y");
+$year = date("Y");
 $flagGaugerCalendar = [3, $user->dealer_id];
 $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $flagGaugerCalendar);
 if(false):
