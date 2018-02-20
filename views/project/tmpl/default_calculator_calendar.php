@@ -2032,7 +2032,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             },
             success: function (msg) {
                 jQuery(type).empty();
-                console.log(msg);s
+                console.log(msg);
                 jQuery("type").append(msg);
                 Today(day, NowMonth, NowYear);
             },
