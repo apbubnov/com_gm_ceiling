@@ -840,7 +840,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <div class="btn-small-l">
                                         <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                                     </div>
-                                    <?php echo $g_calendar; ?>
+                                    <div id = "g_calendar">
+                                        <?php echo $g_calendar; ?>
+                                    </div>
                                     <div class="btn-small-r">
                                         <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                     </div>
