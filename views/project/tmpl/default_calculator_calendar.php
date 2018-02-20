@@ -849,11 +849,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 </div>
                                 <div id="modal_window_container" class = "modal_window_container">
                                     <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-                                    <div id="modal_window_g_choose" class = "modal_window_choose_tar">
+                                    <div id="modal_window_g_choose" class = "modal_window">
                                             <p id="date-modal"></p>
                                             <p><strong>Выберите время замера (и замерщика):</strong></p>
                                             <p>
-                                                <table id="projects_gaugers" class = "table_project_analitic"></table>
+                                                <table id="projects_gaugers"></table>
                                             </p>
                                     </div>
                                 </div>
