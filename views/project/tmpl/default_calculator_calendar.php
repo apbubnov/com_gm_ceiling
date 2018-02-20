@@ -2318,6 +2318,29 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 }, 200);
             }
         });
+        jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
+			var times = jQuery("input[name='choose_time_gauger']");
+            time = "";
+            gauger = "";
+            times.each(function(element) {
+                if (jQuery(this).prop("checked") == true) {
+                    time = jQuery(this).val();
+                    gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
+                }
+            });
+            jQuery("#jform_project_calculation_daypart").val(time);
+            jQuery("#jform_project_calculation_date").val(date);
+            jQuery("#jform_project_calculator").val(gauger);
+            if (jQuery(".change").length == 0) {
+                jQuery("#"+idDay).attr("class", "change");
+            } else {
+                jQuery(".change").attr("class", "current-month");
+                jQuery("#"+idDay).attr("class", "change");
+            }
+            jQuery("#close-tar").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_choose").hide();
+		});
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
