@@ -3281,7 +3281,6 @@ class Gm_ceilingController extends JControllerLegacy
             $client_estimate[] = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/". md5($id."client_single") . ".pdf";
             $filename =  "Подробная смета.pdf";
             Gm_ceilingHelpersGm_ceiling::save_pdf($client_estimate, $sheets_dir . $filename, "A4");
-
             $mailer->setSender($sender);
             $mailer->addRecipient($email);
             $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";

@@ -2499,28 +2499,16 @@
 				}
 			});
 		});
-		//Запрос к серверу на расчет потолка
+		//Запрос к серверу на отправку сметы на почту
 		jQuery( "#send_to_email" ).click(function(){
 			var reg = /^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/;
 			if(reg.test(jQuery("#send_email").val())){
 				if(jQuery("#form-calculation").validationEngine('validate')) {
-					jQuery( "input[type=checkbox]").each(function(){
-						if( jQuery( this ).is(':checked') ) {
-							jQuery( this ).val( 1 );
-						} else {
-							jQuery( this ).val( 0 );
-						}
-					});
-					var temp_task = jQuery("#jform_task").val();
-					jQuery("#jform_task").val( "calculate" );
-					data = jQuery( "#form-calculation").serialize();
-					jQuery("#jform_task").val( temp_task );
-					var additional = "del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val();
 					jQuery.ajax({
 						type: 'POST',
 						url: "index.php?option=com_gm_ceiling&task=sendClientEstimate",
 						data: {
-							id : <?php echo $calc_id;?>,
+							id : <?php //echo $calc_id;?>,
 							email : jQuery("#send_email").val()
 						},
 						success: function(data){
