@@ -2051,35 +2051,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             }
         });
     }
-    function update_calendar2(month, year) {
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
-            data: {
-                id: <?php echo $userId; ?>,
-                month: month,
-                year: year,
-                id_dealer: <?php if ($user->dealer_type == 1 && $user->dealer_mounters == 1) { echo 1; } else { echo $user->dealer_id; } ?>,
-                flag: 2,
-            },
-            success: function (msg) {
-                jQuery("#calendar2").empty();
-                jQuery("#calendar2").append(msg);
-                Today(day, NowMonth, NowYear);
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function () {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-                });
-            }
-        });
-    }
+
     //----------------------------------------
 
     //скрыть модальное окно
@@ -2257,7 +2229,85 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 }
             });
         });
-
+// открытие модального окна с календаря и получение даты и вывода свободных монтажников
+jQuery("#calendar-container").on("click", ".current-month, .not-full-day, .change", function() {
+            window.idDay = jQuery(this).attr("id");
+            reg1 = "D(.*)D";
+            reg2 = "M(.*)M";
+            reg3 = "Y(.*)Y";
+            if (idDay.match(reg1)[1].length == 1) {
+                d = "0"+idDay.match(reg1)[1];
+            } else {
+                d = idDay.match(reg1)[1];
+            }
+            if (idDay.match(reg2)[1].length == 1) {
+                m = "0"+idDay.match(reg2)[1];
+            } else {
+                m = idDay.match(reg2)[1];
+            }
+            window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
+            jQuery("#modal-window-container-tar").show();
+			jQuery("#modal-window-choose-tar").show("slow");
+            jQuery("#close-tar").show();
+            jQuery.ajax({
+                type: 'POST',
+                url: "/index.php?option=com_gm_ceiling&task=calculations.GetBusyGauger",
+                data: {
+                    date: date,
+					dealer: <?php if ($user->dealer_id == 1 && in_array("14", $user->groups)) { echo $userId; } else { echo $user->dealer_id; } ?>,
+                },
+                success: function(data) {
+					Array.prototype.diff = function(a) {
+                        return this.filter(function(i) {return a.indexOf(i) < 0;});
+                    };
+					AllGauger = <?php echo json_encode($AllGauger); ?>;
+                    data = JSON.parse(data); // замеры
+                    AllTime = ["09:00:00", "10:00:00", "11:00:00", "12:00:00", "13:00:00", '14:00:00', "15:00:00", "16:00:00", "17:00:00", "18:00:00", "19:00:00", "20:00:00"];
+                    var TableForSelect = '<tr><th class="caption"></th><th class="caption">Время</th><th class="caption">Адрес</th><th class="caption">Замерщик</th></tr>';
+                    AllTime.forEach( elementTime => {
+                        var t = elementTime.substr(0, 2);
+                        t++;
+                        Array.from(AllGauger).forEach(function(elementGauger) {
+                            var emptytd = 0;
+                            Array.from(data).forEach(function(elementProject) {
+								if (elementProject.project_calculator == elementGauger.id && elementProject.project_calculation_date.substr(11) == elementTime) {
+                                    var timesession = jQuery("#jform_new_project_calculation_daypart").val();
+                                    var gaugersession = jQuery("#jform_project_gauger").val();
+                                    if (elementProject.project_calculator == gaugersession && elementProject.project_calculation_date.substr(11) == timesession) {
+                                        TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                    } else {
+                                        TableForSelect += '<tr><td></td>';
+                                    }
+                                    TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                    TableForSelect += '<td>'+elementProject.project_info+'</td>';
+                                    emptytd = 1;
+                                }
+                            });
+                            if (emptytd == 0) {
+								TableForSelect += '<tr><td><input type="radio" name="choose_time_gauger" value="'+elementTime+'"></td>';
+                                TableForSelect += '<td>'+elementTime.substr(0, 5)+'-'+t+':00</td>';
+                                TableForSelect += '<td></td>';
+                            }
+                            TableForSelect += '<td>'+elementGauger.name+'<input type="hidden" name="gauger" value="'+elementGauger.id+'"></td></tr>';
+                        });
+                    });
+                    jQuery("#projects_gaugers").empty();
+                    jQuery("#projects_gaugers").append(TableForSelect);
+                    jQuery("#date-modal").html("<strong>Выбранный день: "+d+"."+m+"."+idDay.match(reg3)[1]+"</strong>");
+                }
+            });
+			//если было выбрано время, то выдать его
+            if (time != undefined) {
+                setTimeout(function() { 
+                    var times = jQuery("input[name='choose_time_gauger']");
+                    times.each(function(element) {
+                        if (time == jQuery(this).val() && gauger == jQuery(this).closest('tr').find("input[name='gauger']").val()) {
+                            jQuery(this).prop("checked", true);
+                        }
+                    });
+                }, 200);
+            }
+        });
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
