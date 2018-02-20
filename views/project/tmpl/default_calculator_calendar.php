@@ -878,6 +878,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </td>
 
                         </tr>
+                        <tr>
+                            <th>Замерщик</th>
+                            <td><?php echo $this->item->project_calculator;?></td>
+                        </tr>
+                        <tr>
+                            <th>Монтажная бригада</th>
+                            <td><?php echo $this->item->project_mounter;?></td>
+                        </tr>
                     </div>
                         <!--<tr>
                             <th>Дилер</th>
