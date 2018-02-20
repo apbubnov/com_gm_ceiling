@@ -156,44 +156,43 @@ if (empty($list['direction']))
                 $db->setQuery($query);
                 $item->stock_name = $db->loadObject()->name;
 
-                $TC_ID = $item->texture_id . "." . $item->color_id;
+                $TC_ID = $item->texture_id . "/" . $item->color_id;
                 if (empty($result[$TC_ID])) {
                     $canvas = (object)[];
-                    $canvas->name = $item->canvas_name;
-                    $canvas->country = $item->canvas_country;
-                    $canvas->width = $item->canvas_width;
-                    $canvas->price = $item->canvas_price;
-                    $canvas->count = $item->canvas_count;
                     $canvas->texture_title = $item->texture_title;
                     $canvas->texture_colored = $item->texture_colored;
                     $canvas->color_title = (strpos($item->texture_title, "бел"))?303:$item->color_title;
                     $canvas->color_file = $item->color_file;
                     $canvas->color_hex = ($canvas->color_title == 303)?"FFFFFF":$item->color_hex;
-                    $canvas->ocount = self::getOCount($item->canvas_id);
-                    $canvas->rollers = [];
+                    $canvas->canvases = [];
 
                     $result[$TC_ID] = $canvas;
                 }
 
-                if (empty($result[$item->canvas_id])) {
+                $N_ID = $item->canvas_country . "/" . $item->canvas_name;
+                if (empty($result[$TC_ID]->canvases[$N_ID])) {
                     $canvas = (object)[];
-                    $canvas->name = $item->canvas_name;
                     $canvas->country = $item->canvas_country;
+                    $canvas->name = $item->canvas_name;
+                    $canvas->canvases = [];
+
+                    $result[$TC_ID]->canvases[$N_ID] = $canvas;
+                }
+
+                if (empty($result[$TC_ID]->canvases[$N_ID]->canvases[$item->canvas_id])) {
+                    $canvas = (object)[];
+                    $canvas->id = $item->canvas_id;
                     $canvas->width = $item->canvas_width;
                     $canvas->price = $item->canvas_price;
                     $canvas->count = $item->canvas_count;
-                    $canvas->texture_title = $item->texture_title;
-                    $canvas->texture_colored = $item->texture_colored;
-                    $canvas->color_title = (strpos($item->texture_title, "бел"))?303:$item->color_title;
-                    $canvas->color_file = $item->color_file;
-                    $canvas->color_hex = ($canvas->color_title == 303)?"FFFFFF":$item->color_hex;
                     $canvas->ocount = self::getOCount($item->canvas_id);
                     $canvas->rollers = [];
 
-                    $result[$item->canvas_id] = $canvas;
+                    $result[$TC_ID]->canvases[$N_ID]->canvases[$item->canvas_id] = $canvas;
                 }
 
                 $roller = (object)[];
+                $roller->id = $item->roller_id;
                 $roller->barcode = $item->roller_barcode;
                 $roller->article = $item->roller_article;
                 $roller->stock = $item->roller_stock;
@@ -202,13 +201,13 @@ if (empty($list['direction']))
                 $roller->quad = $item->roller_quad;
                 $roller->pprice = $item->pprice;
 
-                $result[$item->canvas_id]->rollers[$item->roller_id] = $roller;
+                $result[$TC_ID]->canvases[$N_ID]->canvases[$item->canvas_id]->rollers[$item->roller_id] = $roller;
 
-                if ($roller_id != $item->roller_id) {
+                /*if ($roller_id != $item->roller_id) {
                     $roller_id = $item->roller_id;
-                }
+                }*/
 
-                if ($canvas_id != $item->canvas_id) {
+                /*if ($canvas_id != $item->canvas_id) {
                     if (isset($canvas_id)) {
                         $tempOption = $result[$canvas_id];
                         foreach ($tempOption->rollers as $v) {
@@ -219,7 +218,7 @@ if (empty($list['direction']))
                         $result[$canvas_id] = $tempOption;
                     }
                     $canvas_id = $item->canvas_id;
-                }
+                }*/
             }
 
             return $result;
