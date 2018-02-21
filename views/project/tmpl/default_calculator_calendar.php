@@ -1312,51 +1312,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
                 формирование заказа
             </button>
-            <?php if ($this->item->project_status == 7) {
-                // регистрационная информация (логин, пароль #1)
-                // registration info (login, password #1)
-                $mrh_login = "demo";
-                $mrh_pass1 = "password_1";
-
-                // номер заказа
-                // number of order
-                $inv_id = 0;
-
-                // описание заказа
-                // order description
-                $inv_desc = "Оплата заказа в Тестовом магазине ROBOKASSA";
-
-                // сумма заказа
-                // sum of order
-                $out_summ = $project_total_discount;;
-
-                // тип товара
-                // code of goods
-                $shp_item = 1;
-
-                // язык
-                // language
-                $culture = "ru";
-
-                // кодировка
-                // encoding
-                $encoding = "utf-8";
-
-                // формирование подписи
-                // generate signature
-                $crc = md5("$mrh_login:$out_summ:$inv_id:$mrh_pass1:shp_Item=$shp_item");
-
-                // HTML-страница с кассой
-                // ROBOKASSA HTML-page
-                print "<html><script language=JavaScript " .
-                    "src='https://auth.robokassa.ru/Merchant/PaymentForm/FormMS.js?" .
-                    "MerchantLogin=$mrh_login&OutSum=$out_summ&InvoiceID=$inv_id" .
-                    "&Description=$inv_desc&SignatureValue=$crc&shp_Item=$shp_item" .
-                    "&Culture=$culture&Encoding=$encoding'></script></html>";
-
-            }
-        } ?>
-        
     </div>
     <?php $first = true; foreach ($calculations as $k => $calculation) { ?>
         <?php $mounters = json_decode($calculation->mounting_sum); ?>
@@ -1770,15 +1725,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 var $ = jQuery;
 var min_project_sum = <?php echo  $min_project_sum;?>;
 var min_components_sum = <?php echo $min_components_sum;?>;
-    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
-        var div = jQuery("#modal_window_del"); // тут указываем ID элемента
-        if (!div.is(e.target) // если клик был не по нашему блоку
-            && div.has(e.target).length === 0) { // и не по его дочерним элементам
-            jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
-            jQuery("#modal_window_del").hide();
-        }
-    });
 
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
@@ -1804,6 +1750,13 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 
     // закрытие окон модальных
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery("#modal_window_del"); // тут указываем ID элемента
+        if (!div.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_del").hide();
+        }
 		var div1 = jQuery("#modal-window-2-tar"); // тут указываем ID элемента
 		if (!div1.is(e.target) // если клик был не по нашему блоку
 		    && div1.has(e.target).length === 0) { // и не по его дочерним элементам
@@ -1817,6 +1770,13 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 			jQuery("#modal-window-container3-tar").hide();
 			jQuery("#modal-window-3-tar").hide();
 		}
+        var div3 = jQuery("#modal_window_g_choose"); // тут указываем ID элемента
+        if (!div3.is(e.target) // если клик был не по нашему блоку
+            && div3.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close").hide();
+            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_g_choose").hide();
+        }
     });
     // -----------------------------------------------------------------------------------------
     // листание календаря
