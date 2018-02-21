@@ -160,15 +160,12 @@ class Gm_ceilingModelCanvases extends JModelList
                 $db->setQuery($query);
                 $item->stock_name = $db->loadObject()->name;
 
-                $TC_ID = $item->texture_id . "/" . $item->color_id;
+                $TC_ID = $item->texture_id;
                 if (empty($OLD_TC_ID)) $OLD_TC_ID = $TC_ID;
                 if (empty($result[$TC_ID])) {
                     $canvas = (object)[];
                     $canvas->texture_title = $item->texture_title;
                     $canvas->texture_colored = $item->texture_colored;
-                    $canvas->color_title = (strpos($item->texture_title, "бел"))?303:$item->color_title;
-                    $canvas->color_file = $item->color_file;
-                    $canvas->color_hex = ($canvas->color_title == 303)?"FFFFFF":$item->color_hex;
                     $canvas->count = 0;
                     $canvas->ocount = "";
                     $canvas->canvases = [];
@@ -195,6 +192,9 @@ class Gm_ceilingModelCanvases extends JModelList
                 if (empty($result[$TC_ID]->canvases[$N_ID]->canvases[$CANVAS_ID])) {
                     $canvas = (object)[];
                     $canvas->id = $item->canvas_id;
+                    $canvas->color_title = (strpos($item->texture_title, "бел"))?303:$item->color_title;
+                    $canvas->color_file = $item->color_file;
+                    $canvas->color_hex = ($canvas->color_title == 303)?"FFFFFF":$item->color_hex;
                     $canvas->width = $item->canvas_width;
                     $canvas->price = $item->canvas_price;
                     $canvas->count = $item->canvas_count;
