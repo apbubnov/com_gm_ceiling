@@ -130,6 +130,7 @@ function dealer_margin($price, $margin, $value, $type)
                     <td>Изменить</td>
                 <? elseif ($managerGM): ?>
                     <td><?= JHtml::_('grid.sort', 'Цена', 'canvas_price', $listDirn, $listOrder); ?></td>
+                    <td><?= JHtml::_('grid.sort', 'Изменение цены', 'canvas_price', $listDirn, $listOrder); ?></td>
                     <td><?= JHtml::_('grid.sort', 'Цена для дилера', 'canvas_price', $listDirn, $listOrder); ?></td>
                     <td>Изменить</td>
                 <? else: ?>
@@ -172,6 +173,7 @@ function dealer_margin($price, $margin, $value, $type)
                             </form>
                         </td>
                     <? elseif ($managerGM): ?>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td>
@@ -222,6 +224,7 @@ function dealer_margin($price, $margin, $value, $type)
                                 </form>
                             </td>
                         <? elseif ($managerGM): ?>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td>
@@ -276,9 +279,16 @@ function dealer_margin($price, $margin, $value, $type)
                                     </form>
                                 </td>
                             <? elseif ($managerGM): ?>
+                                <?
+                                $type = $dealer->CanvasesPrice[$key_c]->type;
+                                $value = $dealer->CanvasesPrice[$key_c]->value;
+                                ?>
                                 <td id="GMPrice"><?= margin($canvas->price, $dealer->gm_components_margin); ?></td>
+                                <td id="UpdateDealerPrice">
+                                    <?=(($type != 1 && $value >= 0)?"+":"").$value.(($type == 3)?"%":"");?>
+                                </td>
                                 <td id="DealerPrice"><?= dealer_margin($canvas->price, $dealer->gm_components_margin,
-                                        $dealer->CanvasesPrice[$key_c]->value, $dealer->CanvasesPrice[$key_c]->type); ?></td>
+                                        $value, $type); ?></td>
                                 <td>
                                     <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
                                         <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"

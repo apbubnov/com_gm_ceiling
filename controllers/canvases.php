@@ -244,6 +244,9 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                             "name" => ".Level3[data-canvas='$v->id'] #GMPrice",
                             "value" => self::margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin)];
                         $answer->elements[] = (object) [
+                            "name" => ".Level3[data-canvas='$v->id'] #UpdateDealerPrice",
+                            "value" => (($type != 1 && $number >= 0)?"+":"").$number.(($type == 3)?"%":"")];
+                        $answer->elements[] = (object) [
                             "name" => ".Level3[data-canvas='$v->id'] #DealerPrice",
                             "value" => $DealerPrice];
                     }
