@@ -286,9 +286,9 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         public function check_update(){
             try
             {
-                if(!empty($_POST['version']))
+                if(!empty($_POST['sync_data']))
                 {
-                   $version = $_POST['version'];
+                   $version = json_decode($_POST['version'])->version;
                    $path = $_SERVER['DOCUMENT_ROOT'] . "/files/android_app";
                    if(file_exists($path.$version)){
                        $result = false;
