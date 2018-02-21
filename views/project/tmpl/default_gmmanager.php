@@ -132,7 +132,7 @@ $AllMounters = $model->FindAllMounters($where);
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
                             <td>
-                                <?
+                                <?php
                                 if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?> -
                                 <? } else { ?>
                                     <?php $jdate = new JDate($this->item->project_calculation_date); ?>
@@ -143,7 +143,7 @@ $AllMounters = $model->FindAllMounters($where);
                         <tr>
                             <th><?php echo "Дата монтажа"; ?></th>
                             <td>
-                                <?
+                                <?php
                                 if ($this->item->project_mounting_date == "0000-00-00 00:00:00") { ?> -
                                 <? } else { ?>
                                     <?php $jdate = new JDate($this->item->project_mounting_date); ?>

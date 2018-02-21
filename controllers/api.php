@@ -283,5 +283,29 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 throw new Exception('Ошибка!', 500);
             }
         }
+        public function check_update(){
+            try
+            { 
+                if(!empty($_POST['sync_data']))
+                {
+                   $version = json_decode($_POST['sync_data'])->version.'apk';
+                   $path = $_SERVER['DOCUMENT_ROOT'] . "/files/android_app/";
+                   if(file_exists($path.$version)){
+                       $result = false;
+                   }
+                   else{
+                       $result = array_diff(scandir($path,1), array('..', '.'))[0];
+                    }
+                }
+                die(json_encode($result));
+            }
+            catch(Exception $e)
+            {
+                $date = date("d.m.Y H:i:s");
+                $files = "components/com_gm_ceiling/";
+                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+                throw new Exception('Ошибка!', 500);
+            } 
+        }
 
     }
