@@ -3187,4 +3187,4 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             jQuery("#update_discount").click();
     }
 </script>
-<?endif;}}}?>
+<?endif;?>
