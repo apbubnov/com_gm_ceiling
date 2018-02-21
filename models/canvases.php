@@ -108,7 +108,6 @@ class Gm_ceilingModelCanvases extends JModelList
             ->select('color.id as color_id, color.title as color_title, color.file as color_file, color.hex as color_hex')
             ->select('texture.id as texture_id, texture.texture_title as texture_title, '
                 . ' texture.texture_colored as texture_colored');
-        $query->where('canvas.count > 0');
 
         // Add the list ordering clause.
         $orderCol = $this->state->get('list.ordering');
@@ -149,6 +148,8 @@ class Gm_ceilingModelCanvases extends JModelList
             $OLD_ROLLER_ID = null;
 
             foreach ($items as $key => $item) {
+                if (!$stock && intval($item->canvas_count) <= 0) continue;
+
                 $item->pprice = self::MinPriceRoller($item->roller_id);
                 $item->pprice = (empty($item->pprice) ? "?" : $item->pprice);
 
