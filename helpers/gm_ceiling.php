@@ -3747,6 +3747,7 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->addRecipient($user->email);
         } elseif ($type == 13) {
         // уведомление дилера, что потолок запушен в производство
+        throw new Exception($data->id_client);
         $dopinfo = $client->getInfo($data->id_client);
         $dealer = JFactory::getUser($data->$dopinfo->dealer_id);
         $body = "Здравствуйте, " . $dealer->name . ". Договор № " . $data->id . "запущен в производство\n\n";
