@@ -379,7 +379,6 @@ function dealer_margin($price, $margin, $value, $type)
 
     function Resize() {
         var WW = $(window).width() + 10;
-        console.log(WW);
 
         var PageScroll = $(".Page .Scroll");
         if (WW > 767) {

@@ -258,6 +258,19 @@ function dealer_margin($price, $margin, $value, $type) {
     }
 
     function Resize() {
+        var WW = $(window).width() + 10;
+
+        var PageScroll = $(".Page .Scroll");
+        if (WW > 767) {
+            var offset = PageScroll.offset(),
+                offsetLeft = (offset.left - 15.0 > 0) ? (offset.left - 15.0) : 0;
+
+            PageScroll.css({
+                "left": (-offsetLeft + "px"),
+                "width": ("calc(100% + " + (offsetLeft * 2) + "px)")
+            });
+        } else PageScroll.removeAttr("style");
+
         ResizeHead();
     }
 
