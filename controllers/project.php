@@ -1251,6 +1251,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			} else {
 				$this->setMessage("Проект ожидает монтажа");
 				Gm_ceilingHelpersGm_ceiling::notify($data, 1);
+				Gm_ceilingHelpersGm_ceiling::notify($data, 13);
 			}
 			$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager', false));
 		}

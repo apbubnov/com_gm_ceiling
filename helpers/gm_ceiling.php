@@ -3745,7 +3745,19 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->setSubject('Изменена дата(время) монтажа дилера');
             $mailer->setBody($body);
             $mailer->addRecipient($user->email);
-        }
+        } elseif ($type == 13) {
+        // уведомление дилера, что потолок запушен в производство
+        $dopinfo = $client->getInfo($data->id_client);
+        $dealer = JFactory::getUser($data->$dopinfo->dealer_id);
+        $body = "Здравствуйте, " . $dealer->name . ". Договор № " . $data->id . "запущен в производство\n\n";
+        $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
+        $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
+        $body .= "Адрес: " . $data->project_info . "\n";
+        $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
+        $mailer->setSubject('Изменена дата(время) монтажа дилера');
+        $mailer->setBody($body);
+        $mailer->addRecipient($user->email);
+    }
 
         if ($type != 5) {
             $mailer->addRecipient($em);
