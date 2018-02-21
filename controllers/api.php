@@ -285,24 +285,16 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         public function check_update(){
             try
-            {
+            { 
                 if(!empty($_POST['sync_data']))
                 {
-                   $version = json_decode($_POST['version'])->version;
+                   $version = json_decode($_POST['sync_data'])->version.'apk';
                    $path = $_SERVER['DOCUMENT_ROOT'] . "/files/android_app";
                    if(file_exists($path.$version)){
                        $result = false;
                    }
                    else{
-                       $dir = opendir($path);
-                       $string_to_search='GM';
-                       while(($file = readdir($dir)) !== false)
-                       {
-                           $app = strstr($file,$string_to_search);
-                        }
-                        print_r($app);
-                        closedir($dir);
-                        $result = $app;
+                       $result = array_diff(scandir($path,1), array('..', '.'))[0];
                     }
                 }
                 die(json_encode($result));
@@ -313,7 +305,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 $files = "components/com_gm_ceiling/";
                 file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
                 throw new Exception('Ошибка!', 500);
-            }
+            } 
         }
 
     }
