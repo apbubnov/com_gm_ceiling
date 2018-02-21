@@ -283,5 +283,37 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 throw new Exception('Ошибка!', 500);
             }
         }
+        public function check_update(){
+            try
+            {
+                if(!empty($_POST['version']))
+                {
+                   $version = $_POST['version'];
+                   $path = $_SERVER['DOCUMENT_ROOT'] . "/files/";
+                   if(file_exists($path.$version)){
+                       $result = false;
+                   }
+                   else{
+                       $dir = opendir($path);
+                       $string_to_search='GM';
+                       while(($file = readdir($dir)) !== false)
+                       {
+                           $app = strstr($file,$string_to_search);
+                        }
+                        print_r($app);
+                        closedir($dir);
+                        $result = $app;
+                    }
+                }
+                die(json_encode($result));
+            }
+            catch(Exception $e)
+            {
+                $date = date("d.m.Y H:i:s");
+                $files = "components/com_gm_ceiling/";
+                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+                throw new Exception('Ошибка!', 500);
+            }
+        }
 
     }
