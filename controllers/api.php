@@ -289,7 +289,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 if(!empty($_POST['version']))
                 {
                    $version = $_POST['version'];
-                   $path = $_SERVER['DOCUMENT_ROOT'] . "/files/";
+                   $path = $_SERVER['DOCUMENT_ROOT'] . "/files/android_app";
                    if(file_exists($path.$version)){
                        $result = false;
                    }
