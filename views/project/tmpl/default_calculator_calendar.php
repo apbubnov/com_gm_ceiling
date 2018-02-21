@@ -3174,9 +3174,17 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         }, 75);
     }
  
+</script>
 
+<?php
+ } else:
+        echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
+    endif;
+?>
+<script language="JavaScript">
     function PressEnter(your_text, your_event) {
         if (your_text != "" && your_event.keyCode == 13)
             jQuery("#update_discount").click();
     }
 </script>
+<?endif;}}}?>
