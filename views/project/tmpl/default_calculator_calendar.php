@@ -646,6 +646,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount; ?>" type="hidden">
                         <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport; ?>" type="hidden">
                         <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
+                        <input name = "project_new_calc_date" id = "project_new_calc_date" type = "hidden">
+                        <input name = "new_project_calculation_daypart" id = "new_project_calculation_daypart" type = "hidden">
+                        <input name = "project_gauger" id = "project_gauger" type = "hidden">
                     </div>
                     <?php if ($user->dealer_type != 2) { ?>
                         <div class="row"><div class="col-12 col-md-6">
@@ -767,7 +770,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                                             </div>
                                         </div>
-                                        <div id="modal_window_container" class = "modal_window_container">
+                                        <div id="modal_window_g_container" class = "modal_window_container">
                                             <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
                                             <div id="modal_window_g_choose" class = "modal_window">
                                                     <p id="g_date-modal"></p>
@@ -1556,24 +1559,13 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </button>
 
         <table id="mounter_wraper" <?if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
-            <t>
+            <tr>
                 <td colspan="6">
-                <h4 id="title" style="display: none;">
-                    Назначить монтажную бригаду
-                </h4>
+                    <h4 id="title" style="display: none;">
+                        Назначить монтажную бригаду
+                    </h4>
                 </td>
-                </tr>
-                <!--                <tr>-->
-                <!--                    <td>-->
-                <!--                        <button class="btn btn-primary" id="mounter_prev" type="button"> <<</button>-->
-                <!--                    </td>-->
-                <!--                    <td>-->
-                <!--                        --><?php ////echo $project_mounter;//$this->form->renderField('project_mounter'); ?>
-                <!--                    </td>-->
-                <!--                    <td>-->
-                <!--                        <button class="btn btn-primary" id="mounter_next" type="button"> >></button>-->
-                <!--                    </td>-->
-                <!--                </tr>-->
+            </tr>
             <tr>
                 <td>
                     <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
@@ -1611,11 +1603,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
                     </button>
                 </td>
-<!--                <td>-->
-<!--                    <a class="btn btn-primary"-->
-<!--                        href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?><!--">-->
-<!--                        Перейти к монтажам </a>-->
-<!--                </td>-->
             </tr>
             <?php } ?>
         </table>
@@ -1765,7 +1752,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         if (!div3.is(e.target) // если клик был не по нашему блоку
             && div3.has(e.target).length === 0) { // и не по его дочерним элементам
             jQuery("#close").hide();
-            jQuery("#modal_window_container").hide();
+            jQuery("#modal_window_g_container").hide();
             jQuery("#modal_window_g_choose").hide();
         }
     });
@@ -1877,7 +1864,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 
     function update_calendar(month, year,type) {
         var flag = (type == "#g_calendar" ) ? 3 : 2;
-        console.log(flag);
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=UpdateCalendarTar",
@@ -1890,7 +1876,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             },
             success: function (msg) {
                 jQuery(type).empty();
-                console.log(msg);
                 jQuery(type).append(msg);
                 Today(day, NowMonth, NowYear);
             },
@@ -2103,7 +2088,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 m = idDay.match(reg2)[1];
             }
             window.date = idDay.match(reg3)[1]+"-"+m+"-"+d;
-            jQuery("#modal_window_container").show();
+            jQuery("#modal_window_g_container").show();
 			jQuery("#modal_window_g_choose").show("slow");
             jQuery("#close-tar").show();
             jQuery.ajax({
@@ -2175,9 +2160,9 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                     gauger = jQuery(this).closest('tr').find("input[name='gauger']").val();
                 }
             });
-            jQuery("#jform_project_calculation_daypart").val(time);
-            jQuery("#jform_project_calculation_date").val(date);
-            jQuery("#jform_project_calculator").val(gauger);
+            jQuery("#new_project_calculation_daypart").val(time);
+            jQuery("#project_new_calc_date").val(date);
+            jQuery("#project_gauger").val(gauger);
             if (jQuery(".change").length == 0) {
                 jQuery("#"+idDay).attr("class", "change");
             } else {
@@ -2185,9 +2170,14 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 jQuery("#"+idDay).attr("class", "change");
             }
             jQuery("#close-tar").hide();
-            jQuery("#modal_window_container").hide();
-            jQuery("#modal_window_choose").hide();
+            jQuery("#modal_window_g_container").hide();
+            jQuery("#modal_window_g_choose").hide();
 		});
+        jQuery("#projects_gaugers").on("click", "td", function(){
+            var times = jQuery(this).closest('tr').find("input:radio[name='choose_time_gauger']");
+            times.prop("checked",true);
+            times.change();
+        });
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -2306,7 +2296,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             });
             if (date == datesession.substr(0, 10)) {
                 var mountersession = jQuery("#project_mounter").val();
-                console.log(timesession);
                 setTimeout(function() {
                     // бригада
                     var mounterall = document.getElementById('mounters').options;
@@ -2596,7 +2585,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                     location.href = "http://" + data;
                 },
                 error: function (data) {
-                    console.log(data);
                     var n = noty({
                         theme: 'relax',
                         layout: 'center',
@@ -2743,7 +2731,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             var el = jQuery("#section_estimate_" + id);
             if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
         }
-        console.log(filenames);
 
 
         var formData = new FormData();
@@ -2771,7 +2758,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             contentType: false,
             cache: false,
             success: function (data) {
-                console.log(data);
                 var n = noty({
                     theme: 'relax',
                     layout: 'center',
@@ -2782,7 +2768,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 
             },
             error: function (data) {
-                console.log(data);
                 var n = noty({
                     theme: 'relax',
                     layout: 'center',
@@ -2803,7 +2788,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             var el = jQuery("#section_mount_" + id);
             if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
         }
-        console.log(filenames);
         var formData = new FormData();
         jQuery.each(jQuery('#dopfile1')[0].files, function (i, file) {
             formData.append('dopfile1', file)
@@ -2825,7 +2809,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             contentType: false,
             cache: false,
             success: function (data) {
-                console.log(data);
                 var n = noty({
                     theme: 'relax',
                     layout: 'center',
@@ -2836,7 +2819,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 
             },
             error: function (data) {
-                console.log(data);
                 var n = noty({
                     theme: 'relax',
                     layout: 'center',
@@ -2853,13 +2835,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         var id  = jQuery("#project_id").val();
         var client_id = jQuery("#client_id").val();
         var testfilename = <?php echo (empty($json2))?"null":$json2;?>;
-        //        for (var i = 0; i < testfilename.length; i++) {
-        //            var id = testfilename[i].id;
-        //            var el = jQuery("#section_mount_" + id);
-        //            if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-        //        }
         var filenames = [];
-        console.log(filenames);
         var formData = new FormData();
         jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {
             formData.append('dopfile2', file)
@@ -2878,7 +2854,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             contentType: false,
             cache: false,
             success: function (data) {
-                console.log(data);
                 var n = noty({
                     theme: 'relax',
                     layout: 'center',
@@ -2889,7 +2864,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 
             },
             error: function (data) {
-                console.log(data);
                 var n = noty({
                     theme: 'relax',
                     layout: 'center',
