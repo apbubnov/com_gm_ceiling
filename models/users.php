@@ -38,7 +38,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`');
 			$query->from('`#__users` AS `u`');
 			$query->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`rgzbn_user_usergroup_map`.`user_id`');
-			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
+			//$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
 			$query->where('`#__user_usergroup_map`.`group_id`=14 AND `dealer_type` < 2');
 			$query->group('`id`');
