@@ -1302,6 +1302,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
                 формирование заказа
             </button>
+        <?php }?>
     </div>
     <?php $first = true; foreach ($calculations as $k => $calculation) { ?>
         <?php $mounters = json_decode($calculation->mounting_sum); ?>
@@ -3177,7 +3178,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 </script>
 
 <?php
- } else:
+else:
         echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
     endif;
 ?>
