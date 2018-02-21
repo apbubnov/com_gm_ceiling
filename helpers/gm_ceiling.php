@@ -3748,6 +3748,7 @@ class Gm_ceilingHelpersGm_ceiling
         } elseif ($type == 13) {
         // уведомление дилера, что потолок запушен в производство
         $data = get_object_vars($data);
+        print_r($data);
         $dopinfo = $client->getInfo($data['id_client']);
         $dealer = JFactory::getUser($data->$dopinfo->dealer_id);
         $body = "Здравствуйте, " . $dealer->name . ". Договор № " . $data->id . "запущен в производство\n\n";
