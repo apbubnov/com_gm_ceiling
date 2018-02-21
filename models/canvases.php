@@ -659,16 +659,16 @@ class Gm_ceilingModelCanvases extends JModelList
                 $data = [$data];
 
             $db = $this->getDbo();
-            $querySTR = "";
+            //$querySTR = "";
             foreach ($data as $v) {
                 $query = $db->getQuery(true);
                 $query->update("`#__gm_ceiling_canvases`")
                     ->set("price = '$v->price'")
                     ->where("id = '$v->id'");
-                $querySTR .= ((string) $query) . "; ";
+                $db->setQuery($query);
+                $db->execute();
+                //$querySTR .= ((string) $query) . "; ";
             }
-            $db->setQuery($querySTR);
-            $db->execute();
         }
         catch(Exception $e)
         {
@@ -695,7 +695,8 @@ class Gm_ceilingModelCanvases extends JModelList
                 $query->where("canvas.id = '$data'");
             else if (gettype($data) == "object")
                 foreach ($data as $key => $item)
-                        $query->$key($item);
+                    foreach ($item as $value)
+                        $query->$key($value);
 
             $db->setQuery($query);
             return $db->loadObjectList();

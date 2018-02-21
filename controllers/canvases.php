@@ -152,6 +152,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
             if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
                 $userDealer = JFactory::getUser($user->dealer_id);
                 $userDealer->groups = $userDealer->get('groups');
+                $userDealer->getDealerInfo();
             }
 
             $managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
@@ -184,15 +185,17 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 $get = (object) [];
                 switch ($level) {
                     case 1:
-                        $object = str_split("/", $id);
+                        $object = preg_split("/\//", $id);
                         $object[1] = empty($object[1])?"IS NULL":"= '".$object[1]."'";
-                        $get->where = "texture.id = '$object[0]'";
-                        $get->where = "color.id $object[1]";
+                        $get->where = [];
+                        $get->where[] = "texture.id = '$object[0]'";
+                        $get->where[] = "color.id $object[1]";
                         break;
                     case 2:
-                        $object = str_split("/", $id);
-                        $get->where = "canvas.country = '$object[0]'";
-                        $get->where = "canvas.name = '$object[1]'";
+                        $object = preg_split("/\//", $id);
+                        $get->where = [];
+                        $get->where[] = "canvas.country = '$object[0]'";
+                        $get->where[] = "canvas.name = '$object[1]'";
                         break;
                     case 3:
                         $get = $id;
@@ -201,7 +204,6 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                         $get = null;
                         break;
                 }
-
 
                 $oldPrice = $model->getPrice($get);
                 $newPrice = $oldPrice;

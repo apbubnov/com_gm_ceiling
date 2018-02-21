@@ -87,11 +87,9 @@ function dealer_margin($price, $margin, $value, $type)
     </div>
     <div class="Actions">
         <?= parent::getButtonBack(); ?>
-        <? if ($stock): ?>
-            <button type="button" class="Current ActionTR" id="ActionTR">
-                <i class="fa fa-caret-down" aria-hidden="true"></i> <span>Раскрыть все</span>
-            </button>
-        <? endif; ?>
+        <button type="button" class="Current ActionTR" id="ActionTR">
+            <i class="fa fa-caret-down" aria-hidden="true"></i> <span>Раскрыть все</span>
+        </button>
         <? if ($managerGM): ?>
             <form class="FormSimple UpdatePrice MarginLeft" data-type="ALL">
                 <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o"
@@ -419,24 +417,11 @@ function dealer_margin($price, $margin, $value, $type)
         }
     }
 
-    function ActionTR() {
+    function ActionTR(event) {
+        if ($(event.target).closest("form").hasClass("UpdatePrice")) return;
+
         var TR = $(this),
-            level = parseInt(this.dataset.level),
-            data = {};
-
-        switch (level) {
-            case 1:
-                data.title = "component";
-                break;
-            case 2:
-                data.title = "option";
-                break;
-            case 3:
-                data.title = "good";
-                break;
-        }
-
-        data.id = this.dataset[data.title];
+            level = parseInt(this.dataset.level);
 
         var TRN = TR.next();
         if (TR.hasClass("Active")) {
