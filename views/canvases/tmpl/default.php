@@ -104,7 +104,7 @@ function dealer_margin($price, $margin, $value, $type)
         <? endif; ?>
     </div>
     <div class="Scroll">
-        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=canvases'); ?>" method="post"
+        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=canvases'.(!empty($dealer)?"&dealer=$dealer->id":"")); ?>" method="post"
               name="adminForm" id="adminForm" hidden>
             <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
             <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
@@ -259,7 +259,7 @@ function dealer_margin($price, $margin, $value, $type)
                                     <a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?= $key_c; ?>">Инфо</a>
                                 </td>
                             <? elseif ($managerGM && empty($dealer)): ?>
-                                <td id="GMPrice"><?= $canvas->price; ?></td>
+                                <td><?= $canvas->price; ?></td>
                                 <td id="GMPrice"><?= margin($canvas->price, $dealer->gm_components_margin); ?></td>
                                 <td id="DealerPrice"><?= double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin); ?></td>
                                 <td>

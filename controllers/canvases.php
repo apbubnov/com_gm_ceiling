@@ -181,30 +181,30 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
             $answer->message = "Обновление произошло успешно!";
             $answer->elements = [];
 
-            if (empty($dealer)) {
-                $get = (object) [];
-                switch ($level) {
-                    case 1:
-                        $object = preg_split("/\//", $id);
-                        $object[1] = empty($object[1])?"IS NULL":"= '".$object[1]."'";
-                        $get->where = [];
-                        $get->where[] = "texture.id = '$object[0]'";
-                        $get->where[] = "color.id $object[1]";
-                        break;
-                    case 2:
-                        $object = preg_split("/\//", $id);
-                        $get->where = [];
-                        $get->where[] = "canvas.country = '$object[0]'";
-                        $get->where[] = "canvas.name = '$object[1]'";
-                        break;
-                    case 3:
-                        $get = $id;
-                        break;
-                    default:
-                        $get = null;
-                        break;
-                }
+            $get = (object) [];
+            switch ($level) {
+                case 1:
+                    $object = preg_split("/\//", $id);
+                    $object[1] = empty($object[1])?"IS NULL":"= '".$object[1]."'";
+                    $get->where = [];
+                    $get->where[] = "texture.id = '$object[0]'";
+                    $get->where[] = "color.id $object[1]";
+                    break;
+                case 2:
+                    $object = preg_split("/\//", $id);
+                    $get->where = [];
+                    $get->where[] = "canvas.country = '$object[0]'";
+                    $get->where[] = "canvas.name = '$object[1]'";
+                    break;
+                case 3:
+                    $get = $id;
+                    break;
+                default:
+                    $get = null;
+                    break;
+            }
 
+            if (empty($dealer)) {
                 $oldPrice = $model->getPrice($get);
                 $newPrice = $oldPrice;
                 foreach ($oldPrice as $k => $v)
@@ -230,7 +230,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 $model->setPrice($newPrice);
             }
             else {
-                $oldPrice = $model->getPrice($id);
+                $oldPrice = $model->getPrice($get);
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
                     $DealerPrice = self::dealer_margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin, $number, $type);
@@ -241,18 +241,22 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                         $dealer->setCanvasesPrice(["value" => $number, "type" => $type], $v->id);
 
                         $answer->elements[] = (object) [
-                            "name" => ".Level1[data-canvas='$v->id'] #GMPrice",
+                            "name" => ".Level3[data-canvas='$v->id'] #GMPrice",
                             "value" => self::margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin)];
                         $answer->elements[] = (object) [
-                            "name" => ".Level1[data-canvas='$v->id'] #DealerPrice",
+                            "name" => ".Level3[data-canvas='$v->id'] #DealerPrice",
                             "value" => $DealerPrice];
                     }
                 }
-                if ($flag == 1)
-                    die(json_encode(["status" => "error", "message" => "Цена для дилера не должна быть ниже себестоймости."]));
-                else if ($flag > 1)
-                    die(json_encode(["status" => "error", "message" => "Цена для дилера не должна быть ниже себестоймости. 
-                    Поэтому к некоторым полотнам новый прайс был не пременен."]));
+                if ($flag == 1) {
+                    $answer->status = "error";
+                    $answer->message = "Цена для дилера не должна быть ниже себестоймости.";
+                }
+                else if ($flag > 1) {
+                    $answer->status = "error";
+                    $answer->message = "Цена для дилера не должна быть ниже себестоймости."
+                        . "Поэтому к некоторым полотнам новый прайс был не пременен.";
+                }
             }
 
             die(json_encode($answer));
