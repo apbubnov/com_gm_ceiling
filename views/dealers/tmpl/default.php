@@ -66,7 +66,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 		            <td>
                        <?php echo $value->name;
                         if($value->kp_cnt + $value->cmnt_cnt + $value->inst_cnt == 0 ){
-                           
+                           echo "НОВЫЙ";
                         }?>
 		            </td>
                     <td>
