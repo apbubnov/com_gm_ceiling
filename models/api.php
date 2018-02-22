@@ -402,7 +402,13 @@ class Gm_ceilingModelApi extends JModelList
                 $list_cornice = array();
                 $list_profil = array();
             }
-
+            //добавление картинок к калькуляции           
+            foreach($list_calculations as $calc){
+                $calc->image = "";
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $calc->id) . ".svg")){
+                    $calc->image = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' .md5("calculation_sketch" . $calc->id) . ".svg");
+                }
+            }
             $result = [];
             $result['rgzbn_gm_ceiling_clients'] = $list_clients;
             $result['rgzbn_gm_ceiling_clients_contacts'] = $list_contacts;

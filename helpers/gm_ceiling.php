@@ -3405,9 +3405,15 @@ class Gm_ceilingHelpersGm_ceiling
         //throw new Exception("fdf");
         if ($type == 0) {
             //Уведомление о записи на замер
+            if($data['who_calculate'] == 0){
+                $group_id = 22;
+            }
+            else {
+                $group_id = 21;
+            }
             $db = JFactory::getDBO();
             $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 22';
+				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` ='.$group_id;
             $db->setQuery($q);
             $users = $db->loadObjectList();
 
@@ -3747,17 +3753,16 @@ class Gm_ceilingHelpersGm_ceiling
             $mailer->addRecipient($user->email);
         } elseif ($type == 13) {
         // уведомление дилера, что потолок запушен в производство
-        throw new Exception($data->id_client);
-        $dopinfo = $client->getInfo($data->id_client);
+        $dopinfo = $client->getInfo($data->client_id);
         $dealer = JFactory::getUser($dopinfo->dealer_id);
-        $body = "Здравствуйте, " . $dealer->name . ". Договор № " . $data->id . "запущен в производство\n\n";
+        $body = "Здравствуйте, " . $dealer->name . ". Договор № " . $data->id . " запущен в производство\n\n";
         $body .= "Имя клиента: " . $dopinfo->client_name . "\n";
         $body .= "Телефон клиента: " . $dopinfo->phone . "\n";
         $body .= "Адрес: " . $data->project_info . "\n";
         $body .= "Чтобы перейти на сайт, щелкните здесь: http://calc.gm-vrn.ru/";
-        $mailer->setSubject('Изменена дата(время) монтажа дилера');
+        $mailer->setSubject('Договор запущен в производство');
         $mailer->setBody($body);
-        $mailer->addRecipient($user->email);
+        $mailer->addRecipient($dealer->email);
     }
 
         if ($type != 5) {
