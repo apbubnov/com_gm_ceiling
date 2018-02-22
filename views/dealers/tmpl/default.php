@@ -64,7 +64,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         	?>
                 <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
 		            <td>
-		               <?php echo $value->name; ?>
+                       <?php echo $value->name;
+                        if($value->kp_cnt + $value->cmnt_cnt + $value->inst_cnt){
+                            echo '&#9734';
+                        }?>
 		            </td>
                     <td>
                        <?php echo $value->client_contacts; ?>

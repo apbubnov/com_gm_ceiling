@@ -1203,7 +1203,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
 
         //Брус до 0,5 и багет 2.5м считается кусками, которые потребуются выложить весь периметр
-/* Округление перенесено
+        /* Округление перенесено
             if ($data['n28'] == 0) $component_count[$items_11[0]->id] = self::rounding($component_count[$items_11[0]->id], 2.5);
             elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] = self::rounding($component_count[$items_236[0]->id], 2.5);
             elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] = self::rounding($component_count[$items_239[0]->id], 2.5);
@@ -1219,7 +1219,7 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[655] = self::rounding($component_count[655], 2.5);
             $component_count[656] = self::rounding($component_count[656], 2.5);
             $component_count[$items_4[0]->id] = ceil($component_count[$items_4[0]->id]);
-*/
+        */
        
 
         //просчет доп компонентов со склада
@@ -1490,9 +1490,9 @@ class Gm_ceilingHelpersGm_ceiling
         $mount_model = self::getModel('mount');
         $calculation_model = self::getModel('calculation');
 
-//        $margins = self::get_margin($data['project_id']);
-//        $gm_mounting_margin = $margins['gm_mounting_margin'];
-//        $dealer_mounting_margin = $margins['dealer_mounting_margin'];
+        //        $margins = self::get_margin($data['project_id']);
+        //        $gm_mounting_margin = $margins['gm_mounting_margin'];
+        //        $dealer_mounting_margin = $margins['dealer_mounting_margin'];
        
         if(empty($calc_id)){
             $project_id = $data['project_id'];

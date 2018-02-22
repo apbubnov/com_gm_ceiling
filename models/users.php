@@ -35,7 +35,25 @@ class Gm_ceilingModelUsers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
+			$kp_cnt_query = $db->getQuery(true);
+			$comments_cnt_query = $db->getQuery(true);
+			$dealer_instr_cnt_query = $db->getQuery(true);
+			$kp_cnt_query
+				->select('COUNT(*)')
+				->from('`#__users_commercial_offer` as co')
+				->where('co.user_id = u.id');
+			$comments_cnt_query
+				->select('COUNT(*)')
+				->from('`#__gm_ceiling_client_history` as h')
+				->where('h.client_id = u.associated_client');
+			$dealer_instr_cnt_query
+				->select('COUNT(*)')
+				->from('`#__users_dealer_instruction` as di')
+				->where('di.user_id = u.id');
 			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`');
+			$query->select("($kp_cnt_query) as kp_cnt");
+			$query->select("($comments_cnt_query) as cmnt_cnt");
+			$query->select("($dealer_instr_cnt_query) as inst_cnt");
 			$query->from('`#__users` AS `u`');
 			$query->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`rgzbn_user_usergroup_map`.`user_id`');
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
