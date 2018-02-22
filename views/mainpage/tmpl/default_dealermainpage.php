@@ -143,7 +143,7 @@ $rest = -($total_sum) - $contributed;
 
 
 <div class="start_page">
-    <?php if ($userId == 1 || $userId == 2): ?>
+    <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
         <h3>Гильдия мастеров</h3>
     <?php elseif ($user->delaer_type == 1 || $user->dealer_type == 0): ?>
         <h3>Дилер</h3>
@@ -152,11 +152,11 @@ $rest = -($total_sum) - $contributed;
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-warning" href="<?php
-                if ($userId == 1 || $userId == 2)
+                if ($userId == 1 || $userId == 2 || $userId == 827)
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false);
                 else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage', false);
                 ?>">
-                    <?php if ($userId == 1 || $userId == 2): ?>
+                    <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
                     <i class="fa fa-clock-o" aria-hidden="true"></i> ГМ Менеджер</a>
                 <?php else: ?>
                     <i class="fa fa-clock-o" aria-hidden="true"></i>Менеджер</a>
@@ -169,11 +169,11 @@ $rest = -($total_sum) - $contributed;
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-success" href="<?php
-                if ($userId == 1 || $userId == 2) {
+                if ($userId == 1 || $userId == 2 || $userId == 827 ) {
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmcalculatormainpage', false); }
                 else { echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=calculatormainpage', false); }
                 ?>">
-                    <?php if ($userId == 1 || $userId == 2): ?>
+                    <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
                     <i class="fa fa-calculator" aria-hidden="true"></i> ГМ Замерщик</a>
                 <?php else: ?>
                     <i class="fa fa-calculator" aria-hidden="true"></i> Замерщик</a>
@@ -186,11 +186,13 @@ $rest = -($total_sum) - $contributed;
         <div style=" margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		    <div class="container-for-circl">
                 <a class="btn btn-large btn-primary" href="<?php
-                if ($userId == 1 || $userId == 2)
+                if ($userId == 1 || $userId == 2){
                     echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=gmchiefmainpage', false);
+                }
+                    
                 else echo JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage', false);
                 ?>">
-                    <?php if ($userId == 1 || $userId == 2): ?>
+                    <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
                     <i class="fa fa-user" aria-hidden="true"></i> ГМ Начальник МС</a>
                 <?php else: ?>
                     <i class="fa fa-user" aria-hidden="true"></i> Начальник МС</a>
@@ -210,7 +212,7 @@ $rest = -($total_sum) - $contributed;
                href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=dealer&subtype', false); ?>"><i
                         class="fa fa-list-alt" aria-hidden="true"></i> Договоры</a>
         </p>
-        <?php if($userId = 2 || $userId = 1){?>
+        <?php if($userId = 2 || $userId = 1 || $userId == 827 ){?>
             <p class="center">
                 <a class="btn btn-large btn-primary"
                 href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=analiticcommon', false); ?>"><i
