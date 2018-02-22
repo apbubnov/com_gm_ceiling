@@ -54,6 +54,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         	<?php
         		foreach ($result_users as $key => $value)
         		{
+                    $bckgrnd = "";
                     $data = $recoil_map_model->getData($value->id);
                     $sum[$value->id] = 0;
                     $dealers[$value->id] = $value;
@@ -67,10 +68,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         	?>
                 <tr class="row<?php echo $i % 2; ?>" <?php echo $bckgrnd; ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
 		            <td>
-                       <?php echo $value->name;
-                        if($value->kp_cnt + $value->cmnt_cnt + $value->inst_cnt == 0 ){
-                           echo "НОВЫЙ";
-                        }?>
+                       <?php echo $value->name;?>
 		            </td>
                     <td>
                        <?php echo $value->client_contacts; ?>
