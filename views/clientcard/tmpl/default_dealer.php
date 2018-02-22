@@ -243,9 +243,10 @@
         var div2 = jQuery("#modal_window_client");
         var div3 = jQuery("#modal_window_comm");
         var div4 = jQuery("#modal_window_login");
-        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target)
+        var div5 = jQuery("#modal_window_call").hide();
+        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) && !div5.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 
-            && div3.has(e.target).length === 0 && div4.has(e.target).length === 0) {
+            && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 &&  div5.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
