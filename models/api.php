@@ -37,6 +37,7 @@ class Gm_ceilingModelApi extends JModelList
                     return false;
                     throw new Exception('empty id!');
                 }
+                
                 $android_id = $data[$key]->android_id;
                 $query = $db->getQuery(true);
                 $query->from("`$table`")
@@ -50,8 +51,10 @@ class Gm_ceilingModelApi extends JModelList
                 {
                     foreach ($value as $column => $column_value)
                     {
-                        $columns .= '`'.$column.'`,';
-                        $columns_values .= '\''.$column_value.'\',';
+                        if($column!="image"&&$column!="cut_image"){
+                            $columns .= '`'.$column.'`,';
+                            $columns_values .= '\''.$column_value.'\',';
+                        }
                     }
                     $columns = substr($columns, 0, -1);
                     $columns_values = substr($columns_values, 0, -1);
@@ -62,8 +65,8 @@ class Gm_ceilingModelApi extends JModelList
                         ->values($columns_values);
                     $db->setQuery($query);
                     $db->execute();
-                    
-                    $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $db->insertid());
+                    $id = $db->insertid();
+                    $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $id);
                 }
                 else
                 {
@@ -71,7 +74,9 @@ class Gm_ceilingModelApi extends JModelList
                     $query->update("`$table`");
                     foreach ($value as $column => $column_value)
                     {
-                        $query->set("`$column` = '$column_value'");
+                        if($column!="image"&&$column!="cut_image"){
+                            $query->set("`$column` = '$column_value'");
+                        }
                     }
                     $query->where("`android_id` = $android_id OR `id` = $android_id");
                     $db->setQuery($query);
@@ -94,6 +99,16 @@ class Gm_ceilingModelApi extends JModelList
                     }
 
                     $arr_ids[$key] = (object)array("old_id" => $android_id, "new_id" => $id);
+                }
+                if($table == 'rgzbn_gm_ceiling_calculations'){
+                    if(!empty($data[$key]->image)){
+                        $filename = md5("calculation_sketch".$id);
+                        file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".svg", $data[$key]->image);
+                    }
+                    if(!empty($data[$key]->cut_image)){
+                        $filename = md5("cut_sketch".$id);
+                        file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", $data[$key]->cut_image);
+                    }
                 }
             }
             return $arr_ids;
