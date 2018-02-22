@@ -243,7 +243,7 @@
         var div2 = jQuery("#modal_window_client");
         var div3 = jQuery("#modal_window_comm");
         var div4 = jQuery("#modal_window_login");
-        var div5 = jQuery("#modal_window_call").hide();
+        var div5 = jQuery("#modal_window_call");
         if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) && !div5.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 
             && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 &&  div5.has(e.target).length === 0) {
@@ -280,7 +280,42 @@
         jQuery("#modal_window_login").show("slow");
         jQuery("#close").show();
     });
+    jQuery("#add_call").click(function(){
+        client_id = <?php echo $this->item->id;?>;
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=addCall",
+            data: {
+                id_client: client_id,
+                date: jQuery("#call_date_m").val(),
+                comment: jQuery("#call_comment_m").val()
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+               add_history(client_id,"Добавлен звонок");
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Добавлен звонок"
+                });
 
+            },
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    });
     jQuery("#cancel").click(function(){
         jQuery("#close").hide();
         jQuery("#mv_container").hide();
