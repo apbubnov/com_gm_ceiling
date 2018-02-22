@@ -30,7 +30,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
     <br>
-    <table class="table table-striped " id="callbacksList">
+    <table class="table one-touch-view" id="callbacksList">
         <thead>
         <tr>
             <th>
