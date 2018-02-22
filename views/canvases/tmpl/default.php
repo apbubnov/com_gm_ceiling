@@ -130,7 +130,7 @@ function dealer_margin($price, $margin, $value, $type)
                     <td>Изменить</td>
                 <? elseif ($managerGM): ?>
                     <td><?= JHtml::_('grid.sort', 'Цена', 'canvas_price', $listDirn, $listOrder); ?></td>
-                    <td><?= JHtml::_('grid.sort', 'Изменение цены', 'canvas_price', $listDirn, $listOrder); ?></td>
+                    <td><?= JHtml::_('grid.sort', 'Изменение', 'canvas_price', $listDirn, $listOrder); ?></td>
                     <td><?= JHtml::_('grid.sort', 'Цена для дилера', 'canvas_price', $listDirn, $listOrder); ?></td>
                     <td>Изменить</td>
                 <? else: ?>
@@ -145,10 +145,7 @@ function dealer_margin($price, $margin, $value, $type)
                     <td><i class="fa fa-caret-down" aria-hidden="true"></i></td>
                     <td></td>
                     <td title="Фактура"><?= $canvasTC->texture_title; ?></td>
-                    <td class="Color" style="
-                            background-color: #<?= $canvasTC->color_hex; ?>;
-                            background-image: url('<?= $canvas->color_file; ?>');
-                            "><?= $canvasTC->color_title; ?></td>
+                    <td></td>
                     <td><?= $canvasTC->count; ?></td>
                     <? if ($stock): ?>
                         <td><?= $canvasTC->ocount; ?></td>
@@ -252,7 +249,10 @@ function dealer_margin($price, $margin, $value, $type)
                                    aria-hidden="true"></i></td>
                             <td><?= $canvas->id;?></td>
                             <td title="Ширина"><?= $canvas->width;?></td>
-                            <td></td>
+                            <td class="Color" style="
+                                    background-color: #<?= $canvas->color_hex; ?>;
+                                    background-image: url('<?= $canvas->color_file; ?>');
+                                    "><?= $canvas->color_title; ?></td>
                             <td><?=$canvas->count;?> шт.</td>
                             <? if ($stock): ?>
                                 <td><?= $canvas->ocount; ?> шт.</td>
@@ -262,7 +262,7 @@ function dealer_margin($price, $margin, $value, $type)
                                     <a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?= $key_c; ?>">Инфо</a>
                                 </td>
                             <? elseif ($managerGM && empty($dealer)): ?>
-                                <td><?= $canvas->price; ?></td>
+                                <td id="GMPrice"><?= $canvas->price; ?></td>
                                 <td id="GMPrice"><?= margin($canvas->price, $dealer->gm_components_margin); ?></td>
                                 <td id="DealerPrice"><?= double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin); ?></td>
                                 <td>
@@ -379,7 +379,6 @@ function dealer_margin($price, $margin, $value, $type)
 
     function Resize() {
         var WW = $(window).width() + 10;
-        console.log(WW);
 
         var PageScroll = $(".Page .Scroll");
         if (WW > 767) {

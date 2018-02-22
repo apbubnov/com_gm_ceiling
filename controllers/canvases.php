@@ -184,11 +184,8 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
             $get = (object) [];
             switch ($level) {
                 case 1:
-                    $object = preg_split("/\//", $id);
-                    $object[1] = empty($object[1])?"IS NULL":"= '".$object[1]."'";
                     $get->where = [];
-                    $get->where[] = "texture.id = '$object[0]'";
-                    $get->where[] = "color.id $object[1]";
+                    $get->where[] = "texture.id = '$id'";
                     break;
                 case 2:
                     $object = preg_split("/\//", $id);
