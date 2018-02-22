@@ -30,7 +30,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
     <br>
-    <table class="table table-striped one-touch-view" id="callbacksList">
+    <table class="table table-striped " id="callbacksList">
         <thead>
         <tr>
             <th>
@@ -62,7 +62,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         $sum[$value->id] +=  $item->sum;
                     }
         	?>
-                <tr class="row" <?php if($value->kp_cnt + $value->cmnt_cnt + $value->inst_cnt == 0 ) echo "bgcolor=\"#d3d3f9\""?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
+                <tr class="row<?php echo $i % 2; ?>" <?php if($value->kp_cnt + $value->cmnt_cnt + $value->inst_cnt == 0 ) echo "bgcolor=\"#d3d3f9\""?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
 		            <td>
                        <?php echo $value->name;
                         if($value->kp_cnt + $value->cmnt_cnt + $value->inst_cnt == 0 ){
