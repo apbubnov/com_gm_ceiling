@@ -45,6 +45,7 @@
     <?php } ?>
     <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
     <button class="btn btn-primary" type="button" id="but_login">Предоставить доступ</button>
+    <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
 
@@ -227,6 +228,12 @@
         <h6 style = "margin-top:10px">Введите почту</h6>
         <p><input type="text" id="email_login" placeholder="Почта" required></p>
         <p><button type="button" id="send_login" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel3" class="btn btn-primary">Отмена</button></p>
+    </div>
+    <div id="modal_window_call" class="modal_window">
+            <label>Добавить звонок</label><br>
+            <input id="call_date_m" type="datetime-local" placeholder="Дата звонка"><br>
+            <input id="call_comment_m" placeholder="Введите примечание"><br>
+            <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
     </div>
 </div>
 
@@ -519,6 +526,11 @@
         var id_client = <?php echo $this->item->id; ?>;
         call(jQuery("#select_phones").val());
         add_history(id_client, "Исходящий звонок на " + jQuery("#select_phones").val().replace('+',''));
+    });
+    jQuery("#but_callback").click(function (){
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_call").show("slow");
+        jQuery("#close").show();
     });
     jQuery("#broke").click(function(){
         jQuery("#call").show();
