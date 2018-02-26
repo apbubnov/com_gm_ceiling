@@ -307,7 +307,7 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <?php if ($user->dealer_type == 0) { ?>
+                              <!--   <?php //if ($user->dealer_type == 0) { ?> -->
                                     <div  class="col-12 col-md-6">
                                         <div class="comment" >
                                             <label>История клиента:</label>
@@ -329,7 +329,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                <?php } ?>
+                                <!-- <?php //} ?> -->
                             </div>
                         <?php } ?>
                     <?php } ?>
