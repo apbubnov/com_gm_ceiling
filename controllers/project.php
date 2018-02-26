@@ -1307,7 +1307,33 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }
+	}
+	public function update_transport(){
+		try{
+			$jinput = JFactory::getApplication()->input;
+			$project_model = self::getModel('Project');
+			$project_id = $jinput->get('id', '', 'INT');
+			$transport_type = $jinput->get('distance', '', 'INT'); 
+			$distance = $jinput->get('distance', '', 'FLOAT');
+			$distance_col = $jinput->get('distance_col', '', 'INT');
+			if(!empty($project_id)){
+				if(!empty($transport_type) && !empty($distance) && !empty($distance_col) ){
+					$project_model->update_transport($project_id,$transport_type,$distance,$distance_col);
+				}
+				throw new Exception("Empty transport data!");
+			}
+			else{
+				throw new Exception("Empty project_id!");
+			}
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 	public function transport()
 	{
 		try

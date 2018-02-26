@@ -2521,100 +2521,88 @@ class Gm_ceilingHelpersGm_ceiling
     $distance расстояние
     $distance_col - кол-во выездов
     */
-    public static function calculate_transport($project_id,$transport_type=null,$distance=null,$distance_col=null){
+    public static function calculate_transport($project_id){
         $project_model = self::getModel('Project');
-        if(!empty($project_id) && !empty($transport_type) && !empty($distance) && !empty($distance_col) ){
-            $data = array(
-                'id'=> $project_id,
-                'transport'=>$transport_type,
-                'distance' => $distance,
-                'distance_col' =>$distance_col
-            );
-            //TODO:спросить много ли где использвется эта фугкция и убрать доп запросы внутри, все можно получить через другие модели
-            $res = $project_model->transport((object)$data);
-        }
-        else{
+        $mount_model = self::getModel('mount');
+        $dealer_info_model = self::getModel('Dealer_info');
+        if(!empty($project_id)){
             $project = $project_model->getData($project_id);
             $transport_type = $project->transport;
             $distance = $project->distance;
             $distance_col = $project->distance_col;
-            /*$client_id = $project->id_client;
-            if(!empty($client_id)){
-                $client_model = self::getModel('client');
-                $dealer_id = $client_model->getClientById($client_id)->dealer_id;
-                if(empty($dealer_id)){
-                    $dealer_id = 1;
-                }
+            if(!empty($project->dealer_id)){
+                $dealer_id = $project->dealer_id;
             }
             else{
-                 $dealer_id = 1;
-            }*/
-            $mount_model = self::getModel('mount');
-            $res = $mount_model->getDataAll($project->dealer_id);//$dealer_id);
-        }
-        $dealer_info_model = self::getModel('Dealer_info');
-        if(empty($res->user_id)) {
-            $res->user_id = 1;
-        }
-        $margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
-        if($res) {
-            if($transport_type == 1) {
-                $transport_sum = double_margin($res->transport * $distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
-                $transport_sum_1 = double_margin($res->transport * $distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
-                $result = array(
-                    'transport' => 'Транспорт по городу',
-                    'distance' => '-',
-                    'distance_col'=> $distance_col,
-                    'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum_1 
-                );
-
+                $dealer_id = 1;
             }
-            elseif($transport_type == 2) {
-                $transport_sum = ($res->distance  * $distance + $res->transport) * $distance_col;
-                $transport_sum_1 = ($res->distance  * $distance + $res->transport) * $distance_col;
-               /*  if($transport_sum < margin($res->transport, $margin))
-                  { 
-                      $transport_sum = margin($res->transport, $margin);
-                      $transport_sum_1 = $res->transport;
-                  } */
-                $result = array(
-                    'transport' => 'Выезд за город',
-                    'distance' => $distance,
-                    'distance_col'=> $distance_col,
-                    'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum_1 
-                );  
+            $res = $mount_model->getDataAll($dealer_id);
+            if(empty($res->user_id)) {
+                $res->user_id = 1;
             }
-            else { 
-                $transport_sum = 0;
-                $transport_sum_1 = 0;
-                $result = array(
-                    'transport' => 'Без транспорта',
-                    'distance' => '-',
-                    'distance_col'=> '-',
-                    'client_sum' => $transport_sum,
-                    'mounter_sum' => $transport_sum_1 
-                );
-            } 
-        }
-       if($transport_type == 1) { 
-            $discount = $project_model->getDiscount($project_id);
-            $min = 100;
-            foreach($discount as $d) {
-                if($d->discount < $min)
-                {
-                    $min = $d->discount;
+            $margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
+            if($res) {
+                if($transport_type == 1) {
+                    $transport_sum = double_margin($res->transport * $distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
+                    $transport_sum_1 = double_margin($res->transport * $distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
+                    $result = array(
+                        'transport' => 'Транспорт по городу',
+                        'distance' => '-',
+                        'distance_col'=> $distance_col,
+                        'client_sum' => $transport_sum,
+                        'mounter_sum' => $transport_sum_1 
+                    );
+    
+                }
+                elseif($transport_type == 2) {
+                    $transport_sum = ($res->distance  * $distance + $res->transport) * $distance_col;
+                    $transport_sum_1 = ($res->distance  * $distance + $res->transport) * $distance_col;
+                   /*  if($transport_sum < margin($res->transport, $margin))
+                      { 
+                          $transport_sum = margin($res->transport, $margin);
+                          $transport_sum_1 = $res->transport;
+                      } */
+                    $result = array(
+                        'transport' => 'Выезд за город',
+                        'distance' => $distance,
+                        'distance_col'=> $distance_col,
+                        'client_sum' => $transport_sum,
+                        'mounter_sum' => $transport_sum_1 
+                    );  
+                }
+                else { 
+                    $transport_sum = 0;
+                    $transport_sum_1 = 0;
+                    $result = array(
+                        'transport' => 'Без транспорта',
+                        'distance' => '-',
+                        'distance_col'=> '-',
+                        'client_sum' => $transport_sum,
+                        'mounter_sum' => $transport_sum_1 
+                    );
                 } 
             }
-            if ($min != 100){
-                $transport_sum = $transport_sum * ((100 - $min)/100);
-                $transport_sum_1 = $transport_sum_1 * ((100 - $min)/100);
+           if($transport_type == 1) { 
+                $discount = $project_model->getDiscount($project_id);
+                $min = 100;
+                foreach($discount as $d) {
+                    if($d->discount < $min)
+                    {
+                        $min = $d->discount;
+                    } 
+                }
+                if ($min != 100){
+                    $transport_sum = $transport_sum * ((100 - $min)/100);
+                    $transport_sum_1 = $transport_sum_1 * ((100 - $min)/100);
+                }
+                $result['client_sum'] = $transport_sum;
+                $result['mounter_sum'] = $transport_sum_1;
             }
-            $result['client_sum'] = $transport_sum;
-            $result['mounter_sum'] = $transport_sum_1;
+            return $result;
         }
-        return $result;
+        else{
+            throw new Exception("empty project_id!");
+        }
     }
     /* функция генерации общего наряда на монтаж */
     public static function create_common_estimate_mounters($project_id){

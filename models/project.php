@@ -1642,6 +1642,27 @@ class Gm_ceilingModelProject extends JModelItem
         }
     }
 
+	public function update_transport($project_id,$transport,$distance,$col){
+		try
+    	{
+	        $db = $this->getDbo();
+	        $query = $db->getQuery(true);
+	        $query ->update('`#__gm_ceiling_projects`')
+	            ->set('transport = '.$db->quote($transport))
+				->set('distance = '.$db->quote($distance))
+				->set('distance_col = '.$db->quote($col))
+	            ->where('id =' .$project_id);
+	        $db->setQuery($query);
+	        $res = $db->execute();
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 	public function transport($data)
     {
     	try
