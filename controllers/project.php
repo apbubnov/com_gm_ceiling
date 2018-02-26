@@ -1318,7 +1318,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$distance_col = $jinput->get('distance_col', '', 'STRING');
 			if(!empty($project_id)){
 				$project_model->update_transport($project_id,$transport_type,$distance,$distance_col);
-				die(json_encode(true));
+				$sum = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id)['client_sum'];
+				die(json_encode($sum));
 			}
 			else{
 				throw new Exception("Empty project_id!");
