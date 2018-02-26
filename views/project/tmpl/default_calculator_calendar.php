@@ -20,8 +20,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-$transport_sum = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id)['client_sum'];
-echo $transport_sum;
+$sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id)['client_sum'];
 $project_total = 0;
 $project_total_discount = 0;
 $total_square = 0;
@@ -57,25 +56,7 @@ foreach ($calculations as $calculation) {
 
     $calculation_total = $calculation->calculation_total;
 }
-$sum_transport = 0;  $sum_transport_discount = 0;
-$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 
-$mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-$min_project_sum = (empty($mount_transport->min_sum))? 0 : $mount_transport->min_sum;
-$min_components_sum = (empty($mount_transport->min_components_sum))?0:$mount_transport->min_components_sum;
-if($this->item->transport == 0 ) $sum_transport = 0;
-if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
-if($this->item->transport == 1 ) {
-$min = 100;
-foreach($calculations as $d) {
-    if($d->discount < $min) $min = $d->discount;
-}
-if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
-}
-/*if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
-    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-}*/
 $project_total_discount_transport = $project_total_discount + $sum_transport;
 
 $del_flag = 0;
@@ -1936,7 +1917,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         {
             show_comments();
         }
-        
+
         // для истории и добавления комментария
         function formatDate(date) {
 
