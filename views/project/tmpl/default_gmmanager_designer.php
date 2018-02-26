@@ -913,7 +913,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                             </div>
                         </td>
                         <td>
-
                             <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
                         </td>
                         <td>

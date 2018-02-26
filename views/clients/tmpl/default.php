@@ -34,7 +34,6 @@ $type = $jinput->getString('type', NULL);
 $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
 $status = $status_model->getData();
 ?>
-
 <?php parent::getButtonBack();?>
 
 <h2 class = "center">Клиенты</h2>

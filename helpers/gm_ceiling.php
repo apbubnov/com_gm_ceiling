@@ -1401,10 +1401,10 @@ class Gm_ceilingHelpersGm_ceiling
         $offcut_square_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] != 0) {
             $canvas_id = $data['n3'];
-            $offcut_square_data['title'] = "Количество обрезков"; //Название фактуры и полотна
-            $offcut_square_data['quantity'] = $data['offcut_square'];                                                                        //Кол-во
+            $offcut_square_data['title'] = "Количество обрезков";                                                                //Название фактуры и полотна
+            $offcut_square_data['quantity'] = $data['offcut_square'];                                                            //Кол-во
             $offcut_square_data['self_price'] = round($canvases[$canvas_id]->price / 2.5, 2);                                    //Себестоимость
-            $offcut_square_data['self_total'] = round($data['offcut_square'] * $offcut_square_data['self_price'], 2);                            //Кол-во * Себестоимость
+            $offcut_square_data['self_total'] = round($data['offcut_square'] * $offcut_square_data['self_price'], 2);            //Кол-во * Себестоимость
             //Стоимость с маржой ГМ (для дилера)
             $offcut_square_data['gm_price'] = round(margin($canvases[$canvas_id]->price, $gm_canvases_margin) / 2.5, 2);
             //Кол-во * Стоимость с маржой ГМ (для дилера)

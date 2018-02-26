@@ -100,7 +100,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                     <td class="center one-touch">
                         <input id="<?= $item->id; ?>_id" value="<?php echo $item->id; ?>"  hidden>
                         <?php echo $item->id;
-
                             $calculations = $model->new_getProjectItems($item->id);
                             $mounting_sum = 0; $material_sum = 0; $cost_price = 0;
                             foreach ($calculations as $calculation) {

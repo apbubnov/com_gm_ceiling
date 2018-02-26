@@ -812,41 +812,7 @@
             </table>
             <?php if ($user->dealer_type == 2) { ?>
                 <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить формирование заказа</button>
-                <?php if ($this->item->project_status == 7) {
-                    // регистрационная информация (логин, пароль #1)
-                    // registration info (login, password #1)
-                    $mrh_login = "demo";
-                    $mrh_pass1 = "password_1";
-                    // номер заказа
-                    // number of order
-                    $inv_id = 0;
-                    // описание заказа
-                    // order description
-                    $inv_desc = "Оплата заказа в Тестовом магазине ROBOKASSA";
-                    // сумма заказа
-                    // sum of order
-                    $out_summ = $project_total_discount;;
-                    // тип товара
-                    // code of goods
-                    $shp_item = 1;
-                    // язык
-                    // language
-                    $culture = "ru";
-                    // кодировка
-                    // encoding
-                    $encoding = "utf-8";
-                    // формирование подписи
-                    // generate signature
-                    $crc = md5("$mrh_login:$out_summ:$inv_id:$mrh_pass1:shp_Item=$shp_item");
-                    // HTML-страница с кассой
-                    // ROBOKASSA HTML-page
-                    print "<html><script language=JavaScript " .
-                        "src='https://auth.robokassa.ru/Merchant/PaymentForm/FormMS.js?" .
-                        "MerchantLogin=$mrh_login&OutSum=$out_summ&InvoiceID=$inv_id" .
-                        "&Description=$inv_desc&SignatureValue=$crc&shp_Item=$shp_item" .
-                        "&Culture=$culture&Encoding=$encoding'></script></html>";
-                }
-            } ?>
+            <?php } ?>
         </div>
         <?php foreach ($calculations as $k => $calculation) { ?>
             <?php $mounters = json_decode($calculation->mounting_sum); ?>

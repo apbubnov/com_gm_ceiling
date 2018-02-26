@@ -394,7 +394,6 @@
                         <td colspan="2">
                             <?php
                             $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-
                             $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
                             ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>

@@ -141,7 +141,6 @@ $rest = -($total_sum) - $contributed;
   <?php  }?>
 </div>
 
-
 <div class="start_page">
     <?php if ($userId == 1 || $userId == 2 || $userId == 827): ?>
         <h3>Гильдия мастеров</h3>

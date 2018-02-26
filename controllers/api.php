@@ -112,33 +112,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
         }
 
-       /*  public
-        function addImagesFromAndroid()
-        {
-            try {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if (!empty($_POST['calculation_images'])) {
-                    $data = json_decode($_POST['calculation_images']);
-                    $calc_image = base64_decode(str_replace('data:image/png;base64,', '', $data->calc_image));
-                    $cut_image = base64_decode(str_replace('data:image/png;base64,', '', $data->cut_image));
-
-                    $filename = md5("calculation_sketch".$data->android_id);
-                    file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".png", $calc_image);
-
-                    $filename = md5("cut_sketch".$data->android_id);
-                    file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png", $cut_image);
-                }
-                die(json_encode($data->android_id));
-            }
-            catch(Exception $e)
-            {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
-            }
-        } */
-
         public
         function deleteDataFromAndroid()
         {

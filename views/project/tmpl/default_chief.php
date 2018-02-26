@@ -296,7 +296,6 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                         <th id="sh_mount"> Наряд на монтаж <i class="fa fa-sort-desc"
                                                                               aria-hidden="true"></i></th>
                                     </tr>
-
                                     <?php foreach ($calculations as $calculation) { ?>
                                         <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                                         <td><?php echo $calculation->calculation_title; ?></td>

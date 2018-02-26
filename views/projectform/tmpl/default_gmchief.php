@@ -715,7 +715,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n29) { ?>
                                 <h4>Переход уровня</h4>
                                 <?php foreach ($calculation->n29 as $key => $n29_item) {

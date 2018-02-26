@@ -78,7 +78,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
                 <?php endif; ?>
                     <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&subtype=run&id='.(int) $item->id); ?>">
-
                         <td class="center one-touch">
                             <?php echo $item->id; ?>
                         </td>

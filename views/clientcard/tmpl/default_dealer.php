@@ -186,7 +186,6 @@
         <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
     </div>
 </div>
-
 <div id="mv_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal_window_client" class="modal_window">

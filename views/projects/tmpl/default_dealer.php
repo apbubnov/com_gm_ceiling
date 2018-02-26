@@ -287,7 +287,6 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             <div class=""><?php echo $item->project_note; ?></div>
                         <?php }
                     } ?>
-
                 </td>
                 <td class="center">
                     <?php if ($item->new_project_sum > 0 && $project_total_discount != $item->new_project_sum) { ?>

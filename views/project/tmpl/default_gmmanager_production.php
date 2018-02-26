@@ -945,7 +945,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                                                                                          alt=""/>
                                     </div>
                                 <?php }?>
-                            <?php } endif; ?>
+                            <?php } endif;?>
                         <?php if ($calculation->n16) { ?>
                             <div>
                                 Скрытый карниз: <?php echo $calculation->n16; ?>

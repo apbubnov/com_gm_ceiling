@@ -260,7 +260,6 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                                 После договора
                             <?php } ?>
                         </td>
-
                         <?php }
                         $json = json_encode($pdf_names_mount); ?>
                         <?php } ?>

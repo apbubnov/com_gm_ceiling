@@ -114,7 +114,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     </tr>
             <?php endforeach; ?>
             </tbody>
-
         </table>
 
         <input type="hidden" name="task" value=""/>

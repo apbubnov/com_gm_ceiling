@@ -585,7 +585,6 @@
             }
         });
     });
-
     jQuery("#add_call").click(function(){
         client_id = <?php echo $this->item->id;?>;
         jQuery.ajax({

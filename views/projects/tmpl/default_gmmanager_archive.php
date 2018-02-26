@@ -105,8 +105,6 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                         <?php echo $dealer->name; ?>
                     </td>
                 </tr>
-               
-               
             <?php endforeach; ?>
             </tbody>
            

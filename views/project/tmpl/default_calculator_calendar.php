@@ -1524,7 +1524,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                    <button class="btn  btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
                    <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
                 <div class="span6">
-
                 </div>
             </div>
         </div>

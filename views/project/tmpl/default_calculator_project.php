@@ -673,6 +673,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                 jQuery(".project_activation").show();
                 jQuery("#mounting_date_control").hide();
             });
+            
             jQuery("#btn_pay").click(function () {
                 var id = "<?php echo $sb_project_id ?>";
                 var number = <?php echo $project_id ?>;

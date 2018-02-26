@@ -62,7 +62,6 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 						<a id="accept_project" class="btn btn btn-success">
 							Договор
 						</a>
-						
 						<a id="refuse_project" class="btn btn btn-danger">
 							Отказ
 						</a>

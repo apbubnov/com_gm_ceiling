@@ -141,8 +141,6 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                             </div>
                         </div>
                     </div>
-
-
                     <?php echo "<h3>Расчеты для проекта</h3>"; ?>
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">

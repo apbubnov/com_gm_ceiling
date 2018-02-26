@@ -274,7 +274,6 @@
         }
     }
 </style>
-
 <script>
     	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
 		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
