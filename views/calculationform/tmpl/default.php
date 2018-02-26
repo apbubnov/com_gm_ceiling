@@ -2621,7 +2621,7 @@
 							<?php } ?>
 							jQuery.ajax({
 								type: 'POST',
-								url: "index.php?option=com_gm_ceiling&task=calculate&"+additional,
+								url: "index.php?option=com_gm_ceiling&task=calculate"+additional,
 								data: data,
 								success: function(data){
 									var html = "",
