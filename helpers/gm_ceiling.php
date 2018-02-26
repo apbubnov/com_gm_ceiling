@@ -738,7 +738,6 @@ class Gm_ceilingHelpersGm_ceiling
 
            return $html; 
     }
-
     public static function create_client_common_estimate($project_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
