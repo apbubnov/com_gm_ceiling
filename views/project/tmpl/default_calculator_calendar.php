@@ -21,7 +21,7 @@ Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 $transport_sum = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id)['client_sum'];
-echo $this->item->transport;
+echo $transport_sum;
 $project_total = 0;
 $project_total_discount = 0;
 $total_square = 0;
@@ -1019,10 +1019,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <div class="form-group">
 
                             <div class="advanced_col1" style="width: 35%;">
-                                <input name="jform[distance_col_1]" id="distance_col_1" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
+                                <input name="jform[distance_col]" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
                             </div>
                             <div class="advanced_col2" style="width: 20%;">
-                            <button type="button" id="click_transport_1" class="btn btn-primary">Ок</button>
+                            <button type="button" name="click_transport" class="btn btn-primary">Ок</button>
                             </div>
                         </div>
 
@@ -1051,7 +1051,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <input name="jform[distance_col]" id="distance_col" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
                             </div>
                             <div class="advanced_col3" style="width: 20%;">
-                            <button type="button" id="click_transport" class="btn btn-primary">Ок</button>
+                            <button type="button" name="click_transport" class="btn btn-primary">Ок</button>
                             </div>
                         </div>
 
@@ -2654,12 +2654,13 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 
             trans();
         });
-        jQuery("#click_transport").click(function () {
-            trans();
+        jQuery("name = click_transport").click(function () {
+            console.log("click");
+            //trans();
         });
-        jQuery("#click_transport_1").click(function () {
+       /*  jQuery("#click_transport_1").click(function () {
             trans();
-        });
+        }); */
 
         if (jQuery("input[name='transport']:checked").val() == '2') {
                 jQuery("#transport_dist").show();
