@@ -2951,8 +2951,13 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         // alert(distance_col);
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=project._update_transport",
-            data: send_data,
+            url: "index.php?option=com_gm_ceiling&task=project.update_transport",
+            data:{
+                id : send_data["id"],
+                transport : send_data["transport"],
+                distance : send_data["distance"] ,
+                distance_col :send_data["distance_col"]
+            },
             success: function(data){
                 data = JSON.parse(data);
                 var html = "",
@@ -3004,7 +3009,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                     text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
                 });
             }
-        }); */
+        }); 
     }
 
     /**
