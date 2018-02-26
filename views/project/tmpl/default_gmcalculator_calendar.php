@@ -1843,7 +1843,7 @@
 
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         show_comments();
-        trans();
+        //trans();
 
         jQuery("#add_birthday").click(function () {
             var birthday = jQuery("#jform_birthday").val();
