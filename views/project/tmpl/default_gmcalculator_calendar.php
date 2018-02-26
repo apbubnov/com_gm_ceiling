@@ -17,6 +17,9 @@
     if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
         $canEdit = JFactory::getUser()->id == $this->item->created_by;
     }
+    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
+    $sum_transport = $transport['client_sum'];
+    $sum_transport_1 = $transport['mounter_sum'];
 
     $project_total = 0;
     $project_total_discount = 0;
@@ -36,7 +39,6 @@
         $calculation->dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
 
         $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-        //$calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $this->item->project_discount) / 100);
         $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
         $project_total += $calculation->calculation_total;
         $project_total_discount += $calculation->calculation_total_discount;
@@ -54,62 +56,13 @@
 
         $calculation_total = $calculation->calculation_total;
     }
-    $sum_transport = 0;  $sum_transport_discount = 0;
-    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-    $mount_transport = $mountModel->getDataAll();
 
-    if($this->item->transport == 0 ) $sum_transport = 0;
-    if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-    if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
-    if($this->item->transport == 1 ) {
-    $min = 100;
-    foreach($calculations as $d) {
-        if($d->discount < $min) $min = $d->discount;
-    }
-    if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
-    }
-    //if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
-    //    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-    //}
+ 
     $project_total_discount_transport = $project_total_discount + $sum_transport;
 
-    /*if ($user->dealer_type != 2)
-        $need_mount = 1;
-    else $need_mount = 0;*/
     $del_flag = 0;
     $project_total = $project_total  + $sum_transport;
     $project_total_discount = $project_total_discount  + $sum_transport;
-    $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations1 = $calculationsModel->getProjectItems($this->item->id);
-    $components_data = array();
-    $project_sum = 0;
-    $counter = 0;
-    /*foreach ($calculations1 as $calculation) {
-        $counter++;
-        $from_db = 1;
-        $save = 1;
-        $ajax = 0;
-        $pdf = 1;
-        $print_components = 0;
-        if($calculation->mounting_sum == 0) $need_mount = 0;
-        else $need_mount = 1;
-        Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-        $from_db = 1;
-        $save = 0;
-        $ajax = 0;
-        $pdf = 0;
-        $print_components = 1;
-        $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-        $project_sum += margin($calculation->components_sum, $this->item->gm_components_margin);
-        $project_sum += margin($calculation->canvases_sum, $this->item->gm_canvases_margin);
-        $project_sum += margin($calculation->mounting_sum, $this->item->gm_mounting_margin);
-        if ($counter == count($calculations1)) {
-            $flag_last = 1;
-            //Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-
-        }
-        //Gm_ceilingHelpersGm_ceiling::print_components($data->id, $components_data);
-    }*/
 
     // календарь
     $month1 = date("n");
@@ -443,24 +396,8 @@
                         $total_perimeter += $calculation->n5;
                         $canvas = $dealer_canvases_sum;
                         // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
-                        $sum_transport = 0;  $sum_transport_discount = 0;
-                        $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-                        $mount_transport = $mountModel->getDataAll();
-                        /*if($calculation->transport == 1 && $calculation->mounting_sum != 0) {
-                            $tmp = 1;
-                            $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-                            $sum_transport_total = $sum_transport;
-                        }
-                        if($calculation->distance > 0  && $calculation->distance_col > 0 && $calculation->mounting_sum != 0) {
-                            $tmp = 2;
-                            $sum_transport = double_margin($mount_transport->distance * $calculation->distance * $calculation->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-                            $sum_transport_total = $sum_transport;
-                        }
-                        if($calculation->discount > 0 && $sum_transport > 0) {
-                            $sum_transport_discount = $sum_transport * ((100 - $calculation->discount) / 100);
-                            $sum_transport_discount_total = $sum_transport_discount;
-                        }
-                        */
+
+
                         $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
                         $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
                         $project_total += $calculation_total;
@@ -533,7 +470,7 @@
                                         <input name="jform[distance_col_1]" id="distance_col_1" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
                                     </div>
                                     <div class="advanced_col2" style="width: 20%;">
-                                        <button type="button" id="click_transport_1" class="btn btn-primary">Ок</button>
+                                        <button type="button" name="click_transport" class="btn btn-primary">Ок</button>
                                     </div>
                                 </div>
                             </div>
@@ -558,7 +495,7 @@
                                         <input name="jform[distance_col]" id="distance_col" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
                                     </div>
                                     <div class="advanced_col3" style="width: 20%;">
-                                        <button type="button" id="click_transport" class="btn btn-primary">Ок</button>
+                                        <button type="button" name="click_transport" class="btn btn-primary">Ок</button>
                                     </div>
                                 </div>
                             </div>
@@ -571,9 +508,6 @@
                 <tr>
                     <?php
                         //-------------------------Себестоимость транспорта-------------------------------------
-                        if($this->item->transport == 0 ) $sum_transport_1 = 0;
-                        if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
-                        if($this->item->transport == 2 ) $sum_transport_1 = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
                         $project_total_11 = $project_total_11 + $sum_transport_1;
                         $project_total = $project_total + $sum_transport;
                         $project_total_discount = $project_total_discount + $sum_transport;
@@ -2101,7 +2035,7 @@
                 jQuery("#transport_dist").show();
                 jQuery("#transport_dist_col").hide();
                 jQuery("#distance").val('');
-                jQuery("#distance_col").val('');
+                jQuery("#distance_col_1").val('');
             }
             else if(transport == '1') {
                 jQuery("#transport_dist").hide();
@@ -2118,12 +2052,10 @@
 
             trans();
         });
-        jQuery("#click_transport").click(function () {
+        jQuery("name = click_transport").click(function () {
             trans();
         });
-        jQuery("#click_transport_1").click(function () {
-            trans();
-        });
+
 
         if (jQuery("input[name='transport']:checked").val() == '2') {
             jQuery("#transport_dist").show();
@@ -2413,7 +2345,7 @@
         }
     } */
 
-    function trans()
+     function trans()
     {
         var id = <?php echo $this->item->id; ?>;
         var calcul = jQuery("input[name='transport']:checked").val();
@@ -2421,48 +2353,34 @@
         var distance = jQuery("#distance").val();
         var distance_col = jQuery("#distance_col").val();
         var distance_col_1 = jQuery("#distance_col_1").val();
-        var form = jQuery("#form-client").serialize();
-        // alert(distance_col);
+        var send_data = [];
+        send_data["id"] = id; 
+        send_data["transport"] = transport;
+        switch(transport){
+            case "0" :
+                send_data["distance_col"] = 0;
+                send_data["distance"] = 0;
+                break;
+            case "1":
+                send_data["distance_col"] = distance_col_1;
+                send_data["distance"] = 0;
+                break;
+            case "2" :
+                send_data["distance_col"] = distance_col;
+                send_data["distance"] = distance;
+                break;
+        }
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=big_smeta.transport",
-            data: form,
+            url: "index.php?option=com_gm_ceiling&task=project.update_transport",
+            data:{
+                id : send_data["id"],
+                transport : send_data["transport"],
+                distance : send_data["distance"] ,
+                distance_col :send_data["distance_col"]
+            },
             success: function(data){
-                data = JSON.parse(data);
-                var html = "",
-                    transport_sum = parseFloat(data);
-                var calc_sum = 0, calc_total = 0; canvas = 0;
-                jQuery.each(jQuery("[name='include_calculation[]']:checked"), function (i,e) {
-                    calc_sum += parseFloat(jQuery("[name='calculation_total_discount["+jQuery(e).val()+"]']").val());
-                    calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
-                    canvas += parseFloat(jQuery("[name='canvas["+jQuery(e).val()+"]']").val());
-                });
-                var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
-                var sum_total = Float(calc_total + transport_sum);
-                if(canvas == 0) sum = 2500;
-                else if(sum < 3500 ) sum = 3500;
-                if(canvas == 0) sum_total = 2500;
-                else if(sum_total < 3500 ) sum_total = 3500;
-                jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
-                //jQuery("#project_total").text(sum  + " руб.");
-                if(canvas == 0) {
-                    jQuery("#project_total span.sum").text(sum_total);
-                    jQuery("#project_total span.dop").html((sum_total <= 2500)?" * минимальная сумма заказа 2500р.":"");
-                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                    jQuery("#project_total_discount span.dop").html((sum <= 2500)?" * минимальная сумма заказа 2500р.":"");
-                    jQuery("#project_sum_transport").val(sum);
-                    jQuery(" #project_sum").val(sum);
-                }
-                else {
-                    jQuery("#project_total span.sum").text(sum_total);
-                    jQuery("#project_total span.dop").html((sum_total <= 3500)?" * минимальная сумма заказа 3500р.":"");
-                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                    jQuery("#project_total_discount span.dop").html((sum <= 3500)?" * минимальная сумма заказа 3500р.":"");
-                    jQuery("#project_sum_transport").val(sum);
-                    jQuery(" #project_sum").val(sum);
-                }
-                
-
+                calc_transport(data);
             },
             dataType: "json",
             timeout: 10000,
@@ -2476,7 +2394,46 @@
                     text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
                 });
             }
-        });
+        }); 
+    }
+    function calc_transport(data){
+        data = JSON.parse(data);
+                var html = "",
+                    transport_sum = parseFloat(data);
+                var calc_sum = 0, calc_total = 0; canvas = 0;
+                jQuery.each(jQuery("[name='include_calculation[]']:checked"), function (i,e) {
+                    calc_sum += parseFloat(jQuery("[name='calculation_total_discount["+jQuery(e).val()+"]']").val());
+                    calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
+                    canvas += parseFloat(jQuery("[name='canvas["+jQuery(e).val()+"]']").val());
+                });
+
+                var sum = Float(calc_sum + transport_sum);
+                var sum_total = Float(calc_total + transport_sum);
+
+                if (canvas == 0) {
+                    sum = (sum <= min_components_sum)?min_components_sum:sum;
+                    sum_total = (sum_total <= min_components_sum)?min_components_sum:sum_total;
+                } else {
+                    sum = (sum <= min_project_sum)?min_project_sum:sum;
+                    sum_total = (sum_total <= min_project_sum)?min_project_sum:sum_total;
+                }
+                sum = Math.round(sum * 100) / 100;
+                sum_total = Math.round(sum_total * 100) / 100;
+
+                jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
+                jQuery("#project_total span.sum").text(sum_total);
+                jQuery("#project_total_discount span.sum").text(sum  + " руб.");
+                jQuery("#project_sum_transport").val(sum);
+                jQuery(" #project_sum").val(sum);
+
+                if(canvas == 0) {
+                    jQuery("#project_total span.dop").html((sum_total == min_components_sum)?" * минимальная сумма заказа "+min_components_sum+"р.":"");
+                    jQuery("#project_total_discount span.dop").html((sum == min_components_sum)?" * минимальная сумма заказа"+min_components_sum+"р.":"");
+                }
+                else {
+                    jQuery("#project_total span.dop").html((sum_total == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+"р.":"");
+                    jQuery("#project_total_discount span.dop").html((sum == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+".":"");
+                }
     }
 
     /**
