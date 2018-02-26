@@ -56,7 +56,9 @@ foreach ($calculations as $calculation) {
 
     $calculation_total = $calculation->calculation_total;
 }
-
+$mount_transport = $mountModel->getDataAll($this->item->dealer_id);
+$min_project_sum = (empty($mount_transport->min_sum))? 0 : $mount_transport->min_sum;
+$min_components_sum = (empty($mount_transport->min_components_sum))?0:$mount_transport->min_components_sum;
 $project_total_discount_transport = $project_total_discount + $sum_transport;
 
 $del_flag = 0;
