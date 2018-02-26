@@ -1019,7 +1019,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <div class="form-group">
 
                             <div class="advanced_col1" style="width: 35%;">
-                                <input name="jform[distance_col]" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
+                                <input name="jform[distance_col_1]" id="distance_col_1" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
                             </div>
                             <div class="advanced_col2" style="width: 20%;">
                             <button type="button" name="click_transport" class="btn btn-primary">Ок</button>
@@ -2637,7 +2637,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 jQuery("#transport_dist").show();
                 jQuery("#transport_dist_col").hide();
                 jQuery("#distance").val('');
-                jQuery("#distance_col").val('');
+                jQuery("#distance_col_1").val('');
             }
             else if(transport == '1') {
                 jQuery("#transport_dist").hide();
@@ -2651,16 +2651,13 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 jQuery("#distance").val('');
                 jQuery("#distance_col").val('');
             }
-
+            if(transport == 0){
+                trans();
+            }
+        });
+        jQuery("[name = click_transport]").click(function () {
             trans();
         });
-        jQuery("name = click_transport").click(function () {
-            console.log("click");
-            //trans();
-        });
-       /*  jQuery("#click_transport_1").click(function () {
-            trans();
-        }); */
 
         if (jQuery("input[name='transport']:checked").val() == '2') {
                 jQuery("#transport_dist").show();
@@ -2933,12 +2930,29 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         var distance = jQuery("#distance").val();
         var distance_col = jQuery("#distance_col").val();
         var distance_col_1 = jQuery("#distance_col_1").val();
-        var form = jQuery("#form-client").serialize();
+        var send_data = [];
+        send_data["id"] = id; 
+        send_data["transport"] = transport;
+        switch(transport){
+            case "0" :
+                send_data["distance_col"] = 0;
+                send_data["distance"] = 0;
+                break;
+            case "1":
+                send_data["distance_col"] = distance_col_1;
+                send_data["distance"] = 0;
+                break;
+            case "2" :
+                send_data["distance_col"] = distance_col;
+                send_data["distance"] = distance;
+                break;
+        }
+       
         // alert(distance_col);
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=big_smeta.transport",
-            data: form,
+            url: "index.php?option=com_gm_ceiling&task=project._update_transport",
+            data: send_data,
             success: function(data){
                 data = JSON.parse(data);
                 var html = "",
@@ -2990,7 +3004,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                     text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
                 });
             }
-        });
+        }); */
     }
 
     /**

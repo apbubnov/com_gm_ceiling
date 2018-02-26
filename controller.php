@@ -2702,8 +2702,9 @@ class Gm_ceilingController extends JControllerLegacy
                 $body .= '</div></td></tr></table>';
                 $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку на <a href=\"$site\">коммерческое предложение</a>, где Вы можете получить более подробную информацию.";
                 if($dealer_type==1){
-                    $body .= "А также ссылку на <a href=\"$site2\">краткий обзор программы</a>.</div></body>";
+                    $body .= "А также ссылку на <a href=\"$site2\">краткий обзор программы</a>.";
                 }
+                $body .= "По всем вопросам писать на почту gm-partner@mail.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
                 $mailer->setSubject('Коммерческое предложение');
                 $mailer->isHtml(true);
                 $mailer->Encoding = 'base64';

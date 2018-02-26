@@ -1313,7 +1313,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$jinput = JFactory::getApplication()->input;
 			$project_model = self::getModel('Project');
 			$project_id = $jinput->get('id', '', 'INT');
-			$transport_type = $jinput->get('distance', '', 'INT'); 
+			$transport_type = $jinput->get('transport', '', 'INT'); 
 			$distance = $jinput->get('distance', '', 'FLOAT');
 			$distance_col = $jinput->get('distance_col', '', 'INT');
 			if(!empty($project_id)){
