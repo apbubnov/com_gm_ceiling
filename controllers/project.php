@@ -1317,10 +1317,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$distance = $jinput->get('distance', '', 'STRING');
 			$distance_col = $jinput->get('distance_col', '', 'STRING');
 			if(!empty($project_id)){
-				if(!empty($transport_type) && !empty($distance) && !empty($distance_col) ){
-					$project_model->update_transport($project_id,$transport_type,$distance,$distance_col);
-				}
-				throw new Exception("Empty transport data!");
+				$project_model->update_transport($project_id,$transport_type,$distance,$distance_col);
 			}
 			else{
 				throw new Exception("Empty project_id!");
