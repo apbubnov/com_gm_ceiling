@@ -1936,7 +1936,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         {
             show_comments();
         }
-        trans();
+        
         // для истории и добавления комментария
         function formatDate(date) {
 
