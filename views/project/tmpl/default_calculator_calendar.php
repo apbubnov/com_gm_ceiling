@@ -2947,19 +2947,36 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 send_data["distance"] = distance;
                 break;
         }
-       
-        // alert(distance_col);
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=project.update_transport",
-            data:{
-                id : send_data["id"],
-                transport : send_data["transport"],
-                distance : send_data["distance"] ,
-                distance_col :send_data["distance_col"]
-            },
-            success: function(data){
-                data = JSON.parse(data);
+        if(send_data["distance"]!=0 || send_data["distance_col"]!=0){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=project.update_transport",
+                data:{
+                    id : send_data["id"],
+                    transport : send_data["transport"],
+                    distance : send_data["distance"] ,
+                    distance_col :send_data["distance_col"]
+                },
+                success: function(data){
+                    calc_transport(data);
+                },
+                dataType: "json",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
+                    });
+                }
+            }); 
+        }
+    }
+    function calc_transport(data){
+        data = JSON.parse(data);
                 var html = "",
                     transport_sum = parseFloat(data);
                 var calc_sum = 0, calc_total = 0; canvas = 0;
@@ -2996,20 +3013,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                     jQuery("#project_total span.dop").html((sum_total == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+"р.":"");
                     jQuery("#project_total_discount span.dop").html((sum == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+".":"");
                 }
-            },
-            dataType: "json",
-            timeout: 10000,
-            error: function(data){
-                var n = noty({
-                    theme: 'relax',
-                    timeout: 2000,
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
-                });
-            }
-        }); 
     }
 
     /**
@@ -3114,8 +3117,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
     }
 
     var mountArray = {};
-
-    //jQuery("#jform_project_mounting_daypart").val(jQuery('#hours_list').val());
 
     jQuery("#spend-form input").on("keyup", function () {
         jQuery('#extra_spend_submit').fadeIn();
