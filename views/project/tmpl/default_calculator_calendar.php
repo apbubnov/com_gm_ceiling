@@ -2932,33 +2932,31 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 send_data["distance"] = distance;
                 break;
         }
-        if(send_data["distance"]!=0 || send_data["distance_col"]!=0){
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=project.update_transport",
-                data:{
-                    id : send_data["id"],
-                    transport : send_data["transport"],
-                    distance : send_data["distance"] ,
-                    distance_col :send_data["distance_col"]
-                },
-                success: function(data){
-                    calc_transport(data);
-                },
-                dataType: "json",
-                timeout: 10000,
-                error: function(data){
-                    var n = noty({
-                        theme: 'relax',
-                        timeout: 2000,
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
-                    });
-                }
-            }); 
-        }
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=project.update_transport",
+            data:{
+                id : send_data["id"],
+                transport : send_data["transport"],
+                distance : send_data["distance"] ,
+                distance_col :send_data["distance_col"]
+            },
+            success: function(data){
+                calc_transport(data);
+            },
+            dataType: "json",
+            timeout: 10000,
+            error: function(data){
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
+                });
+            }
+        }); 
     }
     function calc_transport(data){
         data = JSON.parse(data);
