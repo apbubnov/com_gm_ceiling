@@ -2065,7 +2065,7 @@
                 jQuery("#distance").val('');
                 jQuery("#distance_col").val('');
             }
-            if(transport = 0){
+            if(transport == 0){
                 trans();
             }
         });
