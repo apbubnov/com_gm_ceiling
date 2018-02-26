@@ -20,7 +20,8 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-
+$transport_sum = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id)['client_sum'];
+echo $this->item->transport;
 $project_total = 0;
 $project_total_discount = 0;
 $total_square = 0;
@@ -1005,10 +1006,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </tr>
             <tr>
                 <td colspan="3">
-
-               <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
-               <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
-                <div class="col-sm-4">
+                <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?php if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
+                <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <div class="advanced_col1" style="width: 35%;">
                                 <label>Кол-во выездов</label>
