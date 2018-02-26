@@ -20,7 +20,9 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-$sum_transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id)['client_sum'];
+$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
+$sum_transport = $transport['client_sum'];
+$sum_transport_1 = $transport['mounter_sum'];
 $project_total = 0;
 $project_total_discount = 0;
 $total_square = 0;
@@ -42,7 +44,7 @@ foreach ($calculations as $calculation) {
     $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
     $project_total += $calculation->calculation_total;
     $project_total_discount += $calculation->calculation_total_discount;
-
+    
     if ($user->dealer_type != 2) {
         $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
         $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
@@ -58,8 +60,8 @@ foreach ($calculations as $calculation) {
 }
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
-$min_project_sum = (empty($mount_transport->min_sum))? 0 : $mount_transport->min_sum;
-$min_components_sum = (empty($mount_transport->min_components_sum))?0:$mount_transport->min_components_sum;
+$min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
+$min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
 
 $project_total_discount_transport = $project_total_discount + $sum_transport;
 
@@ -1049,9 +1051,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <tr>
                <?php 
             //-------------------------Себестоимость транспорта-------------------------------------
-                if($this->item->transport == 0 ) $sum_transport_1 = 0;
-                if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
-                if($this->item->transport == 2 ) $sum_transport_1 = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
+                
                 $project_total_11 = $project_total_11 + $sum_transport_1;
                 $project_total = $project_total + $sum_transport;
                 $project_total_discount = $project_total_discount + $sum_transport;
