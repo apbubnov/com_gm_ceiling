@@ -112,7 +112,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
         }
 
-        public
+       /*  public
         function addImagesFromAndroid()
         {
             try {
@@ -137,7 +137,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
                 throw new Exception('Ошибка!', 500);
             }
-        }
+        } */
 
         public
         function deleteDataFromAndroid()

@@ -29,7 +29,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 <h2 class = "center">Архив проектов</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=archive'); ?>" method="post"
       name="adminForm" id="adminForm">
-    <? if (count($this->items) > 0): ?>
+    <?php if (count($this->items) > 0): ?>
         <div class="toolbar">
             <?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
         </div>
@@ -75,7 +75,7 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                     <td>
                     <?php if ($item->project_status == 12) { ?>
                          <i class='fa fa-check' aria-hidden='true'></i> Выполнено
-                    <? } ?>
+                    <?php } ?>
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->id; ?>
@@ -111,11 +111,11 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
             </tbody>
            
         </table>
-    <? else: ?>
+    <?php else: ?>
         <p class="center">
         <h3>У вас еще нет завершенных проектов!</h3>
         </p>
-    <? endif; ?>
+    <?php endif; ?>
 
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="boxchecked" value="0"/>

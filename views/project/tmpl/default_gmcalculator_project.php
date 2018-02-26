@@ -159,7 +159,7 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                         </tr>
                         <tr class="section_ceilings">
                             <?php if ($calculation->discount != 0) { ?>
-                                <td>Цена / -<? echo $calculation->discount ?>% :</td>
+                                <td>Цена / -<?php echo $calculation->discount ?>% :</td>
                                 <td id="calculation_total"> <?php echo round($calculation_total - $sum_transport, 0); ?> руб. /</td>
                                 <td id="calculation_total_discount"> <?php echo round($calculation_total_discount - $sum_transport_discount, 0); ?>
                                     руб.
@@ -183,23 +183,23 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                         </th>
                     </tr>
                     <tr>
-                        <? if ($tmp == 1 && $sum_transport_discount_total != 0 ) { ?>
+                        <?php if ($tmp == 1 && $sum_transport_discount_total != 0 ) { ?>
                             <th> Транспорт / - % </th>
                             <td> <?= $sum_transport_total;?> руб. / <?= $sum_transport_discount_total;?> руб. </td>
                             <td></td>
-                        <? } elseif ($tmp == 1 && $sum_transport_discount_total == 0 ) { ?>
+                        <?php } elseif ($tmp == 1 && $sum_transport_discount_total == 0 ) { ?>
                             <th> Транспорт </th>
                             <td> <?= $sum_transport_total;?> руб. </td>
                             <td></td>
-                        <? } elseif ($tmp == 2 && $sum_transport_discount_total != 0 ) { ?>
+                        <?php } elseif ($tmp == 2 && $sum_transport_discount_total != 0 ) { ?>
                             <th> Выезд за город / - % </th>
                             <td> <?= $sum_transport_total;?> руб. / <?= $sum_transport_discount_total;?> руб. </td>
                             <td></td>
-                        <? } elseif ($tmp == 2 && $sum_transport_discount_total == 0 ) { ?>
+                        <?php } elseif ($tmp == 2 && $sum_transport_discount_total == 0 ) { ?>
                             <th> Выезд за город</th>
                             <td> <?= $sum_transport_total;?> руб. </td>
                             <td></td>
-                        <? } ?>
+                        <?php } ?>
                     </tr>
                     <tr>
                         <?php if ($this->item->project_discount != 0) { ?>
@@ -263,7 +263,7 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
 
                         <?php }
                         $json = json_encode($pdf_names_mount); ?>
-                        <? } ?>
+                        <?php } ?>
                     </tr>
 
                 </table>
@@ -273,7 +273,7 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                 <?php $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg"; ?>
                 <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                     <h3><?php echo $calculation->calculation_title; ?></h3>
-                    <? if (!empty($filename)): ?>
+                    <?php if (!empty($filename)): ?>
                         <div class="sketch_image_block">
                             <h3 class="section_header">
                                 Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
@@ -283,10 +283,10 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                                     style="width:80vw;"/>
                             </div>
                         </div>
-                    <? endif; ?>
+                    <?php endif; ?>
                     <div class="row-fluid">
                         <div class="span6">
-                            <? if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
+                            <?php if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
                                 <h4>Материал</h4>
                                 <div>
                                     Тип потолка: <?php echo $calculation->n1; ?>
@@ -317,7 +317,7 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                                     <div>
                                         <h4> Вставка</h4>
                                     </div>
-                                    <? if ($calculation->n6 == 314) { ?>
+                                    <?php if ($calculation->n6 == 314) { ?>
                                         <div> Белая</div>
                                     <?php } else { ?>
                                         <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
@@ -329,7 +329,7 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                                                     alt=""/>
                                         </div>
                                     <?php } ?>
-                                <? } endif; ?>
+                                <?php } endif; ?>
                             <?php if ($calculation->n16) { ?>
                                 <div>
                                     Скрытый карниз: <?php echo $calculation->n16; ?>
@@ -366,8 +366,8 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                             } ?>
                             <?php if ($calculation->n27 > 0) { ?>
                                 <h4>Шторный карниз</h4>
-                                <? if ($calculation->n16) echo "Скрытый карниз"; ?>
-                                <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                                <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
+                                <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
                                 <?php echo $calculation->n27; ?> м.
                             <?php } ?>
 
@@ -471,11 +471,11 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
                                     Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                                 </div>
                             <?php } ?>
-                            <? $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
+                            <?php $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
                             <?php if (!empty($extra_mounting)) { ?>
                                 <div>
                                     <h4>Дополнительные работы</h4>
-                                    <? foreach ($extra_mounting as $dop) {
+                                    <?php foreach ($extra_mounting as $dop) {
                                         echo "<b>Название:</b> " . $dop->title . "<br>";
                                     } ?>
                                 </div>

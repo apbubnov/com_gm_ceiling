@@ -111,11 +111,11 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                            value="<?php echo $jdate->format('d.m.Y H:i'); ?>"/>
                     <input id="jform_project_mounter" type="hidden" name="jform[project_mounting]"
                            value="<?php echo ($mount->project_mounter) ? $mount->project_mounter : '1'; ?>"/>
-                    <? if ($this->item->project_status == 10) { ?>
+                    <?php if ($this->item->project_status == 10) { ?>
                         <a class="btn btn btn-primary"
                            id="change_data">Изменить дату и время монтажа
                         </a>
-                        <?
+                        <?php
                     } ?>
                     <div class="calendar_wrapper" style="display: none;">
                         <table>
@@ -313,7 +313,7 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
 
                                     <?php } ?>
                                     </tr>
-                                <? } ?>
+                                <?php } ?>
                             </table>
                         </div>
                         <?php foreach ($calculations as $k => $calculation) { ?>

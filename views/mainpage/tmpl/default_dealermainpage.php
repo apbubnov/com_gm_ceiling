@@ -138,7 +138,7 @@ $rest = -($total_sum) - $contributed;
             </div>
         </div>
         <?php } ?>
-  <?  }?>
+  <?php  }?>
 </div>
 
 

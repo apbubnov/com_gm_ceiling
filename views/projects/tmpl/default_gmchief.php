@@ -34,15 +34,15 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 	<input id="jform_project_id" type="hidden" value="jform[project_id]" />
 	<input id="jform_project_status" type="hidden" value="jform[project_status]" />
 </form>
-<? if ($user->dealer_type != 2): ?><h2 class="center">Монтажи</h2><? else: ?><h2 class="center">Заказы</h2><? endif; ?>
+<?php if ($user->dealer_type != 2): ?><h2 class="center">Монтажи</h2><?php else: ?><h2 class="center">Заказы</h2><?php endif; ?>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>" method="post"
       name="adminForm" id="adminForm">
-    <? if (false): ?>
+    <?php if (false): ?>
 	  <div class="toolbar">
 		<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
-    <? endif; ?>
-    <? if (count($this->items) > 0): ?>
+    <?php endif; ?>
+    <?php if (count($this->items) > 0): ?>
 	<table class="table table-striped one-touch-view" id="projectList">
 		<thead>
 			<tr>
@@ -82,27 +82,26 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 				<?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
 					<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
 				<?php endif; ?>
-				<?php// if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
 				<tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
                     <td>
-                        <? if ($item->project_status == 10): ?>
+                        <?php if ($item->project_status == 10): ?>
                             <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </td>
                     <td class="center one-touch">
                         <?php echo $item->id; ?>
                     </td>
                     <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
                     <td class="center one-touch">
-                        <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
-                        <? else: ?><?= $jdate->format('d.m.Y'); ?>
-                        <? endif; ?>
+                        <?php if ($item->mounting_date == "00.00.0000 00:00"): ?> -
+                        <?php else: ?><?= $jdate->format('d.m.Y'); ?>
+                        <?php endif; ?>
                     </td>
                     <td class="center one-touch">
-                        <? if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
-                        <? else: ?>
+                        <?php if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
+                        <?php else: ?>
                             <?php echo $jdate->format('H:i'); ?>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </td>
 					<td class="center one-touch">
 						<?php echo $this->escape($item->project_info); ?>
@@ -114,18 +113,16 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 						<?php echo $item->client_name; ?>
 					</td>
 					<td class="center one-touch">
-						<?php //$dealer = JFactory::getUser($item->dealer_id); ?>
 						<?php echo $item->dealer_name;; ?>
 					</td>
 					<td class="center one-touch">
 						<?php $calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
 						<?php echo $calculations_model->getProjectQuadrature($item->id); ?>
 					</td>
-                    <? if ($item->project_mounter) {$mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
+                    <?php if ($item->project_mounter) {$mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
                         $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
                     <td class="center one-touch"><?= $mounter->name; ?></td>
 				</tr>
-				<?php// endif; ?>
 			<?php endforeach; ?>
 		</tbody>
 	</table>
@@ -156,14 +153,13 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                 <?php if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
                     <?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
                 <?php endif; ?>
-                <?php// if($item->dealer_id==$userId||$item->project_mounter==Gm_ceilingHelpersGm_ceiling::whoseTeam($item->project_mounter)||$item->who_mounting==0):?>
                     <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=gmchief&id='.(int) $item->id); ?>">
                         <td>
-                            <? if ($item->project_status == 10): ?>
+                            <?php if ($item->project_status == 10): ?>
                                 <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>"
                                         type="button">Выполнено
                                 </button>
-                            <? endif; ?>
+                            <?php endif; ?>
                         </td>
                         <td class="center one-touch">
                             <?php echo $item->id; ?>
@@ -171,13 +167,13 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
                         <?php $jdate = new JDate(JFactory::getDate($item->mounting_date)); ?>
                         <td class="center one-touch">
-                            <? if ($item->mounting_date == "00.00.0000 00:00"): ?> -
-                            <? else: ?><?= $jdate->format('d.m'); ?>
-                            <? endif; ?>
-                            <? if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
-                            <? else: ?>
+                            <?php if ($item->mounting_date == "00.00.0000 00:00"): ?> -
+                            <?php else: ?><?= $jdate->format('d.m'); ?>
+                            <?php endif; ?>
+                            <?php if ($item->mounting_date == "00.00.0000 00:00" || $item->calculation_time == ""): ?>-
+                            <?php else: ?>
                                 <?php echo $jdate->format('H:i'); ?>
-                            <? endif; ?>
+                            <?php endif; ?>
                         </td>
                         <td class="center one-touch">
                             <?php echo $this->escape($item->project_info); ?>
@@ -186,11 +182,10 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
                             <?php echo $item->client_contacts; ?><br>
                             <?php echo $item->client_name; ?>
                         </td>
-                        <? if ($item->project_mounter) {$mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
+                        <?php if ($item->project_mounter) {$mounters_model = Gm_ceilingHelpersGm_ceiling::getModel('mounters');
                             $mounter = $mounters_model->getEmailMount($item->project_mounter);}?>
                         <td class="center one-touch"><?= $mounter->name; ?></td>
                     </tr>
-                <?php// endif; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -199,12 +194,12 @@ $canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
 	<?php echo JHtml::_('form.token'); ?>
-    <? else: ?>
+    <?php else: ?>
         <p class="center">
         <h3>У вас еще нет заказов!</h3>
         </p>
         <button id="new_order_btn" class="btn btn-primary" type="button">Сделайте заказ прямо сейчас</button>
-    <? endif; ?>
+    <?php endif; ?>
 </form>
 
 <?php if($canDelete) : ?>

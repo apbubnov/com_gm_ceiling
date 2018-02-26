@@ -34,8 +34,8 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 					<tr>
 						<th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
 						<td>
-                            <?if ($this->item->project_calculation_date == "0000-00-00 00:00:00"){ ?> -
-                            <?} else {?>
+                            <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00"){ ?> -
+                            <?php } else {?>
 							<?php $jdate = new JDate($this->item->project_calculation_date); ?>
 							<?php echo $jdate->format('d.m.Y'); }?>
 						</td>

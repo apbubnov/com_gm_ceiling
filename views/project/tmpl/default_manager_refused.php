@@ -19,9 +19,9 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 ?>
 <?=parent::getButtonBack();?>
 <h2 class="center">Просмотр проекта</h2>
-<?if($this->item):?>
-	<?$model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');?>
-	<?$calculations = $model->getProjectItems($this->item->id);?>
+<?php if($this->item):?>
+	<?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');?>
+	<?php $calculations = $model->getProjectItems($this->item->id);?>
 
 	<div class="container">
 	  <div class="row">
@@ -58,7 +58,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 						<th><?=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART');?></th>
 						<td><?=JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE_OPTION_'.$this->item->project_calculation_daypart);?></td>
 					</tr>
-					<?if($this->type === "calculator" && $this->subtype === "calendar"){?>
+					<?php if($this->type === "calculator" && $this->subtype === "calendar"){?>
 						<a id="accept_project" class="btn btn btn-success">
 							Договор
 						</a>
@@ -228,7 +228,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                 <a class="btn btn-primary"
                    href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?= $calculation->id; ?>">Изменить
                     расчет</a>
-                <? if (!empty($filename)): ?>
+                <?php if (!empty($filename)): ?>
                     <div class="sketch_image_block">
                         <h3 class="section_header">
                             Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
@@ -238,7 +238,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                                  style="width:80vw;"/>
                         </div>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
                 <div class="row-fluid">
                     <div class="span6">
                         <?
@@ -273,7 +273,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                                 <div>
                                     <h4> Вставка</h4>
                                 </div>
-                                <? if ($calculation->n6 == 314) { ?>
+                                <?php if ($calculation->n6 == 314) { ?>
                                     <div> Белая</div>
                                 <?php } else { ?>
                                     <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
@@ -285,7 +285,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                                                 alt=""/>
                                     </div>
                                 <?php } ?>
-                            <? } endif; ?>
+                            <?php } endif; ?>
                         <?php if ($calculation->n16) { ?>
                             <div>
                                 Скрытый карниз: <?php echo $calculation->n16; ?>
@@ -322,8 +322,8 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                         } ?>
                         <?php if ($calculation->n27 > 0) { ?>
                             <h4>Шторный карниз</h4>
-                            <? if ($calculation->n16) echo "Скрытый карниз"; ?>
-                            <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                            <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
+                            <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
                             <?php echo $calculation->n27; ?> м.
                         <?php } ?>
 
@@ -427,11 +427,11 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                                 Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                             </div>
                         <?php } ?>
-                        <? $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
+                        <?php $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
                         <?php if (!empty($extra_mounting)) { ?>
                             <div>
                                 <h4>Дополнительные работы</h4>
-                                <? foreach ($extra_mounting as $dop) {
+                                <?php foreach ($extra_mounting as $dop) {
                                     echo "<b>Название:</b> " . $dop->title . "<br>";
                                 } ?>
                             </div>
@@ -439,7 +439,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                     </div>
                 </div>
             </div>
-        <?
+        <?php
         } ?>
     </div>
 	

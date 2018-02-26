@@ -46,13 +46,13 @@
     <p>
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-     <? if ($user->dealer_type != 1):?>
+     <?php if ($user->dealer_type != 1):?>
     <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
-    <?endif;?>
+    <?php endif;?>
 </div>
 
 
@@ -76,7 +76,7 @@
             </tr>
         </table>  
 </div>
-<? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
+<?php $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
 <div class="container">
     <div class="row">
@@ -87,13 +87,13 @@
                        style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта
                         клиента: </p>
                 </div>
-                <? if (!empty($dop_contacts)) { ?>
+                <?php if (!empty($dop_contacts)) { ?>
                     <div>
-                        <? foreach ($dop_contacts AS $contact) { ?>
-                            <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact;
-                                echo "<br>"; ?></p> <? } ?>
+                        <?php foreach ($dop_contacts AS $contact) { ?>
+                            <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><?php echo $contact->contact;
+                                echo "<br>"; ?></p> <?php } ?>
                     </div>
-                <? } ?>
+                <?php } ?>
                 <div>
                     <input type="text" id="new_email" placeholder="Почта" required>
                     <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
@@ -108,7 +108,7 @@
                 </div>
                 <div>
                     <?php foreach ($client_phones as $item) { ?>
-                        <a href="tel:<? echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></a><br>
+                        <a href="tel:<?php echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><?php echo $item->phone; ?></a><br>
                     <?php } ?>
                 </div>
                 <div>
@@ -153,7 +153,7 @@
         </div>
 
     </div>
-<? } ?>
+<?php } ?>
 </div>
 <div id="orders-container-tar">
     <p class="caption-tar">Заказы</p>
@@ -386,7 +386,7 @@
                 }
                 <?php if($user->dealer_type == 1) {?>
                 url = '/index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar'+'&id=' + data;
-                <?}?>
+                <?php }?>
                 location.href =url;
             },
             dataType: "text",
@@ -410,7 +410,7 @@
         jQuery('#new_phone').mask('+7(999) 999-9999');
         <?php if($user->dealer_type != 1) { ?>
         document.getElementById('calls-tar').scrollTop = 9999;
-        <?}?>
+        <?php } ?>
 
         document.getElementById('add_email').onclick = function()
         {

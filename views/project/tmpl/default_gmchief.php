@@ -57,7 +57,7 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                         </tr>
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                            <? $contacts = $model->getClientPhone($this->item->client_id); ?>
+                            <?php $contacts = $model->getClientPhone($this->item->client_id); ?>
                             <td><?php foreach ($contacts as $phone) echo $phone->client_contacts; ?></td>
                         </tr>
                         <tr>
@@ -110,11 +110,11 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                            value="<?php echo $jdate->format('d.m.Y H:i'); ?>"/>
                     <input id="jform_project_mounter" type="hidden" name="jform[project_mounting]"
                            value="<?php echo ($mount->project_mounter) ? $mount->project_mounter : '1'; ?>"/>
-                    <? if ($this->item->project_status == 10) { ?>
+                    <?php if ($this->item->project_status == 10) { ?>
                         <a class="btn btn btn-primary"
                            id="change_data">Изменить дату и время монтажа
                         </a>
-                        <?
+                        <?php
                     } ?>
                     <div class="calendar_wrapper" style="display: none;">
                         <table>
@@ -312,7 +312,7 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
 
                                     <?php } ?>
                                     </tr>
-                                <? } ?>
+                                <?php } ?>
                             </table>
                         </div>
                         <?php foreach ($calculations as $k => $calculation) { ?>
@@ -324,7 +324,7 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                 <a class="btn btn-primary"
                                    href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить
                                     расчет</a>
-                                <? if (!empty($filename)): ?>
+                                <?php if (!empty($filename)): ?>
                                     <div class="sketch_image_block">
                                         <h3 class="section_header">
                                             Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
@@ -334,10 +334,10 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                                  style="width:80vw;"/>
                                         </div>
                                     </div>
-                                <? endif; ?>
+                                <?php endif; ?>
                                 <div class="row-fluid">
                                     <div class="span6">
-                                        <? if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
+                                        <?php if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
                                             <h4>Материал</h4>
                                             <div>
                                                 Тип потолка: <?php echo $calculation->n1; ?>
@@ -369,7 +369,7 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                                 <div>
                                                     <h4> Вставка</h4>
                                                 </div>
-                                                <? if ($calculation->n6 == 314) { ?>
+                                                <?php if ($calculation->n6 == 314) { ?>
                                                     <div> Белая</div>
                                                 <?php } else { ?>
                                                     <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
@@ -381,7 +381,7 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                                                 alt=""/>
                                                     </div>
                                                 <?php } ?>
-                                            <? } endif; ?>
+                                            <?php } endif; ?>
                                         <?php if ($calculation->n16) { ?>
                                             <div>
                                                 Скрытый карниз: <?php echo $calculation->n16; ?>
@@ -418,8 +418,8 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                         } ?>
                                         <?php if ($calculation->n27 > 0) { ?>
                                             <h4>Шторный карниз</h4>
-                                            <? if ($calculation->n16) echo "Скрытый карниз"; ?>
-                                            <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                                            <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
+                                            <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
                                             <?php echo $calculation->n27; ?> м.
                                         <?php } ?>
 
@@ -523,11 +523,11 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                                 Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                                             </div>
                                         <?php } ?>
-                                        <? $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
+                                        <?php $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
                                         <?php if (!empty($extra_mounting)) { ?>
                                             <div>
                                                 <h4>Дополнительные работы</h4>
-                                                <? foreach ($extra_mounting as $dop) {
+                                                <?php foreach ($extra_mounting as $dop) {
                                                     echo "<b>Название:</b> " . $dop->title . "<br>";
                                                 } ?>
                                             </div>

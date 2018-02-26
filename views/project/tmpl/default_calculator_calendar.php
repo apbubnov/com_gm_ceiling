@@ -315,7 +315,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <tr>
                     <th class="ClientPhones">Телефоны:</th>
                     <td id="ClientPhones">
-                        <?
+                        <?php
                         foreach ($Client->phones as $Phone)
                             echo "<a href='tel:$Phone'>$Phone</a>";
                         ?>
@@ -324,7 +324,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <tr>
                     <th class="ClientEmails">Почты:</th>
                     <td id="ClientEmails">
-                        <?
+                        <?php
                         foreach ($Client->emails as $Email)
                             echo "<a href='mailto:$Email'>$Email</a>";
                         ?>
@@ -348,7 +348,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <th class="ClientCalcTime">Время замера:</th>
                     <td id="ClientCalcTime"><?=$Client->calc_date->time;?></td>
                 </tr>
-                <?if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
+                <?php if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
                     <tr>
                         <th class="ClientDiscount">Изменить величину скидки:</th>
                         <td id="ClientDiscount">
@@ -362,11 +362,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </form>
                         </td>
                     </tr>
-                <?endif;?>
+                <?php endif;?>
                 </tbody>
             </table>
         </div>
-        <?if($user->dealer_type == 0):?>
+        <?php if($user->dealer_type == 0):?>
         <div class="Messages col col-12 col-md-6">
             <div class="Title">История клиента:</div>
             <div class="Note">
@@ -380,7 +380,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </form>
             </div>
         </div>
-        <?endif;?>
+        <?php endif;?>
     </div>
     <div class="Navigation">
         <h3 class="left">Расчеты для проекта</h3>
@@ -396,21 +396,21 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </style>
             <input name="Tab" class="Tab" id="TabAll" type="radio" checked>
             <label for="TabAll" class="TabLabel"><span>Общее</span></label>
-            <?foreach ($calculations as $calculation):?>
+            <?php foreach ($calculations as $calculation):?>
                 <input name="Tab" class="Tab" id="Tab<?=$calculation->id;?>"  type="radio">
                 <label for="Tab<?=$calculation->id;?>" class="TabLabel"><span><?=$calculation->calculation_title;?></span></label>
-            <?endforeach;?>
-            <?if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
+            <?php endforeach;?>
+            <?php if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
                 <input name="Tab" class="Tab" id="TabAdd" type="radio">
                 <label for="TabAdd" class="TabLabel"><span>Добавить потолок</span> <i class="fa fa-plus-square-o" aria-hidden="true"></i></label>
-            <?endif;?>
+            <?php endif;?>
             <div class="WindowTab" id="WindowTabAll">
                     <table class="Information">
                     <tbody>
                     <tr class="CalcTitle TableTitle" data-child="Calculate" data-show="false">
                         <td colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></td>
                     </tr>
-                    <?foreach ($calculations as $calculation):?>
+                    <?php foreach ($calculations as $calculation):?>
                         <tr class="Calculate">
                             <td class="CheckBox" colspan="4">
                                 <input class="CalcCheckBox" id="CalcCheckBox<?=$calculation->id;?>" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
@@ -428,14 +428,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <td>
                                 <span><?=fceil($calculation->client_sum->itog);?></span> руб.
                             </td>
-                            <td><?if($calculation->discount > 0):?>Итого -<?=$calculation->discount;?>%:<?endif;?></td>
+                            <td><?php if($calculation->discount > 0):?>Итого -<?=$calculation->discount;?>%:<?php endif;?></td>
                             <td>
-                                <?if($calculation->discount > 0):?>
+                                <?php if($calculation->discount > 0):?>
                                     <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.
-                                <?endif;?>
+                                <?php endif;?>
                             </td>
                         </tr>
-                    <?endforeach;?>
+                    <?php endforeach;?>
                     <tr class="TR">
                         <th>Общая площадь:</th>
                         <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup></td>
@@ -497,11 +497,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     </tbody>
                 </table>
             </div>
-            <?foreach ($calculations as $k => $calculation):?>
+            <?php foreach ($calculations as $k => $calculation):?>
                 <div class="WindowTab" id="WindowTab<?=$calculation->id;?>">
 
                 </div>
-            <?endforeach;?>
+            <?php endforeach;?>
             <div class="WindowTab" id="WindowTabAdd">
 
             </div>
@@ -579,9 +579,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     }
 </script>
 
-<?endif;?>
+<?php endif;?>
 
-<?if(true):?>
+<?php if(true):?>
 
 <style>
     @media screen and (max-width: 500px) {
@@ -674,7 +674,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <tr>
                                         <th>Дата рождения</th>
                                         <td><input name="new_birthday" id="jform_birthday" class="inputactive"
-                                                    value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date"></td>
+                                                    value="<?php if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date"></td>
                                         <td><button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button></td>
                                     </tr>
                                 <?php } ?>
@@ -974,7 +974,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </tr>
                 <tr class="section_ceilings">
                     <?php if ($calculation->discount != 0) { ?>
-                        <td>Цена / -<? echo $calculation->discount ?>% :</td>
+                        <td>Цена / -<?php echo $calculation->discount ?>% :</td>
                         <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб. /</td>
                         <td id="calculation_total_discount"> <?php echo round($calculation_total_discount , 0); ?>
                             руб.
@@ -1029,7 +1029,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </div>
 
             </div>
-               <p><input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?if( $this->item->transport == 2) echo "checked"?>><label for = "distanceId">Выезд за город</label></p>
+               <p><input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?php if( $this->item->transport == 2) echo "checked"?>><label for = "distanceId">Выезд за город</label></p>
 
             <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist" >
                 <div class="col-sm-4">
@@ -1058,11 +1058,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </div>
 
             </div>
-               <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
+               <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?php if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
                 </td>
             </tr>
             <tr>
-               <?
+               <?php 
             //-------------------------Себестоимость транспорта-------------------------------------
                 if($this->item->transport == 0 ) $sum_transport_1 = 0;
                 if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
@@ -1087,7 +1087,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) { if($min_components_sum>0){$project_total_discount = $min_components_sum;} echo round($project_total_discount, 0);  ?> руб.</th> <?}
                     elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { if($min_project_sum>0){$project_total_discount =  $min_project_sum;} echo round($project_total_discount, 0);  ?> руб.</th>
                         </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
-                    <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
+                    <?php } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
 
                 <?php }
                 else { ?>
@@ -1106,10 +1106,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 } ?>
             </span>
             <span class="dop" style="font-size: 9px;">
-            <? if ($project_total <= $min_components_sum && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
+            <?php if ($project_total <= $min_components_sum && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
                      * минимальная сумма заказа <?php echo $min_components_sum;?>.
-                <? elseif ($project_total <=  $min_project_sum && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
-                     * минимальная сумма заказа <?php echo $min_project_sum;?>.<?endif;?>
+                <?php elseif ($project_total <=  $min_project_sum && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
+                     * минимальная сумма заказа <?php echo $min_project_sum;?>.<?php endif;?>
                      
                       </span>
                 </th>
@@ -1119,7 +1119,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
                 <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
                 <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
-                </tr><? } ?>
+                </tr><?php } ?>
             <tr>
                 <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
                                                                         aria-hidden="true"></i></th>
@@ -1153,8 +1153,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;"
                                 placeholder="Адрес эл.почты" type="text">
                                 <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
-                                    <option value="<?=$em->contact;?>"> <?}?>
+                                    <?php foreach ($contact_email AS $em) {?>
+                                    <option value="<?=$em->contact;?>"> <?php }?>
                                 </datalist>
                         </div>
                         <div class="file_data">
@@ -1230,7 +1230,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         </td>
                     </tr>
                 <?php } ?>
-            <? } ?>
+            <?php } ?>
             <!-------------------------------- Общая смета для клиента ------------------------------------------>
 
             <tr>
@@ -1247,15 +1247,15 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     $json2 = json_encode($pdf_names); ?>
                 </td>
             </tr>
-            <? if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+            <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
             <tr >
                 <td colspan="2">
                     <div class="email-all" style="float: left;">
                         <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;"
                                 placeholder="Адрес эл.почты" type="text">
                                 <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
-                                    <option value="<?=$em->contact;?>"> <?}?>
+                                    <?php foreach ($contact_email AS $em) {?>
+                                    <option value="<?=$em->contact;?>"> <?php }?>
                                 </datalist>
                     </div>
                     <div class="file_data">
@@ -1274,7 +1274,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </td>
                 <td><button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button></td>
             </tr>
-            <? }?>
+            <?php }?>
             <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
             <!-- общий наряд на монтаж--> 
              <tr>
@@ -1316,7 +1316,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <a class="btn btn-primary"
                 href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить
                 расчет</a>
-            <? if (!empty($filename)):?>
+            <?php if (!empty($filename)):?>
                 <div class="sketch_image_block">
                     <h3 class="section_header">
                         Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
@@ -1325,10 +1325,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
                     </div>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
             <div class="row-fluid">
                 <div class="span6">
-                    <?if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                    <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
                         <h4>Материал</h4>
                         <div>
                             Тип потолка: <?php echo $calculation->n1; ?>
@@ -1359,7 +1359,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <div>
                                 <h4> Вставка</h4>
                             </div>
-                            <? if ($calculation->n6 == 314) {?>
+                            <?php if ($calculation->n6 == 314) {?>
                                 <div> Белая </div>
                             <?php } else  {?>
                                 <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
@@ -1369,7 +1369,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                                                      alt=""/>
                                 </div>
                             <?php }?>
-                        <?} endif; ?>
+                        <?php } endif; ?>
                     <?php if ($calculation->n16) { ?>
                         <div>
                             Скрытый карниз: <?php echo $calculation->n16; ?>
@@ -1406,8 +1406,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     } ?>
                     <?php if ($calculation->n27> 0) { ?>
                         <h4>Шторный карниз</h4>
-                        <? if ($calculation->n16) echo "Скрытый карниз"; ?>
-                        <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                        <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
+                        <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
                         <?php echo $calculation->n27; ?> м.
                     <?php } ?>
 
@@ -1511,11 +1511,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                         </div>
                     <?php } ?>
-                    <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
+                    <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
                     <?php if (!empty($extra_mounting) ) { ?>
                         <div>
                             <h4>Дополнительные работы</h4>
-                            <? foreach($extra_mounting as $dop) {
+                            <?php foreach($extra_mounting as $dop) {
                                 echo "<b>Название:</b> " . $dop->title .  "<br>";
                             }?>
                         </div>
@@ -1546,7 +1546,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </tr>
         </table>
     <?php } ?>
-    <div class="project_activation" <?if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?> id="project_activation">
+    <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?> id="project_activation">
         <?php if ($user->dealer_type != 2) { ?>
         <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">
             Примечание к договору
@@ -1558,7 +1558,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
         </button>
 
-        <table id="mounter_wraper" <?if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
+        <table id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
             <tr>
                 <td colspan="6">
                     <h4 id="title" style="display: none;">

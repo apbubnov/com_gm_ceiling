@@ -28,7 +28,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 <button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
 <h2 class = "center">Запущенные проекты</h2>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=runprojects'); ?>" method="post" name="adminForm" id="adminForm">
-    <? if (count($this->items) > 0): ?>
+    <?php if (count($this->items) > 0): ?>
         <div class="toolbar">
             <?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
         </div>
@@ -78,11 +78,9 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                 endif; ?>
                 <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype=run&id='.(int) $item->id); ?>">
                     <td>
-                    <!-- <//?php if ($item->project_status == 10 || $item->project_status == 11 ) { ?> -->
-                        <?if(!($dealer->dealer_type == 1 || $dealer->dealer_type == 0) || $user->dealer_id == $dealer->dealer_id):?>
+                        <?php if(!($dealer->dealer_type == 1 || $dealer->dealer_type == 0) || $user->dealer_id == $dealer->dealer_id):?>
                         <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
                         <?endif;?>
-                  <!--   <// } ?> -->
                         <div id="modal_window_container_<?= $item->id; ?>" class="modal_window_container" style="z-index: 10000; background-color: rgba(0,0,0,0.5);">
                             <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
                             </button>
@@ -97,7 +95,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                         </div>
                     <?php if ($item->project_status == 12) { ?>
                          <i class='fa fa-check' aria-hidden='true'></i> Выполнено
-                    <? } ?>
+                    <?php } ?>
                     </td>
                     <td class="center one-touch">
                         <input id="<?= $item->id; ?>_id" value="<?php echo $item->id; ?>"  hidden>
@@ -138,12 +136,12 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
                                     <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($temp <= 0)?0:round($temp, 2); ?>"  hidden>
                                     <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($temp_material_sum <= 0)?0:round($temp_material_sum,2); ?>"  hidden>
                                 
-                                <? }
+                                <?php }
                                 if($item->check_mount_done == 1) { ?>
                                     <input id="<?= $item->id; ?>_project_sum" value="<?php echo ($item->new_project_sum)?$item->new_project_sum:$item->project_sum; ?>"  hidden>
                                     <input id="<?= $item->id; ?>_mounting_sum" value="<?php echo ($item->new_mount_sum)?$item->new_mount_sum:($mounting_sum + $sum_transport); ?>"  hidden>
                                     <input id="<?= $item->id; ?>_material_sum" value="<?php echo ($item->new_material_sum)?$item->new_material_sum:$material_sum; ?>"  hidden>
-                                <?}
+                                <?php }
 
                             ?>
                             <input id="<?= $item->id; ?>_cost_price" value="<?php echo $cost_price; ?>"  hidden>
@@ -193,11 +191,11 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             <?php endforeach; ?>
             </tbody>
         </table>
-    <? else: ?>
+    <?php else: ?>
         <p class="center">
         <h3>У вас еще нет завершенных проектов!</h3>
         </p>
-    <? endif; ?>
+    <?php endif; ?>
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="boxchecked" value="0"/>
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>

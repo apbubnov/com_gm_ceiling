@@ -186,7 +186,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                     </tr>
                     <tr class="section_ceilings">
                         <?php if ($calculation->discount != 0) { ?>
-                            <td>Цена / -<? echo $calculation->discount ?>% :</td>
+                            <td>Цена / -<?php echo $calculation->discount ?>% :</td>
                             <td id="calculation_total"> <?php echo round($calculation_total - $sum_transport, 0); ?>
                                 руб. /
                             </td>
@@ -215,23 +215,23 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                 </tr>
                 <?if($tmp != 0):?>
                 <tr>
-                    <? if ($tmp == 1 && $sum_transport_discount_total != 0) { ?>
+                    <?php if ($tmp == 1 && $sum_transport_discount_total != 0) { ?>
                         <th> Транспорт / - %</th>
                         <td> <?= $sum_transport_total; ?> руб. / <?= $sum_transport_discount_total; ?> руб.</td>
                         <td></td>
-                    <? } elseif ($tmp == 1 && $sum_transport_discount_total == 0) { ?>
+                    <?php } elseif ($tmp == 1 && $sum_transport_discount_total == 0) { ?>
                         <th> Транспорт</th>
                         <td> <?= $sum_transport_total; ?> руб.</td>
                         <td></td>
-                    <? } elseif ($tmp == 2 && $sum_transport_discount_total != 0) { ?>
+                    <?php } elseif ($tmp == 2 && $sum_transport_discount_total != 0) { ?>
                         <th> Выезд за город / - %</th>
                         <td> <?= $sum_transport_total; ?> руб. / <?= $sum_transport_discount_total; ?> руб.</td>
                         <td></td>
-                    <? } elseif ($tmp == 2 && $sum_transport_discount_total == 0) { ?>
+                    <?php } elseif ($tmp == 2 && $sum_transport_discount_total == 0) { ?>
                         <th> Выезд за город</th>
                         <td> <?= $sum_transport_total; ?> руб.</td>
                         <td></td>
-                    <? } ?>
+                    <?php } ?>
                 </tr>
                 <?endif;?>
                 <tr>
@@ -248,7 +248,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                             $project_total_discount = 3500;
                             echo round($project_total_discount, 0); ?> руб.</th>
                             </span> <span class="dop" style="font-size: 9px;"> * минимальная сумма заказа 3500р. </span>
-                        <? } else echo round($project_total_discount, 0); ?> руб.</th>
+                        <?php } else echo round($project_total_discount, 0); ?> руб.</th>
 
                     <?php }
                     else { ?>
@@ -267,8 +267,8 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                         } ?>
                     </span>
                         <span class="dop" style="font-size: 9px;">
-                <? if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
-                    * минимальная сумма заказа 3500р.<? } ?>
+                <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
+                    * минимальная сумма заказа 3500р.<?php } ?>
                       </span>
                     </th>
                 </tr>
@@ -358,7 +358,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
             <?php $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg"; ?>
             <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
             <h3><?php echo $calculation->calculation_title; ?></h3>
-            <? if (!empty($filename)): ?>
+            <?php if (!empty($filename)): ?>
                 <div class="sketch_image_block">
                     <h3 class="section_header">
                         Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
@@ -367,10 +367,10 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                         <img class="sketch_image" src="<?php echo $filename . '?t=' . time(); ?>" style="width:80vw;"/>
                     </div>
                 </div>
-            <? endif; ?>
+            <?php endif; ?>
             <div class="row-fluid">
                 <div class="span6">
-                    <? if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
+                    <?php if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
                         <h4>Материал</h4>
                         <div>
                             Тип потолка: <?php echo $calculation->n1; ?>
@@ -401,7 +401,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                             <div>
                                 <h4> Вставка</h4>
                             </div>
-                            <? if ($calculation->n6 == 314) { ?>
+                            <?php if ($calculation->n6 == 314) { ?>
                                 <div> Белая</div>
                             <?php } else { ?>
                                 <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
@@ -412,7 +412,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                                                                                      alt=""/>
                                 </div>
                             <?php } ?>
-                        <? } endif; ?>
+                        <?php } endif; ?>
                     <?php if ($calculation->n16) { ?>
                         <div>
                             Скрытый карниз: <?php echo $calculation->n16; ?>
@@ -449,8 +449,8 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                     } ?>
                     <?php if ($calculation->n27 > 0) { ?>
                         <h4>Шторный карниз</h4>
-                        <? if ($calculation->n16) echo "Скрытый карниз"; ?>
-                        <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                        <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
+                        <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
                         <?php echo $calculation->n27; ?> м.
                     <?php } ?>
 
@@ -554,11 +554,11 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                             Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                         </div>
                     <?php } ?>
-                    <? $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
+                    <?php $extra_mounting = (array)json_decode($calculation->extra_mounting); ?>
                     <?php if (!empty($extra_mounting)) { ?>
                         <div>
                             <h4>Дополнительные работы</h4>
-                            <? foreach ($extra_mounting as $dop) {
+                            <?php foreach ($extra_mounting as $dop) {
                                 echo "<b>Название:</b> " . $dop->title . "<br>";
                             } ?>
                         </div>
@@ -590,7 +590,7 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
 
 
 
-            var id = "<? echo $sb_project_id; ?>";
+            var id = "<?php echo $sb_project_id; ?>";
             orderId = id != 0 ? id : "";
             jQuery.ajax({
                 type: 'POST',
@@ -674,16 +674,16 @@ $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
                 jQuery("#mounting_date_control").hide();
             });
             jQuery("#btn_pay").click(function () {
-                var id = "<? echo $sb_project_id ?>";
-                var number = <? echo $project_id ?>;
+                var id = "<?php echo $sb_project_id ?>";
+                var number = <?php echo $project_id ?>;
                 jQuery.ajax({
                     type: 'POST',
                     url: "index.php?option=com_gm_ceiling&task=get_paymanet_form&",
                     data: {
-                        amount: <? echo $project_total_discount * 100 ?>,
+                        amount: <?php echo $project_total_discount * 100 ?>,
                         orderNumber: number.toString() + Date.now(),
-                        description: "Количество потолков: "+<? echo sizeof($calculations) ?>+
-                        " на сумму " +<? echo $project_total_discount ?>,
+                        description: "Количество потолков: "+<?php echo sizeof($calculations) ?>+
+                        " на сумму " +<?php echo $project_total_discount ?>,
                         id: number
                     },
                     dataType: "json",

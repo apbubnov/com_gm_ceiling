@@ -227,7 +227,7 @@
                                         <tr>
                                             <th>Дата рождения</th>
                                             <td>
-                                                <input name="new_birthday" id="jform_birthday" class="inputactive" value="<? if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date">
+                                                <input name="new_birthday" id="jform_birthday" class="inputactive" value="<?php if ($birthday->birthday != 0000-00-00)  echo $birthday->birthday ;?>" placeholder="Дата рождения" type="date">
                                             </td>
                                             <td>
                                                 <button type="button" class = "btn btn-primary" id = "add_birthday">Ок</button>
@@ -490,7 +490,7 @@
                     </tr>
                     <tr class="section_ceilings">
                         <?php if ($calculation->discount != 0) { ?>
-                            <td>Цена / -<? echo $calculation->discount ?>% :</td>
+                            <td>Цена / -<?php echo $calculation->discount ?>% :</td>
                             <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб. /</td>
                             <td id="calculation_total_discount"> <?php echo round($calculation_total_discount, 0); ?>
                                 руб.
@@ -519,7 +519,7 @@
                 </tr>
                 <tr>
                     <td style="width: 45%;">
-                        <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
+                        <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?php if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
                         <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
                             <div class="col-sm-4">
                                 <div class="form-group">
@@ -538,7 +538,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p><input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?if( $this->item->transport == 2) echo "checked"?>><label for = "distanceId">Выезд за город</label></p>
+                        <p><input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?php if( $this->item->transport == 2) echo "checked"?>><label for = "distanceId">Выезд за город</label></p>
                         <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist" >
                             <div class="col-sm-4">
                                 <div class="form-group">
@@ -563,7 +563,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
+                        <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?php if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
                     </td>
                     <th></th>
                     <th></th>
@@ -595,11 +595,11 @@
                                         $project_total_discount = 2500;
                                     } elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) {
                                         $project_total_discount = 2500;
-                                        echo round($project_total_discount, 0);  ?> руб.</th> <?
+                                        echo round($project_total_discount, 0);  ?> руб.</th> <?php
                                     } elseif ($project_total_discount < 3500 && $project_total_discount > 0) {
                                         $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
                                     </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
-                                <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
+                                <?php } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
                     <?php } else { ?>
                         <th>Итого</th>
                         <th id="project_total">
@@ -619,10 +619,10 @@
                     <?php } ?>
                     </span>
                     <span class="dop" style="font-size: 9px;">
-                    <? if ($project_total <= 2500 && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
+                    <?php if ($project_total <= 2500 && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
                             * минимальная сумма заказа 2500р.
-                        <? elseif ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
-                            * минимальная сумма заказа 3500р.<?endif;?>
+                        <?php elseif ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
+                            * минимальная сумма заказа 3500р.<?php endif;?>
                         </span>
                     </th>
                 </tr>
@@ -633,7 +633,7 @@
                         <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
                         <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
                     </tr>
-                <? } ?>
+                <?php } ?>
                 <tr>
                     <th class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                 </tr>
@@ -663,9 +663,9 @@
                             <div class="email-all" style="float: left;">
                                 <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
                                 <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
+                                    <?php foreach ($contact_email AS $em) {?>
                                         <option value="<?=$em->contact;?>">
-                                    <?}?>
+                                    <?php }?>
                                 </datalist>
                             </div>
                             <div class="file_data">
@@ -738,7 +738,7 @@
                             </td>
                         </tr>
                     <?php } ?>
-                <? } ?>
+                <?php } ?>
                 <!-------------------------------- Общая смета для клиента ------------------------------------------>
                 <tr>
                     <td><b>Отправить общую смету <b></td>
@@ -754,15 +754,15 @@
                     </td>
                     <td></td>
                 </tr>
-                <? if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                     <tr>
                         <td>
                             <div class="email-all" style="float: left;">
                                 <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
                                 <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
+                                    <?php foreach ($contact_email AS $em) {?>
                                         <option value="<?=$em->contact;?>">
-                                    <?}?>
+                                    <?php }?>
                                 </datalist>
                             </div>
                             <div class="file_data">
@@ -808,7 +808,7 @@
                         <td></td>
                         <td></td>
                     </tr>
-                <? }?>
+                <?php }?>
             </table>
             <?php if ($user->dealer_type == 2) { ?>
                 <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить формирование заказа</button>
@@ -854,7 +854,7 @@
             <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                 <h3><?php echo $calculation->calculation_title; ?></h3>
                 <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=gmcalculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить расчет</a>
-                <? if (!empty($filename)):?>
+                <?php if (!empty($filename)):?>
                     <div class="sketch_image_block">
                         <h3 class="section_header">
                             Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
@@ -863,10 +863,10 @@
                             <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
                         </div>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
                 <div class="row-fluid">
                     <div class="span6">
-                        <?if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                        <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
                         <h4>Материал</h4>
                         <div>
                             Тип потолка: <?php echo $calculation->n1; ?>
@@ -895,7 +895,7 @@
                             <div>
                                 <h4> Вставка</h4>
                             </div>
-                            <? if ($calculation->n6 == 314) { ?>
+                            <?php if ($calculation->n6 == 314) { ?>
                                 <div> Белая </div>
                             <?php } else  {?>
                                 <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
@@ -904,7 +904,7 @@
                                     Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>" alt=""/>
                                 </div>
                             <?php }?>
-                        <?} endif; ?>
+                        <?php } endif; ?>
                         <?php if ($calculation->n16) { ?>
                             <div>
                                 Скрытый карниз: <?php echo $calculation->n16; ?>
@@ -937,8 +937,8 @@
                         } ?>
                         <?php if ($calculation->n27> 0) { ?>
                             <h4>Шторный карниз</h4>
-                            <? if ($calculation->n16) echo "Скрытый карниз"; ?>
-                            <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                            <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
+                            <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
                             <?php echo $calculation->n27; ?> м.
                         <?php } ?>
                         <?php if ($calculation->n26) { ?>
@@ -1035,11 +1035,11 @@
                                 Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                             </div>
                         <?php } ?>
-                        <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
+                        <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
                         <?php if (!empty($extra_mounting) ) { ?>
                             <div>
                             <h4>Дополнительные работы</h4>
-                                <? foreach($extra_mounting as $dop) {
+                                <?php foreach($extra_mounting as $dop) {
                                     echo "<b>Название:</b> " . $dop->title .  "<br>";
                                 }?>
                             </div>

@@ -219,7 +219,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             ?>
 
             <tr data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=dealer&id=' . (int)$item->id); ?>"
-                class="stat<? echo $item->id?> status<?php echo $item->project_status;?>  <?php echo $status_class;?>" >
+                class="stat<?php echo $item->id?> status<?php echo $item->project_status;?>  <?php echo $status_class;?>" >
                 <td class="center check<?php if ($item->project_check) {
                     echo " checked";
                 } ?>" data-type="0" data-project_id="<?php echo $item->id; ?>">
@@ -230,7 +230,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                 </td>
                 <!-- Статус-->
                 <td class="center">
-                <? $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
+                <?php $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
                     $status = $projects_model->getStatus();?>
                     <select class="change_status" name="change_status" data-id="<?php echo $item->id; ?>">
                         <?php foreach ($status as $i) { ?>
@@ -275,7 +275,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             <div class="center"><?php echo $item->gm_calculator_note; ?></div>
                         <?php } else { ?>
                             <div class=""><?php echo $item->project_note; ?></div>
-                        <? }
+                        <?php }
                     } else {
                         if ($item->dealer_chief_note) { ?>
                             <div class="center"><?php echo $item->dealer_chief_note; ?></div>
@@ -285,7 +285,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             <div class="center"><?php echo $item->dealer_calculator_note; ?></div>
                         <?php } else { ?>
                             <div class=""><?php echo $item->project_note; ?></div>
-                        <? }
+                        <?php }
                     } ?>
 
                 </td>

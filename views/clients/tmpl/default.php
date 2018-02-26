@@ -35,7 +35,7 @@ $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
 $status = $status_model->getData();
 ?>
 
-<?=parent::getButtonBack();?>
+<?php parent::getButtonBack();?>
 
 <h2 class = "center">Клиенты</h2>
 
@@ -56,7 +56,7 @@ $status = $status_model->getData();
             <?php foreach($status as $item): ?>
             <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
                 <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
-            <? } ?>
+            <?php } ?>
             <?php endforeach;?>
         </select>
 	</div>
