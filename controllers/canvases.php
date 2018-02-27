@@ -164,6 +164,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
 
                 if (!empty($dealerId)) {
                     $dealer = JFactory::getUser($dealerId);
+                    $dealer->getCanvasesPrice();
                 }
             }
 
@@ -223,8 +224,8 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 $oldPrice = $model->getPrice($get);
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
-                    $OldDealerPrice = $dealer->getCanvasesPrice()[$v->id];
-                    $OldDealerPrice = self::dealer_margin($oldPrice, 0, $OldDealerPrice->value, $OldDealerPrice->type);
+                    $OldDealerPrice = $dealer->CanvasesPrice[$v->id];
+                    $OldDealerPrice = (empty($OldDealerPrice))?0:self::dealer_margin($oldPrice, 0, $OldDealerPrice->value, $OldDealerPrice->type);
                     if ($type == 0) $OldDealerPrice = $v->price;
                     $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_canvases_margin, $number, $type);
