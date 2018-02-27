@@ -96,7 +96,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     <td>
                             <?php echo JFactory::getUser($value->manager_id)->name; ?>
                     </td>
-                    
 		        </tr>
         	<?php
         		}

@@ -43,9 +43,41 @@
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
-    <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
-    <button class="btn btn-primary" type="button" id="but_login">Предоставить доступ</button>
-    <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
+    <table>
+        <tr>
+            <td>
+                <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
+            </td>
+            <td>
+                <button class="btn btn-primary btn-done" user_id="<?=  $this->item->dealer_id; ?>" type="button"> Внести сумму </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button class="btn btn-primary" type="button" id="but_login">Предоставить доступ</button>
+            </td>
+            <td>
+            <select class="SelectPrice" autocomplete="off">
+                <option disabled selected>Прайс:</option>
+                <option value="/index.php?option=com_gm_ceiling&view=components&dealer=<?= $this->item->dealer_id?>">Компонентов</option>
+                <option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=<?=$this->item->dealer_id?>">Полотен</option>
+            </select>
+            </td>
+            <tr>
+                <td>
+                    <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
+                </td>
+                <td>
+                    Здесь будет отключение рассылки
+                </td>
+            </tr>
+        </tr>
+    </table>
+   
+    
+    
+   
+   
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
 
