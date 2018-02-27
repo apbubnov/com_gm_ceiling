@@ -47,18 +47,18 @@
 </div>
 <table class = "actions">
     <tr>
-        <td style="text-align:left;">
+        <td class = "td-left">
             <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
         </td>
-        <td style="text-align:right;">
+        <td class = "td-right">
             <button class="btn btn-primary btn-done" user_id="<?=  $this->item->dealer_id; ?>" type="button"> Внести сумму </button>
         </td>
     </tr>
     <tr>
-        <td style="text-align:left;">
+        <td class = "td-left">
             <button class="btn btn-primary" type="button" id="but_login">Предоставить доступ</button>
         </td>
-        <td style="text-align:right;">
+        <td class = "td-right">
         <select class="SelectPrice" autocomplete="off">
             <option disabled selected>Прайс:</option>
             <option value="/index.php?option=com_gm_ceiling&view=components&dealer=<?= $this->item->dealer_id?>">Компонентов</option>
@@ -66,10 +66,10 @@
         </select>
         </td>
         <tr>
-            <td style="text-align:left;">
+            <td class = "td-left">
                 <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
             </td>
-            <td style="text-align:right;">
+            <td class = "td-right">
                 Здесь будет отключение рассылки
             </td>
         </tr>
