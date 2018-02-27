@@ -110,6 +110,7 @@ function dealer_margin($price, $margin, $value, $type) {
                 <td>Изменить</td>
                 <?elseif ($managerGM):?>
                 <td><?=JHtml::_( 'grid.sort', 'Цена', 'option_price', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_( 'grid.sort', 'Изменение', 'option_price', $listDirn, $listOrder);?></td>
                 <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
                 <td>Изменить</td>
                 <?else:?>
@@ -136,6 +137,7 @@ function dealer_margin($price, $margin, $value, $type) {
                     <td></td>
                     <td></td>
                 <?elseif ($managerGM):?>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -172,7 +174,14 @@ function dealer_margin($price, $margin, $value, $type) {
                             </form>
                         </td>
                     <?elseif ($managerGM):?>
+                        <?
+                        $type = $dealer->ComponentsPrice[$key_c]->type;
+                        $value = $dealer->ComponentsPrice[$key_c]->value;
+                        ?>
                         <td id="GMPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
+                        <td id="UpdateDealerPrice">
+                            <?=(($type != 1 && $value >= 0)?"+":"").$value.(($type == 3)?"%":"");?>
+                        </td>
                         <td id="DealerPrice"><?=dealer_margin($option->price, $dealer->gm_components_margin,
                                 $dealer->ComponentsPrice[$key_o]->value, $dealer->ComponentsPrice[$key_o]->type);?></td>
                         <td>

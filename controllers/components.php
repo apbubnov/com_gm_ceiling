@@ -151,16 +151,24 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $oldPrice = $model->getPrice($id);
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
-                    $DealerPrice = self::dealer_margin($oldPrice[$k]->price, $userDealer->gm_components_margin, $number, $type);
+                    $OldDealerPrice = $dealer->getComponentsPrice()[$v->id];
+                    $OldDealerPrice = self::dealer_margin($oldPrice, 0, $OldDealerPrice->value, $OldDealerPrice->type);
+                    $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
+                    $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_components_margin, $number, $type);
                     $PPrice = $model->MinPriceOption($v->id);
+                    $CanvasPrice = self::margin($oldPrice[$k]->price, $userDealer->gm_components_margin);
+                    $UpdateDelaerPrice = $DealerPrice - $CanvasPrice;
 
-                    if (floatval($DealerPrice) < floatval($PPrice)) $flag++;
+                    if (floatval($NewDealerPrice) < floatval($PPrice)) $flag++;
                     else {
-                        $dealer->setComponentsPrice(["value" => $DealerPrice, "type" => 1], $v->id);
+                        $dealer->setComponentsPrice(["value" => $NewDealerPrice, "type" => 1], $v->id);
 
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #GMPrice",
-                            "value" => self::margin($oldPrice[$k]->price, $userDealer->gm_components_margin)];
+                            "value" => $CanvasPrice];
+                        $answer->elements[] = (object) [
+                            "name" => ".Level2[data-option='$v->id'] #UpdateDealerPrice",
+                            "value" => (($UpdateDelaerPrice >= 0)?"+":"").$UpdateDelaerPrice];
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #DealerPrice",
                             "value" => $DealerPrice];
