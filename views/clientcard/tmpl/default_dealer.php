@@ -45,7 +45,7 @@
     <?php } ?>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
-<table width = 100%>
+<table class = "actions">
     <tr>
         <td style="text-align:left;">
             <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
