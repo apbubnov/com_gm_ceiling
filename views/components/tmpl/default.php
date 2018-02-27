@@ -182,8 +182,9 @@ function dealer_margin($price, $margin, $value, $type) {
                         $UpdatePrice = $DealerPrice - $Price;
                         ?>
                         <td id="GMPrice"><?= $Price; ?></td>
-                        <td id="UpdateDealerPrice"><?= $UpdatePrice; ?></td>
+                        <td id="UpdateDealerPrice"><?= (($UpdatePrice >= 0)?"+":"").$UpdatePrice; ?></td>
                         <td id="DealerPrice"><?= $DealerPrice; ?></td>
+                        <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
                                 <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
