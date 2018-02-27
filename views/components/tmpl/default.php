@@ -177,8 +177,8 @@ function dealer_margin($price, $margin, $value, $type) {
                         </td>
                     <?elseif ($managerGM):?>
                         <?
-                        $type = $dealer->ComponentsPrice[$key_c]->type;
-                        $value = $dealer->ComponentsPrice[$key_c]->value;
+                        $type = $dealer->ComponentsPrice[$key_o]->type;
+                        $value = $dealer->ComponentsPrice[$key_o]->value;
                         $Price = margin($option->price, $dealer->gm_components_margin);
                         $DealerPrice = dealer_margin($Price, 0, $value, $type);
                         $UpdatePrice = $DealerPrice - $Price;
