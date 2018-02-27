@@ -35,8 +35,28 @@
     }
     $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
     $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
+    $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
+    $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
+<div class="modal_window_container" id="mv_container">
+    <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div class="modal_window" id="modal_window_select_number">
+        <select id="select_phones"><option value='0' disabled selected>Выберите номер</option>
+            <?php foreach($client_phones as $item): ?>
+                <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+    <div class="modal_window" id="modal_window_sum">
+        <p><strong id="dealer_name"></strong></p>
+        <p id="dealer_invoice"></p>
+        <p>Сумма взноса:</p>
+        <p><input type="text" id="pay_sum"></p>
+        <input type="hidden" id="hidden_user_id">
+        <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
+    </div>
+</div>
 <div id="FIO-container-tar">
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
@@ -46,18 +66,13 @@
     <?php } ?>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
-<select id="select_phones" style="display:none;"><option value='0' disabled selected>Выберите номер</option>
-        <?php foreach($client_phones as $item): ?>
-            <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
-        <?php endforeach;?>
-    </select>
 <table class = "actions">
     <tr>
         <td class = "td-left">
             <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
         </td>
         <td class = "td-right">
-            <button class="btn btn-primary btn-done" user_id="<?=  $this->item->dealer_id; ?>" type="button"> Внести сумму </button>
+            <button class="btn btn-primary btn-done" id ="add_pay" type="button"> Внести сумму </button>
         </td>
     </tr>
     <tr>
@@ -92,8 +107,6 @@
             </tr>
         </table>  
 </div>
-<? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
-        $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
 <div>
 <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта дилера: </p>
 </div>
@@ -575,9 +588,50 @@
 
     jQuery("#but_call").click(function ()
     {
-        document.getElementById('select_phones').style.display = 'block';
+        jQuery("#close").show();
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_select_number").show("slow");
     });
-
+    jQuery("#add_pay").click(function(){
+        jQuery("#close").show();
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_sum").show("slow");
+    });
+    jQuery("#save_pay").click(function(){
+        var user_id = <?php echo $this->item->dealer_id;?>;
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
+            data: {
+                id: user_id,
+                sum: document.getElementById('pay_sum').value
+            },
+            success: function(data){
+                var n = noty({
+                    timeout: 5000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Сумма успешно добавлена"
+                });
+                setInterval(function() { location.reload();}, 1500);
+            },
+            dataType: "text",
+            async: false,
+            timeout: 10000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка. Сервер не отвечает"
+                });
+            }
+        });
+    });
     jQuery("#select_phones").change(function ()
     {
         var id_client = <?php echo $this->item->id; ?>;
