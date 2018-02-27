@@ -1125,7 +1125,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$email = $jinput->get('email', null, 'STRING');
 			$calculations_model = self::getModel('calculations');
 			$calculations = $calculations_model->getProjectItems($project_id);
-
+			$array = [];
 			foreach($calculations as $calc){
 				Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc->id);
 				$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "managernone") . ".pdf";
