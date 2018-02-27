@@ -267,7 +267,7 @@
         if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) 
             && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 
-            && div4.has(e.target).length === 0 div5.has(e.target).length === 0 div6.has(e.target).length === 0) {
+            && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
