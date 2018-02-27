@@ -195,7 +195,7 @@ function dealer_margin($price, $margin, $value, $type)
                     <? endif; ?>
                 </tr>
                 <? foreach ($canvasTC->canvases as $key_N => $canvaseN): ?>
-                    <tr class="TBody Level2 Action" style="display: none;" data-canvas="<?= $key_TC."/".$key_N; ?>" data-level="2">
+                    <tr class="TBody Level2 Action" style="display: none;" data-canvas="<?= $key_N; ?>" data-level="2">
                         <td><i class="fa fa-caret-down" aria-hidden="true"></i></td>
                         <td></td>
                         <td title="Страна - Название"><?= $canvaseN->country . " - " . $canvaseN->name; ?></td>
@@ -211,7 +211,7 @@ function dealer_margin($price, $margin, $value, $type)
                             <td></td>
                             <td></td>
                             <td>
-                                <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_N; ?>">
+                                <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC."/".$key_N; ?>">
                                     <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                           aria-hidden="true"></i></label>
                                     <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
@@ -228,7 +228,7 @@ function dealer_margin($price, $margin, $value, $type)
                             <td></td>
                             <td></td>
                             <td>
-                                <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_N; ?>">
+                                <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC."/".$key_N; ?>">
                                     <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                           aria-hidden="true"></i></label>
                                     <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
