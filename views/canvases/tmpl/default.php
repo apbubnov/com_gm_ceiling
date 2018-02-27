@@ -195,7 +195,7 @@ function dealer_margin($price, $margin, $value, $type)
                     <? endif; ?>
                 </tr>
                 <? foreach ($canvasTC->canvases as $key_N => $canvaseN): ?>
-                    <tr class="TBody Level2 Action" style="display: none;" data-canvas="<?= $key_N; ?>" data-level="2">
+                    <tr class="TBody Level2 Action" style="display: none;" data-canvas="<?= $key_TC."/".$key_N; ?>" data-level="2">
                         <td><i class="fa fa-caret-down" aria-hidden="true"></i></td>
                         <td></td>
                         <td title="Страна - Название"><?= $canvaseN->country . " - " . $canvaseN->name; ?></td>

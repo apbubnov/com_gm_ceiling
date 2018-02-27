@@ -194,8 +194,9 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 case 2:
                     $object = preg_split("/\//", $id);
                     $get->where = [];
-                    $get->where[] = "canvas.country = '$object[0]'";
-                    $get->where[] = "canvas.name = '$object[1]'";
+                    $get->where[] = "texture.id = '$object[0]'";
+                    $get->where[] = "canvas.country = '$object[1]'";
+                    $get->where[] = "canvas.name = '$object[2]'";
                     break;
                 case 3:
                     $get = $id;
@@ -225,7 +226,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->CanvasesPrice[$v->id];
-                    $OldDealerPrice = (empty($OldDealerPrice))?0:self::dealer_margin($oldPrice, 0, $OldDealerPrice->value, $OldDealerPrice->type);
+                    $OldDealerPrice = (empty($OldDealerPrice))?0:self::dealer_margin($v->price, 0, $OldDealerPrice->value, $OldDealerPrice->type);
                     if ($type == 0) $OldDealerPrice = $v->price;
                     $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_canvases_margin, $number, $type);
