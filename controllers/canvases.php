@@ -164,6 +164,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
 
                 if (!empty($dealerId)) {
                     $dealer = JFactory::getUser($dealerId);
+                    $dealer->getCanvasesPrice();
                 }
             }
 
@@ -176,6 +177,8 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
             $e = str_replace(["+", "-"], "", $p);
             $type = (strlen($e) != strlen($p))?((strlen($p) != strlen($price))?3:2):1;
             $number = floatval($p);
+
+            if ($price == "*") $type = 0;
 
             $answer = (object) [];
             $answer->status = "success";
@@ -191,8 +194,9 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 case 2:
                     $object = preg_split("/\//", $id);
                     $get->where = [];
-                    $get->where[] = "canvas.country = '$object[0]'";
-                    $get->where[] = "canvas.name = '$object[1]'";
+                    $get->where[] = "texture.id = '$object[0]'";
+                    $get->where[] = "canvas.country = '$object[1]'";
+                    $get->where[] = "canvas.name = '$object[2]'";
                     break;
                 case 3:
                     $get = $id;
@@ -207,17 +211,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 $newPrice = $oldPrice;
                 foreach ($oldPrice as $k => $v)
                 {
-                    switch ($type) {
-                        case 3:
-                            $newPrice[$k]->price = $v->price + $v->price * ($number / 100);
-                            break;
-                        case 2:
-                            $newPrice[$k]->price = $v->price + $number;
-                            break;
-                        case 1:
-                            $newPrice[$k]->price = $number;
-                            break;
-                    }
+                    $newPrice[$k]->price = $this->dealer_margin($v->price, 0, $number, $type);
                     $answer->elements[] = (object) [
                         "name" => ".Level3[data-canvas='$v->id'] #GMPrice",
                         "value" => self::margin($newPrice[$k]->price, $userDealer->gm_canvases_margin)];
@@ -231,8 +225,9 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 $oldPrice = $model->getPrice($get);
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
-                    $OldDealerPrice = $dealer->getCanvasesPrice()[$v->id];
-                    $OldDealerPrice = self::dealer_margin($oldPrice, 0, $OldDealerPrice->value, $OldDealerPrice->type);
+                    $OldDealerPrice = $dealer->CanvasesPrice[$v->id];
+                    $OldDealerPrice = (empty($OldDealerPrice))?0:self::dealer_margin($v->price, 0, $OldDealerPrice->value, $OldDealerPrice->type);
+                    if ($type == 0) $OldDealerPrice = $v->price;
                     $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_canvases_margin, $number, $type);
                     $PPrice = $model->MinPriceCanvas($v->id);
@@ -282,6 +277,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
         $result = 0;
         switch ($type)
         {
+            case 0: $result = $price; break;
             case 1: $result = $value; break;
             case 2: $result = $price + $value; break;
             case 3: $result = $price + $price * floatval($value) / 100; break;

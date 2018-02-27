@@ -75,8 +75,9 @@ function dealer_margin($price, $margin, $value, $type) {
         <?if ($managerGM):?>
         <form class="FormSimple UpdatePrice MarginLeft">
             <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-            <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price" placeholder="0"
-                   title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+            <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
+                   placeholder="0"
+                   title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                    size="5" required>
             <button type="submit" class="buttonOK">
                 <i class="fa fa-paper-plane" aria-hidden="true"></i>
@@ -165,8 +166,9 @@ function dealer_margin($price, $margin, $value, $type) {
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price" placeholder="0"
-                                       title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
+                                       placeholder="0"
+                                       title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                                        size="5" required>
                                 <button type="submit" class="buttonOK">
                                     <i class="fa fa-paper-plane" aria-hidden="true"></i>
@@ -175,8 +177,8 @@ function dealer_margin($price, $margin, $value, $type) {
                         </td>
                     <?elseif ($managerGM):?>
                         <?
-                        $type = $dealer->ComponentsPrice[$key_c]->type;
-                        $value = $dealer->ComponentsPrice[$key_c]->value;
+                        $type = $dealer->ComponentsPrice[$key_o]->type;
+                        $value = $dealer->ComponentsPrice[$key_o]->value;
                         $Price = margin($option->price, $dealer->gm_components_margin);
                         $DealerPrice = dealer_margin($Price, 0, $value, $type);
                         $UpdatePrice = $DealerPrice - $Price;
@@ -187,8 +189,9 @@ function dealer_margin($price, $margin, $value, $type) {
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price" placeholder="0"
-                                       title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
+                                       placeholder="0"
+                                       title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                                        size="5" required>
                                 <button type="submit" class="buttonOK">
                                     <i class="fa fa-paper-plane" aria-hidden="true"></i>
