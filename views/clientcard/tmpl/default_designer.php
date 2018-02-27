@@ -263,7 +263,7 @@
         var div3 = jQuery("#modal_window_comm");
         var div4 = jQuery("#modal_window_call");
         var div5 = jQuery("#call");
-        var div6 = jQuery("#modal_window_select_number";)
+        var div6 = jQuery("#modal_window_select_number");
         if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) 
             && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 

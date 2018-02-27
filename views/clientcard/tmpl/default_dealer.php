@@ -69,14 +69,13 @@
         </select>
         </td>
     </tr>
-        <tr>
-            <td class = "td-left">
-                <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
-            </td>
-            <td class = "td-right">
-                Здесь будет отключение рассылки
-            </td>
-        </tr>
+    <tr>
+        <td class = "td-left">
+            <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
+        </td>
+        <td class = "td-right">
+            Здесь будет отключение рассылки
+        </td>
     </tr>
 </table>
 <div>
