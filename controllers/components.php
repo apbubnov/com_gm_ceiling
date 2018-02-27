@@ -118,6 +118,8 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             $type = (strlen($e) != strlen($p))?((strlen($p) != strlen($price))?3:2):1;
             $number = floatval($p);
 
+            if ($price == "*") $type = 0;
+
             $answer = (object) [];
             $answer->status = "success";
             $answer->message = "Обновление произошло успешно!";
@@ -128,17 +130,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $newPrice = $oldPrice;
                 foreach ($oldPrice as $k => $v)
                 {
-                    switch ($type) {
-                        case 3:
-                            $newPrice[$k]->price = $v->price + $v->price * ($number / 100);
-                            break;
-                        case 2:
-                            $newPrice[$k]->price = $v->price + $number;
-                            break;
-                        case 1:
-                            $newPrice[$k]->price = $number;
-                            break;
-                    }
+                    $newPrice[$k]->price = $this->dealer_margin($v->price, 0, $number, $type);
                     $answer->elements[] = (object) [
                         "name" => ".Level2[data-option='$v->id'] #GMPrice",
                         "value" => self::margin($newPrice[$k]->price, $userDealer->gm_components_margin)];
@@ -199,6 +191,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
         $result = 0;
         switch ($type)
         {
+            case 0: $result = $price; break;
             case 1: $result = $value; break;
             case 2: $result = $price + $value; break;
             case 3: $result = $price + $price * floatval($value) / 100; break;
