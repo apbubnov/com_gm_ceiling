@@ -94,8 +94,9 @@ function dealer_margin($price, $margin, $value, $type)
             <form class="FormSimple UpdatePrice MarginLeft" data-type="ALL">
                 <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o"
                                                                           aria-hidden="true"></i></label>
-                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price" placeholder="0"
-                       title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
+                       placeholder="0"
+                       title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                        size="5" required>
                 <button type="submit" class="buttonOK">
                     <i class="fa fa-paper-plane" aria-hidden="true"></i>
@@ -104,7 +105,8 @@ function dealer_margin($price, $margin, $value, $type)
         <? endif; ?>
     </div>
     <div class="Scroll">
-        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=canvases'.(!empty($dealer)?"&dealer=$dealer->id":"")); ?>" method="post"
+        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=canvases' . (!empty($dealer) ? "&dealer=$dealer->id" : "")); ?>"
+              method="post"
               name="adminForm" id="adminForm" hidden>
             <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
             <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
@@ -160,7 +162,8 @@ function dealer_margin($price, $margin, $value, $type)
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC; ?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                       aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price"
+                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+"
+                                       name="Price" id="Price"
                                        placeholder="0"
                                        title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
                                        size="5" required>
@@ -177,9 +180,9 @@ function dealer_margin($price, $margin, $value, $type)
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_TC; ?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                       aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price"
+                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
                                        placeholder="0"
-                                       title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
+                                       title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
                                        size="5" required>
                                 <button type="submit" class="buttonOK">
                                     <i class="fa fa-paper-plane" aria-hidden="true"></i>
@@ -191,7 +194,7 @@ function dealer_margin($price, $margin, $value, $type)
                         <td></td>
                     <? endif; ?>
                 </tr>
-            <?foreach ($canvasTC->canvases as $key_N => $canvaseN):?>
+                <? foreach ($canvasTC->canvases as $key_N => $canvaseN): ?>
                     <tr class="TBody Level2 Action" style="display: none;" data-canvas="<?= $key_N; ?>" data-level="2">
                         <td><i class="fa fa-caret-down" aria-hidden="true"></i></td>
                         <td></td>
@@ -211,7 +214,8 @@ function dealer_margin($price, $margin, $value, $type)
                                 <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_N; ?>">
                                     <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                           aria-hidden="true"></i></label>
-                                    <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price"
+                                    <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+"
+                                           name="Price" id="Price"
                                            placeholder="0"
                                            title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
                                            size="5" required>
@@ -228,7 +232,8 @@ function dealer_margin($price, $margin, $value, $type)
                                 <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_N; ?>">
                                     <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
                                                                                           aria-hidden="true"></i></label>
-                                    <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price"
+                                    <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+"
+                                           name="Price" id="Price"
                                            placeholder="0"
                                            title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
                                            size="5" required>
@@ -242,18 +247,19 @@ function dealer_margin($price, $margin, $value, $type)
                             <td></td>
                         <? endif; ?>
                     </tr>
-            <?foreach ($canvaseN->canvases as $key_c => $canvas): if ($stock || $canvas->count > 0): ?>
+                    <? foreach ($canvaseN->canvases as $key_c => $canvas): if ($stock || $canvas->count > 0): ?>
                         <tr class="TBody Level3 <?= ($stock && $canvas->count > 0) ? "Action" : "" ?>"
                             style="display: none;" data-canvas="<?= $key_c; ?>" data-level="3">
-                            <td><i class="fa <?= ($stock && $canvas->count > 0) ? "fa-caret-down" : "fa-caret-right"; ?>"
+                            <td>
+                                <i class="fa <?= ($stock && $canvas->count > 0) ? "fa-caret-down" : "fa-caret-right"; ?>"
                                    aria-hidden="true"></i></td>
-                            <td><?= $canvas->id;?></td>
-                            <td title="Ширина"><?= $canvas->width;?></td>
+                            <td><?= $canvas->id; ?></td>
+                            <td title="Ширина"><?= $canvas->width; ?></td>
                             <td class="Color" style="
                                     background-color: #<?= $canvas->color_hex; ?>;
                                     background-image: url('<?= $canvas->color_file; ?>');
                                     "><?= $canvas->color_title; ?></td>
-                            <td><?=$canvas->count;?> шт.</td>
+                            <td><?= $canvas->count; ?> шт.</td>
                             <? if ($stock): ?>
                                 <td><?= $canvas->ocount; ?> шт.</td>
                                 <td><?= $canvas->pprice; ?> руб./м<sup>2</sup></td>
@@ -267,9 +273,11 @@ function dealer_margin($price, $margin, $value, $type)
                                 <td id="DealerPrice"><?= double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin); ?></td>
                                 <td>
                                     <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
-                                        <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
-                                                                                              aria-hidden="true"></i></label>
-                                        <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price"
+                                        <label for="Price" title="Изменить дилерскую цену"><i
+                                                    class="fa fa-pencil-square-o"
+                                                    aria-hidden="true"></i></label>
+                                        <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+"
+                                               name="Price" id="Price"
                                                placeholder="0"
                                                title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
                                                size="5" required>
@@ -287,13 +295,15 @@ function dealer_margin($price, $margin, $value, $type)
                                 $UpdatePrice = $DealerPrice - $Price;
                                 ?>
                                 <td id="GMPrice"><?= $Price; ?></td>
-                                <td id="UpdateDealerPrice"><?= (($UpdatePrice >= 0)?"+":"").$UpdatePrice; ?></td>
+                                <td id="UpdateDealerPrice"><?= (($UpdatePrice >= 0) ? "+" : "") . $UpdatePrice; ?></td>
                                 <td id="DealerPrice"><?= $DealerPrice; ?></td>
                                 <td>
                                     <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
-                                        <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"
-                                                                                              aria-hidden="true"></i></label>
-                                        <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price"
+                                        <label for="Price" title="Изменить дилерскую цену"><i
+                                                    class="fa fa-pencil-square-o"
+                                                    aria-hidden="true"></i></label>
+                                        <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+"
+                                               name="Price" id="Price"
                                                placeholder="0"
                                                title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
                                                size="5" required>
@@ -307,24 +317,25 @@ function dealer_margin($price, $margin, $value, $type)
                                 <td><?= double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin); ?></td>
                             <? endif; ?>
                         </tr>
-                <? if ($stock && $canvas->count > 0) foreach ($canvas->rollers as $key_r => $roller): ?>
-                    <tr class="TBody Level4" style="display: none;" data-canvas="<?= $key_r; ?>"
-                        data-roller="<?= $key_r; ?>" data-level="4">
-                        <td><i class="fa fa-caret-right" aria-hidden="true"></i></td>
-                        <td><?= $roller->id; ?></td>
-                        <td title="Штриховой код / Артикль"><?= $roller->barcode; ?> / <?= $roller->article; ?></td>
-                        <td></td>
-                        <td><?= $roller->quad; ?> м<sup>2</sup></td>
-                        <td></td>
-                        <td><?= $roller->pprice; ?> руб./м<sup>2</sup></td>
-                        <td><?= $roller->stock_name; ?></td>
-                        <td>
-                            <a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?= $key_c; ?>&roller=<?= $key_r; ?>">Инфо</a>
-                        </td>
-                    </tr>
+                        <? if ($stock && $canvas->count > 0) foreach ($canvas->rollers as $key_r => $roller): ?>
+                            <tr class="TBody Level4" style="display: none;" data-canvas="<?= $key_r; ?>"
+                                data-roller="<?= $key_r; ?>" data-level="4">
+                                <td><i class="fa fa-caret-right" aria-hidden="true"></i></td>
+                                <td><?= $roller->id; ?></td>
+                                <td title="Штриховой код / Артикль"><?= $roller->barcode; ?>
+                                    / <?= $roller->article; ?></td>
+                                <td></td>
+                                <td><?= $roller->quad; ?> м<sup>2</sup></td>
+                                <td></td>
+                                <td><?= $roller->pprice; ?> руб./м<sup>2</sup></td>
+                                <td><?= $roller->stock_name; ?></td>
+                                <td>
+                                    <a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=canvas&id=<?= $key_c; ?>&roller=<?= $key_r; ?>">Инфо</a>
+                                </td>
+                            </tr>
+                        <? endforeach; ?>
+                    <? endif; endforeach; ?>
                 <? endforeach; ?>
-                <? endif; endforeach; ?>
-            <? endforeach; ?>
             <? endforeach; ?>
             </tbody>
             <tfoot>
@@ -493,7 +504,7 @@ function dealer_margin($price, $margin, $value, $type)
 
         values.id = this.dataset.id;
         values.dealer = Data.Dealer;
-        values.level = (TR)?TR.data("level"):0;
+        values.level = (TR) ? TR.data("level") : 0;
 
         jQuery.ajax({
             type: 'POST',
