@@ -46,11 +46,14 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                Дата регистрации
             </th>
             <th>
+                Менеджер
+            </th>
+           <!--  <th>
                 Взнос
             </th>
             <th>
                 Изменить
-            </th>
+            </th> -->
         </tr>
         </thead>
         <tbody id="tbody_dealers">
@@ -91,15 +94,18 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                        ?>
 		            </td>
                     <td>
-                        <button class="btn btn-primary btn-done" user_id="<?= $value->id; ?>" type="button"> Внести сумму </button>
+                            <?php echo JFactory::getUser($value->manager_id)->name; ?>
+                    </td>
+                    <!-- <td>
+                        <button class="btn btn-primary btn-done" user_id="<?= /* $value->id; */ ?>" type="button"> Внести сумму </button>
                     </td>
                     <td>
                         <select class="SelectPrice" autocomplete="off">
                             <option disabled selected>Прайс:</option>
-                            <option value="/index.php?option=com_gm_ceiling&view=components&dealer=<?=$value->id;?>">Компонентов</option>
-                            <option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=<?=$value->id;?>">Полотен</option>
+                            <option value="/index.php?option=com_gm_ceiling&view=components&dealer=<?=/* $value->id; */?>">Компонентов</option>
+                            <option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=<?=/* $value->id; */?>">Полотен</option>
                         </select>
-                    </td>
+                    </td> -->
 		        </tr>
         	<?php
         		}

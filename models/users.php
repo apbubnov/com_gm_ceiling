@@ -50,7 +50,7 @@ class Gm_ceilingModelUsers extends JModelList
 				->select('COUNT(*)')
 				->from('`#__users_dealer_instruction` as di')
 				->where('di.user_id = u.id');
-			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`,i.city');
+			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`,i.city,c.manager_id');
 			$query->select("($kp_cnt_query) as kp_cnt");
 			$query->select("($comments_cnt_query) as cmnt_cnt");
 			$query->select("($dealer_instr_cnt_query) as inst_cnt");
