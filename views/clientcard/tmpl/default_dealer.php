@@ -68,6 +68,7 @@
             <option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=<?=$this->item->dealer_id?>">Полотен</option>
         </select>
         </td>
+    </tr>
         <tr>
             <td class = "td-left">
                 <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
