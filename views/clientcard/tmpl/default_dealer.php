@@ -33,10 +33,11 @@
     else{
         $manager_name = "-";
     }
+    $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+    $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
-    <p>
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
@@ -45,6 +46,11 @@
     <?php } ?>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
+<select id="select_phones" style="display:none;"><option value='0' disabled selected>Выберите номер</option>
+        <?php foreach($client_phones as $item): ?>
+            <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
+        <?php endforeach;?>
+    </select>
 <table class = "actions">
     <tr>
         <td class = "td-left">
@@ -75,17 +81,6 @@
         </tr>
     </tr>
 </table>
-
-
-<?php
-        $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-        $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
-    ?>
-    <select id="select_phones" style="display:none;"><option value='0' disabled selected>Выберите номер</option>
-        <?php foreach($client_phones as $item): ?>
-            <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
-        <?php endforeach;?>
-    </select></p>
 <div id="call" class="call" style="display:none;">
         <label for="call">Перенести звонок</label>
         <br>
