@@ -77,7 +77,8 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 	        $jinput = $app->input;
             $user = JFactory::getUser();
 	        $name = $jinput->get('fio', null, 'STRING');
-	        $phone = $jinput->get('phone', null, 'STRING');
+			$phone = $jinput->get('phone', null, 'STRING');
+			$city  = $jinput->get('city',null,'STRING');
 			//Создание клиента
 			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
 			$client_data['client_name'] = $name;
@@ -95,6 +96,8 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 				$dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, "$client_id@$client_id", $client_id);
 				$client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
 				$client_model->updateClient($client_id,null,$dealer_id);
+				$dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
+				$dealer_info_model->update_city($dealer_id,$city);
 		        die($dealer_id);
 		    }
 	    }

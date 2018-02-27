@@ -105,9 +105,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <div class="modal_window" id="modal_window_create">
                 <p><strong>Создание нового дилера</strong></p>
                 <p>ФИО:</p>
-                <p><input type="text" id="fio_dealer"></p>
+                <p><input type="text" id="fio_dealer" placeholder = "ФИО"></p>
                 <p>Номер телефона:</p>
                 <p><input type="text" id="dealer_contacts"></p>
+                <p>Город</p>
+                <p><input type="text" id = "dealer_city" placeholder = "Город"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
         <div class="modal_window" id="modal_window_sum">
@@ -163,7 +165,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 url: "index.php?option=com_gm_ceiling&task=dealer.create_dealer",
                                 data: {
                                     fio: document.getElementById('fio_dealer').value,
-                                    phone: document.getElementById('dealer_contacts').value
+                                    phone: document.getElementById('dealer_contacts').value,
+                                    city: document.getElementById('dealer_city').value
                                 },
                                 success: function(data){
                                     if (data == 'client_found')
