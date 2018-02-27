@@ -253,7 +253,7 @@
     </div>
     <div class="modal_window" id="modal_window_select_number">
         <p>Выберите номер для звонка:</p>
-        <select id="select_phones"><option value='0' disabled selected>Выберите номер</option>
+        <select id="select_phones" class = "select_phones"><option value='0' disabled selected>Выберите номер</option>
             <?php foreach($client_phones as $item): ?>
                 <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
             <?php endforeach;?>
@@ -292,6 +292,11 @@
             jQuery("#modal_window_sum").hide();
         }
     });
+    function ChangeSelectPrice() {
+            location.href = this.value;
+            jQuery(".SelectPrice option:first-child").prop("selected", true);
+        }
+    jQuery(".SelectPrice").change(ChangeSelectPrice);
 
     jQuery("#new_client").click(function(){
         jQuery("#close").show();
