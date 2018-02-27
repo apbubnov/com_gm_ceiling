@@ -1117,6 +1117,49 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
 	}
+	public function activate_by_email(){
+		try{
+			$app = JFactory::getApplication();
+			$jinput = JFactory::getApplication()->input;
+			$project_id = $jinput->get('id', null, 'INT');
+			$email = $jinput->get('email', null, 'STRING');
+			$calculations_model = self::getModel('calculations');
+			$calculations = $calculations_model->getProjectItems($project_id);
+
+			foreach($calculations as $calc){
+				Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc->id);
+				$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "managernone") . ".pdf";
+			}
+			Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id,0);
+			$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($project_id . "consumablesnone") . ".pdf";
+			$filename = md5($project_id . "project№".$project_id) . ".pdf";
+			$sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/tmp/';
+			Gm_ceilingHelpersGm_ceiling::save_pdf($array, $sheets_dir . $filename, "A4");
+			$mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
+            $sender = array(
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            );
+
+            $mailer->setSender($sender);
+            $mailer->addRecipient($email);
+            $body = "Запуск в производство";
+            $mailer->setSubject('Запуск в производство');
+            $mailer->setBody($body);
+            $mailer->addAttachment($sheets_dir.$filename);
+            $send = $mailer->Send();
+            unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
+            die($send);
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 	public function approve()
 	{
 		try
