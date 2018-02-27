@@ -282,13 +282,13 @@ function dealer_margin($price, $margin, $value, $type)
                                 <?
                                 $type = $dealer->CanvasesPrice[$key_c]->type;
                                 $value = $dealer->CanvasesPrice[$key_c]->value;
+                                $Price = margin($canvas->price, $dealer->gm_canvases_margin);
+                                $DealerPrice = dealer_margin($canvas->price, $dealer->gm_canvases_margin, $value, $type);
+                                $UpdatePrice = $DealerPrice - $Price;
                                 ?>
-                                <td id="GMPrice"><?= margin($canvas->price, $dealer->gm_components_margin); ?></td>
-                                <td id="UpdateDealerPrice">
-                                    <?=(($type != 1 && $value >= 0)?"+":"").$value.(($type == 3)?"%":"");?>
-                                </td>
-                                <td id="DealerPrice"><?= dealer_margin($canvas->price, $dealer->gm_components_margin,
-                                        $value, $type); ?></td>
+                                <td id="GMPrice"><?= $Price; ?></td>
+                                <td id="UpdateDealerPrice"><?= $UpdatePrice; ?></td>
+                                <td id="DealerPrice"><?= $DealerPrice; ?></td>
                                 <td>
                                     <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
                                         <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o"

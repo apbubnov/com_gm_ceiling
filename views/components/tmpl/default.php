@@ -177,14 +177,13 @@ function dealer_margin($price, $margin, $value, $type) {
                         <?
                         $type = $dealer->ComponentsPrice[$key_c]->type;
                         $value = $dealer->ComponentsPrice[$key_c]->value;
+                        $Price = margin($component->price, $dealer->gm_components_margin);
+                        $DealerPrice = dealer_margin($component->price, $dealer->gm_components_margin, $value, $type);
+                        $UpdatePrice = $DealerPrice - $Price;
                         ?>
-                        <td id="GMPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
-                        <td id="UpdateDealerPrice">
-                            <?=(($type != 1 && $value >= 0)?"+":"").$value.(($type == 3)?"%":"");?>
-                        </td>
-                        <td id="DealerPrice"><?=dealer_margin($option->price, $dealer->gm_components_margin,
-                                $dealer->ComponentsPrice[$key_o]->value, $dealer->ComponentsPrice[$key_o]->type);?></td>
-                        <td>
+                        <td id="GMPrice"><?= $Price; ?></td>
+                        <td id="UpdateDealerPrice"><?= $UpdatePrice; ?></td>
+                        <td id="DealerPrice"><?= $DealerPrice; ?></td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
                                 <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
