@@ -40,6 +40,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                Телефоны
             </th>
             <th>
+                Город
+            </th>
+            <th>
                Дата регистрации
             </th>
             <th>
@@ -72,6 +75,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 		            </td>
                     <td>
                        <?php echo $value->client_contacts; ?>
+                    </td>
+                    <td>
+                        <?php echo (!empty($value->city) ? $value->city : "-")?>
                     </td>
 		            <td>
 		               <?php
