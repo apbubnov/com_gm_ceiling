@@ -171,6 +171,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
             $price = $app->input->get('Price', null, 'string');
             $level = $app->input->get('level', null, 'int');
 
+            $price = str_replace(",", ".", $price);
             $p = str_replace("%", "", $price);
             $e = str_replace(["+", "-"], "", $p);
             $type = (strlen($e) != strlen($p))?((strlen($p) != strlen($price))?3:2):1;
