@@ -112,6 +112,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             $id = $app->input->get('id', null, 'int');
             $price = $app->input->get('Price', null, 'string');
 
+            $price = str_replace(",", ".", $price);
             $p = str_replace("%", "", $price);
             $e = str_replace(["+", "-"], "", $p);
             $type = (strlen($e) != strlen($p))?((strlen($p) != strlen($price))?3:2):1;
