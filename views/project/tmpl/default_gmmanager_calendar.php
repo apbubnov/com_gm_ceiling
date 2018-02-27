@@ -31,10 +31,17 @@
     $_SESSION['user_group'] = $user_group;
     $_SESSION['dop_num'] = $dop_num;
 
-Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
-
+    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+    //транспорт
+    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
+    $sum_transport = $transport['client_sum'];
+    $sum_transport_1 = $transport['mounter_sum'];
+    /* минимальная сумма заказа */
+    $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
+    $min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
+    $min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
     $project_total = 0;
     $project_total_discount = 0;
     $total_square = 0;
@@ -66,24 +73,6 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
         $calculation_total = $calculation->calculation_total;
     }
 
-    $sum_transport = 0;  $sum_transport_discount = 0;
-    
-    $mount_transport = $mountModel->getDataAll();
-
-    if($this->item->transport == 0 ) $sum_transport = 0;
-    if($this->item->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-    if($this->item->transport == 2 ) $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
-    if($this->item->transport == 1 ) {
-        $min = 100;
-        foreach($calculations as $d) {
-            if($d->discount < $min) $min = $d->discount;
-        }
-        if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
-    }
-    /*
-    if($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
-        $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-    }*/
     $project_total_discount_transport = $project_total_discount + $sum_transport;
 
     $project_total = $project_total  + $sum_transport;
@@ -368,7 +357,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                                         <button type="button" class = "btn btn-primary" id = "add_email">Ок</button>
                                     </td>
                                 </tr>
-                                <? 
+                                <?php 
                                     $street = preg_split("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info)[0];
                                     preg_match("/,.дом:.([\d\w\/\s]{1,4}),/", $this->item->project_info,$house);
                                     $house = $house[1];
@@ -639,7 +628,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                     </tr>
                     <tr class="section_ceilings">
                         <?php if ($calculation->discount != 0) { ?>
-                            <td>Цена / -<? echo $calculation->discount ?>% :</td>
+                            <td>Цена / -<?php echo $calculation->discount ?>% :</td>
                             <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб. /</td>
                             <td id="calculation_total_discount"> <?php echo round($calculation_total_discount ,0); ?>
                                 руб.
@@ -673,7 +662,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                 <tr>
                     <td style="width: 45%;">
 
-                        <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
+                        <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?php if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
                         <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
                             <div class="col-sm-4">
                                 <div class="form-group">
@@ -689,14 +678,14 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                                         <input name="jform[distance_col_1]" id="distance_col_1" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
                                     </div>
                                     <div class="advanced_col2" style="width: 20%;">
-                                        <button type="button" id="click_transport_1" class="btn btn-primary">Ок</button>
+                                        <button type="button" name="click_transport" class="btn btn-primary">Ок</button>
                                     </div>
                                 </div>
 
                             </div>
 
                         </div>
-                        <p><input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?if( $this->item->transport == 2) echo "checked"?>><label for = "distanceId">Выезд за город</label></p>
+                        <p><input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?php if( $this->item->transport == 2) echo "checked"?>><label for = "distanceId">Выезд за город</label></p>
 
                         <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist" >
                             <div class="col-sm-4">
@@ -718,25 +707,22 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                                         <input name="jform[distance_col]" id="distance_col" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
                                     </div>
                                     <div class="advanced_col3" style="width: 20%;">
-                                        <button type="button" id="click_transport" class="btn btn-primary">Ок</button>
+                                        <button type="button" name="click_transport" class="btn btn-primary">Ок</button>
                                     </div>
                                 </div>
 
                             </div>
 
                         </div>
-                        <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
+                        <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?php if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
                     </td>
                     <th></th>
                     <th></th>
                 </tr>
                 <tr>
-                    <?
+                    <?php
 
                     //-------------------------Себестоимость транспорта-------------------------------------
-                    if($this->item->transport == 0 ) $sum_transport_1 = 0;
-                    if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
-                    if($this->item->transport == 2 ) $sum_transport_1 = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
                     $project_total_11 = $project_total_11 + $sum_transport_1;
                     $project_total = $project_total + $sum_transport;
                     $project_total_discount = $project_total_discount + $sum_transport;
@@ -755,11 +741,23 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                     <th id="project_total_discount">
                         <span class="sum">
                      <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                    if($dealer_canvases_sum == 0 && $project_total_discount < 2500) $project_total_discount = 2500;
-                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < 2500) { $project_total_discount = 2500; echo round($project_total_discount, 0);  ?> руб.</th> <?}
-                    elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
-                        </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
-                    <? } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
+                    if($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum){
+                        if($min_components_sum>0){
+                            $project_total_discount = $min_components_sum;
+                        }
+                    } 
+                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) {
+                        if($min_components_sum>0){
+                            $project_total_discount = $min_components_sum;
+                        }
+                         echo round($project_total_discount, 0);  ?> руб.</th> <?}
+                    elseif($project_total_discount < $min_project_sum && $project_total_discount > 0) {
+                        if($min_project_sum>0){
+                            $project_total_discount = $min_project_sum;
+                        }
+                        echo round($project_total_discount, 0);  ?> руб.</th>
+                        </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum?>р. </span>
+                    <?php } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
 
                 <?php }
                 else { ?>
@@ -768,8 +766,16 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                 <span class="sum">
                     <?php
                     if ($this->item->new_project_sum == 0) {
-                        if($project_total < 2500 && $project_total > 0 && $dealer_canvases_sum == 0)  { $project_total = 2500; } 
-                        elseif($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                        if($project_total < $min_components_sum && $project_total > 0 && $dealer_canvases_sum == 0)  {
+                            if($min_components_sum>0){
+                                $project_total = $min_components_sum;
+                            } 
+                        } 
+                        elseif($project_total < $min_project_sum && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  {
+                            if($min_project_sum>0){
+                                $project_total = $min_project_sum;
+                            } 
+                        }
                         
                         echo round($project_total, 2);
                     } else {
@@ -778,10 +784,10 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                 } ?>
             </span>
             <span class="dop" style="font-size: 9px;">
-            <? if ($project_total <= 2500 && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
-                     * минимальная сумма заказа 2500р.
-                <? elseif ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
-                     * минимальная сумма заказа 3500р.<?endif;?>
+            <?php if ($project_total <= $min_components_sum && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
+                     * минимальная сумма заказа <?php echo $min_components_sum?>р.
+                <?php elseif ($project_total <= $min_project_sum && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
+                     * минимальная сумма заказа <?php echo $min_project_sum?>р.<?php endif;?>
                      
                       </span>
                 </th>
@@ -824,8 +830,8 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                                 <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;"
                                 placeholder="Адрес эл.почты" type="text">
                                 <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
-                                    <option value="<?=$em->contact;?>"> <?}?>
+                                    <?php foreach ($contact_email AS $em) {?>
+                                    <option value="<?=$em->contact;?>"> <?php }?>
                                 </datalist>
                             </div>
                             <div class="file_data">
@@ -899,7 +905,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                             </td>
                         </tr>
                     <?php } ?>
-                <? } ?>
+                <?php } ?>
                 <!-- Общая смета для клиента -->
 
                 <tr>
@@ -916,15 +922,15 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                     </td>
                     <td></td>
                 </tr>
-                <?  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                <?php  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                     <tr >
                         <td>
                             <div class="email-all" style="float: left;">
                                <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;"
                                 placeholder="Адрес эл.почты" type="text">
                                 <datalist id="email">
-                                    <? foreach ($contact_email AS $em) {?>
-                                    <option value="<?=$em->contact;?>"> <?}?>
+                                    <?php foreach ($contact_email AS $em) {?>
+                                    <option value="<?=$em->contact;?>"> <?php }?>
                                 </datalist>
                             </div>
                             <div class="file_data">
@@ -964,7 +970,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                         </td>
                         <td></td>
                     </tr>
-                <? }?>
+                <?php }?>
             </table>
 
 
@@ -980,7 +986,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                 <a class="btn btn-primary" onclick='send_and_redirect(<?php echo $calculation->id; ?>)'
                    href='javascript:'>Изменить
                     расчет</a>
-                <? if (!empty($filename)):?>
+                <?php if (!empty($filename)):?>
                     <div class="sketch_image_block">
                         <h3 class="section_header">
                             Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
@@ -989,10 +995,10 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                             <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
                         </div>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
                 <div class="row-fluid">
                     <div class="span6">
-                        <?if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                        <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
                             <h4>Материал</h4>
                             <div>
                                 Тип потолка: <?php echo $calculation->n1; ?>
@@ -1022,7 +1028,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                                 <div>
                                     <h4> Вставка</h4>
                                 </div>
-                                <? if ($calculation->n6 == 314) {?>
+                                <?php if ($calculation->n6 == 314) {?>
                                     <div> Белая </div>
                                 <?php } else  { ?>
                                     <?php $color_1 = $model_components->getColorId($calculation->n6); ?>
@@ -1031,7 +1037,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                                                                                          alt=""/>
                                     </div>
                                 <?php }?>
-                            <?} endif; ?>
+                            <?php } endif; ?>
                         <?php if ($calculation->n16) { ?>
                             <div>
                                 Скрытый карниз: <?php echo $calculation->n16; ?>
@@ -1068,8 +1074,8 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                         } ?>
                         <?php if ($calculation->n27> 0) { ?>
                             <h4>Шторный карниз</h4>
-                            <? if ($calculation->n16) echo "Скрытый карниз"; ?>
-                            <? if (!$calculation->n16) echo "Обычный карниз"; ?>
+                            <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
+                            <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
                             <?php echo $calculation->n27; ?> м.
                         <?php } ?>
 
@@ -1173,11 +1179,11 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                                 Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
                             </div>
                         <?php } ?>
-                        <? $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
+                        <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
                         <?php if (!empty($extra_mounting) ) { ?>
                             <div>
                                 <h4>Дополнительные работы</h4>
-                                <? foreach($extra_mounting as $dop) {
+                                <?php foreach($extra_mounting as $dop) {
                                     echo "<b>Название:</b> " . $dop->title .  "<br>";
                                 }?>
                             </div>
@@ -1259,6 +1265,8 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 <script language="JavaScript">
 
     var $ = jQuery;
+    var min_project_sum = <?php echo  $min_project_sum;?>;
+    var min_components_sum = <?php echo $min_components_sum;?>;
 
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_del"); // тут указываем ID элемента
@@ -1392,7 +1400,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         
-        trans();
+        //trans();
 
         window.time = undefined;
         window.gauger = undefined;
@@ -2352,15 +2360,13 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                 jQuery("#distance").val('');
                 jQuery("#distance_col").val('');
             }
-
-            trans();
+            if(transport == 0){
+                trans();
+            }
+            
         });
 
-        jQuery("#click_transport").click(function () {
-            trans();
-        });
-
-        jQuery("#click_transport_1").click(function () {
+        jQuery("[name = click_transport]").click(function () {
             trans();
         });
 
@@ -2756,48 +2762,34 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
         var distance = jQuery("#distance").val();
         var distance_col = jQuery("#distance_col").val();
         var distance_col_1 = jQuery("#distance_col_1").val();
-        var form = jQuery("#form-client").serialize();
-        // alert(distance_col);
+        var send_data = [];
+        send_data["id"] = id; 
+        send_data["transport"] = transport;
+        switch(transport){
+            case "0" :
+                send_data["distance_col"] = 0;
+                send_data["distance"] = 0;
+                break;
+            case "1":
+                send_data["distance_col"] = distance_col_1;
+                send_data["distance"] = 0;
+                break;
+            case "2" :
+                send_data["distance_col"] = distance_col;
+                send_data["distance"] = distance;
+                break;
+        }
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=big_smeta.transport",
-            data: form,
+            url: "index.php?option=com_gm_ceiling&task=project.update_transport",
+            data:{
+                id : send_data["id"],
+                transport : send_data["transport"],
+                distance : send_data["distance"] ,
+                distance_col :send_data["distance_col"]
+            },
             success: function(data){
-                data = JSON.parse(data);
-                var html = "",
-                    transport_sum = parseFloat(data);
-                var calc_sum = 0, calc_total = 0; canvas = 0;
-                jQuery.each(jQuery("[name='include_calculation[]']:checked"), function (i,e) {
-                    calc_sum += parseFloat(jQuery("[name='calculation_total_discount["+jQuery(e).val()+"]']").val());
-                    calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
-                    canvas += parseFloat(jQuery("[name='canvas["+jQuery(e).val()+"]']").val());
-                });
-                var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
-                var sum_total = Float(calc_total + transport_sum);
-                if(canvas == 0) sum = 2500;
-                else if(sum < 3500 ) sum = 3500;
-                if(canvas == 0) sum_total = 2500;
-                else if(sum_total < 3500 ) sum_total = 3500;
-                jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
-                //jQuery("#project_total").text(sum  + " руб.");
-                if(canvas == 0) {
-                    jQuery("#project_total span.sum").text(sum_total);
-                    jQuery("#project_total span.dop").html((sum_total <= 2500)?" * минимальная сумма заказа 2500р.":"");
-                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                    jQuery("#project_total_discount span.dop").html((sum <= 2500)?" * минимальная сумма заказа 2500р.":"");
-                    jQuery("#project_sum_transport").val(sum);
-                    jQuery(" #project_sum").val(sum);
-                }
-                else {
-                    jQuery("#project_total span.sum").text(sum_total);
-                    jQuery("#project_total span.dop").html((sum_total <= 3500)?" * минимальная сумма заказа 3500р.":"");
-                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                    jQuery("#project_total_discount span.dop").html((sum <= 3500)?" * минимальная сумма заказа 3500р.":"");
-                    jQuery("#project_sum_transport").val(sum);
-                    jQuery(" #project_sum").val(sum);
-                }
-                
-
+                calc_transport(data);
             },
             dataType: "json",
             timeout: 10000,
@@ -2811,7 +2803,46 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
                     text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
                 });
             }
-        });
+        }); 
+    }
+    function calc_transport(data){
+        data = JSON.parse(data);
+                var html = "",
+                    transport_sum = parseFloat(data);
+                var calc_sum = 0, calc_total = 0; canvas = 0;
+                jQuery.each(jQuery("[name='include_calculation[]']:checked"), function (i,e) {
+                    calc_sum += parseFloat(jQuery("[name='calculation_total_discount["+jQuery(e).val()+"]']").val());
+                    calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
+                    canvas += parseFloat(jQuery("[name='canvas["+jQuery(e).val()+"]']").val());
+                });
+
+                var sum = Float(calc_sum + transport_sum);
+                var sum_total = Float(calc_total + transport_sum);
+
+                if (canvas == 0) {
+                    sum = (sum <= min_components_sum)?min_components_sum:sum;
+                    sum_total = (sum_total <= min_components_sum)?min_components_sum:sum_total;
+                } else {
+                    sum = (sum <= min_project_sum)?min_project_sum:sum;
+                    sum_total = (sum_total <= min_project_sum)?min_project_sum:sum_total;
+                }
+                sum = Math.round(sum * 100) / 100;
+                sum_total = Math.round(sum_total * 100) / 100;
+
+                jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
+                jQuery("#project_total span.sum").text(sum_total);
+                jQuery("#project_total_discount span.sum").text(sum  + " руб.");
+                jQuery("#project_sum_transport").val(sum);
+                jQuery(" #project_sum").val(sum);
+
+                if(canvas == 0) {
+                    jQuery("#project_total span.dop").html((sum_total == min_components_sum)?" * минимальная сумма заказа "+min_components_sum+"р.":"");
+                    jQuery("#project_total_discount span.dop").html((sum == min_components_sum)?" * минимальная сумма заказа"+min_components_sum+"р.":"");
+                }
+                else {
+                    jQuery("#project_total span.dop").html((sum_total == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+"р.":"");
+                    jQuery("#project_total_discount span.dop").html((sum == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+".":"");
+                }
     }
 
     // @return {number}
@@ -2841,32 +2872,48 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
         //var canvas = jQuery("#canvas").val();
         
         if(canvas == 0) {
-            if(project_total < 2500 && pr_total2 !== 0)  project_total = 2500;
-            if(project_total_discount < 2500 && pr_total2 !== 0)  project_total_discount = 2500;
-
+            if(project_total < min_components_sum && pr_total2 !== 0){
+                if(min_components_sum>0){
+                    project_total = min_components_sum;
+                }
+            } 
+            if(project_total_discount < min_components_sum && pr_total2 !== 0)
+            {
+                if(min_components_sum>0){
+                    project_total_discount = min_components_sum;
+                }
+            }
             jQuery("#project_total span.sum").text(project_total.toFixed(2));
-            if (project_total > 2500) { jQuery("#project_total span.dop").html(" "); }
-            if (project_total <= 2500 && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа 2500р."); }
-            if (project_total <= 2500 && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
+            if (project_total > min_components_sum) { jQuery("#project_total span.dop").html(" "); }
+            if (project_total <= min_components_sum && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа "+min_components_sum+"р."); }
+            if (project_total <= min_components_sum && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
             jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
-            if (project_total_discount > 2500) { jQuery("#project_total_discount span.dop").html(" "); }
-            if (project_total_discount <= 2500 && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа 2500р."); }
-            if (project_total_discount <= 2500 && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
+            if (project_total_discount > min_components_sum) { jQuery("#project_total_discount span.dop").html(" "); }
+            if (project_total_discount <= min_components_sum && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа "+min_components_sum+"р."); }
+            if (project_total_discount <= min_components_sum && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
             //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
             jQuery("#project_sum").val(project_total_discount);
         }
         else {
-            if(project_total < 3500 && pr_total2 !== 0)  project_total = 3500;
-            if(project_total_discount < 3500 && pr_total2 !== 0)  project_total_discount = 3500;
+            if(project_total < min_project_sum && pr_total2 !== 0){
+                if(min_project_sum>0){
+                    project_total = min_project_sum;
+                }
+            }  
+            if(project_total_discount < min_project_sum && pr_total2 !== 0){
+                if(min_project_sum>0){
+                    project_total_discount = min_project_sum;
+                }
+            }
 
             jQuery("#project_total span.sum").text(project_total.toFixed(2));
-            if (project_total > 3500) { jQuery("#project_total span.dop").html(" "); }
-            if (project_total <= 3500 && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа 3500р."); }
-            if (project_total <= 3500 && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
+            if (project_total > min_project_sum) { jQuery("#project_total span.dop").html(" "); }
+            if (project_total <= min_project_sum && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа "+min_project_sum+"р."); }
+            if (project_total <= min_project_sum && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
             jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
-            if (project_total_discount > 3500) { jQuery("#project_total_discount span.dop").html(" "); }
-            if (project_total_discount <= 3500 && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа 3500р."); }
-            if (project_total_discount <= 3500 && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
+            if (project_total_discount > min_project_sum) { jQuery("#project_total_discount span.dop").html(" "); }
+            if (project_total_discount <= min_project_sum && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа"+min_project_sum+"р."); }
+            if (project_total_discount <= min_project_sum && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
             //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
             jQuery("#project_sum").val(project_total_discount);
         }
