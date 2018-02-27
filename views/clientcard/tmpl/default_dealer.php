@@ -78,17 +78,6 @@
         </tr>
     </tr>
 </table>
-<div id="call" class="call" style="display:none;">
-        <label for="call">Перенести звонок</label>
-        <br>
-        <table>
-            <tr>
-                <td> <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></td>
-                <td> <input name="call_comment" id="call_comment" placeholder="Введите примечание"></td>
-                <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>
-            </tr>
-        </table>  
-</div>
 <div>
 <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта дилера: </p>
 </div>
@@ -267,6 +256,14 @@
         <input type="hidden" id="hidden_user_id">
         <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
     </div>
+    <div id="call" class="modal_window">
+        <p>Перенести звонок</p>
+        <p>Дата звонка:</p>
+        <p><input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></p>
+        <p>Примечание</p>
+        <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
+        <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
+    </div>
 </div>
 
 <script>
@@ -278,9 +275,11 @@
         var div5 = jQuery("#modal_window_call");
         var div6 = jQuery("#modal_window_select_number");
         var div7 = jQuery("#modal_window_sum");
-        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) && !div5.is(e.target)&& !div6.is(e.target)&& !div7.is(e.target)
-            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 
-            && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 &&  div5.has(e.target).length === 0&&  div6.has(e.target).length === 0&&  div7.has(e.target).length === 0) {
+        var div8 = jQuery("#call");
+        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) 
+            && !div5.is(e.target)&& !div6.is(e.target) && !div7.is(e.target) && !div8.is(e.target)
+            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 
+            && div5.has(e.target).length === 0 &&  div6.has(e.target).length === 0&&  div7.has(e.target).length === 0 && div8.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
@@ -290,6 +289,7 @@
             jQuery("#modal_window_login").hide();
             jQuery("#modal_window_select_number").hide();
             jQuery("#modal_window_sum").hide();
+            jQuery("#call").hide();
         }
     });
     function ChangeSelectPrice() {
@@ -651,7 +651,9 @@
         jQuery("#close").show();
     });
     jQuery("#broke").click(function(){
-        jQuery("#call").show();
+        jQuery("#mv_container").show();
+        jQuery("#call").show("slow");
+        jQuery("#close").show();
             
     })
     jQuery("#add_call_and_submit").click(function(){
