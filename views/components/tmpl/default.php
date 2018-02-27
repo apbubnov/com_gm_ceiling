@@ -75,7 +75,7 @@ function dealer_margin($price, $margin, $value, $type) {
         <?if ($managerGM):?>
         <form class="FormSimple UpdatePrice MarginLeft">
             <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-            <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
+            <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price" placeholder="0"
                    title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
                    size="5" required>
             <button type="submit" class="buttonOK">
@@ -110,6 +110,7 @@ function dealer_margin($price, $margin, $value, $type) {
                 <td>Изменить</td>
                 <?elseif ($managerGM):?>
                 <td><?=JHtml::_( 'grid.sort', 'Цена', 'option_price', $listDirn, $listOrder);?></td>
+                <td><?=JHtml::_( 'grid.sort', 'Изменение', 'option_price', $listDirn, $listOrder);?></td>
                 <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
                 <td>Изменить</td>
                 <?else:?>
@@ -139,6 +140,7 @@ function dealer_margin($price, $margin, $value, $type) {
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                 <?else:?>
                     <td></td>
                     <td></td>
@@ -163,7 +165,7 @@ function dealer_margin($price, $margin, $value, $type) {
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
+                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price" placeholder="0"
                                        title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
                                        size="5" required>
                                 <button type="submit" class="buttonOK">
@@ -172,13 +174,20 @@ function dealer_margin($price, $margin, $value, $type) {
                             </form>
                         </td>
                     <?elseif ($managerGM):?>
-                        <td id="GMPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
-                        <td id="DealerPrice"><?=dealer_margin($option->price, $dealer->gm_components_margin,
-                                $dealer->ComponentsPrice[$key_o]->value, $dealer->ComponentsPrice[$key_o]->type);?></td>
+                        <?
+                        $type = $dealer->ComponentsPrice[$key_c]->type;
+                        $value = $dealer->ComponentsPrice[$key_c]->value;
+                        $Price = margin($option->price, $dealer->gm_components_margin);
+                        $DealerPrice = dealer_margin($Price, 0, $value, $type);
+                        $UpdatePrice = $DealerPrice - $Price;
+                        ?>
+                        <td id="GMPrice"><?= $Price; ?></td>
+                        <td id="UpdateDealerPrice"><?= (($UpdatePrice >= 0)?"+":"").$UpdatePrice; ?></td>
+                        <td id="DealerPrice"><?= $DealerPrice; ?></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
                                 <label for="Price" title="Изменить дилерскую цену"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-                                <input type="text" pattern="[+-]{1}\d{1,}%{1}|[+-]{0,1}\d{1,}" name="Price" id="Price" placeholder="0"
+                                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+" name="Price" id="Price" placeholder="0"
                                        title="Формат: X, +X, -X, +X% или -X%, где X - это значение! Например: +15%."
                                        size="5" required>
                                 <button type="submit" class="buttonOK">

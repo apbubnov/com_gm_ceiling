@@ -171,6 +171,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
             $price = $app->input->get('Price', null, 'string');
             $level = $app->input->get('level', null, 'int');
 
+            $price = str_replace(",", ".", $price);
             $p = str_replace("%", "", $price);
             $e = str_replace(["+", "-"], "", $p);
             $type = (strlen($e) != strlen($p))?((strlen($p) != strlen($price))?3:2):1;
@@ -230,19 +231,24 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 $oldPrice = $model->getPrice($get);
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
-                    $DealerPrice = self::dealer_margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin, $number, $type);
+                    $OldDealerPrice = $dealer->getCanvasesPrice()[$v->id];
+                    $OldDealerPrice = self::dealer_margin($oldPrice, 0, $OldDealerPrice->value, $OldDealerPrice->type);
+                    $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
+                    $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_canvases_margin, $number, $type);
                     $PPrice = $model->MinPriceCanvas($v->id);
+                    $CanvasPrice = self::margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin);
+                    $UpdateDelaerPrice = $DealerPrice - $CanvasPrice;
 
-                    if (floatval($DealerPrice) < floatval($PPrice)) $flag++;
+                    if (floatval($NewDealerPrice) < floatval($PPrice)) $flag++;
                     else {
-                        $dealer->setCanvasesPrice(["value" => $number, "type" => $type], $v->id);
+                        $dealer->setCanvasesPrice(["value" => $NewDealerPrice, "type" => 1], $v->id);
 
                         $answer->elements[] = (object) [
                             "name" => ".Level3[data-canvas='$v->id'] #GMPrice",
-                            "value" => self::margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin)];
+                            "value" => $CanvasPrice];
                         $answer->elements[] = (object) [
                             "name" => ".Level3[data-canvas='$v->id'] #UpdateDealerPrice",
-                            "value" => (($type != 1 && $number >= 0)?"+":"").$number.(($type == 3)?"%":"")];
+                            "value" => (($UpdateDelaerPrice >= 0)?"+":"").$UpdateDelaerPrice];
                         $answer->elements[] = (object) [
                             "name" => ".Level3[data-canvas='$v->id'] #DealerPrice",
                             "value" => $DealerPrice];
