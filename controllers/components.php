@@ -156,7 +156,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
 
                     if (floatval($DealerPrice) < floatval($PPrice)) $flag++;
                     else {
-                        $dealer->setComponentsPrice(["value" => $number, "type" => $type], $v->id);
+                        $dealer->setComponentsPrice(["value" => $DealerPrice, "type" => 1], $v->id);
 
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #GMPrice",

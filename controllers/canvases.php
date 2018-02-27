@@ -235,7 +235,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
 
                     if (floatval($DealerPrice) < floatval($PPrice)) $flag++;
                     else {
-                        $dealer->setCanvasesPrice(["value" => $number, "type" => $type], $v->id);
+                        $dealer->setCanvasesPrice(["value" => $DealerPrice, "type" => 1], $v->id);
 
                         $answer->elements[] = (object) [
                             "name" => ".Level3[data-canvas='$v->id'] #GMPrice",
