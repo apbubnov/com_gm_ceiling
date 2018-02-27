@@ -147,6 +147,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->ComponentsPrice[$v->id];
                     $OldDealerPrice = self::dealer_margin($v->price, 0, $OldDealerPrice->value, $OldDealerPrice->type);
+                    if ($type == 0) $OldDealerPrice = $v->price;
                     $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_components_margin, $number, $type);
                     $PPrice = $model->MinPriceOption($v->id);
