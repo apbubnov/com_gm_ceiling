@@ -39,24 +39,6 @@
     $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
-<div class="modal_window_container" id="mv_container">
-    <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-    <div class="modal_window" id="modal_window_select_number">
-        <select id="select_phones"><option value='0' disabled selected>Выберите номер</option>
-            <?php foreach($client_phones as $item): ?>
-                <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
-            <?php endforeach;?>
-        </select>
-    </div>
-    <div class="modal_window" id="modal_window_sum">
-        <p><strong id="dealer_name"></strong></p>
-        <p id="dealer_invoice"></p>
-        <p>Сумма взноса:</p>
-        <p><input type="text" id="pay_sum"></p>
-        <input type="hidden" id="hidden_user_id">
-        <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
-    </div>
-</div>
 <div id="FIO-container-tar">
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
@@ -269,6 +251,22 @@
             <input id="call_comment_m" placeholder="Введите примечание"><br>
             <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
     </div>
+    <div class="modal_window" id="modal_window_select_number">
+        <p>Выберите номер для звонка:</p>
+        <select id="select_phones"><option value='0' disabled selected>Выберите номер</option>
+            <?php foreach($client_phones as $item): ?>
+                <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+    <div class="modal_window" id="modal_window_sum">
+        <p><strong id="dealer_name"></strong></p>
+        <p id="dealer_invoice"></p>
+        <p>Сумма взноса:</p>
+        <p><input type="text" id="pay_sum"></p>
+        <input type="hidden" id="hidden_user_id">
+        <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
+    </div>
 </div>
 
 <script>
@@ -278,9 +276,11 @@
         var div3 = jQuery("#modal_window_comm");
         var div4 = jQuery("#modal_window_login");
         var div5 = jQuery("#modal_window_call");
-        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) && !div5.is(e.target)
+        var div6 = jQuery("#modal_window_select_number");
+        var div7 = jQuery("#modal_window_sum");
+        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) && !div5.is(e.target)&& !div6.is(e.target)&& !div7.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 
-            && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 &&  div5.has(e.target).length === 0) {
+            && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 &&  div5.has(e.target).length === 0&&  div6.has(e.target).length === 0&&  div7.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
@@ -288,6 +288,8 @@
             jQuery("#modal_window_comm").hide();
             jQuery("#modal_window_call").hide();
             jQuery("#modal_window_login").hide();
+            jQuery("#modal_window_select_number").hide();
+            jQuery("#modal_window_sum").hide();
         }
     });
 
