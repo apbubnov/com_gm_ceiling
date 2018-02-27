@@ -1130,7 +1130,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc->id);
 				$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "managernone") . ".pdf";
 			}
-			throw new Exception(implode("|",$array));
+			print_r($array);
 			Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id,0);
 			$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($project_id . "consumablesnone") . ".pdf";
 			$filename = "project№".$project_id. ".pdf";
