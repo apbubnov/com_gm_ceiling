@@ -340,6 +340,44 @@
     jQuery("[name = send_email]").change(function(){
         jQuery("#email").val(jQuery(this).val());
     });
+    jQuery("#send_email").click(function(){
+        var email = jQuery("#email").val();
+        var subj = jQuery("#email_subj").val();
+        var text = jQuery("#email_text").val();
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=sendEmail",
+            data: {
+                email: email,
+                subj: subj,
+                text: text
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+               add_history(client_id,"Отправлен email");
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Письмо отправлено!"
+                });
+
+            },
+            error: function (data) {
+                console.log(data);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    });
     jQuery("#but_comm").click(function (){
         jQuery("#mv_container").show();
         jQuery("#modal_window_comm").show("slow");
