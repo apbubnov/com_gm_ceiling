@@ -139,11 +139,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#mv_container").show();
             jQuery("#modal_window_create").show("slow");
         });
-        jQuery("#send_to_all").click(function(){
+
+      /*   jQuery("#send_to_all").click(function(){
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_send").show("slow");
-        });
+        }); */
 
         function ChangeSelectPrice() {
             location.href = this.value;
