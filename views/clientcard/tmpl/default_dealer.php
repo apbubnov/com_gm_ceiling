@@ -343,7 +343,7 @@
         jQuery("#modal_window_client").show("slow");
     });
     jQuery("[name = rm_email]").click(function(){
-        console.log(jQuery(this).attr("email");)
+        console.log(jQuery(this).attr("email"));
     });
     jQuery("#new_send_email").click(function(){
         jQuery("#close").show();
