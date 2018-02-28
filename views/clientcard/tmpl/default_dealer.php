@@ -274,11 +274,11 @@
         </div>
         <? } ?>
         <h6 style = "margin-top:10px">Введите почту</h6>
-        <p><input type="text" id="email" placeholder="Почта" required></p>
+        <p><input type="text" id="email" class="inputactive" placeholder="Почта" required></p>
         <p>Тема письма</p>
-        <p><input type="text" id="email_subj" placeholder="Тема" required></p>
+        <p><input type="text" id="email_subj" class="inputactive" placeholder="Тема" required></p>
         <p><textarea class="inputactive" id="email_text" placeholder="Введите текст письма"></textarea></p>
-        <p><button type = "button" id = "send_email" class = "btn btn-primary"></button></p>
+        <p><button type = "button" id = "send_email" class = "btn btn-primary">Отправить</button></p>
     </div>
 </div>
 
@@ -294,9 +294,10 @@
         var div8 = jQuery("#call");
         var div9 = jQuery("#modal_window_send_email");
         if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) 
-            && !div5.is(e.target)&& !div6.is(e.target) && !div7.is(e.target) && !div8.is(e.target)
+            && !div5.is(e.target)&& !div6.is(e.target) && !div7.is(e.target) && !div8.is(e.target) && !div9.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 
-            && div5.has(e.target).length === 0 &&  div6.has(e.target).length === 0&&  div7.has(e.target).length === 0 && div8.has(e.target).length === 0) {
+            && div5.has(e.target).length === 0 &&  div6.has(e.target).length === 0&&  div7.has(e.target).length === 0 && div8.has(e.target).length === 0
+            && div9.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
