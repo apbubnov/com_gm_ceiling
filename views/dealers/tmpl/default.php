@@ -210,9 +210,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         if (target.id == 'send')
                         {
                             alert("123123123");
-                         /*    jQuery.ajax({
+                            /*  jQuery.ajax({
                                 type: 'POST',
-                                url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
+                                url: "index.php?option=com_gm_ceiling&task=",
                                 data: {
                                    
                                 },
@@ -240,7 +240,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                         text: "Ошибка. Сервер не отвечает"
                                     });
                                 }
-                            }); */
+                            });  */
                             return;
                         }
                     }
