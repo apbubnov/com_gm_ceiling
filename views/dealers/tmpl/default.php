@@ -117,11 +117,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id = "dealer_city" placeholder = "Город"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <div class="modal_window" id="modal_window_send">
+        <!-- <div class="modal_window" id="modal_window_send">
             <p>Текст письма:</p>
             <p><textarea rows = "10" class ="textarea-gm" id="email_text"></p>
             <p><button type="submit" id="send" class="btn btn-primary">Разослать</button></p>
-        </div>
+        </div> -->
     </div>
 
 <script>
@@ -138,6 +138,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_create").show("slow");
+        });
+        
+        jQuery("#send_to_all").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_send").show("slow");
         });
 
         function ChangeSelectPrice() {
@@ -202,14 +208,14 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 }                   
                             });
                         }
-                        if (target.id == 'save_pay')
+                        if (target.id == 'send')
                         {
-                            jQuery.ajax({
+                            alert("123123123");
+                            /*  jQuery.ajax({
                                 type: 'POST',
-                                url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
+                                url: "index.php?option=com_gm_ceiling&task=",
                                 data: {
-                                    id: document.getElementById('hidden_user_id').value,
-                                    sum: document.getElementById('pay_sum').value
+                                   
                                 },
                                 success: function(data){
                                     var n = noty({
@@ -235,7 +241,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                         text: "Ошибка. Сервер не отвечает"
                                     });
                                 }
-                            });
+                            });  */
                             return;
                         }
                     }
