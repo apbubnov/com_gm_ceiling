@@ -221,8 +221,8 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 					}
 				}
 			}
+
 			foreach($emails as $email){
-				throw new
 				$this->sendEmail($email,"Предложение",$text);
 			}
             die(json_encode(true));
