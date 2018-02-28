@@ -84,7 +84,10 @@
 <? if (!empty($dop_contacts)) { ?>
 <div>
 <? foreach ($dop_contacts AS $contact) {?>
-    <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
+    <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?>
+    <button name ="rm_email" email="<? echo $contact->contact;?>">Удалить</button>
+    </p>
+<? }?>
 </div>
 <? } ?>
 <div>
