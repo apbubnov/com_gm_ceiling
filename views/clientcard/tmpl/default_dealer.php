@@ -83,11 +83,22 @@
 </div>
 <? if (!empty($dop_contacts)) { ?>
 <div>
+<table>
+
 <? foreach ($dop_contacts AS $contact) {?>
-    <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?>
-    <button name ="rm_email" class = "btn btn-danger" style="display:inline-block" email="<? echo $contact->contact;?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
-    </p>
+    <tr>
+        <td>
+            <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact;?> </p>s
+        </td>
+        <td>
+            <button name ="rm_email" class = "btn btn-danger" email="<? echo $contact->contact;?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        </td>
+    </tr>
+   
+    
+   
 <? }?>
+</table>
 </div>
 <? } ?>
 <div>
