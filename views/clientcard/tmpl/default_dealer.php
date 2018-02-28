@@ -85,7 +85,7 @@
 <div>
 <? foreach ($dop_contacts AS $contact) {?>
     <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?>
-    <button name ="rm_email" class = "clear_form_group btn btn-danger" email="<? echo $contact->contact;?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+    <button name ="rm_email" class = " btn btn-danger" email="<? echo $contact->contact;?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
     </p>
 <? }?>
 </div>
