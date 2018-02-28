@@ -271,7 +271,7 @@
         <? foreach ($dop_contacts AS $contact) {
             $i=0;
             $id = "cnt".$i;?>
-            <input type="radio" name='send_email' class = "radio" id="<?php echo $id;?>" value='<? echo $contact->contact; ?>'><label for = "<?php $id;?>" ><? echo $contact->contact; ?></label><br>
+            <input type="radio" name='send_email' class = "radio" id="<?php echo $id;?>" value='<? echo $contact->contact; ?>'><label for ="<?php echo $id;?>" ><? echo $contact->contact; ?></label><br>
         <? 
             $i++;
         }?>
