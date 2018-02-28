@@ -87,8 +87,8 @@
 
 <? foreach ($dop_contacts AS $contact) {?>
     <tr>
-        <td>
-            <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact;?> </p>s
+        <td style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;">
+            <? echo $contact->contact;?>
         </td>
         <td>
             <button name ="rm_email" class = "btn btn-danger" email="<? echo $contact->contact;?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
