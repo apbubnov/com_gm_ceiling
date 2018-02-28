@@ -984,10 +984,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					else{
 						$return = $model->activate($data, 23);
 						$array = [];
-						throw new Exception(implode('|',$include_calculation));
 						foreach($include_calculation as $calc){
-							Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc->id);
-							$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "managernone") . ".pdf";
+							Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc);
+							$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc. "managernone") . ".pdf";
 						}
 						Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id,0);
 						$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($project_id . "consumablesnone") . ".pdf";
