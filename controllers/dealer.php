@@ -169,7 +169,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
 	}
-	public function sendEmail($email=null,$text=null){
+	public function sendEmail($email=null,$subject=null,$text=null){
         try{
             $jinput = JFactory::getApplication()->input;
             $email = (empty($email)) ? $jinput->get('email', null, 'STRING') : $email;
@@ -214,9 +214,14 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 			$dealers = $user_model->getDealers();
 			$emails = [];
 			foreach($dealers as $dealer){
-				$emails[] = $dop_contact_model->getEmailByClientID($dealer->associated_client);
+				$tmp = $dop_contact_model->getEmailByClientID($dealer->associated_client);
+				foreach ($tmp as $value) {
+					$emails[]=$value->contact;
+				}
 			}
-			
+			/* foreach($emails as $email){
+				$this->sendEmail($email,"Предложение",$text);
+			} */
             die(json_encode($emails));
         }
         catch(Exception $e)
