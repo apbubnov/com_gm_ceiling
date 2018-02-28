@@ -759,6 +759,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$mounting_date = $jinput->get('jform_project_mounting_date', '0000-00-00 00:00:00', 'DATE');
 			$data->project_mounting_date = $mounting_date;
 			$project_mounter = $jinput->get('project_mounter',0,'INT');
+			$activate_by_email = $jinput->get('activate_by_email',null,'INT');
+			$email = $jinput->get('email_to_send',null,'STRING');
 			if ($project_mounter!=0) {
 				$data->project_mounter = $project_mounter;
 			}
@@ -932,52 +934,81 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					//$checked_calculations = array_intersect($data['include_calculation'], $all_calculations);
 					$ignored_calculations = array_diff($all_calculations, $include_calculation);
 					// Attempt to save the data.
-					$gm_calculator_note = $jinput->get('gm_calculator_note','Отсутсвует','STRING');
-					if($user->dealer_type!=2 && $project_verdict == 1) 
-					{
-						
-						$c_date = date_create($data->project_mounting_date);
-						date_sub($c_date, date_interval_create_from_date_string('1 day'));
-						
-						if(empty($data->project_mounting_date)){
+					if($activate_by_email==0){
+						$gm_calculator_note = $jinput->get('gm_calculator_note','Отсутсвует','STRING');
+						if($user->dealer_type!=2 && $project_verdict == 1) 
+						{
 							
-							$data->project_status = 4;
-							$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
-							$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
-							$call_mount_time = $jinput->get('calltime_without_mounter','','STRING'); 
-							$callback_model->save($call_mount_date.' '.$call_mount_time,"Примечание от замерщика : ".$gm_calculator_note,$data->id_client,$data->read_by_manager);
-							$client_history_model->save($data->id_client,"Добавлен новый звонок. Примечание от замерщика: ".$gm_calculator_note);
-							$return = $model->activate($data,4/*3*/);
+							$c_date = date_create($data->project_mounting_date);
+							date_sub($c_date, date_interval_create_from_date_string('1 day'));
+							
+							if(empty($data->project_mounting_date)){
+								
+								$data->project_status = 4;
+								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
+								$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
+								$call_mount_time = $jinput->get('calltime_without_mounter','','STRING'); 
+								$callback_model->save($call_mount_date.' '.$call_mount_time,"Примечание от замерщика : ".$gm_calculator_note,$data->id_client,$data->read_by_manager);
+								$client_history_model->save($data->id_client,"Добавлен новый звонок. Примечание от замерщика: ".$gm_calculator_note);
+								$return = $model->activate($data,4/*3*/);
+								
+							}
+							else{
+								if($project_status == 4){
+									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
+									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
+									$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
+									$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
+									$return = $model->activate($data, 4);
+
+								} else {
+									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
+									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
+									$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
+									$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
+									$return = $model->activate($data, 5/*3*/);
+								}
+
+								
+							}
 							
 						}
-						else{
-							if($project_status == 4){
-                                $client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
-                                $client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
-                                $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
-                                $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
-                                $return = $model->activate($data, 4);
-
-                            } else {
-                                $client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
-                                $client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
-                                $callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
-                                $client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
-                                $return = $model->activate($data, 5/*3*/);
-                            }
-
-							
+						else if ($user->dealer_type!=2 && $project_verdict == 0)
+						{
+							$return = $model->activate($data, 3/*7*/);
+							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание замерщика : ".$gm_calculator_note);
+							$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
+							$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
 						}
-						
 					}
-					else if ($user->dealer_type!=2 && $project_verdict == 0)
-					{
-						$return = $model->activate($data, 3/*7*/);
-						$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание замерщика : ".$gm_calculator_note);
-						$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
-						$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
-					}
+					else{
+						$return = $model->activate($data, 23/*7*/);
+						$array = [];
+						foreach($include_calculation as $calc){
+							Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc->id);
+							$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "managernone") . ".pdf";
+						}
+						Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id,0);
+						$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($project_id . "consumablesnone") . ".pdf";
+						$filename = "project№".$project_id. ".pdf";
+						$sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/tmp/';
+						Gm_ceilingHelpersGm_ceiling::save_pdf($array, $sheets_dir . $filename, "A4");
+						$mailer = JFactory::getMailer();
+						$config = JFactory::getConfig();
+						$sender = array(
+							$config->get('mailfrom'),
+							$config->get('fromname')
+						);
 
+						$mailer->setSender($sender);
+						$mailer->addRecipient($email);
+						$body = "Запуск в производство";
+						$mailer->setSubject('Запуск в производство');
+						$mailer->setBody($body);
+						$mailer->addAttachment($sheets_dir.$filename);
+						$send = $mailer->Send();
+						unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);					
+					}
                     $dealer_info_model = $this->getModel('Dealer_info', 'Gm_ceilingModel');
                     $gm_canvases_margin = $dealer_info_model->getMargin('gm_canvases_margin',$user->dealer_id);
                     if($smeta == 0) $gm_components_margin = $dealer_info_model->getMargin('gm_components_margin',$user->dealer_id);

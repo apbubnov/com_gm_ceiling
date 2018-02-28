@@ -1621,7 +1621,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     <div id="modal_window_by_email" class = "modal_window">
             <p><strong>Введите адрес эл.почты:</strong></p>
             <p>
-                <input id = "email_to_send" name = "email_to send" class = "input-gm">
+                <input id = "email_to_send" name = "email_to_send" class = "input-gm">
             </p>
             <p><button class = "btn btn-primary">Запустить</button></p>
     </div>
