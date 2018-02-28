@@ -217,6 +217,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                    text : jQuery("#email_text")
                                 },
                                 success: function(data){
+                                    console.log(data);
                                     var n = noty({
                                         timeout: 5000,
                                         theme: 'relax',
