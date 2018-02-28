@@ -337,7 +337,9 @@
         jQuery("#modal_window_fio").show("slow");
         jQuery("#close").show();
     });
-
+    jQuery("[name = send_email]").change(function(){
+        jQuery("#email").val(this.val());
+    });
     jQuery("#but_comm").click(function (){
         jQuery("#mv_container").show();
         jQuery("#modal_window_comm").show("slow");
