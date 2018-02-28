@@ -120,7 +120,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <div class="modal_window" id="modal_window_send">
             <p>Текст письма:</p>
             <p><textarea rows = "10" class ="textarea-gm" id="email_text"></textarea></p>
-            <p><button type="submit" id="send" class="btn btn-primary">Разослать</button></p>
+            <p><button type="button" id="send" class="btn btn-primary">Разослать</button></p>
         </div>
     </div>
 
