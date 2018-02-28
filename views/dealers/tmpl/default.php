@@ -226,7 +226,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                         type: "success",
                                         text: "Сумма успешно добавлена"
                                     });
-                                    setInterval(function() { location.reload();}, 1500);
+                                    //setInterval(function() { location.reload();}, 1500);
                                 },
                                 dataType: "text",
                                 async: false,
