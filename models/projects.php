@@ -175,7 +175,7 @@ class Gm_ceilingModelProjects extends JModelList
                     $query->where('dealer_id = ' . $user->dealer_id);
                     break;
                 case "chiefprojects":
-                    $query->where('a.project_status = 4 OR a.project_status = 5');
+                    $query->where('a.project_status = 4 OR a.project_status = 5 OR a.project_status = 23');
                     $query->where('dealer_id = ' . $user->dealer_id);
                     $query->where('a.project_mounter IS NULL');
                     break;
