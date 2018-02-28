@@ -338,7 +338,7 @@
         jQuery("#close").show();
     });
     jQuery("[name = send_email]").change(function(){
-        jQuery("#email").val(this.val());
+        jQuery("#email").val(jQuery(this).val());
     });
     jQuery("#but_comm").click(function (){
         jQuery("#mv_container").show();
