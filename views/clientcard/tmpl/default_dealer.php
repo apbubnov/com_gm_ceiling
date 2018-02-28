@@ -74,7 +74,7 @@
             <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
         </td>
         <td class = "td-right">
-            Здесь будет отключение рассылки
+           <button id = "new_send_email" type = "button">Написать e-mail</button>
         </td>
     </tr>
 </table>
@@ -264,6 +264,22 @@
         <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
         <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
     </div>
+    <div class = "modal_window" id="modal_window_send_email">
+        <p>Новое сообщение</p>
+        <? if (!empty($dop_contacts)) { ?>
+        <div style="margin-top: 10px;">
+        <? foreach ($dop_contacts AS $contact) {?>
+            <input type="radio" name='send_email' value='<? echo $contact->contact; ?>' ><? echo $contact->contact; ?><br>
+        <? }?>
+        </div>
+        <? } ?>
+        <h6 style = "margin-top:10px">Введите почту</h6>
+        <p><input type="text" id="email" placeholder="Почта" required></p>
+        <p>Тема письма</p>
+        <p><input type="text" id="email_subj" placeholder="Тема" required></p>
+        <p><textarea class="inputactive" id="email_text" placeholder="Введите текст письма"></textarea></p>
+        <p><button type = "button" id = "send_email" class = "btn btn-primary"></button></p>
+    </div>
 </div>
 
 <script>
@@ -276,6 +292,7 @@
         var div6 = jQuery("#modal_window_select_number");
         var div7 = jQuery("#modal_window_sum");
         var div8 = jQuery("#call");
+        var div9 = jQuery("#modal_window_send_email");
         if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) 
             && !div5.is(e.target)&& !div6.is(e.target) && !div7.is(e.target) && !div8.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 
@@ -290,6 +307,8 @@
             jQuery("#modal_window_select_number").hide();
             jQuery("#modal_window_sum").hide();
             jQuery("#call").hide();
+            jQuery("#modal_window_send_email").hide();
+            
         }
     });
     function ChangeSelectPrice() {
@@ -303,7 +322,11 @@
         jQuery("#mv_container").show();
         jQuery("#modal_window_client").show("slow");
     });
-
+    jQuery("#new_send_email").click(function(){
+        jQuery("#close").show();
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_send_email").show("slow");
+    });
     jQuery("#edit").click(function() {
         jQuery("#mv_container").show();
         jQuery("#modal_window_fio").show("slow");
