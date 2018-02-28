@@ -253,7 +253,7 @@ class Gm_ceilingControllerClient extends JControllerLegacy
             $client_id = $jinput->get('client_id', null, 'INT');
             $email = $jinput->get('email', null, 'STRING');
 
-            $client_dop_model = Gm_ceilingHelpersGm_ceiling::getModel('client_dop_contacts');
+            $client_dop_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
             $result = $client_dop_model->removeEmail($client_id, $email);
             die(json_encode($result));
 		}
