@@ -137,6 +137,15 @@ class Gm_ceilingModelClients_dop_contacts extends JModelList
         $db->setQuery($query);
         $items = $db->loadObjectList();
         return $items;
-    }
+	}
+	public function removeEmail($id,$email){
+		$db    = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->delete('#__gm_ceiling_clients_dop_contacts');
+		$query->where("client_id = $id and contact = $email");
+		$db->setQuery($query);
+		$result = $db->execute();
+        return $result;
+	}
 }
 ?>

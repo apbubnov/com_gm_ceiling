@@ -343,7 +343,41 @@
         jQuery("#modal_window_client").show("slow");
     });
     jQuery("[name = rm_email]").click(function(){
-        console.log(jQuery(this).attr("email"));
+        var email = jQuery(this).attr("email");
+        var client_id = <?php echo $this->item->id;?>;
+
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=client.removeEmail",
+            data: {
+                email: email,
+                client_id : client_id
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                add_history(client_id,"Удален email: "+email);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Письмо отправлено!"
+                });
+
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+
     });
     jQuery("#new_send_email").click(function(){
         jQuery("#close").show();
