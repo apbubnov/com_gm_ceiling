@@ -118,6 +118,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
         <div class="modal_window" id="modal_window_send">
+            <p>Тема</p>
+            <p><input type ="text" class="input-gm" id="email_subj"></p>
             <p>Текст письма:</p>
             <p><textarea rows = "10" class ="textarea-gm" id="email_text"></textarea></p>
             <p><button type="button" id="send" class="btn btn-primary">Разослать</button></p>
@@ -214,7 +216,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 type: 'POST',
                                 url: "index.php?option=com_gm_ceiling&task=dealer.send_out_to_dealers",
                                 data: {
-                                   text : jQuery("#email_text").val()
+                                   text : jQuery("#email_text").val(),
+                                   subj : jQuery("#email_subj").val()
                                 },
                                 success: function(data){
                                     console.log(data);

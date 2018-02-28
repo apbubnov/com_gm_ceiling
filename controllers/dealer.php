@@ -213,6 +213,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             $app = JFactory::getApplication();
             $jinput = $app->input;
 			$text = $jinput->get('text', null, 'STRING');
+			$subject = $jinput->get('subj', null, 'STRING');
 			$user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
 			$dop_contact_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
 			$dealers = $user_model->getDealers();
@@ -227,7 +228,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 			}
 
 			foreach($emails as $email){
-				$res = $this->sendEmail($email,"Предложение",$text);
+				$res = $this->sendEmail($email,$subject,$text);
 			}
             die(json_encode($emails));
         }
