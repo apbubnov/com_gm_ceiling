@@ -26,6 +26,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
     </div>
     <div style="display:inline-block; width: 48%; text-align: left;">
+        <button type="button" id="send_to_all" class="btn btn-primary">Отправить на email</button>
+    </div>
+    <div style="display:inline-block; width: 48%; text-align: left;">
         <input type="text" id="name_find_dealer">
         <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
@@ -114,13 +117,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id = "dealer_city" placeholder = "Город"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <div class="modal_window" id="modal_window_sum">
-            <p><strong id="dealer_name"></strong></p>
-            <p id="dealer_invoice"></p>
-            <p>Сумма взноса:</p>
-            <p><input type="text" id="pay_sum"></p>
-            <input type="hidden" id="hidden_user_id">
-            <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
+        <div class="modal_window" id="modal_window_send">
+            <p>Текст письма:</p>
+            <p><textarea rows = "10" class ="textarea-gm" id="email_text"></p>
+            <p><button type="submit" id="send" class="btn btn-primary">Разослать</button></p>
         </div>
     </div>
 
@@ -139,6 +139,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#mv_container").show();
             jQuery("#modal_window_create").show("slow");
         });
+        jQuery("#send_to_all").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_send").show("slow");
+        });
 
         function ChangeSelectPrice() {
             location.href = this.value;
@@ -154,7 +159,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             while (target.tagName != 'BODY')
             {
                 var div = jQuery("#modal_window_create");
-                var div2 = jQuery("#modal_window_sum"); // тут указываем ID элемента
+                var div2 = jQuery("#modal_window_send"); // тут указываем ID элемента
                 if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
                 {
                     console.log(target);
@@ -202,14 +207,14 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 }                   
                             });
                         }
-                        if (target.id == 'save_pay')
+                        if (target.id == 'send')
                         {
-                            jQuery.ajax({
+                            alert("123123123");
+                         /*    jQuery.ajax({
                                 type: 'POST',
                                 url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
                                 data: {
-                                    id: document.getElementById('hidden_user_id').value,
-                                    sum: document.getElementById('pay_sum').value
+                                   
                                 },
                                 success: function(data){
                                     var n = noty({
@@ -235,7 +240,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                         text: "Ошибка. Сервер не отвечает"
                                     });
                                 }
-                            });
+                            }); */
                             return;
                         }
                     }
