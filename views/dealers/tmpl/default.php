@@ -224,7 +224,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                         layout: 'center',
                                         maxVisible: 5,
                                         type: "success",
-                                        text: "Сумма успешно добавлена"
+                                        text: "Письма отправлены"
                                     });
                                     //setInterval(function() { location.reload();}, 1500);
                                 },

@@ -193,7 +193,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             $mailer->setBody($text);
             //$mailer->addAttachment($sheets_dir.$filename);
             $send = $mailer->Send();
-            die(json_encode(true));
+            //die(json_encode(true));
         }
         catch(Exception $e)
         {
