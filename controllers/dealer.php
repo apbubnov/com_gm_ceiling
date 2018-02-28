@@ -171,12 +171,14 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 	}
 	public function sendEmail($email=null,$subject=null,$text=null){
         try{
+			$flag = 0;
             $jinput = JFactory::getApplication()->input;
             $email = (empty($email)) ? $jinput->get('email', null, 'STRING') : $email;
 			$client_id = $jinput->get('client_id', null, 'STRING');
 			if(!empty($client_id)){
 				$dop_contact_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
 				$dop_contact_model->save($client_id,1,$email);
+				$flag = 1;
 			}
             
             $subject = (empty($subject)) ? $jinput->get('subj', null, 'STRING') : $subject;
@@ -192,8 +194,10 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             $mailer->setSubject($subject);
             $mailer->setBody($text);
             //$mailer->addAttachment($sheets_dir.$filename);
-            $send = $mailer->Send();
-            //die(json_encode(true));
+			$send = $mailer->Send();
+			if($flag==1){
+				die(json_encode(true));
+			}
         }
         catch(Exception $e)
         {
