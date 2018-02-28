@@ -3308,6 +3308,8 @@ class Gm_ceilingController extends JControllerLegacy
         try{
             $jinput = JFactory::getApplication()->input;
             $email = $jinput->get('email', null, 'STRING');
+            $dop_contact_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+            $dop_contact_model->save($client_id,1,$email);
             $subject = $jinput->get('subj', null, 'STRING');
             $text = $jinput->get('text', null, 'STRING');
             $mailer = JFactory::getMailer();

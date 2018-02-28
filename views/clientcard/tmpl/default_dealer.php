@@ -354,7 +354,8 @@
             dataType: "json",
             async: true,
             success: function (data) {
-               add_history(client_id,"Отправлен email");
+                client_id = <?php echo $this->item->id;?>;
+                add_history(client_id,"Отправлен email");
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -366,7 +367,6 @@
 
             },
             error: function (data) {
-                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
