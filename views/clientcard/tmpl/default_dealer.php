@@ -269,7 +269,7 @@
         <? if (!empty($dop_contacts)) { ?>
         <div style="margin-top: 10px;">
         <? foreach ($dop_contacts AS $contact) {?>
-            <input type="radio" name='send_email' value='<? echo $contact->contact; ?>' ><? echo $contact->contact; ?><br>
+            <input type="radio" name='send_email' class = "radio" value='<? echo $contact->contact; ?>'><label><? echo $contact->contact; ?></label><br>
         <? }?>
         </div>
         <? } ?>
