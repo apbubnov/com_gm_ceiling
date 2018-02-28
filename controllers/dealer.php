@@ -171,6 +171,7 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 	}
 	public function sendEmail($email=null,$subject=null,$text=null){
         try{
+			throw new Exception("$email,$subject,$text");
             $jinput = JFactory::getApplication()->input;
             $email = (empty($email)) ? $jinput->get('email', null, 'STRING') : $email;
 			$client_id = $jinput->get('client_id', null, 'STRING');
