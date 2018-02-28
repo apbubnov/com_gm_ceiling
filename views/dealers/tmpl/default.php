@@ -117,11 +117,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id = "dealer_city" placeholder = "Город"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <!-- <div class="modal_window" id="modal_window_send">
+        <div class="modal_window" id="modal_window_send">
             <p>Текст письма:</p>
-            <p><textarea rows = "10" class ="textarea-gm" id="email_text"></p>
+            <p><textarea rows = "10" class ="textarea-gm" id="email_text"></textarea></p>
             <p><button type="submit" id="send" class="btn btn-primary">Разослать</button></p>
-        </div> -->
+        </div>
     </div>
 
 <script>
