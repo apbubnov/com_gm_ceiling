@@ -277,7 +277,7 @@
         <p><input type="text" id="email" class="inputactive" placeholder="Почта" required></p>
         <p>Тема письма</p>
         <p><input type="text" id="email_subj" class="inputactive" placeholder="Тема" required></p>
-        <p><textarea class="inputactive" id="email_text" placeholder="Введите текст письма"></textarea></p>
+        <p><textarea class="inputactive" rows="10" id="email_text" placeholder="Введите текст письма"></textarea></p>
         <p><button type = "button" id = "send_email" class = "btn btn-primary">Отправить</button></p>
     </div>
 </div>
