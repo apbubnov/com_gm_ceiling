@@ -266,10 +266,11 @@
     </div>
     <div class = "modal_window" id="modal_window_send_email">
         <p>Новое сообщение</p>
-        <? if (!empty($dop_contacts)) { ?>
+        <? if (!empty($dop_contacts)) {
+            $i=0; ?>
         <div style="margin-top: 10px;">
         <? foreach ($dop_contacts AS $contact) {
-            $i=0;
+            
             $id = "cnt".$i;?>
             <input type="radio" name='send_email' class = "radio" id="<?php echo $id;?>" value='<? echo $contact->contact; ?>'><label for ="<?php echo $id;?>" ><? echo $contact->contact; ?></label><br>
         <? 
