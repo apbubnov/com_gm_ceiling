@@ -214,7 +214,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 type: 'POST',
                                 url: "index.php?option=com_gm_ceiling&task=dealer.send_out_to_dealers",
                                 data: {
-                                   text : jQuery("#email_text")
+                                   text : jQuery("#email_text").val()
                                 },
                                 success: function(data){
                                     console.log(data);
