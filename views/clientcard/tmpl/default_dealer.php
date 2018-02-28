@@ -74,7 +74,7 @@
             <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
         </td>
         <td class = "td-right">
-           <button id = "new_send_email" type = "button">Написать e-mail</button>
+           <button id = "new_send_email" type = "button" class = "btn btn-primary">Написать e-mail</button>
         </td>
     </tr>
 </table>
@@ -274,10 +274,10 @@
         </div>
         <? } ?>
         <h6 style = "margin-top:10px">Введите почту</h6>
-        <p><input type="text" id="email" class="inputactive" placeholder="Почта" required></p>
+        <p><input type="text" id="email" class="input-gm" placeholder="Почта" required></p>
         <p>Тема письма</p>
-        <p><input type="text" id="email_subj" class="inputactive" placeholder="Тема" required></p>
-        <p><textarea class="inputactive" rows="10" id="email_text" placeholder="Введите текст письма"></textarea></p>
+        <p><input type="text" id="email_subj" class="input-gm" placeholder="Тема" required></p>
+        <p><textarea class="textarea-gm" rows="10" id="email_text" placeholder="Введите текст письма"></textarea></p>
         <p><button type = "button" id = "send_email" class = "btn btn-primary">Отправить</button></p>
     </div>
 </div>
