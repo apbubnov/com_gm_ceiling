@@ -219,10 +219,10 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 					$emails[]=$value->contact;
 				}
 			}
-			/* foreach($emails as $email){
+			foreach($emails as $email){
 				$this->sendEmail($email,"Предложение",$text);
-			} */
-            die(json_encode($emails));
+			}
+            die(json_encode(true));
         }
         catch(Exception $e)
         {
