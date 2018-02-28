@@ -268,9 +268,13 @@
         <p>Новое сообщение</p>
         <? if (!empty($dop_contacts)) { ?>
         <div style="margin-top: 10px;">
-        <? foreach ($dop_contacts AS $contact) {?>
-            <input type="radio" name='send_email' class = "radio" value='<? echo $contact->contact; ?>'><label><? echo $contact->contact; ?></label><br>
-        <? }?>
+        <? foreach ($dop_contacts AS $contact) {
+            $i=0;
+            $id = "cnt".$i;?>
+            <input type="radio" name='send_email' class = "radio" id="<?=echo $id;?>" value='<? echo $contact->contact; ?>'><label for = "<?=echo $id;?>" ><? echo $contact->contact; ?></label><br>
+        <? 
+            $i++;
+        }?>
         </div>
         <? } ?>
         <h6 style = "margin-top:10px">Введите почту</h6>
