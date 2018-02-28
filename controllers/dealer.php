@@ -168,5 +168,63 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
+	}
+	public function sendEmail($email=null,$text=null){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $email = (empty($email)) ? $jinput->get('email', null, 'STRING') : $email;
+			$client_id = $jinput->get('client_id', null, 'STRING');
+			if(!empty($client_id)){
+				$dop_contact_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+				$dop_contact_model->save($client_id,1,$email);
+			}
+            
+            $subject = (empty($subject)) ? $jinput->get('subj', null, 'STRING') : $subject;
+            $text = (empty($text)) ? $jinput->get('text', null, 'STRING') : $text;
+            $mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
+            $sender = array(
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            );
+            $mailer->setSender($sender);
+            $mailer->addRecipient($email);
+            $mailer->setSubject($subject);
+            $mailer->setBody($text);
+            //$mailer->addAttachment($sheets_dir.$filename);
+            $send = $mailer->Send();
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
+	public function send_out_to_dealers(){
+		try
+        {
+            $app = JFactory::getApplication();
+            $jinput = $app->input;
+			$text = $jinput->get('text', null, 'STRING');
+			$user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+			$dop_contact_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+			$dealers = $user_model->getDealers();
+			$emails = [];
+			foreach($dealers as $dealer){
+				$emails[] = $dop_contact_model->getEmailByClientID($dealer->associated_client);
+			}
+			
+            die(json_encode($emails));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }

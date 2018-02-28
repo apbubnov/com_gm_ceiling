@@ -347,7 +347,7 @@
         var subj = jQuery("#email_subj").val();
         var text = jQuery("#email_text").val();
         jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=sendEmail",
+            url: "index.php?option=com_gm_ceiling&task=dealer.sendEmail",
             data: {
                 email: email,
                 subj: subj,

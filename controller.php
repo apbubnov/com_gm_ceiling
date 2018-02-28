@@ -3304,38 +3304,6 @@ class Gm_ceilingController extends JControllerLegacy
 
 
     }
-    public function sendEmail(){
-        try{
-            $jinput = JFactory::getApplication()->input;
-            $email = $jinput->get('email', null, 'STRING');
-            $client_id = $jinput->get('client_id', null, 'STRING');
-            $dop_contact_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-            $dop_contact_model->save($client_id,1,$email);
-            $subject = $jinput->get('subj', null, 'STRING');
-            $text = $jinput->get('text', null, 'STRING');
-            $mailer = JFactory::getMailer();
-            $config = JFactory::getConfig();
-            $sender = array(
-                $config->get('mailfrom'),
-                $config->get('fromname')
-            );
-            $mailer->setSender($sender);
-            $mailer->addRecipient($email);
-            $mailer->setSubject($subject);
-            $mailer->setBody($text);
-            //$mailer->addAttachment($sheets_dir.$filename);
-            $send = $mailer->Send();
-            die(json_encode(true));
-        }
-        catch(Exception $e)
-        {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
-        }
-    }
-
     public function filterProjectForStatus() {
         try
         {
