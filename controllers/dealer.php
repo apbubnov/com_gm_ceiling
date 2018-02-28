@@ -216,10 +216,13 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 			foreach($dealers as $dealer){
 				$tmp = $dop_contact_model->getEmailByClientID($dealer->associated_client);
 				foreach ($tmp as $value) {
-					$emails[]=$value->contact;
+					if(!empty($value->contact)){
+						$emails[]=$value->contact;
+					}
 				}
 			}
 			foreach($emails as $email){
+				throw new
 				$this->sendEmail($email,"Предложение",$text);
 			}
             die(json_encode(true));
