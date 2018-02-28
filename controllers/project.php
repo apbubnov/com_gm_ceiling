@@ -982,8 +982,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 					}
 					else{
-						$return = $model->activate($data, 23/*7*/);
+						$return = $model->activate($data, 23);
 						$array = [];
+						throw new Exception(implode('|',$include_calculation));
 						foreach($include_calculation as $calc){
 							Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc->id);
 							$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "managernone") . ".pdf";
@@ -1091,12 +1092,17 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						if( count($ignored_calculations) > 0 ) {
 							$data = $model->getNewData($project_id);
 							$data->refuse_id = $refuse_id;
-							Gm_ceilingHelpersGm_ceiling::notify($data, 6);
+							if($activate_by_email==0){
+								Gm_ceilingHelpersGm_ceiling::notify($data, 6);
+							}
 							$this->setMessage("Проект сформирован! <br>  Неотмеченные потолки перемещены в копию проекта с отказом");
 						} else {
 						    if($project_status == 4 )  { $this->setMessage("Проект сохранен");}
 						    else {
-                                Gm_ceilingHelpersGm_ceiling::notify($data, 2);
+								if($activate_by_email==0){
+									Gm_ceilingHelpersGm_ceiling::notify($data, 2);
+								}
+                               
                                 $this->setMessage("Проект сформирован");
                                 Gm_ceilingHelpersGm_ceiling::notify($data, 7);
                             }
