@@ -909,6 +909,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             $tmp = 0;
             $sum_transport_discount_total = 0;
             $sum_transport_total = 0;
+            $dealer_comp_all =0;
             $JS_Calcs_Sum = array();
 
             foreach ($calculations as $calculation) {
@@ -927,6 +928,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     $calculation_total_11 += $calculation_total_1;
                     $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
                     $project_total_11 += $project_total_1;
+                    $dealer_comp_all += $dealer_components_sum_1;
                 }
                 $calculation->calculation_title;
                 $total_square += $calculation->n4;
@@ -2512,16 +2514,16 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             else jQuery("input[name='smeta']").val(0);
         });
         jQuery("input[name^='smeta']").change(function () {
-            comp_sum = <?php echo $dealer_components_sum_1;?>;
-            console.log(jQuery("#calculation_total1")[0].innerText);
+            comp_sum = <?php echo $dealer_comp_all;?>;
+            console.log(comp_sum);
             var sum = jQuery("#calculation_total1")[0].innerText;
             if(jQuery("input[name^='smeta']").attr("checked") == 'checked'){
                 jQuery("#calculation_total1")[0].innerText = +sum-comp_sum;
-                console.log(jQuery("#calculation_total1")[0].innerText);
+                
             }
             else{
                 jQuery("#calculation_total1")[0].innerText = +sum+comp_sum;
-                console.log(jQuery("#calculation_total1")[0].innerText);
+            
             } 
         });
         
