@@ -641,9 +641,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     </div>
                     <?php if ($user->dealer_type != 2) {
                         $flag = $this->item->client_id == 1;
-                        if($flag){
-                            $str = "style=\"display: none;\"";
-                        }
+                        $str = "style=\"display: none;\"";
+                       
                         ?>
                         <div class="row"><div class="col-12 col-md-6">
                             <table class="table">
