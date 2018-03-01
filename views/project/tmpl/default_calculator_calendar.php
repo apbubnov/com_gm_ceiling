@@ -640,7 +640,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
                     </div>
                     <?php if ($user->dealer_type != 2) {
-                        $flag = $this->item->client == 1;
+                        $flag = $this->item->id_client == 1;
                         if($flag){
                             $str = "style=\"display: none;\"";
                         }
