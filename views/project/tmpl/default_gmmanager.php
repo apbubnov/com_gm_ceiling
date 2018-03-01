@@ -249,7 +249,7 @@ $AllMounters = $model->FindAllMounters($where);
                     $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
 
                     foreach ($calculations as $calculation) {
-                        $total_comp+=Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id);
+                        $total_comp+=Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id)['self_total'];
                         $total_components_sum += $calculation->components_sum;
 
                         $baget = $calculation->n5 + $calculation->dop_krepezh / 2.0;
