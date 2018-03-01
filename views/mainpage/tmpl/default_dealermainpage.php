@@ -298,7 +298,7 @@ $rest = -($total_sum) - $contributed;
                     owner: "<?php echo $userId?>"
                 },
                 success: function (data) {
-                    url = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' + data;
+                    url = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' + parseInt(data);
                     location.href = url;
                 },
                 dataType: "text",
