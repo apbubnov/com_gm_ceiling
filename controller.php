@@ -83,6 +83,9 @@ class Gm_ceilingController extends JControllerLegacy
                         } elseif (in_array("11", $groups)) {
                             $type = "mountersmainpage";//монтажная бригада
                         }
+                    } elseif (in_array("24", $groups)) {
+                            $type = "manufacturermainpage";//производитель
+                        }
                         if (!empty($type)) {
                             $this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=' . $type, false));
                             $app->input->set('type', $type);
