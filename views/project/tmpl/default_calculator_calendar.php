@@ -1947,10 +1947,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
 
     jQuery(document).ready(function () {
         var client_id = "<?php echo $this->item->id_client;?>";
-        if(client_id==1){
-            console.log("12312");
-            jQuery("#change_data").trigger('click');
-        }
+        
         window.time = undefined;
         window.gauger = undefined;
         $("#modal_window_container #ok").click(function() { click_ok(this); });
@@ -2629,7 +2626,10 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             jQuery(".Date").toggle();
             jQuery("#accept_changes").toggle();
         });
-
+        if(client_id==1){
+            console.log("12312");
+            jQuery("#change_data").trigger('click');
+        }
         jQuery("#save_email").click(function(){
             jQuery("#activate_by_email").val(1);
             jQuery("#close").show();
