@@ -31,6 +31,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
     <div style="display:inline-block; width: 48%; text-align: left;">
         <input type="text" id="name_find_dealer">
         <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+        <select id="filter_manager">
+            
+        </select>
     </div>
     <br>
     <table class="table one-touch-view" id="callbacksList">
@@ -255,6 +258,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             }
         });
 
+        var managers = {}, cities = {};
+
         showDealers();
         document.getElementById('find_dealer').onclick = showDealers;
 
@@ -298,6 +303,17 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     }
                     tbody.innerHTML = html;
                     html = '';
+                    if (managers.length === 0)
+                    {
+                        for(var i in data)
+                        {
+                            if (!(data[i].manager_id in managers))
+                            {
+                                managers[data[i].manager_id] = data[i].manager_name;
+                            }
+                        }
+                    }
+                    console.log(managers);
                 },
                 dataType: "json",
                 async: false,
