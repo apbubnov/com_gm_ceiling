@@ -640,7 +640,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
                     </div>
                     <?php if ($user->dealer_type != 2) {
-                        $flag = $this->item->id_client == 1;
+                        $flag = $this->item->client_id == 1;
                         if($flag){
                             $str = "style=\"display: none;\"";
                         }
@@ -703,7 +703,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                     <td <?php echo ($flag)? $str : ""?>><a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>"><?=$this->item->project_info;?></a></td>
-                                    <td <?php echo ($flag)? $str : ""?> >
+                                    <td <?php echo (!$flag)? $str : ""?> >
                                         <div class="Address" style="display: none; position:relative;">
                                             <label id="jform_address_lbl" for="jform_address">Адрес<span
                                                         class="star">&nbsp;*</span></label>
@@ -712,9 +712,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="Address" style="display: none;">
-                                    <td <?php echo ($flag)? $str : ""?>>Дом  </td><td <?php echo ($flag)? $str : ""?>>Корпус</td>
-                                    <td<?php echo ($flag)? $str : ""?>>
+                                <tr class="Address" <?php echo (!$flag)? $str : ""?>>
+                                    <td>Дом  </td><td>Корпус</td>
+                                    <td>
                                         <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
                                                 } else echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом"  aria-required="true" type="text">
                                 
@@ -722,9 +722,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 } else echo $bdq ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
                                     </td>
                                 </tr>
-                                <tr class="Address" style="display: none;">
-                                    <td <?php echo ($flag)? $str : ""?>>Квартира  </td><td <?php echo ($flag)? $str : ""?>>Подъезд</td>
-                                    <td <?php echo ($flag)? $str : ""?>>
+                                <tr class="Address" <?php echo (!$flag)? $str : ""?>>
+                                    <td>Квартира  </td><td>Подъезд</td>
+                                    <td>
                                         <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment'];
                                                 } else echo $apartment ?>" class="inputactive" style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;" placeholder="Квартира"  aria-required="true" type="text">
                                 
@@ -732,9 +732,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 } else echo $porch ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
                                     </td>
                                 </tr>
-                                <tr class="Address" style="display: none;">
-                                    <td  <?php echo ($flag)? $str : ""?>> Этаж  </td><td <?php echo ($flag)? $str : ""?>>Код домофона</td>
-                                    <td <?php echo ($flag)? $str : ""?>>
+                                <tr class="Address" <?php echo (!$flag)? $str : ""?>>
+                                    <td> Этаж  </td><td>Код домофона</td>
+                                    <td>
                                         <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor'];
                                                 } else echo $floor ?>" class="inputactive" style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;" placeholder="Этаж" aria-required="true" type="text">
                                 
@@ -744,7 +744,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 </tr>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                                    <td <?php echo ($flag)? $str : ""?> >
+                                    <td <?php echo ($flag)? $str : ""?>>
                                         <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
                                             -
                                         <?php } else { ?>
@@ -752,7 +752,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             <?php echo $jdate->format('d.m.Y'); ?>
                                         <?php } ?>
                                     </td>
-                                    <td <?php echo ($flag)? $str : ""?>>
+                                    <td <?php echo (!$flag)? $str : ""?>>
                                         <div id = "calendar_container"class="Date" style="display: none;position: relative;">
                                             <div class="btn-small-l">
                                                 <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
@@ -783,7 +783,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     </td>
                                     <td>
                                         <button type="submit" id="accept_changes" class="btn btn btn-success"
-                                                style="display: none;">
+                                            <?php echo (!$flag)? $str : ""?>>
                                             Сохранить
                                         </button>
                                     </td>
