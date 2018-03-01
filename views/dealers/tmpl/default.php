@@ -310,6 +310,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     var tbody = document.getElementById('tbody_dealers');
                     tbody.innerHTML = '';
                     var html = '';
+                    var color;
                     for(var i in data)
                     {
                         for(var key in data[i])
@@ -319,7 +320,15 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 data[i][key] = '-';
                             }
                         }
-                        html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
+                        if(data[i].kp_cnt + data[i].cmnt_cnt + data[i].inst_cnt == 0 )
+                        {
+                            color = "bgcolor=\"#d3d3f9\"";
+                        }
+                        else
+                        {
+                            color = '';
+                        }
+                        html += '<tr' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].city + '</td>';
