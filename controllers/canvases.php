@@ -226,7 +226,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->CanvasesPrice[$v->id];
-                    $OldDealerPrice = (empty($OldDealerPrice))?0:self::dealer_margin($v->price, 0, $OldDealerPrice->value, $OldDealerPrice->type);
+                    $OldDealerPrice = (empty($OldDealerPrice))?$v->price:self::dealer_margin($v->price, 0, $OldDealerPrice->value, $OldDealerPrice->type);
                     if ($type == 0) $OldDealerPrice = $v->price;
                     $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_canvases_margin, $number, $type);
@@ -234,7 +234,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                     $CanvasPrice = self::margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin);
                     $UpdateDelaerPrice = $DealerPrice - $CanvasPrice;
 
-                    if (floatval($NewDealerPrice) < floatval($PPrice)) $flag++;
+                    if (floatval($NewDealerPrice) < floatval($PPrice) && false) $flag++;
                     else { 
                         $dealer->setCanvasesPrice(["value" => $NewDealerPrice, "type" => 1], $v->id);
 

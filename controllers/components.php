@@ -146,7 +146,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->ComponentsPrice[$v->id];
-                    $OldDealerPrice = (empty($OldDealerPrice))?0:self::dealer_margin($v->price, 0, $OldDealerPrice->value, $OldDealerPrice->type);
+                    $OldDealerPrice = (empty($OldDealerPrice))?$v->price:self::dealer_margin($v->price, 0, $OldDealerPrice->value, $OldDealerPrice->type);
                     if ($type == 0) $OldDealerPrice = $v->price;
                     $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_components_margin, $number, $type);
@@ -154,7 +154,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                     $ComponentsPrice = self::margin($v->price, $userDealer->gm_components_margin);
                     $UpdateDelaerPrice = $DealerPrice - $ComponentsPrice;
 
-                    if (floatval($NewDealerPrice) < floatval($PPrice)) $flag++;
+                    if (floatval($NewDealerPrice) < floatval($PPrice) && false) $flag++;
                     else {
                         $dealer->setComponentsPrice(["value" => $NewDealerPrice, "type" => 1], $v->id);
 
