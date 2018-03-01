@@ -197,6 +197,7 @@ $AllMounters = $model->FindAllMounters($where);
                                 <?php echo $calculation->canvases_sum; ?> руб.
                             </td>
                             <td>
+                                <?php Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0, $calculation->id);?>
                                 <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary"
