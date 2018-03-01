@@ -3165,6 +3165,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $html .= '</tr>';
         }
+
         if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] > 0) {
             $name = $offcut_square_data['title'];
             $html .= '<tr>';
