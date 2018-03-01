@@ -324,6 +324,7 @@ if (empty($list['direction']))
 			$kp_cnt_query = $db->getQuery(true);
 			$comments_cnt_query = $db->getQuery(true);
 			$dealer_instr_cnt_query = $db->getQuery(true);
+			$manager_query = $db->getQuery(true);
 			$kp_cnt_query
 				->select('COUNT(*)')
 				->from('`#__users_commercial_offer` as co')
