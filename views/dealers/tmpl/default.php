@@ -60,49 +60,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         </tr>
         </thead>
         <tbody id="tbody_dealers">
-        	<?php
-        		foreach ($result_users as $key => $value)
-        		{
-                    $bckgrnd = "";
-                    $data = $recoil_map_model->getData($value->id);
-                    $sum[$value->id] = 0;
-                    $dealers[$value->id] = $value;
-                    foreach ($data as $item)
-                    {
-                        $sum[$value->id] +=  $item->sum;
-                    }
-                    if($value->kp_cnt + $value->cmnt_cnt + $value->inst_cnt == 0 ){
-                        $bckgrnd = "bgcolor=\"#d3d3f9\"";
-                    } 
-        	?>
-                <tr class="row<?php echo $i % 2; ?>" <?php echo $bckgrnd; ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id='.(int) $value->associated_client); ?>">
-		            <td>
-                       <?php echo $value->name;?>
-		            </td>
-                    <td>
-                       <?php echo $value->client_contacts; ?>
-                    </td>
-                    <td>
-                        <?php echo (!empty($value->city) ? $value->city : "-")?>
-                    </td>
-		            <td>
-		               <?php
-                            if($value->created == "0000-00-00 00:00:00") {
-                                echo "-";
-                            } else {
-                                $jdate = new JDate($value->created);
-                                $created = $jdate->format("d.m.Y H:i");
-                                echo $created;
-                            }
-                       ?>
-		            </td>
-                    <td>
-                            <?php echo JFactory::getUser($value->manager_id)->name; ?>
-                    </td>
-		        </tr>
-        	<?php
-        		}
-        	?>
+
         </tbody>
     </table>
     <div class="modal_window_container" id="mv_container">
@@ -297,7 +255,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             }
         });
 
-        jQuery("#find_dealer").click(function(){
+        showDealers();
+        document.getElementById('find_dealer').onclick = showDealers;
+
+        function showDealers(){
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=findOldClients",
@@ -352,6 +313,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     });
                 }                   
             });
-        });
+        }
     });
 </script>
