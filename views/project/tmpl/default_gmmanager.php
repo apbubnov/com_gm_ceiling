@@ -249,7 +249,7 @@ $AllMounters = $model->FindAllMounters($where);
                     $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
 
                     foreach ($calculations as $calculation) {
-                        $total_comp+=Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id)['self_total'];
+                        //$total_comp+=Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id)['self_total'];
                         $total_components_sum += $calculation->components_sum;
 
                         $baget = $calculation->n5 + $calculation->dop_krepezh / 2.0;
@@ -312,7 +312,7 @@ $AllMounters = $model->FindAllMounters($where);
                         <td>
                             <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                            <?php echo $total_comp;/* echo $total_components_sum - $baget2 + $itog - $brus2 + $itog2 - $price_provod + $price_provod1; */ ?>
+                            <?php echo $total_components_sum - $baget2 + $itog - $brus2 + $itog2 - $price_provod + $price_provod1; ?>
                             руб.
                             <?php } else { ?>
                                 0
