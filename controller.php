@@ -296,6 +296,8 @@ class Gm_ceilingController extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $FIO = $jinput->get('fio', '', 'STRING');
             $flag = $jinput->get('flag', 'clients', 'STRING');
+            $manager_id = $jinput->get('manager_id', null, 'STRING');
+            $city = $jinput->get('manager_id', null, 'STRING');
             $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
             if ($flag == 'clients')
             {
@@ -303,7 +305,7 @@ class Gm_ceilingController extends JControllerLegacy
             }
             elseif ($flag == 'dealers')
             {
-                $result = $clients_model->getDealersByClientName($FIO);
+                $result = $clients_model->getDealersByClientName($FIO, $manager_id, $city);
             }
             elseif ($flag == 'designers')
             {
