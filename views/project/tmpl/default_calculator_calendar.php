@@ -1949,7 +1949,7 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         var client_id = "<?php echo $this->item->id_client;?>";
         if(client_id==1){
             console.log("12312");
-            jQuery("#change_data").click();
+            jQuery("#change_data").trigger('click');
         }
         window.time = undefined;
         window.gauger = undefined;
