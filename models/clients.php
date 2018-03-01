@@ -320,13 +320,40 @@ if (empty($list['direction']))
 			$user = JFactory::getUser();
 			$db    = JFactory::getDbo();
 			$client_name = $db->escape($client_name);
+
+			$kp_cnt_query = $db->getQuery(true);
+			$comments_cnt_query = $db->getQuery(true);
+			$dealer_instr_cnt_query = $db->getQuery(true);
+			$kp_cnt_query
+				->select('COUNT(*)')
+				->from('`#__users_commercial_offer` as co')
+				->where('co.user_id = u.id');
+			$comments_cnt_query
+				->select('COUNT(*)')
+				->from('`#__gm_ceiling_client_history` as h')
+				->where('h.client_id = u.associated_client');
+			$dealer_instr_cnt_query
+				->select('COUNT(*)')
+				->from('`#__users_dealer_instruction` as di')
+				->where('di.user_id = u.id');
+			$manager_query
+				->select('`name`')
+				->from('`#__users`')
+				->where('id = c.manager_id');
+
 			$query = $db->getQuery(true);
 			$query
-				->select("`c`.*, GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`")
+				->select("`c`.*, GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`,`i`.`city`")
+				->select("($kp_cnt_query) as kp_cnt")
+				->select("($comments_cnt_query) as cmnt_cnt")
+				->select("($dealer_instr_cnt_query) as inst_cnt")
+				->select("($manager_query) as manager_name")
 				->from("`#__gm_ceiling_clients` as `c`")
 				->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`')
 				->innerJoin('`rgzbn_users` AS `u` ON `c`.`id` = `u`.`associated_client`')
-				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1)")
+				->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`rgzbn_user_usergroup_map`.`user_id`')
+				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1) AND `#__user_usergroup_map`.`group_id`=14")
 				->order('`c`.`id` DESC')
 				->group('`c`.`id`');
 			$db->setQuery($query);

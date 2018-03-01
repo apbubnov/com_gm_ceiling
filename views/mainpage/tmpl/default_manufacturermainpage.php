@@ -17,7 +17,7 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 ?>
-<?=parent::getButtonBack();?>
+
 <h2 class="center">Производитель</h2>
 
 <div class="start_page">
