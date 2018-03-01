@@ -2514,12 +2514,13 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         jQuery("input[name^='smeta']").change(function () {
             comp_sum = <?php echo $dealer_components_sum_1;?>;
             console.log(jQuery("#calculation_total1")[0].innerText);
+            var sum = jQuery("#calculation_total1")[0].innerText;
             if(jQuery("input[name^='smeta']").attr("checked") == 'checked'){
-                jQuery("#calculation_total1")[0].innerText = +jQuery("#calculation_total1")[0].innerText+comp_sum;
+                jQuery("#calculation_total1")[0].innerText = +sum-comp_sum;
                 console.log(jQuery("#calculation_total1")[0].innerText);
             }
             else{
-                jQuery("#calculation_total1")[0].innerText = +jQuery("#calculation_total1")[0].innerText-comp_sum;
+                jQuery("#calculation_total1")[0].innerText = +sum+comp_sum;
                 console.log(jQuery("#calculation_total1")[0].innerText);
             } 
         });
