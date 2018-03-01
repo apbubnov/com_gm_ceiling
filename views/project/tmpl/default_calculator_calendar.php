@@ -29,7 +29,6 @@ $total_square = 0;
 $total_perimeter = 0;
 $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations = $model->getProjectItems($this->item->id);
-
 foreach ($calculations as $calculation) {
     $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
     $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
@@ -933,7 +932,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 $total_square += $calculation->n4;
                 $total_perimeter += $calculation->n5;
                 $canvas = $dealer_canvases_sum;
-
 
                 $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
                 $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
@@ -2513,7 +2511,19 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 jQuery("input[name='smeta']").val(1);
             else jQuery("input[name='smeta']").val(0);
         });
-
+        jQuery("input[name^='smeta']").change(function () {
+            comp_sum = <?php echo $dealer_components_sum_1;?>;
+            console.log(jQuery("#calculation_total1")[0].innerText);
+            if(jQuery("input[name^='smeta']").attr("checked") == 'checked'){
+                jQuery("#calculation_total1").[0].innerText = jQuery("#calculation_total1")[0].innerText+comp_sum;
+                console.log(jQuery("#calculation_total1")[0].innerText);
+            }
+            else{
+                jQuery("#calculation_total1")[0].innerText = jQuery("#calculation_total1")[0].innerText-comp_sum;
+                console.log(jQuery("#calculation_total1")[0].innerText);
+            } 
+        });
+        
         jQuery("#client_order").click(function () {
             jQuery("input[name='project_verdict']").val(1);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
