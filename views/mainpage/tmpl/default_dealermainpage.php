@@ -225,6 +225,9 @@ $rest = -($total_sum) - $contributed;
         <?php }?>
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
+            <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Рассчитать</button>
+        </p>
+        <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>"><i class="fa fa-plus" aria-hidden="true"></i> Добавить замер</a>
         </p>
         <p class="center">
@@ -277,6 +280,9 @@ $rest = -($total_sum) - $contributed;
         jQuery("#msrmnt_btn").click(function () {
             jQuery("#new_msrmnt_btn").toggle();
             jQuery("#exist_msrmnt_btn").toggle();
+        });
+        jQuery().click(function(){
+
         });
         jQuery("#prices_btn").click(function () {
             jQuery("#canvases_price_btn").toggle();
