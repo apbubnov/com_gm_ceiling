@@ -154,7 +154,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                     $ComponentsPrice = self::margin($v->price, $userDealer->gm_components_margin);
                     $UpdateDelaerPrice = $DealerPrice - $ComponentsPrice;
 
-                    if (floatval($NewDealerPrice) < floatval($PPrice)) $flag++;
+                    if (floatval($NewDealerPrice) < floatval($PPrice) && false) $flag++;
                     else {
                         $dealer->setComponentsPrice(["value" => $NewDealerPrice, "type" => 1], $v->id);
 

@@ -234,7 +234,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                     $CanvasPrice = self::margin($oldPrice[$k]->price, $userDealer->gm_canvases_margin);
                     $UpdateDelaerPrice = $DealerPrice - $CanvasPrice;
 
-                    if (floatval($NewDealerPrice) < floatval($PPrice)) $flag++;
+                    if (floatval($NewDealerPrice) < floatval($PPrice) && false) $flag++;
                     else { 
                         $dealer->setCanvasesPrice(["value" => $NewDealerPrice, "type" => 1], $v->id);
 
