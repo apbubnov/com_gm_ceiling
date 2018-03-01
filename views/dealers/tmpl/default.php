@@ -31,7 +31,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
     <div style="display:inline-block; width: 48%; text-align: left;">
         <input type="text" id="name_find_dealer">
         <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
-        <select id="filter_manager">
+        <select class="input-gm" id="filter_manager">
+            
+        </select>
+        <select class="input-gm" id="filter_city">
             
         </select>
     </div>
@@ -326,6 +329,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     console.log(managers, cities);
                     jQuery.each(managers, function(key, value) {   
                      jQuery('#filter_manager')
+                         .append(jQuery("<option></option>")
+                                    .attr("value",key)
+                                    .text(value)); 
+                    });
+                    jQuery.each(cities, function(key, value) {   
+                     jQuery('#filter_city')
                          .append(jQuery("<option></option>")
                                     .attr("value",key)
                                     .text(value)); 
