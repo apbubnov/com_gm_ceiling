@@ -2516,11 +2516,11 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             console.log(jQuery("#calculation_total1")[0].innerText);
             if(jQuery("input[name^='smeta']").attr("checked") == 'checked'){
                 jQuery("#calculation_total1").val(jQuery("#calculation_total1")[0].innerText+comp_sum);
-                console.log(jQuery("#calculation_total1").val(0));
+                console.log(jQuery("#calculation_total1")[0].innerText);
             }
             else{
                 jQuery("#calculation_total1").val(jQuery("#calculation_total1")[0].innerText-comp_sum);
-                console.log(jQuery("#calculation_total1").val(0));
+                console.log(jQuery("#calculation_total1")[0].innerText);
             } 
         });
         
