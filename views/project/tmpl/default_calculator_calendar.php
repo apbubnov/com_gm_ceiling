@@ -654,8 +654,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <td <?php echo ($flag)? $str : ""?>>
                                         <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>"><?php echo $this->item->client_id; ?></a>
                                     </td>
-                                    <td <?php echo ($flag)? $str : ""?> >
-                                        <div class="FIO" style="display: none;">
+                                    <td >
+                                        <div class="FIO" <?php echo (!$flag)? $str : ""?>>
                                             <label id="jform_client_name-lbl" for="jform_client_name">ФИО клиента<span class="star">&nbsp;*</span></label>
                                             <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
                                         </div>
@@ -679,8 +679,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
                                             echo "<br>";
                                         } ?></td>
-                                    <td <?php echo ($flag)? $str : ""?>>
-                                        <div class="Contacts" style="display: none;">
+                                    <td>
+                                        <div class="Contacts"  <?php echo (!$flag)? $str : ""?>>
                                             <label id="jform_client_contacts-lbl" for="jform_client_contacts">Телефон
                                                 клиента<span class="star">&nbsp;*</span></label>
                                             <input name="new_client_contacts" id="jform_client_contacts" value=""
@@ -704,7 +704,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                     <td <?php echo ($flag)? $str : ""?>><a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>"><?=$this->item->project_info;?></a></td>
                                     <td <?php echo (!$flag)? $str : ""?> >
-                                        <div class="Address" style="display: none; position:relative;">
+                                        <div class="Address" style="position:relative;">
                                             <label id="jform_address_lbl" for="jform_address">Адрес<span
                                                         class="star">&nbsp;*</span></label>
                                             <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица"
@@ -753,7 +753,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <?php } ?>
                                     </td>
                                     <td <?php echo (!$flag)? $str : ""?>>
-                                        <div id = "calendar_container"class="Date" style="display: none;position: relative;">
+                                        <div id = "calendar_container"class="Date" style="position: relative;">
                                             <div class="btn-small-l">
                                                 <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                                             </div>
