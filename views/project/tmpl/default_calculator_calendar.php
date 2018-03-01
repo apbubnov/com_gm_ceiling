@@ -2513,10 +2513,14 @@ var min_components_sum = <?php echo $min_components_sum;?>;
         });
         jQuery("input[name^='smeta']").change(function () {
             comp_sum = <?php echo $dealer_components_sum_1;?>;
-            console.log("qweqwe");
-            if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
+            if(jQuery("input[name^='smeta']").attr("checked") == 'checked'){
                 jQuery("#calculation_total1").val(jQuery("#calculation_total1").val()+comp_sum);
-            else jQuery("#calculation_total1").val(jQuery("#calculation_total1").val()-comp_sum);
+                console.log(jQuery("#calculation_total1").val(0));
+            }
+            else{
+                jQuery("#calculation_total1").val(jQuery("#calculation_total1").val()-comp_sum);
+                console.log(jQuery("#calculation_total1").val(0));
+            } 
         });
         
         jQuery("#client_order").click(function () {
