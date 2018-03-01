@@ -281,9 +281,6 @@ $rest = -($total_sum) - $contributed;
             jQuery("#new_msrmnt_btn").toggle();
             jQuery("#exist_msrmnt_btn").toggle();
         });
-        jQuery().click(function(){
-
-        });
         jQuery("#prices_btn").click(function () {
             jQuery("#canvases_price_btn").toggle();
             jQuery("#components_price_btn").toggle();
@@ -298,7 +295,8 @@ $rest = -($total_sum) - $contributed;
                     owner: "<?php echo $userId?>"
                 },
                 success: function (data) {
-                    url = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' + parseInt(data);
+                    data = JSON.parse(data);
+                    url = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' + data;
                     location.href = url;
                 },
                 dataType: "text",
