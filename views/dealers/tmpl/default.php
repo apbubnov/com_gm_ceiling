@@ -31,6 +31,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
     <div style="display:inline-block; width: 48%; text-align: left;">
         <input type="text" id="name_find_dealer">
         <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+        <select class="input-gm" id="filter_manager">
+            
+        </select>
+        <select class="input-gm" id="filter_city">
+            
+        </select>
     </div>
     <br>
     <table class="table one-touch-view" id="callbacksList">
@@ -255,6 +261,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             }
         });
 
+        var managers = {}, cities = {};
+
         showDealers();
         document.getElementById('find_dealer').onclick = showDealers;
 
@@ -298,6 +306,39 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     }
                     tbody.innerHTML = html;
                     html = '';
+                    if (Object.keys(managers).length === 0)
+                    {
+                        for(var i in data)
+                        {
+                            if (!(data[i].manager_id in managers) && data[i].manager_id != '-')
+                            {
+                                managers[data[i].manager_id] = data[i].manager_name;
+                            }
+                        }
+                    }
+                    if (Object.keys(cities).length === 0)
+                    {
+                        for(var i in data)
+                        {
+                            if (!(data[i].city in cities) && data[i].city != '-')
+                            {
+                                cities[data[i].city] = data[i].city;
+                            }
+                        }
+                    }
+                    console.log(managers, cities);
+                    jQuery.each(managers, function(key, value) {   
+                     jQuery('#filter_manager')
+                         .append(jQuery("<option></option>")
+                                    .attr("value",key)
+                                    .text(value)); 
+                    });
+                    jQuery.each(cities, function(key, value) {   
+                     jQuery('#filter_city')
+                         .append(jQuery("<option></option>")
+                                    .attr("value",key)
+                                    .text(value)); 
+                    });
                 },
                 dataType: "json",
                 async: false,
