@@ -296,8 +296,8 @@ class Gm_ceilingController extends JControllerLegacy
             $jinput = JFactory::getApplication()->input;
             $FIO = $jinput->get('fio', '', 'STRING');
             $flag = $jinput->get('flag', 'clients', 'STRING');
-            $manager_id = $jinput->get('manager_id', null, 'STRING');
-            $city = $jinput->get('manager_id', null, 'STRING');
+            $manager_id = $jinput->get('manager_id', null, 'INT');
+            $city = $jinput->get('city', null, 'STRING');
             $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
             if ($flag == 'clients')
             {
