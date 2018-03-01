@@ -639,22 +639,18 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input name = "project_gauger" id = "project_gauger" type = "hidden">
                         <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
                     </div>
-                    <?php if ($user->dealer_type != 2) {
-                        $flag = $this->item->client_id == 1;
-                        $str = "style=\"display: none;\"";
-                       
-                        ?>
+                    <?php if ($user->dealer_type != 2) { ?>
                         <div class="row"><div class="col-12 col-md-6">
                             <table class="table">
                                 <tr>
                                     <th>
                                         <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
                                     </th>
-                                    <td <?php echo ($flag)? $str : ""?>>
+                                    <td>
                                         <a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>"><?php echo $this->item->client_id; ?></a>
                                     </td>
-                                    <td >
-                                        <div class="FIO" <?php echo (!$flag)? $str : ""?>>
+                                    <td>
+                                        <div class="FIO" style="display: none;">
                                             <label id="jform_client_name-lbl" for="jform_client_name">ФИО клиента<span class="star">&nbsp;*</span></label>
                                             <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
                                         </div>
@@ -673,13 +669,21 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <?php } ?>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                                    <?php $phone = $model->getClientPhones($this->item->id_client); ?>
-                                    <td <?php echo ($flag)? $str : ""?>><?php foreach ($phone AS $contact) {
+                                    <?php
+                                        if($this->item->id_client!=1){ 
+                                            $phone = $model->getClientPhones($this->item->id_client);
+                                         }
+                                         else 
+                                         {
+                                             $phone = [];
+                                         }
+                                    ?>
+                                    <td><?php foreach ($phone AS $contact) {
                                             echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
                                             echo "<br>";
                                         } ?></td>
                                     <td>
-                                        <div class="Contacts"  <?php echo (!$flag)? $str : ""?>>
+                                        <div class="Contacts" style="display: none;">
                                             <label id="jform_client_contacts-lbl" for="jform_client_contacts">Телефон
                                                 клиента<span class="star">&nbsp;*</span></label>
                                             <input name="new_client_contacts" id="jform_client_contacts" value=""
@@ -687,23 +691,25 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th>Почта</th>
-                                    <td <?php echo ($flag)? $str : ""?>><?php
-                                        $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-                                        $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
-                                        foreach ($contact_email AS $contact) {
-                                            echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
-                                            echo "<br>";
-                                        } ?>
-                                    </td>
+                                <?php if($this->item->id_client!=1){?>
+                                    <tr>
+                                        <th>Почта</th>
+                                        <td><?php
+                                            $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+                                            $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
+                                            foreach ($contact_email AS $contact) {
+                                                echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
+                                                echo "<br>";
+                                            } ?>
+                                        </td>
 
-                                </tr>
+                                    </tr>
+                                 <?php }?>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                                    <td <?php echo ($flag)? $str : ""?>><a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>"><?=$this->item->project_info;?></a></td>
-                                    <td <?php echo (!$flag)? $str : ""?> >
-                                        <div class="Address" style="position:relative;">
+                                    <td><a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>"><?=$this->item->project_info;?></a></td>
+                                    <td >
+                                        <div class="Address" style="display: none; position:relative;">
                                             <label id="jform_address_lbl" for="jform_address">Адрес<span
                                                         class="star">&nbsp;*</span></label>
                                             <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица"
@@ -711,7 +717,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="Address" <?php echo (!$flag)? $str : ""?>>
+                                <tr class="Address" style="display: none;">
                                     <td>Дом  </td><td>Корпус</td>
                                     <td>
                                         <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
@@ -721,7 +727,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 } else echo $bdq ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
                                     </td>
                                 </tr>
-                                <tr class="Address" <?php echo (!$flag)? $str : ""?>>
+                                <tr class="Address" style="display: none;">
                                     <td>Квартира  </td><td>Подъезд</td>
                                     <td>
                                         <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment'];
@@ -731,7 +737,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 } else echo $porch ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
                                     </td>
                                 </tr>
-                                <tr class="Address" <?php echo (!$flag)? $str : ""?>>
+                                <tr class="Address" style="display: none;">
                                     <td> Этаж  </td><td>Код домофона</td>
                                     <td>
                                         <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor'];
@@ -743,7 +749,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 </tr>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                                    <td <?php echo ($flag)? $str : ""?>>
+                                    <td>
                                         <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
                                             -
                                         <?php } else { ?>
@@ -751,8 +757,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             <?php echo $jdate->format('d.m.Y'); ?>
                                         <?php } ?>
                                     </td>
-                                    <td <?php echo (!$flag)? $str : ""?>>
-                                        <div id = "calendar_container"class="Date" style="position: relative;">
+                                    <td>
+                                        <div id = "calendar_container"class="Date" style="display: none;position: relative;">
                                             <div class="btn-small-l">
                                                 <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                                             </div>
@@ -782,7 +788,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     </td>
                                     <td>
                                         <button type="submit" id="accept_changes" class="btn btn btn-success"
-                                            <?php echo (!$flag)? $str : ""?>>
+                                                style="display: none;">
                                             Сохранить
                                         </button>
                                     </td>
@@ -1940,6 +1946,10 @@ var min_components_sum = <?php echo $min_components_sum;?>;
     //------------------------------------------
 
     jQuery(document).ready(function () {
+        var client_id = "<?php echo $this->item->id_client;?>";
+        if(client_id==1){
+            jQuery("#change_data").click();
+        }
         window.time = undefined;
         window.gauger = undefined;
         $("#modal_window_container #ok").click(function() { click_ok(this); });
