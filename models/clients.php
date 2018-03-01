@@ -363,7 +363,7 @@ if (empty($list['direction']))
 				}
 				if (!empty($city))
 				{
-					$query->where("`i`.`city` = $city");
+					$query->where("`i`.`city` = '$city'");
 				}
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
