@@ -2978,8 +2978,9 @@ class Gm_ceilingHelpersGm_ceiling
         $array1 = array();
         $array2 = explode(';', $data['calc_data']);
         foreach($array2 as $str) {
-        list($key, $value) = explode('=', $str);
-        $array1[$key] = $value;
+            list($key, $value) = explode('=', $str);
+            $array1[$key] = $value;
+        }
         foreach($array1 as $key=>$value){
             $us_walls .= $key.'='.$value*$p_usadki.';';
         }
