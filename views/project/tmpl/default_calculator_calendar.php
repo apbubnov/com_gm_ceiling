@@ -2512,7 +2512,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             else jQuery("input[name='smeta']").val(0);
         });
         jQuery("input[name^='smeta']").change(function () {
-            comp_sum = <?php echo $dealer_components_sum_1;?>
+            comp_sum = <?php echo $dealer_components_sum_1;?>;
+            cobnsole.log("qweqwe");
             if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
                 jQuery("#calculation_total1").val(jQuery("#calculation_total1").val()+comp_sum);
             else jQuery("#calculation_total1").val(jQuery("#calculation_total1").val()-comp_sum);
