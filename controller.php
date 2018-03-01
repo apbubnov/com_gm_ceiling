@@ -1460,6 +1460,7 @@ class Gm_ceilingController extends JControllerLegacy
             $arr_points = $jinput->get('arr_points', null, 'array');
             $offcut_square = $jinput->get('square_obrezkov', 0, 'FLOAT');
             $cuts = $jinput->get('cuts', '', 'string');
+            $p_usadki = $jinput->get('p_usadki', '1', 'FLOAT');
             
             for ($i = 0; $i < count($arr_points); $i++)
             {
@@ -1472,7 +1473,7 @@ class Gm_ceilingController extends JControllerLegacy
 
                 $str .= "Полотно" . ($i + 1) . ": " . $points_polonta . "; ";
             }
-
+            $str .= '||'.$p_usadki;
             $filename = md5($user_id . "cut-" . date("d-m-Y H:i:s"));
 
             //list($type, $data) = explode(';', $data);
