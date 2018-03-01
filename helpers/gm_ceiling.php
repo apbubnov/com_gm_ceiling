@@ -2972,7 +2972,18 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($data['project_id']);
         $canvases_data = self::calculate_canvases($calc_id);
-
+        $array_cut = explode('||',$data['cut_data']);
+        $cut_data = $array_cut[0];
+        $p_usadki = $array_cut[1];
+        $array1 = array();
+        $array2 = explode(';', $data['calc_data']);
+        foreach($array2 as $str) {
+            list($key, $value) = explode('=', $str);
+            $array1[$key] = $value;
+        }
+        foreach($array1 as $key=>$value){
+            $us_walls .= $key.'='.$value*$p_usadki.';';
+        }
         $html = '<img class= "image" src="/images/GM.png"/><h1 style="text-align:center;">Потолок ' . $data["calculation_title"] . '</h1>';
         $html .= '<table>';
         $html .= '<tbody>';
@@ -3039,7 +3050,10 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<table>';
         $html .= '<tbody>';
         $html .= '<tr>';
-        $html .= '<th>Полотна: </th><td>' . str_replace(';', ";<br>", $data['cut_data']) . '</td>';
+        $html .= '<th>Полотна: </th><td>' . str_replace(';', ";<br>", $cut_data) . '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<th>Стороны: </th><td>' . $us_walls. '</td>';
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';
