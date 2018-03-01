@@ -1373,6 +1373,11 @@ class Gm_ceilingHelpersGm_ceiling
 
             //Стоимость с маржой ГМ и дилера (для клиента)
             $canvas_id = (empty($data["n3_id"]))?$data["n3"]:$data["n3_id"];
+
+            $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
+            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            $canvases_data['self_dealer_total'] = round($data['n4'] * $canvases_data['self_dealer_price'], 2);
+
             $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
@@ -1409,7 +1414,12 @@ class Gm_ceilingHelpersGm_ceiling
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $offcut_square_data['gm_total'] = round($data['offcut_square'] * $offcut_square_data['gm_price'], 2);
             //Стоимость с маржой ГМ и дилера (для клиента)
-            
+
+            $offcut_square_data['self_dealer_price'] = dealer_margin(round($canvases[$canvas_id]->price / 2.5, 2), 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);//round(double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, 50) / 2.5, 2);
+            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            $offcut_square_data['self_dealer_total'] = round($data['offcut_square'] * $offcut_square_data['self_dealer_price'], 2);
+
+
             $offcut_square_data['dealer_price'] = dealer_margin(round($canvases[$canvas_id]->price / 2.5, 2), $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);//round(double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, 50) / 2.5, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
@@ -3147,11 +3157,11 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<tr>';
             $html .= '<td>' . $name . '</td>';
             if($need_price == 1){
-                $html .= '<td>' . round($canvases_data['self_price'], 2) . '</td>';
+                $html .= '<td>' . round($canvases_data['self_dealer_price'], 2) . '</td>';
             }
             $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
             if($need_price == 1){
-                $html .= '<td>' . $canvases_data['self_total'] . '</td>';
+                $html .= '<td>' . $canvases_data['self_dealer_total'] . '</td>';
             }
             $html .= '</tr>';
         }
@@ -3160,11 +3170,11 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<tr>';
             $html .= '<td>' . $name . '</td>';
             if($need_price == 1){
-                $html .= '<td >' . round($offcut_square_data['self_price'], 2) . '</td>';
+                $html .= '<td >' . round($offcut_square_data['self_dealer_price'], 2) . '</td>';
             }
             $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
             if($need_price == 1){
-                $html .= '<td>' . $offcut_square_data['self_total'] . '</td>';
+                $html .= '<td>' . $offcut_square_data['self_dealer_total'] . '</td>';
             }
             $html .= '</tr>';
         }

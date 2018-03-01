@@ -313,7 +313,7 @@ if (empty($list['direction']))
         }
 	}
 
-	public function getDealersByClientName($client_name)
+	public function getDealersByClientName($client_name, $manager_id, $city)
 	{
 		try
 		{
@@ -357,6 +357,14 @@ if (empty($list['direction']))
 				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1) AND `#__user_usergroup_map`.`group_id`=14")
 				->order('`c`.`id` DESC')
 				->group('`c`.`id`');
+				if (!empty($manager_id))
+				{
+					$query->where("`c`.`manager_id` = $manager_id");
+				}
+				if (!empty($city))
+				{
+					$query->where("`i`.`city` = '$city'");
+				}
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
 			return $items;

@@ -32,10 +32,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <input type="text" id="name_find_dealer">
         <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
         <select class="input-gm" id="filter_manager">
-            
+            <option value="">Выберите менеджера</option>
         </select>
         <select class="input-gm" id="filter_city">
-            
+            <option value="">Выберите город</option>
         </select>
     </div>
     <br>
@@ -265,6 +265,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
         showDealers();
         document.getElementById('find_dealer').onclick = showDealers;
+        document.getElementById('filter_manager').onchange = showDealers;
+        document.getElementById('filter_city').onchange = showDealers;
 
         function showDealers(){
             jQuery.ajax({
@@ -272,7 +274,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 url: "index.php?option=com_gm_ceiling&task=findOldClients",
                 data: {
                     fio: document.getElementById('name_find_dealer').value,
-                    flag: 'dealers'
+                    flag: 'dealers',
+                    manager_id: document.getElementById('filter_manager').value,
+                    city: document.getElementById('filter_city').value
                 },
                 success: function(data){
                     console.log(data);
@@ -315,6 +319,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 managers[data[i].manager_id] = data[i].manager_name;
                             }
                         }
+                        jQuery.each(managers, function(key, value) {   
+                            jQuery('#filter_manager')
+                             .append(jQuery("<option></option>")
+                                        .attr("value",key)
+                                        .text(value)); 
+                        });
                     }
                     if (Object.keys(cities).length === 0)
                     {
@@ -325,20 +335,13 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 cities[data[i].city] = data[i].city;
                             }
                         }
+                        jQuery.each(cities, function(key, value) {   
+                            jQuery('#filter_city')
+                             .append(jQuery("<option></option>")
+                                        .attr("value",key)
+                                        .text(value)); 
+                        });
                     }
-                    console.log(managers, cities);
-                    jQuery.each(managers, function(key, value) {   
-                     jQuery('#filter_manager')
-                         .append(jQuery("<option></option>")
-                                    .attr("value",key)
-                                    .text(value)); 
-                    });
-                    jQuery.each(cities, function(key, value) {   
-                     jQuery('#filter_city')
-                         .append(jQuery("<option></option>")
-                                    .attr("value",key)
-                                    .text(value)); 
-                    });
                 },
                 dataType: "json",
                 async: false,
