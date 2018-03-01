@@ -359,11 +359,11 @@ if (empty($list['direction']))
 				->group('`c`.`id`');
 				if (!empty($manager_id))
 				{
-					$query->where("`c`.`manager_id` = $manager_id")
+					$query->where("`c`.`manager_id` = $manager_id");
 				}
 				if (!empty($city))
 				{
-					$query->where("`i`.`city` = $city")
+					$query->where("`i`.`city` = $city");
 				}
 			$db->setQuery($query);
 			$items = $db->loadObjectList();
