@@ -834,8 +834,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$newDayPart = $jinput->get('new_project_calculation_daypart','','STRING');
 					$newGauger = $jinput->get('project_gauger','','STRING');
 					$client_model =  $this->getModel('client', 'Gm_ceilingModel');
-					throw new Exception($data->client_id);
-					if($data->client_id!=1){
+				
+					if($data->id_client!=1){
 						if(!empty($newFIO)){
 							if($newFIO!=$data->client_id){
 								$client_model->updateClient($data->id_client,$newFIO);
