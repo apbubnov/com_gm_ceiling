@@ -669,7 +669,15 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <?php } ?>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                                    <?php $phone = $model->getClientPhones($this->item->id_client); ?>
+                                    <?php
+                                        if($this->item->id_client!=1){ 
+                                            $phone = $model->getClientPhones($this->item->id_client);
+                                         }
+                                         else 
+                                         {
+                                             $phone = [];
+                                         }
+                                    ?>
                                     <td><?php foreach ($phone AS $contact) {
                                             echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
                                             echo "<br>";
@@ -683,18 +691,20 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th>Почта</th>
-                                    <td><?php
-                                        $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-                                        $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
-                                        foreach ($contact_email AS $contact) {
-                                            echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
-                                            echo "<br>";
-                                        } ?>
-                                    </td>
+                                <?php if($this->item->id_client!=1){?>
+                                    <tr>
+                                        <th>Почта</th>
+                                        <td><?php
+                                            $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+                                            $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
+                                            foreach ($contact_email AS $contact) {
+                                                echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
+                                                echo "<br>";
+                                            } ?>
+                                        </td>
 
-                                </tr>
+                                    </tr>
+                                 <?php }?>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                     <td><a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>"><?=$this->item->project_info;?></a></td>
@@ -779,7 +789,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <td>
                                         <button type="submit" id="accept_changes" class="btn btn btn-success"
                                                 style="display: none;">
-                                            Изменить
+                                            Сохранить
                                         </button>
                                     </td>
                                 </tr>
@@ -1936,6 +1946,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
     //------------------------------------------
 
     jQuery(document).ready(function () {
+        var client_id = "<?php echo $this->item->id_client;?>";
+        
         window.time = undefined;
         window.gauger = undefined;
         $("#modal_window_container #ok").click(function() { click_ok(this); });
@@ -2614,7 +2626,10 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             jQuery(".Date").toggle();
             jQuery("#accept_changes").toggle();
         });
-
+        if(client_id==1){
+            console.log("12312");
+            jQuery("#change_data").trigger('click');
+        }
         jQuery("#save_email").click(function(){
             jQuery("#activate_by_email").val(1);
             jQuery("#close").show();

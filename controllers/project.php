@@ -834,44 +834,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$newDayPart = $jinput->get('new_project_calculation_daypart','','STRING');
 					$newGauger = $jinput->get('project_gauger','','STRING');
 					$client_model =  $this->getModel('client', 'Gm_ceilingModel');
-					
-					if($data->client_id!=1){
+					$phones = [];
+					$phones[] = $jinput->get('new_client_contacts',null, 'STRING');
+					if($data->id_client!=1){
 						if(!empty($newFIO)){
 							if($newFIO!=$data->client_id){
 								$client_model->updateClient($data->id_client,$newFIO);
 								$client_history_model->save($data->id_client,"Изменено ФИО пользователя");	
 							}				
-						}
-						if(!empty($new_address)){
-							if($new_address!=$data->project_info){
-								$model->update_address($data->id,$new_address);
-								$client_history_model->save($data->id_client,"Адрес замера изменен с ".$data->project_info." на ".$new_address);
-							}							
-						}
-						$date_time = $data->project_calculation_date;
-						$date_arr = date_parse($date_time);
-						$date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
-						$time = $date_arr['hour'].':00';
-						if(!empty($newDate) && !empty($newDayPart))
-						{
-							if($date!=$newDate && $time!=$newDayPart){
-								$model->update_date_time($data->id,$newDate." ".$newDayPart);
-								$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$newDayPart);
-							}
-							elseif ($date!=$newDate) {
-								$model->update_date_time($data->id,$newDate." ".$time);
-								$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$time);
-							}
-							elseif ($newDayPart!=$time) {
-								$model->update_date_time($data->id,$date." ".$newDayPart);
-								$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$date." в ".$newDayPart);
-							}
-							
-						}
-						if (!empty($newGauger)) {
-							$model->update_date_gauger($data->id,$newGauger);
-							$name_gauger = $model->GetNameGauger($newGauger);
-							$client_history_model->save($data->id_client,"Замерщик изменен на $name_gauger->name");
 						}
 					}
 					else{
@@ -882,18 +852,43 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$client_data['dealer_id'] = $user->dealer_id;
 						$client_data['manager_id'] = $user->id;
 						$client_id = $client_model->save($client_data);
-						$db = JFactory::getDbo();
-						$query = $db->getQuery(true);
-						$fields = array(
-							$db->quoteName('client_id'). ' = '.$db->quote($client_id)
-						);
-						$conditions = array(
-							$db->quoteName('id').' = '.$db->quote($project_id)
-						);
-						$query->update($db->quoteName('#__gm_ceiling_projects'))->set($fields)->where($conditions);
-						$db->setQuery($query);
-						$result = $db->execute();
+						$model->update_client($data->id,$client_id);
+						$cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
+						$cl_phones_model->save($client_id,$phones);
+						
 					}
+					if(!empty($new_address)){
+						if($new_address!=$data->project_info){
+							$model->update_address($data->id,$new_address);
+							$client_history_model->save($data->id_client,"Адрес замера изменен с ".$data->project_info." на ".$new_address);
+						}							
+					}
+					$date_time = $data->project_calculation_date;
+					$date_arr = date_parse($date_time);
+					$date = $date_arr['year'].'-'.$date_arr['month'].'-'.$date_arr['day'];
+					$time = $date_arr['hour'].':00';
+					if(!empty($newDate) && !empty($newDayPart))
+					{
+						if($date!=$newDate && $time!=$newDayPart){
+							$model->update_date_time($data->id,$newDate." ".$newDayPart);
+							$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$newDayPart);
+						}
+						elseif ($date!=$newDate) {
+							$model->update_date_time($data->id,$newDate." ".$time);
+							$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$newDate." в ".$time);
+						}
+						elseif ($newDayPart!=$time) {
+							$model->update_date_time($data->id,$date." ".$newDayPart);
+							$client_history_model->save($data->id_client,"Замер пернесен с ".$date." в ".$time." на ".$date." в ".$newDayPart);
+						}
+						
+					}
+					if (!empty($newGauger)) {
+						$model->update_date_gauger($data->id,$newGauger);
+						$name_gauger = $model->GetNameGauger($newGauger);
+						$client_history_model->save($data->id_client,"Замерщик изменен на $name_gauger->name");
+					}
+					
 				}	
 				if($isDiscountChange&&(!empty($new_discount)||$new_discount==0)){
 					$model->change_discount($project_id,$new_discount);
