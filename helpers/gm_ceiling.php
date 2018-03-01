@@ -2977,6 +2977,7 @@ class Gm_ceilingHelpersGm_ceiling
         $p_usadki = $array_cut[1];
         $array1 = array();
         $array2 = explode(';', $data['calc_data']);
+        array_pop($array2);
         foreach($array2 as $str) {
             list($key, $value) = explode('=', $str);
             $array1[$key] = $value;
