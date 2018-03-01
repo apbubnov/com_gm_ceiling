@@ -303,7 +303,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     }
                     tbody.innerHTML = html;
                     html = '';
-                    if (managers.length === 0)
+                    if (Object.keys(managers).length === 0)
                     {
                         for(var i in data)
                         {
