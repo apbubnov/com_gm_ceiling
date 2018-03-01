@@ -225,6 +225,9 @@ $rest = -($total_sum) - $contributed;
         <?php }?>
     <?php } elseif ($user->dealer_type == 1) { ?>
         <p class="center">
+            <button class="btn btn-large btn-primary" id="precalc_btn" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Рассчитать</button>
+        </p>
+        <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=addproject&type=calculator', false); ?>"><i class="fa fa-plus" aria-hidden="true"></i> Добавить замер</a>
         </p>
         <p class="center">
@@ -292,6 +295,7 @@ $rest = -($total_sum) - $contributed;
                     owner: "<?php echo $userId?>"
                 },
                 success: function (data) {
+                    data = JSON.parse(data);
                     url = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' + data;
                     location.href = url;
                 },
