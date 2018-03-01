@@ -307,13 +307,29 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     {
                         for(var i in data)
                         {
-                            if (!(data[i].manager_id in managers))
+                            if (!(data[i].manager_id in managers) && data[i].manager_id != '-')
                             {
                                 managers[data[i].manager_id] = data[i].manager_name;
                             }
                         }
                     }
-                    console.log(managers);
+                    if (Object.keys(cities).length === 0)
+                    {
+                        for(var i in data)
+                        {
+                            if (!(data[i].city in cities) && data[i].city != '-')
+                            {
+                                cities[data[i].city] = data[i].city;
+                            }
+                        }
+                    }
+                    console.log(managers, cities);
+                    jQuery.each(managers, function(key, value) {   
+                     jQuery('#filter_manager')
+                         .append(jQuery("<option></option>")
+                                    .attr("value",key)
+                                    .text(value)); 
+                    });
                 },
                 dataType: "json",
                 async: false,
