@@ -312,6 +312,13 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     var html = '';
                     for(var i in data)
                     {
+                        for(var key in data[i])
+                        {
+                            if (data[i][key] == null)
+                            {
+                                data[i][key] = '-';
+                            }
+                        }
                         html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
