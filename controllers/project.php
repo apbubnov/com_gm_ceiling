@@ -834,7 +834,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$newDayPart = $jinput->get('new_project_calculation_daypart','','STRING');
 					$newGauger = $jinput->get('project_gauger','','STRING');
 					$client_model =  $this->getModel('client', 'Gm_ceilingModel');
-				
+					$phones = [];
+					$phones[] = $jinput->get('new_client_contacts',null, 'STRING');
 					if($data->id_client!=1){
 						if(!empty($newFIO)){
 							if($newFIO!=$data->client_id){
@@ -852,6 +853,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$client_data['manager_id'] = $user->id;
 						$client_id = $client_model->save($client_data);
 						$model->update_client($data->id,$client_id);
+						$cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
+						$cl_phones_model->save($client_id,$phones);
 						
 					}
 					if(!empty($new_address)){
