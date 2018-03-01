@@ -19,7 +19,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 ?>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
     <a class="btn btn-large btn-primary"
-       href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
+       href="/index.php?option=com_gm_ceiling&view=mainpage&type=manufacturermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
     <h2 class="center">Дилеры</h2>
     <div style="display:inline-block; width: 48%; text-align: left;">
@@ -315,12 +315,17 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         html += '<tr data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
-                        html += '<td>' + data[i].city + '</td>';
                         html += '<td>' + data[i].created + '</td>';
-                        html += '<td>' + data[i].manager_name + '</td></tr>';
+                        html += '<td><button class="btn btn-primary btn-done" user_id="' + data[i].dealer_id + '" type="button"> Внести сумму </button></td>';
+                        html += '<td><select class="SelectPrice" autocomplete="off">\n' +
+                            '<option disabled selected>Прайс:</option>\n' +
+                            '<option value="/index.php?option=com_gm_ceiling&view=components&dealer=' + data[i].dealer_id + '">Компонентов</option>\n' +
+                            '<option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=' + data[i].dealer_id + '">Полотен</option>\n' +
+                            '</select></td></tr>';
                     }
                     tbody.innerHTML = html;
                     html = '';
+                    jQuery(".SelectPrice").change(ChangeSelectPrice);
                 },
                 dataType: "json",
                 async: false,
