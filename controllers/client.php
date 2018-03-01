@@ -246,4 +246,23 @@ class Gm_ceilingControllerClient extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
 	}
+	public function removeEmail(){
+		try
+		{
+			$jinput = JFactory::getApplication()->input;
+            $client_id = $jinput->get('client_id', null, 'INT');
+            $email = $jinput->get('email', null, 'STRING');
+
+            $client_dop_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+            $result = $client_dop_model->removeEmail($client_id, $email);
+            die(json_encode($result));
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }

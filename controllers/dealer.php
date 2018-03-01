@@ -77,7 +77,8 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 	        $jinput = $app->input;
             $user = JFactory::getUser();
 	        $name = $jinput->get('fio', null, 'STRING');
-	        $phone = $jinput->get('phone', null, 'STRING');
+			$phone = $jinput->get('phone', null, 'STRING');
+			$city  = $jinput->get('city',null,'STRING');
 			//Создание клиента
 			$clientform_model =Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
 			$client_data['client_name'] = $name;
@@ -95,6 +96,8 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 				$dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, "$client_id@$client_id", $client_id);
 				$client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
 				$client_model->updateClient($client_id,null,$dealer_id);
+				$dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
+				$dealer_info_model->update_city($dealer_id,$city);
 		        die($dealer_id);
 		    }
 	    }
@@ -165,5 +168,76 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
+	}
+	public function sendEmail($email=null,$subject=null,$text=null){
+        try{
+			$flag = 0;
+            $jinput = JFactory::getApplication()->input;
+            $email = (empty($email)) ? $jinput->get('email', null, 'STRING') : $email;
+			$client_id = $jinput->get('client_id', null, 'STRING');
+			if(!empty($client_id)){
+				$dop_contact_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+				$dop_contact_model->save($client_id,1,$email);
+				$flag = 1;
+			}
+            
+            $subject = (empty($subject)) ? $jinput->get('subj', null, 'STRING') : $subject;
+            $text = (empty($text)) ? $jinput->get('text', null, 'STRING') : $text;
+            $mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
+            $sender = array(
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            );
+            $mailer->setSender($sender);
+            $mailer->addRecipient($email);
+            $mailer->setSubject($subject);
+            $mailer->setBody($text);
+            //$mailer->addAttachment($sheets_dir.$filename);
+			$send = $mailer->Send();
+			if($flag==1){
+				die(json_encode(true));
+			}
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
+	public function send_out_to_dealers(){
+		try
+        {
+            $app = JFactory::getApplication();
+            $jinput = $app->input;
+			$text = $jinput->get('text', null, 'STRING');
+			$subject = $jinput->get('subj', null, 'STRING');
+			$user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+			$dop_contact_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+			$dealers = $user_model->getDealers();
+			$emails = [];
+			foreach($dealers as $dealer){
+				$tmp = $dop_contact_model->getEmailByClientID($dealer->associated_client);
+				foreach ($tmp as $value) {
+					if(!empty($value->contact)){
+						$emails[]=$value->contact;
+					}
+				}
+			}
+
+			foreach($emails as $email){
+				$res = $this->sendEmail($email,$subject,$text);
+			}
+            die(json_encode($emails));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }

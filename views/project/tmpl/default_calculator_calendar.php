@@ -637,6 +637,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <input name = "project_new_calc_date" id = "project_new_calc_date" type = "hidden">
                         <input name = "new_project_calculation_daypart" id = "new_project_calculation_daypart" type = "hidden">
                         <input name = "project_gauger" id = "project_gauger" type = "hidden">
+                        <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
                     </div>
                     <?php if ($user->dealer_type != 2) { ?>
                         <div class="row"><div class="col-12 col-md-6">
@@ -1578,12 +1579,17 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </td>
             </tr>
             <tr>
-                <td colspan="3">
+                <td colspan="2">
                     <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
                         производство
                     </button>
                 </td>
-                <td colspan="3">
+                <td colspan="2">
+                    <button class="validate btn btn-primary" id="save_email" type="button" from="form-client"> Сохранить и запустить <br> в
+                        производство по email
+                    </button>
+                </td>
+                <td colspan="2">
                     <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
                     </button>
                 </td>
@@ -1609,6 +1615,15 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <select name="hours" id='hours'></select>
         </p>
         <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+    </div>
+</div>
+<div id="modal_window_activate" class = "modal_window_container">
+    <div id="modal_window_by_email" class = "modal_window">
+            <p><strong>Введите адрес эл.почты:</strong></p>
+            <p>
+                <input id = "email_to_send" name = "email_to_send" class = "input-gm">
+            </p>
+            <p><button class = "btn btn-primary">Запустить</button></p>
     </div>
 </div>
 <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
@@ -1738,6 +1753,13 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             jQuery("#close").hide();
             jQuery("#modal_window_g_container").hide();
             jQuery("#modal_window_g_choose").hide();
+        }
+        var div4 = jQuery("#modal_window_by_email");
+        if (!div4.is(e.target) // если клик был не по нашему блоку
+            && div4.has(e.target).length === 0) { // и не по его дочерним элементам
+            jQuery("#close").hide();
+            jQuery("#modal_window_activate").hide();
+            jQuery("#modal_window_by_email").hide();
         }
     });
     // -----------------------------------------------------------------------------------------
@@ -2592,6 +2614,14 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             jQuery(".Date").toggle();
             jQuery("#accept_changes").toggle();
         });
+
+        jQuery("#save_email").click(function(){
+            jQuery("#activate_by_email").val(1);
+            jQuery("#close").show();
+            jQuery("#modal_window_activate").show();
+            jQuery("#modal_window_by_email").show();
+        });
+
         jQuery("#accept_changes").click(function () {
             jQuery("input[name='data_change']").val(1);
         });

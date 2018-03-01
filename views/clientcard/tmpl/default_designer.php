@@ -36,41 +36,37 @@
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
-    <p>
-    <button class="btn btn-primary" type="button" id="btn_refuse">Отказ от сотрудничества</button>
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
-    <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
-    <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
+   
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
-
-
+<table class = "actions">
+    <tr>
+        <td>
+            <button class="btn btn-primary" type="button" id="btn_refuse">Отказ от сотрудничества</button>
+        </td>
+    </tr>
+    <tr>
+        <td class = "td-left">
+            <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
+        </td>
+    </tr>
+    <tr>
+        <td class = "td-left">
+            <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
+        </td>
+    </tr>
+    
+</table>
 <?php
         $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
         $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
-    ?>
-    <select id="select_phones" style="display:none;"><option value='0' disabled selected>Выберите номер</option>
-        <?php foreach($client_phones as $item): ?>
-            <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
-        <?php endforeach;?>
-    </select></p>
-<div id="call" class="call" style="display:none;">
-        <label for="call">Перенести звонок</label>
-        <br>
-        <table>
-            <tr>
-                <td> <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></td>
-                <td> <input name="call_comment" id="call_comment" placeholder="Введите примечание"></td>
-                <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>
-            </tr>
-        </table>  
-</div>
-<? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
+        $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
 <div style="width: 98%;">
 <div style="display: inline-block; width: 48%;">
@@ -241,6 +237,24 @@
             <input id="call_comment_m" placeholder="Введите примечание"><br>
             <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
     </div>
+    <div id="modal_window_select_number" class="modal_window">
+        <p>Выберите номер для звонка:</p>
+        <select id="select_phones" class = "select_phones">
+            <option value='0' disabled selected>Выберите номер</option>
+            <?php foreach($client_phones as $item): ?>
+                <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+    <div id="call" class="modal_window">
+            <p>Перенести звонок</p>
+            <p>Дата звонка</p>
+            <p><input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></p>
+            <p>Примечание</p>
+            <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
+            <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
+
+    </div>
 </div>
 <script>
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
@@ -248,15 +262,20 @@
         var div2 = jQuery("#modal_window_client");
         var div3 = jQuery("#modal_window_comm");
         var div4 = jQuery("#modal_window_call");
-        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) 
-            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 
-            && div3.has(e.target).length === 0 && div4.has(e.target).length === 0) {
+        var div5 = jQuery("#call");
+        var div6 = jQuery("#modal_window_select_number");
+        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) 
+            && !div4.is(e.target) && !div5.is(e.target) && !div6.is(e.target)
+            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 
+            && div4.has(e.target).length === 0 && div5.has(e.target).length === 0 && div6.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
             jQuery("#modal_window_client").hide();
             jQuery("#modal_window_comm").hide();
             jQuery("#modal_window_call").hide();
+            jQuery("#call").hide();
+            jQuery("#modal_window_select_number").hide();
         }
     });
 
@@ -534,7 +553,9 @@
 
     jQuery("#but_call").click(function ()
     {
-        document.getElementById('select_phones').style.display = 'block';
+        jQuery("#close").show();
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_select_number").show("slow");
     });
 
     jQuery("#select_phones").change(function ()
@@ -545,8 +566,9 @@
     });
 
     jQuery("#broke").click(function(){
-        jQuery("#call").show();
-            
+        jQuery("#mv_container").show();
+        jQuery("#call").show("slow");
+        jQuery("#close").show(); 
     });
 
     jQuery("#add_call_and_submit").click(function(){

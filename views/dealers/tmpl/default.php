@@ -26,6 +26,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <button type="button" id="new_dealer" class="btn btn-primary">Создать дилера</button>
     </div>
     <div style="display:inline-block; width: 48%; text-align: left;">
+        <button type="button" id="send_to_all" class="btn btn-primary">Отправить на email</button>
+    </div>
+    <div style="display:inline-block; width: 48%; text-align: left;">
         <input type="text" id="name_find_dealer">
         <button type="button" id="find_dealer" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
@@ -40,14 +43,20 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                Телефоны
             </th>
             <th>
+                Город
+            </th>
+            <th>
                Дата регистрации
             </th>
             <th>
+                Менеджер
+            </th>
+           <!--  <th>
                 Взнос
             </th>
             <th>
                 Изменить
-            </th>
+            </th> -->
         </tr>
         </thead>
         <tbody id="tbody_dealers">
@@ -73,6 +82,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     <td>
                        <?php echo $value->client_contacts; ?>
                     </td>
+                    <td>
+                        <?php echo (!empty($value->city) ? $value->city : "-")?>
+                    </td>
 		            <td>
 		               <?php
                             if($value->created == "0000-00-00 00:00:00") {
@@ -85,14 +97,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                        ?>
 		            </td>
                     <td>
-                        <button class="btn btn-primary btn-done" user_id="<?= $value->id; ?>" type="button"> Внести сумму </button>
-                    </td>
-                    <td>
-                        <select class="SelectPrice" autocomplete="off">
-                            <option disabled selected>Прайс:</option>
-                            <option value="/index.php?option=com_gm_ceiling&view=components&dealer=<?=$value->id;?>">Компонентов</option>
-                            <option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=<?=$value->id;?>">Полотен</option>
-                        </select>
+                            <?php echo JFactory::getUser($value->manager_id)->name; ?>
                     </td>
 		        </tr>
         	<?php
@@ -105,18 +110,19 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <div class="modal_window" id="modal_window_create">
                 <p><strong>Создание нового дилера</strong></p>
                 <p>ФИО:</p>
-                <p><input type="text" id="fio_dealer"></p>
+                <p><input type="text" id="fio_dealer" placeholder = "ФИО"></p>
                 <p>Номер телефона:</p>
                 <p><input type="text" id="dealer_contacts"></p>
+                <p>Город</p>
+                <p><input type="text" id = "dealer_city" placeholder = "Город"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <div class="modal_window" id="modal_window_sum">
-            <p><strong id="dealer_name"></strong></p>
-            <p id="dealer_invoice"></p>
-            <p>Сумма взноса:</p>
-            <p><input type="text" id="pay_sum"></p>
-            <input type="hidden" id="hidden_user_id">
-            <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
+        <div class="modal_window" id="modal_window_send">
+            <p>Тема</p>
+            <p><input type ="text" class="input-gm" id="email_subj"></p>
+            <p>Текст письма:</p>
+            <p><textarea rows = "10" class ="textarea-gm" id="email_text"></textarea></p>
+            <p><button type="button" id="send" class="btn btn-primary">Разослать</button></p>
         </div>
     </div>
 
@@ -135,6 +141,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#mv_container").show();
             jQuery("#modal_window_create").show("slow");
         });
+        
+        jQuery("#send_to_all").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_send").show("slow");
+        });
 
         function ChangeSelectPrice() {
             location.href = this.value;
@@ -150,7 +162,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             while (target.tagName != 'BODY')
             {
                 var div = jQuery("#modal_window_create");
-                var div2 = jQuery("#modal_window_sum"); // тут указываем ID элемента
+                var div2 = jQuery("#modal_window_send"); // тут указываем ID элемента
                 if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
                 {
                     console.log(target);
@@ -163,7 +175,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 url: "index.php?option=com_gm_ceiling&task=dealer.create_dealer",
                                 data: {
                                     fio: document.getElementById('fio_dealer').value,
-                                    phone: document.getElementById('dealer_contacts').value
+                                    phone: document.getElementById('dealer_contacts').value,
+                                    city: document.getElementById('dealer_city').value
                                 },
                                 success: function(data){
                                     if (data == 'client_found')
@@ -197,25 +210,26 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 }                   
                             });
                         }
-                        if (target.id == 'save_pay')
+                        if (target.id == 'send')
                         {
-                            jQuery.ajax({
+                             jQuery.ajax({
                                 type: 'POST',
-                                url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
+                                url: "index.php?option=com_gm_ceiling&task=dealer.send_out_to_dealers",
                                 data: {
-                                    id: document.getElementById('hidden_user_id').value,
-                                    sum: document.getElementById('pay_sum').value
+                                   text : jQuery("#email_text").val(),
+                                   subj : jQuery("#email_subj").val()
                                 },
                                 success: function(data){
+                                    console.log(data);
                                     var n = noty({
                                         timeout: 5000,
                                         theme: 'relax',
                                         layout: 'center',
                                         maxVisible: 5,
                                         type: "success",
-                                        text: "Сумма успешно добавлена"
+                                        text: "Письма отправлены"
                                     });
-                                    setInterval(function() { location.reload();}, 1500);
+                                    //setInterval(function() { location.reload();}, 1500);
                                 },
                                 dataType: "text",
                                 async: false,
@@ -230,7 +244,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                         text: "Ошибка. Сервер не отвечает"
                                     });
                                 }
-                            });
+                            }); 
                             return;
                         }
                     }

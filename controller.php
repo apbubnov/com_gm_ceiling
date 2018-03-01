@@ -3304,7 +3304,6 @@ class Gm_ceilingController extends JControllerLegacy
 
 
     }
-
     public function filterProjectForStatus() {
         try
         {

@@ -578,7 +578,7 @@ class Gm_ceilingHelpersGm_ceiling
                 self::create_cut_pdf(null,$data);
                 //для менеджера
                 
-                self::create_manager_estimate(null,$data,$canvases_data,$offcut_square_data,$guild_data);
+                self::create_manager_estimate(1,null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета
                 self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
             }         
@@ -2874,7 +2874,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
     /* функция для создания PDF документа с расходкой по проекту */
-    public static function create_estimate_of_consumables($project_id){
+    public static function create_estimate_of_consumables($project_id,$need_price){
         $components_data = array();
         $calculations_model = self::getModel('calculations');
         $calculations = $calculations_model->getProjectItems($project_id);
@@ -2924,7 +2924,11 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<p>&nbsp;</p>
 		<h2>Дата: ' . date("d.m.Y") . '</h2>
 		<table border="0" cellspacing="0" width="100%">
-		<tbody><tr><th>Наименование</th><th class="center">Ед. изм.</th><th class="center">Кол-во</th><th class="center">Общая стоимость</th></tr>';
+        <tbody><tr><th>Наименование</th><th class="center">Ед. изм.</th><th class="center">Кол-во</th>';
+        if($need_price == 1){
+            $html .='<th class="center">Общая стоимость</th></tr>';
+        }
+       
         $price_itog = 0;
         foreach ($print_data as $key => $item) {
             if ($item['quantity'] > 0 || $item['quantity'] > 0.0) {
@@ -2932,17 +2936,25 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td>' . $item['title'] . '</td>';
                 $html .= '<td class="center">' . $item['unit'] . '</td>';
                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
-                $html .= '<td class="center">' . round($item['self_total'], 2) . '</td>';
+                if($need_price == 1){
+                    $html .= '<td class="center">' . round($item['self_total'], 2) . '</td>';
+                }
                 $html .= '</tr>';
                 $price_itog += $item['self_total'];
             }
         }
-        $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
+        if($need_price == 1){
+            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
+        }
         $html .= '</tbody></table><p>&nbsp;</p>';
 
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-
-        $filename = md5($project_id . "consumables") . ".pdf";
+        if($need_price == 1){
+            $filename = md5($project_id . "consumables") . ".pdf";
+        }
+        else{
+            $filename = md5($project_id . "consumablesnone") . ".pdf";
+        }
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         return 1;
     }
@@ -3049,7 +3061,7 @@ class Gm_ceilingHelpersGm_ceiling
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4", "cut");
     }
     /*функция генерации pdf для менеджера*/
-    public static function create_manager_estimate($calc_id=null,$data = null, $canvases_data = null,$offcut_square_data = null,$guild_data = null){
+    public static function create_manager_estimate($need_price,$calc_id=null,$data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
@@ -3060,23 +3072,16 @@ class Gm_ceilingHelpersGm_ceiling
         }
         
         $project_model = self::getModel('project');
-        $project = $project_model->getData($data->project_id);
+        $project = $project_model->getData($data['project_id']);
         if(empty($canvases_data)){
             $canvases_data = self::calculate_canvases($calc_id);
         }
         if(empty($offcut_square_data)){
-            $offcut_square_data =self::calculate_offcut($calc_id);
+            $offcut_square_data = self::calculate_offcut($calc_id);
         }
         if(empty($guild_data)){
             $guild_data = self::calculate_guild_jobs($calc_id)['guild_data'];
         }
-        /*foreach ($guild_data as $guild) {
-            $total_gm_guild += $guild['gm_salary_total'];
-            $total_dealer_guild += $guild['dealer_salary_total'];
-            $total_with_gm_margin_guild += $guild['total_with_gm_margin'];
-            $total_with_gm_dealer_margin_guild += $guild['total_with_gm_dealer_margin'];
-            $total_with_dealer_margin_guild += $guild['total_with_dealer_margin'];
-        }*/
         $html = '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
         if (isset($project->id)) {
@@ -3094,9 +3099,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= "<b>Адрес: </b>" . $project->project_info . "<br>";
             }
         }
-        if (isset($mount->name)) {
-            if ($mount->name) {
-                $html .= "<b>Монтажная группа: </b>" . $mount->name . "<br>";
+        if (isset($project->project_mounter)&&$need_price == 1) {
+            if ($project->project_mounter) {
+                $html .= "<b>Монтажная группа: </b>" . JFactory::getUser($project->project_mounter)->name . "<br>";
             }
         }
         if (isset($calculation_title)) {
@@ -3107,7 +3112,15 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<p>&nbsp;</p>
                 <h1>Для менеджера</h1>
                 <table border="0" cellspacing="0" width="100%">
-                <tbody><tr><th>Наименование</th><th class="center">Себестоимость</th><th class="center">Кол-во</th><th>Итого</th></tr>';
+                <tbody><tr><th>Наименование</th>';
+        if($need_price == 1){
+            $html .='<th class="center">Себестоимость</th>';
+        }
+        $html .='<th class="center">Кол-во</th>';
+        if($need_price == 1){
+            $html .=' <th>Итого</th>';
+        }
+        $html .='</tr>';
         if ($data['n1'] && $data['n2'] && $data['n3']) {
             if ($data['color'] > 0) {
                 $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
@@ -3118,27 +3131,39 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $html .= '<tr>';
             $html .= '<td>' . $name . '</td>';
-            $html .= '<td>' . round($canvases_data['self_price'], 2) . '</td>';
+            if($need_price == 1){
+                $html .= '<td>' . round($canvases_data['self_price'], 2) . '</td>';
+            }
             $html .= '<td class="center">' . $canvases_data['quantity'] . '</td>';
-            $html .= '<td>' . $canvases_data['self_total'] . '</td>';
+            if($need_price == 1){
+                $html .= '<td>' . $canvases_data['self_total'] . '</td>';
+            }
             $html .= '</tr>';
         }
         if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] > 0) {
             $name = $offcut_square_data['title'];
             $html .= '<tr>';
             $html .= '<td>' . $name . '</td>';
-            $html .= '<td >' . round($offcut_square_data['self_price'], 2) . '</td>';
+            if($need_price == 1){
+                $html .= '<td >' . round($offcut_square_data['self_price'], 2) . '</td>';
+            }
             $html .= '<td class="center">' . $offcut_square_data['quantity'] . '</td>';
-            $html .= '<td>' . $offcut_square_data['self_total'] . '</td>';
+            if($need_price == 1){
+                $html .= '<td>' . $offcut_square_data['self_total'] . '</td>';
+            }
             $html .= '</tr>';
         }
         $price = 0;
         foreach ($guild_data["guild_data"] as $item) {
             $html .= '<tr>';
             $html .= '<td>' . $item['title'] . '</td>';
-            $html .= '<td>' . round($item['gm_salary'], 2) . '</td>';
+            if($need_price == 1){
+                $html .= '<td>' . round($item['gm_salary'], 2) . '</td>';
+            }
             $html .= '<td class="center">' . $item['quantity'] . '</td>';
-            $html .= '<td>' . $item['gm_salary_total'] . '</td>';
+            if($need_price == 1){
+                $html .= '<td>' . $item['gm_salary_total'] . '</td>';
+            }
             $html .= '</tr>';
             $price += $item['gm_salary_total'];
         }
@@ -3150,13 +3175,20 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td></td>';
             $html .= '</tr>';
         }
-        $price_itog = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $guild_data["total_gm_guild"];
-        $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
+        if($need_price == 1){
+            $price_itog = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $guild_data["total_gm_guild"];
+            $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
+        }
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= "<b>Длины сторон: </b>" . $data['calc_data'] . "<br>";
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
             $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 530px;"/> <br>';
-        $filename = md5($calc_id . "manager") . ".pdf";
+        if($need_price == 1){
+            $filename = md5($calc_id . "manager") . ".pdf";
+        }
+        else{
+            $filename = md5($calc_id . "managernone") . ".pdf";
+        }
         Gm_ceilingHelpersGm_ceiling::save_pdf($html, $sheets_dir . $filename, "A4");
         return 1;
     }

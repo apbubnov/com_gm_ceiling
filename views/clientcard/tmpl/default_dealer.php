@@ -33,52 +33,72 @@
     else{
         $manager_name = "-";
     }
+    $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+    $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
+    $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
+    $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
 ?>
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
-    <p>
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
     <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
     <?php if ($call_id != 0) { ?>
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
-    <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
-    <button class="btn btn-primary" type="button" id="but_login">Предоставить доступ</button>
-    <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
 </div>
-
-
-<?php
-        $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-        $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
-    ?>
-    <select id="select_phones" style="display:none;"><option value='0' disabled selected>Выберите номер</option>
-        <?php foreach($client_phones as $item): ?>
-            <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
-        <?php endforeach;?>
-    </select></p>
-<div id="call" class="call" style="display:none;">
-        <label for="call">Перенести звонок</label>
-        <br>
-        <table>
-            <tr>
-                <td> <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></td>
-                <td> <input name="call_comment" id="call_comment" placeholder="Введите примечание"></td>
-                <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>
-            </tr>
-        </table>  
-</div>
-<? $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
-        $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
+<table class = "actions">
+    <tr>
+        <td class = "td-left">
+            <button class="btn btn-primary" type="button" id="but_comm">Отправить КП</button>
+        </td>
+        <td class = "td-right">
+            <button class="btn btn-primary btn-done" id ="add_pay" type="button"> Внести сумму </button>
+        </td>
+    </tr>
+    <tr>
+        <td class = "td-left">
+            <button class="btn btn-primary" type="button" id="but_login">Предоставить доступ</button>
+        </td>
+        <td class = "td-right">
+        <select class="SelectPrice" autocomplete="off">
+            <option disabled selected>Прайс:</option>
+            <option value="/index.php?option=com_gm_ceiling&view=components&dealer=<?= $this->item->dealer_id?>">Компонентов</option>
+            <option value="/index.php?option=com_gm_ceiling&view=canvases&dealer=<?=$this->item->dealer_id?>">Полотен</option>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <td class = "td-left">
+            <button class="btn btn-primary" type="button" id="but_callback">Добавить перезвон</button>
+        </td>
+        <td class = "td-right">
+           <button id = "new_send_email" type = "button" class = "btn btn-primary">Написать e-mail</button>
+        </td>
+    </tr>
+</table>
 <div>
 <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта дилера: </p>
 </div>
 <? if (!empty($dop_contacts)) { ?>
 <div>
+<table>
+
 <? foreach ($dop_contacts AS $contact) {?>
-    <p  style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><? echo $contact->contact; echo "<br>";?></p> <? }?>
+    <tr>
+        <td style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;">
+            <? echo $contact->contact;?>
+        </td>
+        <td>
+            <button name ="rm_email" class = "btn btn-danger" email="<? echo $contact->contact;?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        </td>
+    </tr>
+   
+    
+   
+<? }?>
+</table>
 </div>
 <? } ?>
 <div>
@@ -234,6 +254,51 @@
             <input id="call_comment_m" placeholder="Введите примечание"><br>
             <button class="btn btn-primary" id="add_call" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
     </div>
+    <div class="modal_window" id="modal_window_select_number">
+        <p>Выберите номер для звонка:</p>
+        <select id="select_phones" class = "select_phones"><option value='0' disabled selected>Выберите номер</option>
+            <?php foreach($client_phones as $item): ?>
+                <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+    <div class="modal_window" id="modal_window_sum">
+        <p><strong id="dealer_name"></strong></p>
+        <p id="dealer_invoice"></p>
+        <p>Сумма взноса:</p>
+        <p><input type="text" id="pay_sum"></p>
+        <input type="hidden" id="hidden_user_id">
+        <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
+    </div>
+    <div id="call" class="modal_window">
+        <p>Перенести звонок</p>
+        <p>Дата звонка:</p>
+        <p><input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></p>
+        <p>Примечание</p>
+        <p><input name="call_comment" id="call_comment" placeholder="Введите примечание"></p>
+        <p><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></p>
+    </div>
+    <div class = "modal_window" id="modal_window_send_email">
+        <p>Новое сообщение</p>
+        <? if (!empty($dop_contacts)) {
+            $i=0; ?>
+        <div style="margin-top: 10px;">
+        <? foreach ($dop_contacts AS $contact) {
+            
+            $id = "cnt".$i;?>
+            <input type="radio" name='send_email' class = "radio" id="<?php echo $id;?>" value='<? echo $contact->contact; ?>'><label for ="<?php echo $id;?>" ><? echo $contact->contact; ?></label><br>
+        <? 
+            $i++;
+        }?>
+        </div>
+        <? } ?>
+        <h6 style = "margin-top:10px">Введите почту</h6>
+        <p><input type="text" id="email" class="input-gm" placeholder="Почта" required></p>
+        <p>Тема письма</p>
+        <p><input type="text" id="email_subj" class="input-gm" placeholder="Тема" required></p>
+        <p><textarea class="textarea-gm" rows="10" id="email_text" placeholder="Введите текст письма"></textarea></p>
+        <p><button type = "button" id = "send_email" class = "btn btn-primary">Отправить</button></p>
+    </div>
 </div>
 
 <script>
@@ -243,9 +308,15 @@
         var div3 = jQuery("#modal_window_comm");
         var div4 = jQuery("#modal_window_login");
         var div5 = jQuery("#modal_window_call");
-        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) && !div5.is(e.target)
-            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 
-            && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 &&  div5.has(e.target).length === 0) {
+        var div6 = jQuery("#modal_window_select_number");
+        var div7 = jQuery("#modal_window_sum");
+        var div8 = jQuery("#call");
+        var div9 = jQuery("#modal_window_send_email");
+        if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) 
+            && !div5.is(e.target)&& !div6.is(e.target) && !div7.is(e.target) && !div8.is(e.target) && !div9.is(e.target)
+            && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 
+            && div5.has(e.target).length === 0 &&  div6.has(e.target).length === 0&&  div7.has(e.target).length === 0 && div8.has(e.target).length === 0
+            && div9.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
@@ -253,21 +324,113 @@
             jQuery("#modal_window_comm").hide();
             jQuery("#modal_window_call").hide();
             jQuery("#modal_window_login").hide();
+            jQuery("#modal_window_select_number").hide();
+            jQuery("#modal_window_sum").hide();
+            jQuery("#call").hide();
+            jQuery("#modal_window_send_email").hide();
+            
         }
     });
+    function ChangeSelectPrice() {
+            location.href = this.value;
+            jQuery(".SelectPrice option:first-child").prop("selected", true);
+        }
+    jQuery(".SelectPrice").change(ChangeSelectPrice);
 
     jQuery("#new_client").click(function(){
         jQuery("#close").show();
         jQuery("#mv_container").show();
         jQuery("#modal_window_client").show("slow");
     });
+    jQuery("[name = rm_email]").click(function(){
+        var email = jQuery(this).attr("email");
+        var client_id = <?php echo $this->item->id;?>;
 
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=client.removeEmail",
+            data: {
+                email: email,
+                client_id : client_id
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                add_history(client_id,"Удален email: "+email);
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Письмо отправлено!"
+                });
+
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+
+    });
+    jQuery("#new_send_email").click(function(){
+        jQuery("#close").show();
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_send_email").show("slow");
+    });
     jQuery("#edit").click(function() {
         jQuery("#mv_container").show();
         jQuery("#modal_window_fio").show("slow");
         jQuery("#close").show();
     });
+    jQuery("[name = send_email]").change(function(){
+        jQuery("#email").val(jQuery(this).val());
+    });
+    jQuery("#send_email").click(function(){
+        var client_id = <?php echo $this->item->id;?>;
+        var email = jQuery("#email").val();
+        var subj = jQuery("#email_subj").val();
+        var text = jQuery("#email_text").val();
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=dealer.sendEmail",
+            data: {
+                email: email,
+                subj: subj,
+                text: text,
+                client_id : client_id
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                add_history(client_id,"Отправлен email");
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Письмо отправлено!"
+                });
 
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    });
     jQuery("#but_comm").click(function (){
         jQuery("#mv_container").show();
         jQuery("#modal_window_comm").show("slow");
@@ -553,9 +716,50 @@
 
     jQuery("#but_call").click(function ()
     {
-        document.getElementById('select_phones').style.display = 'block';
+        jQuery("#close").show();
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_select_number").show("slow");
     });
-
+    jQuery("#add_pay").click(function(){
+        jQuery("#close").show();
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_sum").show("slow");
+    });
+    jQuery("#save_pay").click(function(){
+        var user_id = <?php echo $this->item->dealer_id;?>;
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=dealer.add_in_table_recoil_map_project",
+            data: {
+                id: user_id,
+                sum: document.getElementById('pay_sum').value
+            },
+            success: function(data){
+                var n = noty({
+                    timeout: 5000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Сумма успешно добавлена"
+                });
+                setInterval(function() { location.reload();}, 1500);
+            },
+            dataType: "text",
+            async: false,
+            timeout: 10000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка. Сервер не отвечает"
+                });
+            }
+        });
+    });
     jQuery("#select_phones").change(function ()
     {
         var id_client = <?php echo $this->item->id; ?>;
@@ -568,7 +772,9 @@
         jQuery("#close").show();
     });
     jQuery("#broke").click(function(){
-        jQuery("#call").show();
+        jQuery("#mv_container").show();
+        jQuery("#call").show("slow");
+        jQuery("#close").show();
             
     })
     jQuery("#add_call_and_submit").click(function(){

@@ -235,7 +235,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                     $UpdateDelaerPrice = $DealerPrice - $CanvasPrice;
 
                     if (floatval($NewDealerPrice) < floatval($PPrice)) $flag++;
-                    else {
+                    else { 
                         $dealer->setCanvasesPrice(["value" => $NewDealerPrice, "type" => 1], $v->id);
 
                         $answer->elements[] = (object) [
@@ -247,7 +247,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                         $answer->elements[] = (object) [
                             "name" => ".Level3[data-canvas='$v->id'] #DealerPrice",
                             "value" => $DealerPrice];
-                    }
+                    } 
                 }
                 if ($flag == 1) {
                     $answer->status = "error";
