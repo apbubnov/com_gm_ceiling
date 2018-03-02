@@ -2575,6 +2575,7 @@ class Gm_ceilingController extends JControllerLegacy
             $width = $jinput->get('width', '', 'INT');
             $cuts = $jinput->get('cuts', '', 'string');
             $width = (string)$width/100;
+            $p_usadki = $jinput->get('p_usadki', '', 'string');
             if(empty(strpos($width,'.'))){
                 $width.='.0';
             }
@@ -2590,10 +2591,10 @@ class Gm_ceilingController extends JControllerLegacy
 
                 $str .= "Полотно" . ($i + 1) . ": " . $points_polonta . "; ";
             }
-
-            list($type, $data) = explode(';', $data);
+            $str.='||'.$p_usadki;
+           /*  list($type, $data) = explode(';', $data);
             list(, $data) = explode(',', $data);
-            $data = base64_decode($data);
+            $data = base64_decode($data); */
 
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $result = $calc_model->update_cut_data($calc_id, $str, $width);
