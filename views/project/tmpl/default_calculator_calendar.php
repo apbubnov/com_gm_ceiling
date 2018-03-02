@@ -1079,9 +1079,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <th id="project_total_discount">
                         <span class="sum">
                      <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                    if($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum) if($min_components_sum>0){$project_total_discount = $min_components_sum;}
-                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) { if($min_components_sum>0){$project_total_discount = $min_components_sum;} echo round($project_total_discount, 0);  ?> руб.</th> <?}
-                    elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { if($min_project_sum>0){$project_total_discount =  $min_project_sum;} echo round($project_total_discount, 0);  ?> руб.</th>
+                    if($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum)
+                        $project_total_discount = $min_components_sum;
+                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) {
+                        $project_total_discount = $min_components_sum;
+                        echo round($project_total_discount, 0);  ?> руб.</th> <?}
+                    elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { 
+                        $project_total_discount =  $min_project_sum;
+                        echo round($project_total_discount, 0);  ?> руб.</th>
                         </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                     <?php } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
 
