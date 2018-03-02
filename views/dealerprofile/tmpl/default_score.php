@@ -84,7 +84,7 @@ $rest = -($total_sum) - $contributed;
         </tbody>
         <tfoot>
             <tr style="border: 1px solid #414099">
-                <th class="right" colspan="2"> ИТОГО: </th>
+                <th class="right" colspan="3"> ИТОГО: </th>
                 <th class="center itog"><span><?= $rest ? round(-$rest,2) : 0; ?></span> руб.</th>
             </tr>
         </tfoot>
