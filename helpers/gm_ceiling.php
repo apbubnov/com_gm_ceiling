@@ -2873,7 +2873,7 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($component_array as $key1 => $component) {
                 if ($component['stack'] == 0) {
                     $print_data[$key1]['self_total'] =  $print_data[$key1]['self_total'] + $component['self_total'];
-                    $print_data[$key1]['dealer_total'] = $print_datap[$key1]['dealer_total'] + $component['dealer_total'];
+                    $print_data[$key1]['dealer_total'] = $print_datap[$key1]['dealer_total'] + $component['self_dealer_total'];
                     $print_data[$key1]['quantity'] = self::rounding($print_data[$key1]['quantity'] + $component['quantity'], $print_data[$key1]['rounding']); // Округление                   
                 }
             }
@@ -2912,10 +2912,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td class="center">' . $item['unit'] . '</td>';
                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
                 if($need_price == 1){
-                    $html .= '<td class="center">' . round($item['self_total'], 2) . '</td>';
+                    $html .= '<td class="center">' . round($item['dealer_total'], 2) . '</td>';
                 }
                 $html .= '</tr>';
-                $price_itog += $item['self_total'];
+                $price_itog += $item['dealer_total'];
             }
         }
         if($need_price == 1){
