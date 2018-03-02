@@ -48,6 +48,7 @@ $rest = -($total_sum) - $contributed;
             <th class=''>Дата</th>
             <th class=''>Проект</th>
             <th class=''>Сумма</th>
+            <th class=''>Комментарий</th>
         </tr>
         <tr class="row" id="TrClone" data-href="" style="display: none">
             <td class="one-touch date"></td>
@@ -77,6 +78,7 @@ $rest = -($total_sum) - $contributed;
                 </td>
                 <td class="one-touch"><?php echo $item->project_id; ?></td>
                 <td class="one-touch"> <?php echo $item->sum; ?> </td>
+                <td class="one-touch"><?php echo $item->comment?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
