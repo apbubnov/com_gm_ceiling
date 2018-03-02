@@ -485,7 +485,6 @@ class Gm_ceilingHelpersGm_ceiling
             $data['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $data['components_sum'] = $components_sum;
             $data['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data['guild_data']['total_dealer_guild'];
-            throw new Exception($canvases_data['dealer_total']);
             $data['dealer_components_sum'] = $dealer_components_sum;
             $data['mounting_sum'] = $total_gm_mounting;
             $data['project_discount'] = $dealer->discount;
