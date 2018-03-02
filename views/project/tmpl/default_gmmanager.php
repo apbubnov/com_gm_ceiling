@@ -13,7 +13,7 @@ $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
-$model_calcilations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+$model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations = $model_calculations->getProjectItems($this->item->id);
 foreach($calculations as $calc){
     Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);    
