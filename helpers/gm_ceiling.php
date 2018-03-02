@@ -2911,10 +2911,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td class="center">' . $item['unit'] . '</td>';
                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
                 if($need_price == 1){
-                    $html .= '<td class="center">' . round($item['dealer_total'], 2) . '</td>';
+                    $html .= '<td class="center">' . round($item['self_total'], 2) . '</td>';
                 }
                 $html .= '</tr>';
-                $price_itog += $item['dealer_total'];
+                $price_itog += $item['self_total'];
             }
         }
         if($need_price == 1){
