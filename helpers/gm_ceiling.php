@@ -2887,6 +2887,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
         }  
         
+        print_r($print_data);
         $html = '<h1>Расходные материалы</h1>';
         if (isset($project_id)) {
             if ($project_id) {
