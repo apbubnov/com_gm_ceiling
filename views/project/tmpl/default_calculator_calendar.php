@@ -786,7 +786,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <?php echo $this->item->dealer_manager_note; ?>
                                     </td>
                                     <td>
-                                        <button type="button" id="accept_changes" class="btn btn btn-success"
+                                        <button type="submit" id="accept_changes" class="btn btn btn-success"
                                                 style="display: none;">
                                             Сохранить
                                         </button>
@@ -2059,15 +2059,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                     });
                 }
             });
-        });
-        jQuery("#accept_changes").click(function(){
-            var name = jQuery("#jform_client_name");
-            
-            if(name.val()!=""){
-                jQuery("#form-client").submit();
-            }
-            else
-            name.focus();
         });
         jQuery("#add_birthday").click(function () {
             var birthday = jQuery("#jform_birthday").val();
