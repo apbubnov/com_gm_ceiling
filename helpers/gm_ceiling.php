@@ -2948,7 +2948,7 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data = self::calculate_canvases($calc_id);
         $client_model = self::getModel('client');
         $client = $client_model->getClientById($project->id_client);
-        $dealer_name = JFactory::getUser($client->delaer_id);
+        $dealer_name = JFactory::getUser($client->delaer_id)->name;
         $array_cut = explode('||',$data['cut_data']);
         $cut_data = $array_cut[0];
         $p_usadki = $array_cut[1];
