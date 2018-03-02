@@ -2946,14 +2946,14 @@ class Gm_ceilingHelpersGm_ceiling
         $project_model = self::getModel('project');
         $project = $project_model->getData($data['project_id']);
         $canvases_data = self::calculate_canvases($calc_id);
+        $client_model = self::getModel('client');
+        $client = $client_model->getClientById($project->id_client);
+        $dealer_name = JFactory::getUser($client->delaer_id);
         $array_cut = explode('||',$data['cut_data']);
         $cut_data = $array_cut[0];
-        $cut_array = explode(';', $cut_data);
-        $cut_array = array_reverse($cut_array);
-        $cut_data = implode(',',$cut_array);
         $p_usadki = $array_cut[1];
         $array1 = array();
-        $array2 = explode(',', $data['calc_data']);
+        $array2 = explode(';', $data['calc_data']);
         array_pop($array2);
         foreach($array2 as $str) {
             list($key, $value) = explode('=', $str);
@@ -2968,7 +2968,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<tr>';
         $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
         $html .= '<th>Клиент:</th><td >' . $project->client_id . '</td>';
-        $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
+        $html .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';               
@@ -2982,7 +2982,8 @@ class Gm_ceilingHelpersGm_ceiling
             } else {
                 $name = $canvases_data['title'];
         }
-        $html .= '<th>Цвет: </th><td colspan="3" >' . $name . '</td>';
+        $html .= '<th>Цвет: </th><td colspan="2" >' . $name . '</td>';
+        $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';
