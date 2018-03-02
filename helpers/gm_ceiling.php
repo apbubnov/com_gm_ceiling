@@ -145,8 +145,8 @@ class Gm_ceilingHelpersGm_ceiling
         $mount_model = self::getModel('mount');
 
             $gm_margin = $margin_model->getDataById(1);
-            $margin_model->save($gm_margin->dealer_canvases_margin,$gm_margin->dealer_components_margin,$gm_margin->dealer_mounting_margin,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
-            $gm_mount = $mount_model->getDataAll(1);
+            $margin_model->save(0,0,0,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
+            $gm_mount = $mount_model->getDataAll(0);
             $gm_mount->user_id = $userID;
             $mount_model->insert($gm_mount);
         
@@ -154,18 +154,6 @@ class Gm_ceilingHelpersGm_ceiling
 
         //header('location: /index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage');
     }
-
-    /*функция для получения всех монтажных бригад и проверки кому принадлежит та или иная бригада*/
-    /* public static function whoseTeam($teamName)
-    {
-        $teamsModel = Gm_ceilingHelpersGm_ceiling::getModel('teams');
-        $teamsList = $teamsModel->getAllItems();
-        for ($i = 0; $i < count($teamsList); $i++) {
-            if ($teamsList[$i]['name'] == $teamName) {
-                return $teamsList[$i]['dealer_id'];
-            }
-        }
-    } */
 
     /* 	основная функция для расчета стоимости потолка
 		$from_db - 0,1 флаг, брать ли данные калькуляции из БД
@@ -471,7 +459,7 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_components_sum = 0;
             $dealer_components_sum = 0;
             foreach ($components_data as $component_item) {
-                $components_sum += $component_item['self_total'];
+                $components_sum += $component_item['self_dealer_total'];
                 $gm_components_sum += $component_item['gm_total'];
                 $dealer_components_sum += $component_item['dealer_total'];
             }
@@ -483,16 +471,18 @@ class Gm_ceilingHelpersGm_ceiling
             $new_discount = $data['discount'];
             //Сюда забиваем ответ в JSON
             $ajax_return = array();
+            $ajax_return['canv_arr'] = $canvases_data;
+            $ajax_return['comp_arr'] = $components_data;
             $ajax_return['total_sum'] = round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild + $data['guild_data']['total_dealer_guild'], 2);
             $ajax_return['project_discount'] = $new_discount;
-            $ajax_return['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $data["guild_data"]["total_gm_guild"];
+            $ajax_return['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $ajax_return['components_sum'] = $components_sum;
             $ajax_return['mounting_sum'] = $total_gm_mounting;
             $ajax_return['dealer_components_sum'] = $dealer_components_sum;
             $ajax_return['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data["guild_data"]["total_dealer_guild"];
             $ajax_return['dealer_mounting_sum'] = $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild;
             $ajax_return['mounting_arr'] = $data;
-            $data['canvases_sum'] = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $data["guild_data"]["total_gm_guild"];
+            $data['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $data['components_sum'] = $components_sum;
             $data['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data['guild_data']['total_dealer_guild'];
             $data['dealer_components_sum'] = $dealer_components_sum;
@@ -632,13 +622,8 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
         }
-
-        $components_sum = 0;
-        $gm_components_sum = 0;
         $dealer_components_sum = 0;
         foreach ($components_data as $component_item) {
-            $components_sum += $component_item['self_total'];
-            $gm_components_sum += $component_item['gm_total'];
             $dealer_components_sum += $component_item['dealer_total'];
         }
         $total_with_gm_dealer_margin = $mounting_data['total_with_gm_dealer_margin'];
@@ -1200,33 +1185,11 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['n21'] > 0) {
             $component_count[$items_2[0]->id] += $data['n21'] * 2;
         }
-
-        //Брус до 0,5 и багет 2.5м считается кусками, которые потребуются выложить весь периметр
-        /* Округление перенесено
-            if ($data['n28'] == 0) $component_count[$items_11[0]->id] = self::rounding($component_count[$items_11[0]->id], 2.5);
-            elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] = self::rounding($component_count[$items_236[0]->id], 2.5);
-            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] = self::rounding($component_count[$items_239[0]->id], 2.5);
-            $component_count[$items_559[0]->id] = self::rounding($component_count[$items_559[0]->id], 2.5);
-            $component_count[$items_233[0]->id] = self::rounding($component_count[$items_233[0]->id], 2.5);
-            $component_count[$items_38[0]->id] = self::rounding($component_count[$items_38[0]->id], 0.5);
-            $component_count[$items_1[0]->id] = self::rounding($component_count[$items_1[0]->id], 0.5);
-            $component_count[650] = self::rounding($component_count[650], 2.5);
-            $component_count[651] = self::rounding($component_count[651], 2.5);
-            $component_count[652] = self::rounding($component_count[652], 2.5);
-            $component_count[653] = self::rounding($component_count[653], 2.5);
-            $component_count[654] = self::rounding($component_count[654], 2.5);
-            $component_count[655] = self::rounding($component_count[655], 2.5);
-            $component_count[656] = self::rounding($component_count[656], 2.5);
-            $component_count[$items_4[0]->id] = ceil($component_count[$items_4[0]->id]);
-        */
-       
-
         //просчет доп компонентов со склада
         $components_stock = json_decode($data['components_stock']);
         foreach ($components_stock as $comp_stock) {
             $component_count[$comp_stock->title] += $comp_stock->value;
         }
-
         //---------------------------------- ВОЗВРАЩАЕМ СТОИМОСТЬ КОМПЛЕКТУЮЩИХ --------------------------------------//
         //Сюда считаем итоговую сумму полотна
         $canvases_data = self::calculate_canvases($data['id']);
@@ -1237,30 +1200,22 @@ class Gm_ceilingHelpersGm_ceiling
         foreach ($component_count as $key => $cost) {
             $component_item = array();
 
-            $component_item['title'] = $components[$key]->full_name;//. " ".$components[$key]->title ; 								//Название комплектующего
-            $component_item['unit'] = $components[$key]->component_unit;                                //В чем измеряется
-            $component_item['id'] = $components[$key]->id;                                                //ID
+            $component_item['title'] = $components[$key]->full_name;    						//Название комплектующего
+            $component_item['unit'] = $components[$key]->component_unit;                        //В чем измеряется
+            $component_item['id'] = $components[$key]->id;                                      //ID
             $component_item['quantity'] = self::rounding($cost, $components[$key]->count_sale); // Округление
-            /*if ($component_item['unit'] == "шт.") {
-                $component_item['quantity'] = ceil($cost);                                                //Кол-во
-            } else {
-                $component_item['quantity'] = $component_count[$key];
-            }*/
-            $component_item['stack'] = 0;                                                                //Флаг, складывать ли этот компонент при сложении калькуляций
-
-            //$component_item['self_price'] = dealer_margin($components[$key]->price, 0, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);                            //Себестоимость
-            $component_item['self_price'] = $components[$key]->price;
+            $component_item['stack'] = 0;                                                       //Флаг, складывать ли этот компонент при сложении калькуляций
+            $component_item['self_price'] = $components[$key]->price;                           //cебестоимость    
             $component_item['self_total'] = round($component_item['self_price'] * $component_item['quantity'], 2);//Кол-во * Себестоимость
 
             //Стоимость с маржой ГМ (для дилера)
-            //$component_item['gm_price'] = margin($components[$key]->price, $gm_components_margin);
             $component_item['gm_price'] = margin($component_item['self_price'], $gm_components_margin);
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
-
             //Стоимость с маржой ГМ и дилера (для клиента)
-            //$component_item['dealer_price'] = double_margin($components[$key]->price, $gm_components_margin, $dealer_components_margin);
-            //$component_item['dealer_price'] = margin($component_item['gm_price'], $dealer_components_margin);
+            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+                //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
             $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
@@ -1286,7 +1241,10 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
 
             //Стоимость с маржой ГМ и дилера (для клиента)
-            //$component_item['dealer_price'] = double_margin($component_item['self_price'], $gm_components_margin, $dealer_components_margin);
+            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+
+            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
             $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
 
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
@@ -1348,6 +1306,7 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases = [];
         foreach ($canvases_list as $i => $canvas)
             $canvases[$canvas->id] = $canvas;
+
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
            
@@ -1359,11 +1318,11 @@ class Gm_ceilingHelpersGm_ceiling
             $total_gm_guild = $data['guild_data']['total_gm_guild'];
 
             if (empty($calc_id)):
-                $canvases_data['self_price'] = round($canvases[$data['n3']]->price, 2);                                    //Себестоимость
-                $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                            //Кол-во * Себестоимость
+                $canvases_data['self_price'] = round($canvases[$data['n3']]->price, 2);                                    //Себестоимость по основному прайсу
+                $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                       //Кол-во * Себестоимость
             else:
-                $canvases_data['self_price'] = round($data["canvases_sum"] / $data["n4"], 2);                                    //Себестоимость
-                $canvases_data['self_total'] = round($data["canvases_sum"], 2);                            //Кол-во * Себестоимость
+                $canvases_data['self_price'] = round($data["canvases_sum"] / $data["n4"], 2);                              //Себестоимость по основному прайсу
+                $canvases_data['self_total'] = round($data["canvases_sum"], 2);                                             //Кол-во * Себестоимость
             endif;
 
             //Стоимость с маржой ГМ (для дилера)
@@ -1371,15 +1330,14 @@ class Gm_ceilingHelpersGm_ceiling
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
 
-            //Стоимость с маржой ГМ и дилера (для клиента)
-            $canvas_id = (empty($data["n3_id"]))?$data["n3"]:$data["n3_id"];
-
+            $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
+            //себестоимость дилера, с учетом его прайса
             $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
-            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            //Кол-во * себестоимость дилера
             $canvases_data['self_dealer_total'] = round($data['n4'] * $canvases_data['self_dealer_price'], 2);
-
+            //дилерская цена для клиента
             $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
-            //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
+            //Кол-во * дилерскую цену (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
         }
         return $canvases_data;
@@ -1418,8 +1376,6 @@ class Gm_ceilingHelpersGm_ceiling
             $offcut_square_data['self_dealer_price'] = dealer_margin(round($canvases[$canvas_id]->price / 2.5, 2), 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);//round(double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, 50) / 2.5, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['self_dealer_total'] = round($data['offcut_square'] * $offcut_square_data['self_dealer_price'], 2);
-
-
             $offcut_square_data['dealer_price'] = dealer_margin(round($canvases[$canvas_id]->price / 2.5, 2), $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);//round(double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, 50) / 2.5, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
@@ -2884,10 +2840,16 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
     /* функция для создания PDF документа с расходкой по проекту */
-    public static function create_estimate_of_consumables($project_id,$need_price){
+    public static function create_estimate_of_consumables($project_id,$need_price=1){
+        $project_model = self::getModel('Project');
+        $project = $project_model->getData($project_id);
+        $client_model = self::getModel('Client');
+        $client = $client_model->getClientById($project->id_client);
         $components_data = array();
         $calculations_model = self::getModel('calculations');
         $calculations = $calculations_model->getProjectItems($project_id);
+        $dealer_info = JFactory::getUser($client->dealer_id);
+        $dealer_info_components = $dealer_info->getComponentsPrice();
         foreach($calculations as $calc){
             $components_data [] = self::calculate_components($calc->id,null,0);
         }
@@ -2902,6 +2864,7 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['title'] = $components[$key]->full_name;                              //Название комплектующего
             $component_item['unit'] = $components[$key]->component_unit;                                //В чем измеряется
             $component_item['self_total'] = 0;                                                          //себестоимость
+            $component_item['dealer_total'] = 0;
             $component_item['id'] = $components[$key]->id;                                              //ID
             $component_item['quantity'] = 0;                                                            //Кол-во
             $component_item['rounding'] = $components[$key]->count_sale;                                // Значение для округления со склада
@@ -2911,7 +2874,8 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($component_array as $key1 => $component) {
                 if ($component['stack'] == 0) {
                     $print_data[$key1]['self_total'] =  $print_data[$key1]['self_total'] + $component['self_total'];
-                    $print_data[$key1]['quantity'] = self::rounding( $print_data[$key1]['quantity'] + $component['quantity'], $print_data[$key1]['rounding']); // Округление                   
+                    $print_data[$key1]['dealer_total'] = $print_datap[$key1]['dealer_total'] + $component['dealer_total'];
+                    $print_data[$key1]['quantity'] = self::rounding($print_data[$key1]['quantity'] + $component['quantity'], $print_data[$key1]['rounding']); // Округление                   
                 }
             }
 
@@ -2940,6 +2904,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
        
         $price_itog = 0;
+        
         foreach ($print_data as $key => $item) {
             if ($item['quantity'] > 0 || $item['quantity'] > 0.0) {
                 $html .= '<tr>';
@@ -2947,10 +2912,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td class="center">' . $item['unit'] . '</td>';
                 $html .= '<td class="center">' . $item['quantity'] . '</td>';
                 if($need_price == 1){
-                    $html .= '<td class="center">' . round($item['self_total'], 2) . '</td>';
+                    $html .= '<td class="center">' . round($item['dealer_total'], 2) . '</td>';
                 }
                 $html .= '</tr>';
-                $price_itog += $item['self_total'];
+                $price_itog += $item['dealer_total'];
             }
         }
         if($need_price == 1){
@@ -3202,7 +3167,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</tr>';
         }
         if($need_price == 1){
-            $price_itog = $canvases_data['self_total'] + $offcut_square_data['self_total'] + $guild_data["total_gm_guild"];
+            $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer)total'] + $guild_data["total_gm_guild"];
             $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
         }
         $html .= '</tbody></table><p>&nbsp;</p>';
