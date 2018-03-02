@@ -2948,9 +2948,12 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data = self::calculate_canvases($calc_id);
         $array_cut = explode('||',$data['cut_data']);
         $cut_data = $array_cut[0];
+        $cut_array = explode(';', $cut_data);
+        $cut_array = array_reverse($cut_array);
+        $cut_data = implode(',',$cut_array);
         $p_usadki = $array_cut[1];
         $array1 = array();
-        $array2 = explode(';', $data['calc_data']);
+        $array2 = explode(',', $data['calc_data']);
         array_pop($array2);
         foreach($array2 as $str) {
             list($key, $value) = explode('=', $str);
