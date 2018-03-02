@@ -2600,8 +2600,7 @@ class Gm_ceilingController extends JControllerLegacy
             $result = $calc_model->update_cut_data($calc_id, $str, $width);
 
             $filename = md5('cut_sketch' . $calc_id);
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png", $data);
-
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", base64_decode($data));
             if (!empty($cuts))
             {
                 $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');
