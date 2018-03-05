@@ -1,4 +1,7 @@
 <?php
+
+JHtml::_('formbehavior.chosen', 'select');
+
     $user       = JFactory::getUser();
     $userId     = $user->get('id');
     $user_group = $user->groups;
@@ -37,7 +40,11 @@
     $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
     $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
     $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
+
+    $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
+    $status = $status_model->getData();
 ?>
+
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
@@ -146,6 +153,15 @@
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
         <p class="caption-tar">Клиенты дилера</p>
+        <p>
+            <select id="select_status" ><option value='' selected>Выберите статус</option>
+                <?php foreach($status as $item): ?>
+                    <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
+                        <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
+                    <?php } ?>
+                <?php endforeach;?>
+            </select>
+        </p>
         <div id="cliens_of_dealer_2">
             <table id="cliens_of_dealer_table" class="table table-striped table_cashbox one-touch-view" cellspacing="0">
                 <tbody>

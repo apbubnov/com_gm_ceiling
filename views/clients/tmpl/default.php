@@ -51,7 +51,8 @@ $status = $status_model->getData();
 		<div class="span9">
 			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
-        <select id="select_status" ><option value='' selected>Выберите статус</option>
+        <select id="select_status" >
+            <option value='' selected>Выберите статус</option>
             <?php foreach($status as $item): ?>
             <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
                 <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
@@ -88,29 +89,29 @@ $status = $status_model->getData();
 
 		<tbody>
         <!-- по сути этот кусок кода не нужен, т.к. таблицу формирует jQ...-->
-<!--		--><?php //foreach ($this->items as $i => $item) : ?>
-<!--			--><?php //$canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-<!--			--><?php //if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
-<!--				--><?php //$canEdit = JFactory::getUser()->id == $item->created_by; ?>
-<!--			--><?php //endif; ?>
-<!--			--><?php //if($item->id !== $user->associated_client): ?>
-<!--			<tr class="row--><?php //echo $i % 2; ?><!-- inform" data-href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?><!--">-->
-<!--				<td class="one-touch created">-->
-<!--					--><?php
-//						if($item->created == "0000-00-00 00:00:00") {
-//							echo "-";
-//						} else {
-//							$jdate = new JDate($item->created);
-//							$created = $jdate->format("d.m.Y H:i");
-//							echo $created;
-//						}
-//					?>
-<!--                    -->
-<!--				</td>-->
-<!--				<td class="one-touch name">--><?php //echo $this->escape($item->client_name); ?><!--<br>--><?php //echo $item->client_contacts; ?><!--</td>-->
-<!--                <td class="one-touch address"> --><?php //print_r($item); ?><!-- </td>-->
-<!--			</tr>-->
-<!--			--><?php //endif; endforeach; ?>
+        <!--		--><?php //foreach ($this->items as $i => $item) : ?>
+        <!--			--><?php //$canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
+        <!--			--><?php //if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
+        <!--				--><?php //$canEdit = JFactory::getUser()->id == $item->created_by; ?>
+        <!--			--><?php //endif; ?>
+        <!--			--><?php //if($item->id !== $user->associated_client): ?>
+        <!--			<tr class="row--><?php //echo $i % 2; ?><!-- inform" data-href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?><!--">-->
+        <!--				<td class="one-touch created">-->
+        <!--					--><?php
+        //						if($item->created == "0000-00-00 00:00:00") {
+        //							echo "-";
+        //						} else {
+        //							$jdate = new JDate($item->created);
+        //							$created = $jdate->format("d.m.Y H:i");
+        //							echo $created;
+        //						}
+        //					?>
+        <!--                    -->
+        <!--				</td>-->
+        <!--				<td class="one-touch name">--><?php //echo $this->escape($item->client_name); ?><!--<br>--><?php //echo $item->client_contacts; ?><!--</td>-->
+        <!--                <td class="one-touch address"> --><?php //print_r($item); ?><!-- </td>-->
+        <!--			</tr>-->
+        <!--			--><?php //endif; endforeach; ?>
 		</tbody>
 	</table>
 
