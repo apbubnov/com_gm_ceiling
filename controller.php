@@ -1517,6 +1517,7 @@ class Gm_ceilingController extends JControllerLegacy
             $save = $jinput->get('save', '0', 'INT');
             $pdf = $jinput->get('pdf', '0', 'INT');
             $need_mount = $jinput->get('need_mount', '0', 'INT');
+            
             $del_flag = $jinput->get('del_flag', '0', 'INT');
             $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount);
             die($result);
