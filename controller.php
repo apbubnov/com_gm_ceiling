@@ -3058,11 +3058,13 @@ class Gm_ceilingController extends JControllerLegacy
     public function filterProjectForStatus() {
         try
         {
+            $user = JFactory::getUser();
             $jinput = JFactory::getApplication()->input;
             $status = $jinput->get('status', '0', 'int');
             $search = $jinput->get('search', '', 'string');
+            $dealer_id = $jinput->get('dealer_id', $user->dealer_id, 'int');
             $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-            $result =  $projects_model->filterProjectForStatus($status, $search);
+            $result =  $projects_model->filterProjectForStatus($status, $search, $dealer_id);
             foreach ($result as $key => $value) {
                 $result[$key]->created = date("d.m.Y H:i", strtotime($value->created));
             }

@@ -228,6 +228,7 @@ $status = $status_model->getData();
             }
         });
     });
+    
     function OpenPage() {
         var e = jQuery("[data-href]");
         jQuery.each(e, function (i, v) {
