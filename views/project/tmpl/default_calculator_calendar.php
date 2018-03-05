@@ -785,12 +785,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <td>
                                         <?php echo $this->item->dealer_manager_note; ?>
                                     </td>
+                                    <?php if ($this->item->id_client != 1) { ?>
                                     <td>
                                         <button type="submit" id="accept_changes" class="btn btn btn-success"
                                                 style="display: none;">
-                                            Сохранить
+                                            Сохранить клиента
                                         </button>
                                     </td>
+                                    <?php } ?>
                                 </tr>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
@@ -2653,8 +2655,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             jQuery("#accept_changes").toggle();
         });
         if(client_id==1){
-            console.log("12312");
+            //console.log("12312");
+            jQuery("input[name='data_change']").val(1);
             jQuery("#change_data").trigger('click');
+            jQuery("#accept_project").trigger('click');
         }
         jQuery("#save_email").click(function(){
             jQuery("#activate_by_email").val(1);
