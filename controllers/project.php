@@ -853,12 +853,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$client_data['manager_id'] = $user->id;
 						$client_id = $client_model->save($client_data);
 						$model->update_client($data->id,$client_id);
+                        if (empty($newFIO))
+                        {
+                            $cl_model = $this->getModel('Client', 'Gm_ceilingModel');
+                            $newFIO = "$client_id";
+                            $cl_model->updateClient($client_id,$newFIO);
+                        }
 						$cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
 						if(!empty($phones[0])){
 							$cl_phones_model->save($client_id,$phones);
 						}
-						
-						
 					}
 					if(!empty($new_address)){
 						if($new_address!=$data->project_info){
