@@ -2027,6 +2027,8 @@
         });
 
         jQuery("#update_discount").click(function () {
+            console.log(<?php echo $skidka; ?>);
+            console.log(jQuery("#jform_new_discount").val());
             var phones = [];
             var s = window.location.href;
             var classname = jQuery("input[name='new_client_contacts[]']");
