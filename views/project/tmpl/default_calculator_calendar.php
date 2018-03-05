@@ -2676,9 +2676,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         });
 
         jQuery("#update_discount").click(function () {
-
             jQuery("input[name='isDiscountChange']").val(1);
-            if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
+            console.log(<?php echo $skidka; ?>);
+            console.log(jQuery("#jform_new_discount").val());
+            //if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
         });
 
 
