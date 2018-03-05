@@ -12,6 +12,11 @@
     text-align: center;
 }
 
+#projects_gaugers tr {
+    cursor: pointer;
+}
+
 .caption {
     background-color: #d3d3f9;
+    cursor: none;
 }
