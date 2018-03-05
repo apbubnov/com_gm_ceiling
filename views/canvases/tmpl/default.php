@@ -23,22 +23,21 @@ $model = $this->getModel();
 $user = JFactory::getUser();
 $user->groups = $user->get('groups');
 $user->getDealerInfo();
+$user->getCanvasesPrice();
 
-$userDealer = $user;
+
 
 if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
     $userDealer = JFactory::getUser($user->dealer_id);
     $userDealer->groups = $userDealer->get('groups');
     $userDealer->getDealerInfo();
+    $userDealer->getCanvasesPrice();
+} else {
+    $userDealer = $user;
 }
 
-$managerD = in_array(13, $user->groups) || in_array(14, $userDealer->groups);
 $managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
 $stock = in_array(19, $user->groups);
-
-if ($managerD) {
-    $userDealer->getCanvasesPrice();
-}
 
 $dealer = null;
 
@@ -85,7 +84,7 @@ function dealer_margin($price, $margin, $value, $type)
 
 ?>
 <link rel="stylesheet" type="text/css"
-      href="/canvases/com_gm_ceiling/views/canvases/css/style.css?date=<?= date("H.i.s"); ?>">
+      href="/components/com_gm_ceiling/views/canvases/css/style.css?date=<?= date("H.i.s"); ?>">
 <div class="Page">
     <div class="Title">
         Прайс полотен<?= (isset($dealer)) ? " для $dealer->name #$dealer->id" : ""; ?>.
@@ -313,17 +312,14 @@ function dealer_margin($price, $margin, $value, $type)
                                         </button>
                                     </form>
                                 </td>
-                            <? elseif ($managerD): ?>
-                            <?
+                            <? else: ?>
+                                <?
                                 $type = $userDealer->CanvasesPrice[$key_c]->type;
                                 $value = $userDealer->CanvasesPrice[$key_c]->value;
                                 $TempPrice = margin($canvas->price, $userDealer->gm_canvases_margin);
-                            ?>
+                                ?>
                                 <td><?= dealer_margin($TempPrice, 0, $value, $type)?></td>
                                 <td><?= dealer_margin($TempPrice, $userDealer->dealer_canvases_margin, $value, $type)?></td>
-                            <? else: ?>
-                                <td><?= margin($canvas->price, $userDealer->gm_canvases_margin); ?></td>
-                                <td><?= double_margin($canvas->price, $userDealer->dealer_canvases_margin, $userDealer->dealer_canvases_margin); ?></td>
                             <? endif; ?>
                         </tr>
                         <? if ($stock) foreach ($canvas->rollers as $key_r => $roller): ?>
