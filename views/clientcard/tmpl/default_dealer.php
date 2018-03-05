@@ -335,6 +335,7 @@ JHtml::_('formbehavior.chosen', 'select');
 </div>
 
 <script>
+    var $ = jQuery;
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_fio"); // тут указываем ID элемента
         var div2 = jQuery("#modal_window_client");
