@@ -625,7 +625,8 @@ JHtml::_('formbehavior.chosen', 'select');
                 url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
                 data: {
                     status: status,
-                    search: search
+                    search: search,
+                    dealer_id: <?php echo $client->dealer_id; ?>
                 },
                 dataType: "json",
                 async: true,
