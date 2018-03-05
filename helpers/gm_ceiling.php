@@ -453,6 +453,13 @@ class Gm_ceilingHelpersGm_ceiling
             //считаем монтаж
             if ($need_mount) {
                 $mounting_data = self::calculate_mount($del_flag,null,$data);
+            } else {
+                $mounting_data = [
+                    'total_with_gm_dealer_margin' => 0,
+                    'total_with_gm_dealer_margin_guild' => 0,
+                    'total_gm_mounting' => 0,
+                    'total_dealer_mounting' => 0
+                ]
             }
             //Итоговая сумма компонентов
             $total_sum = 0;
