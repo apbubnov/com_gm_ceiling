@@ -853,12 +853,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$client_data['manager_id'] = $user->id;
 						$client_id = $client_model->save($client_data);
 						$model->update_client($data->id,$client_id);
+                        if (empty($newFIO))
+                        {
+                            $cl_model = $this->getModel('Client', 'Gm_ceilingModel');
+                            $newFIO = "$client_id";
+                            $cl_model->updateClient($client_id,$newFIO);
+                        }
 						$cl_phones_model = $this->getModel('Client_phones', 'Gm_ceilingModel');
 						if(!empty($phones[0])){
 							$cl_phones_model->save($client_id,$phones);
 						}
-						
-						
 					}
 					if(!empty($new_address)){
 						if($new_address!=$data->project_info){
@@ -906,7 +910,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				else {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
 				}
+                if ($data->id_client == 1)
+                {
+                    goto metka;
+                }
 			} else {
+                metka:
 				if($subtype === "refused") {
 					$model->return_project($project_id);
 				// Clear the profile id from the session.
@@ -946,8 +955,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
 								$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
 								$call_mount_time = $jinput->get('calltime_without_mounter','','STRING'); 
-								$callback_model->save($call_mount_date.' '.$call_mount_time,"Примечание от замерщика : ".$gm_calculator_note,$data->id_client,$data->read_by_manager);
-								$client_history_model->save($data->id_client,"Добавлен новый звонок. Примечание от замерщика: ".$gm_calculator_note);
+								if(!empty($data->read_by_manager)){
+									$callback_model->save($call_mount_date.' '.$call_mount_time,"Примечание от замерщика : ".$gm_calculator_note,$data->id_client,$data->read_by_manager);
+									$client_history_model->save($data->id_client,"Добавлен новый звонок. Примечание от замерщика: ".$gm_calculator_note);
+								}
+								
 								$return = $model->activate($data,4/*3*/);
 								
 							}
@@ -955,15 +967,19 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 								if($project_status == 4){
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
 									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
-									$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
-									$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
+									if(!empty($data->read_by_manager)){
+										$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
+										$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
+									}
 									$return = $model->activate($data, 4);
 
 								} else {
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
 									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
-									$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
-									$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
+									if(!empty($data->read_by_manager)){
+										$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
+										$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
+									}
 									$return = $model->activate($data, 5/*3*/);
 								}
 

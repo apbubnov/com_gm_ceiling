@@ -880,10 +880,14 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    public function filterProjectForStatus($status, $search){
+    public function filterProjectForStatus($status, $search, $dealer_id=null){
         try
         {
             $user = JFactory::getUser();
+            if ($dealer_id == null) {
+                $dealer_id = $user->dealer_id;
+            }
+
             $db = $this->getDbo();
             $query = $db->getQuery(true);
             $query->from("`#__gm_ceiling_clients` as `client`")
@@ -899,13 +903,13 @@ class Gm_ceilingModelProjects extends JModelList
                 ->group("`client`.`id`");
 
             if($status && !$search)
-                $query->where("`p`.`project_status` = $status AND `client`.`dealer_id` = $user->dealer_id");
+                $query->where("`p`.`project_status` = $status AND `client`.`dealer_id` = $dealer_id");
             elseif($status && $search)
-                $query->where("`p`.`project_status` =  $status AND `client`.`dealer_id` = $user->dealer_id AND (`client`.`client_name` LIKE '%$search%' OR `phone`.`phone` LIKE '%$search%' OR `p`.`id` LIKE '%$search%' OR `p`.`project_info` LIKE '%$search%')");
+                $query->where("`p`.`project_status` =  $status AND `client`.`dealer_id` = $dealer_id AND (`client`.`client_name` LIKE '%$search%' OR `phone`.`phone` LIKE '%$search%' OR `p`.`id` LIKE '%$search%' OR `p`.`project_info` LIKE '%$search%')");
             elseif(!$status && !$search)
-                $query->where("`client`.`dealer_id` = $user->dealer_id");
+                $query->where("`client`.`dealer_id` = $dealer_id");
             elseif(!$status && $search)
-                $query->where("`client`.`dealer_id` = $user->dealer_id AND (`client`.`client_name` LIKE '%$search%' OR `phone`.`phone` LIKE '%$search%' OR `p`.`id` LIKE '%$search%' OR `p`.`project_info` LIKE '%$search%')");
+                $query->where("`client`.`dealer_id` = $dealer_id AND (`client`.`client_name` LIKE '%$search%' OR `phone`.`phone` LIKE '%$search%' OR `p`.`id` LIKE '%$search%' OR `p`.`project_info` LIKE '%$search%')");
           // print_r((string)$query); exit;
             $db->setQuery($query);
             

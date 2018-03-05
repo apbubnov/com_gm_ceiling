@@ -1524,6 +1524,11 @@
             jQuery("#modal-window-container-tar").hide();
             jQuery("#modal-window-choose-tar").hide();
         });
+        jQuery("#projects_gaugers").on("click", "td", function(){
+            var times = jQuery(this).closest('tr').find("input:radio[name='choose_time_gauger']");
+            times.prop("checked",true);
+            times.change();
+        });
         //------------------------------------------
 
         // подсвет сегоднешней даты
@@ -2022,6 +2027,8 @@
         });
 
         jQuery("#update_discount").click(function () {
+            console.log(<?php echo $skidka; ?>);
+            console.log(jQuery("#jform_new_discount").val());
             var phones = [];
             var s = window.location.href;
             var classname = jQuery("input[name='new_client_contacts[]']");

@@ -2612,6 +2612,7 @@
 					jQuery("#jform_task").val( temp_task );
 					
 					<?php if($type === "gmcalculator"||$type === "calculator" || ( $type === "gmmanager" && $subtype === "calendar")) { ?>
+											
 						var additional = "&save=1&pdf=1&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val();
 						 
 						<?php } else if ($type === "gmmanager" || $type === "manager" || $type === "guest") {  ?>

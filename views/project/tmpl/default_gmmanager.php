@@ -13,7 +13,11 @@ $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
-
+$model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+$calculations = $model_calculations->getProjectItems($this->item->id);
+foreach($calculations as $calc){
+    Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);    
+}
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
@@ -115,7 +119,7 @@ $AllMounters = $model->FindAllMounters($where);
             $print_components = 1;
             $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
         }*/
-        Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
+        //Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
         $client = $client_model->getClientById($this->item->id_client);
         $dealer = JFactory::getUser($client->dealer_id);
@@ -249,6 +253,7 @@ $AllMounters = $model->FindAllMounters($where);
                     $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
 
                     foreach ($calculations as $calculation) {
+                        //$total_comp+=Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id)['self_total'];
                         $total_components_sum += $calculation->components_sum;
 
                         $baget = $calculation->n5 + $calculation->dop_krepezh / 2.0;

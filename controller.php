@@ -1517,6 +1517,7 @@ class Gm_ceilingController extends JControllerLegacy
             $save = $jinput->get('save', '0', 'INT');
             $pdf = $jinput->get('pdf', '0', 'INT');
             $need_mount = $jinput->get('need_mount', '0', 'INT');
+            
             $del_flag = $jinput->get('del_flag', '0', 'INT');
             $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount);
             die($result);
@@ -2575,6 +2576,7 @@ class Gm_ceilingController extends JControllerLegacy
             $width = $jinput->get('width', '', 'INT');
             $cuts = $jinput->get('cuts', '', 'string');
             $width = (string)$width/100;
+            $p_usadki = $jinput->get('p_usadki', '', 'string');
             if(empty(strpos($width,'.'))){
                 $width.='.0';
             }
@@ -2590,17 +2592,16 @@ class Gm_ceilingController extends JControllerLegacy
 
                 $str .= "Полотно" . ($i + 1) . ": " . $points_polonta . "; ";
             }
-
-            list($type, $data) = explode(';', $data);
+            $str.='||'.$p_usadki;
+           /*  list($type, $data) = explode(';', $data);
             list(, $data) = explode(',', $data);
-            $data = base64_decode($data);
+            $data = base64_decode($data); */
 
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $result = $calc_model->update_cut_data($calc_id, $str, $width);
 
             $filename = md5('cut_sketch' . $calc_id);
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".png", $data);
-
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", base64_decode($data));
             if (!empty($cuts))
             {
                 $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');
@@ -2886,274 +2887,18 @@ class Gm_ceilingController extends JControllerLegacy
 
     public function createPdfs(){
         try{
-        $jinput = JFactory::getApplication()->input;
-        $project_id = $jinput->get('id','','INT');
-        $proj_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-        $project = $proj_model->getData($project_id);
-        $project_total = 0;
-        $project_total_discount = 0;
-        $total_square = 0;
-        $total_perimeter = 0;
-        $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-        $calculations = $model->getProjectItems($project->id);
-
-        foreach ($calculations as $calculation) {
-
-            $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$project->gm_canvases_margin*/, $project->dealer_canvases_margin);
-            $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$project->gm_components_margin*/, $project->dealer_components_margin);
-            $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$project->gm_mounting_margin*/, $project->dealer_mounting_margin);
-
-            $calculation->dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$project->gm_canvases_margin*/);
-            $calculation->dealer_components_sum_1 = margin($calculation->components_sum, 0/* $project->gm_components_margin*/);
-            $calculation->dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/* $project->gm_mounting_margin*/);
-
-            $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-            $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
-            $project_total += $calculation->calculation_total;
-            $project_total_discount += $calculation->calculation_total_discount;
-
-            if ($user->dealer_type != 2) {
-                $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$project->gm_canvases_margin*/);
-                $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$project->gm_components_margin*/);
-                $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$project->gm_mounting_margin*/);
-                $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
-                $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
-                $calculation_total_11 += $calculation_total_1;
-                $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
+            $jinput = JFactory::getApplication()->input;
+            $project_id = $jinput->get('id','','INT');
+            $calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+            $calculations = $calculations_model->getProjectItems($project_id);
+            foreach($calculations as $calc){
+                Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
+                Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1,$calc->id);
+                Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($calc->id);
             }
-            $project_total_11 += $project_total_1;
-
-            $calculation_total = $calculation->calculation_total;
-
-        }
-        $sum_transport = 0;  $sum_transport_discount = 0;
-        $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-        $mount_transport = $mountModel->getDataAll();
-
-        if($project->transport == 0 ) $sum_transport = 0;
-        if($project->transport == 1 ) $sum_transport = double_margin($mount_transport->transport * $project->distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
-        if($project->transport == 2 ) $sum_transport = ($mount_transport->distance * $project->distance + $mount_transport->transport)  * $project->distance_col;
-        if($project->transport == 1 ) {
-        $min = 100;
-        foreach($calculations as $d) {
-            if($d->discount < $min) $min = $d->discount;
-        }
-        if  ($min != 100) $sum_transport = $sum_transport * ((100 - $min)/100);
-        }
-        if($sum_transport < double_margin($mount_transport->transport, $project->gm_mounting_margin, $project->dealer_mounting_margin) && $sum_transport != 0) {
-            $sum_transport = double_margin($mount_transport->transport, $project->gm_mounting_margin, $project->dealer_mounting_margin);
-        }
-        $project_total_discount_transport = $project_total_discount + $sum_transport;
-        $del_flag = 0;
-        $project_total = $project_total  + $sum_transport;
-        $project_total_discount = $project_total_discount  + $sum_transport;
-            $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-            $calculations1 = $calculationsModel->getProjectItems($project->id);
-            $components_data = array();
-            $project_sum = 0;
-            $counter = 0;
-        /*foreach ($calculations1 as $calculation) {
-            $counter++;
-            $from_db = 1;
-            $save = 1;
-            $ajax = 0;
-            $pdf = 1;
-            $print_components = 0;
-            if($calculation->mounting_sum == 0) $need_mount = 0;
-            else $need_mount = 1;
-            Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-            $from_db = 1;
-            $save = 0;
-            $ajax = 0;
-            $pdf = 0;
-            $print_components = 1;
-            $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-            $project_sum += margin($calculation->components_sum, $project->gm_components_margin);
-            $project_sum += margin($calculation->canvases_sum, $project->gm_canvases_margin);
-            $project_sum += margin($calculation->mounting_sum, $project->gm_mounting_margin);
-            if ($counter == count($calculations1)) {
-                $flag_last = 1;
-                Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-
-            }
-        } */
-       Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
-       
-            
-            $sum = 0;
-            $data->id = $project->id;
-            $data->transport = $project->transport;
-            $data->distance = $project->distance;
-            $distance_col = $project->distance_col;
-            $data->distance_col = $distance_col ;
-            
-            $model_project = Gm_ceilingHelpersGm_ceiling::getModel('Project');
-            $res = $model_project->transport($data);
-            $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info');
-            if(empty($res->user_id)) $res->user_id = 1;
-            $margin = $dealer_info_model->getMargin('dealer_mounting_margin',$res->user_id);
-           
-            if($res) {
-                if($data->transport == 1) { $transport_sum = margin($res->transport * $distance_col, $margin);
-                $transport_sum_1 = $res->transport * $distance_col;
-                }
-                elseif($data->transport == 2) {
-                    $transport_sum = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                    $transport_sum_1 = ($res->distance  * $data->distance + $res->transport) * $distance_col;
-                    if($transport_sum < margin($res->transport, $margin))
-                      { 
-                          $transport_sum = margin($res->transport, $margin);
-                          $transport_sum_1 = $res->transport;
-                      }  
-                }
-                else { $transport_sum = 0; $transport_sum_1 = 0; } 
-            }
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('Big_smeta');
-            if(!empty($calculations)) {
-                
-            
-                $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
-                $html = ' <h1>Номер договора: ' . $project->id . '</h1><br>';
-                $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
-                $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
-                $html .= '<table border="0" cellspacing="0" width="100%">
-                <tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
-                //написать модель, которая будет возвращать данные о калькуляции
-                foreach ($calculations as $calc) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . $calc->calculation_title . '</td>';
-                    $html .= '<td class="center">' . $calc->n4 . '</td>';
-                    $html .= '<td class="center">' . $calc->n5 . '</td>';
-                    $html .= '<td class="center">' . 0 . '</td>';
-                    $html .= '</tr>';
-                    $sum +=0;
-                }
-                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
-                $html .= '</tbody></table><p>&nbsp;</p><br>';
-    
-            }
-            
-            $html .= '<h2>Транспортные расходы: </h2>';
-            $html .= '<table border="0" cellspacing="0" width="100%">
-			<tbody><tr><th>Вид транспорта</th><th class="center">Кол-во км<sup>2</sup>.</th><th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th></tr>';
-                if($project->transport == '2' ) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . 'Выезд за город' . '</td>';
-                    $html .= '<td class="center">' . $project->distance . '</td>';
-                    $html .= '<td class="center">' .$project->distance_col . '</td>';
-                    $html .= '<td class="center">' . $transport_sum . '</td>';
-                    $html .= '</tr>';
-                }
-                elseif($project->transport == '1' ) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . 'Транспорт по городу' . '</td>';
-                    $html .= '<td class="center"> - </td>';
-                    $html .= '<td class="center">' . $project->distance_col . '</td>';
-                    $html .= '<td class="center">' . $transport_sum . '</td>';
-                    $html .= '</tr>';
-                }
-                elseif($project->transport == '0' ) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . 'Без транспорта' . '</td>';
-                    $html .= '<td class="center"> - </td>';
-                    $html .= '<td class="center"> - </td>';
-                    $html .= '<td class="center"> 0 </td>';
-                    $html .= '</tr>';
-                }
-
-            $html .= '</tbody></table><p>&nbsp;</p>';
-            $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport_sum + $sum, 2) . ' руб.</div>';
-
-            $array_html = array();
-            $array_html[] = $html;
-
-            foreach ($calculations as $calc) {
-
-               $patch = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($calc . "-0-0") . ".pdf";
-               $array_html[] = $patch;
-            }
-            //print_r($components_data); exit;
-            $filename = md5($project->id . "-9") . ".pdf";
-            Gm_ceilingHelpersGm_ceiling::save_pdf($array_html, $sheets_dir . $filename, "A4");
-
-
-             $mount = $model_project->getMount($project->id);
-             if(!empty($mount->id)) $mount_name = $model_project->getMounterBrigade($mount->id);
-            //смета по монтажным работам
-            $html = ' <h1>Номер договора: ' . $project->id . '</h1><br>';
-            $html .= '<h2>Дата: ' . date("d.m.Y") . '</h2>';
-            if(!empty($mount->name)) $html .= '<h2>Монтажная бригада: ' . $mount->name . '</h2>';
-             if (isset($mount_name)) {
-                    $html .= "<h2>Состав монтажной бригады: </h2>";
-                    foreach ($mount_name AS $k => $value) {
-                        $html .= $value->name . (($k < count($mount_name) - 1) ? " , " : " ");
-                    }
-                    $html .= "<br>";
-                   // foreach($mount_name as $value) $html .= $value->name." ,";
-                    
-                   
-                }
-            if(!empty($calculations)) {
-                $html .= '<h2>Краткая информация по выбранным(-ому) потолкам(-у): </h2>';
-                $html .= '<table border="0" cellspacing="0" width="100%">
-                <tbody><tr><th>Название</th><th class="center">Площадь, м<sup>2</sup>.</th><th class="center">Периметр, м </th><th class="center">Стоимость, руб.</th></tr>';
-                //написать модель, которая будет возвращать данные о калькуляции
-                foreach ($calculations as $calc) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . $calc->calculation_title . '</td>';
-                    $html .= '<td class="center">' . $calc->n4 . '</td>';
-                    $html .= '<td class="center">' . $calc->n5 . '</td>';
-                    $html .= '<td class="center">' . $calc->mounting_sum . '</td>';
-                    $html .= '</tr>';
-                    $sum_1 += $calc->mounting_sum;
-                }
-                $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum_1 . '</th></tr>';
-                $html .= '</tbody></table><p>&nbsp;</p><br>';
-
-            }
-          
-            $html .= '<h2>Транспортные расходы: </h2>';
-            $html .= '<table border="0" cellspacing="0" width="100%">
-			<tbody><tr><th>Вид транспорта</th><th class="center">Кол-во км<sup>2</sup>.</th><th class="center">Кол-во выездов  </th><th class="center">Стоимость, руб.</th></tr>';
-                if($project->transport == '2' ) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . 'Выезд за город' . '</td>';
-                    $html .= '<td class="center">' . $project->distance . '</td>';
-                    $html .= '<td class="center">' . $project->distance_col . '</td>';
-                    $html .= '<td class="center">' . $transport_sum_1 . '</td>';
-                    $html .= '</tr>';
-                }
-                elseif($project->transport == '1' ) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . 'Транспорт по городу' . '</td>';
-                    $html .= '<td class="center"> - </td>';
-                    $html .= '<td class="center">' .$project->distance_col . '</td>';
-                    $html .= '<td class="center">' . $transport_sum_1 . '</td>';
-                    $html .= '</tr>';
-                }
-                elseif($project->transport == '0' ) {
-                    $html .= '<tr>';
-                    $html .= '<td>' . 'Без транспорта' . '</td>';
-                    $html .= '<td class="center"> - </td>';
-                    $html .= '<td class="center"> - </td>';
-                    $html .= '<td class="center"> 0 </td>';
-                    $html .= '</tr>';
-                }
-
-            $html .= '</tbody></table><p>&nbsp;</p>';
-            $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport_sum_1 + $sum_1, 2) . ' руб.</div>';
-
-            $array_html = array();
-            $array_html[] = $html;
-
-            foreach ($calculations as $calc) {
-
-               $patch = $_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($calc . "-2") . ".pdf";
-               $array_html[] = $patch;
-            }
-            //print_r($components_data); exit;
-            $filename = md5($project->id . "-10") . ".pdf";
-            Gm_ceilingHelpersGm_ceiling::save_pdf($array_html, $sheets_dir . $filename, "A4");
+            Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id);
+            Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id);
+            die(json_encode(true));
         }
         catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
@@ -3313,11 +3058,13 @@ class Gm_ceilingController extends JControllerLegacy
     public function filterProjectForStatus() {
         try
         {
+            $user = JFactory::getUser();
             $jinput = JFactory::getApplication()->input;
             $status = $jinput->get('status', '0', 'int');
             $search = $jinput->get('search', '', 'string');
+            $dealer_id = $jinput->get('dealer_id', $user->dealer_id, 'int');
             $projects_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
-            $result =  $projects_model->filterProjectForStatus($status, $search);
+            $result =  $projects_model->filterProjectForStatus($status, $search, $dealer_id);
             foreach ($result as $key => $value) {
                 $result[$key]->created = date("d.m.Y H:i", strtotime($value->created));
             }

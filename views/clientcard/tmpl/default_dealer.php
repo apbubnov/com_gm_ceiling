@@ -1,4 +1,7 @@
 <?php
+
+JHtml::_('formbehavior.chosen', 'select');
+
     $user       = JFactory::getUser();
     $userId     = $user->get('id');
     $user_group = $user->groups;
@@ -37,7 +40,11 @@
     $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
     $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
     $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
+
+    $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
+    $status = $status_model->getData();
 ?>
+
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
     <label id = "FIO"><?php echo $this->item->client_name; ?></label>
@@ -146,29 +153,55 @@
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
         <p class="caption-tar">Клиенты дилера</p>
+        <p>
+            <select id="select_status" ><option value='' selected>Выберите статус</option>
+                <?php foreach($status as $item): ?>
+                    <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
+                        <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
+                    <?php } ?>
+                <?php endforeach;?>
+            </select>
+        </p>
         <div id="cliens_of_dealer_2">
-            <table id="cliens_of_dealer_table" class="table table-striped table_cashbox one-touch-view" cellspacing="0">
+            <table class="table table-striped table_cashbox one-touch-view" id="clientList">
+                <thead>
+                    <tr>
+                        <th class='' >Создан</th>
+                        <th class=''>Клиент</th>
+                        <th class=''>Адрес</th>
+                        <th>Статус</th>
+                    </tr>
+                    <tr class="row" id="TrClone" data-href="" style="display: none">
+                        <td class="one-touch created"></td>
+                        <td class="one-touch name"></td>
+                        <td class="one-touch address"></td>
+                        <td class="one-touch status"></td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <!-- <table id="cliens_of_dealer_table" class="table table-striped table_cashbox one-touch-view" cellspacing="0">
                 <tbody>
-                <?php foreach ($clients_items as $i => $item) : ?>
-                    <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
+                <?php// foreach ($clients_items as $i => $item) : ?>
+                    <tr class="row<?php// echo $i % 2; ?>" data-href="<?php// echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
                         <td class="one-touch">
                             <?php
-                                if($item->created == "0000-00-00") {
+                                /* if($item->created == "0000-00-00") {
                                     echo "-";
                                 } else {
                                     $jdate = new JDate($item->created);
                                     $created = $jdate->format("d.m.Y");
                                     echo $created;
-                                }
+                                } */
                             ?>
                             
                         </td>
-                        <td class="one-touch"><?php echo $item->client_name; ?></td>
-                        <td class="one-touch"><?php echo $item->client_contacts; ?></td>
+                        <td class="one-touch"><?php// echo $item->client_name; ?></td>
+                        <td class="one-touch"><?php// echo $item->client_contacts; ?></td>
                     </tr>
-                <?php endforeach; ?>
+                <?php// endforeach; ?>
                 </tbody>
-            </table>
+            </table> -->
         </div>
     </div>
 </div>
@@ -302,6 +335,7 @@
 </div>
 
 <script>
+    var $ = jQuery;
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_fio"); // тут указываем ID элемента
         var div2 = jQuery("#modal_window_client");
@@ -582,8 +616,92 @@
         jQuery("#email_login").val(elem.value);
     }
 
-    jQuery(document).ready(function ()
-    {
+        // фильтр по статусу
+        jQuery("#select_status").change(function () {
+            var status = jQuery("#select_status").val();
+            var search = jQuery("#filter_search").val();
+            jQuery.ajax({
+                type: "POST",
+                url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
+                data: {
+                    status: status,
+                    search: search,
+                    dealer_id: <?php echo $client->dealer_id; ?>
+                },
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (data) {
+                    console.log(data);
+                    var list = $("#clientList tbody");
+                    list.empty();
+                    var text='';
+                    for(i=0;i<data.length;i++){
+                        var tr = $("#TrClone").clone();
+
+                        tr.show();
+                        tr.find(".created").text(data[i].created);
+                        if (data[i].client_contacts != null)
+                        {
+                            tr.find(".name").text(data[i].client_contacts + ' ' + data[i].client_name);
+                        }
+                        else
+                        {
+                            tr.find(".name").text(data[i].client_name);
+                        }
+                        if (data[i].address != null)
+                        {
+                            tr.find(".address").text(data[i].address);
+                        }
+                        else
+                        {
+                            tr.find(".address").text('-');
+                        }
+                        if (data[i].status != null)
+                        {
+                            tr.find(".status").text(data[i].status);
+                        }
+                        else
+                        {
+                            tr.find(".status").text('-');
+                        }
+                        
+                        tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
+                        list.append(tr);
+                    }
+                    OpenPage();
+                },
+                timeout: 50000,
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+        function OpenPage() {
+            var e = jQuery("[data-href]");
+            jQuery.each(e, function (i, v) {
+                jQuery(v).click(function () {
+                    document.location.href = this.dataset.href;
+                });
+            });
+        }
+        //-----------------------------------------------
+
+
+    jQuery(document).ready(function () {
+
+        // фильтр по статусу
+        jQuery("#select_status").change();
+        //-----------------------------------------------
+
         document.getElementById('calls-tar').scrollTop = 9999;
         jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
 
