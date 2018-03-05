@@ -85,7 +85,7 @@ function dealer_margin($price, $margin, $value, $type)
 
 ?>
 <link rel="stylesheet" type="text/css"
-      href="/components/com_gm_ceiling/views/canvases/css/style.css?date=<?= date("H.i.s"); ?>">
+      href="/canvases/com_gm_ceiling/views/canvases/css/style.css?date=<?= date("H.i.s"); ?>">
 <div class="Page">
     <div class="Title">
         Прайс полотен<?= (isset($dealer)) ? " для $dealer->name #$dealer->id" : ""; ?>.
@@ -272,8 +272,8 @@ function dealer_margin($price, $margin, $value, $type)
                                 </td>
                             <? elseif ($managerGM && empty($dealer)): ?>
                                 <td id="GMPrice"><?= $canvas->price; ?></td>
-                                <td id="GMPrice"><?= margin($canvas->price, $dealer->gm_components_margin); ?></td>
-                                <td id="DealerPrice"><?= double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin); ?></td>
+                                <td id="GMPrice"><?= margin($canvas->price, $dealer->gm_canvases_margin); ?></td>
+                                <td id="DealerPrice"><?= double_margin($canvas->price, $userDealer->gm_canvases_margin, $userDealer->dealer_canvases_margin); ?></td>
                                 <td>
                                     <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
                                         <label for="Price" title="Изменить дилерскую цену"><i
@@ -317,13 +317,13 @@ function dealer_margin($price, $margin, $value, $type)
                             <?
                                 $type = $userDealer->CanvasesPrice[$key_c]->type;
                                 $value = $userDealer->CanvasesPrice[$key_c]->value;
-                                $TempPrice = margin($canvas->price, $userDealer->gm_components_margin);
+                                $TempPrice = margin($canvas->price, $userDealer->gm_canvases_margin);
                             ?>
                                 <td><?= dealer_margin($TempPrice, 0, $value, $type)?></td>
-                                <td><?= dealer_margin($TempPrice, $userDealer->gm_canvases_margin, $value, $type)?></td>
+                                <td><?= dealer_margin($TempPrice, $userDealer->dealer_canvases_margin, $value, $type)?></td>
                             <? else: ?>
-                                <td><?= margin($canvas->price, $userDealer->gm_components_margin); ?></td>
-                                <td><?= double_margin($canvas->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin); ?></td>
+                                <td><?= margin($canvas->price, $userDealer->gm_canvases_margin); ?></td>
+                                <td><?= double_margin($canvas->price, $userDealer->dealer_canvases_margin, $userDealer->dealer_canvases_margin); ?></td>
                             <? endif; ?>
                         </tr>
                         <? if ($stock) foreach ($canvas->rollers as $key_r => $roller): ?>

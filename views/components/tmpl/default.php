@@ -32,8 +32,13 @@ if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
     $userDealer->getDealerInfo();
 }
 
+$managerD = in_array(13, $user->groups) || in_array(14, $userDealer->groups);
+$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
 $stock = in_array(19, $user->groups);
-$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups) && !$stock;
+
+if ($managerD) {
+    $userDealer->getCanvasesPrice();
+}
 
 $dealer = null;
 
@@ -198,7 +203,15 @@ function dealer_margin($price, $margin, $value, $type) {
                                 </button>
                             </form>
                         </td>
-                    <?else:?>
+                    <? elseif ($managerD): ?>
+                        <?
+                        $type = $userDealer->ComponentsPrice[$key_c]->type;
+                        $value = $userDealer->ComponentsPrice[$key_c]->value;
+                        $TempPrice = margin($canvas->price, $userDealer->gm_components_margin);
+                        ?>
+                        <td><?= dealer_margin($TempPrice, 0, $value, $type)?></td>
+                        <td><?= dealer_margin($TempPrice, $userDealer->dealer_components_margin, $value, $type)?></td>
+                    <? else: ?>
                         <td><?=margin($option->price, $userDealer->gm_components_margin);?></td>
                         <td><?=double_margin($option->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
                     <?endif;?>
