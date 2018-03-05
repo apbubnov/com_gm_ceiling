@@ -785,12 +785,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <td>
                                         <?php echo $this->item->dealer_manager_note; ?>
                                     </td>
+                                    <?php if ($this->item->id_client != 1) { ?>
                                     <td>
                                         <button type="submit" id="accept_changes" class="btn btn btn-success"
                                                 style="display: none;">
-                                            Сохранить
+                                            Сохранить клиента
                                         </button>
                                     </td>
+                                    <?php } ?>
                                 </tr>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
@@ -1530,7 +1532,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </div>
      
     <?php } ?>
-    <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
+    <?php if ((($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) && $this->item->id_client != 1) { ?>
         <table>
             <tr>
                 <td>
@@ -1599,11 +1601,15 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         производство
                     </button>
                 </td>
+            </tr>
+            <tr>
                 <td colspan="2">
                     <button class="validate btn btn-primary" id="save_email" type="button" from="form-client"> Сохранить и запустить <br> в
                         производство по email
                     </button>
                 </td>
+            </tr>
+            <tr>
                 <td colspan="2">
                     <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
                     </button>
@@ -2649,8 +2655,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             jQuery("#accept_changes").toggle();
         });
         if(client_id==1){
-            console.log("12312");
+            //console.log("12312");
+            jQuery("input[name='data_change']").val(1);
             jQuery("#change_data").trigger('click');
+            jQuery("#accept_project").trigger('click');
         }
         jQuery("#save_email").click(function(){
             jQuery("#activate_by_email").val(1);
