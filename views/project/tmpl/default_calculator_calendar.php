@@ -597,7 +597,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     <div class="row">
         <div class="col-12 item_fields">
             <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
-            <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data"  >
+            <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                 <?php if ($this->type === "calculator" && $this->subtype === "calendar"){ ?>
                     <?php if ($this->item->project_verdict == 0) { ?>
                         <?php if ($user->dealer_type != 2) { ?>
