@@ -803,7 +803,7 @@ class Gm_ceilingModelProject extends JModelItem
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->update("`#__gm_ceiling_projects`")
-				->set('`client_id` = $client_id')
+				->set("`client_id` = $client_id")
 	            ->where("`id` = $id");
 	        $db->setQuery($query);
 	        $db->execute();
