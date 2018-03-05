@@ -135,10 +135,10 @@ class Gm_ceilingModelProject extends JModelItem
 						$db = JFactory::getDbo();
 						$query = $db->getQuery(true);
 						$query
-							->select('`#__gm_ceiling_clients_2460720`.`id`')
-							->select('`#__gm_ceiling_clients_2460720`.`client_name`')
-							->select('`#__gm_ceiling_clients_2460720`.`dealer_id`')
-							->from($db->quoteName('#__gm_ceiling_clients', '#__gm_ceiling_clients_2460720'))
+							->select('`#__gm_ceiling_clients`.`id`')
+							->select('`#__gm_ceiling_clients`.`client_name`')
+							->select('`#__gm_ceiling_clients`.`dealer_id`')
+							->from($db->quoteName('#__gm_ceiling_clients'))
 							->where($db->quoteName('id') . ' = ' . $db->quote($db->escape($value)));
 						$db->setQuery($query);
 						$results = $db->loadObject();
