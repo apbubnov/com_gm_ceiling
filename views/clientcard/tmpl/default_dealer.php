@@ -146,6 +146,13 @@
 <div class="row">
     <div class="col-sm-12" id = "cliens_of_dealer">
         <p class="caption-tar">Клиенты дилера</p>
+        <select id="select_status" ><option value='' selected>Выберите статус</option>
+            <?php foreach($status as $item): ?>
+            <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
+                <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
+            <?php } ?>
+            <?php endforeach;?>
+        </select>
         <div id="cliens_of_dealer_2">
             <table id="cliens_of_dealer_table" class="table table-striped table_cashbox one-touch-view" cellspacing="0">
                 <tbody>
