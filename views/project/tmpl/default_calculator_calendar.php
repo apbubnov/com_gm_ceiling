@@ -1599,11 +1599,15 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         производство
                     </button>
                 </td>
+            </tr>
+            <tr>
                 <td colspan="2">
                     <button class="validate btn btn-primary" id="save_email" type="button" from="form-client"> Сохранить и запустить <br> в
                         производство по email
                     </button>
                 </td>
+            </tr>
+            <tr>
                 <td colspan="2">
                     <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
                     </button>
