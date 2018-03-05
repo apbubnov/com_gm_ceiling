@@ -1714,9 +1714,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     </style>
 
 <script type="text/javascript">
-var $ = jQuery;
-var min_project_sum = <?php echo  $min_project_sum;?>;
-var min_components_sum = <?php echo $min_components_sum;?>;
+    var $ = jQuery;
+    var min_project_sum = <?php echo  $min_project_sum;?>;
+    var min_components_sum = <?php echo $min_components_sum;?>;
 
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
@@ -2093,7 +2093,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 }
             });
         });
-// открытие модального окна с календаря и получение даты и вывода свободных монтажников
+
+        // открытие модального окна с календаря и получение даты и вывода свободных замерщиков
         jQuery("#calendar_container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
             reg1 = "D(.*)D";
@@ -2172,6 +2173,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 }, 200);
             }
         });
+
+        // получение значений замерщиков
         jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
 			var times = jQuery("input[name='choose_time_gauger']");
             time = "";
@@ -2200,6 +2203,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             times.prop("checked",true);
             times.change();
         });
+        //---------------------------------------------------------------
+
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
