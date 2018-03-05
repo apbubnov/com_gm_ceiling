@@ -459,7 +459,7 @@ class Gm_ceilingHelpersGm_ceiling
                     'total_with_gm_dealer_margin_guild' => 0,
                     'total_gm_mounting' => 0,
                     'total_dealer_mounting' => 0
-                ]
+                ];
             }
             //Итоговая сумма компонентов
             $total_sum = 0;
