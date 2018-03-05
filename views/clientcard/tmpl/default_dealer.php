@@ -616,10 +616,7 @@ JHtml::_('formbehavior.chosen', 'select');
         jQuery("#email_login").val(elem.value);
     }
 
-    jQuery(document).ready(function () {
-
         // фильтр по статусу
-        jQuery("#select_status").change();
         jQuery("#select_status").change(function () {
             var status = jQuery("#select_status").val();
             var search = jQuery("#filter_search").val();
@@ -695,6 +692,13 @@ JHtml::_('formbehavior.chosen', 'select');
                 });
             });
         }
+        //-----------------------------------------------
+
+
+    jQuery(document).ready(function () {
+
+        // фильтр по статусу
+        jQuery("#select_status").change();
         //-----------------------------------------------
 
         document.getElementById('calls-tar').scrollTop = 9999;
