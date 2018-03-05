@@ -910,7 +910,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				else {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
 				}
+                goto metka;
 			} else {
+                metka:
 				if($subtype === "refused") {
 					$model->return_project($project_id);
 				// Clear the profile id from the session.
