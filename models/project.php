@@ -805,7 +805,7 @@ class Gm_ceilingModelProject extends JModelItem
 			$query->update("`#__gm_ceiling_projects`")
 				->columns('`client_id`')
 	            ->values("$client_id")
-	            ->where("`id` = $client_id");
+	            ->where("`id` = $id");
 	        $db->setQuery($query);
 	        $db->execute();
 			return true;
