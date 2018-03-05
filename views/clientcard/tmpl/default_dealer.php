@@ -619,6 +619,7 @@ JHtml::_('formbehavior.chosen', 'select');
     jQuery(document).ready(function () {
 
         // фильтр по статусу
+        jQuery("#select_status").change();
         jQuery("#select_status").change(function () {
             var status = jQuery("#select_status").val();
             var search = jQuery("#filter_search").val();
