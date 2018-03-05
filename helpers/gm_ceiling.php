@@ -451,7 +451,9 @@ class Gm_ceilingHelpersGm_ceiling
             //считаем комплектующие
             $components_data = self::calculate_components(null,$data,$del_flag);
             //считаем монтаж
-            $mounting_data = self::calculate_mount($del_flag,null,$data);
+            if ($need_mount) {
+                $mounting_data = self::calculate_mount($del_flag,null,$data);
+            }
             //Итоговая сумма компонентов
             $total_sum = 0;
             //Прибавляем к подсчету комплектующие
