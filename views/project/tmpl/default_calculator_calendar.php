@@ -29,7 +29,6 @@ $total_square = 0;
 $total_perimeter = 0;
 $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations = $model->getProjectItems($this->item->id);
-
 foreach ($calculations as $calculation) {
     $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
     $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
@@ -787,7 +786,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <?php echo $this->item->dealer_manager_note; ?>
                                     </td>
                                     <td>
-                                        <button type="button" id="accept_changes" class="btn btn btn-success"
+                                        <button type="submit" id="accept_changes" class="btn btn btn-success"
                                                 style="display: none;">
                                             Сохранить
                                         </button>
@@ -910,6 +909,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             $tmp = 0;
             $sum_transport_discount_total = 0;
             $sum_transport_total = 0;
+            $dealer_comp_all =0;
             $JS_Calcs_Sum = array();
 
             foreach ($calculations as $calculation) {
@@ -928,12 +928,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     $calculation_total_11 += $calculation_total_1;
                     $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
                     $project_total_11 += $project_total_1;
+                    $dealer_comp_all += $dealer_components_sum_1;
                 }
                 $calculation->calculation_title;
                 $total_square += $calculation->n4;
                 $total_perimeter += $calculation->n5;
                 $canvas = $dealer_canvases_sum;
-
 
                 $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
                 $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
@@ -1079,9 +1079,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <th id="project_total_discount">
                         <span class="sum">
                      <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                    if($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum) if($min_components_sum>0){$project_total_discount = $min_components_sum;}
-                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) { if($min_components_sum>0){$project_total_discount = $min_components_sum;} echo round($project_total_discount, 0);  ?> руб.</th> <?}
-                    elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { if($min_project_sum>0){$project_total_discount =  $min_project_sum;} echo round($project_total_discount, 0);  ?> руб.</th>
+                    if($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum)
+                        $project_total_discount = $min_components_sum;
+                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) {
+                        $project_total_discount = $min_components_sum;
+                        echo round($project_total_discount, 0);  ?> руб.</th> <?}
+                    elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { 
+                        $project_total_discount =  $min_project_sum;
+                        echo round($project_total_discount, 0);  ?> руб.</th>
                         </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                     <?php } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
 
@@ -1709,9 +1714,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     </style>
 
 <script type="text/javascript">
-var $ = jQuery;
-var min_project_sum = <?php echo  $min_project_sum;?>;
-var min_components_sum = <?php echo $min_components_sum;?>;
+    var $ = jQuery;
+    var min_project_sum = <?php echo  $min_project_sum;?>;
+    var min_components_sum = <?php echo $min_components_sum;?>;
 
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
@@ -2055,15 +2060,6 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 }
             });
         });
-        jQuery("#accept_changes").click(function(){
-            var name = jQuery("#jform_client_name");
-            
-            if(name.val()!=""){
-                jQuery("#form-client").submit();
-            }
-            else
-            name.focus();
-        });
         jQuery("#add_birthday").click(function () {
             var birthday = jQuery("#jform_birthday").val();
             var id_client = <?php echo $this->item->id_client;?>;
@@ -2097,7 +2093,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 }
             });
         });
-// открытие модального окна с календаря и получение даты и вывода свободных монтажников
+
+        // открытие модального окна с календаря и получение даты и вывода свободных замерщиков
         jQuery("#calendar_container").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
             reg1 = "D(.*)D";
@@ -2176,6 +2173,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 }, 200);
             }
         });
+
+        // получение значений замерщиков
         jQuery("#projects_gaugers").on("change", "input:radio[name='choose_time_gauger']", function() {
 			var times = jQuery("input[name='choose_time_gauger']");
             time = "";
@@ -2204,6 +2203,8 @@ var min_components_sum = <?php echo $min_components_sum;?>;
             times.prop("checked",true);
             times.change();
         });
+        //---------------------------------------------------------------
+
         // открытие модального окна с календаря и получение даты и вывода свободных монтажников
         jQuery("#calendar1, #calendar2").on("click", ".current-month, .not-full-day, .change", function() {
             window.idDay = jQuery(this).attr("id");
@@ -2513,7 +2514,20 @@ var min_components_sum = <?php echo $min_components_sum;?>;
                 jQuery("input[name='smeta']").val(1);
             else jQuery("input[name='smeta']").val(0);
         });
-
+        jQuery("input[name^='smeta']").change(function () {
+            comp_sum = <?php echo $dealer_comp_all;?>;
+            console.log(comp_sum);
+            var sum = jQuery("#calculation_total1")[0].innerText;
+            if(jQuery("input[name^='smeta']").attr("checked") == 'checked'){
+                jQuery("#calculation_total1")[0].innerText = +sum-comp_sum;
+                
+            }
+            else{
+                jQuery("#calculation_total1")[0].innerText = +sum+comp_sum;
+            
+            } 
+        });
+        
         jQuery("#client_order").click(function () {
             jQuery("input[name='project_verdict']").val(1);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);

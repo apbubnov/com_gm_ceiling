@@ -64,6 +64,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
                 ->select('ifnull(project_id,\'-\') as `project_id`')
                 ->select('date_time')
                 ->select('sum')
+                ->select('comment')
                 ->from('#__gm_ceiling_recoil_map_project')
                 ->where("recoil_id = $id");
 			$db->setQuery($query);
