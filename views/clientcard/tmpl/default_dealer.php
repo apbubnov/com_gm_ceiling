@@ -1,4 +1,7 @@
 <?php
+
+JHtml::_('formbehavior.chosen', 'select');
+
     $user       = JFactory::getUser();
     $userId     = $user->get('id');
     $user_group = $user->groups;
