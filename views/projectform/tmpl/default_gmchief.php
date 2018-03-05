@@ -1700,6 +1700,11 @@
             jQuery("#modal-window-container-tar").hide();
             jQuery("#modal-window-choose-tar").hide();
         });
+        jQuery("#projects_gaugers").on("click", "td", function(){
+            var times = jQuery(this).closest('tr').find("input:radio[name='choose_time_gauger']");
+            times.prop("checked",true);
+            times.change();
+        });
         //------------------------------------------
 
         // подсвет сегоднешней даты
