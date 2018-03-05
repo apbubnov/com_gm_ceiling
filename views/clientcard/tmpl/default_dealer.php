@@ -686,6 +686,14 @@ JHtml::_('formbehavior.chosen', 'select');
                 }
             });
         });
+        function OpenPage() {
+            var e = jQuery("[data-href]");
+            jQuery.each(e, function (i, v) {
+                jQuery(v).click(function () {
+                    document.location.href = this.dataset.href;
+                });
+            });
+        }
         //-----------------------------------------------
 
         document.getElementById('calls-tar').scrollTop = 9999;
