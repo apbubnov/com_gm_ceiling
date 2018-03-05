@@ -163,28 +163,45 @@ JHtml::_('formbehavior.chosen', 'select');
             </select>
         </p>
         <div id="cliens_of_dealer_2">
-            <table id="cliens_of_dealer_table" class="table table-striped table_cashbox one-touch-view" cellspacing="0">
+            <table class="table table-striped table_cashbox one-touch-view" id="clientList">
+                <thead>
+                    <tr>
+                        <th class='' >Создан</th>
+                        <th class=''>Клиент</th>
+                        <th class=''>Адрес</th>
+                        <th>Статус</th>
+                    </tr>
+                    <tr class="row" id="TrClone" data-href="" style="display: none">
+                        <td class="one-touch created"></td>
+                        <td class="one-touch name"></td>
+                        <td class="one-touch address"></td>
+                        <td class="one-touch status"></td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <!-- <table id="cliens_of_dealer_table" class="table table-striped table_cashbox one-touch-view" cellspacing="0">
                 <tbody>
-                <?php foreach ($clients_items as $i => $item) : ?>
-                    <tr class="row<?php echo $i % 2; ?>" data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
+                <?php// foreach ($clients_items as $i => $item) : ?>
+                    <tr class="row<?php// echo $i % 2; ?>" data-href="<?php// echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?>">
                         <td class="one-touch">
                             <?php
-                                if($item->created == "0000-00-00") {
+                                /* if($item->created == "0000-00-00") {
                                     echo "-";
                                 } else {
                                     $jdate = new JDate($item->created);
                                     $created = $jdate->format("d.m.Y");
                                     echo $created;
-                                }
+                                } */
                             ?>
                             
                         </td>
-                        <td class="one-touch"><?php echo $item->client_name; ?></td>
-                        <td class="one-touch"><?php echo $item->client_contacts; ?></td>
+                        <td class="one-touch"><?php// echo $item->client_name; ?></td>
+                        <td class="one-touch"><?php// echo $item->client_contacts; ?></td>
                     </tr>
-                <?php endforeach; ?>
+                <?php// endforeach; ?>
                 </tbody>
-            </table>
+            </table> -->
         </div>
     </div>
 </div>
@@ -598,8 +615,78 @@ JHtml::_('formbehavior.chosen', 'select');
         jQuery("#email_login").val(elem.value);
     }
 
-    jQuery(document).ready(function ()
-    {
+    jQuery(document).ready(function () {
+
+        // фильтр по статусу
+        jQuery("#select_status").change(function () {
+            var status = jQuery("#select_status").val();
+            var search = jQuery("#filter_search").val();
+            jQuery.ajax({
+                type: "POST",
+                url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
+                data: {
+                    status: status,
+                    search: search
+                },
+                dataType: "json",
+                async: true,
+                cache: false,
+                success: function (data) {
+                    console.log(data);
+                    var list = $("#clientList tbody");
+                    list.empty();
+                    var text='';
+                    for(i=0;i<data.length;i++){
+                        var tr = $("#TrClone").clone();
+
+                        tr.show();
+                        tr.find(".created").text(data[i].created);
+                        if (data[i].client_contacts != null)
+                        {
+                            tr.find(".name").text(data[i].client_contacts + ' ' + data[i].client_name);
+                        }
+                        else
+                        {
+                            tr.find(".name").text(data[i].client_name);
+                        }
+                        if (data[i].address != null)
+                        {
+                            tr.find(".address").text(data[i].address);
+                        }
+                        else
+                        {
+                            tr.find(".address").text('-');
+                        }
+                        if (data[i].status != null)
+                        {
+                            tr.find(".status").text(data[i].status);
+                        }
+                        else
+                        {
+                            tr.find(".status").text('-');
+                        }
+                        
+                        tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
+                        list.append(tr);
+                    }
+                    OpenPage();
+                },
+                timeout: 50000,
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        });
+        //-----------------------------------------------
+
         document.getElementById('calls-tar').scrollTop = 9999;
         jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
 
