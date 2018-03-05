@@ -792,14 +792,23 @@ class Gm_ceilingModelProject extends JModelItem
 	{
 		try
 		{
-			$table = $this->getTable();
+			/*$table = $this->getTable();
 			if($id > 0) {
 				$table->load($id);
 				$table->client_id = $client_id;
 			}
 			$return = $table->store();
 
-			return $return;
+			return $return;*/
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->update("`#__gm_ceiling_projects`")
+				->columns('`client_id`')
+	            ->values("$client_id")
+	            ->where("`id` = $client_id");
+	        $db->setQuery($query);
+	        $db->execute();
+			return true;
 		}
 		catch(Exception $e)
         {
