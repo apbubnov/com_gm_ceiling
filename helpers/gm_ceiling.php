@@ -1318,9 +1318,14 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
            
-            if (empty($calc_id)) $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
-            else $canvases_data['title'] = $data['n3'] . ", " . $data['n2'] . " " . $data['color']; //Название фактуры и полотна
-
+            /*if (empty($calc_id)) {
+                $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
+            }
+            else
+            {
+                $canvases_data['title'] = $data['n3'] . ", " . $data['n2'] . " " . $data['color']; //Название фактуры и полотна
+                $canvases_data['title_standart'] = 
+            }*/
             $canvases_data['quantity'] = $data['n4'];
 
             $total_gm_guild = $data['guild_data']['total_gm_guild'];
@@ -2978,15 +2983,39 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';               
         $html .= '</tr>';
         $html .= '<tr>';
+        
 
-        if ($data['color'] > 0) {
-            $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
-            $color = $color_model->getData($data['color']);
-            $name = $canvases_data['title'] . ", цвет: " . $color->colors_title;
-            } else {
-                $name = $canvases_data['title'];
+        if (empty($data['n3_id']))
+        {
+            $canvas_id = $data['n3'];
         }
-        $html .= '<th>Цвет: </th><td colspan="2" >' . $name . '</td>';
+        else
+        {
+            $canvas_id = $data['n3_id'];
+        }
+
+        $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+        $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+
+        $canvas = $canvases_model->getFilteredItemsCanvas("WHERE `id` = $canvas_id");
+
+        if (is_null($canvas['color_id']))
+        {
+            $color_title = '303';
+        }
+        else
+        {
+            $color = $color_model->getData($canvas['color_id']);
+            $color_title = $color->title;
+        }
+        
+        $facture = $canvas->texture_title;
+        $width = $canvas->width * 100;
+        $name = $canvas->name;
+
+        $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name;
+
+        $html .= '<th>Цвет: </th><td colspan="2" >' . $canv_name . '</td>';
         $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
         $html .= '</tr>';
         $html .= '</tbody>';
@@ -3020,13 +3049,14 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<tr>';
         $html .= '<th>Договор №: </th> <td>' . $project->id . '</td>';
         $html .= '<th class ="left">Клиент:</th><td >' . $project->client_id . '</td>';
-        $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
+        $html .= '<th>Дилер:</th><td >' . $dealer_name . '</td>';
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
         $html .= '</tr>';
         $html .= '<tr>';
-        $html .= '<th>Цвет: </th><td colspan="3" >' . $name . '</td>';
+        $html .= '<th>Цвет: </th><td colspan="3" >' . $canv_name . '</td>';
+        $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';

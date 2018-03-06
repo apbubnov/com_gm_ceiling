@@ -71,7 +71,7 @@ $rest = -($total_sum) - $contributed;
 ?>
 
 <?php if(!$dealerInfo->update_check):?>
-<style>
+<!-- <style>
     #toProfile {
         position: relative;
         width: 52px;
@@ -111,7 +111,7 @@ $rest = -($total_sum) - $contributed;
         font-size: 12px;
         color: rgb(65,64,153);
     }
-</style>
+</style> -->
 <?endif;?>
 
 <div class="form-group">
@@ -123,7 +123,7 @@ $rest = -($total_sum) - $contributed;
             <div class="pix"></div>
             <div class="message">Посетите данную страницу для настроек прайса монтажа!</div>
         <?//endif;?>
-    </button -->>
+    </button> -->
 
         <a class="btn btn-primary btn-acct" href="/index.php?option=com_gm_ceiling&view=dealerprofile&type=score"> <?=$rest?-$rest:0;?> руб. </a>
         <div id="modal_window_container" class="modal_window_container" >
