@@ -614,7 +614,7 @@
 		</div>
 		<!-- Шторный карниз -->
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row sm">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<table style="margin-left: calc(50% - 87px);">
