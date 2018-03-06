@@ -30,7 +30,7 @@ $rest = -($total_sum) - $contributed;
         border-radius: 5px;
     }
     @media screen and (min-width: 768px) {
-        #ScoreList td {
+        .small_table {
             font-size: 13px;
         }
 	}
@@ -46,7 +46,7 @@ $rest = -($total_sum) - $contributed;
             </div>
         </div>
     </div>
-    <table class="table table-striped table_cashbox one-touch-view" id="ScoreList">
+    <table class="table table-striped table_cashbox one-touch-view small_table" id="ScoreList">
         <thead>
         <tr>
             <th class=''>Дата</th>
