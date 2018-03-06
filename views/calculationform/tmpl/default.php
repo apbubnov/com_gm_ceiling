@@ -519,7 +519,7 @@
 								<?php foreach($n13 as $lamp) {?>
 									<div class="form-group">
 										<div class="advanced_col1">
-											<input name="n13_count[]" class="form-control" value="<?php echo $lamp->n13_count; ?>" placeholder="шт." >
+											<input id="n13_count" name="n13_count[]" class="form-control" value="<?php echo $lamp->n13_count; ?>" placeholder="шт." >
 										</div>
 										<div class="advanced_col2">
 											<select name="n13_type[]" id="n13" class="form-control n13_control" placeholder="Вид">
@@ -584,7 +584,7 @@
 							<?php foreach($n26 as $ecola) {?>
 								<div class="form-group">
 									<div class="advanced_col1">
-										<input name="ecola_count[]"  value="<?=/*$tmp[$item]*/ $ecola->n26_count; ?>" class="form-control" placeholder="шт." type="tel">
+										<input id="ecola_count" name="ecola_count[]"  value="<?=/*$tmp[$item]*/ $ecola->n26_count; ?>" class="form-control" placeholder="шт." type="tel">
 									</div>
 									<div class="advanced_col2">
 										<select class="form-control" name="light_color[]" placeholder="Светильник">
@@ -1793,10 +1793,18 @@
 		jQuery("#chandelier").show();
 		jQuery("#btn_chandelier").hide();
 	});
+	if (jQuery("#jform_n12").val() != null) {
+		jQuery("#chandelier").show();
+		jQuery("#btn_chandelier").hide();
+	}
 	jQuery("#btn_fixtures").click( function () {
 		jQuery(".fixtures").show();
 		jQuery("#btn_fixtures").hide();
 	});
+	if (jQuery("#n13_count").val() != null || jQuery("#ecola_count").val() != null ) {
+		jQuery(".fixtures").show();
+		jQuery("#btn_fixtures").hide();
+	}
 	
 	//------------------------------
 
