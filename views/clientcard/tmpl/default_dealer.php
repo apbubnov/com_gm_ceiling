@@ -54,6 +54,7 @@ foreach ($dealer_history as $key => $item) {
     $dealer_history_sum += $item->sum;
 }
 ?>
+<link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/clientcard/css/dealer.css">
 
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
@@ -302,42 +303,48 @@ foreach ($dealer_history as $key => $item) {
             <?php endforeach;?>
         </select>
     </div>
-    <div class="modal_window" id="modal_window_sum">
-        <div class="">У дилера на счету: <span><?=$dealer_history_sum;?></span></div>
-        <p><strong id="dealer_name"></strong></p>
-        <p id="dealer_invoice"></p>
-        <p>Сумма взноса:</p>
-        <p><input type="text" id="pay_sum"></p>
-        <input type="hidden" id="hidden_user_id">
-        <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
-
-        <table>
-            <thead>
-            <tr>
-                <td>Дата</td>
-                <td>Проект</td>
-                <td>Сумма</td>
-                <td>Комментарий</td>
-            </tr>
-            </thead>
-            <tbody>
-            <?foreach ($dealer_history as $item):?>
+    <div class="modal_window modal_window_pay" id="modal_window_sum">
+        <div class="dealer_name"><?=$this->item->client_name;?></div>
+        <div class="dealer_pay">У дилера на счету: <span><?=$dealer_history_sum;?></span></div>
+        <form class="send_pay" method="post" action="/index.php?option=com_gm_ceiling&task=clientform.pay">
+            <input hidden type="number" name="dealer_id" value="<?=$dealer->id;?>">
+            <label for="pay_sum"><i class="fa fa-money"></i></label>
+            <input type="text" id="pay_sum" class="pay_sum" name="pay_sum" placeholder="Сумма" pattern="\d+|\d+\.{1,1}\d+"
+                   title="Введи количество денег, которые вносит дилер" required>
+            <label for="pay_comment"><i class="fa fa-edit"></i></label>
+            <input type="text" id="pay_comment" class="pay_comment" name="pay_comment" placeholder="Комментарий"
+                   title="Введите комментарий об внесении средств" required>
+            <button><i class="fa fa-paper-plane"></i></button>
+        </form>
+        <div class="table_size">
+            <table class="dealer_history">
+                <thead>
                 <tr>
-                    <td><?=$item->data;?></td>
-                    <td><?=$item->project_id;?></td>
-                    <td><?=$item->sum;?></td>
-                    <td><?=$item->comment;?></td>
+                    <td>Дата</td>
+                    <td>Проект</td>
+                    <td>Сумма</td>
+                    <td>Комментарий</td>
                 </tr>
-            <?endforeach;?>
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="2"></td>
-                <td>Итого:</td>
-                <td><?=$dealer_history_sum;?></td>
-            </tr>
-            </tfoot>
-        </table>
+                </thead>
+                <tbody>
+                <?foreach ($dealer_history as $item):?>
+                    <tr class="<?=($item->project_id != "-")?"project":"";?>" data-project="<?=$item->project_id;?>">
+                        <td><?=$item->data;?></td>
+                        <td><?=$item->project_id;?></td>
+                        <td><?=$item->sum;?></td>
+                        <td><?=$item->comment;?></td>
+                    </tr>
+                <?endforeach;?>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="2" style="text-align: right;">Итого:</td>
+                    <td><?=$dealer_history_sum;?></td>
+                    <td></td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
     <div id="call" class="modal_window">
         <p>Перенести звонок</p>
@@ -733,6 +740,13 @@ foreach ($dealer_history as $key => $item) {
 
 
     jQuery(document).ready(function () {
+
+        /*Переход к проекту в воде денег*/
+        $(".modal_window_pay .dealer_history tbody tr.project").click(function () {
+            $id = this.dataset.project;
+            location.href = "/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id=" + $id;
+        });
+
 
         // фильтр по статусу
         jQuery("#select_status").change();

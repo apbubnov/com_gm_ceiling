@@ -140,6 +140,37 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    function insert($recoil_id, $project_id, $sum, $comment)
+    {
+        try
+        {
+            if (empty($recoil_id) || empty($sum) || empty($comment))
+                throw new Exception("Переданы неверные данные!");
+
+            $db = JFactory::getDbo();
+
+            $query = $db->getQuery(true);
+
+            $project_id = (empty($project_id))?"NULL":"'$project_id'";
+            $date = date("Y-m-d H:i:s");
+
+            $query->insert('`#__gm_ceiling_recoil_map_project`')
+                ->columns("recoil_id, project_id, sum, date_time, comment")
+                ->values("'$recoil_id', $project_id, '$sum', '$date', '$comment'");
+
+            $db->setQuery($query);
+            $db->execute();
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     function getRecoilId($project_id)
     {
     	try
