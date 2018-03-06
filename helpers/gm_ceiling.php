@@ -3006,7 +3006,7 @@ class Gm_ceilingHelpersGm_ceiling
         else
         {
             $color = $color_model->getData($canvases[0]->color_id);
-            $color_title = $color->title;
+            $color_title = $color->colors_title;
         }
         
         $facture = $canvases[0]->texture_title;
