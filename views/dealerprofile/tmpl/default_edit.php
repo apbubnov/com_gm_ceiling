@@ -28,6 +28,9 @@ $mount = $model_mount->getDataAll();
 	.caption1 {
 		text-align: center;
 		padding: 10px 0;
+		border-radius: 0;
+		border-color: #ffffff;
+		border-style: solid;
 	}
 </style>
 
