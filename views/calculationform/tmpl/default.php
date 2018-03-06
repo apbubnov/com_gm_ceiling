@@ -455,7 +455,7 @@
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
 							</td>
 							<td>
-								<button type="button" id="btn_chandelier" class="btn btn-danger add_fields"><i class="fa fa-plus"></i></button>
+								<button type="button" id="btn_chandelier" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
@@ -487,7 +487,7 @@
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">На упаковке светильника указан диаметр технологического отверстия</span></a>
 							</td>
 							<td>
-								<button type="button" id="btn_fixtures" class="btn btn-danger add_fields"><i class="fa fa-plus"></i></button>
+								<button type="button" id="btn_fixtures" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
