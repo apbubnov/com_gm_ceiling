@@ -39,7 +39,7 @@ $rest = -($total_sum) - $contributed;
         }
 	}
 </style>
-<?=parent::getButtonBack();?>
+<!-- <?=parent::getButtonBack();?> -->
 <h2 class = "center">Детализация счета</h2>
 
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=dealermainpage&type=score'); ?>" method="post" name="adminForm" id="adminForm">
