@@ -71,7 +71,7 @@ $rest = -($total_sum) - $contributed;
 ?>
 
 <?php if(!$dealerInfo->update_check):?>
-<style>
+<!-- <style>
     #toProfile {
         position: relative;
         width: 52px;
@@ -111,19 +111,19 @@ $rest = -($total_sum) - $contributed;
         font-size: 12px;
         color: rgb(65,64,153);
     }
-</style>
+</style> -->
 <?endif;?>
 
 <div class="form-group">
     <h2 style = "display:inline-block;"><?php echo $user->name; ?></h2> <?php if($user->dealer_type!=2 ){
         if($userId == 1 || $userId == 2 || ($userId != 1 && $user->dealer_id != 1)) { ?>
-    <button id="toProfile" class = "btn btn-primary">
+    <!-- <button id="toProfile" class = "btn btn-primary">
         <i class="fa fa-cogs" aria-hidden="true"></i>
-        <?if(!$dealerInfo->update_check):?>
+        <?//if(!$dealerInfo->update_check):?>
             <div class="pix"></div>
             <div class="message">Посетите данную страницу для настроек прайса монтажа!</div>
-        <?endif;?>
-    </button>
+        <?//endif;?>
+    </button> -->
 
         <a class="btn btn-primary btn-acct" href="/index.php?option=com_gm_ceiling&view=dealerprofile&type=score"> <?=$rest?-$rest:0;?> руб. </a>
         <div id="modal_window_container" class="modal_window_container" >
