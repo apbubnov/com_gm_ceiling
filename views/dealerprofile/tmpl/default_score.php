@@ -29,7 +29,11 @@ $rest = -($total_sum) - $contributed;
         border: 1px solid #414099;
         border-radius: 5px;
     }
-
+    @media and screen (min-width: 768px) {
+        .table {
+            font-size: 16px;
+        }
+    }
 </style>
 <?=parent::getButtonBack();?>
 <h2 class = "center">Детализация счета</h2>
