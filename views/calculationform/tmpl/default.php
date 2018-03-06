@@ -494,7 +494,7 @@
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
-			<div class="row sm-margin-bottom" id="fixtures" style="display: none; width: 100%;">
+			<div class="row sm-margin-bottom" class="fixtures" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n13_block" >
@@ -550,7 +550,7 @@
 			</div>
 		</div>
 		<!-- Экола -->
-		<div class="container">
+		<div class="container" class="fixtures" style="display: none; width: 100%;">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
@@ -559,7 +559,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		<div class="container">
+		<div class="container" class="fixtures" style="display: none; width: 100%;">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
@@ -1793,7 +1793,7 @@
 		jQuery("#btn_chandelier").hide();
 	});
 	jQuery("#btn_fixtures").click( function () {
-		jQuery("#fixtures").show();
+		jQuery(".fixtures").show();
 		jQuery("#btn_fixtures").hide();
 	});
 	
