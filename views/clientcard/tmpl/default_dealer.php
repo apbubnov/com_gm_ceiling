@@ -328,7 +328,7 @@ foreach ($dealer_history as $key => $item) {
                 </thead>
                 <tbody>
                 <?foreach ($dealer_history as $item):?>
-                    <tr>
+                    <tr class="<?=($item->project_id != "-")?"project":"";?>" data-project="<?=$item->project_id;?>">
                         <td><?=$item->data;?></td>
                         <td><?=$item->project_id;?></td>
                         <td><?=$item->sum;?></td>
@@ -740,6 +740,13 @@ foreach ($dealer_history as $key => $item) {
 
 
     jQuery(document).ready(function () {
+
+        /*Переход к проекту в воде денег*/
+        $(".modal_window_pay .dealer_history tbody tr.project").click(function () {
+            $id = this.dataset.project;
+            location.href = "/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id=" + $id;
+        });
+
 
         // фильтр по статусу
         jQuery("#select_status").change();
