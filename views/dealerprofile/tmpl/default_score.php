@@ -31,7 +31,7 @@ $rest = -($total_sum) - $contributed;
     }
     @media and screen (min-width: 768px) {
         .table {
-            font-size: 11px;
+            font-size: 13px !important;
         }
     }
 </style>
