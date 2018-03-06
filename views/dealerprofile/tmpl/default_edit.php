@@ -47,6 +47,9 @@ $mount = $model_mount->getDataAll();
 		border: 1px solid rgba(0,0,0,.15);
 		border-radius: .25rem;
 	}
+	.control-label {
+		margin-top: 5px;
+	}
 </style>
 
 <?=parent::getButtonBack();?>
