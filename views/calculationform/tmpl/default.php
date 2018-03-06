@@ -455,7 +455,7 @@
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
 							</td>
 							<td>
-								<button type="button" id="btn_chandelier" class="btn btn-danger add_fields">+</button>
+								<button type="button" id="btn_chandelier" class="btn btn-danger add_fields"><i class="fas fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
