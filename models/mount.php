@@ -89,7 +89,7 @@ class Gm_ceilingModelMount extends JModelList
 	        $query = $db->getQuery(true);
 	        $query->select('*');
 	        $query->from('`#__gm_ceiling_mount`');
-	        $query->where("`user_id` = $dealerId");
+	        $query->where("`user_id` = '$dealerId'");
 	        $db->setQuery($query);
 	        $item = $db->loadObject();
 	        return $item;
