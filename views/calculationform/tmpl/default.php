@@ -449,14 +449,26 @@
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n12-lbl" for="jform_n12" class="">Введите кол-во люстр:</label>
+								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить любстры</label>
 							</td>
 							<td>
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
 							</td>
+							<td>
+								<button type="button" id="btn_chandelier" class="add_fields">+</button>
+							</td>
 						</tr>
 					</table>
-					<input id="jform_n12" data-next="#jform_n13" name="jform[n12]" placeholder ="шт." value="<?php echo $this->item->n12; ?>" class="form-control" type="tel">
+					<table id="chandelier" style="display: none">
+						<tr>
+							<td>Введите кол-во люстр:</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="jform_n12" data-next="#jform_n13" name="jform[n12]" placeholder ="шт." value="<?php echo $this->item->n12; ?>" class="form-control" type="tel">
+							</td>
+						</tr>
+					</table>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -1771,6 +1783,12 @@
 </div>
 
 <script type="text/javascript">
+
+	// кнопки открытия скрытых полей
+	jQuery("#btn_chandelier").click( function () {
+		jQuery("#chandelier").show();
+	});
+	//------------------------------
 
     var $ = jQuery;
 	//для подгрузки компонентов со склада
