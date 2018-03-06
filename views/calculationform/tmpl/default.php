@@ -449,7 +449,7 @@
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить любстры</label>
+								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить люстры</label>
 							</td>
 							<td>
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
@@ -1787,6 +1787,7 @@
 	// кнопки открытия скрытых полей
 	jQuery("#btn_chandelier").click( function () {
 		jQuery("#chandelier").show();
+		jQuery("#btn_chandelier").hide();
 	});
 	//------------------------------
 
