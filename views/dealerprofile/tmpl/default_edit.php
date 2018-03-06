@@ -29,6 +29,7 @@ $mount = $model_mount->getDataAll();
 		text-align: center;
 		padding: 15px 0;
 		margin-bottom: 0;
+		color: #414099;
 	}
 	.caption2 {
 		text-align: center;
@@ -36,6 +37,7 @@ $mount = $model_mount->getDataAll();
 		padding: 10px 0;
 		border: 0;
 		margin-bottom: 0;
+		color: #414099;
 	}
 </style>
 
