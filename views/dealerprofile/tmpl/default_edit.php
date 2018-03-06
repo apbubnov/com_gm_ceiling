@@ -48,8 +48,8 @@ $mount = $model_mount->getDataAll();
 		border-radius: .25rem;
 	}
 	.control-label {
-		margin-top: 5px;
-		margin-bottom: 2px;
+		margin-top: 7px;
+		margin-bottom: 0;
 	}
 </style>
 
