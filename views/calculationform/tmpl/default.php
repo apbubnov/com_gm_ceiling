@@ -494,7 +494,7 @@
 				</div>
 				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
 			</div>
-			<div class="row sm-margin-bottom" class="fixtures" style="display: none; width: 100%;">
+			<div class="row sm-margin-botto fixtures" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n13_block" >
