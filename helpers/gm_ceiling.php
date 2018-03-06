@@ -2996,9 +2996,9 @@ class Gm_ceilingHelpersGm_ceiling
 
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
-        throw new Exception("Error Processing Request", 1);
+        
         $canvas = $canvases_model->getFilteredItemsCanvas("id = $canvas_id");
-
+        throw new Exception("Error Processing Request", 1);
         if (is_null($canvas['color_id']))
         {
             $color_title = '303';
