@@ -95,6 +95,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
                 $userDealer = JFactory::getUser($user->dealer_id);
                 $userDealer->groups = $userDealer->get('groups');
+                $userDealer->getDealerInfo();
             }
 
             $managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
@@ -169,11 +170,15 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                             "value" => $DealerPrice];
                     }
                 }
-                if ($flag == 1)
-                    die(json_encode(["status" => "error", "message" => "Цена для дилера не должна быть ниже себестоймости."]));
-                else if ($flag > 1)
-                    die(json_encode(["status" => "error", "message" => "Цена для дилера не должна быть ниже себестоймости. 
-                    Поэтому к некоторым компонентам новый прайс был не пременен."]));
+                if ($flag == 1) {
+                    $answer->status = "error";
+                    $answer->message = "Цена для дилера не должна быть ниже себестоймости.";
+                }
+                else if ($flag > 1) {
+                    $answer->status = "error";
+                    $answer->message = "Цена для дилера не должна быть ниже себестоймости."
+                        . "Поэтому к некоторым компонентам новый прайс был не пременен.";
+                }
             }
 
             die(json_encode($answer));

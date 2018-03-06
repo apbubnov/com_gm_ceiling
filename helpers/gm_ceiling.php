@@ -2957,7 +2957,7 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data = self::calculate_canvases($calc_id);
         $client_model = self::getModel('client');
         $client = $client_model->getClientById($project->id_client);
-        $dealer_name = JFactory::getUser($client->delaer_id)->name;
+        $dealer_name = JFactory::getUser($client->dealer_id)->name;
         $array_cut = explode('||',$data['cut_data']);
         $cut_data = $array_cut[0];
         $p_usadki = $array_cut[1];
@@ -3412,8 +3412,10 @@ class Gm_ceilingHelpersGm_ceiling
     //Уведомление разных структур
     public static function notify($data, $type){
         $mailer = JFactory::getMailer();
-        $em = /*'kostikkuzmenko@mail.ru';*/
-            'popowa.alinochka';//'al.p.bubnov@gmail.com';
+        $em = '';
+            //'kostikkuzmenko@mail.ru';
+            //'popowa.alinochka';
+            //'al.p.bubnov@gmail.com';
         $em1 = 'g';//'gmvrn1510@gmail.com';
         $config = JFactory::getConfig();
         $sender = array(
@@ -3802,7 +3804,9 @@ class Gm_ceilingHelpersGm_ceiling
     
     public static function push($id, $status_id){
         $mailer = JFactory::getMailer();
-        $em = 'popowa.alinochka@gmail.co';//'kostikkuzmenko@mail.ru';
+        $em = '';
+            //'popowa.alinochka@gmail.co';
+            ////'kostikkuzmenko@mail.ru';
         $config = JFactory::getConfig();
         $sender = array(
             $config->get('mailfrom'),

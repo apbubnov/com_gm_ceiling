@@ -23,17 +23,19 @@ $model = $this->getModel();
 $user = JFactory::getUser();
 $user->groups = $user->get('groups');
 $user->getDealerInfo();
-
-$userDealer = $user;
+$user->getComponentsPrice();
 
 if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
     $userDealer = JFactory::getUser($user->dealer_id);
     $userDealer->groups = $userDealer->get('groups');
     $userDealer->getDealerInfo();
+    $userDealer->getComponentsPrice();
+} else {
+    $userDealer = $user;
 }
 
+$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups);
 $stock = in_array(19, $user->groups);
-$managerGM = in_array(16, $user->groups) || in_array(15, $userDealer->groups) && !$stock;
 
 $dealer = null;
 
@@ -62,7 +64,7 @@ function dealer_margin($price, $margin, $value, $type) {
     return margin($result, $margin);
 }
 ?>
-<link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css?date=<?=date("H.i.s");?>">
+<link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css">
 <div class="Page">
     <div class="Title">
         Прайс компонентов<?=(isset($dealer))?" для $dealer->name #$dealer->id":"";?>.
@@ -86,7 +88,7 @@ function dealer_margin($price, $margin, $value, $type) {
         <?endif;?>
     </div>
     <div class="Scroll">
-        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=components'); ?>" method="post"
+        <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=components' . (!empty($dealer) ? "&dealer=$dealer->id" : "")); ?>" method="post"
               name="adminForm" id="adminForm" hidden>
             <input type="hidden" name="filter_order" value="<?= $listOrder; ?>"/>
             <input type="hidden" name="filter_order_Dir" value="<?= $listDirn; ?>"/>
@@ -198,9 +200,14 @@ function dealer_margin($price, $margin, $value, $type) {
                                 </button>
                             </form>
                         </td>
-                    <?else:?>
-                        <td><?=margin($option->price, $userDealer->gm_components_margin);?></td>
-                        <td><?=double_margin($option->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
+                    <? else: ?>
+                        <?
+                        $type = $userDealer->ComponentsPrice[$key_o]->type;
+                        $value = $userDealer->ComponentsPrice[$key_o]->value;
+                        $TempPrice = margin($option->price, $userDealer->gm_components_margin);
+                        ?>
+                        <td><?= dealer_margin($TempPrice, 0, $value, $type)?></td>
+                        <td><?= dealer_margin($TempPrice, $userDealer->dealer_components_margin, $value, $type)?></td>
                     <?endif;?>
                 </tr>
         <?if ($stock) foreach ($option->goods as $key_g => $good):?>

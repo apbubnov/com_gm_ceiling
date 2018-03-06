@@ -123,6 +123,7 @@ $AllMounters = $model->FindAllMounters($where);
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
         $client = $client_model->getClientById($this->item->id_client);
         $dealer = JFactory::getUser($client->dealer_id);
+        $dealer_cl = $client_model->getClientById($dealer->associated_client);
     ?>
 
     <div class="container">
@@ -133,6 +134,10 @@ $AllMounters = $model->FindAllMounters($where);
                       action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar"
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <table class="table">
+                        <tr>
+                            <th>Дилер</th>
+                            <td><?php echo $dealer_cl->client_name; ?></td>
+                        </tr>
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
                             <td>
@@ -419,13 +424,12 @@ $AllMounters = $model->FindAllMounters($where);
             </div>
         </div>
     </div>
-    <? if ((int)$status[0]->project_status == 22) { ?>
         <form id="form-project"
               action="/index.php?option=com_gm_ceiling&task=project.return&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-        <button type="submit" class="btn btn-primary">Вернуть на стадию замера</button>
-        </form>
-    <? } elseif ($subtype != "run") { ?>
+            <button type="submit" class="btn btn-primary">Вернуть на стадию замера</button>
+        </form><br>
+    <?php if ($subtype != "run") { ?>
         <form id="form-project"
               action="/index.php?option=com_gm_ceiling&task=project.approvemanager&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
