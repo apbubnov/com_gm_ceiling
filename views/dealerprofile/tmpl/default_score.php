@@ -30,7 +30,7 @@ $rest = -($total_sum) - $contributed;
         border-radius: 5px;
     }
     @media and screen (min-width: 768px) {
-        .table {
+        #ScoreList {
             font-size: 13px !important;
         }
     }
