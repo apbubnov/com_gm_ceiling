@@ -26,7 +26,7 @@ $answer2 = $model->getDataByStatus("Mountings");
 $answer3 = $model->getDataByStatus("UnComplitedMountings");
 //--------------------------------------
 ?>
-<?=parent::getButtonBack();?>
+<!-- <?=parent::getButtonBack();?> -->
 <h2 class="center">Монтажи</h2>
 <? if ($user->dealer_type == 0) { ?>
 	<div class="start_page">
