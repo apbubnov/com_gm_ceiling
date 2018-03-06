@@ -22,7 +22,11 @@ $listDirn   = $this->state->get('list.direction');
 $dealer = JFactory::getUser($user->dealer_id);
 
 ?>
-<?=parent::getButtonBack();?>
+<?php if (in_array("14", $user->groups)) { ?>
+    <?=parent::getButtonBack();?>
+<?php } ?>
+
+
 <div class="start_page">
 
 <h2 class="center">Прайсы</h2>
