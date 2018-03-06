@@ -43,6 +43,16 @@ JHtml::_('formbehavior.chosen', 'select');
 
     $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
     $status = $status_model->getData();
+
+
+    /*Dealer history*/
+$recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+$dealer_history = $recoil_map_project_model->getData($client->dealer_id);
+$dealer_history_sum = 0;
+foreach ($dealer_history as $key => $item) {
+    $dealer_history[$key]->data = date("d.m.Y H:i", strtotime($item->date_time));
+    $dealer_history_sum += $item->sum;
+}
 ?>
 
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
@@ -293,13 +303,41 @@ JHtml::_('formbehavior.chosen', 'select');
         </select>
     </div>
     <div class="modal_window" id="modal_window_sum">
-
+        <div class="">У дилера на счету: <span><?=$dealer_history_sum;?></span></div>
         <p><strong id="dealer_name"></strong></p>
         <p id="dealer_invoice"></p>
         <p>Сумма взноса:</p>
         <p><input type="text" id="pay_sum"></p>
         <input type="hidden" id="hidden_user_id">
         <p><button type="submit" id="save_pay" class="btn btn-primary">ОК</button></p>
+
+        <table>
+            <thead>
+            <tr>
+                <td>Дата</td>
+                <td>Проект</td>
+                <td>Сумма</td>
+                <td>Комментарий</td>
+            </tr>
+            </thead>
+            <tbody>
+            <?foreach ($dealer_history as $item):?>
+                <tr>
+                    <td><?=$item->data;?></td>
+                    <td><?=$item->project_id;?></td>
+                    <td><?=$item->sum;?></td>
+                    <td><?=$item->comment;?></td>
+                </tr>
+            <?endforeach;?>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="2"></td>
+                <td>Итого:</td>
+                <td><?=$dealer_history_sum;?></td>
+            </tr>
+            </tfoot>
+        </table>
     </div>
     <div id="call" class="modal_window">
         <p>Перенести звонок</p>
