@@ -29,11 +29,8 @@ $rest = -($total_sum) - $contributed;
         border: 1px solid #414099;
         border-radius: 5px;
     }
-    #ScoreList {
-        font-size: 18px;
-    }
     @media screen and (min-width: 768px) {
-        #ScoreList {
+        #ScoreList td {
             font-size: 13px;
         }
 	}
