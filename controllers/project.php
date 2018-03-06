@@ -1392,7 +1392,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				$this->setMessage("Проект вернулся на стадию замера!");
 				//Gm_ceilingHelpersGm_ceiling::notify($data, 1);
 			}
-			$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=refused', false));
+			$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
 		}
 		catch(Exception $e)
         {
