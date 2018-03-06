@@ -101,9 +101,6 @@ JHtml::_('formbehavior.chosen', 'select');
             <button name ="rm_email" class = "btn btn-danger" email="<? echo $contact->contact;?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
         </td>
     </tr>
-   
-    
-   
 <? }?>
 </table>
 </div>
@@ -296,6 +293,7 @@ JHtml::_('formbehavior.chosen', 'select');
         </select>
     </div>
     <div class="modal_window" id="modal_window_sum">
+
         <p><strong id="dealer_name"></strong></p>
         <p id="dealer_invoice"></p>
         <p>Сумма взноса:</p>
