@@ -123,7 +123,7 @@ $AllMounters = $model->FindAllMounters($where);
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
         $client = $client_model->getClientById($this->item->id_client);
         $dealer = JFactory::getUser($client->dealer_id);
-        $dealer_cl = $client_model->getClientById($dealer->id);
+        $dealer_cl = $client_model->getClientById($dealer->associated_client);
     ?>
 
     <div class="container">
