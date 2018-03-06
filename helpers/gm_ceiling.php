@@ -1325,20 +1325,16 @@ class Gm_ceilingHelpersGm_ceiling
 
             $total_gm_guild = $data['guild_data']['total_gm_guild'];
 
-            if (empty($calc_id)):
-                $canvases_data['self_price'] = round($canvases[$data['n3']]->price, 2);                                    //Себестоимость по основному прайсу
-                $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);                       //Кол-во * Себестоимость
-            else:
-                $canvases_data['self_price'] = round($data["canvases_sum"] / $data["n4"], 2);                              //Себестоимость по основному прайсу
-                $canvases_data['self_total'] = round($data["canvases_sum"], 2);                                             //Кол-во * Себестоимость
-            endif;
+            $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
+
+            $canvases_data['self_price'] = round($canvases[$canvas_id]->price, 2);                                    //Себестоимость по основному прайсу
+            $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);
 
             //Стоимость с маржой ГМ (для дилера)
             $canvases_data['gm_price'] = margin($canvases_data['self_price'], $gm_canvases_margin);
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
 
-            $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
             //себестоимость дилера, с учетом его прайса
             $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
             //Кол-во * себестоимость дилера
@@ -1370,21 +1366,21 @@ class Gm_ceilingHelpersGm_ceiling
         }
         $offcut_square_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] != 0) {
-            $canvas_id = $data['n3'];
+            $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
             $offcut_square_data['title'] = "Количество обрезков";                                                                //Название фактуры и полотна
             $offcut_square_data['quantity'] = $data['offcut_square'];                                                            //Кол-во
-            $offcut_square_data['self_price'] = round($canvases[$canvas_id]->price / 2.5, 2);                                    //Себестоимость
+            $offcut_square_data['self_price'] = round($canvases[$canvas_id]->price * 0.4, 2);                                    //Себестоимость
             $offcut_square_data['self_total'] = round($data['offcut_square'] * $offcut_square_data['self_price'], 2);            //Кол-во * Себестоимость
             //Стоимость с маржой ГМ (для дилера)
-            $offcut_square_data['gm_price'] = round(margin($canvases[$canvas_id]->price, $gm_canvases_margin) / 2.5, 2);
+            $offcut_square_data['gm_price'] = round(margin($canvases[$canvas_id]->price, $gm_canvases_margin) * 0.4, 2);
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $offcut_square_data['gm_total'] = round($data['offcut_square'] * $offcut_square_data['gm_price'], 2);
             //Стоимость с маржой ГМ и дилера (для клиента)
 
-            $offcut_square_data['self_dealer_price'] = dealer_margin(round($canvases[$canvas_id]->price / 2.5, 2), 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);//round(double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, 50) / 2.5, 2);
+            $offcut_square_data['self_dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type) * 0.4, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['self_dealer_total'] = round($data['offcut_square'] * $offcut_square_data['self_dealer_price'], 2);
-            $offcut_square_data['dealer_price'] = dealer_margin(round($canvases[$canvas_id]->price / 2.5, 2), $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);//round(double_margin($canvases[$data['n3']]->price, $gm_canvases_margin, 50) / 2.5, 2);
+            $offcut_square_data['dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type) * 0.4, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
         }
@@ -2882,20 +2878,20 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($component_array as $key1 => $component) {
                 if ($component['stack'] == 0) {
                     $print_data[$key1]['self_total'] =  $print_data[$key1]['self_total'] + $component['self_total'];
-                    $print_data[$key1]['dealer_total'] = $print_datap[$key1]['dealer_total'] + $component['self_dealer_total'];
-                    $print_data[$key1]['quantity'] = self::rounding($print_data[$key1]['quantity'] + $component['quantity'], $print_data[$key1]['rounding']); // Округление                   
+                    $print_data[$key1]['dealer_total'] = $print_data[$key1]['dealer_total'] + $component['self_dealer_total'];
+                    $print_data[$key1]['quantity'] = self::rounding($print_data[$key1]['quantity'] + $component['quantity'], $print_data[$key1]['rounding']); // Округление
                 }
             }
 
         }
-          foreach ($components_data as $component_array) {
+        foreach ($components_data as $component_array) {
             foreach ($component_array as $key => $component) {
                 if ($component['stack'] == 1) {
                     $print_data[] = $component;
                 }
             }
-        }  
-        
+        }
+
         $html = '<h1>Расходные материалы</h1>';
         if (isset($project_id)) {
             if ($project_id) {
@@ -2910,9 +2906,8 @@ class Gm_ceilingHelpersGm_ceiling
         if($need_price == 1){
             $html .='<th class="center">Общая стоимость</th></tr>';
         }
-       
+
         $price_itog = 0;
-        
         foreach ($print_data as $key => $item) {
             if ($item['quantity'] > 0 || $item['quantity'] > 0.0) {
                 $html .= '<tr>';
@@ -3082,7 +3077,7 @@ class Gm_ceilingHelpersGm_ceiling
             $offcut_square_data = self::calculate_offcut($calc_id);
         }
         if(empty($guild_data)){
-            $guild_data = self::calculate_guild_jobs($calc_id)['guild_data'];
+            $guild_data = self::calculate_guild_jobs($calc_id);
         }
         $html = '<h1>Информация</h1>';
         $html .= "<b>Название: </b>" . $data['calculation_title'] . "<br>";
@@ -3156,7 +3151,6 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $html .= '</tr>';
         }
-        $price = 0;
         foreach ($guild_data["guild_data"] as $item) {
             $html .= '<tr>';
             $html .= '<td>' . $item['title'] . '</td>';
@@ -3168,7 +3162,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $html .= '<td>' . $item['gm_salary_total'] . '</td>';
             }
             $html .= '</tr>';
-            $price += $item['gm_salary_total'];
         }
         if ($data['n9'] > 0) {
             $html .= '<tr>';
@@ -3179,7 +3172,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</tr>';
         }
         if($need_price == 1){
-            $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer)total'] + $guild_data["total_gm_guild"];
+            $price_itog = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $guild_data["total_gm_guild"];
             $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($price_itog, 2) . '</th></tr>';
         }
         $html .= '</tbody></table><p>&nbsp;</p>';
