@@ -2998,8 +2998,7 @@ class Gm_ceilingHelpersGm_ceiling
         $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
         
         $canvas = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id");
-        print_r($canvas);
-        exit();
+
         if (is_null($canvas['color_id']))
         {
             $color_title = '303';
@@ -3011,7 +3010,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         
         $facture = $canvas->texture_title;
-        $width = $canvas->width * 100;
+        $width = floatval($canvas->width) * 100;
         $name = $canvas->name;
 
         $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name;
