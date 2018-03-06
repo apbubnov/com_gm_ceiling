@@ -123,7 +123,7 @@ $rest = -($total_sum) - $contributed;
             <div class="pix"></div>
             <div class="message">Посетите данную страницу для настроек прайса монтажа!</div>
         <?//endif;?>
-    </button -->>
+    </button> -->
 
         <a class="btn btn-primary btn-acct" href="/index.php?option=com_gm_ceiling&view=dealerprofile&type=score"> <?=$rest?-$rest:0;?> руб. </a>
         <div id="modal_window_container" class="modal_window_container" >
