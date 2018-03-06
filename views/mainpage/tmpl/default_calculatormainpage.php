@@ -23,7 +23,7 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
 //--------------------------------------
 
 ?>
-<?=parent::getButtonBack();?>
+<!-- <?=parent::getButtonBack();?> -->
 <h2 class="center">Замерщик</h2>
 
 <div class="start_page">

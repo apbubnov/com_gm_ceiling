@@ -44,8 +44,10 @@ if (count($AllGauger) == 0) {
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/addproject/tmpl/css/style.css" type="text/css" />
+<?php if (!in_array("14", $user->groups)) { ?>
+    <?=parent::getButtonBack();?>
+<?php } ?>
 
-<?=parent::getButtonBack();?>
 <form id="calculate_form" action="/index.php?option=com_gm_ceiling&task=addproject.save" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 	<!-- Скрытые поля -->
 	<input name="jform[project_calculation_date]" id="jform_project_calculation_date" value="" type="hidden">

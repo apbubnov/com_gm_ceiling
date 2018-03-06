@@ -2996,22 +2996,22 @@ class Gm_ceilingHelpersGm_ceiling
 
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+        
+        $canvases = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id");
 
-        $canvas = $canvases_model->getFilteredItemsCanvas("WHERE `id` = $canvas_id");
-
-        if (is_null($canvas['color_id']))
+        if (is_null($canvases[0]->color_id))
         {
             $color_title = '303';
         }
         else
         {
-            $color = $color_model->getData($canvas['color_id']);
+            $color = $color_model->getData($canvases[0]->color_id);
             $color_title = $color->title;
         }
         
-        $facture = $canvas->texture_title;
-        $width = $canvas->width * 100;
-        $name = $canvas->name;
+        $facture = $canvases[0]->texture_title;
+        $width = floatval($canvases[0]->width) * 100;
+        $name = $canvases[0]->name;
 
         $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name;
 
