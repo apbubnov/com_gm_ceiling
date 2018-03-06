@@ -80,7 +80,7 @@ class Gm_ceilingModelMount extends JModelList
     {
     	try
     	{
-			if(empty($dealerId)){
+			if(is_null($dealerId)){
 				$app = JFactory::getApplication();
 				$user = JFactory::getUser();
 				$dealerId = $user->dealer_id;
