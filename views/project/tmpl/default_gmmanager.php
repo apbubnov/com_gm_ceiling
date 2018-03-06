@@ -134,6 +134,10 @@ $AllMounters = $model->FindAllMounters($where);
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <table class="table">
                         <tr>
+                            <th>Дилер</th>
+                            <td><?php echo $dealer->id; ?></td>
+                        </tr>
+                        <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
                             <td>
                                 <?php
@@ -419,13 +423,12 @@ $AllMounters = $model->FindAllMounters($where);
             </div>
         </div>
     </div>
-    <? if ((int)$status[0]->project_status == 22) { ?>
         <form id="form-project"
               action="/index.php?option=com_gm_ceiling&task=project.return&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-        <button type="submit" class="btn btn-primary">Вернуть на стадию замера</button>
+            <button type="submit" class="btn btn-primary">Вернуть на стадию замера</button>
         </form>
-    <? } elseif ($subtype != "run") { ?>
+    <?php if ($subtype != "run") { ?>
         <form id="form-project"
               action="/index.php?option=com_gm_ceiling&task=project.approvemanager&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
