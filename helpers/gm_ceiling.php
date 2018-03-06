@@ -2997,7 +2997,7 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
 
-        $canvas = $canvases_model->getFilteredItemsCanvas("WHERE `id` = $canvas_id");
+        $canvas = $canvases_model->getFilteredItemsCanvas("`id` = $canvas_id");
 
         if (is_null($canvas['color_id']))
         {
