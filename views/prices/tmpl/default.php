@@ -22,7 +22,7 @@ $listDirn   = $this->state->get('list.direction');
 $dealer = JFactory::getUser($user->dealer_id);
 
 ?>
-<?php if (in_array("14", $user->groups)) { ?>
+<?php if (!in_array("14", $user->groups)) { ?>
     <?=parent::getButtonBack();?>
 <?php } ?>
 
