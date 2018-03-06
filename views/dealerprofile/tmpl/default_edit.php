@@ -27,8 +27,13 @@ $mount = $model_mount->getDataAll();
 <style>
 	.caption1 {
 		text-align: center;
-		padding: 10px 0;
+		padding: 15px 0;
+		margin-bottom: 0;
+	}
+	.caption2 {
+		text-align: center;
 		height: auto;
+		padding: 10px 0;
 		border: 0;
 		margin-bottom: 0;
 	}
@@ -41,7 +46,7 @@ $mount = $model_mount->getDataAll();
 </div>
 <form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
 	<h3 class="caption1">Редактирование маржинальности</h3>
-	<h5 class="caption1">Укажите, какой процент прибыли от заказа Вы желаете получать</h5>
+	<h5 class="caption2">Укажите, какой процент прибыли от заказа Вы желаете получать</h5>
 	<div class="row">
 		<div class="col-md-4">
 			<div class="control-group">
