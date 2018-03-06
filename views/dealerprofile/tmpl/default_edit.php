@@ -25,6 +25,9 @@ $mount = $model_mount->getDataAll();
 <?if(!$user->getDealerInfo()->update_check) { $user->setDealerInfo(["update_check" => true]);}?>
 
 <style>
+body {
+	color: #414099;
+}
 	.caption1 {
 		text-align: center;
 		padding: 15px 0;
