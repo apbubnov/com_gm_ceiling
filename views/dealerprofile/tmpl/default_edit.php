@@ -30,7 +30,7 @@ $mount = $model_mount->getDataAll();
 		<input type="hidden" name="task" value="user.logout">
 	</div>
 </form> -->
-<div style="width: 100%; text-aligh: right;">
+<div style="width: 100%; text-aligh: rigth;">
 	<a href="/index.php?option=com_users&view=profile&layout=edit" class="btn btn-large btn-primary">Изменить личные данные</a>
 </div>
 <form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
