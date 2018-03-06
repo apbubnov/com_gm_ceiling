@@ -30,16 +30,12 @@ $mount = $model_mount->getDataAll();
 		<input type="hidden" name="task" value="user.logout">
 	</div>
 </form> -->
-<div style="width: 100%; text-align: rigth;">
+<div style="width: 100%; text-align: right;">
 	<a href="/index.php?option=com_users&view=profile&layout=edit" class="btn btn-large btn-primary">Изменить личные данные</a>
 </div>
 <form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
-	<h3>
-		Редактирование маржинальности
-	</h3>
-	<h4>
-		Укажите, какой процент прибыли от заказа Вы желаете получать
-	</h4>
+	<h3>Редактирование маржинальности</h3>
+	<h4>Укажите, какой процент прибыли от заказа Вы желаете получать</h4>
 	<div class="col-md-4">
 		<div class="control-group">
 			<div class="control-label">
@@ -71,9 +67,7 @@ $mount = $model_mount->getDataAll();
 		</div>
 	</div>
 	<?php if ($user->dealer_type == 1 && $user->dealer_mounters == 0): ?>
-	<h3>
-		Редактирование прайса монтажа
-	</h3>
+	<h3>Редактирование прайса монтажа</h3>
 	<div class="col-md-4">
 		<div class="control-group">
 			<div class="control-label">
@@ -392,9 +386,7 @@ $mount = $model_mount->getDataAll();
 			</div>
 		</div>
 	</div>
-	<h3>
-		Минимальная сумма заказа
-	</h3>
+	<h3>Минимальная сумма заказа</h3>
 	<div class="col-md-4">
 		<div class="control-group">
 			<div class="control-label">
