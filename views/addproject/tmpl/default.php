@@ -44,7 +44,7 @@ if (count($AllGauger) == 0) {
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/addproject/tmpl/css/style.css" type="text/css" />
-<?php if (!$user->dealer_id == 1 && !in_array("14", $user->groups)) { ?>
+<?php if (!$user->dealer_id == 1 && in_array("14", $user->groups)) { ?>
     <?=parent::getButtonBack();?>
 <?php } ?>
 
