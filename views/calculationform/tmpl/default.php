@@ -550,7 +550,7 @@
 			</div>
 		</div>
 		<!-- Экола -->
-		<div class="container" class="fixtures" style="display: none; width: 100%;">
+		<div class="container fixtures" style="display: none; width: 100%;">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
@@ -559,7 +559,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		<div class="container" class="fixtures" style="display: none; width: 100%;">
+		<div class="container fixtures" style="display: none; width: 100%;">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
