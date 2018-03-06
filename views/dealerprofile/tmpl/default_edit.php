@@ -43,7 +43,9 @@ $mount = $model_mount->getDataAll();
 		color: #414099;
 	}
 	input[type="text"] {
+		padding: .5rem .75rem;
 		border: 1px solid rgba(0,0,0,.15);
+		border-radius: .25rem;
 	}
 </style>
 
