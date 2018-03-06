@@ -481,17 +481,20 @@
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n13-lbl" for="jform_n13" class="">Введите кол-во светильников:</label>
+								<label id="jform_n13-lbl" for="jform_n13" class="">Добавить светильники</label>
 							</td>
 							<td>
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">На упаковке светильника указан диаметр технологического отверстия</span></a>
+							</td>
+							<td>
+								<button type="button" id="btn_fixtures" class="btn btn-danger add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
-			<div class="row sm-margin-bottom">
+			<div class="row sm-margin-bottom" id="fixtures" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n13_block" >
@@ -1789,6 +1792,11 @@
 		jQuery("#chandelier").show();
 		jQuery("#btn_chandelier").hide();
 	});
+	jQuery("#btn_fixtures").click( function () {
+		jQuery("#fixtures").show();
+		jQuery("#btn_fixtures").hide();
+	});
+	
 	//------------------------------
 
     var $ = jQuery;
