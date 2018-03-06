@@ -3013,7 +3013,7 @@ class Gm_ceilingHelpersGm_ceiling
         $width = $canvas->width * 100;
         $name = $canvas->name;
 
-        $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name
+        $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name;
 
         $html .= '<th>Цвет: </th><td colspan="2" >' . $canv_name . '</td>';
         $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
