@@ -38,7 +38,7 @@ $mount = $model_mount->getDataAll();
 </div>
 <form id="dealer_form" action="/index.php?option=com_gm_ceiling&task=dealer.updatedata" method="post"  class="form-validate form-horizontal" enctype="multipart/form-data">
 	<h3 class="caption1">Редактирование маржинальности</h3>
-	<h4>Укажите, какой процент прибыли от заказа Вы желаете получать</h4>
+	<h2 class="caption1">Укажите, какой процент прибыли от заказа Вы желаете получать</h4>
 	<div class="col-md-4">
 		<div class="control-group">
 			<div class="control-label">
