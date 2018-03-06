@@ -71,7 +71,7 @@ $rest = -($total_sum) - $contributed;
 ?>
 
 <?php if(!$dealerInfo->update_check):?>
-<style>
+<!-- <style>
     #toProfile {
         position: relative;
         width: 52px;
@@ -111,7 +111,7 @@ $rest = -($total_sum) - $contributed;
         font-size: 12px;
         color: rgb(65,64,153);
     }
-</style>
+</style> -->
 <?endif;?>
 
 <div class="form-group">
