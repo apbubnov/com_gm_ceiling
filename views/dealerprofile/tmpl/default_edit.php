@@ -25,9 +25,9 @@ $mount = $model_mount->getDataAll();
 <?if(!$user->getDealerInfo()->update_check) { $user->setDealerInfo(["update_check" => true]);}?>
 
 <style>
-body {
-	color: #414099;
-}
+	body {
+		color: #414099;
+	}
 	.caption1 {
 		text-align: center;
 		padding: 15px 0;
@@ -41,6 +41,9 @@ body {
 		border: 0;
 		margin-bottom: 0;
 		color: #414099;
+	}
+	input[type="text"] {
+		border: 1px solid rgba(0,0,0,.15);
 	}
 </style>
 
