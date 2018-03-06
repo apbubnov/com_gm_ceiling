@@ -33,7 +33,7 @@ $rest = -($total_sum) - $contributed;
     .small_table {
         font-size: 1rem;
     }
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
         .small_table {
             font-size: 13px;
         }
