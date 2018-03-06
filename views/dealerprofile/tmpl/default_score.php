@@ -24,6 +24,7 @@ foreach ($items as $item) {
 }
 $rest = -($total_sum) - $contributed;
 ?>
+
 <style>
     input {
         border: 1px solid #414099;
@@ -32,7 +33,7 @@ $rest = -($total_sum) - $contributed;
     .small_table {
         font-size: 1rem;
     }
-@media screen and (min-width: 768px) {
+    @media screen and (min-width: 768px) {
         .small_table {
             font-size: 13px;
         }
