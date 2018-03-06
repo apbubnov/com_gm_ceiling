@@ -30,6 +30,7 @@ $mount = $model_mount->getDataAll();
 		padding: 10px 0;
 		height: auto;
 		border: 0;
+		margin-bottom: 0;
 	}
 </style>
 
