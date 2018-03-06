@@ -49,6 +49,7 @@ $mount = $model_mount->getDataAll();
 	}
 	.control-label {
 		margin-top: 5px;
+		margin-bottom: 2px;
 	}
 </style>
 
