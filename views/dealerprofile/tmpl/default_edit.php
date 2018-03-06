@@ -31,6 +31,7 @@ $mount = $model_mount->getDataAll();
 		border-radius: 0;
 		border-color: #ffffff;
 		border-style: solid;
+		height: auto;
 	}
 </style>
 
