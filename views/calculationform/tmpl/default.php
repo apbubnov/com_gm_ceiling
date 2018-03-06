@@ -492,7 +492,7 @@
 						</tr>
 					</table>
 				</div>
-				<div class="col-sm-4"></div>
+				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
 			</div>
 			<div class="row sm-margin-bottom" class="fixtures" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
@@ -610,11 +610,12 @@
 					</div>
 					<button id="add_ecola" class="btn btn-primary" type="button">Добавить </button>
 				</div>
+				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
 			</div>
 		</div>
 		<!-- Шторный карниз -->
 		<div class="container">
-			<div class="row sm">
+			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<table style="margin-left: calc(50% - 87px);">
