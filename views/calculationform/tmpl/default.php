@@ -1788,27 +1788,6 @@
 
 <script type="text/javascript">
 
-	// кнопки открытия скрытых полей
-	jQuery("#btn_chandelier").click( function () {
-		jQuery("#chandelier").show();
-		jQuery("#btn_chandelier").hide();
-	});
-	console.log(jQuery("#jform_n12").val());
-	if (jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != "") {
-		jQuery("#chandelier").show();
-		jQuery("#btn_chandelier").hide();
-	}
-	jQuery("#btn_fixtures").click( function () {
-		jQuery(".fixtures").show();
-		jQuery("#btn_fixtures").hide();
-	});
-	if (jQuery("#n13_count").val() != null || jQuery("#ecola_count").val() != null || jQuery("#n13_count").val() != "" || jQuery("#ecola_count").val() != "") {
-		jQuery(".fixtures").show();
-		jQuery("#btn_fixtures").hide();
-	}
-	
-	//------------------------------
-
     var $ = jQuery;
 	//для подгрузки компонентов со склада
     function GetList(e, select, like) {
@@ -1951,6 +1930,27 @@
 	});
 
 	jQuery(document).ready(function() {
+
+		// кнопки открытия скрытых полей
+		jQuery("#btn_chandelier").click( function () {
+			jQuery("#chandelier").show();
+			jQuery("#btn_chandelier").hide();
+		});
+		console.log(jQuery("#jform_n12").val());
+		if (jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != "") {
+			jQuery("#chandelier").show();
+			jQuery("#btn_chandelier").hide();
+		}
+		jQuery("#btn_fixtures").click( function () {
+			jQuery(".fixtures").show();
+			jQuery("#btn_fixtures").hide();
+		});
+		if (jQuery("#n13_count").val() != null || jQuery("#ecola_count").val() != null || jQuery("#n13_count").val() != "" || jQuery("#ecola_count").val() != "") {
+			jQuery(".fixtures").show();
+			jQuery("#btn_fixtures").hide();
+		}
+		
+		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
 
