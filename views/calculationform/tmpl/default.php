@@ -1773,7 +1773,7 @@
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-						<table style="text-align: center;">
+						<table style="width:100%; text-align: center;">
 							<tr>
 								<td>
 									<!-- сохранить -->
