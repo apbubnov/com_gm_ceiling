@@ -122,29 +122,6 @@
 		<?php if ($user->dealer_type !=2 ){
 			$del_flag = 1;
 		} ?>
-		<?php if(!$new || $type === "gmcalculator" || $type === "calculator"||$type === "gmmanager"  ) { ?>
-			<div class="form-group"> 
-				<div class="container">
-					<div class="col-sm-4"></div>
-					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-							<table>	
-								<tr>
-									<td>
-										<label id="jform_calculation_title-lbl" for="jform_calculation_title" class="">Название расчета:</label>
-									</td>
-									<td>
-										<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">Назовите чертеж, по названию комнаты, в которой производится замер, что бы легче было потом ориентироваться. Например: "Спальня" </span></a>
-									</td>
-								</tr>
-							</table>
-							<input id="jform_calculation_title" name="jform[calculation_title]" value="<?php echo $this->item->calculation_title; ?>" class="form-control" type="text">
-						</div>
-					</div>
-					<div class="col-sm-4"></div>
-				</div>
-			</div>
-		<?php } ?>
 		<!-- характеристики полотна -->
 		<div class="container">
 			<div class="col-sm-4"></div>
@@ -1715,6 +1692,35 @@
 				</div>
 			</div>
 		</div>
+		<!-- название расчета -->
+		<?php if(!$new || $type === "gmcalculator" || $type === "calculator"||$type === "gmmanager"  ) { ?>
+			<div class="form-group"> 
+				<div class="container">
+					<div class="col-sm-4"></div>
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4">
+							<table>	
+								<tr>
+									<td>
+										<label id="jform_calculation_title-lbl" for="jform_calculation_title" class="">Название расчета:</label>
+									</td>
+									<td>
+										<a class="help">
+											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<span class="airhelp">
+												Назовите чертеж, по названию комнаты, в которой производится замер, что бы легче было потом ориентироваться. Например: "Спальня" 
+											</span>
+										</a>
+									</td>
+								</tr>
+							</table>
+							<input id="jform_calculation_title" name="jform[calculation_title]" value="<?php echo $this->item->calculation_title; ?>" class="form-control" type="text">
+						</div>
+					</div>
+					<div class="col-sm-4"></div>
+				</div>
+			</div>
+		<?php } ?>
 		<!-- сохранить -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
