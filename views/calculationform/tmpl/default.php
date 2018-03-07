@@ -1054,10 +1054,10 @@
 			<?php if($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- разделитель -->
 				<div class = "container">
-					<div class="row" id="razdelitel">
+					<div class="row" id="razdelitel" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
@@ -1082,10 +1082,10 @@
 				</div>
 				<!-- сложность доступа -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
@@ -1110,10 +1110,10 @@
 				</div>
 				<!-- внутренний вырез на месте -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
@@ -1139,10 +1139,10 @@
 				</div>
 				<!-- Внутренний вырез в цеху -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
@@ -1168,10 +1168,10 @@
 				</div>
 				<!-- слив воды -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
@@ -1194,10 +1194,10 @@
 				</div>
 				<!-- доп крепеж -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
@@ -1223,10 +1223,10 @@
 				</div>
 				<!-- Усилиние стен -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
