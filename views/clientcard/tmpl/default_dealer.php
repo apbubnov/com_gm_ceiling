@@ -96,29 +96,47 @@ foreach ($dealer_history as $key => $item) {
         </td>
     </tr>
 </table>
-<div>
-<p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта дилера: </p>
-</div>
-<? if (!empty($dop_contacts)) { ?>
-<div>
-<table>
+<div style="width: 98%;">
+    <div style="display: inline-block; width: 48%;">
+    <div>
+    <p class = "caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта дилера: </p>
+    </div>
+    <? if (!empty($dop_contacts)) { ?>
+    <div>
+    <table>
 
-<? foreach ($dop_contacts AS $contact) {?>
-    <tr>
-        <td style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;">
-            <? echo $contact->contact;?>
-        </td>
-        <td>
-            <button name ="rm_email" class = "btn btn-danger" email="<? echo $contact->contact;?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
-        </td>
-    </tr>
-<? }?>
-</table>
-</div>
-<? } ?>
-<div>
-    <input type="text" id="new_email" placeholder="Почта" required>
-    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+    <? foreach ($dop_contacts AS $contact) {?>
+        <tr>
+            <td style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;">
+                <? echo $contact->contact;?>
+            </td>
+            <td>
+                <button name ="rm_email" class = "btn btn-danger" email="<? echo $contact->contact;?>"><i class="fa fa-trash" aria-hidden="true"></i></button>
+            </td>
+        </tr>
+    <? }?>
+    </table>
+    </div>
+    <? } ?>
+    <div>
+        <input type="text" id="new_email" placeholder="Почта" required>
+        <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+    </div>
+    </div>
+    <div style="display: inline-block; width: 48%;">
+        <div>
+        <p class = "caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны дилера: </p>
+        </div>
+        <div>
+        <?php foreach($client_phones as $item) { ?>
+                <p  style="font-size: 20px; color: #414099; margin-bottom: 0px;"><? echo $item->phone; ?></p>
+            <?php } ?>
+        </div>
+        <div>
+            <input type="text" id="new_phone" placeholder="Телефон" required>
+            <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-12" id = "calls">
@@ -842,6 +860,34 @@ foreach ($dealer_history as $key => $item) {
                 data: {
                     client_id: client_id,
                     email: document.getElementById('new_email').value
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    location.reload();
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
+
+        document.getElementById('add_phone').onclick = function()
+        {
+            var client_id = <?php echo $client->id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=client.addPhone",
+                data: {
+                    client_id: client_id,
+                    phone: document.getElementById('new_phone').value
                 },
                 dataType: "json",
                 async: false,
