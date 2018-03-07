@@ -1607,11 +1607,20 @@
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<h4>Монтаж</h4>
+							<table class="table_calcform">
+								<tr>
+									<td class="td_calcform1">
+										<button type="button" id="btn_mount2" class="btn add_fields">
+											Отменить монтаж
+										</button>
+									</td>
+									<td class="td_calcform2"></td>
+								</tr>
+							</table>
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="row sm-margin-bottom">
+					<div class="row" id="mount2" style="display: none; margin-top: 25px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" id = "need_mount">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">
@@ -2349,10 +2358,22 @@
 				jQuery("#btn_height").css("background-color", "#414099");
 			}
 		});
-		console.log(jQuery("input[name='jform[height]']:radio:checked").val());
 		if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
 			jQuery("#row_height").show();
 			jQuery("#btn_height").css("background-color", "#010084");
+		}
+		jQuery("#btn_mount2").click( function () {
+			jQuery("#mount2").toggle();
+			if (jQuery("#btn_mount2").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_mount2").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_mount2").css("background-color", "#414099");
+			}
+		});
+		console.log(jQuery("input[name='need_mount']:radio:checked").val());
+		if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
+			jQuery("#mount2").show();
+			jQuery("#btn_mount2").css("background-color", "#010084");
 		}
 		
 		//------------------------------
