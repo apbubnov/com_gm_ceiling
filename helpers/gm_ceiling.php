@@ -1377,6 +1377,9 @@ class Gm_ceilingHelpersGm_ceiling
             $data['n1'] = $data['n1_id']; 
             $data['n2'] = $data['n2_id'];
             $data['n3'] = $data['n3_id'];
+        } else {
+            $calculation_model = self::getModel('calculation');
+            $data = get_object_vars($calculation_model->getData($data["id"]));
         }
         $dealer_info = JFactory::getUser($data['dealer_id']);
         $dealer_info_canvases = $dealer_info->getCanvasesPrice();
