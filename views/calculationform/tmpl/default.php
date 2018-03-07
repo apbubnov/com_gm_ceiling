@@ -1962,7 +1962,7 @@
 			if (jQuery("#btn_chandelier").css("background-color") == "rgb(65, 64, 153)") {
 				jQuery("#btn_chandelier").css("background-color", "#010084");
 			} else {
-				jQuery("#btn_chandelier").css({"background-color":"#414099", "border-color":"#414099 !important;"});
+				jQuery("#btn_chandelier").css("background-color", "#414099");
 			}
 		});
 		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
@@ -1971,7 +1971,11 @@
 		}
 		jQuery("#btn_fixtures").click( function () {
 			jQuery(".fixtures").show();
-			//jQuery("#btn_fixtures").hide();
+			if (jQuery("#btn_fixtures").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_fixtures").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_fixtures").css("background-color", "#414099");
+			}
 		});
 		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "") || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "")) {
 			jQuery(".fixtures").show();
