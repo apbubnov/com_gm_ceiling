@@ -981,7 +981,7 @@
 					</div>
 				</div>
 				<div class="container">
-					<div class="row sm-margin-bottom" id="level">
+					<div class="row sm-margin-bottom" id="level" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group" style="margin-bottom: 0em;">
