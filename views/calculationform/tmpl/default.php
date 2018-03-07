@@ -1961,8 +1961,8 @@
 			jQuery("#chandelier").toggle();
 			console.log(jQuery("#btn_chandelier").css("background-color"));
 			if (jQuery("#btn_chandelier").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_chandelier").css("background-color":"#afafda");
-				jQuery("#btn_chandelier").css("border-color":"#afafda !important;");
+				jQuery("#btn_chandelier").css("background-color", "#afafda");
+				jQuery("#btn_chandelier").css("border-color", "#afafda !important;");
 			} else {
 				jQuery("#btn_chandelier").css({"background-color":"#414099", "border-color":"#414099 !important;"});
 			}
