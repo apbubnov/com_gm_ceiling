@@ -628,12 +628,14 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table>
+					<table class="table_calcform">
 						<tr>
-							<td>
-								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить шторный карниз</label>
+							<td class="td_calcform1">
+								<button type="button" id="btn_cornice" class="btn add_fields">
+									<label id="jform_n12-lbl" for="jform_n12" class="no_margin">Добавить шторный карниз</label>
+								</button>
 							</td>
-							<td>
+							<td class="td_calcform2">
 								<a class="help" >
 									<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 									<span class="airhelp">
@@ -646,9 +648,6 @@
 										<br>Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз
 									</span>
 								</a>							
-							</td>
-							<td>
-								<button type="button" id="btn_cornice" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
@@ -1982,12 +1981,16 @@
 			jQuery("#btn_fixtures").css("background-color", "#010084");
 		}
 		jQuery("#btn_cornice").click( function () {
-			jQuery(".cornice").show();
-			jQuery("#btn_cornice").hide();
+			jQuery(".cornice").toggle();
+			if (jQuery("#btn_cornice").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_cornice").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_cornice").css("background-color", "#414099");
+			}
 		});
 		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "") || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "")) {
 			jQuery(".cornice").show();
-			jQuery("#btn_cornice").hide();
+			jQuery("#btn_cornice").css("background-color", "#010084");
 		}
 		jQuery("#btn_pipes").click( function () {
 			jQuery("#pipes").show();
