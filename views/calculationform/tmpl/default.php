@@ -1398,9 +1398,14 @@
 					<div class="row" style="margin-bottom: 1em;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<table>
+							<table class="table_calcform">
 								<tr>
-									<td>Другие комплектующие</td>
+									<td class="td_calcform3">
+										<button type="button" id="btn_accessories" class="btn add_fields">
+											Другие комплектующие
+										</button>
+									</td>
+									<td class="td_calcform2"></td>
 								</tr>
 							</table>
 						</div>
@@ -1408,7 +1413,7 @@
 					</div>
 				</div>
 				<div class = "container">
-					<div class="row">
+					<div class="row" id="accessories" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="advanced_col_half">
@@ -1416,7 +1421,7 @@
 								<div id="extra_components_title_container">
 									<?php foreach($extra_components_array as $item) { ?>
 										<div class='form-group'>
-											<input name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'>
+											<input id="extra_components_title" name='extra_components_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'>
 										</div>
 									<?php } ?>
 								</div>
@@ -2220,7 +2225,42 @@
 			jQuery("#diffuser").show();
 			jQuery("#btn_diffuser").css("background-color", "#010084");
 		}
-		
+		jQuery("#btn_accessories").click( function () {
+			jQuery("#accessories").toggle();
+			if (jQuery("#btn_accessories").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_accessories").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_accessories").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "") {
+			jQuery("#accessories").show();
+			jQuery("#btn_accessories").css("background-color", "#010084");
+		}
+		jQuery("#btn_diffuser").click( function () {
+			jQuery("#diffuser").toggle();
+			if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_diffuser").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_diffuser").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "") {
+			jQuery("#diffuser").show();
+			jQuery("#btn_diffuser").css("background-color", "#010084");
+		}
+		jQuery("#btn_diffuser").click( function () {
+			jQuery("#diffuser").toggle();
+			if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_diffuser").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_diffuser").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "") {
+			jQuery("#diffuser").show();
+			jQuery("#btn_diffuser").css("background-color", "#010084");
+		}
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
