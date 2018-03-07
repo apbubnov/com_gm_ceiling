@@ -1167,80 +1167,84 @@
 				<!-- слив воды -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_n32-lbl" for="jform_n32" class="">Слив воды</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_draining" class="btn add_fields">
+												<label id="jform_n32-lbl" for="jform_n32" class="no_margin">Слив воды</label>
+											</button>
 										</td>
-										<td>
+										<td class="td_calcform2">
 											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
 
 										В работу входит слив воды. Укажите колиество комнат.</span></a>
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n32]" id="jform_n32" value="<?php echo $this->item->n32; ?>" class="form-control" placeholder="Кол-во комнат, шт." type="tel">
+								<input name="jform[n32]" id="jform_n32" value="<?php echo $this->item->n32; ?>" class="form-control" placeholder="Кол-во комнат, шт." type="tel" style="display: none;">
 							</div>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 				<!-- доп крепеж -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_dop_krepezh-lbl" for="jform_dop_krepezh" class="">Дополнительный крепеж</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_fixture2" class="btn add_fields">
+												<label id="jform_dop_krepezh-lbl" for="jform_dop_krepezh" class="no_margin">Дополнительный крепеж</label>
+											</button>
 										</td>
-										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-											На 1м дополнительного крепежа используется:  <br> 10 * Саморез 3,5 * 51  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  </span></a>
+										<td class="td_calcform2">
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">
+													На 1м дополнительного крепежа используется:<br>
+													10 * Саморез 3,5 * 51  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  
+												</span>
+											</a>
 										</td>
 									</tr>
 								</table>
-
-								<input name="jform[dop_krepezh]" id="jform_dop_krepezh" data-next="#jform_n18" value="<?php echo $this->item->dop_krepezh; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[dop_krepezh]" id="jform_dop_krepezh" data-next="#jform_n18" value="<?php echo $this->item->dop_krepezh; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 				<!-- Усилиние стен -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
+										<td class="td_calcform3">
+											<button type="button" id="btn_gain" class="btn add_fields">
+												<label id="jform_n18-lbl" for="jform_n18" class="no_margin">Усиление стен</label>
+											</button>
+										</td class="td_calcform2">
 										<td>
-											<label id="jform_n18-lbl" for="jform_n18" class="">Усиление стен</label>
-										</td>
-										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-											На 1м усиления стен используется:  <br> Брус 40*50 + 3 * Саморез 3,5 * 51  + 3 * Дюбель полим. 6 * 51 + 3 * Кронштейн 15 * 12,5 см.</span></a>
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">
+													На 1м усиления стен используется:  <br> Брус 40*50 + 3 * Саморез 3,5 * 51  + 3 * Дюбель полим. 6 * 51 + 3 * Кронштейн 15 * 12,5 см.
+												</span>
+											</a>
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n18]" id="jform_n18" data-next="#jform_n11" value="<?php echo $this->item->n18; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n18]" id="jform_n18" data-next="#jform_n11" value="<?php echo $this->item->n18; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 			<?php }?>
@@ -2147,6 +2151,43 @@
 			jQuery("#jform_n31").show();
 			jQuery("#btn_notch2").css("background-color", "#010084");
 		}
+		jQuery("#btn_draining").click( function () {
+			jQuery("#jform_n32").toggle();
+			if (jQuery("#btn_draining").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_draining").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_draining").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "") {
+			jQuery("#jform_n32").show();
+			jQuery("#btn_draining").css("background-color", "#010084");
+		}
+		jQuery("#btn_fixture2").click( function () {
+			jQuery("#jform_dop_krepezh").toggle();
+			if (jQuery("#btn_fixture2").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_fixture2").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_fixture2").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "") {
+			jQuery("#jform_dop_krepezh").show();
+			jQuery("#btn_fixture2").css("background-color", "#010084");
+		}
+		jQuery("#btn_gain").click( function () {
+			jQuery("#jform_n18").toggle();
+			if (jQuery("#btn_gain").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_gain").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_gain").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "") {
+			jQuery("#jform_n18").show();
+			jQuery("#btn_gain").css("background-color", "#010084");
+		}
+		
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
