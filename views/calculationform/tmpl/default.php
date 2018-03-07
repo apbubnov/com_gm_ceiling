@@ -477,16 +477,15 @@
 			<div class="row sm">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table>
+					<table class="table_calcform">
 						<tr>
-							<td>
-								<label id="jform_n13-lbl" for="jform_n13" class="">Добавить светильники</label>
+							<td class="td_calcform1">
+								<button type="button" id="btn_fixtures" class="btn add_fields">
+									<label id="jform_n13-lbl" for="jform_n13" class="no_margin">Добавить светильники</label>
+								</button>
 							</td>
-							<td>
+							<td class="td_calcform2">
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">На упаковке светильника указан диаметр технологического отверстия</span></a>
-							</td>
-							<td>
-								<button type="button" id="btn_fixtures" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
