@@ -353,15 +353,21 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" style="text-align:-webkit-center">
-					<table style="margin-bottom: 30px;">
+					<table class="table_calcform" style="margin-bottom: 30px;">
 						<tr>
-							<td>
-								<h3>Декоративная вставка</h3>
+							<td class="td_calcform1">
+								<button type="button" id="btn_insert" class="btn add_fields">
+									Декоративная вставка
+								</button>
 							</td>
-							<td>
-								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp"><img src="/images/vstavka.png" width="380" height="250"/>
-									<br>Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой 
-								</span></a>
+							<td class="td_calcform2">
+								<a class="help" >
+									<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+									<span class="airhelp">
+										<img src="/images/vstavka.png" width="380" height="250"/>
+										<br>Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой 
+									</span>
+								</a>
 							</td>
 						</tr>
 					</table>
