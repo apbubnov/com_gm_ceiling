@@ -1959,17 +1959,15 @@
 		// кнопки открытия скрытых полей
 		jQuery("#btn_chandelier").click( function () {
 			jQuery("#chandelier").toggle();
-			console.log(jQuery("#btn_chandelier").css("background-color"));
 			if (jQuery("#btn_chandelier").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_chandelier").css("background-color", "#afafda");
-				jQuery("#btn_chandelier").css("border-color", "#afafda !important;");
+				jQuery("#btn_chandelier").css("background-color", "#010084");
 			} else {
 				jQuery("#btn_chandelier").css({"background-color":"#414099", "border-color":"#414099 !important;"});
 			}
 		});
 		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
 			jQuery("#chandelier").show();
-			jQuery("#btn_chandelier").css({"background-color":"#afafda", "border":"1px solid #afafda !important;"});
+			jQuery("#btn_chandelier").css("background-color", "#010084");
 		}
 		jQuery("#btn_fixtures").click( function () {
 			jQuery(".fixtures").show();
