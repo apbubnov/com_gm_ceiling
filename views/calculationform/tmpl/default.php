@@ -446,16 +446,15 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table>
+					<table class="table_calcform">
 						<tr>
-							<td>
-								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить люстры</label>
+							<td class="td_calcform1">
+								<button type="button" id="btn_chandelier" class="btn add_fields">
+									<label id="jform_n12-lbl" for="jform_n12" class="">Добавить люстры</label>
+								</button>
 							</td>
-							<td>
+							<td class="td_calcform2">
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
-							</td>
-							<td>
-								<button type="button" id="btn_chandelier" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
@@ -845,7 +844,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel"  style="display: none;">
+								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -873,7 +872,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n8]" id="jform_n8" data-next="#jform_n19" value="<?php echo $this->item->n8; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n8]" id="jform_n8" data-next="#jform_n19" value="<?php echo $this->item->n8; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>					
@@ -896,9 +895,12 @@
 												<span class="airhelp">На 1м провода используется:  <br> Провод ПВС 2 х 0,75  + 2 * Дюбель полим. 6 * 51 + 2 * Саморез ГДК 3,5 * 51</span>
 											</a>
 										</td>
+										<td>
+											<button type="button" id="btn_wire" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+										</td>
 									</tr>
 								</table>
-								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -921,9 +923,12 @@
 												<span class="airhelp">На 1м  используется:  <br> Брус 40*50  + 3 * Подвес прямой П 60 (0,8) +  6 * Дюбель полим. 6 * 51 + 6 * Саморез ГДК 3,5 * 51 + 6 * Саморез ГДК 3,5 * 41</span>
 											</a>
 										</td>
+										<td>
+											<button type="button" id="btn_bar" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+										</td>
 									</tr>
 								</table>
-								<input name="jform[n17]" id="jform_n17"  value="<?php echo $this->item->n17; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n17]" id="jform_n17"  value="<?php echo $this->item->n17; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>					
@@ -946,9 +951,12 @@
 												<span class="airhelp">На 1м парящего потолка используется:  <br> Багет для парящих пот аллюм + Вставка для парящих потолков </span>
 										</a>
 										</td>
+										<td>
+											<button type="button" id="btn_soaring" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+										</td>
 									</tr>
 								</table>
-								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -956,12 +964,15 @@
 				</div>
 				<!-- переход уровня -->
 				<div class="container">
-					<div class="row">
+					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="margin-bottom: 1em;">
 							<table>
 								<tr>
 									<td>Переход уровня</td>
+									<td>
+										<button type="button" id="btn_level" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -969,7 +980,7 @@
 					</div>
 				</div>
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row sm-margin-bottom" id="level" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group" style="margin-bottom: 0em;">
@@ -991,7 +1002,7 @@
 									<?php foreach($n29 as $level) {?>
 										<div class="form-group">
 											<div class="advanced_col1">
-												<input name="n29_count[]"  value="<?=/*$tmp[$item]*/ $level->n29_count; ?>" class="form-control" placeholder="м." type="tel">
+												<input id="n29_count" name="n29_count[]"  value="<?=/*$tmp[$item]*/ $level->n29_count; ?>" class="form-control" placeholder="м." type="tel">
 											</div>
 											<div class="advanced_col5">
 												<select name="n29_type[]" id="n29" class="form-control n29_control" placeholder="Тип">
@@ -1031,9 +1042,12 @@
 											<span class="airhelp">Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них</span>
 										</a>
 									</td>
+									<td>
+										<button type="button" id="btn_firealarm" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+									</td>
 								</tr>
 							</table>
-							<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel">
+							<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel" style="display: none;">
 						</div>
 					</div>
 					<div class="col-sm-4"></div>
@@ -1991,6 +2005,46 @@
 		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "") {
 			jQuery("#jform_n8").show();
 			jQuery("#btn_stoneware").hide();
+		}
+		jQuery("#btn_wire").click( function () {
+			jQuery("#jform_n19").show();
+			jQuery("#btn_wire").hide();
+		});
+		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "") {
+			jQuery("#jform_n19").show();
+			jQuery("#btn_wire").hide();
+		}
+		jQuery("#btn_bar").click( function () {
+			jQuery("#jform_n17").show();
+			jQuery("#btn_bar").hide();
+		});
+		if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "") {
+			jQuery("#jform_n17").show();
+			jQuery("#btn_bar").hide();
+		}
+		jQuery("#btn_soaring").click( function () {
+			jQuery("#jform_n30").show();
+			jQuery("#btn_soaring").hide();
+		});
+		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "") {
+			jQuery("#jform_n30").show();
+			jQuery("#btn_soaring").hide();
+		}
+		jQuery("#btn_level").click( function () {
+			jQuery("#level").show();
+			jQuery("#btn_level").hide();
+		});
+		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "") {
+			jQuery("#level").show();
+			jQuery("#btn_level").hide();
+		}
+		jQuery("#btn_firealarm").click( function () {
+			jQuery("#jform_n21").show();
+			jQuery("#btn_firealarm").hide();
+		});
+		if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "") {
+			jQuery("#jform_n21").show();
+			jQuery("#btn_firealarm").hide();
 		}
 		
 		//------------------------------
