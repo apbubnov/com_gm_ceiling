@@ -1043,9 +1043,12 @@
 											<span class="airhelp">Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них</span>
 										</a>
 									</td>
+									<td>
+										<button type="button" id="btn_firealarm" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+									</td>
 								</tr>
 							</table>
-							<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel">
+							<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel" style="display: none;">
 						</div>
 					</div>
 					<div class="col-sm-4"></div>
@@ -2035,6 +2038,14 @@
 		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "") {
 			jQuery("#level").show();
 			jQuery("#btn_level").hide();
+		}
+		jQuery("#btn_firealarm").click( function () {
+			jQuery("#jform_n21").show();
+			jQuery("#btn_firealarm").hide();
+		});
+		if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "") {
+			jQuery("#jform_n21").show();
+			jQuery("#btn_firealarm").hide();
 		}
 		
 		//------------------------------
