@@ -747,12 +747,14 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table>
+					<table class="table_calcform">
 						<tr>
-							<td>
-								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить трубы, входящие в потолок</label>
+							<td class="td_calcform1">
+								<button type="button" id="btn_pipes" class="btn add_fields">
+									<label id="jform_n12-lbl" for="jform_n12" class="no_margin">Добавить трубы, входящие в потолок</label>
+								</button>
 							</td>
-							<td>
+							<td class="td_calcform2">
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 									<span class="airhelp">
 										<img src="/images/obvod.png" width="380" height="250" align="center"/>
@@ -760,9 +762,6 @@
 										<img src="/images/obvod2.png" width="380" height="250" align="center"/>
 									</span>
 								</a>						
-							</td>
-							<td>
-								<button type="button" id="btn_pipes" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
@@ -1993,15 +1992,19 @@
 			jQuery("#btn_cornice").css("background-color", "#010084");
 		}
 		jQuery("#btn_pipes").click( function () {
-			jQuery("#pipes").show();
-			jQuery("#btn_pipes").hide();
+			jQuery("#pipes").toggle();
+			if (jQuery("#btn_pipes").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_pipes").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_pipes").css("background-color", "#414099");
+			}
 		});
 		if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "") {
 			jQuery("#pipes").show();
-			jQuery("#btn_pipes").hide();
+			jQuery("#btn_pipes").css("background-color", "#010084");
 		}
 		jQuery("#btn_tile").click( function () {
-			jQuery("#jform_n7").show();
+			jQuery("#jform_n7").toggle();
 			jQuery("#btn_tile").hide();
 		});
 		if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "") {
@@ -2009,7 +2012,7 @@
 			jQuery("#btn_tile").hide();
 		}
 		jQuery("#btn_stoneware").click( function () {
-			jQuery("#jform_n8").show();
+			jQuery("#jform_n8").toggle();
 			jQuery("#btn_stoneware").hide();
 		});
 		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "") {
@@ -2017,7 +2020,7 @@
 			jQuery("#btn_stoneware").hide();
 		}
 		jQuery("#btn_wire").click( function () {
-			jQuery("#jform_n19").show();
+			jQuery("#jform_n19").toggle();
 			jQuery("#btn_wire").hide();
 		});
 		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "") {
@@ -2025,7 +2028,7 @@
 			jQuery("#btn_wire").hide();
 		}
 		jQuery("#btn_bar").click( function () {
-			jQuery("#jform_n17").show();
+			jQuery("#jform_n17").toggle();
 			jQuery("#btn_bar").hide();
 		});
 		if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "") {
@@ -2033,7 +2036,7 @@
 			jQuery("#btn_bar").hide();
 		}
 		jQuery("#btn_soaring").click( function () {
-			jQuery("#jform_n30").show();
+			jQuery("#jform_n30").toggle();
 			jQuery("#btn_soaring").hide();
 		});
 		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "") {
@@ -2041,7 +2044,7 @@
 			jQuery("#btn_soaring").hide();
 		}
 		jQuery("#btn_level").click( function () {
-			jQuery("#level").show();
+			jQuery("#level").toggle();
 			jQuery("#btn_level").hide();
 		});
 		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "") {
@@ -2049,7 +2052,7 @@
 			jQuery("#btn_level").hide();
 		}
 		jQuery("#btn_firealarm").click( function () {
-			jQuery("#jform_n21").show();
+			jQuery("#jform_n21").toggle();
 			jQuery("#btn_firealarm").hide();
 		});
 		if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "") {
