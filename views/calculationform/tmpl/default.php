@@ -446,16 +446,15 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table>
+					<table class="table_calcform">
 						<tr>
-							<td>
-								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить люстры</label>
+							<td class="td_calcform1">
+								<button type="button" id="btn_chandelier" class="btn add_fields">
+									<label id="jform_n12-lbl" for="jform_n12" class="">Добавить люстры</label>
+								</button>
 							</td>
-							<td>
+							<td class="td_calcform2">
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
-							</td>
-							<td>
-								<button type="button" id="btn_chandelier" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
