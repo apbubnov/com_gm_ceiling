@@ -868,6 +868,9 @@
 												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в керамогранит</span>
 											</a>
 										</td>
+										<td>
+											<button type="button" id="btn_stoneware" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+										</td>
 									</tr>
 								</table>
 								<input name="jform[n8]" id="jform_n8" data-next="#jform_n19" value="<?php echo $this->item->n8; ?>" class="form-control" placeholder="м." type="tel">
@@ -1977,9 +1980,17 @@
 			jQuery("#jform_n7").show();
 			jQuery("#btn_tile").hide();
 		});
-		if (jQuery("#n14_cojform_n7unt").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "") {
+		if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "") {
 			jQuery("#jform_n7").show();
 			jQuery("#btn_tile").hide();
+		}
+		jQuery("#btn_stoneware").click( function () {
+			jQuery("#jform_n8").show();
+			jQuery("#btn_stoneware").hide();
+		});
+		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "") {
+			jQuery("#jform_n8").show();
+			jQuery("#btn_stoneware").hide();
 		}
 		
 		//------------------------------
