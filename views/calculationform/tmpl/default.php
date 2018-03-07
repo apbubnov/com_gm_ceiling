@@ -630,24 +630,27 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table style="margin-left: calc(50% - 87px);">
+					<table>
 						<tr>
 							<td>
-								<h3>Шторный карниз</h3>
+								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить шторный карниз</label>
 							</td>
 							<td>
 								<a class="help" >
 									<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-									<span class="airhelp">Если его не будет или он будет крепиться к стене просто пропустите этот пункт.
-										<br>Шторный карниз можно крепить на потолок двумя способами:
-										<br> 
+									<span class="airhelp">
+										Если его не будет или он будет крепиться к стене просто пропустите этот пункт.<br>
+										Шторный карниз можно крепить на потолок двумя способами:<br> 
 										<ul>
 											<li>Видимый <br> <img src="/images/karniz.png" width="350" height="250"/></li>
-												<li>Скрытый <br> <img src="/images/karniz2.png" width="350" height="250"/></li>
-											</ul>
+											<li>Скрытый <br> <img src="/images/karniz2.png" width="350" height="250"/></li>
+										</ul>
 										<br>Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз
 									</span>
-								</a>
+								</a>							
+							</td>
+							<td>
+								<button type="button" id="btn_cornice" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
@@ -656,7 +659,7 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="row">
+			<div class="row cornice" style="display: none; width: 100%;">
 				<div class="col-sm-4">
 					<div class="form-group">
 						<div style="width: 100%; text-align: left;">
@@ -681,7 +684,7 @@
 		</div>
 		<!-- приобрести карнизы -->
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row sm-margin-bottom cornice" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<h4>Можете приобрести карнизы у нас:</h4>
@@ -690,7 +693,7 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row sm-margin-bottom cornice" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div class="form-group" style="margin-bottom: 0em;">
@@ -714,7 +717,7 @@
 							<?php foreach ($n15 as $cornice) { ?>
 								<div class="form-group">
 									<div class="advanced_col1">
-										<input name="n15_count[]"  value="<?= $cornice->n15_count; ?>" class="form-control" placeholder="шт." type="tel">
+										<input id="n15_count" name="n15_count[]"  value="<?= $cornice->n15_count; ?>" class="form-control" placeholder="шт." type="tel">
 									</div>
 									<div class="advanced_col2">
 										<select name="n15_type[]" id="n15" class="form-control n15_control" placeholder="Тип">
@@ -1947,6 +1950,14 @@
 		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined)) {
 			jQuery(".fixtures").show();
 			jQuery("#btn_fixtures").hide();
+		}
+		jQuery("#btn_cornice").click( function () {
+			jQuery(".cornice").show();
+			jQuery("#btn_cornice").hide();
+		});
+		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined)) {
+			jQuery(".cornice").show();
+			jQuery("#btn_cornice").hide();
 		}
 		
 		//------------------------------
