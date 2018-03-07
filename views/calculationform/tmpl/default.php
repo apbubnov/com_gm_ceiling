@@ -1253,9 +1253,14 @@
 				<div class="row">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4" style="margin-bottom: 1em;">
-						<table>
+						<table class="table_calcform">
 							<tr>
-								<td>Вентиляция</td>
+								<td class="td_calcform3">
+									<button type="button" id="btn_hoods" class="btn add_fields">
+										Вентиляция
+									</button>
+								</td>
+								<td class="td_calcform2"></td>
 							</tr>
 						</table>
 					</div>
@@ -1263,7 +1268,7 @@
 				</div>
 			</div>
 			<div class="container">
-				<div class="row sm-margin-bottom">
+				<div class="row sm-margin-bottom" id="hoods">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div id="jform_n22_block"> 
@@ -1288,7 +1293,7 @@
 										foreach($n22 as $ventilation) if ($ventilation->n22_count > 0) { ?>
 											<div class="form-group">
 												<div class="advanced_col1">
-													<input name="n22_count[]" class="form-control" value="<?php echo $ventilation->n22_count; ?>" placeholder="м." type="tel">
+													<input id="n22_count" name="n22_count[]" class="form-control" value="<?php echo $ventilation->n22_count; ?>" placeholder="м." type="tel">
 												</div>
 												<div class="advanced_col2">
 													<select id="n22" class="form-control" name="n22_type[]" for="jform_n22_type">
@@ -2186,6 +2191,18 @@
 		if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "") {
 			jQuery("#jform_n18").show();
 			jQuery("#btn_gain").css("background-color", "#010084");
+		}
+		jQuery("#btn_hoods").click( function () {
+			jQuery("#hoods").toggle();
+			if (jQuery("#btn_hoods").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_hoods").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_hoods").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "") {
+			jQuery("#hoods").show();
+			jQuery("#btn_hoods").css("background-color", "#010084");
 		}
 		
 		//------------------------------
