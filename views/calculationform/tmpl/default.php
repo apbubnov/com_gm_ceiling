@@ -848,7 +848,7 @@
 				</div>
 				<!-- керамогранит -->
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row">
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -867,7 +867,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n8]" id="jform_n8" data-next="#jform_n19" value="<?php echo $this->item->n8; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
+								<input name="jform[n8]" id="jform_n8" data-next="#jform_n19" value="<?php echo $this->item->n8; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>					
@@ -875,7 +875,7 @@
 				</div>
 				<!-- провод -->
 				<div class = "container">
-					<div class="row sm-margin-bottom">
+					<div class="row">
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -894,7 +894,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
+								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -902,7 +902,7 @@
 				</div>
 				<!-- закладная брусом -->
 				<div class = "container">
-					<div class="row sm-margin-bottom">
+					<div class="row">
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -921,7 +921,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n17]" id="jform_n17"  value="<?php echo $this->item->n17; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
+								<input name="jform[n17]" id="jform_n17"  value="<?php echo $this->item->n17; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>					
@@ -929,7 +929,7 @@
 				</div>
 				<!-- парящий потолок -->
 				<div class = "container">
-					<div class="row sm-margin-bottom" id="n30_block">
+					<div class="row" id="n30_block">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -948,7 +948,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
+								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
