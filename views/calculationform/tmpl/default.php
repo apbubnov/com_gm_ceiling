@@ -1568,10 +1568,10 @@
 				</div>
 				<!-- высота помещения -->
 				<div class="container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<table class="table_calcform">
+							<table class="table_calcform" style="margin-bottom: 25px;">
 								<tr>
 									<td class="td_calcform1">
 										<button type="button" id="btn_height" class="btn add_fields">
@@ -2349,6 +2349,7 @@
 				jQuery("#btn_height").css("background-color", "#414099");
 			}
 		});
+		console.log(jQuery("input[name='jform[height]']:radio:checked").val());
 		if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
 			jQuery("#row_height").show();
 			jQuery("#btn_height").css("background-color", "#010084");
