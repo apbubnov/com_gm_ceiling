@@ -881,7 +881,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_wire" class="btn add_fields">
 												<label id="jform_n19-lbl" for="jform_n19" class="no_margin">Провод</label>
 											</button>
@@ -908,7 +908,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_bar" class="btn add_fields">
 												<label id="jform_n17-lbl" for="jform_n17" class="no_margin">Закладная брусом</label>
 											</button>
@@ -935,7 +935,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_soaring" class="btn add_fields">
 												<label id="jform_n30-lbl" for="jform_n30" class="no_margin">Парящий потолок</label>
 											</button>
