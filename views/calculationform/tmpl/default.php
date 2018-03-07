@@ -825,7 +825,7 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table class="table_calcform">
+								<table class="table_calcform" style="margin-bottom: 25px;">
 									<tr>
 										<td class="td_calcform3">
 											<button type="button" id="btn_tile" class="btn add_fields">
