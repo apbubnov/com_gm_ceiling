@@ -924,9 +924,12 @@
 												<span class="airhelp">На 1м  используется:  <br> Брус 40*50  + 3 * Подвес прямой П 60 (0,8) +  6 * Дюбель полим. 6 * 51 + 6 * Саморез ГДК 3,5 * 51 + 6 * Саморез ГДК 3,5 * 41</span>
 											</a>
 										</td>
+										<td>
+											<button type="button" id="btn_bar" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+										</td>
 									</tr>
 								</table>
-								<input name="jform[n17]" id="jform_n17"  value="<?php echo $this->item->n17; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n17]" id="jform_n17"  value="<?php echo $this->item->n17; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>					
@@ -949,9 +952,12 @@
 												<span class="airhelp">На 1м парящего потолка используется:  <br> Багет для парящих пот аллюм + Вставка для парящих потолков </span>
 										</a>
 										</td>
+										<td>
+											<button type="button" id="btn_soaring" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+										</td>
 									</tr>
 								</table>
-								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -2002,6 +2008,22 @@
 		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "") {
 			jQuery("#jform_n19").show();
 			jQuery("#btn_wire").hide();
+		}
+		jQuery("#btn_bar").click( function () {
+			jQuery("#jform_n17").show();
+			jQuery("#btn_bar").hide();
+		});
+		if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "") {
+			jQuery("#jform_n17").show();
+			jQuery("#btn_bar").hide();
+		}
+		jQuery("#btn_soaring").click( function () {
+			jQuery("#jform_n30").show();
+			jQuery("#btn_soaring").hide();
+		});
+		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "") {
+			jQuery("#jform_n30").show();
+			jQuery("#btn_soaring").hide();
 		}
 		
 		//------------------------------
