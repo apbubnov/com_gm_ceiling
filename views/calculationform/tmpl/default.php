@@ -845,7 +845,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel"  style="display: none;">
+								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -873,7 +873,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n8]" id="jform_n8" data-next="#jform_n19" value="<?php echo $this->item->n8; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n8]" id="jform_n8" data-next="#jform_n19" value="<?php echo $this->item->n8; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>					
@@ -896,9 +896,12 @@
 												<span class="airhelp">На 1м провода используется:  <br> Провод ПВС 2 х 0,75  + 2 * Дюбель полим. 6 * 51 + 2 * Саморез ГДК 3,5 * 51</span>
 											</a>
 										</td>
+										<td>
+											<button type="button" id="btn_wire" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+										</td>
 									</tr>
 								</table>
-								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -1991,6 +1994,14 @@
 		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "") {
 			jQuery("#jform_n8").show();
 			jQuery("#btn_stoneware").hide();
+		}
+		jQuery("#btn_wire").click( function () {
+			jQuery("#jform_n19").show();
+			jQuery("#btn_wire").hide();
+		});
+		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "") {
+			jQuery("#jform_n19").show();
+			jQuery("#btn_wire").hide();
 		}
 		
 		//------------------------------
