@@ -1109,53 +1109,59 @@
 				<!-- внутренний вырез на месте -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_n11-lbl" for="jform_n11" class="">Внутренний вырез (на месте)</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_notch1" class="btn add_fields">
+												<label id="jform_n11-lbl" for="jform_n11" class="no_margin">Внутренний вырез (на месте)</label>
+											</button>
 										</td>
-										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-											На 1м внутреннего выреза используется:  <br> Брус 40*50  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм) + 3 * Кронштейн 15 * 12,5 см. + + 22 * Саморез 3,5 * 41 +  16 * Дюбель полим. 6 * 51 + Гарпун </span></a>
+										<td class="td_calcform2">
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">
+													На 1м внутреннего выреза используется:<br>
+													Брус 40*50  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм) + 3 * Кронштейн 15 * 12,5 см. + + 22 * Саморез 3,5 * 41 +  16 * Дюбель полим. 6 * 51 + Гарпун 
+												</span>
+											</a>
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n11]" id="jform_n11" value="<?php echo $this->item->n11; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n11]" id="jform_n11" value="<?php echo $this->item->n11; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 				<!-- Внутренний вырез в цеху -->
 				<div class = "container">
 					<div class="row sm-margin-bottom">
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_n31-lbl" for="jform_n31" class="">Внутренний вырез (в цеху)</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_notch2" class="btn add_fields">
+												<label id="jform_n31-lbl" for="jform_n31" class="no_margin">Внутренний вырез (в цеху)</label>
+											</button>
 										</td>
-										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-											На 1м внутреннего выреза используется:  <br>  Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  + 10 * Саморез 3,5 * 51 +  10 * Дюбель полим. 6 * 51 + Вставка</span></a>
+										<td class="td_calcform2">
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">
+													На 1м внутреннего выреза используется:<br>
+													Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  + 10 * Саморез 3,5 * 51 +  10 * Дюбель полим. 6 * 51 + Вставка
+												</span>
+											</a>
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n31]" id="jform_n31" value="<?php echo $this->item->n31; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n31]" id="jform_n31" value="<?php echo $this->item->n31; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 				</div>
 				<!-- слив воды -->
@@ -2117,7 +2123,30 @@
 			jQuery("#jform_n24").show();
 			jQuery("#btn_access").css("background-color", "#010084");
 		}
-		 
+		jQuery("#btn_notch1").click( function () {
+			jQuery("#jform_n11").toggle();
+			if (jQuery("#btn_notch1").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_notch1").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_notch1").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "") {
+			jQuery("#jform_n11").show();
+			jQuery("#btn_notch1").css("background-color", "#010084");
+		}
+		jQuery("#btn_notch2").click( function () {
+			jQuery("#jform_n31").toggle();
+			if (jQuery("#btn_notch2").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_notch2").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_notch2").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "") {
+			jQuery("#jform_n31").show();
+			jQuery("#btn_notch2").css("background-color", "#010084");
+		}
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
