@@ -1960,9 +1960,9 @@
 		jQuery("#btn_chandelier").click( function () {
 			jQuery("#chandelier").toggle();
 			if (jQuery("#btn_chandelier").css("background-color") == "#414099") {
-				jQuery("#btn_chandelier").css({"background-color": "#d3d3f9"; "border": "1px solid #d3d3f9 !important;"});
+				jQuery("#btn_chandelier").css({"background-color": "#d3d3f9", "border": "1px solid #d3d3f9 !important;"});
 			} else {
-				jQuery("#btn_chandelier").css({"background-color": "#414099"; "border": "1px solid #414099 !important;"});
+				jQuery("#btn_chandelier").css({"background-color": "#414099", "border": "1px solid #414099 !important;"});
 			}
 		});
 		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
