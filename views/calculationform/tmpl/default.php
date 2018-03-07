@@ -1960,7 +1960,7 @@
 		jQuery("#btn_chandelier").click( function () {
 			jQuery("#chandelier").toggle();
 			console.log(jQuery("#btn_chandelier").css("background-color"));
-			if (jQuery("#btn_chandelier").css("background-color") == "#414099") {
+			if (jQuery("#btn_chandelier").css("background-color") == "rgb(65, 64, 153)") {
 				jQuery("#btn_chandelier").css({"background-color": "#d3d3f9", "border": "1px solid #d3d3f9 !important;"});
 			} else {
 				jQuery("#btn_chandelier").css({"background-color": "#414099", "border": "1px solid #414099 !important;"});
