@@ -958,7 +958,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-4"></div>
-						<div class="col-sm-4" style="margin-bottom: 1em;">
+						<div class="col-sm-4" style="margin-bottom: 15px;">
 							<table class="table_calcform">
 								<tr>
 									<td class="td_calcform1">
@@ -1024,13 +1024,13 @@
 			<?php } ?>
 			<!-- пожарная сигнализация -->
 			<div class = "container">
-				<div class="row">
+				<div class="row" style="margin-bottom: 15px;">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-						<div class="form-group">
+						<div class="form-group" style="margin-bottom: 0;">
 							<table class="table_calcform">
 								<tr>
-									<td class="td_calcform3">
+									<td class="td_calcform1">
 										<button type="button" id="btn_firealarm" class="btn add_fields">
 											Пожарная сигнализация
 										</button>
