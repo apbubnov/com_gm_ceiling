@@ -1947,7 +1947,7 @@
 			jQuery(".fixtures").show();
 			jQuery("#btn_fixtures").hide();
 		});
-		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined)) {
+		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "") || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "")) {
 			jQuery(".fixtures").show();
 			jQuery("#btn_fixtures").hide();
 		}
@@ -1955,7 +1955,7 @@
 			jQuery(".cornice").show();
 			jQuery("#btn_cornice").hide();
 		});
-		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined)) {
+		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "") || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "")) {
 			jQuery(".cornice").show();
 			jQuery("#btn_cornice").hide();
 		}
