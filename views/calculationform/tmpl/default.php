@@ -613,29 +613,44 @@
 				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
 			</div>
 		</div>
+		<!-- прочий монтаж -->
+		<div class="container">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4">
+					<h3>Прочий монтаж</h3>
+				</div>
+				<div class="col-sm-4">
+				</div>
+			</div>
+		</div>
 		<!-- Шторный карниз -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table style="margin-left: calc(50% - 87px);">
+					<table>
 						<tr>
 							<td>
-								<h3>Шторный карниз</h3>
+								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить шторный карниз</label>
 							</td>
 							<td>
 								<a class="help" >
 									<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-									<span class="airhelp">Если его не будет или он будет крепиться к стене просто пропустите этот пункт.
-										<br>Шторный карниз можно крепить на потолок двумя способами:
-										<br> 
+									<span class="airhelp">
+										Если его не будет или он будет крепиться к стене просто пропустите этот пункт.<br>
+										Шторный карниз можно крепить на потолок двумя способами:<br> 
 										<ul>
 											<li>Видимый <br> <img src="/images/karniz.png" width="350" height="250"/></li>
-												<li>Скрытый <br> <img src="/images/karniz2.png" width="350" height="250"/></li>
-											</ul>
+											<li>Скрытый <br> <img src="/images/karniz2.png" width="350" height="250"/></li>
+										</ul>
 										<br>Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз
 									</span>
-								</a>
+								</a>							
+							</td>
+							<td>
+								<button type="button" id="btn_cornice" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
@@ -644,7 +659,7 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="row">
+			<div class="row cornice" style="display: none; width: 100%;">
 				<div class="col-sm-4">
 					<div class="form-group">
 						<div style="width: 100%; text-align: left;">
@@ -669,7 +684,7 @@
 		</div>
 		<!-- приобрести карнизы -->
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row sm-margin-bottom cornice" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<h4>Можете приобрести карнизы у нас:</h4>
@@ -678,7 +693,7 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row sm-margin-bottom cornice" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div class="form-group" style="margin-bottom: 0em;">
@@ -702,7 +717,7 @@
 							<?php foreach ($n15 as $cornice) { ?>
 								<div class="form-group">
 									<div class="advanced_col1">
-										<input name="n15_count[]"  value="<?= $cornice->n15_count; ?>" class="form-control" placeholder="шт." type="tel">
+										<input id="n15_count" name="n15_count[]"  value="<?= $cornice->n15_count; ?>" class="form-control" placeholder="шт." type="tel">
 									</div>
 									<div class="advanced_col2">
 										<select name="n15_type[]" id="n15" class="form-control n15_control" placeholder="Тип">
@@ -737,17 +752,20 @@
 				<div class="col-sm-4">
 					<table>
 						<tr>
-							<td style="text-align: center;">
-								<h3>Укажите кол-во труб входящих в потолок</h3>
+							<td>
+								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить трубы, входящие в потолок</label>
 							</td>
-							<td style="text-align: left;">
+							<td>
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 									<span class="airhelp">
 										<img src="/images/obvod.png" width="380" height="250" align="center"/>
 										<br>На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
 										<img src="/images/obvod2.png" width="380" height="250" align="center"/>
 									</span>
-								</a>
+								</a>						
+							</td>
+							<td>
+								<button type="button" id="btn_pipes" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
@@ -756,7 +774,7 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row sm-margin-bottom" id="pipes" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n14_block" >
@@ -779,7 +797,7 @@
 									<?php if ($truba->n14_count > 0) { ?>
 										<div class="form-group">
 											<div class="advanced_col1">
-												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
+												<input id="n14_count" name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
 											</div>
 											<div class="advanced_col5">
 												<select class="form-control" name="n14_type[]" placeholder="Платформа">
@@ -804,18 +822,6 @@
 			</div>
 		</div>
 		<div id="extra_section">
-			<!-- прочий монтаж -->
-			<div class="container">
-				<div class="row sm-margin-bottom">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<h3>Прочий монтаж</h3>
-					</div>
-					<div class="col-sm-4">
-					</div>
-				</div>
-			</div>
 			<?php if ($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- плитка -->
 				<div class="container">
@@ -832,11 +838,14 @@
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в плитку</span>
-											</a>
+											</a>						
+										</td>
+										<td>
+											<button type="button" id="btn_tile" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel"  style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -858,6 +867,9 @@
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в керамогранит</span>
 											</a>
+										</td>
+										<td>
+											<button type="button" id="btn_stoneware" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 										</td>
 									</tr>
 								</table>
@@ -1788,26 +1800,6 @@
 
 <script type="text/javascript">
 
-	// кнопки открытия скрытых полей
-	jQuery("#btn_chandelier").click( function () {
-		jQuery("#chandelier").show();
-		jQuery("#btn_chandelier").hide();
-	});
-	if (jQuery("#jform_n12").val() != null) {
-		jQuery("#chandelier").show();
-		jQuery("#btn_chandelier").hide();
-	}
-	jQuery("#btn_fixtures").click( function () {
-		jQuery(".fixtures").show();
-		jQuery("#btn_fixtures").hide();
-	});
-	if (jQuery("#n13_count").val() != null || jQuery("#ecola_count").val() != null ) {
-		jQuery(".fixtures").show();
-		jQuery("#btn_fixtures").hide();
-	}
-	
-	//------------------------------
-
     var $ = jQuery;
 	//для подгрузки компонентов со склада
     function GetList(e, select, like) {
@@ -1950,6 +1942,58 @@
 	});
 
 	jQuery(document).ready(function() {
+
+		// кнопки открытия скрытых полей
+		jQuery("#btn_chandelier").click( function () {
+			jQuery("#chandelier").show();
+			jQuery("#btn_chandelier").hide();
+		});
+		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
+			jQuery("#chandelier").show();
+			jQuery("#btn_chandelier").hide();
+		}
+		jQuery("#btn_fixtures").click( function () {
+			jQuery(".fixtures").show();
+			jQuery("#btn_fixtures").hide();
+		});
+		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "") || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "")) {
+			jQuery(".fixtures").show();
+			jQuery("#btn_fixtures").hide();
+		}
+		jQuery("#btn_cornice").click( function () {
+			jQuery(".cornice").show();
+			jQuery("#btn_cornice").hide();
+		});
+		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "") || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "")) {
+			jQuery(".cornice").show();
+			jQuery("#btn_cornice").hide();
+		}
+		jQuery("#btn_pipes").click( function () {
+			jQuery("#pipes").show();
+			jQuery("#btn_pipes").hide();
+		});
+		if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "") {
+			jQuery("#pipes").show();
+			jQuery("#btn_pipes").hide();
+		}
+		jQuery("#btn_tile").click( function () {
+			jQuery("#jform_n7").show();
+			jQuery("#btn_tile").hide();
+		});
+		if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "") {
+			jQuery("#jform_n7").show();
+			jQuery("#btn_tile").hide();
+		}
+		jQuery("#btn_stoneware").click( function () {
+			jQuery("#jform_n8").show();
+			jQuery("#btn_stoneware").hide();
+		});
+		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "") {
+			jQuery("#jform_n8").show();
+			jQuery("#btn_stoneware").hide();
+		}
+		
+		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
 
