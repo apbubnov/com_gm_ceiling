@@ -1571,7 +1571,7 @@
 					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<table class="table_calcform" style="margin-bottom: 25px;">
+							<table class="table_calcform">
 								<tr>
 									<td class="td_calcform1">
 										<button type="button" id="btn_height" class="btn add_fields">
@@ -1584,7 +1584,7 @@
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="row" id="row_height">
+					<div class="row" id="row_height" style="display: none; margin-top: 25px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" id = "height">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 75px);">
