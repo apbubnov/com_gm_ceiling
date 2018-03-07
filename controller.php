@@ -316,6 +316,15 @@ class Gm_ceilingController extends JControllerLegacy
                 $result = $clients_model->getDesignersByClientName($FIO, 5);
             }
 
+            foreach ($result as $key => $dealer) {
+                /*Dealer history*/
+                /*$recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+                $dealer_history = $recoil_map_project_model->getData($client->dealer_id);
+                $dealer_history_sum = 0;
+                foreach ($dealer_history as $key => $item) {
+                    $dealer_history_sum += $item->sum;*/
+            }
+
             die(json_encode($result));
         }
         catch(Exception $e)
@@ -1150,7 +1159,7 @@ class Gm_ceilingController extends JControllerLegacy
          WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
             $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $items = $model->getAllList_Price();
-            $filter = "component.title = 'Светильник'";
+            $filter = "component.title = 'Светильник' && a.count > 0";
             $items = $model->getFilteredItems($filter);
             die(json_encode($items));
         }
@@ -1171,7 +1180,7 @@ class Gm_ceilingController extends JControllerLegacy
              WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
             $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
             $items = $model->getAllList_Price();
-            $filter = "component.title = 'Лампа'";
+            $filter = "component.title = 'Лампа' && a.count > 0";
             $items = $model->getFilteredItems($filter);
             die(json_encode($items));
         }
