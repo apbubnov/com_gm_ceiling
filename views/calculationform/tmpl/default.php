@@ -1056,19 +1056,23 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_n20-lbl" for="jform_n20" class="">Разделитель</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_delimiter" class="btn add_fields">
+												<label id="jform_n20-lbl" for="jform_n20" class="no_margin">Разделитель</label>
+											</button>
 										</td>
-										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-											На 1м разделителя используется:  <br> Брус 40*50  + 3 * Саморез ГКД 4,2 * 102 +  3 * Дюбель полим. 6 * 51 + 20 * Саморез ГДК 3,5 * 51 +  Вставка в разд 303 гриб + Багет разделительный аллюм (2.5 м.) </span></a>
+										<td class="td_calcform2">
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">
+													На 1м разделителя используется:  <br> Брус 40*50  + 3 * Саморез ГКД 4,2 * 102 +  3 * Дюбель полим. 6 * 51 + 20 * Саморез ГДК 3,5 * 51 +  Вставка в разд 303 гриб + Багет разделительный аллюм (2.5 м.)
+												</span>
+											</a>
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n20]" id="jform_n20" data-next="#jform_n21" value="<?php echo $this->item->n20; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n20]" id="jform_n20" data-next="#jform_n21" value="<?php echo $this->item->n20; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>					
@@ -2086,6 +2090,19 @@
 			jQuery("#jform_n21").show();
 			jQuery("#btn_firealarm").css("background-color", "#010084");
 		}
+		jQuery("#btn_delimiter").click( function () {
+			jQuery("#jform_n20").toggle();
+			if (jQuery("#btn_delimiter").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_delimiter").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_delimiter").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "") {
+			jQuery("#jform_n20").show();
+			jQuery("#btn_delimiter").css("background-color", "#010084");
+		}
+		
 		
 		//------------------------------
 
