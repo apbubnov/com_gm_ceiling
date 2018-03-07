@@ -1084,20 +1084,23 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_n24-lbl" for="jform_n24" class="">Сложность доступа</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_access" class="btn add_fields">
+												<label id="jform_n24-lbl" for="jform_n24" class="no_margin">Сложность доступа</label>
+											</button>
 										</td>
-										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-											Наценка на монтажные работы за труднодоступные места. Считается по метрам.  </span></a>
+										<td class="td_calcform2">
+											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+												<span class="airhelp">
+													Наценка на монтажные работы за труднодоступные места. Считается по метрам.  
+												</span>
+											</a>
 										</td>
 									</tr>
 								</table>
-
-								<input name="jform[n24]" id="jform_n24" data-next="#jform_n10" value="<?php echo $this->item->n24; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n24]" id="jform_n24" data-next="#jform_n10" value="<?php echo $this->item->n24; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -2102,8 +2105,19 @@
 			jQuery("#jform_n20").show();
 			jQuery("#btn_delimiter").css("background-color", "#010084");
 		}
-		
-		
+		jQuery("#btn_access").click( function () {
+			jQuery("#jform_n24").toggle();
+			if (jQuery("#btn_access").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_access").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_access").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "") {
+			jQuery("#jform_n24").show();
+			jQuery("#btn_access").css("background-color", "#010084");
+		}
+		 
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
