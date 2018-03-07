@@ -2039,7 +2039,7 @@
 				jQuery("#btn_baguette").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("radio[name='jform[n28]']").val() == 1 || jQuery("radio[name='jform[n28]']").val() == 2) {
+		if (jQuery("radio[name='jform[n28]']:radio:checked").val() == 1 || jQuery("radio[name='jform[n28]']:radio:checked").val() == 2) {
 			jQuery("#baguette").show();
 			jQuery("#btn_baguette").css("background-color", "#010084");
 		}
@@ -2051,7 +2051,8 @@
 				jQuery("#btn_insert").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("radio[name='radio']").val() != 0) {
+		console.log(jQuery("radio[name='radio']:radio:checked").val());
+		if (jQuery("radio[name='radio']:radio:checked").val() != 0) {
 			jQuery("#insert").show();
 			jQuery("#btn_insert").css("background-color", "#010084");
 		}
