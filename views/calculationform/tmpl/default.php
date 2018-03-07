@@ -360,7 +360,7 @@
 									Декоративная вставка
 								</button>
 							</td>
-							<td class="td_calcform2">
+							<td class="td_calcform2" style="text-align: center;">
 								<a class="help" >
 									<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 									<span class="airhelp">
