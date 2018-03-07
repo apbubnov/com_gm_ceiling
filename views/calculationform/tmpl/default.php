@@ -446,7 +446,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table class="table_calcform">
+					<table class="table_calcform" style="margin-bottom: 30px;">
 						<tr>
 							<td class="td_calcform1">
 								<button type="button" id="btn_chandelier" class="btn add_fields">
@@ -469,7 +469,7 @@
 						</tr>
 					</table>
 				</div>
-				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
+				<div class="col-sm-4"></div>
 			</div>
 		</div>
 		<!-- Светильники -->
@@ -1959,6 +1959,7 @@
 		// кнопки открытия скрытых полей
 		jQuery("#btn_chandelier").click( function () {
 			jQuery("#chandelier").toggle();
+			console.log(jQuery("#btn_chandelier").css("background-color"));
 			if (jQuery("#btn_chandelier").css("background-color") == "#414099") {
 				jQuery("#btn_chandelier").css({"background-color": "#d3d3f9", "border": "1px solid #d3d3f9 !important;"});
 			} else {
@@ -1967,7 +1968,7 @@
 		});
 		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
 			jQuery("#chandelier").show();
-			//jQuery("#btn_chandelier").hide();
+			jQuery("#btn_chandelier").css({"background-color": "#d3d3f9", "border": "1px solid #d3d3f9 !important;"});
 		}
 		jQuery("#btn_fixtures").click( function () {
 			jQuery(".fixtures").show();
