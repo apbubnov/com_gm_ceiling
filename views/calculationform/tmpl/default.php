@@ -613,6 +613,18 @@
 				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
 			</div>
 		</div>
+		<!-- прочий монтаж -->
+		<div class="container">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4">
+					<h3>Прочий монтаж</h3>
+				</div>
+				<div class="col-sm-4">
+				</div>
+			</div>
+		</div>
 		<!-- Шторный карниз -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
@@ -804,18 +816,6 @@
 			</div>
 		</div>
 		<div id="extra_section">
-			<!-- прочий монтаж -->
-			<div class="container">
-				<div class="row sm-margin-bottom">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<h3>Прочий монтаж</h3>
-					</div>
-					<div class="col-sm-4">
-					</div>
-				</div>
-			</div>
 			<?php if ($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- плитка -->
 				<div class="container">
@@ -1936,7 +1936,6 @@
 			jQuery("#chandelier").show();
 			jQuery("#btn_chandelier").hide();
 		});
-		console.log(jQuery("#jform_n12").val());
 		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
 			jQuery("#chandelier").show();
 			jQuery("#btn_chandelier").hide();
