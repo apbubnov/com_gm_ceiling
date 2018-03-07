@@ -1252,9 +1252,9 @@
 			<?php }?>
 			<!-- вентиляция -->
 			<div class="container">
-				<div class="row">
+				<div class="row" style="margin-bottom: 15px;">
 					<div class="col-sm-4"></div>
-					<div class="col-sm-4" style="margin-bottom: 1em;">
+					<div class="col-sm-4">
 						<table class="table_calcform">
 							<tr>
 								<td class="td_calcform3">
