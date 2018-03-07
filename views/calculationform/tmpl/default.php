@@ -774,7 +774,7 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="row sm-margin-bottom pipes" style="display: none; width: 100%;">
+			<div class="row sm-margin-bottom" id="pipes" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n14_block" >
