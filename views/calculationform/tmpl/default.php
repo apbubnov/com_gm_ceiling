@@ -1454,9 +1454,14 @@
 					<div class="row" style="margin-bottom: 1em;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<table>
+							<table class="table_calcform">
 								<tr>
-									<td>Другие комплектующие со склада</td>
+									<td class="td_calcform3">
+										<button type="button" id="btn_accessories2" class="btn add_fields">
+											Другие комплектующие со склада
+										</button>
+									</td>
+									<td class="td_calcform2"></td>
 								</tr>
 							</table>
 						</div>
@@ -1464,7 +1469,7 @@
 					</div>
 				</div>
 				<div class = "container">
-					<div class="row">
+					<div class="row accessories2" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="advanced_col_half">
@@ -1492,7 +1497,7 @@
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="row sm-margin-bottom">
+					<div class="row sm-margin-bottom accessories2" style="display: none; width: 100%;">>
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -2237,17 +2242,17 @@
 			jQuery(".accessories").show();
 			jQuery("#btn_accessories").css("background-color", "#010084");
 		}
-		jQuery("#btn_diffuser").click( function () {
-			jQuery("#diffuser").toggle();
-			if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_diffuser").css("background-color", "#010084");
+		jQuery("#btn_accessories2").click( function () {
+			jQuery(".accessories2").toggle();
+			if (jQuery("#btn_accessories2").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_accessories2").css("background-color", "#010084");
 			} else {
-				jQuery("#btn_diffuser").css("background-color", "#414099");
+				jQuery("#btn_accessories2").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "") {
-			jQuery("#diffuser").show();
-			jQuery("#btn_diffuser").css("background-color", "#010084");
+		if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "") {
+			jQuery(".accessories2").show();
+			jQuery("#btn_accessories2").css("background-color", "#010084");
 		}
 		jQuery("#btn_diffuser").click( function () {
 			jQuery("#diffuser").toggle();
