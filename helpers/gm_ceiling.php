@@ -1315,17 +1315,40 @@ class Gm_ceilingHelpersGm_ceiling
         foreach ($canvases_list as $i => $canvas)
             $canvases[$canvas->id] = $canvas;
 
+
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
-           
-            /*if (empty($calc_id)) {
-                $canvases_data['title'] = $canvases[$data['n3']]->texture_title . ", " . $canvases[$data['n3']]->name . " " . $canvases[$data['n3']]->width; //Название фактуры и полотна
+
+            if (empty($data['n3_id']))
+            {
+                $canvas_id = $data['n3'];
             }
             else
             {
-                $canvases_data['title'] = $data['n3'] . ", " . $data['n2'] . " " . $data['color']; //Название фактуры и полотна
-                $canvases_data['title_standart'] = 
-            }*/
+                $canvas_id = $data['n3_id'];
+            }
+
+            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+
+            $canvases = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id");
+
+            if (is_null($canvases[0]->color_id))
+            {
+                $color_title = '303';
+            }
+            else
+            {
+                $color = $color_model->getData($canvases[0]->color_id);
+                $color_title = $color->colors_title;
+            }
+
+            $facture = $canvases[0]->texture_title;
+            $width = floatval($canvases[0]->width) * 100;
+            $name = $canvases[0]->name;
+
+            $canvases_data['title'] = $facture.'-'.$color_title.'-'.$width.' '.$name;
+
             $canvases_data['quantity'] = $data['n4'];
 
             $total_gm_guild = $data['guild_data']['total_gm_guild'];
@@ -2984,7 +3007,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= '<tr>';
         
-
+/*
         if (empty($data['n3_id']))
         {
             $canvas_id = $data['n3'];
@@ -3014,8 +3037,9 @@ class Gm_ceilingHelpersGm_ceiling
         $name = $canvases[0]->name;
 
         $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name;
+*/
 
-        $html .= '<th>Цвет: </th><td colspan="2" >' . $canv_name . '</td>';
+        $html .= '<th>Цвет: </th><td colspan="2" >' . $canvases_data["title"] . '</td>';
         $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
         $html .= '</tr>';
         $html .= '</tbody>';
@@ -3055,7 +3079,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<th>Адрес : </th> <td colspan="5">' . $project->project_info . '</td>';
         $html .= '</tr>';
         $html .= '<tr>';
-        $html .= '<th>Цвет: </th><td colspan="3" >' . $canv_name . '</td>';
+        $html .= '<th>Цвет: </th><td colspan="3" >' . $canvases_data["title"] . '</td>';
         $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
         $html .= '</tr>';
         $html .= '</tbody>';
