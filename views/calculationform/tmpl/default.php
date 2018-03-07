@@ -458,7 +458,7 @@
 							</td>
 						</tr>
 					</table>
-					<table id="chandelier" style="display: none; width: 100%;">
+					<table id="chandelier" style="display: none; width: 100%; margin-bottom: 30px;">
 						<tr>
 							<td>Введите кол-во люстр:</td>
 						</tr>
