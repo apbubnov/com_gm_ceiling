@@ -3,7 +3,7 @@ button {
 }
 
 .modal_window_pay {
-    padding-bottom: 0 !important;
+    padding: 0 !important;
     border-radius: 2px;
     overflow: hidden;
 }

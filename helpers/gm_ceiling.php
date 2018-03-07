@@ -1301,11 +1301,16 @@ class Gm_ceilingHelpersGm_ceiling
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
+        } else {
+            $calculation_model = self::getModel('calculation');
+            $data = get_object_vars($calculation_model->getData($data["id"]));
         }
         $margins = self::get_margin($data['project_id']);
         $gm_canvases_margin = $margins['gm_canvases_margin'];
         $dealer_canvases_margin = $margins['dealer_canvases_margin'];
+
         $dealer_info = JFactory::getUser($data['dealer_id']);
+
         $dealer_info_canvases = $dealer_info->getCanvasesPrice();
 
         //Получаем прайс-лист полотен
@@ -1319,41 +1324,32 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data = array();
         if ($data['n1'] && $data['n2'] && $data['n3']) {
 
-            if (empty($data['n3_id']))
-            {
-                $canvas_id = $data['n3'];
-            }
-            else
-            {
-                $canvas_id = $data['n3_id'];
-            }
+            $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
 
             $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
             $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
 
-            $canvases = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id");
+            $canvasesData = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id");
 
-            if (is_null($canvases[0]->color_id))
+            if (is_null($canvasesData[0]->color_id))
             {
                 $color_title = '303';
             }
             else
             {
-                $color = $color_model->getData($canvases[0]->color_id);
+                $color = $color_model->getData($canvasesData[0]->color_id);
                 $color_title = $color->colors_title;
             }
 
-            $facture = $canvases[0]->texture_title;
-            $width = floatval($canvases[0]->width) * 100;
-            $name = $canvases[0]->name;
+            $facture = $canvasesData[0]->texture_title;
+            $width = floatval($canvasesData[0]->width) * 100;
+            $name = $canvasesData[0]->name;
 
             $canvases_data['title'] = $facture.'-'.$color_title.'-'.$width.' '.$name;
 
             $canvases_data['quantity'] = $data['n4'];
 
             $total_gm_guild = $data['guild_data']['total_gm_guild'];
-
-            $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
 
             $canvases_data['self_price'] = round($canvases[$canvas_id]->price, 2);                                    //Себестоимость по основному прайсу
             $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);
