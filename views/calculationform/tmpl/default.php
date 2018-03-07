@@ -1970,7 +1970,7 @@
 			jQuery("#btn_chandelier").css("background-color", "#010084");
 		}
 		jQuery("#btn_fixtures").click( function () {
-			jQuery(".fixtures").show();
+			jQuery(".fixtures").toggle();
 			if (jQuery("#btn_fixtures").css("background-color") == "rgb(65, 64, 153)") {
 				jQuery("#btn_fixtures").css("background-color", "#010084");
 			} else {
@@ -1979,7 +1979,7 @@
 		});
 		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "") || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "")) {
 			jQuery(".fixtures").show();
-			//jQuery("#btn_fixtures").hide();
+			jQuery("#btn_fixtures").css("background-color", "#010084");
 		}
 		jQuery("#btn_cornice").click( function () {
 			jQuery(".cornice").show();
