@@ -827,7 +827,7 @@
 							<div class="form-group">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform1">
+										<td class="td_calcform3">
 											<button type="button" id="btn_tile" class="btn add_fields">
 												<label id="jform_n7-lbl" for="jform_n7" class="no_margin">Метраж стен с плиткой</label>
 											</button>
