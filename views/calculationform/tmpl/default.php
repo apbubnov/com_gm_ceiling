@@ -1937,7 +1937,7 @@
 			jQuery("#btn_chandelier").hide();
 		});
 		console.log(jQuery("#jform_n12").val());
-		if (jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != undefined || jQuery("#jform_n12").val() != "") {
+		if (jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != undefined || jQuery("#jform_n12").val() != "" || jQuery("#jform_n12").val() != " ") {
 			jQuery("#chandelier").show();
 			jQuery("#btn_chandelier").hide();
 		}
