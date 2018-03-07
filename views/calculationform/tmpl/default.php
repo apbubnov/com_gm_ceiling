@@ -1257,7 +1257,7 @@
 					<div class="col-sm-4">
 						<table class="table_calcform">
 							<tr>
-								<td class="td_calcform3">
+								<td class="td_calcform1">
 									<button type="button" id="btn_hoods" class="btn add_fields">
 										Вентиляция
 									</button>
@@ -1327,12 +1327,12 @@
 			<?php if($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- диффузор -->
 				<div class="container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
-						<div class="col-sm-4" style="margin-bottom: 1em;">
+						<div class="col-sm-4">
 							<table class="table_calcform">
 								<tr>
-									<td class="td_calcform3">
+									<td class="td_calcform1">
 										<button type="button" id="btn_diffuser" class="btn add_fields">
 											Диффузор
 										</button>
@@ -1397,12 +1397,12 @@
 				</div>
 				<!-- другие комплектующие -->
 				<div class="container">
-					<div class="row" style="margin-bottom: 1em;">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<table class="table_calcform">
 								<tr>
-									<td class="td_calcform3">
+									<td class="td_calcform1">
 										<button type="button" id="btn_accessories" class="btn add_fields">
 											Другие комплектующие
 										</button>
@@ -1453,12 +1453,12 @@
 				</div>
 				<!-- другие комплектующие из склада-->
 				<div class="container">
-					<div class="row" style="margin-bottom: 1em;">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<table class="table_calcform">
 								<tr>
-									<td class="td_calcform3">
+									<td class="td_calcform1">
 										<button type="button" id="btn_accessories2" class="btn add_fields">
 											Другие комплектующие со склада
 										</button>
