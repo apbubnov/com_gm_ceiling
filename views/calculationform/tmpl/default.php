@@ -1936,6 +1936,7 @@
 			jQuery("#chandelier").show();
 			jQuery("#btn_chandelier").hide();
 		});
+		alert(jQuery("#jform_n12").val());
 		console.log(jQuery("#jform_n12").val());
 		if (jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != undefined) {
 			jQuery("#chandelier").show();
