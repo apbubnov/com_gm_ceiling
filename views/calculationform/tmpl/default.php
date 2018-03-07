@@ -827,7 +827,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_tile" class="btn add_fields">
 												<label id="jform_n7-lbl" for="jform_n7" class="no_margin">Метраж стен с плиткой</label>
 											</button>
@@ -854,7 +854,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_stoneware" class="btn add_fields">
 												<label id="jform_n8-lbl" for="jform_n8" class="no_margin">Метраж стен с керамогранитом</label>
 											</button>
@@ -961,7 +961,7 @@
 						<div class="col-sm-4" style="margin-bottom: 1em;">
 							<table class="table_calcform">
 								<tr>
-									<td class="td_calcform3">
+									<td class="td_calcform1">
 										<button type="button" id="btn_level" class="btn add_fields">
 											Переход уровня
 										</button>
