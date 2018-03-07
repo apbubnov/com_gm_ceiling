@@ -971,6 +971,9 @@
 							<table>
 								<tr>
 									<td>Переход уровня</td>
+									<td>
+										<button type="button" id="btn_level" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -978,7 +981,7 @@
 					</div>
 				</div>
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row sm-margin-bottom" id="level">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group" style="margin-bottom: 0em;">
@@ -1000,7 +1003,7 @@
 									<?php foreach($n29 as $level) {?>
 										<div class="form-group">
 											<div class="advanced_col1">
-												<input name="n29_count[]"  value="<?=/*$tmp[$item]*/ $level->n29_count; ?>" class="form-control" placeholder="м." type="tel">
+												<input id="n29_count" name="n29_count[]"  value="<?=/*$tmp[$item]*/ $level->n29_count; ?>" class="form-control" placeholder="м." type="tel">
 											</div>
 											<div class="advanced_col5">
 												<select name="n29_type[]" id="n29" class="form-control n29_control" placeholder="Тип">
@@ -2024,6 +2027,14 @@
 		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "") {
 			jQuery("#jform_n30").show();
 			jQuery("#btn_soaring").hide();
+		}
+		jQuery("#btn_level").click( function () {
+			jQuery("#level").show();
+			jQuery("#btn_level").hide();
+		});
+		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "") {
+			jQuery("#level").show();
+			jQuery("#btn_level").hide();
 		}
 		
 		//------------------------------
