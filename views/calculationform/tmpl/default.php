@@ -2033,7 +2033,7 @@
 				jQuery("#btn_baguette").css("background-color", "#414099");
 			}
 		});
-		console.log(jQuery("radio[name='jform[n28]']").val());
+		console.log(jQuery("radio[name='jform[n28]:checked']").val());
 		if (jQuery("radio[name='jform[n28]']").val() == 1 || jQuery("radio[name='jform[n28]']").val() == 2) {
 			jQuery("#baguette").show();
 			jQuery("#btn_baguette").css("background-color", "#010084");
