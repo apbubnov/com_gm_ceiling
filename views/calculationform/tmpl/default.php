@@ -965,7 +965,7 @@
 				</div>
 				<!-- переход уровня -->
 				<div class="container">
-					<div class="row">
+					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="margin-bottom: 1em;">
 							<table>
