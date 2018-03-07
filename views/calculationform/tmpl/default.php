@@ -1497,7 +1497,7 @@
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="row sm-margin-bottom accessories2" style="display: none; width: 100%;">>
+					<div class="row sm-margin-bottom accessories2" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -1512,9 +1512,13 @@
 					<div class="row" style="margin-bottom: 1em;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<table>
+							<table class="table_calcform">
 								<tr>
-									<td>Другие работы по монтажу</td>
+									<td class="td_calcform3">
+										<button type="button" id="btn_mount" class="btn add_fields">
+											Другие работы по монтажу</td>
+										</button>
+									<td class="td_calcform2"></td>
 								</tr>
 							</table>
 						</div>
@@ -1522,14 +1526,14 @@
 					</div>
 				</div>
 				<div class = "container">
-					<div class="row">
+					<div class="row mount" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="advanced_col_half">
 								<label>Название</label>
 								<div id="extra_mounting_title_container">
 									<?php foreach($extra_mounting_array as $item) { ?>
-										<div class='form-group'><input name='extra_mounting_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'><input id="extra_mounting_title" name='extra_mounting_title[]' value='<?php echo $item['title']; ?>' class='form-control' type='text'></div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1544,7 +1548,7 @@
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="row sm-margin-bottom">
+					<div class="row sm-margin-bottom mount" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -2254,17 +2258,17 @@
 			jQuery(".accessories2").show();
 			jQuery("#btn_accessories2").css("background-color", "#010084");
 		}
-		jQuery("#btn_diffuser").click( function () {
-			jQuery("#diffuser").toggle();
-			if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_diffuser").css("background-color", "#010084");
+		jQuery("#btn_mount").click( function () {
+			jQuery(".mount").toggle();
+			if (jQuery("#btn_mount").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_mount").css("background-color", "#010084");
 			} else {
-				jQuery("#btn_diffuser").css("background-color", "#414099");
+				jQuery("#btn_mount").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "") {
-			jQuery("#diffuser").show();
-			jQuery("#btn_diffuser").css("background-color", "#010084");
+		if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "") {
+			jQuery(".mount").show();
+			jQuery("#btn_mount").css("background-color", "#010084");
 		}
 		//------------------------------
 
