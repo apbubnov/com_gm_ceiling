@@ -323,4 +323,27 @@ class Gm_ceilingControllerClientForm extends JControllerForm
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	public function pay() {
+	    try {
+            $JInput   = JFactory::getApplication()->input;
+
+            $recoil_id = $JInput->getInt('dealer_id');
+            $sum = $JInput->getFloat('pay_sum');
+            $comment = $JInput->getString('pay_comment');
+
+            $recoil_map_project = $this->getModel('recoil_map_project', 'Gm_ceilingModel');
+            $recoil_map_project->insert($recoil_id, null, $sum, $comment);
+
+            $this->setMessage("Средства успешно внесены!");
+            $this->setRedirect(JRoute::_($_SERVER["HTTP_REFERER"], false));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }

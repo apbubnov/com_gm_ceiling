@@ -24,25 +24,33 @@ foreach ($items as $item) {
 }
 $rest = -($total_sum) - $contributed;
 ?>
+
 <style>
     input {
         border: 1px solid #414099;
         border-radius: 5px;
     }
-
+    .small_table {
+        font-size: 1rem;
+    }
+    @media screen and (min-width: 768px) {
+        .small_table {
+            font-size: 13px !important;
+        }
+	}
 </style>
-<?=parent::getButtonBack();?>
+<!-- <?=parent::getButtonBack();?> -->
 <h2 class = "center">Детализация счета</h2>
 
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=dealermainpage&type=score'); ?>" method="post" name="adminForm" id="adminForm">
-    <div class="row-fluid toolbar">
+    <div class="row-fluid toolbar" style="margin: 30px 0 0 0;">
         <div class="span3">
             <div class = "date-actions" style="text-align: right; padding-bottom: 1em;">
                 Выбрать с <input type = "date" id = "c_date1"> по <input type ="date" id = "c_date2"> <button type="button" class = "btn btn-primary" id = "c_show_all">Показать всё</button>
             </div>
         </div>
     </div>
-    <table class="table table-striped table_cashbox one-touch-view" id="ScoreList">
+    <table class="table table-striped table_cashbox one-touch-view small_table" id="ScoreList">
         <thead>
         <tr>
             <th class=''>Дата</th>

@@ -75,16 +75,21 @@ function dealer_margin($price, $margin, $value, $type) {
             <i class="fa fa-caret-down" aria-hidden="true"></i> <span>Раскрыть все</span>
         </button>
         <?if ($managerGM):?>
-        <form class="FormSimple UpdatePrice MarginLeft">
-            <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
-            <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
-                   placeholder="0"
-                   title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
-                   size="5" required>
-            <button type="submit" class="buttonOK">
-                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            <form class="FormSimple UpdatePrice MarginLeft">
+                <label for="Price" title="Изменить все дилерские цены"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></label>
+                <input type="text" pattern="[+-]{1}\d+[,.]{0,1}\d+%{1}|[+-]{0,1}\d+[,.]{0,1}\d+|*" name="Price" id="Price"
+                       placeholder="0"
+                       title="Формат: *, X, +X, -X, +X% или -X%, где X - это значение, * - очистить! Например: +15%."
+                       size="5" required>
+                <button type="submit" class="buttonOK">
+                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </form>
+        <?endif;?>
+        <?if(!($managerGM || $stock)):?>
+            <button type="button" class="Current Basket" id="Basket">
+                <i class="fa fa-shopping-basket"></i> <span class="sum">0</span> руб.
             </button>
-        </form>
         <?endif;?>
     </div>
     <div class="Scroll">
@@ -100,25 +105,28 @@ function dealer_margin($price, $margin, $value, $type) {
                 <td><i class="fa fa-bars" aria-hidden="true"></i></td>
                 <td><?=JHtml::_( 'grid.sort', '<i class="fa fa-hashtag" aria-hidden="true"></i>', 'component_id', $listDirn, $listOrder);?></td>
                 <td><?=JHtml::_('grid.sort', 'Наименование', 'component_title', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_('grid.sort', 'Количество', 'option_count', $listDirn, $listOrder);?></td>
                 <?if($stock):?>
-                <td>Заказать</td>
-                <td>Цена закупки</td>
-                <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
-                <td>Посмотреть</td>
+                    <td><?=JHtml::_('grid.sort', 'Количество', 'option_count', $listDirn, $listOrder);?></td>
+                    <td>Заказать</td>
+                    <td>Цена закупки</td>
+                    <td><i class="fa fa-cubes" aria-hidden="true"></i></td>
+                    <td>Посмотреть</td>
                 <?elseif ($managerGM && empty($dealer)):?>
-                <td><?=JHtml::_( 'grid.sort', 'Цена', 'option_price', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'option_price', $listDirn, $listOrder);?></td>
-                <td>Изменить</td>
+                    <td><?=JHtml::_('grid.sort', 'Количество', 'option_count', $listDirn, $listOrder);?></td>
+                    <td><?=JHtml::_( 'grid.sort', 'Цена', 'option_price', $listDirn, $listOrder);?></td>
+                    <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
+                    <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'option_price', $listDirn, $listOrder);?></td>
+                    <td>Изменить</td>
                 <?elseif ($managerGM):?>
-                <td><?=JHtml::_( 'grid.sort', 'Цена', 'option_price', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_( 'grid.sort', 'Изменение', 'option_price', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
-                <td>Изменить</td>
+                    <td><?=JHtml::_('grid.sort', 'Количество', 'option_count', $listDirn, $listOrder);?></td>
+                    <td><?=JHtml::_( 'grid.sort', 'Цена', 'option_price', $listDirn, $listOrder);?></td>
+                    <td><?=JHtml::_( 'grid.sort', 'Изменение', 'option_price', $listDirn, $listOrder);?></td>
+                    <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
+                    <td>Изменить</td>
                 <?else:?>
-                <td><?=JHtml::_( 'grid.sort', 'Себестоймость', 'option_price', $listDirn, $listOrder);?></td>
-                <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'option_price', $listDirn, $listOrder);?></td>
+                    <td><?=JHtml::_( 'grid.sort', 'Себестоймость', 'option_price', $listDirn, $listOrder);?></td>
+                    <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'option_price', $listDirn, $listOrder);?></td>
+                    <td>Купить</td>
                 <?endif;?>
             </tr>
         </thead>
@@ -128,8 +136,8 @@ function dealer_margin($price, $margin, $value, $type) {
                 <td><i class="fa fa-caret-down" aria-hidden="true"></i></td>
                 <td><?=$key_c;?></td>
                 <td><?=$component->title;?> <?=$component->unit;?></td>
-                <td></td>
                 <?if($stock):?>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -139,12 +147,15 @@ function dealer_margin($price, $margin, $value, $type) {
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                 <?elseif ($managerGM):?>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                 <?else:?>
+                    <td></td>
                     <td></td>
                     <td></td>
                 <?endif;?>
@@ -155,13 +166,14 @@ function dealer_margin($price, $margin, $value, $type) {
                     <td><i class="fa <?=($stock)?"fa-caret-down":"fa-caret-right";?>" aria-hidden="true"></i></td>
                     <td><?=$key_o;?></td>
                     <td><?=$component->title;?> <?=$option->title;?></td>
-                    <td><?=$option->count;?></td>
                     <?if($stock):?>
+                        <td><?=$option->count;?></td>
                         <td><?=$option->ocount;?></td>
                         <td><?=$option->pprice;?></td>
                         <td></td>
                         <td><a href="/index.php?option=com_gm_ceiling&view=stock&type=info&subtype=component&id=<?=$key_o;?>">Инфо</a></td>
                     <?elseif ($managerGM && empty($dealer)):?>
+                        <td><?=$option->count;?></td>
                         <td id="GMPrice"><?=$option->price;?></td>
                         <td id="GMPrice"><?=margin($option->price, $dealer->gm_components_margin);?></td>
                         <td id="DealerPrice"><?=double_margin($option->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin);?></td>
@@ -178,6 +190,7 @@ function dealer_margin($price, $margin, $value, $type) {
                             </form>
                         </td>
                     <?elseif ($managerGM):?>
+                        <td><?=$option->count;?></td>
                         <?
                         $type = $dealer->ComponentsPrice[$key_o]->type;
                         $value = $dealer->ComponentsPrice[$key_o]->value;
@@ -206,8 +219,22 @@ function dealer_margin($price, $margin, $value, $type) {
                         $value = $userDealer->ComponentsPrice[$key_o]->value;
                         $TempPrice = margin($option->price, $userDealer->gm_components_margin);
                         ?>
-                        <td><?= dealer_margin($TempPrice, 0, $value, $type)?></td>
-                        <td><?= dealer_margin($TempPrice, $userDealer->dealer_components_margin, $value, $type)?></td>
+                        <td><?= dealer_margin($TempPrice, 0, $value, $type);?></td>
+                        <td><?= dealer_margin($TempPrice, $userDealer->dealer_components_margin, $value, $type);?></td>
+                        <td>
+                            <form class="FormSimple Pay MarginLeft" data-id="<?=$key_o;?>" action="javascript:Pay(<?=$key_o;?>);">
+                                <label for="CountPay" title="Введите количество"><i class="fa fa-cubes"></i></label>
+                                <input type="number" name="CountPay" id="CountPay" placeholder="0"
+                                       title="Введите количество" size="5"
+                                       data-JsonSend='{
+                                       "id": "<?=$key_o;?>",
+                                       "price": "<?=dealer_margin($TempPrice, 0, $value, $type);?>"
+                                       }' required>
+                                <button type="submit" class="buttonOK">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </td>
                     <?endif;?>
                 </tr>
         <?if ($stock) foreach ($option->goods as $key_g => $good):?>
@@ -243,6 +270,8 @@ function dealer_margin($price, $margin, $value, $type) {
     $(document).scroll(Scroll);
 
     function Init() {
+        Data.Pay = [];
+
         Data.Preloader = $(".PRELOADER_GM");
 
         Data.Ajax = "/index.php?option=com_gm_ceiling&task=";
@@ -448,5 +477,22 @@ function dealer_margin($price, $margin, $value, $type) {
         });
 
         return result;
+    }
+
+    function Pay(id) {
+        var form = $("form[data-id='" + id + "']"),
+            serialize = JSON.serialize(form),
+            json = serialize.jsons.CountPay;
+
+        json.count = serialize.CountPay;
+
+        Data.Pay[id] = json;
+        Data.Pay.sum = 0;
+
+        $.each(Data.Pay, function (i, v) {
+            if (v != null) Data.Pay.sum += parseFloat(v.price) * parseInt(v.count);
+        });
+
+        $("#Basket .sum").text(Data.Pay.sum);
     }
 </script>

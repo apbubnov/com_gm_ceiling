@@ -449,14 +449,26 @@
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n12-lbl" for="jform_n12" class="">Введите кол-во люстр:</label>
+								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить люстры</label>
 							</td>
 							<td>
 								<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
 							</td>
+							<td>
+								<button type="button" id="btn_chandelier" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+							</td>
 						</tr>
 					</table>
-					<input id="jform_n12" data-next="#jform_n13" name="jform[n12]" placeholder ="шт." value="<?php echo $this->item->n12; ?>" class="form-control" type="tel">
+					<table id="chandelier" style="display: none; width: 100%;">
+						<tr>
+							<td>Введите кол-во люстр:</td>
+						</tr>
+						<tr>
+							<td>
+								<input id="jform_n12" data-next="#jform_n13" name="jform[n12]" placeholder ="шт." value="<?php echo $this->item->n12; ?>" class="form-control" type="tel">
+							</td>
+						</tr>
+					</table>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -469,17 +481,20 @@
 					<table>
 						<tr>
 							<td>
-								<label id="jform_n13-lbl" for="jform_n13" class="">Введите кол-во светильников:</label>
+								<label id="jform_n13-lbl" for="jform_n13" class="">Добавить светильники</label>
 							</td>
 							<td>
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">На упаковке светильника указан диаметр технологического отверстия</span></a>
 							</td>
+							<td>
+								<button type="button" id="btn_fixtures" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+							</td>
 						</tr>
 					</table>
 				</div>
-				<div class="col-sm-4"></div>
+				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
 			</div>
-			<div class="row sm-margin-bottom">
+			<div class="row sm-margin-bottom fixtures" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n13_block" >
@@ -504,7 +519,7 @@
 								<?php foreach($n13 as $lamp) {?>
 									<div class="form-group">
 										<div class="advanced_col1">
-											<input name="n13_count[]" class="form-control" value="<?php echo $lamp->n13_count; ?>" placeholder="шт." >
+											<input id="n13_count" name="n13_count[]" class="form-control" value="<?php echo $lamp->n13_count; ?>" placeholder="шт." >
 										</div>
 										<div class="advanced_col2">
 											<select name="n13_type[]" id="n13" class="form-control n13_control" placeholder="Вид">
@@ -535,7 +550,7 @@
 			</div>
 		</div>
 		<!-- Экола -->
-		<div class="container">
+		<div class="container fixtures" style="display: none; width: 100%;">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
@@ -544,7 +559,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		<div class="container">
+		<div class="container fixtures" style="display: none; width: 100%;">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
@@ -569,7 +584,7 @@
 							<?php foreach($n26 as $ecola) {?>
 								<div class="form-group">
 									<div class="advanced_col1">
-										<input name="ecola_count[]"  value="<?=/*$tmp[$item]*/ $ecola->n26_count; ?>" class="form-control" placeholder="шт." type="tel">
+										<input id="ecola_count" name="ecola_count[]"  value="<?=/*$tmp[$item]*/ $ecola->n26_count; ?>" class="form-control" placeholder="шт." type="tel">
 									</div>
 									<div class="advanced_col2">
 										<select class="form-control" name="light_color[]" placeholder="Светильник">
@@ -594,6 +609,19 @@
 						<?php } ?>
 					</div>
 					<button id="add_ecola" class="btn btn-primary" type="button">Добавить </button>
+				</div>
+				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
+			</div>
+		</div>
+		<!-- прочий монтаж -->
+		<div class="container">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4">
+					<h3>Прочий монтаж</h3>
+				</div>
+				<div class="col-sm-4">
 				</div>
 			</div>
 		</div>
@@ -788,18 +816,6 @@
 			</div>
 		</div>
 		<div id="extra_section">
-			<!-- прочий монтаж -->
-			<div class="container">
-				<div class="row sm-margin-bottom">
-					<div class="col-sm-4">
-					</div>
-					<div class="col-sm-4">
-						<h3>Прочий монтаж</h3>
-					</div>
-					<div class="col-sm-4">
-					</div>
-				</div>
-			</div>
 			<?php if ($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- плитка -->
 				<div class="container">
@@ -1914,6 +1930,26 @@
 	});
 
 	jQuery(document).ready(function() {
+
+		// кнопки открытия скрытых полей
+		jQuery("#btn_chandelier").click( function () {
+			jQuery("#chandelier").show();
+			jQuery("#btn_chandelier").hide();
+		});
+		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
+			jQuery("#chandelier").show();
+			jQuery("#btn_chandelier").hide();
+		}
+		jQuery("#btn_fixtures").click( function () {
+			jQuery(".fixtures").show();
+			jQuery("#btn_fixtures").hide();
+		});
+		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined)) {
+			jQuery(".fixtures").show();
+			jQuery("#btn_fixtures").hide();
+		}
+		
+		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
 
