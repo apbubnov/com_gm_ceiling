@@ -1268,7 +1268,7 @@
 				</div>
 			</div>
 			<div class="container">
-				<div class="row sm-margin-bottom" id="hoods">
+				<div class="row sm-margin-bottom" id="hoods" style="display: none; width: 100%;">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div id="jform_n22_block"> 
