@@ -1328,10 +1328,14 @@
 					<div class="row">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="margin-bottom: 1em;">
-							<table>
+							<table class="table_calcform">
 								<tr>
-									<td>Диффузор</td>
-									<td>
+									<td class="td_calcform3">
+										<button type="button" id="btn_diffuser" class="btn add_fields">
+											Диффузор
+										</button>
+									</td>
+									<td class="td_calcform2">
 										<a class="help">
 											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 											<span class="airhelp">Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br></span>
@@ -1344,7 +1348,7 @@
 					</div>
 				</div>
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row sm-margin-bottom" id="diffuser" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div id="jform_n23_block">
@@ -1366,7 +1370,7 @@
 										<?php foreach($n23 as $diffuzor) if ($diffuzor->n23_count > 0) { ?>
 											<div class="form-group">
 												<div class="advanced_col1">
-													<input name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
+													<input id="n23_count" name="n23_count[]" class="form-control" value="<?php echo $diffuzor->n23_count; ?>" placeholder="шт." type="tel">
 												</div>
 												<div class="advanced_col5">
 													<select class="form-control" name="n23_size[]" for="jform_n22_type" placeholder="Размер">
@@ -2203,6 +2207,18 @@
 		if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "") {
 			jQuery("#hoods").show();
 			jQuery("#btn_hoods").css("background-color", "#010084");
+		}
+		jQuery("#btn_diffuser").click( function () {
+			jQuery("#diffuser").toggle();
+			if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_diffuser").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_diffuser").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "") {
+			jQuery("#diffuser").show();
+			jQuery("#btn_diffuser").css("background-color", "#010084");
 		}
 		
 		//------------------------------
