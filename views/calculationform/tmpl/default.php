@@ -625,7 +625,7 @@
 		</div>
 		<!-- Шторный карниз -->
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row" style="margin-bottom: 15px;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<table class="table_calcform">
@@ -744,7 +744,7 @@
 		</div>
 		<!-- трубы -->
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row" style="margin-bottom: 15px;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<table class="table_calcform">
