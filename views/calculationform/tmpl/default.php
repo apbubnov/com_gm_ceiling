@@ -828,16 +828,15 @@
 								<table>
 									<tr>
 										<td>
-											<label id="jform_n7-lbl" for="jform_n7" class="">Метраж стен с плиткой</label>
+											<button type="button" id="btn_tile" class="btn add_fields">
+												<label id="jform_n7-lbl" for="jform_n7" class="no_margin">Метраж стен с плиткой</label>
+											</button>
 										</td>
 										<td>
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в плитку</span>
 											</a>						
-										</td>
-										<td>
-											<button type="button" id="btn_tile" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 										</td>
 									</tr>
 								</table>
@@ -2005,11 +2004,15 @@
 		}
 		jQuery("#btn_tile").click( function () {
 			jQuery("#jform_n7").toggle();
-			jQuery("#btn_tile").hide();
+			if (jQuery("#btn_tile").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_tile").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_tile").css("background-color", "#414099");
+			}
 		});
 		if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "") {
 			jQuery("#jform_n7").show();
-			jQuery("#btn_tile").hide();
+			jQuery("#btn_tile").css("background-color", "#010084");
 		}
 		jQuery("#btn_stoneware").click( function () {
 			jQuery("#jform_n8").toggle();
