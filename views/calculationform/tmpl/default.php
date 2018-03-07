@@ -1516,15 +1516,16 @@
 				</div>
 				<!-- другие работы по монтажу -->
 				<div class = "container">
-					<div class="row" style="margin-bottom: 1em;">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<table class="table_calcform">
 								<tr>
-									<td class="td_calcform3">
+									<td class="td_calcform1">
 										<button type="button" id="btn_mount" class="btn add_fields">
-											Другие работы по монтажу</td>
+											Другие работы по монтажу
 										</button>
+									</td>
 									<td class="td_calcform2"></td>
 								</tr>
 							</table>
@@ -1567,14 +1568,23 @@
 				</div>
 				<!-- высота помещения -->
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<h4>Высота помещения</h4>
+							<table class="table_calcform">
+								<tr>
+									<td class="td_calcform1">
+										<button type="button" id="btn_height" class="btn add_fields">
+											Высота помещения
+										</button>
+									</td>
+									<td class="td_calcform2"></td>
+								</tr>
+							</table>
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="row sm-margin-bottom">
+					<div class="row" id="row_height">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" id = "height">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 75px);">
@@ -2331,6 +2341,19 @@
 			jQuery(".mount").show();
 			jQuery("#btn_mount").css("background-color", "#010084");
 		}
+		jQuery("#btn_height").click( function () {
+			jQuery("#row_height").toggle();
+			if (jQuery("#btn_height").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_height").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_height").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
+			jQuery("#row_height").show();
+			jQuery("#btn_height").css("background-color", "#010084");
+		}
+		
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
