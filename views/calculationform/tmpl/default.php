@@ -959,11 +959,14 @@
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="margin-bottom: 1em;">
-							<table>
+							<table class="table_calcform">
 								<tr>
-									<td>Переход уровня</td>
-									<td>
-										<button type="button" id="btn_level" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
+									<td class="td_calcform3">
+										<button type="button" id="btn_level" class="btn add_fields">
+											Переход уровня
+										</button>
+									</td>
+									<td class="td_calcform2">
 									</td>
 								</tr>
 							</table>
@@ -2012,43 +2015,63 @@
 		}
 		jQuery("#btn_stoneware").click( function () {
 			jQuery("#jform_n8").toggle();
-			jQuery("#btn_stoneware").hide();
+			if (jQuery("#btn_stoneware").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_stoneware").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_stoneware").css("background-color", "#414099");
+			}
 		});
 		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "") {
 			jQuery("#jform_n8").show();
-			jQuery("#btn_stoneware").hide();
+			jQuery("#btn_stoneware").css("background-color", "#010084");
 		}
 		jQuery("#btn_wire").click( function () {
 			jQuery("#jform_n19").toggle();
-			jQuery("#btn_wire").hide();
+			if (jQuery("#btn_wire").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_wire").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_wire").css("background-color", "#414099");
+			}
 		});
 		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "") {
 			jQuery("#jform_n19").show();
-			jQuery("#btn_wire").hide();
+			jQuery("#btn_wire").css("background-color", "#010084");
 		}
 		jQuery("#btn_bar").click( function () {
 			jQuery("#jform_n17").toggle();
-			jQuery("#btn_bar").hide();
+			if (jQuery("#btn_wire").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_wire").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_wire").css("background-color", "#414099");
+			}
 		});
 		if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "") {
 			jQuery("#jform_n17").show();
-			jQuery("#btn_bar").hide();
+			jQuery("#btn_wire").css("background-color", "#010084");
 		}
 		jQuery("#btn_soaring").click( function () {
 			jQuery("#jform_n30").toggle();
-			jQuery("#btn_soaring").hide();
+			if (jQuery("#btn_soaring").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_soaring").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_soaring").css("background-color", "#414099");
+			}
 		});
 		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "") {
 			jQuery("#jform_n30").show();
-			jQuery("#btn_soaring").hide();
+			jQuery("#btn_soaring").css("background-color", "#010084");
 		}
 		jQuery("#btn_level").click( function () {
 			jQuery("#level").toggle();
-			jQuery("#btn_level").hide();
+			if (jQuery("#btn_level").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_level").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_level").css("background-color", "#414099");
+			}
 		});
 		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "") {
 			jQuery("#level").show();
-			jQuery("#btn_level").hide();
+			jQuery("#btn_level").css("background-color", "#010084");
 		}
 		jQuery("#btn_firealarm").click( function () {
 			jQuery("#jform_n21").toggle();
