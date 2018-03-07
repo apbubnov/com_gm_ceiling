@@ -752,17 +752,20 @@
 				<div class="col-sm-4">
 					<table>
 						<tr>
-							<td style="text-align: center;">
-								<h3>Укажите кол-во труб входящих в потолок</h3>
+							<td>
+								<label id="jform_n12-lbl" for="jform_n12" class="">Добавить трубы, входящие в потолок</label>
 							</td>
-							<td style="text-align: left;">
+							<td>
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 									<span class="airhelp">
 										<img src="/images/obvod.png" width="380" height="250" align="center"/>
 										<br>На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
 										<img src="/images/obvod2.png" width="380" height="250" align="center"/>
 									</span>
-								</a>
+								</a>						
+							</td>
+							<td>
+								<button type="button" id="btn_pipes" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
@@ -771,7 +774,7 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row sm-margin-bottom pipes" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div id="jform_n14_block" >
@@ -794,7 +797,7 @@
 									<?php if ($truba->n14_count > 0) { ?>
 										<div class="form-group">
 											<div class="advanced_col1">
-												<input name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
+												<input id="n14_count" name="n14_count[]" class="form-control" value="<?php echo $truba->n14_count; ?>" placeholder="шт." type="tel">
 											</div>
 											<div class="advanced_col5">
 												<select class="form-control" name="n14_type[]" placeholder="Платформа">
@@ -1958,6 +1961,14 @@
 		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "") || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "")) {
 			jQuery(".cornice").show();
 			jQuery("#btn_cornice").hide();
+		}
+		jQuery("#btn_pipes").click( function () {
+			jQuery("#pipes").show();
+			jQuery("#btn_pipes").hide();
+		});
+		if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "") {
+			jQuery("#pipes").show();
+			jQuery("#btn_pipes").hide();
 		}
 		
 		//------------------------------
