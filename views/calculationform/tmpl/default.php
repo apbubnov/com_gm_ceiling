@@ -848,10 +848,10 @@
 				</div>
 				<!-- керамогранит -->
 				<div class="container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
@@ -875,10 +875,10 @@
 				</div>
 				<!-- провод -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
@@ -902,10 +902,10 @@
 				</div>
 				<!-- закладная брусом -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
@@ -929,10 +929,10 @@
 				</div>
 				<!-- парящий потолок -->
 				<div class = "container">
-					<div class="row" id="n30_block">
+					<div class="row" id="n30_block" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
 										<td class="td_calcform3">
