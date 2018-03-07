@@ -1773,51 +1773,55 @@
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
-						<!-- сохранить -->
-						<div style="width: 50%; padding-right: 15px;">
-							<?php if ($this->type === "gmcalculator") { ?>
-								<?php if ($this->item->project_id) { ?>
-									<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Сохранить</a></button>
-								<?php } elseif ($project_id) { ?>
-									<a id="save_button"  class="btn btn-primary btn-big "   href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a></button>
-								<?php } else { ?>
-									<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
-								<?php } ?>
-							<?php } elseif ($this->type === "calculator") { ?>
-								<?php if($this->item->project_id) { ?>
-									<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Сохранить</a>
-								<?php } elseif ($project_id) { ?>
-									<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a>
-								<?php } else { ?>
-									<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
-								<?php } ?>
-							<?php } ?>
-							<?php if ($this->type === "gmmanager") { ?>
-								<a id="save_button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
-							<?php } ?>
-						</div>
-						<!-- отменить -->
-						<div style="width: 50%; padding-left: 15px;">
-							<?php if($this->type === "gmcalculator") { ?>
-								<?php if ($this->item->project_id) { ?>
-									<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Отменить</a>
-								<?php } elseif ($project_id) { ?>
-									<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
-								<?php } else { ?>
-									<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
-								<?php } ?>
-							<?php } elseif ($this->type === "calculator") { ?>
-								<?php if ($this->item->project_id) { ?>
-									<a class="btn btn-primary" style="margin-top:15px;" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Отменить</a>
-								<?php } elseif ($project_id) { ?>
-									<a class="btn btn-primary" style="margin-top:15px;" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
-								<?php } else { ?>
-									<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
-								<?php } ?>
-							<?php } elseif($this->type === "manager") { ?>
-								<a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage">Отменить</a>
-							<?php } ?>
-						</div>
+						<table>
+							<tr>
+								<td>
+									<!-- сохранить -->
+									<?php if ($this->type === "gmcalculator") { ?>
+										<?php if ($this->item->project_id) { ?>
+											<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Сохранить</a></button>
+										<?php } elseif ($project_id) { ?>
+											<a id="save_button"  class="btn btn-primary btn-big "   href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a></button>
+										<?php } else { ?>
+											<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
+										<?php } ?>
+									<?php } elseif ($this->type === "calculator") { ?>
+										<?php if($this->item->project_id) { ?>
+											<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Сохранить</a>
+										<?php } elseif ($project_id) { ?>
+											<a id="save_button"  class="btn btn-primary btn-big "  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a>
+										<?php } else { ?>
+											<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
+										<?php } ?>
+									<?php } ?>
+									<?php if ($this->type === "gmmanager") { ?>
+										<a id="save_button" class="btn btn-primary btn-big" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
+									<?php } ?>
+								</td>
+								<td>
+									<!-- отменить -->
+									<?php if($this->type === "gmcalculator") { ?>
+										<?php if ($this->item->project_id) { ?>
+											<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Отменить</a>
+										<?php } elseif ($project_id) { ?>
+											<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
+										<?php } else { ?>
+											<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
+										<?php } ?>
+									<?php } elseif ($this->type === "calculator") { ?>
+										<?php if ($this->item->project_id) { ?>
+											<a class="btn btn-primary" style="margin-top:15px;" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Отменить</a>
+										<?php } elseif ($project_id) { ?>
+											<a class="btn btn-primary" style="margin-top:15px;" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
+										<?php } else { ?>
+											<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
+										<?php } ?>
+									<?php } elseif($this->type === "manager") { ?>
+										<a class="btn btn-primary" href="/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage">Отменить</a>
+									<?php } ?>
+								</td>
+							</tr>
+						</table>
 					</div>
 					<div class="col-sm-4"></div>
 				</div>
