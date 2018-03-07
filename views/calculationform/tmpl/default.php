@@ -825,14 +825,14 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
+										<td class="td_calcform1">
 											<button type="button" id="btn_tile" class="btn add_fields">
 												<label id="jform_n7-lbl" for="jform_n7" class="no_margin">Метраж стен с плиткой</label>
 											</button>
 										</td>
-										<td>
+										<td class="td_calcform2">
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в плитку</span>
