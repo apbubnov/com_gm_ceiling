@@ -1060,7 +1060,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_delimiter" class="btn add_fields">
 												<label id="jform_n20-lbl" for="jform_n20" class="no_margin">Разделитель</label>
 											</button>
@@ -1088,7 +1088,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_access" class="btn add_fields">
 												<label id="jform_n24-lbl" for="jform_n24" class="no_margin">Сложность доступа</label>
 											</button>
@@ -1116,7 +1116,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_notch1" class="btn add_fields">
 												<label id="jform_n11-lbl" for="jform_n11" class="no_margin">Внутренний вырез (на месте)</label>
 											</button>
@@ -1145,7 +1145,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_notch2" class="btn add_fields">
 												<label id="jform_n31-lbl" for="jform_n31" class="no_margin">Внутренний вырез (в цеху)</label>
 											</button>
@@ -1174,7 +1174,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_draining" class="btn add_fields">
 												<label id="jform_n32-lbl" for="jform_n32" class="no_margin">Слив воды</label>
 											</button>
@@ -1200,7 +1200,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_fixture2" class="btn add_fields">
 												<label id="jform_dop_krepezh-lbl" for="jform_dop_krepezh" class="no_margin">Дополнительный крепеж</label>
 											</button>
@@ -1229,7 +1229,7 @@
 							<div class="form-group" style="margin-bottom: 0;">
 								<table class="table_calcform">
 									<tr>
-										<td class="td_calcform3">
+										<td class="td_calcform1">
 											<button type="button" id="btn_gain" class="btn add_fields">
 												<label id="jform_n18-lbl" for="jform_n18" class="no_margin">Усиление стен</label>
 											</button>
