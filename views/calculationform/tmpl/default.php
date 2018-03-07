@@ -443,7 +443,7 @@
 		</div>
 		<!-- Люстры -->
 		<div class="container">
-			<div class="row sm-margin-bottom">
+			<div class="row">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<table class="table_calcform" style="margin-bottom: 30px;">
