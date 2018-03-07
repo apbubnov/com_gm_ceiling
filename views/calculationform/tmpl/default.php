@@ -1937,7 +1937,7 @@
 			jQuery("#btn_chandelier").hide();
 		});
 		console.log(jQuery("#jform_n12").val());
-		if (jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != "") {
+		if (jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != undefined) {
 			jQuery("#chandelier").show();
 			jQuery("#btn_chandelier").hide();
 		}
@@ -1945,8 +1945,6 @@
 			jQuery(".fixtures").show();
 			jQuery("#btn_fixtures").hide();
 		});
-		console.log(jQuery("#n13_count").val());
-		console.log(jQuery("#ecola_count").val());
 		if (jQuery("#n13_count").val() != null || jQuery("#ecola_count").val() != null || jQuery("#n13_count").val() != undefined || jQuery("#ecola_count").val() != undefined) {
 			jQuery(".fixtures").show();
 			jQuery("#btn_fixtures").hide();
