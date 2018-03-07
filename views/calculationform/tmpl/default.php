@@ -450,7 +450,7 @@
 						<tr>
 							<td class="td_calcform1">
 								<button type="button" id="btn_chandelier" class="btn add_fields">
-									<label id="jform_n12-lbl" for="jform_n12" class="">Добавить люстры</label>
+									<label id="jform_n12-lbl" for="jform_n12" class="no_margin">Добавить люстры</label>
 								</button>
 							</td>
 							<td class="td_calcform2">
