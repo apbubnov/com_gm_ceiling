@@ -772,6 +772,7 @@ foreach ($dealer_history as $key => $item) {
 
         document.getElementById('calls-tar').scrollTop = 9999;
         jQuery('#jform_client_contacts').mask('+7(999) 999-9999');
+        jQuery('#new_phone').mask('+7(999) 999-9999');
 
         jQuery("#send_comm").click(function(){
             var user_id = <?php echo $client->dealer_id; ?>;
