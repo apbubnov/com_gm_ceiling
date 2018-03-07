@@ -1301,7 +1301,7 @@ class Gm_ceilingHelpersGm_ceiling
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
-        } else {
+        } else if (!empty($data["id"])) {
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($data["id"]));
         }
@@ -1377,9 +1377,12 @@ class Gm_ceilingHelpersGm_ceiling
             $data['n1'] = $data['n1_id']; 
             $data['n2'] = $data['n2_id'];
             $data['n3'] = $data['n3_id'];
-        } else {
+        } else if (!empty($data["id"])) {
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($data["id"]));
+            $data['n1'] = $data['n1_id'];
+            $data['n2'] = $data['n2_id'];
+            $data['n3'] = $data['n3_id'];
         }
         $dealer_info = JFactory::getUser($data['dealer_id']);
         $dealer_info_canvases = $dealer_info->getCanvasesPrice();
