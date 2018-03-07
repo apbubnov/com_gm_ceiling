@@ -1413,7 +1413,7 @@
 					</div>
 				</div>
 				<div class = "container">
-					<div class="row" id="accessories" style="display: none; width: 100%;">
+					<div class="row accessories" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="advanced_col_half">
@@ -1439,7 +1439,7 @@
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="row sm-margin-bottom">
+					<div class="row sm-margin-bottom accessories" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -2226,7 +2226,7 @@
 			jQuery("#btn_diffuser").css("background-color", "#010084");
 		}
 		jQuery("#btn_accessories").click( function () {
-			jQuery("#accessories").toggle();
+			jQuery(".accessories").toggle();
 			if (jQuery("#btn_accessories").css("background-color") == "rgb(65, 64, 153)") {
 				jQuery("#btn_accessories").css("background-color", "#010084");
 			} else {
@@ -2234,7 +2234,7 @@
 			}
 		});
 		if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "") {
-			jQuery("#accessories").show();
+			jQuery(".accessories").show();
 			jQuery("#btn_accessories").css("background-color", "#010084");
 		}
 		jQuery("#btn_diffuser").click( function () {
