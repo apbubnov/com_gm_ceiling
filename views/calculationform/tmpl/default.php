@@ -2051,7 +2051,7 @@
 				jQuery("#btn_insert").css("background-color", "#414099");
 			}
 		});
-		console.log(jQuery("radio[name='jform[n28]']:radio:checked").val());
+		console.log(jQuery("input[name='jform[n28]']:radio:checked").val());
 		if (jQuery("radio[name='radio']:radio:checked").val() != 0) {
 			jQuery("#insert").show();
 			jQuery("#btn_insert").css("background-color", "#010084");
