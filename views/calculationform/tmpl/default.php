@@ -371,7 +371,7 @@
 							</td>
 						</tr>
 					</table>
-					<div class="form-group" id="insert" style="text-align: left; margin-left: calc(50% - 72px);">
+					<div class="form-group" id="insert" style="display: none; text-align: left; margin-left: calc(50% - 72px);">
 						<?php
 							if ($this->item->n6 > 0) {
 								$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
