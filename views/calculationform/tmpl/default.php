@@ -2033,7 +2033,8 @@
 				jQuery("#btn_baguette").css("background-color", "#414099");
 			}
 		});
-		console.log(jQuery("input[name='jform[n28]:checked']").val());
+		console.log(jQuery("input[name='jform[n28]:radio:checked']").val());
+		//$('input[name=skill1]:radio:checked').val();
 		if (jQuery("radio[name='jform[n28]']").val() == 1 || jQuery("radio[name='jform[n28]']").val() == 2) {
 			jQuery("#baguette").show();
 			jQuery("#btn_baguette").css("background-color", "#010084");
