@@ -306,11 +306,32 @@
 		<!-- Багет -->
 		<div class="container" id="block_n28">
 			<div class="row">
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4" style="padding-left: 0px;">
-					<div class="form-group" style="margin-bottom: 30px;">
-						<h3>Выберите багет</h3>
-					</div>
+					<table class="table_calcform" style="margin-bottom: 15px;">
+						<tr>
+							<td class="td_calcform1">
+								<button type="button" id="btn_baguette" class="btn add_fields">
+									Изменить багет
+								</button>
+							</td>
+							<td class="td_calcform2">
+								<a class="help">
+									<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; />
+									<span class="airhelp">
+										В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
+									</span>
+								</a>
+							</td>
+						</tr>
+					</table>
 				</div>
+				<div class="col-sm-4"></div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row" id="baguette" style="display: none; width: 100%;">
+				<div class="col-sm-4"></div>
 				<div class="col-sm-4" style="padding-right: 0px;">
 					<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
                         <div style="display: inline-block;"><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($this->item->n28 == 0) echo "checked='checked'" ?>>
@@ -324,6 +345,7 @@
                         </div>
 					</div>
 				</div>
+				<div class="col-sm-4"></div>
 			</div>
 		</div>
 		<!-- вставка -->
@@ -2002,6 +2024,20 @@
 	jQuery(document).ready(function() {
 
 		// кнопки открытия скрытых полей
+		
+		jQuery("#btn_baguette").click( function () {
+			jQuery("#baguette").toggle();
+			if (jQuery("#btn_baguette").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_baguette").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_baguette").css("background-color", "#414099");
+			}
+		});
+		console.log(jQuery("radio[name='jform[n28]']").val());
+		if (jQuery("radio[name='jform[n28]']").val() == 1 || jQuery("radio[name='jform[n28]']").val() == 2) {
+			jQuery("#baguette").show();
+			jQuery("#btn_baguette").css("background-color", "#010084");
+		}
 		jQuery("#btn_chandelier").click( function () {
 			jQuery("#chandelier").toggle();
 			if (jQuery("#btn_chandelier").css("background-color") == "rgb(65, 64, 153)") {
