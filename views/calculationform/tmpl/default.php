@@ -371,7 +371,7 @@
 							</td>
 						</tr>
 					</table>
-					<div class="form-group" style="text-align: left; margin-left: calc(50% - 72px);">
+					<div class="form-group" id="insert" style="text-align: left; margin-left: calc(50% - 72px);">
 						<?php
 							if ($this->item->n6 > 0) {
 								$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
@@ -2039,11 +2039,21 @@
 				jQuery("#btn_baguette").css("background-color", "#414099");
 			}
 		});
-		console.log(jQuery("input[name='jform[n28]']:radio:checked").val());
-		//$('input[name=skill1]:radio:checked').val();
 		if (jQuery("radio[name='jform[n28]']").val() == 1 || jQuery("radio[name='jform[n28]']").val() == 2) {
 			jQuery("#baguette").show();
 			jQuery("#btn_baguette").css("background-color", "#010084");
+		}
+		jQuery("#btn_insert").click( function () {
+			jQuery("#insert").toggle();
+			if (jQuery("#btn_insert").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_insert").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_insert").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("radio[name='radio']").val() != 0) {
+			jQuery("#insert").show();
+			jQuery("#btn_insert").css("background-color", "#010084");
 		}
 		jQuery("#btn_chandelier").click( function () {
 			jQuery("#chandelier").toggle();
