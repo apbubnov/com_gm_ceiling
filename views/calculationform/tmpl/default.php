@@ -852,19 +852,18 @@
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_n8-lbl" for="jform_n8" class="">Метраж стен с керамогранитом</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_stoneware" class="btn add_fields">
+												<label id="jform_n8-lbl" for="jform_n8" class="no_margin">Метраж стен с керамогранитом</label>
+											</button>
 										</td>
-										<td>
+										<td class="td_calcform2">
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в керамогранит</span>
 											</a>
-										</td>
-										<td>
-											<button type="button" id="btn_stoneware" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 										</td>
 									</tr>
 								</table>
@@ -880,19 +879,18 @@
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_n19-lbl" for="jform_n19" class="">Провод</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_wire" class="btn add_fields">
+												<label id="jform_n19-lbl" for="jform_n19" class="">Провод</label>
+											</button>
 										</td>
-										<td>
+										<td class="td_calcform2">
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">На 1м провода используется:  <br> Провод ПВС 2 х 0,75  + 2 * Дюбель полим. 6 * 51 + 2 * Саморез ГДК 3,5 * 51</span>
 											</a>
-										</td>
-										<td>
-											<button type="button" id="btn_wire" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 										</td>
 									</tr>
 								</table>
