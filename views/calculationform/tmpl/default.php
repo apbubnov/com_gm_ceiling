@@ -838,11 +838,14 @@
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в плитку</span>
-											</a>
+											</a>						
+										</td>
+										<td>
+											<button type="button" id="btn_tile" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel">
+								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel"  style="display: none;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -1969,6 +1972,14 @@
 		if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "") {
 			jQuery("#pipes").show();
 			jQuery("#btn_pipes").hide();
+		}
+		jQuery("#btn_tile").click( function () {
+			jQuery("#jform_n7").show();
+			jQuery("#btn_tile").hide();
+		});
+		if (jQuery("#n14_cojform_n7unt").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "") {
+			jQuery("#jform_n7").show();
+			jQuery("#btn_tile").hide();
 		}
 		
 		//------------------------------
