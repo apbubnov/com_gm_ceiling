@@ -1775,7 +1775,7 @@
 					<div class="col-sm-4">
 						<table style="width:100%; text-align: center;">
 							<tr>
-								<td>
+								<td style="text-align: center;">
 									<!-- сохранить -->
 									<?php if ($this->type === "gmcalculator") { ?>
 										<?php if ($this->item->project_id) { ?>
@@ -1798,7 +1798,7 @@
 										<a id="save_button" class="btn btn-success" href="<?php echo $_SESSION['url']; ?>">Сохранить</a>
 									<?php } ?>
 								</td>
-								<td>
+								<td style="text-align: center;">
 									<!-- отменить -->
 									<?php if($this->type === "gmcalculator") { ?>
 										<?php if ($this->item->project_id) { ?>
