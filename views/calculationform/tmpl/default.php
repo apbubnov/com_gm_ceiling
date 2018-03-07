@@ -832,7 +832,7 @@
 												<label id="jform_n7-lbl" for="jform_n7" class="no_margin">Метраж стен с плиткой</label>
 											</button>
 										</td>
-										<td class="td_calcform2" style="margin-bottom: 25px;">
+										<td class="td_calcform2">
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в плитку</span>
@@ -840,7 +840,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel" style="display: none;">
+								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 25px;margin-bottom: 25px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
