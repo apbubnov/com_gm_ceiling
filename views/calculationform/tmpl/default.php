@@ -1945,6 +1945,8 @@
 			jQuery(".fixtures").show();
 			jQuery("#btn_fixtures").hide();
 		});
+		console.log(jQuery("#n13_count").val());
+		console.log(jQuery("#ecola_count").val());
 		if (jQuery("#n13_count").val() != null || jQuery("#ecola_count").val() != null || jQuery("#n13_count").val() != "" || jQuery("#ecola_count").val() != "") {
 			jQuery(".fixtures").show();
 			jQuery("#btn_fixtures").hide();
