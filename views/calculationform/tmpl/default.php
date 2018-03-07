@@ -350,7 +350,7 @@
 		</div>
 		<!-- вставка -->
 		<div class="container" id="block_n6">
-			<div class="row sm-margin-bottom">
+			<div class="row">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4" style="text-align:-webkit-center">
 					<table class="table_calcform" style="margin-bottom: 30px;">
@@ -2051,7 +2051,6 @@
 				jQuery("#btn_insert").css("background-color", "#414099");
 			}
 		});
-		console.log(jQuery("input[name='radio']:radio:checked").val());
 		if (jQuery("input[name='radio']:radio:checked").val() != 0) {
 			jQuery("#insert").show();
 			jQuery("#btn_insert").css("background-color", "#010084");
