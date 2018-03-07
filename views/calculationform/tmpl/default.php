@@ -469,7 +469,7 @@
 						</tr>
 					</table>
 				</div>
-				<div class="col-sm-4"></div>
+				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
 			</div>
 		</div>
 		<!-- Светильники -->
@@ -477,16 +477,15 @@
 			<div class="row sm">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<table>
+					<table class="table_calcform">
 						<tr>
-							<td>
-								<label id="jform_n13-lbl" for="jform_n13" class="">Добавить светильники</label>
+							<td class="td_calcform1">
+								<button type="button" id="btn_fixtures" class="btn add_fields">
+									<label id="jform_n13-lbl" for="jform_n13" class="no_margin">Добавить светильники</label>
+								</button>
 							</td>
-							<td>
+							<td class="td_calcform2">
 								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">На упаковке светильника указан диаметр технологического отверстия</span></a>
-							</td>
-							<td>
-								<button type="button" id="btn_fixtures" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 							</td>
 						</tr>
 					</table>
@@ -1959,20 +1958,24 @@
 
 		// кнопки открытия скрытых полей
 		jQuery("#btn_chandelier").click( function () {
-			jQuery("#chandelier").show();
-			jQuery("#btn_chandelier").hide();
+			jQuery("#chandelier").toggle();
+			if (jQuery("#btn_chandelier").css("background-color") == "#414099") {
+				jQuery("#btn_chandelier").css({"background-color": "#d3d3f9"; "border": "1px solid #d3d3f9 !important;"});
+			} else {
+				jQuery("#btn_chandelier").css({"background-color": "#414099"; "border": "1px solid #414099 !important;"});
+			}
 		});
 		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
 			jQuery("#chandelier").show();
-			jQuery("#btn_chandelier").hide();
+			//jQuery("#btn_chandelier").hide();
 		}
 		jQuery("#btn_fixtures").click( function () {
 			jQuery(".fixtures").show();
-			jQuery("#btn_fixtures").hide();
+			//jQuery("#btn_fixtures").hide();
 		});
 		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "") || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "")) {
 			jQuery(".fixtures").show();
-			jQuery("#btn_fixtures").hide();
+			//jQuery("#btn_fixtures").hide();
 		}
 		jQuery("#btn_cornice").click( function () {
 			jQuery(".cornice").show();
