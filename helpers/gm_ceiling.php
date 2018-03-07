@@ -799,7 +799,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<td>' . $transport['transport']. '</td>';
         $html .= '<td class="center">' . $transport['distance'] . '</td>';
         $html .= '<td class="center">' . $transport['distance_col'] . '</td>';
-        $html .= '<td class="center">' . $transport['mounter_sum'] . '</td>';
+        $html .= '<td class="center">' . $transport['client_sum'] . '</td>';
         $html .= '</tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['mounter_sum'] + $sum, 2) . ' руб.</div>';
@@ -2540,11 +2540,11 @@ class Gm_ceilingHelpersGm_ceiling
             if(empty($res->user_id)) {
                 $res->user_id = 1;
             }
-            $margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
+            //$margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
             if($res) {
                 if($transport_type == 1) {
-                    $transport_sum = double_margin($res->transport * $distance_col, $project->gm_canvases_margin, $project->dealer_canvases_margin);
-                    $transport_sum_1 = double_margin($res->transport * $distance_col, $project->gm_canvases_margin, $project->dealer_canvases_margin);
+                    $transport_sum = double_margin($res->transport * $distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
+                    $transport_sum_1 = margin($res->transport * $distance_col, $project->gm_mounting_margin);
                     $result = array(
                         'transport' => 'Транспорт по городу',
                         'distance' => '-',
@@ -2557,11 +2557,6 @@ class Gm_ceilingHelpersGm_ceiling
                 elseif($transport_type == 2) {
                     $transport_sum = ($res->distance  * $distance + $res->transport) * $distance_col;
                     $transport_sum_1 = ($res->distance  * $distance + $res->transport) * $distance_col;
-                   /*  if($transport_sum < margin($res->transport, $margin))
-                      { 
-                          $transport_sum = margin($res->transport, $margin);
-                          $transport_sum_1 = $res->transport;
-                      } */
                     $result = array(
                         'transport' => 'Выезд за город',
                         'distance' => $distance,
@@ -2584,19 +2579,12 @@ class Gm_ceilingHelpersGm_ceiling
             }
            if($transport_type == 1) { 
                 $discount = $project_model->getDiscount($project_id);
-                $min = 100;
-                foreach($discount as $d) {
-                    if($d->discount < $min)
-                    {
-                        $min = $d->discount;
-                    } 
-                }
-                if ($min != 100){
-                    $transport_sum = $transport_sum * ((100 - $min)/100);
-                    $transport_sum_1 = $transport_sum_1 * ((100 - $min)/100);
-                }
-                $result['client_sum'] = $transport_sum;
-                $result['mounter_sum'] = $transport_sum_1;
+
+                $max = 0;
+                foreach ($discount as $d) if($d->discount > $max) $max = $d->discount;
+
+                $result['client_sum'] = $result['client_sum'] * ((100 - $max)/100);
+                $result['mounter_sum'] = $result['mounter_sum'] * ((100 - $max)/100);
             }
             return $result;
         }

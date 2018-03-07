@@ -1079,43 +1079,40 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <th>Итого/ - %:</th>
                     <th id="project_total"><span class="sum"><?php echo round($project_total, 0); ?></span> руб. /</th>
                     <th id="project_total_discount">
-                        <span class="sum">
-                     <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                    if($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum)
-                        $project_total_discount = $min_components_sum;
-                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) {
-                        $project_total_discount = $min_components_sum;
-                        echo round($project_total_discount, 0);  ?> руб.</th> <?}
-                    elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0) { 
-                        $project_total_discount =  $min_project_sum;
-                        echo round($project_total_discount, 0);  ?> руб.</th>
-                        </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
-                    <?php } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
-
-                <?php }
-                else { ?>
+                        <?
+                        //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                        $old_price = $project_total_discount;
+                        if($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum)
+                            $project_total_discount = $min_components_sum;
+                        elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum)
+                            $project_total_discount = $min_components_sum;
+                        elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0)
+                            $project_total_discount =  $min_project_sum;
+                        ?>
+                        <span class="sum"><?= round($project_total_discount, 0);?> руб.</span>
+                        <?if($old_price != $project_total_discount):?>
+                            <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
+                        <?endif;?>
+                    </th>
+                <?php } else { ?>
                 <th>Итого</th>
                 <th id="project_total" colspan="2">
-                <span class="sum">
-                    <?php
-                    if ($this->item->new_project_sum == 0) {
-                        if($project_total < $min_components_sum && $project_total > 0 && $dealer_canvases_sum == 0)  { if($min_components_sum>0){$project_total = $min_components_sum;} } 
-                        elseif($project_total <  $min_project_sum && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  {  if($min_project_sum>0){$project_total =  $min_project_sum;} }
-                        
-                        echo round($project_total, 2);
-                    } else {
-                        echo round($this->item->new_project_sum, 2);
-                    }
-                } ?>
-            </span>
-            <span class="dop" style="font-size: 9px;">
-            <?php if ($project_total <= $min_components_sum && $project_total_discount > 0 && $dealer_canvases_sum == 0):?>
-                     * минимальная сумма заказа <?php echo $min_components_sum;?>.
-                <?php elseif ($project_total <=  $min_project_sum && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0): ?>
-                     * минимальная сумма заказа <?php echo $min_project_sum;?>.<?php endif;?>
-                     
-                      </span>
+                    <?
+                    //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                    $old_price = $project_total;
+                    if($dealer_canvases_sum == 0 && $project_total < $min_components_sum)
+                        $project_total = $min_components_sum;
+                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total < $min_components_sum)
+                        $project_total = $min_components_sum;
+                    elseif($project_total <  $min_project_sum && $project_total > 0)
+                        $project_total =  $min_project_sum;
+                    ?>
+                    <span class="sum"><?= round($project_total, 0);?> руб.
+                    </span><?if($old_price != $project_total):?>
+                        <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
+                    <?endif;?>
                 </th>
+                <?};?>
             </tr>
             <?php if ($user->dealer_type != 2) { ?>
                 <tr>

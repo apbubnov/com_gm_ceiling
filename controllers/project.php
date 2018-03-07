@@ -1410,9 +1410,15 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$transport_type = $jinput->get('transport', '', 'STRING'); 
 			$distance = $jinput->get('distance', '', 'STRING');
 			$distance_col = $jinput->get('distance_col', '', 'STRING');
+            $all = $jinput->get('all', '', 'INT');
 			if(!empty($project_id)){
 				$project_model->update_transport($project_id,$transport_type,$distance,$distance_col);
-				$sum = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id)['client_sum'];
+				if (empty($all)) $sum = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id)['client_sum'];
+				else $sum = Gm_ceilingHelpersGm_ceiling::calculate_transport($project_id);
+
+                Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($project_id);
+                Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id);
+
 				die(json_encode($sum));
 			}
 			else{

@@ -1213,7 +1213,6 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
 
     jQuery(document).ready(function () {
         $("#modal_window_container #ok").click(function() { click_ok(this); });
-        trans();
         var hrefs = document.getElementsByTagName("a");
         var regexp = /index\.php\?option=com_gm_ceiling\&task=mainpage/;
         for(var i = 0; i < hrefs.length;i++){
@@ -1931,6 +1930,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
             jQuery("#transport_dist_col").show();
         }
 
+        trans();
     });
 
     function submit_form(e) {
@@ -2278,24 +2278,33 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
         var calcul = jQuery("input[name='transport']:checked").val();
         var transport = jQuery("input[name='transport']:checked").val();
         var distance = jQuery("#distance").val();
-        var distance_col = jQuery("#distance_col").val();
-        var distance_col_1 = jQuery("#distance_col_1").val();
-        var form = jQuery("#form-client").serialize();
-        // alert(distance_col);
+        var distance_col = 0;
+        switch (parseInt(transport)) {
+            case 1: distance_col = $("#distance_col_1").val(); break;
+            case 2: distance_col = $("#distance_col").val(); break;
+        }
         jQuery.ajax({
             type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=big_smeta.transport",
-            data: form,
-            success: function(data){
-                data = JSON.parse(data);
-                var html = "",
-                    transport_sum = parseFloat(data);
+            url: "index.php?option=com_gm_ceiling&task=project.update_transport",
+            data: {
+                id: id,
+                transport: transport,
+                distance: distance,
+                distance_col: distance_col
+            },
+            dataType: "json",
+            timeout: 10000,
+            async: false,
+            success: function (transport_sum) {
+                $("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
+
                 var calc_sum = 0, calc_total = 0; canvas = 0;
                 jQuery.each(jQuery("[name='include_calculation[]']:checked"), function (i,e) {
                     calc_sum += parseFloat(jQuery("[name='calculation_total_discount["+jQuery(e).val()+"]']").val());
                     calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
                     canvas += parseFloat(jQuery("[name='canvas["+jQuery(e).val()+"]']").val());
                 });
+
                 var sum = Float(calc_sum/*parseFloat(jQuery("#project_sum").val())*/ + transport_sum);
                 var sum_total = Float(calc_total + transport_sum);
                 if(canvas == 0) sum = 2500;
@@ -2304,6 +2313,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                 else if(sum_total < 3500 ) sum_total = 3500;
                 jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
                 //jQuery("#project_total").text(sum  + " руб.");
+
                 if(canvas == 0) {
                     jQuery("#project_total span.sum").text(sum_total);
                     jQuery("#project_total span.dop").html((sum_total <= 2500)?" * минимальная сумма заказа 2500р.":"");
@@ -2320,12 +2330,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
                     jQuery("#project_sum_transport").val(sum);
                     jQuery(" #project_sum").val(sum);
                 }
-                
-
             },
-            dataType: "json",
-            timeout: 10000,
-            error: function(data){
+            error: function (){
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
