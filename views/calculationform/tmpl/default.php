@@ -1028,17 +1028,18 @@
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
 						<div class="form-group">
-							<table>
+							<table class="table_calcform">
 								<tr>
-									<td>Пожарная сигнализация</td>
-									<td>
+									<td class="td_calcform3">
+										<button type="button" id="btn_firealarm" class="btn add_fields">
+											Пожарная сигнализация
+										</button>
+									</td>
+									<td class="td_calcform2">
 										<a class="help" >
 											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 											<span class="airhelp">Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них</span>
 										</a>
-									</td>
-									<td>
-										<button type="button" id="btn_firealarm" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 									</td>
 								</tr>
 							</table>
@@ -2075,11 +2076,15 @@
 		}
 		jQuery("#btn_firealarm").click( function () {
 			jQuery("#jform_n21").toggle();
-			jQuery("#btn_firealarm").hide();
+			if (jQuery("#btn_firealarm").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_firealarm").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_firealarm").css("background-color", "#414099");
+			}
 		});
 		if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "") {
 			jQuery("#jform_n21").show();
-			jQuery("#btn_firealarm").hide();
+			jQuery("#btn_firealarm").css("background-color", "#010084");
 		}
 		
 		//------------------------------
