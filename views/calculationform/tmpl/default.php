@@ -1793,7 +1793,7 @@
 		jQuery("#chandelier").show();
 		jQuery("#btn_chandelier").hide();
 	});
-	if (jQuery("#jform_n12").val() != null) {
+	if (jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != "") {
 		jQuery("#chandelier").show();
 		jQuery("#btn_chandelier").hide();
 	}
@@ -1801,7 +1801,7 @@
 		jQuery(".fixtures").show();
 		jQuery("#btn_fixtures").hide();
 	});
-	if (jQuery("#n13_count").val() != null || jQuery("#ecola_count").val() != null ) {
+	if (jQuery("#n13_count").val() != null || jQuery("#ecola_count").val() != null || jQuery("#n13_count").val() != "" || jQuery("#ecola_count").val() != "") {
 		jQuery(".fixtures").show();
 		jQuery("#btn_fixtures").hide();
 	}
