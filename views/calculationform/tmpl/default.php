@@ -883,7 +883,7 @@
 									<tr>
 										<td class="td_calcform3">
 											<button type="button" id="btn_wire" class="btn add_fields">
-												<label id="jform_n19-lbl" for="jform_n19" class="">Провод</label>
+												<label id="jform_n19-lbl" for="jform_n19" class="no_margin">Провод</label>
 											</button>
 										</td>
 										<td class="td_calcform2">
@@ -906,19 +906,18 @@
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_n17-lbl" for="jform_n17" class="">Закладная брусом</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_bar" class="btn add_fields">
+												<label id="jform_n17-lbl" for="jform_n17" class="no_margin">Закладная брусом</label>
+											</button>
 										</td>
-										<td>
+										<td class="td_calcform2">
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">На 1м  используется:  <br> Брус 40*50  + 3 * Подвес прямой П 60 (0,8) +  6 * Дюбель полим. 6 * 51 + 6 * Саморез ГДК 3,5 * 51 + 6 * Саморез ГДК 3,5 * 41</span>
 											</a>
-										</td>
-										<td>
-											<button type="button" id="btn_bar" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 										</td>
 									</tr>
 								</table>
@@ -934,19 +933,18 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<table>
+								<table class="table_calcform">
 									<tr>
-										<td>
-											<label id="jform_n30-lbl" for="jform_n30" class="">Парящий потолок</label>
+										<td class="td_calcform3">
+											<button type="button" id="btn_soaring" class="btn add_fields">
+												<label id="jform_n30-lbl" for="jform_n30" class="no_margin">Парящий потолок</label>
+											</button>
 										</td>
-										<td>
+										<td class="td_calcform2">
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
 												<span class="airhelp">На 1м парящего потолка используется:  <br> Багет для парящих пот аллюм + Вставка для парящих потолков </span>
 										</a>
-										</td>
-										<td>
-											<button type="button" id="btn_soaring" class="btn btn-primary add_fields"><i class="fa fa-plus"></i></button>
 										</td>
 									</tr>
 								</table>
