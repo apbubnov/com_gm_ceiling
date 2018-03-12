@@ -38,9 +38,12 @@ $status = $status_model->getData();
 <?php parent::getButtonBack();?>
 
 <style>
+    .span9 {
+        margin-bottom: 15px;
+    }
     @media (min-width: 768px) {
         .span9 {
-            margin-bottom: 15px;
+            margin-bottom: 0px;
         }
     }
 
