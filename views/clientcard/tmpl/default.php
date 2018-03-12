@@ -61,10 +61,10 @@
     
     @media screen and (min-width: 768px) {
         .contact_container1 {
-            padding-right: 5px;
+            padding-right: 7px;
         }
         .contact_container2 {
-            padding-left: 5px;
+            padding-left: 7px;
         }
     }
     @media (max-width: 1024px) {
@@ -118,6 +118,7 @@
         </table>  
     </div>
 <!-- конец -->
+<!-- контакты -->
 <div class="row">
     <div class="col-sm-6">
         <div class="contact_container1">
@@ -159,44 +160,44 @@
         </div>
     </div>
 </div>
+<!-- заказы -->
+<!-- стиль исправить не могу, пока не увижу где селект показывается -->
+    <?php if($user->dealer_type != 1) { ?>
+        <div class="row">
+            <div class="col-sm-12" id = "calls">
+                <p class="caption-tar">История клиента</p>
+                <div id="calls-tar">
+                    <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
 
-<?php if($user->dealer_type != 1) { ?>
-    <div class="row">
-        <div class="col-sm-12" id = "calls">
-            <p class="caption-tar">История клиента</p>
-            <div id="calls-tar">
-                <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
+                        <?php foreach($history as $item): ?>
 
-                    <?php foreach($history as $item): ?>
+                        <tr>
+                            <td>
+                                <?php
+                                    $date = new DateTime($item->date_time);
+                                    echo $date->Format('d.m.Y H:i');
+                                ?>
+                            </td>
+                            <td><?php echo $item->text;?></td>
+                        </tr>
 
-                    <tr>
-                        <td>
-                            <?php
-                                $date = new DateTime($item->date_time);
-                                echo $date->Format('d.m.Y H:i');
-                            ?>
-                        </td>
-                        <td><?php echo $item->text;?></td>
-                    </tr>
+                        <?php endforeach;?>
 
-                    <?php endforeach;?>
-
-                </table>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-12" id="add-note-container-tar">
+                <label for="comments">Добавить комментарий:</label>
+                <br>
+                <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
+                <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </div>
         </div>
-
-        <div class="col-xs-12" id="add-note-container-tar">
-            <label for="comments">Добавить комментарий:</label>
-            <br>
-            <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
-            <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-        </div>
-
-    </div>
-<?php } ?>
-</div>
+    <?php } ?>
+<!-- конец -->
+<!-- заказы -->
 <div id="orders-container-tar">
-    <p class="caption-tar">Заказы</p>
+    <h3>Заказы</h3>
     <table class="table table-striped table_cashbox one-touch-view" id="table_projects">
         <thead>
             <tr>
@@ -284,6 +285,7 @@
         <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
     </div>
 </div>
+<!-- модальное окно -->
 <div id="modal-window-container-tar">
     <button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal-window-call-tar">
