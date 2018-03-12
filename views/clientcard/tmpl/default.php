@@ -58,28 +58,12 @@
         width: 100%;
         padding: 0;
     }
-    
     @media screen and (min-width: 768px) {
         .contact_container1 {
-            padding-right: 7px;
+            padding-right: 10px;
         }
         .contact_container2 {
-            padding-left: 7px;
-        }
-    }
-    @media (max-width: 1024px) {
-        table, table * {
-            font-size: 10px !important;
-            padding: .1rem !important;
-            width: auto !important;
-            margin: 0 !important;
-            text-align: center !important;
-        }
-
-        table {
-            margin: 0 -30px !important;
-            width: calc(100% + 60px) !important;
-            max-width: none !important;
+            padding-left: 10px;
         }
     }
 </style>
@@ -198,7 +182,7 @@
 <!-- заказы -->
 <div id="orders-container-tar">
     <h3>Заказы</h3>
-    <table class="table table-striped table_cashbox one-touch-view" id="table_projects">
+    <table class="small_table table-striped table_cashbox one-touch-view" id="table_projects">
         <thead>
             <tr>
                 <th>Номер</th>
@@ -209,77 +193,76 @@
             </tr>
         </thead>
         <?php foreach($projects as $item):?>
-
-            <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) {
-                if($item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
-                elseif($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
-                else echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
-                else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
-                <td><?php echo $item->id;?></td>
+            <tr class = "row_project" data-href="
+                <?php
+                    if($user->dealer_type == 1) {
+                        if ($item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) {
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
+                        } elseif ($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") {
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
+                        } else {
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id);
+                        }
+                    } else {
+                        echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id);
+                    }
+                ?>
+            ">
+                <td>
+                    <?php echo $item->id;?>
+                </td>
                 <td>
                     <?php 
                         $date = new DateTime($item->created);
                         echo $date->Format('d.m.Y');
                     ?>
                 </td>
-                <td><?php echo $item->project_sum;?></td>
-                <?php
-                    $note = '';
-                    if ($item->project_status < 3 || $item->project_status == 15)
-                    {
-                        if (!empty($item->gm_manager_note))
-                        {
-                            $note .= $item->gm_manager_note.'<br>';
+                <td>
+                    <?php echo $item->project_sum;?>
+                </td>
+                <td>
+                    <?php
+                        $note = '';
+                        if ($item->project_status < 3 || $item->project_status == 15) {
+                            if (!empty($item->gm_manager_note)) {
+                                $note .= $item->gm_manager_note.'<br>';
+                            }
+                            if (!empty($item->dealer_manager_note)) {
+                                $note .= $item->dealer_manager_note.'<br>';
+                            }
+                            if (!empty($item->project_note)) {
+                                $note .= $item->project_note.'<br>';
+                            }
+                        } elseif ($item->project_status == 3 || $item->project_status == 4) {
+                            if (!empty($item->gm_calculator_note)) {
+                                $note .= $item->gm_calculator_note.'<br>';
+                            }
+                            if (!empty($item->dealer_calculator_note)) {
+                                $note .= $item->dealer_calculator_note.'<br>';
+                            }
+                        } elseif ($item->project_status > 4 || $item->project_status < 11) {
+                            if (!empty($item->gm_chief_note)) {
+                                $note .= $item->gm_chief_note.'<br>';
+                            }
+                            if (!empty($item->dealer_chief_note)) {
+                                $note .= $item->dealer_chief_note.'<br>';
+                            }
+                        } else {
+                            if (!empty($item->gm_mount_note)) {
+                                $note .= $item->gm_mount_note.'<br>';
+                            }
+                            if (!empty($item->mount_note)) {
+                                $note .= $item->mount_note.'<br>';
+                            }
                         }
-                        if (!empty($item->dealer_manager_note))
-                        {
-                            $note .= $item->dealer_manager_note.'<br>';
-                        }
-                        if (!empty($item->project_note))
-                        {
-                            $note .= $item->project_note.'<br>';
-                        }
-                    }
-                    elseif ($item->project_status == 3 || $item->project_status == 4)
-                    {
-                        if (!empty($item->gm_calculator_note))
-                        {
-                            $note .= $item->gm_calculator_note.'<br>';
-                        }
-                        if (!empty($item->dealer_calculator_note))
-                        {
-                            $note .= $item->dealer_calculator_note.'<br>';
-                        }
-                    }
-                    elseif ($item->project_status > 4 || $item->project_status < 11)
-                    {
-                        if (!empty($item->gm_chief_note))
-                        {
-                            $note .= $item->gm_chief_note.'<br>';
-                        }
-                        if (!empty($item->dealer_chief_note))
-                        {
-                            $note .= $item->dealer_chief_note.'<br>';
-                        }
-                    }
-                    else
-                    {
-                        if (!empty($item->gm_mount_note))
-                        {
-                            $note .= $item->gm_mount_note.'<br>';
-                        }
-                        if (!empty($item->mount_note))
-                        {
-                            $note .= $item->mount_note.'<br>';
-                        }
-                    }
-                ?>
-                <td><?php echo $note; ?></td>
-                <td><?php echo $item->status; ?></td>
+                        echo $note;
+                    ?>
+                </td>
+                <td>
+                    <?php echo $item->status; ?>
+                </td>
             </tr>
-
         <?php endforeach;?>
-   
     </table>
     <div id="add-gauging-container-tar">
         <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
