@@ -101,7 +101,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
-            <div style="display: inline-block;">
+            <div style="display: inline-block; width: 100%;">
                 <div>
                     <!-- <p class="caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта клиента: </p> -->
                     <h4 style="color: #414099;">Почта клиента: </h4>
