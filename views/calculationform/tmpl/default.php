@@ -1786,8 +1786,8 @@
 										</button>
 									</td>
 								</tr>
-								<input type="text" id="comment" name="jform_details" value="<?php echo $this->item->details; ?>" class="form-control" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</table>
+							<input type="text" id="comment" name="jform_details" value="<?php echo $this->item->details; ?>" class="form-control" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
