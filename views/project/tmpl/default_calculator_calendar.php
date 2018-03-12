@@ -573,6 +573,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <style>
+    .col-xs-12, .col-md-6 {
+        padding: 0;
+    }
     @media screen and (max-width: 500px) {
         #table1 {
             width: 300px;
