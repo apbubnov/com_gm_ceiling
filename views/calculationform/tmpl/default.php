@@ -1780,12 +1780,11 @@
 						<div class="col-sm-4">
 							<table class="table_calcform">
 								<tr>
-									<td class="td_calcform1">
+									<td class="td_calcform3">
 										<button type="button" id="btn_comment" class="btn add_fields">
 											Комментарий
 										</button>
 									</td>
-									<td class="td_calcform2"></td>
 								</tr>
 								<input type="text" id="comment" name="jform_details" value="<?php echo $this->item->details; ?>" class="form-control" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</table>
