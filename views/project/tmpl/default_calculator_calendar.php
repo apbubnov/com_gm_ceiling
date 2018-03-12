@@ -145,7 +145,7 @@ $month = date("n");
 $year = date("Y");
 $flagGaugerCalendar = [3, $user->dealer_id];
 $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $flagGaugerCalendar);
-if(false):
+if(true):
 /***************************************************************************************************************************************************************************************************************************************************/
 /* Клиент */
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
