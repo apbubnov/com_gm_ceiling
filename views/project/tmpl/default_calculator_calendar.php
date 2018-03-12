@@ -578,6 +578,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         text-align: center;
         margin-bottom: 15px;
     }
+    .calculation_sum {
+        width: 100%;
+    }
+    .calculation_sum td {
+        padding: 0 5px;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
@@ -645,7 +651,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         </div>
                         <?php if ($user->dealer_type != 2) { ?>
                             <div>
-                                <table class="table_info">
+                                <table class="table_info" style="margin-bottom: 25px;">
                                     <tr>
                                         <th>
                                             <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
@@ -678,7 +684,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </tr>
                                     <?php } ?>
                                     <tr>
-                                        <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
+                                        <th>
+                                            <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
+                                        </th>
                                         <?php
                                             if ($this->item->id_client!=1) { 
                                                 $phone = $model->getClientPhones($this->item->id_client);
@@ -686,53 +694,71 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 $phone = [];
                                             }
                                         ?>
-                                        <td><?php foreach ($phone AS $contact) {
-                                                echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
-                                                echo "<br>";
-                                            } ?></td>
+                                        <td>
+                                            <?php
+                                                foreach ($phone AS $contact) {
+                                                    echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
+                                                    echo "<br>";
+                                                } 
+                                            ?>
+                                        </td>
                                         <td>
                                             <div class="Contacts" style="display: none;">
-                                                <label id="jform_client_contacts-lbl" for="jform_client_contacts">Телефон
-                                                    клиента<span class="star">&nbsp;*</span></label>
-                                                <input name="new_client_contacts" id="jform_client_contacts" value=""
-                                                        placeholder="Телефон клиента" type="text">
+                                                <label id="jform_client_contacts-lbl" for="jform_client_contacts">Телефон клиента<span class="star">&nbsp;*</span></label>
+                                                <input name="new_client_contacts" id="jform_client_contacts" value="" placeholder="Телефон клиента" type="text">
                                             </div>
                                         </td>
                                     </tr>
-                                    <?php if($this->item->id_client!=1){?>
+                                    <?php if ($this->item->id_client!=1) { ?>
                                         <tr>
                                             <th>Почта</th>
-                                            <td><?php
-                                                $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-                                                $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
-                                                foreach ($contact_email AS $contact) {
-                                                    echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
-                                                    echo "<br>";
-                                                } ?>
+                                            <td>
+                                                <?php
+                                                    $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+                                                    $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
+                                                    foreach ($contact_email AS $contact) {
+                                                        echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
+                                                        echo "<br>";
+                                                    }
+                                                ?>
                                             </td>
-
                                         </tr>
-                                    <?php }?>
+                                    <?php } ?>
                                     <tr>
-                                        <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                                        <td><a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>"><?=$this->item->project_info;?></a></td>
-                                        <td >
+                                        <th>
+                                            <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
+                                        </th>
+                                        <td>
+                                            <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
+                                                <?=$this->item->project_info;?>
+                                            </a>
+                                        </td>
+                                        <td>
                                             <div class="Address" style="display: none; position:relative;">
-                                                <label id="jform_address_lbl" for="jform_address">Адрес<span
-                                                            class="star">&nbsp;*</span></label>
-                                                <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица"
-                                                        type="text">
+                                                <label id="jform_address_lbl" for="jform_address">Адрес<span class="star">&nbsp;*</span></label>
+                                                <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
                                             </div>
                                         </td>
                                     </tr>
                                     <tr class="Address" style="display: none;">
-                                        <td>Дом  </td><td>Корпус</td>
+                                        <td>Дом</td>
+                                        <td>Корпус</td>
                                         <td>
-                                            <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
-                                                    } else echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом"  aria-required="true" type="text">
+                                            <input name="new_house" id="jform_house" value="
+                                                <?php
+                                                    if (isset($_SESSION['house'])) {
+                                                        echo $_SESSION['house'];
+                                                    } else echo $house
+                                                ?>
+                                            " class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом"  aria-required="true" type="text">
                                     
-                                            <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) {echo $_SESSION['bdq'];
-                                                    } else echo $bdq ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
+                                            <input name="new_bdq" id="jform_bdq"  value="
+                                                <?php
+                                                    if (isset($_SESSION['bdq'])) {
+                                                        echo $_SESSION['bdq'];
+                                                    } else echo $bdq
+                                                ?>
+                                            " class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
                                         </td>
                                     </tr>
                                     <tr class="Address" style="display: none;">
@@ -830,48 +856,49 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 </table>
                             </div>
                         <?php } ?>
-                        <?php if($user->dealer_type == 0) { ?>
-                            <div  class="col-12 col-md-6">
-                                <div class="comment">
-                                    <label> История клиента: </label>
-                                    <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
-                                    <table>
-                                        <tr>
-                                            <td><label> Добавить комментарий: </label></td>
-                                        </tr>
-                                        <tr>
-                                            <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                                            <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                                            </button></td>
-                                        </tr>
-                                    </table>
+                        <!-- стиль поменяю, когда буду править гм страницы -->
+                            <?php if($user->dealer_type == 0) { ?>
+                                <div  class="col-12 col-md-6">
+                                    <div class="comment">
+                                        <label> История клиента: </label>
+                                        <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
+                                        <table>
+                                            <tr>
+                                                <td><label> Добавить комментарий: </label></td>
+                                            </tr>
+                                            <tr>
+                                                <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                                <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                                </button></td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
+                            <?php } ?>
+                        <!-- конец -->
+                        <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
+                            <div class="center-left">
+                                <a class="btn btn-primary" id="change_discount">Изменить величину скидки</a>
                             </div>
                         <?php } ?>
-                        <table class="table calculation_sum">
-                            <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
-                                <tr>
-                                    <td style=" padding-left:0;"><a class="btn btn-primary" id="change_discount">Изменить величину
-                                            скидки</a></td>
-                                </tr>
-                            <?php } ?>
+                        <table class="calculation_sum">
                             <?php $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100; ?>
                             <tbody class="new_discount" style="display: none">
-                            <tr>
-                                <td>
-                                    <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
-                                    <input name="new_discount" id="jform_new_discount" value=""
-                                            onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки"
-                                            max='<?= round($skidka, 0); ?>' type="number">
-                                    <input name="isDiscountChange" value="0" type="hidden">
-                                </td>
-                                <td>
-                                    <button id="update_discount" class="btn btn btn-primary">
-                                        Ок
-                                    </button>
-                                </td>
-
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input name="new_discount" id="jform_new_discount" value="" onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки" max='<?= round($skidka, 0); ?>' type="number" style="width: 100%;">
+                                        <input name="isDiscountChange" value="0" type="hidden">
+                                    </td>
+                                    <td>
+                                        <button id="update_discount" class="btn btn btn-primary">Ок</button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     <?php } ?>
