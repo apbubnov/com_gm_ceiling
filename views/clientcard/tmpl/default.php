@@ -287,7 +287,7 @@
 		if (!div.is(e.target) // если клик был не по нашему блоку
 		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
 			jQuery(".btn-close").hide();
-			jQuery(".modal-window-container-tar").hide();
+			jQuery(".modal-window-container").hide();
 			jQuery("#modal-window-call-tar").hide();
 		}
 		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
