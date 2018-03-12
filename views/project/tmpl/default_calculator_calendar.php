@@ -580,6 +580,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     }
     .calculation_sum {
         width: 100%;
+        margin-bottom: 25px;
     }
     .calculation_sum td {
         padding: 0 5px;
