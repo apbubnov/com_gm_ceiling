@@ -599,25 +599,19 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <div class="col-xs-12 col-md-6">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" enctype="multipart/form-data">
-                    <?php if ($this->type === "calculator" && $this->subtype === "calendar"){ ?>
+                    <?php if ($this->type === "calculator" && $this->subtype === "calendar") { ?>
                         <?php if ($this->item->project_verdict == 0) { ?>
                             <?php if ($user->dealer_type != 2) { ?>
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <a class="btn btn-primary" id="change_data">
-                                                <?php
-                                                    if ($this->item->client_id == 1){
-                                                        echo "Заполнить данные о клиенте";
-                                                    }
-                                                    else{
-                                                        echo "Изменить данные";
-                                                    }  
-                                                ?>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
+                                <a class="btn btn-primary" id="change_data" style="margin-bottom: 15px;">
+                                    <?php
+                                        if ($this->item->client_id == 1){
+                                            echo "Заполнить данные о клиенте";
+                                        }
+                                        else {
+                                            echo "Изменить данные";
+                                        }  
+                                    ?>
+                                </a>
                             <?php } ?>
                         <?php } ?>
                         <div class="project_activation" style="display: none;">
