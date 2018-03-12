@@ -38,6 +38,12 @@
             $subtype = 'production';
         }
     }
+    // телефоны клиента
+    $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+    $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
+    $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
+    $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
+    //-----------------
 ?>
 
 <style>
@@ -59,7 +65,7 @@
 </style>
 
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
-<div id="FIO-container-tar">
+<div id="FIO-container-tar" style="margin-top: 15px;">
     <p>
         <label id = "FIO"><?php echo $this->item->client_name; ?></label>
         <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
@@ -73,37 +79,32 @@
         <?php endif;?>
     </p>
 </div>
-
-<?php
-        $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-        $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
-    ?>
-    <select id="select_phones" style="display:none;"><option value='0' disabled selected>Выберите номер</option>
+<!-- стиль исправить не могу, пока не увижу где селект показывается -->
+    <select id="select_phones" style="display:none;">
+        <option value='0' disabled selected>Выберите номер</option>
         <?php foreach($client_phones as $item): ?>
             <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
         <?php endforeach;?>
-    </select></p>
-<div id="call" class="call" style="display:none;">
-    <label for="call">Перенести звонок</label>
-    <br>
-    <table>
-        <tr>
-            <td> <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></td>
-            <td> <input name="call_comment" id="call_comment" placeholder="Введите примечание"></td>
-            <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>
-        </tr>
-    </table>  
-</div>
-<?php $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
-        $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
+    </select>
+    <div id="call" class="call" style="display:none;">
+        <label for="call">Перенести звонок</label>
+        <br>
+        <table>
+            <tr>
+                <td> <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></td>
+                <td> <input name="call_comment" id="call_comment" placeholder="Введите примечание"></td>
+                <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>
+            </tr>
+        </table>  
+    </div>
+<!-- конец -->
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
             <div style="display: inline-block;">
                 <div>
-                    <p class="caption-tar"
-                       style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта
-                        клиента: </p>
+                    <!-- <p class="caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта клиента: </p> -->
+                    <h3>Почта клиента: </h3>
                 </div>
                 <?php if (!empty($dop_contacts)) { ?>
                     <div>
