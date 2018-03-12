@@ -39,8 +39,13 @@ if (count($AllGauger) == 0) {
 }
 //----------------------------------------------------------------------------------
 
-
 ?>
+
+<style>
+    body {
+        color: #414099;
+    }
+</style>
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/addproject/tmpl/css/style.css" type="text/css" />
