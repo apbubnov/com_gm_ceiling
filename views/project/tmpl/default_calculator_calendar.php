@@ -588,7 +588,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 </style>
 
 <?= parent::getButtonBack(); ?>
-<h2 class="center" style="margin-top: 15px;">Просмотр проекта</h2>
+<h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
     <?php
         $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
@@ -596,7 +596,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     ?>
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-md-6 item_fields">
+            <div class="col-xs-12 col-md-6">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <?php if ($this->type === "calculator" && $this->subtype === "calendar"){ ?>
