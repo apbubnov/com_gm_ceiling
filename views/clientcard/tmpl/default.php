@@ -101,45 +101,43 @@
         </table>  
     </div>
 <!-- конец -->
-<div class="container">
-    <div class="row">
-        <div class="col-sm-6">
-            <div style="display: inline-block; width: 100%;">
-                <div>
-                    <h4 style="text-align: center;">Почты клиента:</h4>
-                </div>
-                <?php if (!empty($dop_contacts)) { ?>
-                    <div>
-                        <?php foreach ($dop_contacts AS $contact) { ?>
-                            <p style="font-size: 20px; color: #414099; margin-bottom: 0px;">
-                                <?php echo $contact->contact; echo "<br>" ?>
-                            </p>
-                        <?php } ?>
-                    </div>
-                <?php } ?>
-                <div>
-                    <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 125px);">
-                    <button type="button" id="add_email" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
-                </div>
+<div class="row">
+    <div class="col-sm-6">
+        <div style="display: inline-block; width: 100%;">
+            <div>
+                <h4 style="text-align: center;">Почты клиента:</h4>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div style="display: inline-block; width: 100%;">
+            <?php if (!empty($dop_contacts)) { ?>
                 <div>
-                    <h4 style="text-align: center;">Телефоны клиента:</h4>
-                </div>
-                <div>
-                    <?php foreach ($client_phones as $item) { ?>
-                        <a href="tel:<?php echo $item->phone; ?>" style="font-size: 20px; margin-bottom: 0px;">
-                            <?php echo $item->phone; ?>
-                        </a>
-                        <br>
+                    <?php foreach ($dop_contacts AS $contact) { ?>
+                        <p style="font-size: 20px; margin-bottom: 0px;">
+                            <?php echo $contact->contact; echo "<br>" ?>
+                        </p>
                     <?php } ?>
                 </div>
-                <div>
-                    <input type="text" id="new_phone" placeholder="Телефон" required style="width: calc(100% - 125px);">
-                    <button type="button" id="add_phone" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
-                </div>
+            <?php } ?>
+            <div>
+                <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 125px);">
+                <button type="button" id="add_email" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div style="display: inline-block; width: 100%;">
+            <div>
+                <h4 style="text-align: center;">Телефоны клиента:</h4>
+            </div>
+            <div>
+                <?php foreach ($client_phones as $item) { ?>
+                    <a href="tel:<?php echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;">
+                        <?php echo $item->phone; ?>
+                    </a>
+                    <br>
+                <?php } ?>
+            </div>
+            <div>
+                <input type="text" id="new_phone" placeholder="Телефон" required style="width: calc(100% - 125px);">
+                <button type="button" id="add_phone" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
             </div>
         </div>
     </div>
