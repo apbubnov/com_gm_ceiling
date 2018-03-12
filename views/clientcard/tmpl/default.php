@@ -50,6 +50,9 @@
     body {
         color: #414099;
     }
+    .col-sm-6 {
+        padding: 0;
+    }
     @media (max-width: 1024px) {
         table, table * {
             font-size: 10px !important;
