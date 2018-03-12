@@ -573,6 +573,15 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <style>
+    .center-left {
+        width: 100%;
+        text-align: center;
+    }
+    @media screen and (min-width: 768px;) {
+        .center-left {
+            text-align: left;
+        }
+    }
     @media screen and (max-width: 500px) {
         #table1 {
             width: 300px;
@@ -599,16 +608,18 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <?php if ($this->type === "calculator" && $this->subtype === "calendar") { ?>
                         <?php if ($this->item->project_verdict == 0) { ?>
                             <?php if ($user->dealer_type != 2) { ?>
-                                <a class="btn btn-primary" id="change_data" style="margin-bottom: 15px;">
-                                    <?php
-                                        if ($this->item->client_id == 1){
-                                            echo "Заполнить данные о клиенте";
-                                        }
-                                        else {
-                                            echo "Изменить данные";
-                                        }  
-                                    ?>
-                                </a>
+                                <div class="center-left">
+                                    <a class="btn btn-primary" id="change_data" style="margin-bottom: 15px;">
+                                        <?php
+                                            if ($this->item->client_id == 1){
+                                                echo "Заполнить данные о клиенте";
+                                            }
+                                            else {
+                                                echo "Изменить данные";
+                                            }  
+                                        ?>
+                                    </a>
+                                </div>
                             <?php } ?>
                         <?php } ?>
                         <div class="project_activation" style="display: none;">
