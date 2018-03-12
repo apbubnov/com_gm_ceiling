@@ -26,6 +26,9 @@ $type = $jinput->getString('type', NULL);
 ?>
 
 <style>
+    body {
+        color: #414099;
+    }
     input, button {
         width: 100%;
     }
