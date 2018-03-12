@@ -553,8 +553,8 @@
 			</div>
 		</div>
 		<!-- Экола -->
-		<div class="container fixtures" style="display: none; width: 100%;">
-			<div class="row sm-margin-bottom">
+		<div class="container">
+			<div class="row sm-margin-bottom fixtures" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<h4>Можете приобрести светильники у нас:</h4>
@@ -562,8 +562,8 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		<div class="container fixtures" style="display: none; width: 100%;">
-			<div class="row sm-margin-bottom">
+		<div class="container">
+			<div class="row sm-margin-bottom fixtures" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div class="form-group" style="margin-bottom: 0em;">
