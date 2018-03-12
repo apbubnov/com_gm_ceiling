@@ -111,15 +111,16 @@
                 <?php if (!empty($dop_contacts)) { ?>
                     <div>
                         <?php foreach ($dop_contacts AS $contact) { ?>
-                            <p style="font-size: 20px;text-align: left; margin-bottom: 0px;">
-                                <?php echo $contact->contact; echo "<br>"; ?>
+                            <p style="font-size: 20px; margin-bottom: 0px;">
+                                <?php echo $contact->contact; ?>
                             </p>
+                            <br>
                         <?php } ?>
                     </div>
                 <?php } ?>
                 <div>
-                    <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 135px);">
-                    <button type="button" id="add_email" class="btn btn-primary" style="margin-left: 25px;">Добавить</button>
+                    <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 125px);">
+                    <button type="button" id="add_email" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
                 </div>
             </div>
         </div>
@@ -130,12 +131,15 @@
                 </div>
                 <div>
                     <?php foreach ($client_phones as $item) { ?>
-                        <a href="tel:<?php echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><?php echo $item->phone; ?></a><br>
+                        <a href="tel:<?php echo $item->phone; ?>" style="font-size: 20px; margin-bottom: 0px;">
+                            <?php echo $item->phone; ?>
+                        </a>
+                        <br>
                     <?php } ?>
                 </div>
                 <div>
-                    <input type="text" id="new_phone" placeholder="Телефон" required>
-                    <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
+                    <input type="text" id="new_phone" placeholder="Телефон" required style="width: calc(100% - 125px);">
+                    <button type="button" id="add_phone" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
                 </div>
             </div>
         </div>
