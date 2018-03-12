@@ -118,8 +118,8 @@
                     </div>
                 <?php } ?>
                 <div>
-                    <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 105px);">
-                    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
+                    <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 130px);">
+                    <button type="button" id="add_email" class="btn btn-primary" style="margin-left: 25px;">Добавить</button>
                 </div>
             </div>
         </div>
