@@ -269,12 +269,15 @@
     </div>
 </div>
 <!-- модальное окно -->
-<div id="modal-window-container-tar">
-    <button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-    <div id="modal-window-call-tar">
+<div class="modal-window-container">
+    <button type="button" class="btn-close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal-window-call-tar" class="modal-window-tar">
         <h6>Введите новое ФИО клиента</h6>
         <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
-        <p><button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+        <p>
+            <button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>
+            <button type="button" id="cancel" class="btn btn-primary">Отмена</button>
+        </p>
     </div>
 </div>
 
@@ -283,8 +286,8 @@
 		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
 		if (!div.is(e.target) // если клик был не по нашему блоку
 		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
+			jQuery(".btn-close").hide();
+			jQuery(".modal-window-container-tar").hide();
 			jQuery("#modal-window-call-tar").hide();
 		}
 		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
@@ -302,11 +305,6 @@
 			jQuery("#modal-window-registration-tar").hide();
 		}
 	});
-    jQuery("#cancel").click(function(){
-        jQuery("#close-tar").hide();
-		jQuery("#modal-window-container-tar").hide();
-		jQuery("#modal-window-call-tar").hide();
-    })
     jQuery("#update_fio").click(function(){
         jQuery.ajax({
             type: 'POST',
@@ -318,8 +316,8 @@
             success: function(data){
                 jQuery("#FIO").text(data);
                 jQuery("#new_fio").val("");
-                jQuery("#close-tar").hide();
-		        jQuery("#modal-window-container-tar").hide();
+                jQuery(".btn-close").hide();
+		        jQuery(".modal-window-container").hide();
 		        jQuery("#modal-window-call-tar").hide();
                 var n = noty({
                     theme: 'relax',
@@ -346,9 +344,9 @@
         });
     })
     jQuery("#edit").click(function() {
-			jQuery("#modal-window-container-tar").show();
+			jQuery(".modal-window-container").show();
 			jQuery("#modal-window-call-tar").show("slow");
-			jQuery("#close-tar").show();
+			jQuery(".btn-close").show();
 	    });
     jQuery('body').on('click', '.row_project', function(e)
     {
