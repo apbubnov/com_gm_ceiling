@@ -34,7 +34,31 @@ $type = $jinput->getString('type', NULL);
 $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
 $status = $status_model->getData();
 ?>
+
 <?php parent::getButtonBack();?>
+
+<style>
+    @media (min-width: 768px) {
+        .span9 {
+            margin-bottom: 15px;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        table, table *  {
+            font-size: 10px !important;
+            padding: .1rem !important;
+            width: auto !important;
+            margin: 0 !important;
+        }
+
+        table {
+            margin: 0 -30px !important;
+            width: calc(100% + 60px) !important;
+            max-width: none !important;
+        }
+    }
+</style>
 
 <h2 class = "center">Клиенты</h2>
 
@@ -51,12 +75,12 @@ $status = $status_model->getData();
 		<div class="span9">
 			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
 		</div>
-        <select id="select_status" >
+        <select id="select_status">
             <option value='' selected>Выберите статус</option>
             <?php foreach($status as $item): ?>
-            <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
-                <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
-            <?php } ?>
+                <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
+                    <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
+                <?php } ?>
             <?php endforeach;?>
         </select>
 	</div>
@@ -114,30 +138,12 @@ $status = $status_model->getData();
         <!--			--><?php //endif; endforeach; ?>
 		</tbody>
 	</table>
-
 	<input type="hidden" name="task" value=""/>
 	<input type="hidden" name="boxchecked" value="0"/>
 	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
 	<?php echo JHtml::_('form.token'); ?>
 </form>
-
-<style>
-    @media (max-width: 1024px) {
-        table, table *  {
-            font-size: 10px !important;
-            padding: .1rem !important;
-            width: auto !important;
-            margin: 0 !important;
-        }
-
-        table {
-            margin: 0 -30px !important;
-            width: calc(100% + 60px) !important;
-            max-width: none !important;
-        }
-    }
-</style>
 
 <script type="text/javascript">
 
@@ -149,7 +155,6 @@ $status = $status_model->getData();
 	});
 
 	function deleteItem() {
-
 		if (!confirm("<?php echo JText::_('COM_GM_CEILING_DELETE_MESSAGE'); ?>")) {
 			return false;
 		}
