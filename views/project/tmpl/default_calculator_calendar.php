@@ -573,9 +573,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <style>
-    .col-xs-12, .col-md-6 {
-        padding: 0;
-    }
     @media screen and (max-width: 500px) {
         #table1 {
             width: 300px;
@@ -596,7 +593,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     ?>
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-md-6">
+            <div class="col-xs-12 col-md-6 no_margin2">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" enctype="multipart/form-data">
                     <?php if ($this->type === "calculator" && $this->subtype === "calendar") { ?>
