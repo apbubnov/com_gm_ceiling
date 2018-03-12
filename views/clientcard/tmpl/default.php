@@ -125,7 +125,7 @@
             </div>
         </div>
         <div class="col-sm-6">
-            <div style="display: inline-block;">
+            <div style="display: inline-block; width: 100%;">
                 <div>
                     <h4 style="text-align: center;">Телефоны клиента:</h4>
                 </div>
