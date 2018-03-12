@@ -563,7 +563,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
 <?php endif;?>
 
-<?php if(true):?>
+<?php if(false):?>
 
 <style>
     @media screen and (max-width: 500px) {
