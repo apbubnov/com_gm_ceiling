@@ -426,6 +426,10 @@ class Gm_ceilingHelpersGm_ceiling
                 $data['n1'] = 29;
             } 
             //Получаем объект дилера
+
+            /*Сделано, что бы при расчете ГМ в проекте дилера цены были дилерские*/
+            $data['dealer_id'] = $ProjectData = self::getModel("project")->getData($data["project_id"])->dealer_id;
+
             if (gettype($data) == "array")
             {
                 if (empty($data['dealer_id'])) {
@@ -606,9 +610,6 @@ class Gm_ceilingHelpersGm_ceiling
     }
     public static function create_client_single_estimate_html($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
     $mounting_data = null){
-        $user = JFactory::getUser();
-        $dealer = JFactory::getUser($user->dealer_id);
-
         if(empty($canvases_data)){
             $canvases_data = self::calculate_canvases($calc_id);
         }
@@ -631,6 +632,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($calc_id));
         }
+        $dealer = JFactory::getUser($data['dealer_id']);
         $dealer_components_sum = 0;
         foreach ($components_data as $component_item) {
             $dealer_components_sum += $component_item['dealer_total'];
