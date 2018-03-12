@@ -826,7 +826,7 @@
 			<?php if ($type!='guest' && $user->dealer_type!=2) {?>
 				<!-- плитка -->
 				<div class="container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group" style="margin-bottom: 0;">
@@ -853,7 +853,7 @@
 				</div>
 				<!-- керамогранит -->
 				<div class="container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
 							<div class="form-group" style="margin-bottom: 0;">
@@ -882,7 +882,7 @@
 				</div>
 				<!-- провод -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
 							<div class="form-group" style="margin-bottom: 0;">
@@ -909,7 +909,7 @@
 				</div>
 				<!-- закладная брусом -->
 				<div class = "container">
-					<div class="row">
+					<div class="row" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>				
 						<div class="col-sm-4">
 							<div class="form-group" style="margin-bottom: 0;">
@@ -936,7 +936,7 @@
 				</div>
 				<!-- парящий потолок -->
 				<div class = "container">
-					<div class="row" id="n30_block">
+					<div class="row" id="n30_block" style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group" style="margin-bottom: 0;">
@@ -955,7 +955,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 20px;">
+								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
