@@ -36,7 +36,7 @@ $type = $jinput->getString('type', NULL);
     <?php else: ?>
         <h2 class="center">Добавление нового клиента</h2>
     <?php endif; ?>
-    <div class="row">
+    <div class="row" style="margin-top: 15px;">
         <div class="col-md-4"></div>
         <div class="col-md-4">
             <form id="form-client" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
@@ -56,15 +56,13 @@ $type = $jinput->getString('type', NULL);
                     <input type="hidden" name="jform[modified_by]" value="<?php echo $this->item->modified_by; ?>"/>
                 <?php endif; ?>
                 <?php echo $this->form->renderField('client_name'); ?>
+                <div style="margin-top: 10px;"></div>
                 <?php echo $this->form->renderField('client_contacts'); ?>
-                <div class="control-group" style="margin-top: 15px;">
+                <div class="control-group" style="margin-top: 25px;">
                     <div class="controls">
                         <?php if ($this->canSave): ?>
                             <button type="submit" class="validate btn btn-primary">Сохранить клиента</button>
                         <?php endif; ?>
-                        <a class="btn" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=clientform.cancel&type=' . $type); ?>" title="<?php echo JText::_('JCANCEL'); ?>">
-                            <?php echo JText::_('JCANCEL'); ?>
-                        </a>
                     </div>
                 </div>
                 <input type="hidden" name="option" value="com_gm_ceiling"/>
