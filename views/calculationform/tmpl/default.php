@@ -400,7 +400,7 @@
 				<?php if(empty($this->item->n6) || $this->item->n6 == 0 ||$this->item->n6 ==314) { ?>
 					<div class="container">
 						<div class="col-sm-4"></div>
-						<div class="col-sm-4">
+						<div class="col-sm-4" style="margin-bottom: 15px;">
 							<div style="width: 100%; text-align: left;">
 								<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none; text-align: center;">Выберите цвет:</label>
 							</div>
@@ -412,7 +412,7 @@
 				<?php } else { ?>
 					<div class="container">
 						<div class="col-sm-4"></div>
-						<div class="col-sm-4">
+						<div class="col-sm-4" style="margin-bottom: 15px;">
 							<div style="width: 100%; text-align: left;">
 								<label id="jform_color_switch-lbl_1" for="color_switch_1" style="text-align: center;">Выберите цвет:</label>
 							</div>
