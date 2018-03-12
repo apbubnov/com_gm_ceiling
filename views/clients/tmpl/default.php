@@ -39,10 +39,12 @@ $status = $status_model->getData();
 
 <style>
     .span9 {
+        margin-top: 15px;
         margin-bottom: 15px;
     }
     @media (min-width: 768px) {
         .span9 {
+            margin-top: 0px;
             margin-bottom: 0px;
         }
     }
