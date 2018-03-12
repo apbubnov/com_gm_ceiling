@@ -26,16 +26,20 @@ $type = $jinput->getString('type', NULL);
 ?>
 
 <style>
-    input, button { width: 100%; }
+    input, button {
+        width: 100%;
+    }
 </style>
 
 <?= parent::getButtonBack(); ?>
 <div class="client-edit front-end-edit">
-    <?php if (!empty($this->item->id)): ?>
-        <h2 class="center">Изменить клиента</h2>
-    <?php else: ?>
-        <h2 class="center">Добавление нового клиента</h2>
-    <?php endif; ?>
+    <div style="margin-top: 15px;">
+        <?php if (!empty($this->item->id)): ?>
+            <h2 class="center">Изменить клиента</h2>
+        <?php else: ?>
+            <h2 class="center">Добавление нового клиента</h2>
+        <?php endif; ?>
+    </div>
     <div class="row" style="margin-top: 15px;">
         <div class="col-md-4"></div>
         <div class="col-md-4">
