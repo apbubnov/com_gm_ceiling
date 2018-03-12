@@ -850,31 +850,33 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 </table>
                             </div>
                         <?php } ?>
-                        <?php if($user->dealer_type == 0) { ?>
-                            <div  class="col-12 col-md-6">
-                                <div class="comment">
-                                    <label> История клиента: </label>
-                                    <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
-                                    <table>
-                                        <tr>
-                                            <td><label> Добавить комментарий: </label></td>
-                                        </tr>
-                                        <tr>
-                                            <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                                            <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                                            </button></td>
-                                        </tr>
-                                    </table>
+                        <!-- стиль поменяю, когда буду править гм страницы -->
+                            <?php if($user->dealer_type == 0) { ?>
+                                <div  class="col-12 col-md-6">
+                                    <div class="comment">
+                                        <label> История клиента: </label>
+                                        <textarea id="comments" class="input-comment" rows=11 readonly> </textarea>
+                                        <table>
+                                            <tr>
+                                                <td><label> Добавить комментарий: </label></td>
+                                            </tr>
+                                            <tr>
+                                                <td width = 100%><textarea  class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                                <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                                </button></td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
+                            <?php } ?>
+                        <!-- конец -->
+                        <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
+                            <div class="center-left">
+                                <a class="btn btn-primary" id="change_discount">Изменить величину скидки</a>
                             </div>
                         <?php } ?>
-                        <table class="table calculation_sum">
-                            <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
-                                <tr>
-                                    <td style=" padding-left:0;"><a class="btn btn-primary" id="change_discount">Изменить величину
-                                            скидки</a></td>
-                                </tr>
-                            <?php } ?>
+                        <table class="calculation_sum">
+                            
                             <?php $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100; ?>
                             <tbody class="new_discount" style="display: none">
                             <tr>
@@ -890,7 +892,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         Ок
                                     </button>
                                 </td>
-
                             </tr>
                             </tbody>
                         </table>
