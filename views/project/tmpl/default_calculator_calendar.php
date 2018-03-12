@@ -889,6 +889,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <p>
                                             <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
                                         </p>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <input name="new_discount" id="jform_new_discount" value="" onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки" max='<?= round($skidka, 0); ?>' type="number" style="width: 100%;">
                                         <input name="isDiscountChange" value="0" type="hidden">
                                     </td>
