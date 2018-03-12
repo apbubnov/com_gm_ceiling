@@ -400,7 +400,7 @@
 				<?php if(empty($this->item->n6) || $this->item->n6 == 0 ||$this->item->n6 ==314) { ?>
 					<div class="container">
 						<div class="col-sm-4"></div>
-						<div class="col-sm-4">
+						<div class="col-sm-4" style="margin-bottom: 15px;">
 							<div style="width: 100%; text-align: left;">
 								<label id="jform_color_switch-lbl_1" for="color_switch_1" style="display: none; text-align: center;">Выберите цвет:</label>
 							</div>
@@ -412,7 +412,7 @@
 				<?php } else { ?>
 					<div class="container">
 						<div class="col-sm-4"></div>
-						<div class="col-sm-4">
+						<div class="col-sm-4" style="margin-bottom: 15px;">
 							<div style="width: 100%; text-align: left;">
 								<label id="jform_color_switch-lbl_1" for="color_switch_1" style="text-align: center;">Выберите цвет:</label>
 							</div>
@@ -553,8 +553,8 @@
 			</div>
 		</div>
 		<!-- Экола -->
-		<div class="container fixtures" style="display: none; width: 100%;">
-			<div class="row sm-margin-bottom">
+		<div class="container">
+			<div class="row sm-margin-bottom fixtures" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<h4>Можете приобрести светильники у нас:</h4>
@@ -562,8 +562,8 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		<div class="container fixtures" style="display: none; width: 100%;">
-			<div class="row sm-margin-bottom">
+		<div class="container">
+			<div class="row sm-margin-bottom fixtures" style="display: none; width: 100%;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
 					<div class="form-group" style="margin-bottom: 0em;">
@@ -613,7 +613,7 @@
 					</div>
 					<button id="add_ecola" class="btn btn-primary" type="button">Добавить </button>
 				</div>
-				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
+				<div class="col-sm-4"></div>
 			</div>
 		</div>
 		<!-- прочий монтаж -->
@@ -845,7 +845,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n7]" id="jform_n7" data-next="#jform_n8" value="<?php echo $this->item->n7; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -867,12 +867,14 @@
 										<td class="td_calcform2">
 											<a class="help" >
 												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в керамогранит</span>
+												<span class="airhelp">
+													Считается дополнительная работа монтажникам по креплению багета в керамогранит
+												</span>
 											</a>
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n8]" id="jform_n8" data-next="#jform_n19" value="<?php echo $this->item->n8; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n8]" id="jform_n8" data-next="#jform_n19" value="<?php echo $this->item->n8; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>					
@@ -899,7 +901,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n19]" id="jform_n19" data-next="#jform_n17" value="<?php echo $this->item->n19; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -926,7 +928,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n17]" id="jform_n17"  value="<?php echo $this->item->n17; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n17]" id="jform_n17"  value="<?php echo $this->item->n17; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>					
@@ -953,7 +955,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n30]" id="jform_n30" data-next="#jform_n17" value="<?php echo $this->item->n30; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -1050,7 +1052,7 @@
 									</td>
 								</tr>
 							</table>
-							<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+							<input name="jform[n21]" id="jform_n21" data-next="#jform_n24" value="<?php echo $this->item->n21; ?>" class="form-control" placeholder="шт." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 						</div>
 					</div>
 					<div class="col-sm-4"></div>
@@ -1107,7 +1109,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n24]" id="jform_n24" data-next="#jform_n10" value="<?php echo $this->item->n24; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n24]" id="jform_n24" data-next="#jform_n10" value="<?php echo $this->item->n24; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -1136,7 +1138,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n11]" id="jform_n11" value="<?php echo $this->item->n11; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n11]" id="jform_n11" value="<?php echo $this->item->n11; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -1165,7 +1167,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n31]" id="jform_n31" value="<?php echo $this->item->n31; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n31]" id="jform_n31" value="<?php echo $this->item->n31; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -1191,7 +1193,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n32]" id="jform_n32" value="<?php echo $this->item->n32; ?>" class="form-control" placeholder="Кол-во комнат, шт." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n32]" id="jform_n32" value="<?php echo $this->item->n32; ?>" class="form-control" placeholder="Кол-во комнат, шт." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -1220,7 +1222,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[dop_krepezh]" id="jform_dop_krepezh" data-next="#jform_n18" value="<?php echo $this->item->dop_krepezh; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[dop_krepezh]" id="jform_dop_krepezh" data-next="#jform_n18" value="<?php echo $this->item->dop_krepezh; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -1248,7 +1250,7 @@
 										</td>
 									</tr>
 								</table>
-								<input name="jform[n18]" id="jform_n18" data-next="#jform_n11" value="<?php echo $this->item->n18; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 30px;">
+								<input name="jform[n18]" id="jform_n18" data-next="#jform_n11" value="<?php echo $this->item->n18; ?>" class="form-control" placeholder="м." type="tel" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 							</div>
 						</div>
 						<div class="col-sm-4"></div>
@@ -1449,7 +1451,7 @@
 					<div class="row sm-margin-bottom accessories" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<button id="extra_components_button" class="btn btn-primary" type="button">Добавить</button>
 							</div>
 						</div>
@@ -1507,7 +1509,7 @@
 					<div class="row sm-margin-bottom accessories2" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<button id="components_button_stock" class="btn btn-primary" type="button">Добавить</button>
 							</div>
 						</div>
@@ -1549,7 +1551,9 @@
 								<label>Стоимость</label>
 								<div id="extra_mounting_value_container">
 									<?php foreach($extra_mounting_array as $item) { ?>
-										<div class='form-group'><input name='extra_mounting_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'>
+											<input name='extra_mounting_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'>
+										</div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1559,7 +1563,7 @@
 					<div class="row sm-margin-bottom mount" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<button id="extra_mounting_button" class="btn btn-primary" type="button">Добавить</button>
 							</div>
 						</div>
@@ -1700,7 +1704,7 @@
 					</div>
 				</div>			
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row" style="margin-bottom: 5px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<h4 center> Получить смету на почту </h4>
@@ -1709,7 +1713,7 @@
 					</div>
 				</div>
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -1729,7 +1733,7 @@
 					</div>
 				</div>
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div id="send_email_success" style="display: none; font-size: 26px;">
@@ -1744,8 +1748,8 @@
 			<?php if(!$new || $type === "gmcalculator" || $type === "calculator"||$type === "gmmanager"  ) { ?>
 				<div class="form-group under_calculate"> 
 					<div class="container">
-						<div class="col-sm-4"></div>
-						<div class="row sm-margin-bottom">
+						<div class="row">
+							<div class="col-sm-4"></div>
 							<div class="col-sm-4">
 								<table>	
 									<tr>
@@ -1764,11 +1768,32 @@
 								</table>
 								<input id="jform_calculation_title" name="jform[calculation_title]" value="<?php echo $this->item->calculation_title; ?>" class="form-control" type="text">
 							</div>
+							<div class="col-sm-4"></div>
+						</div>
+					</div>
+				</div>
+			<?php } ?>
+			<?php if ($type === "gmcalculator" || $type === "calculator") { ?>
+				<div class="container">
+					<div class="row"  style="margin-bottom: 15px;">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<table class="table_calcform">
+								<tr>
+									<td class="td_calcform3">
+										<button type="button" id="btn_comment" class="btn add_fields">
+											Комментарий
+										</button>
+									</td>
+								</tr>
+							</table>
+							<input type="text" id="comment" name="jform_details" value="<?php echo $this->item->details; ?>" class="form-control"  placeholder="комментарий" style="display: none; margin-bottom: 5px;">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
 				</div>
 			<?php } ?>
+			<!-- кнопки -->
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
@@ -2060,7 +2085,7 @@
 				jQuery("#btn_chandelier").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
+		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
 			jQuery("#chandelier").show();
 			jQuery("#btn_chandelier").css("background-color", "#010084");
 		}
@@ -2072,7 +2097,7 @@
 				jQuery("#btn_fixtures").css("background-color", "#414099");
 			}
 		});
-		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "") || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "")) {
+		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
 			jQuery(".fixtures").show();
 			jQuery("#btn_fixtures").css("background-color", "#010084");
 		}
@@ -2084,7 +2109,7 @@
 				jQuery("#btn_cornice").css("background-color", "#414099");
 			}
 		});
-		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "") || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "")) {
+		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0)) {
 			jQuery(".cornice").show();
 			jQuery("#btn_cornice").css("background-color", "#010084");
 		}
@@ -2096,7 +2121,7 @@
 				jQuery("#btn_pipes").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "") {
+		if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) {
 			jQuery("#pipes").show();
 			jQuery("#btn_pipes").css("background-color", "#010084");
 		}
@@ -2108,7 +2133,7 @@
 				jQuery("#btn_tile").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "") {
+		if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
 			jQuery("#jform_n7").show();
 			jQuery("#btn_tile").css("background-color", "#010084");
 		}
@@ -2120,7 +2145,7 @@
 				jQuery("#btn_stoneware").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "") {
+		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "" && jQuery("#jform_n8").val() != 0) {
 			jQuery("#jform_n8").show();
 			jQuery("#btn_stoneware").css("background-color", "#010084");
 		}
@@ -2132,7 +2157,7 @@
 				jQuery("#btn_wire").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "") {
+		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "" && jQuery("#jform_n19").val() != 0) {
 			jQuery("#jform_n19").show();
 			jQuery("#btn_wire").css("background-color", "#010084");
 		}
@@ -2144,7 +2169,7 @@
 				jQuery("#btn_wire").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "") {
+		if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "" && jQuery("#jform_n17").val() != 0) {
 			jQuery("#jform_n17").show();
 			jQuery("#btn_wire").css("background-color", "#010084");
 		}
@@ -2156,7 +2181,7 @@
 				jQuery("#btn_soaring").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "") {
+		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "" && jQuery("#jform_n30").val() != 0) {
 			jQuery("#jform_n30").show();
 			jQuery("#btn_soaring").css("background-color", "#010084");
 		}
@@ -2168,7 +2193,7 @@
 				jQuery("#btn_level").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "") {
+		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
 			jQuery("#level").show();
 			jQuery("#btn_level").css("background-color", "#010084");
 		}
@@ -2180,7 +2205,7 @@
 				jQuery("#btn_firealarm").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "") {
+		if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "" && jQuery("#jform_n21").val() != 0) {
 			jQuery("#jform_n21").show();
 			jQuery("#btn_firealarm").css("background-color", "#010084");
 		}
@@ -2192,7 +2217,7 @@
 				jQuery("#btn_delimiter").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "") {
+		if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
 			jQuery("#jform_n20").show();
 			jQuery("#btn_delimiter").css("background-color", "#010084");
 		}
@@ -2204,7 +2229,7 @@
 				jQuery("#btn_access").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "") {
+		if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
 			jQuery("#jform_n24").show();
 			jQuery("#btn_access").css("background-color", "#010084");
 		}
@@ -2216,7 +2241,7 @@
 				jQuery("#btn_notch1").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "") {
+		if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
 			jQuery("#jform_n11").show();
 			jQuery("#btn_notch1").css("background-color", "#010084");
 		}
@@ -2228,7 +2253,7 @@
 				jQuery("#btn_notch2").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "") {
+		if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
 			jQuery("#jform_n31").show();
 			jQuery("#btn_notch2").css("background-color", "#010084");
 		}
@@ -2240,7 +2265,7 @@
 				jQuery("#btn_draining").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "") {
+		if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
 			jQuery("#jform_n32").show();
 			jQuery("#btn_draining").css("background-color", "#010084");
 		}
@@ -2252,7 +2277,7 @@
 				jQuery("#btn_fixture2").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "") {
+		if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
 			jQuery("#jform_dop_krepezh").show();
 			jQuery("#btn_fixture2").css("background-color", "#010084");
 		}
@@ -2264,7 +2289,7 @@
 				jQuery("#btn_gain").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "") {
+		if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
 			jQuery("#jform_n18").show();
 			jQuery("#btn_gain").css("background-color", "#010084");
 		}
@@ -2276,7 +2301,7 @@
 				jQuery("#btn_hoods").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "") {
+		if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) {
 			jQuery("#hoods").show();
 			jQuery("#btn_hoods").css("background-color", "#010084");
 		}
@@ -2288,7 +2313,7 @@
 				jQuery("#btn_diffuser").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "") {
+		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) {
 			jQuery("#diffuser").show();
 			jQuery("#btn_diffuser").css("background-color", "#010084");
 		}
@@ -2300,7 +2325,7 @@
 				jQuery("#btn_accessories").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "") {
+		if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) {
 			jQuery(".accessories").show();
 			jQuery("#btn_accessories").css("background-color", "#010084");
 		}
@@ -2312,7 +2337,7 @@
 				jQuery("#btn_accessories2").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "") {
+		if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
 			jQuery(".accessories2").show();
 			jQuery("#btn_accessories2").css("background-color", "#010084");
 		}
@@ -2324,7 +2349,7 @@
 				jQuery("#btn_mount").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "") {
+		if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) {
 			jQuery(".mount").show();
 			jQuery("#btn_mount").css("background-color", "#010084");
 		}
@@ -2352,6 +2377,19 @@
 			jQuery("#mount2").show();
 			jQuery("#btn_mount2").css("background-color", "#010084");
 		}
+		jQuery("#btn_comment").click( function () {
+			jQuery("#comment").toggle();
+			if (jQuery("#btn_comment").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_comment").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_comment").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#comment").val() != null && jQuery("#comment").val() != undefined && jQuery("#comment").val() != "" && jQuery("#comment").val() != 0) {
+			jQuery("#comment").show();
+			jQuery("#btn_comment").css("background-color", "#010084");
+		}
+		
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");

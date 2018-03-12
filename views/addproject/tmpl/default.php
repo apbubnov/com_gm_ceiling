@@ -39,8 +39,13 @@ if (count($AllGauger) == 0) {
 }
 //----------------------------------------------------------------------------------
 
-
 ?>
+
+<style>
+    body {
+        color: #414099;
+    }
+</style>
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/addproject/tmpl/css/style.css" type="text/css" />
@@ -69,10 +74,10 @@ if (count($AllGauger) == 0) {
 			<input name="jform[client_fio-find]" id="jform_client_fio-find" value="" style="width:100%;" placeholder="ФИО клиента"  aria-required="true" type="text">
 		</div>
 		<div class="controls">
-			<button id="find_client_btn" class="btn btn-primary" style="width:100%; margin-top: 10px;" type="button">Найти</button>
+			<button id="find_client_btn" class="btn btn-primary" style="width:100%; margin-top: 15px; margin-bottom: 15px;" type="button">Найти</button>
 		</div>
 		<div class="controls" id="select_clients" style="display:none">
-			<select  style="width:100%; margin-top: 5px;"  name="jform[clients]"  id="clients"></select>
+			<select  style="width: 100%; margin-bottom: 15px;"  name="jform[clients]"  id="clients"></select>
 		</div>
 	</div>
 	<!-- Регистрация клиента -->

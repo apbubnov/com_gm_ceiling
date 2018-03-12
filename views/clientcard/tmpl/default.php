@@ -17,13 +17,12 @@
     $call_id = $jinput->get('call_id', 0, 'INT');
     $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
     $client = $client_model->getClientById($this->item->id);
-    if(!empty($client->manager_id)){
+    if (!empty($client->manager_id)) {
         $manager_name = JFactory::getUser($client->manager_id)->name;
     }
-    else{
+    else {
         $manager_name = "-";
     }
-
     if ($client->dealer_id == 1)
     {
         $subtype = 'calendar';
@@ -39,33 +38,59 @@
             $subtype = 'production';
         }
     }
+    // контакты клиента
+    $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+    $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
+    $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
+    $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);
+    //-----------------
 ?>
-<div class="Page">
+
+<style>
+    body {
+        color: #414099;
+    }
+    .col-sm-6 {
+        padding: 0;
+    }
+    .contact_container1, .contact_container2 {
+        display: inline-block;
+        width: 100%;
+        padding: 0;
+    }
+    @media screen and (min-width: 768px) {
+        .contact_container1 {
+            padding-right: 10px;
+        }
+        .contact_container2 {
+            padding-left: 10px;
+        }
+    }
+</style>
+
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
-<div id="FIO-container-tar">
+<div id="FIO-container-tar" style="margin-top: 15px;">
     <p>
-    <label id = "FIO"><?php echo $this->item->client_name; ?></label>
-    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-     <?php if ($user->dealer_type != 1):?>
-    <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
-    <?php if ($call_id != 0) { ?>
-        <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
-    <?php } ?>
-    <br><label>Менеджер: <?php echo $manager_name;?></label>
-    <?php endif;?>
+        <label id = "FIO" style="font-size: 2rem;"><?php echo $this->item->client_name; ?></label>
+        <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+        <?php if ($user->dealer_type != 1):?>
+            <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
+            <?php if ($call_id != 0) { ?>
+                <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
+            <?php } ?>
+            <br>
+            <label>Менеджер: <?php echo $manager_name;?></label>
+        <?php endif;?>
+    </p>
 </div>
-
-
-<?php
-        $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-        $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
-    ?>
-    <select id="select_phones" style="display:none;"><option value='0' disabled selected>Выберите номер</option>
+<!-- стиль исправить не могу, пока не увижу где селект показывается -->
+    <select id="select_phones" style="display:none;">
+        <option value='0' disabled selected>Выберите номер</option>
         <?php foreach($client_phones as $item): ?>
             <option value="<?php echo $item->phone; ?>"><?php echo $item->phone; ?></option>
         <?php endforeach;?>
-    </select></p>
-<div id="call" class="call" style="display:none;">
+    </select>
+    <div id="call" class="call" style="display:none;">
         <label for="call">Перенести звонок</label>
         <br>
         <table>
@@ -75,89 +100,89 @@
                 <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>
             </tr>
         </table>  
-</div>
-<?php $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
-        $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-6">
-            <div style="display: inline-block;">
-                <div>
-                    <p class="caption-tar"
-                       style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта
-                        клиента: </p>
-                </div>
-                <?php if (!empty($dop_contacts)) { ?>
-                    <div>
-                        <?php foreach ($dop_contacts AS $contact) { ?>
-                            <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><?php echo $contact->contact;
-                                echo "<br>"; ?></p> <?php } ?>
-                    </div>
-                <?php } ?>
-                <div>
-                    <input type="text" id="new_email" placeholder="Почта" required>
-                    <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
-                </div>
+    </div>
+<!-- конец -->
+<!-- контакты -->
+<div class="row">
+    <div class="col-sm-6">
+        <div class="contact_container1">
+            <div>
+                <h4 style="text-align: center;">Почты клиента:</h4>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div style="display: inline-block;">
+            <?php if (!empty($dop_contacts)) { ?>
                 <div>
-                    <p class="caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны
-                        клиента: </p>
-                </div>
-                <div>
-                    <?php foreach ($client_phones as $item) { ?>
-                        <a href="tel:<?php echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;"><?php echo $item->phone; ?></a><br>
+                    <?php foreach ($dop_contacts AS $contact) { ?>
+                        <p style="font-size: 20px; margin-bottom: 0px;">
+                            <?php echo $contact->contact; echo "<br>" ?>
+                        </p>
                     <?php } ?>
                 </div>
-                <div>
-                    <input type="text" id="new_phone" placeholder="Телефон" required>
-                    <button type="button" id="add_phone" class="btn btn-primary">Добавить</button>
+            <?php } ?>
+            <div>
+                <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 125px);">
+                <button type="button" id="add_email" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="contact_container2">
+            <div>
+                <h4 style="text-align: center;">Телефоны клиента:</h4>
+            </div>
+            <div>
+                <?php foreach ($client_phones as $item) { ?>
+                    <a href="tel:<?php echo $item->phone; ?>" style="font-size: 20px; color: #414099; margin-bottom: 0px;">
+                        <?php echo $item->phone; ?>
+                    </a>
+                    <br>
+                <?php } ?>
+            </div>
+            <div>
+                <input type="text" id="new_phone" placeholder="Телефон" required style="width: calc(100% - 125px);">
+                <button type="button" id="add_phone" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- заказы -->
+<!-- стиль исправить не могу, пока не увижу где селект показывается -->
+    <?php if($user->dealer_type != 1) { ?>
+        <div class="row">
+            <div class="col-sm-12" id = "calls">
+                <p class="caption-tar">История клиента</p>
+                <div id="calls-tar">
+                    <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
+
+                        <?php foreach($history as $item): ?>
+
+                        <tr>
+                            <td>
+                                <?php
+                                    $date = new DateTime($item->date_time);
+                                    echo $date->Format('d.m.Y H:i');
+                                ?>
+                            </td>
+                            <td><?php echo $item->text;?></td>
+                        </tr>
+
+                        <?php endforeach;?>
+
+                    </table>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<?php if($user->dealer_type != 1) { ?>
-    <div class="row">
-        <div class="col-sm-12" id = "calls">
-            <p class="caption-tar">История клиента</p>
-            <div id="calls-tar">
-                <table id="table-calls-tar" class="table table-striped one-touch-view" cellspacing="0">
-
-                    <?php foreach($history as $item): ?>
-
-                    <tr>
-                        <td>
-                            <?php
-                                $date = new DateTime($item->date_time);
-                                echo $date->Format('d.m.Y H:i');
-                            ?>
-                        </td>
-                        <td><?php echo $item->text;?></td>
-                    </tr>
-
-                    <?php endforeach;?>
-
-                </table>
+            <div class="col-xs-12" id="add-note-container-tar">
+                <label for="comments">Добавить комментарий:</label>
+                <br>
+                <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
+                <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
             </div>
         </div>
-
-        <div class="col-xs-12" id="add-note-container-tar">
-            <label for="comments">Добавить комментарий:</label>
-            <br>
-            <input id="new_comment" type="text" class="input-text-tar input2" placeholder ="Введите новый комментарий">
-            <button class = "btn btn-primary" type = "button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-        </div>
-
-    </div>
-<?php } ?>
-</div>
+    <?php } ?>
+<!-- конец -->
+<!-- заказы -->
 <div id="orders-container-tar">
-    <p class="caption-tar">Заказы</p>
-    <table class="table table-striped table_cashbox one-touch-view" id="table_projects">
+    <h3>Заказы</h3>
+    <table class="small_table table-striped table_cashbox one-touch-view" id="table_projects">
         <thead>
             <tr>
                 <th>Номер</th>
@@ -168,119 +193,101 @@
             </tr>
         </thead>
         <?php foreach($projects as $item):?>
-
-            <tr class = "row_project" data-href="<?php if($user->dealer_type == 1) {
-                if($item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
-                elseif($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
-                else echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id); }
-                else {  echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id); }?>">
-                <td><?php echo $item->id;?></td>
+            <tr class = "row_project" data-href="
+                <?php
+                    if($user->dealer_type == 1) {
+                        if ($item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) {
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
+                        } elseif ($item->status == "В производстве" || $item->status == "Ожидание монтажа" || $item->status == "Заказ закрыт") {
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);
+                        } else {
+                            echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=manager&subtype=calendar&id='.(int) $item->id);
+                        }
+                    } else {
+                        echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmmanager&subtype='.$subtype.'&id='.(int) $item->id.'&call_id='.(int) $call_id);
+                    }
+                ?>
+            ">
+                <td>
+                    <?php echo $item->id;?>
+                </td>
                 <td>
                     <?php 
                         $date = new DateTime($item->created);
                         echo $date->Format('d.m.Y');
                     ?>
                 </td>
-                <td><?php echo $item->project_sum;?></td>
-                <?php
-                    $note = '';
-                    if ($item->project_status < 3 || $item->project_status == 15)
-                    {
-                        if (!empty($item->gm_manager_note))
-                        {
-                            $note .= $item->gm_manager_note.'<br>';
+                <td>
+                    <?php echo $item->project_sum;?>
+                </td>
+                <td>
+                    <?php
+                        $note = '';
+                        if ($item->project_status < 3 || $item->project_status == 15) {
+                            if (!empty($item->gm_manager_note)) {
+                                $note .= $item->gm_manager_note.'<br>';
+                            }
+                            if (!empty($item->dealer_manager_note)) {
+                                $note .= $item->dealer_manager_note.'<br>';
+                            }
+                            if (!empty($item->project_note)) {
+                                $note .= $item->project_note.'<br>';
+                            }
+                        } elseif ($item->project_status == 3 || $item->project_status == 4) {
+                            if (!empty($item->gm_calculator_note)) {
+                                $note .= $item->gm_calculator_note.'<br>';
+                            }
+                            if (!empty($item->dealer_calculator_note)) {
+                                $note .= $item->dealer_calculator_note.'<br>';
+                            }
+                        } elseif ($item->project_status > 4 || $item->project_status < 11) {
+                            if (!empty($item->gm_chief_note)) {
+                                $note .= $item->gm_chief_note.'<br>';
+                            }
+                            if (!empty($item->dealer_chief_note)) {
+                                $note .= $item->dealer_chief_note.'<br>';
+                            }
+                        } else {
+                            if (!empty($item->gm_mount_note)) {
+                                $note .= $item->gm_mount_note.'<br>';
+                            }
+                            if (!empty($item->mount_note)) {
+                                $note .= $item->mount_note.'<br>';
+                            }
                         }
-                        if (!empty($item->dealer_manager_note))
-                        {
-                            $note .= $item->dealer_manager_note.'<br>';
-                        }
-                        if (!empty($item->project_note))
-                        {
-                            $note .= $item->project_note.'<br>';
-                        }
-                    }
-                    elseif ($item->project_status == 3 || $item->project_status == 4)
-                    {
-                        if (!empty($item->gm_calculator_note))
-                        {
-                            $note .= $item->gm_calculator_note.'<br>';
-                        }
-                        if (!empty($item->dealer_calculator_note))
-                        {
-                            $note .= $item->dealer_calculator_note.'<br>';
-                        }
-                    }
-                    elseif ($item->project_status > 4 || $item->project_status < 11)
-                    {
-                        if (!empty($item->gm_chief_note))
-                        {
-                            $note .= $item->gm_chief_note.'<br>';
-                        }
-                        if (!empty($item->dealer_chief_note))
-                        {
-                            $note .= $item->dealer_chief_note.'<br>';
-                        }
-                    }
-                    else
-                    {
-                        if (!empty($item->gm_mount_note))
-                        {
-                            $note .= $item->gm_mount_note.'<br>';
-                        }
-                        if (!empty($item->mount_note))
-                        {
-                            $note .= $item->mount_note.'<br>';
-                        }
-                    }
-                ?>
-                <td><?php echo $note; ?></td>
-                <td><?php echo $item->status; ?></td>
+                        echo $note;
+                    ?>
+                </td>
+                <td>
+                    <?php echo $item->status; ?>
+                </td>
             </tr>
-
         <?php endforeach;?>
-   
     </table>
     <div id="add-gauging-container-tar">
-        <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
+        <input type="button" id="add_new_project" class="btn btn-primary" value="Добавить замер">
     </div>
 </div>
-<div id="modal-window-container-tar">
-		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal-window-call-tar">
-			<h6>Введите новое ФИО клиента</h6>
-			<p><input type="text" id="new_fio" placeholder="ФИО" required></p>
-			<p><button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
-		</div>
-	</div>
+<!-- модальное окно -->
+<div class="modal-window-container">
+    <button type="button" class="btn-close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal-window-call-tar" class="modal-window-tar">
+        <p style="margin-top: 1em !important;">Введите новое ФИО клиента</p>
+        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
+        <p>
+            <button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>
+            <button type="button" id="cancel" class="btn btn-primary">Отмена</button>
+        </p>
+    </div>
+</div>
 
-
-<style>
-    @media (max-width: 1024px) {
-        .Page, .Page * {
-            font-size: 10px !important;
-        }
-        table, table * {
-            font-size: 10px !important;
-            padding: .1rem !important;
-            width: auto !important;
-            margin: 0 !important;
-            text-align: center !important;
-        }
-
-        table {
-            margin: 0 -30px !important;
-            width: calc(100% + 60px) !important;
-            max-width: none !important;
-        }
-    }
-</style>
 <script>
     	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
 		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
 		if (!div.is(e.target) // если клик был не по нашему блоку
 		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
-			jQuery("#close-tar").hide();
-			jQuery("#modal-window-container-tar").hide();
+			jQuery(".btn-close").hide();
+			jQuery(".modal-window-container").hide();
 			jQuery("#modal-window-call-tar").hide();
 		}
 		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
@@ -298,11 +305,6 @@
 			jQuery("#modal-window-registration-tar").hide();
 		}
 	});
-    jQuery("#cancel").click(function(){
-        jQuery("#close-tar").hide();
-		jQuery("#modal-window-container-tar").hide();
-		jQuery("#modal-window-call-tar").hide();
-    })
     jQuery("#update_fio").click(function(){
         jQuery.ajax({
             type: 'POST',
@@ -314,8 +316,8 @@
             success: function(data){
                 jQuery("#FIO").text(data);
                 jQuery("#new_fio").val("");
-                jQuery("#close-tar").hide();
-		        jQuery("#modal-window-container-tar").hide();
+                jQuery(".btn-close").hide();
+		        jQuery(".modal-window-container").hide();
 		        jQuery("#modal-window-call-tar").hide();
                 var n = noty({
                     theme: 'relax',
@@ -342,9 +344,9 @@
         });
     })
     jQuery("#edit").click(function() {
-			jQuery("#modal-window-container-tar").show();
+			jQuery(".modal-window-container").show();
 			jQuery("#modal-window-call-tar").show("slow");
-			jQuery("#close-tar").show();
+			jQuery(".btn-close").show();
 	    });
     jQuery('body').on('click', '.row_project', function(e)
     {
