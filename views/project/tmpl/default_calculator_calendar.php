@@ -274,7 +274,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     /* Не обращайте внимания! */
 </div>
 <?= parent::getButtonBack(); ?>
-<h2 class="center" style="margin-top: 15px;">Просмотр проекта</h2>
+<h2 class="center" style="margin-top: 15px;">,KF,KF,FKПросмотр проекта</h2>
 <h3 class="left">Информация по проекту № <?= $this->item->id ?></h3>
 <div class="Actions">
     <div class="Update">
