@@ -1748,7 +1748,7 @@
 			<?php if(!$new || $type === "gmcalculator" || $type === "calculator"||$type === "gmmanager"  ) { ?>
 				<div class="form-group under_calculate"> 
 					<div class="container">
-						<div class="row"  style="margin-bottom: 15px;">
+						<div class="row">
 							<div class="col-sm-4"></div>
 							<div class="col-sm-4">
 								<table>	
@@ -1787,7 +1787,7 @@
 									</td>
 								</tr>
 							</table>
-							<input type="text" id="comment" name="jform_details" value="<?php echo $this->item->details; ?>" class="form-control" style="display: none; margin-top: 20px; margin-bottom: 5px;">
+							<input type="text" id="comment" name="jform_details" value="<?php echo $this->item->details; ?>" class="form-control" style="display: none;">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
