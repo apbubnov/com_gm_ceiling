@@ -1748,8 +1748,8 @@
 			<?php if(!$new || $type === "gmcalculator" || $type === "calculator"||$type === "gmmanager"  ) { ?>
 				<div class="form-group under_calculate"> 
 					<div class="container">
-						<div class="col-sm-4"></div>
 						<div class="row"  style="margin-bottom: 15px;">
+							<div class="col-sm-4"></div>
 							<div class="col-sm-4">
 								<table>	
 									<tr>
@@ -1768,11 +1768,33 @@
 								</table>
 								<input id="jform_calculation_title" name="jform[calculation_title]" value="<?php echo $this->item->calculation_title; ?>" class="form-control" type="text">
 							</div>
+							<div class="col-sm-4"></div>
+						</div>
+					</div>
+				</div>
+			<?php } ?>
+			<?php if ($type === "gmcalculator" || $type === "calculator") { ?>
+				<div class="container">
+					<div class="row"  style="margin-bottom: 15px;">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<table class="table_calcform">
+								<tr>
+									<td class="td_calcform1">
+										<button type="button" id="btn_comment" class="btn add_fields">
+											Комментарий
+										</button>
+									</td>
+									<td class="td_calcform2"></td>
+								</tr>
+								<input type="text" id="comment" name="jform_details" value="<?php echo $this->item->details; ?>" class="form-control" style="display: none; margin-top: 20px; margin-bottom: 5px;">
+							</table>
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
 				</div>
 			<?php } ?>
+			<!-- кнопки -->
 			<div class="container">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
@@ -2356,6 +2378,19 @@
 			jQuery("#mount2").show();
 			jQuery("#btn_mount2").css("background-color", "#010084");
 		}
+		jQuery("#btn_comment").click( function () {
+			jQuery("#comment").toggle();
+			if (jQuery("#btn_comment").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_comment").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_comment").css("background-color", "#414099");
+			}
+		});
+		if (jQuery("#comment").val() != null && jQuery("#comment").val() != undefined && jQuery("#comment").val() != "" && jQuery("#comment").val() != 0) {
+			jQuery("#comment").show();
+			jQuery("#btn_comment").css("background-color", "#010084");
+		}
+		
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
