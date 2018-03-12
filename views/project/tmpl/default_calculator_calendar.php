@@ -886,9 +886,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <tbody class="new_discount" style="display: none">
                                 <tr>
                                     <td>
-                                        <p>
-                                            <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
-                                        </p>
+                                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
                                     </td>
                                     <td></td>
                                 </tr>
