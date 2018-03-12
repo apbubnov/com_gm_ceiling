@@ -25,6 +25,7 @@ $answer2 = $model->getDataByStatus("Mountings");
 // незапущенные монтажи
 $answer3 = $model->getDataByStatus("UnComplitedMountings");
 //--------------------------------------
+
 ?>
 <!-- <?=parent::getButtonBack();?> -->
 <h2 class="center">Монтажи</h2>
