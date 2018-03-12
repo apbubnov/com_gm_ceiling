@@ -3053,7 +3053,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</table>';
         $html .= '<div align="center" style="width: 100%">';
         if (file_exists($_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg"))
-            $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 800px;"/>';
+            $html .= '<img src="' . $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . md5("calculation_sketch" . $data['id']) . ".svg" . '" style="width: 100%; max-height: 700px;"/>';
         $html .= '</div>';
         $html .= "<pagebreak />";
         $html .= $html;
