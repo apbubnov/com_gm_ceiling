@@ -47,6 +47,9 @@
 ?>
 
 <style>
+    body {
+        color: #414099;
+    }
     @media (max-width: 1024px) {
         table, table * {
             font-size: 10px !important;
@@ -67,7 +70,9 @@
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar" style="margin-top: 15px;">
     <p>
-        <label id = "FIO"><?php echo $this->item->client_name; ?></label>
+        <h2>
+            <label id = "FIO"><?php echo $this->item->client_name; ?></label>
+        </h2>
         <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
         <?php if ($user->dealer_type != 1):?>
             <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
@@ -103,8 +108,7 @@
         <div class="col-sm-6">
             <div style="display: inline-block; width: 100%;">
                 <div>
-                    <!-- <p class="caption-tar" style="font-size: 26px; color: #414099; text-align: left; margin-bottom: 0px;">Почта клиента: </p> -->
-                    <h4 style="color: #414099; text-align: center;">Почта клиента: </h4>
+                    <h4 style="text-align: center;">Почты клиента:</h4>
                 </div>
                 <?php if (!empty($dop_contacts)) { ?>
                     <div>
@@ -122,8 +126,7 @@
         <div class="col-sm-6">
             <div style="display: inline-block;">
                 <div>
-                    <p class="caption-tar" style="font-size: 26px; color: #414099; margin-bottom: 0px;">Телефоны
-                        клиента: </p>
+                    <h4 style="text-align: center;">клиента:</h4>
                 </div>
                 <div>
                     <?php foreach ($client_phones as $item) { ?>
