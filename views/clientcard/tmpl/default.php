@@ -265,7 +265,7 @@
         <?php endforeach;?>
     </table>
     <div id="add-gauging-container-tar">
-        <input type="button" id="add_new_project" class="input-button-tar" value="Добавить замер">
+        <input type="button" id="add_new_project" class="btn btn-primary" value="Добавить замер">
     </div>
 </div>
 <!-- модальное окно -->
