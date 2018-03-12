@@ -17,13 +17,12 @@
     $call_id = $jinput->get('call_id', 0, 'INT');
     $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
     $client = $client_model->getClientById($this->item->id);
-    if(!empty($client->manager_id)){
+    if (!empty($client->manager_id)) {
         $manager_name = JFactory::getUser($client->manager_id)->name;
     }
-    else{
+    else {
         $manager_name = "-";
     }
-
     if ($client->dealer_id == 1)
     {
         $subtype = 'calendar';
@@ -40,21 +39,40 @@
         }
     }
 ?>
-<div class="Page">
+
+<style>
+    @media (max-width: 1024px) {
+        table, table * {
+            font-size: 10px !important;
+            padding: .1rem !important;
+            width: auto !important;
+            margin: 0 !important;
+            text-align: center !important;
+        }
+
+        table {
+            margin: 0 -30px !important;
+            width: calc(100% + 60px) !important;
+            max-width: none !important;
+        }
+    }
+</style>
+
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar">
     <p>
-    <label id = "FIO"><?php echo $this->item->client_name; ?></label>
-    <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-     <?php if ($user->dealer_type != 1):?>
-    <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
-    <?php if ($call_id != 0) { ?>
-        <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
-    <?php } ?>
-    <br><label>Менеджер: <?php echo $manager_name;?></label>
-    <?php endif;?>
+        <label id = "FIO"><?php echo $this->item->client_name; ?></label>
+        <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+        <?php if ($user->dealer_type != 1):?>
+            <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
+            <?php if ($call_id != 0) { ?>
+                <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
+            <?php } ?>
+            <br>
+            <label>Менеджер: <?php echo $manager_name;?></label>
+        <?php endif;?>
+    </p>
 </div>
-
 
 <?php
         $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
@@ -66,15 +84,15 @@
         <?php endforeach;?>
     </select></p>
 <div id="call" class="call" style="display:none;">
-        <label for="call">Перенести звонок</label>
-        <br>
-        <table>
-            <tr>
-                <td> <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></td>
-                <td> <input name="call_comment" id="call_comment" placeholder="Введите примечание"></td>
-                <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>
-            </tr>
-        </table>  
+    <label for="call">Перенести звонок</label>
+    <br>
+    <table>
+        <tr>
+            <td> <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка"></td>
+            <td> <input name="call_comment" id="call_comment" placeholder="Введите примечание"></td>
+            <td><button class="btn btn-primary" id="add_call_and_submit" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>
+        </tr>
+    </table>  
 </div>
 <?php $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
         $dop_contacts = $client_dop_contacts_model->getContact($this->item->id);?>
@@ -245,35 +263,14 @@
     </div>
 </div>
 <div id="modal-window-container-tar">
-		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal-window-call-tar">
-			<h6>Введите новое ФИО клиента</h6>
-			<p><input type="text" id="new_fio" placeholder="ФИО" required></p>
-			<p><button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
-		</div>
-	</div>
+    <button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal-window-call-tar">
+        <h6>Введите новое ФИО клиента</h6>
+        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
+        <p><button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+    </div>
+</div>
 
-
-<style>
-    @media (max-width: 1024px) {
-        .Page, .Page * {
-            font-size: 10px !important;
-        }
-        table, table * {
-            font-size: 10px !important;
-            padding: .1rem !important;
-            width: auto !important;
-            margin: 0 !important;
-            text-align: center !important;
-        }
-
-        table {
-            margin: 0 -30px !important;
-            width: calc(100% + 60px) !important;
-            max-width: none !important;
-        }
-    }
-</style>
 <script>
     	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
 		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
