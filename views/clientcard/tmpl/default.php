@@ -53,6 +53,20 @@
     .col-sm-6 {
         padding: 0;
     }
+    .contact_container1, .contact_container2 {
+        display: inline-block;
+        width: 100%;
+        padding: 0;
+    }
+    
+    @media screen and (min-width: 768px) {
+        .contact_container1 {
+            padding-right: 5px;
+        }
+        .contact_container2 {
+            padding-left: 5px;
+        }
+    }
     @media (max-width: 1024px) {
         table, table * {
             font-size: 10px !important;
@@ -106,7 +120,7 @@
 <!-- конец -->
 <div class="row">
     <div class="col-sm-6">
-        <div style="display: inline-block; width: 100%;">
+        <div class="contact_container1">
             <div>
                 <h4 style="text-align: center;">Почты клиента:</h4>
             </div>
@@ -126,7 +140,7 @@
         </div>
     </div>
     <div class="col-sm-6">
-        <div style="display: inline-block; width: 100%;">
+        <div class="contact_container2">
             <div>
                 <h4 style="text-align: center;">Телефоны клиента:</h4>
             </div>
