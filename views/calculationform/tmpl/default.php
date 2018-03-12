@@ -613,7 +613,7 @@
 					</div>
 					<button id="add_ecola" class="btn btn-primary" type="button">Добавить </button>
 				</div>
-				<div class="col-sm-4" style="margin-bottom: 30px;"></div>
+				<div class="col-sm-4"></div>
 			</div>
 		</div>
 		<!-- прочий монтаж -->
@@ -2064,7 +2064,7 @@
 				jQuery("#btn_chandelier").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "") {
+		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
 			jQuery("#chandelier").show();
 			jQuery("#btn_chandelier").css("background-color", "#010084");
 		}
@@ -2076,7 +2076,7 @@
 				jQuery("#btn_fixtures").css("background-color", "#414099");
 			}
 		});
-		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "") || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "")) {
+		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
 			jQuery(".fixtures").show();
 			jQuery("#btn_fixtures").css("background-color", "#010084");
 		}
@@ -2088,7 +2088,7 @@
 				jQuery("#btn_cornice").css("background-color", "#414099");
 			}
 		});
-		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "") || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "")) {
+		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0)) {
 			jQuery(".cornice").show();
 			jQuery("#btn_cornice").css("background-color", "#010084");
 		}
@@ -2100,7 +2100,7 @@
 				jQuery("#btn_pipes").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "") {
+		if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) {
 			jQuery("#pipes").show();
 			jQuery("#btn_pipes").css("background-color", "#010084");
 		}
@@ -2112,7 +2112,7 @@
 				jQuery("#btn_tile").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "") {
+		if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
 			jQuery("#jform_n7").show();
 			jQuery("#btn_tile").css("background-color", "#010084");
 		}
@@ -2124,7 +2124,7 @@
 				jQuery("#btn_stoneware").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "") {
+		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "" && jQuery("#jform_n8").val() != 0) {
 			jQuery("#jform_n8").show();
 			jQuery("#btn_stoneware").css("background-color", "#010084");
 		}
@@ -2136,7 +2136,7 @@
 				jQuery("#btn_wire").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "") {
+		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "" && jQuery("#jform_n19").val() != 0) {
 			jQuery("#jform_n19").show();
 			jQuery("#btn_wire").css("background-color", "#010084");
 		}
@@ -2148,7 +2148,7 @@
 				jQuery("#btn_wire").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "") {
+		if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "" && jQuery("#jform_n17").val() != 0) {
 			jQuery("#jform_n17").show();
 			jQuery("#btn_wire").css("background-color", "#010084");
 		}
@@ -2160,7 +2160,7 @@
 				jQuery("#btn_soaring").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "") {
+		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "" && jQuery("#jform_n30").val() != 0) {
 			jQuery("#jform_n30").show();
 			jQuery("#btn_soaring").css("background-color", "#010084");
 		}
@@ -2172,7 +2172,7 @@
 				jQuery("#btn_level").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "") {
+		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
 			jQuery("#level").show();
 			jQuery("#btn_level").css("background-color", "#010084");
 		}
@@ -2184,7 +2184,7 @@
 				jQuery("#btn_firealarm").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "") {
+		if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "" && jQuery("#jform_n21").val() != 0) {
 			jQuery("#jform_n21").show();
 			jQuery("#btn_firealarm").css("background-color", "#010084");
 		}
@@ -2196,7 +2196,7 @@
 				jQuery("#btn_delimiter").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "") {
+		if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
 			jQuery("#jform_n20").show();
 			jQuery("#btn_delimiter").css("background-color", "#010084");
 		}
@@ -2208,7 +2208,7 @@
 				jQuery("#btn_access").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "") {
+		if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
 			jQuery("#jform_n24").show();
 			jQuery("#btn_access").css("background-color", "#010084");
 		}
@@ -2220,7 +2220,7 @@
 				jQuery("#btn_notch1").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "") {
+		if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
 			jQuery("#jform_n11").show();
 			jQuery("#btn_notch1").css("background-color", "#010084");
 		}
@@ -2232,7 +2232,7 @@
 				jQuery("#btn_notch2").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "") {
+		if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
 			jQuery("#jform_n31").show();
 			jQuery("#btn_notch2").css("background-color", "#010084");
 		}
@@ -2244,7 +2244,7 @@
 				jQuery("#btn_draining").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "") {
+		if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
 			jQuery("#jform_n32").show();
 			jQuery("#btn_draining").css("background-color", "#010084");
 		}
@@ -2256,7 +2256,7 @@
 				jQuery("#btn_fixture2").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "") {
+		if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
 			jQuery("#jform_dop_krepezh").show();
 			jQuery("#btn_fixture2").css("background-color", "#010084");
 		}
@@ -2268,7 +2268,7 @@
 				jQuery("#btn_gain").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "") {
+		if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
 			jQuery("#jform_n18").show();
 			jQuery("#btn_gain").css("background-color", "#010084");
 		}
@@ -2280,7 +2280,7 @@
 				jQuery("#btn_hoods").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "") {
+		if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) {
 			jQuery("#hoods").show();
 			jQuery("#btn_hoods").css("background-color", "#010084");
 		}
@@ -2292,7 +2292,7 @@
 				jQuery("#btn_diffuser").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "") {
+		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) {
 			jQuery("#diffuser").show();
 			jQuery("#btn_diffuser").css("background-color", "#010084");
 		}
@@ -2304,7 +2304,7 @@
 				jQuery("#btn_accessories").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "") {
+		if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) {
 			jQuery(".accessories").show();
 			jQuery("#btn_accessories").css("background-color", "#010084");
 		}
@@ -2316,7 +2316,7 @@
 				jQuery("#btn_accessories2").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "") {
+		if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
 			jQuery(".accessories2").show();
 			jQuery("#btn_accessories2").css("background-color", "#010084");
 		}
@@ -2328,7 +2328,7 @@
 				jQuery("#btn_mount").css("background-color", "#414099");
 			}
 		});
-		if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "") {
+		if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) {
 			jQuery(".mount").show();
 			jQuery("#btn_mount").css("background-color", "#010084");
 		}
