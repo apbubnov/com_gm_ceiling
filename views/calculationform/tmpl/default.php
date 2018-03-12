@@ -1704,7 +1704,7 @@
 					</div>
 				</div>			
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row" style="margin-bottom: 5px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<h4 center> Получить смету на почту </h4>
@@ -1713,7 +1713,7 @@
 					</div>
 				</div>
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -1733,7 +1733,7 @@
 					</div>
 				</div>
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div id="send_email_success" style="display: none; font-size: 26px;">
@@ -1749,7 +1749,7 @@
 				<div class="form-group under_calculate"> 
 					<div class="container">
 						<div class="col-sm-4"></div>
-						<div class="row sm-margin-bottom">
+						<div class="row"  style="margin-bottom: 15px;">
 							<div class="col-sm-4">
 								<table>	
 									<tr>
