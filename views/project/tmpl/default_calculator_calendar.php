@@ -645,7 +645,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         </div>
                         <?php if ($user->dealer_type != 2) { ?>
                             <div>
-                                <table class="table_info">
+                                <table class="table_info" style="margin-bottom: 25px;">
                                     <tr>
                                         <th>
                                             <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?>
