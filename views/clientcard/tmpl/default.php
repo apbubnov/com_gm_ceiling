@@ -111,10 +111,9 @@
                 <?php if (!empty($dop_contacts)) { ?>
                     <div>
                         <?php foreach ($dop_contacts AS $contact) { ?>
-                            <p style="font-size: 20px; margin-bottom: 0px;">
-                                <?php echo $contact->contact; ?>
+                            <p style="font-size: 20px; color: #414099; margin-bottom: 0px;">
+                                <?php echo $contact->contact; echo "<br>" ?>
                             </p>
-                            <br>
                         <?php } ?>
                     </div>
                 <?php } ?>
