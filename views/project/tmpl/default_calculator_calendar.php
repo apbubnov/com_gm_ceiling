@@ -145,7 +145,9 @@ $month = date("n");
 $year = date("Y");
 $flagGaugerCalendar = [3, $user->dealer_id];
 $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $flagGaugerCalendar);
-if(true):
+//------------------------------
+
+if(false):
 /***************************************************************************************************************************************************************************************************************************************************/
 /* Клиент */
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
@@ -263,13 +265,9 @@ $calculationsItog->dealer_sum->CanvasAndComponents = $calculationsItog->dealer_s
 $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $Transport = $mount_model->getDataAll();
 $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
-
 ?>
-
 <link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
-
 <?=parent::getPreloader();?>
-
 <div>
     /* Правит - @CEH4TOP */
     /* Не обращайте внимания! */
@@ -495,7 +493,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
     var $ = jQuery,
         DATA = {};
@@ -565,8 +562,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         this.dataset.show = show;
     }
 </script>
-
 <?php endif;?>
+
+
+
 
 <?php if(true):?>
 
@@ -583,9 +582,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 </style>
 
 <?= parent::getButtonBack(); ?>
-
-<h2 class="center">Просмотр проекта</h2>
-
+<h2 class="center" style="margin-top: 15px;">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
 <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
 <?php $calculations = $model->getProjectItems($this->item->id);?>
