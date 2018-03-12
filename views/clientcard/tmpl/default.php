@@ -38,7 +38,7 @@
             $subtype = 'production';
         }
     }
-    // телефоны клиента
+    // контакты клиента
     $client_phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
     $client_phones = $client_phones_model->getItemsByClientId($this->item->id);
     $client_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts'); 
@@ -70,9 +70,7 @@
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar" style="margin-top: 15px;">
     <p>
-        <h2>
-            <label id = "FIO"><?php echo $this->item->client_name; ?></label>
-        </h2>
+        <label id = "FIO" style="font-size: 2rem;"><?php echo $this->item->client_name; ?></label>
         <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
         <?php if ($user->dealer_type != 1):?>
             <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
@@ -113,12 +111,14 @@
                 <?php if (!empty($dop_contacts)) { ?>
                     <div>
                         <?php foreach ($dop_contacts AS $contact) { ?>
-                            <p style="font-size: 20px; color: #414099; text-align: left; margin-bottom: 0px;"><?php echo $contact->contact;
-                                echo "<br>"; ?></p> <?php } ?>
+                            <p style="font-size: 20px;text-align: left; margin-bottom: 0px;">
+                                <?php echo $contact->contact; echo "<br>"; ?>
+                            </p>
+                        <?php } ?>
                     </div>
                 <?php } ?>
                 <div>
-                    <input type="text" id="new_email" placeholder="Почта" required>
+                    <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 105px);">
                     <button type="button" id="add_email" class="btn btn-primary">Добавить</button>
                 </div>
             </div>
@@ -126,7 +126,7 @@
         <div class="col-sm-6">
             <div style="display: inline-block;">
                 <div>
-                    <h4 style="text-align: center;">клиента:</h4>
+                    <h4 style="text-align: center;">Телефоны клиента:</h4>
                 </div>
                 <div>
                     <?php foreach ($client_phones as $item) { ?>
