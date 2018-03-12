@@ -678,7 +678,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </tr>
                                     <?php } ?>
                                     <tr>
-                                        <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
+                                        <th>
+                                            <?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
+                                        </th>
                                         <?php
                                             if ($this->item->id_client!=1) { 
                                                 $phone = $model->getClientPhones($this->item->id_client);
@@ -686,53 +688,71 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 $phone = [];
                                             }
                                         ?>
-                                        <td><?php foreach ($phone AS $contact) {
-                                                echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
-                                                echo "<br>";
-                                            } ?></td>
+                                        <td>
+                                            <?php
+                                                foreach ($phone AS $contact) {
+                                                    echo "<a href='tel:+$contact->client_contacts'>$contact->client_contacts</a>";
+                                                    echo "<br>";
+                                                } 
+                                            ?>
+                                        </td>
                                         <td>
                                             <div class="Contacts" style="display: none;">
-                                                <label id="jform_client_contacts-lbl" for="jform_client_contacts">Телефон
-                                                    клиента<span class="star">&nbsp;*</span></label>
-                                                <input name="new_client_contacts" id="jform_client_contacts" value=""
-                                                        placeholder="Телефон клиента" type="text">
+                                                <label id="jform_client_contacts-lbl" for="jform_client_contacts">Телефон клиента<span class="star">&nbsp;*</span></label>
+                                                <input name="new_client_contacts" id="jform_client_contacts" value="" placeholder="Телефон клиента" type="text">
                                             </div>
                                         </td>
                                     </tr>
-                                    <?php if($this->item->id_client!=1){?>
+                                    <?php if ($this->item->id_client!=1) { ?>
                                         <tr>
                                             <th>Почта</th>
-                                            <td><?php
-                                                $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-                                                $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
-                                                foreach ($contact_email AS $contact) {
-                                                    echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
-                                                    echo "<br>";
-                                                } ?>
+                                            <td>
+                                                <?php
+                                                    $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+                                                    $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
+                                                    foreach ($contact_email AS $contact) {
+                                                        echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
+                                                        echo "<br>";
+                                                    }
+                                                ?>
                                             </td>
-
                                         </tr>
-                                    <?php }?>
+                                    <?php } ?>
                                     <tr>
-                                        <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                                        <td><a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>"><?=$this->item->project_info;?></a></td>
-                                        <td >
+                                        <th>
+                                            <?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?>
+                                        </th>
+                                        <td>
+                                            <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>">
+                                                <?=$this->item->project_info;?>
+                                            </a>
+                                        </td>
+                                        <td>
                                             <div class="Address" style="display: none; position:relative;">
-                                                <label id="jform_address_lbl" for="jform_address">Адрес<span
-                                                            class="star">&nbsp;*</span></label>
-                                                <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица"
-                                                        type="text">
+                                                <label id="jform_address_lbl" for="jform_address">Адрес<span class="star">&nbsp;*</span></label>
+                                                <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
                                             </div>
                                         </td>
                                     </tr>
                                     <tr class="Address" style="display: none;">
-                                        <td>Дом  </td><td>Корпус</td>
+                                        <td>Дом</td>
+                                        <td>Корпус</td>
                                         <td>
-                                            <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
-                                                    } else echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом"  aria-required="true" type="text">
+                                            <input name="new_house" id="jform_house" value="
+                                                <?php
+                                                    if (isset($_SESSION['house'])) {
+                                                        echo $_SESSION['house'];
+                                                    } else echo $house
+                                                ?>
+                                            " class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом"  aria-required="true" type="text">
                                     
-                                            <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) {echo $_SESSION['bdq'];
-                                                    } else echo $bdq ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
+                                            <input name="new_bdq" id="jform_bdq"  value="
+                                                <?php
+                                                    if (isset($_SESSION['bdq'])) {
+                                                        echo $_SESSION['bdq'];
+                                                    } else echo $bdq
+                                                ?>
+                                            " class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
                                         </td>
                                     </tr>
                                     <tr class="Address" style="display: none;">
