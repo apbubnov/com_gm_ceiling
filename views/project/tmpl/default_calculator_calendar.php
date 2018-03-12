@@ -578,6 +578,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         text-align: center;
         margin-bottom: 15px;
     }
+    .calculation_sum td {
+        padding: 0 5px;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
@@ -883,7 +886,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <p>
                                             <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
                                         </p>
-                                        <input name="new_discount" id="jform_new_discount" value="" onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки" max='<?= round($skidka, 0); ?>' type="number">
+                                        <input name="new_discount" id="jform_new_discount" value="" onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки" max='<?= round($skidka, 0); ?>' type="number" style="width: 100%;">
                                         <input name="isDiscountChange" value="0" type="hidden">
                                     </td>
                                     <td>
