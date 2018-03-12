@@ -1451,7 +1451,7 @@
 					<div class="row sm-margin-bottom accessories" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<button id="extra_components_button" class="btn btn-primary" type="button">Добавить</button>
 							</div>
 						</div>
@@ -1509,7 +1509,7 @@
 					<div class="row sm-margin-bottom accessories2" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<button id="components_button_stock" class="btn btn-primary" type="button">Добавить</button>
 							</div>
 						</div>
@@ -1551,7 +1551,9 @@
 								<label>Стоимость</label>
 								<div id="extra_mounting_value_container">
 									<?php foreach($extra_mounting_array as $item) { ?>
-										<div class='form-group'><input name='extra_mounting_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'></div>
+										<div class='form-group'>
+											<input name='extra_mounting_value[]' value='<?php echo $item['value']; ?>' class='form-control' type='text'>
+										</div>
 									<?php } ?>
 								</div>
 							</div>
@@ -1561,7 +1563,7 @@
 					<div class="row sm-margin-bottom mount" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="form-group" style="margin-bottom: 0em;">
 								<button id="extra_mounting_button" class="btn btn-primary" type="button">Добавить</button>
 							</div>
 						</div>
