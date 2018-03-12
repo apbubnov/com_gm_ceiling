@@ -272,7 +272,7 @@
 <div class="modal-window-container">
     <button type="button" class="btn-close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div id="modal-window-call-tar" class="modal-window-tar">
-        <p styleу="margin-top: 1em;">Введите новое ФИО клиента</p>
+        <p styleу="margin-top: 1em !inportant;">Введите новое ФИО клиента</p>
         <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
         <p>
             <button type="button" id="update_fio" class="btn btn-primary">Сохранить</button>
