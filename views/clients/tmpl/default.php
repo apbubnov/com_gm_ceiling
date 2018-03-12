@@ -48,21 +48,19 @@ $status = $status_model->getData();
             margin-bottom: 0px;
         }
     }
-
-    @media (max-width: 1024px) {
+   /*  @media (max-width: 1024px) {
         table, table *  {
             font-size: 10px !important;
             padding: .1rem !important;
             width: auto !important;
             margin: 0 !important;
         }
-
         table {
             margin: 0 -30px !important;
             width: calc(100% + 60px) !important;
             max-width: none !important;
         }
-    }
+    } */
 </style>
 
 <h2 class = "center">Клиенты</h2>
@@ -89,7 +87,7 @@ $status = $status_model->getData();
             <?php endforeach;?>
         </select>
 	</div>
-	<table class="table table-striped table_cashbox one-touch-view" id="clientList">
+	<table class="/*table*/ small_table table-striped table_cashbox one-touch-view" id="clientList">
 		<thead>
 			<tr>
 				<th class='' >
