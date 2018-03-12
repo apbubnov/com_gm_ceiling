@@ -576,8 +576,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     .center-left {
         width: 100%;
         text-align: center;
+        margin-bottom: 15px;
     }
-    @media screen and (min-width: 768px;) {
+    @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
         }
@@ -609,7 +610,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <?php if ($this->item->project_verdict == 0) { ?>
                             <?php if ($user->dealer_type != 2) { ?>
                                 <div class="center-left">
-                                    <a class="btn btn-primary" id="change_data" style="margin-bottom: 15px;">
+                                    <a class="btn btn-primary" id="change_data">
                                         <?php
                                             if ($this->item->client_id == 1){
                                                 echo "Заполнить данные о клиенте";
