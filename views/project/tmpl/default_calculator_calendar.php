@@ -145,7 +145,7 @@ $month = date("n");
 $year = date("Y");
 $flagGaugerCalendar = [3, $user->dealer_id];
 $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $flagGaugerCalendar);
-if(true):
+if(false):
 /***************************************************************************************************************************************************************************************************************************************************/
 /* Клиент */
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
@@ -269,224 +269,229 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 <link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
 
 <?=parent::getPreloader();?>
+
 <div>
     /* Правит - @CEH4TOP */
     /* Не обращайте внимания! */
 </div>
-<?= parent::getButtonBack(); ?>
-<h2 class="center" style="margin-top: 15px;">,KF,KF,FKПросмотр проекта</h2>
-<h3 class="left">Информация по проекту № <?= $this->item->id ?></h3>
-<div class="Actions">
-    <div class="Update">
-        <button class="Update">
-            <?=($this->item->client_id == 1)?"Заполнить данные о клиенте":"Изменить данные";?>
-        </button>
+<div class="Page">
+    <div class="TitlePage">
+        <h2 class="center">Просмотр проекта</h2>
+        <h3 class="left">Информация по проекту № <?= $this->item->id ?></h3>
     </div>
-</div>
-<div class="Body row">
-    <div class="Client col col-12 <?=($user->dealer_type == 0)?"col-md-6":"col-md-12"?>">
-        <table class="Client" db-id="<?=$Client->id_client;?>">
-            <tbody>
-            <tr>
-                <th class="ClientName">Клиент:</th>
-                <td id="ClientName"><a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$Client->id_client;?>"><?=$Client->client_id;?></a></td>
-            </tr>
-            <tr>
-                <th class="ClientBDay">Дата рождения:</th>
-                <td id="ClientBDay"><?=$Client->birthday_date;?></td>
-            </tr>
-            <tr>
-                <th class="ClientPhones">Телефоны:</th>
-                <td id="ClientPhones">
-                    <?php
-                    foreach ($Client->phones as $Phone)
-                        echo "<a href='tel:$Phone'>$Phone</a>";
-                    ?>
-                </td>
-            </tr>
-            <tr>
-                <th class="ClientEmails">Почты:</th>
-                <td id="ClientEmails">
-                    <?php
-                    foreach ($Client->emails as $Email)
-                        echo "<a href='mailto:$Email'>$Email</a>";
-                    ?>
-                </td>
-            </tr>
-            <tr>
-                <th class="ClientAddress">Адрес:</th>
-                <td id="ClientAddress" json="<?=json_encode($Client->address);?>">
-                    <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$Client->address->full;?>"><?=$Client->address->full;?></a>
-                </td>
-            </tr>
-            <tr>
-                <th class="ClientCalcDate">Дата замера:</th>
-                <td id="ClientCalcDate"><?=$Client->calc_date->date;?></td>
-            </tr>
-            <tr>
-                <th class="ClientNote">Примечание менеджера:</th>
-                <td id="ClientNote"><?=$Client->dealer_manager_note;?></td>
-            </tr>
-            <tr>
-                <th class="ClientCalcTime">Время замера:</th>
-                <td id="ClientCalcTime"><?=$Client->calc_date->time;?></td>
-            </tr>
-            <?php if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
-                <tr>
-                    <th class="ClientDiscount">Изменить величину скидки:</th>
-                    <td id="ClientDiscount">
-                        <form action="javascript:SendDiscount();">
-                            <input type="number" class="Discount"
-                                    min="<?$Client->discount->min;?>"
-                                    max="<?=$Client->discount->max;?>">
-                            <button type="submit" class="AddDiscount">
-                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endif;?>
-            </tbody>
-        </table>
-    </div>
-    <?php if($user->dealer_type == 0):?>
-    <div class="Messages col col-12 col-md-6">
-        <div class="Title">История клиента:</div>
-        <div class="Note">
-            <textarea id="Notes" class="Notes" rows="11" readonly></textarea>
-            <form class="Add" action="javascript:SendNote();">
-                <div class="Title">Добавить комментарий:</div>
-                <textarea class="Note" placeholder="Введите новое примечание" onmousemove="ResizeNote();"></textarea>
-                <button type="submit" class="AddNote" onmousemove="ResizeNote();">
-                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                </button>
-            </form>
+    <div class="Actions">
+        <div class="Back"><?= parent::getButtonBack(); ?></div>
+        <div class="Update">
+            <button class="Update">
+                <?=($this->item->client_id == 1)?"Заполнить данные о клиенте":"Изменить данные";?>
+            </button>
         </div>
     </div>
-    <?php endif;?>
-</div>
-<div class="Navigation">
-    <h3 class="left">Расчеты для проекта</h3>
-    <div class="Tabs">
-        <style>
-            .Page .Navigation .Tabs #TabAll:checked ~ #WindowTabAll,
-            <?foreach ($calculations as $calculation):?>
-            .Page .Navigation .Tabs #Tab<?=$calculation->id;?>:checked ~ #WindowTab<?=$calculation->id;?>,
-            <?endforeach;?>
-            .Page .Navigation .Tabs #TabAdd:checked ~ #WindowTabAdd {
-                display: inline-block;
-            }
-        </style>
-        <input name="Tab" class="Tab" id="TabAll" type="radio" checked>
-        <label for="TabAll" class="TabLabel"><span>Общее</span></label>
-        <?php foreach ($calculations as $calculation):?>
-            <input name="Tab" class="Tab" id="Tab<?=$calculation->id;?>"  type="radio">
-            <label for="Tab<?=$calculation->id;?>" class="TabLabel"><span><?=$calculation->calculation_title;?></span></label>
-        <?php endforeach;?>
-        <?php if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
-            <input name="Tab" class="Tab" id="TabAdd" type="radio">
-            <label for="TabAdd" class="TabLabel"><span>Добавить потолок</span> <i class="fa fa-plus-square-o" aria-hidden="true"></i></label>
-        <?php endif;?>
-        <div class="WindowTab" id="WindowTabAll">
-                <table class="Information">
+    <div class="Body row">
+        <div class="Client col col-12 <?=($user->dealer_type == 0)?"col-md-6":"col-md-12"?>">
+            <table class="Client" db-id="<?=$Client->id_client;?>">
                 <tbody>
-                <tr class="CalcTitle TableTitle" data-child="Calculate" data-show="false">
-                    <td colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></td>
+                <tr>
+                    <th class="ClientName">Клиент:</th>
+                    <td id="ClientName"><a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$Client->id_client;?>"><?=$Client->client_id;?></a></td>
                 </tr>
-                <?php foreach ($calculations as $calculation):?>
-                    <tr class="Calculate">
-                        <td class="CheckBox" colspan="4">
-                            <input class="CalcCheckBox" id="CalcCheckBox<?=$calculation->id;?>" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
-                            <label for="CalcCheckBox<?=$calculation->id;?>"><?=$calculation->calculation_title;?></label>
-                        </td>
-                    </tr>
-                    <tr class="Calculate">
-                        <td>Площадь:</td>
-                        <td><span><?=$calculation->square;?></span> м<sup>2</sup></td>
-                        <td>Периметр:</td>
-                        <td><span><?=$calculation->perimeter;?></span> м</td>
-                    </tr>
-                    <tr class="Calculate">
-                        <td>Итого:</td>
-                        <td>
-                            <span><?=fceil($calculation->client_sum->itog);?></span> руб.
-                        </td>
-                        <td><?php if($calculation->discount > 0):?>Итого -<?=$calculation->discount;?>%:<?php endif;?></td>
-                        <td>
-                            <?php if($calculation->discount > 0):?>
-                                <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.
-                            <?php endif;?>
-                        </td>
-                    </tr>
-                <?php endforeach;?>
-                <tr class="TR">
-                    <th>Общая площадь:</th>
-                    <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup></td>
-                    <th>Общий периметр:</th>
-                    <td><span><?=$calculationsItog->perimeter;?></span> м</td>
+                <tr>
+                    <th class="ClientBDay">Дата рождения:</th>
+                    <td id="ClientBDay"><?=$Client->birthday_date;?></td>
                 </tr>
-                <tr class="TransportTH TableTitle" data-child="TransportTR" data-show="true">
-                    <td colspan="4">Транспортные расходы <i class="fa fa-sort-desc" aria-hidden="true"></i></td>
-                </tr>
-                <tr class="TransportTR">
-                    <td colspan="4">
-                        <form action="javascript:SendTransport();" class="Transports">
-                            <div class="Transport In">
-                                <input name="transport" class="RadioT" id="transport_1" value="1" type="radio" <?=($$Project->transport == 1 )?"checked":"";?>>
-                                <label for="transport_1">Транспорт по городу</label>
-                                <div class="Block">
-                                    <div class="Name">Количество выездов:</div>
-                                    <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col;?>" placeholder="раз">
-                                    <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                                </div>
-                            </div>
-                            <div class="Transport Out">
-                                <input name="transport" class="RadioT" id="transport_2" value="2" type="radio" <?=($$Project->transport == 2 )?"checked":"";?>>
-                                <label for="transport_2">Выезд за город</label>
-                                <div class="Block">
-                                    <div class="Name">Кол-во, км:</div>
-                                    <input class="Input" type="number" min="1" max="999" name="jform[distance]" id="distance" value="<?=$$Project->distance; ?>" placeholder="км.">
-                                    <div class="Name">Кол-во выездов:</div>
-                                    <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col; ?>" placeholder="раз">
-                                    <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                                </div>
-                            </div>
-                            <div class="Transport Empty">
-                                <div class="Title">
-                                    <input name="transport" class="RadioT" id="transport_0" value="0" type="radio" <?=($$Project->transport == 0 )?"checked":"";?>>
-                                    <label for="transport_0">Без транспорта</label>
-                                </div>
-                                <div class="Block"></div>
-                            </div>
-                        </form>
+                <tr>
+                    <th class="ClientPhones">Телефоны:</th>
+                    <td id="ClientPhones">
+                        <?php
+                        foreach ($Client->phones as $Phone)
+                            echo "<a href='tel:$Phone'>$Phone</a>";
+                        ?>
                     </td>
                 </tr>
-                <tr class="TR">
-                    <th>Услуги транспорта:</th>
-                    <td><span><?=$Transport->itog_sum;?></span> руб.</td>
+                <tr>
+                    <th class="ClientEmails">Почты:</th>
+                    <td id="ClientEmails">
+                        <?php
+                        foreach ($Client->emails as $Email)
+                            echo "<a href='mailto:$Email'>$Email</a>";
+                        ?>
+                    </td>
                 </tr>
-                <tr class="TR">
-                    <th>Итого:</th>
-                    <td><span><?=$calculationsItog->client_sum->itog;?></span> руб.</td>
-                    <th>Итого -<?=$calculationsItog->discount;?>%:</th>
-                    <td><span><?=$calculationsItog->client_sum->discount;?></span> руб.</td>
+                <tr>
+                    <th class="ClientAddress">Адрес:</th>
+                    <td id="ClientAddress" json="<?=json_encode($Client->address);?>">
+                        <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$Client->address->full;?>"><?=$Client->address->full;?></a>
+                    </td>
                 </tr>
-                <tr class="TR">
-                    <td><span><?=ceil($calculationsItog->dealer_sum->CanvasAndComponents);?></span></td>
-                    <td><span><?=ceil($calculationsItog->dealer_sum->mounting);?></span></td>
-                    <td></td>
-                    <td><span><?=ceil($calculationsItog->dealer_sum->itog);?></span></td>
+                <tr>
+                    <th class="ClientCalcDate">Дата замера:</th>
+                    <td id="ClientCalcDate"><?=$Client->calc_date->date;?></td>
                 </tr>
+                <tr>
+                    <th class="ClientNote">Примечание менеджера:</th>
+                    <td id="ClientNote"><?=$Client->dealer_manager_note;?></td>
+                </tr>
+                <tr>
+                    <th class="ClientCalcTime">Время замера:</th>
+                    <td id="ClientCalcTime"><?=$Client->calc_date->time;?></td>
+                </tr>
+                <?php if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
+                    <tr>
+                        <th class="ClientDiscount">Изменить величину скидки:</th>
+                        <td id="ClientDiscount">
+                            <form action="javascript:SendDiscount();">
+                                <input type="number" class="Discount"
+                                       min="<?$Client->discount->min;?>"
+                                       max="<?=$Client->discount->max;?>">
+                                <button type="submit" class="AddDiscount">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endif;?>
                 </tbody>
             </table>
         </div>
-        <?php foreach ($calculations as $k => $calculation):?>
-            <div class="WindowTab" id="WindowTab<?=$calculation->id;?>">
+        <?php if($user->dealer_type == 0):?>
+        <div class="Messages col col-12 col-md-6">
+            <div class="Title">История клиента:</div>
+            <div class="Note">
+                <textarea id="Notes" class="Notes" rows="11" readonly></textarea>
+                <form class="Add" action="javascript:SendNote();">
+                    <div class="Title">Добавить комментарий:</div>
+                    <textarea class="Note" placeholder="Введите новое примечание" onmousemove="ResizeNote();"></textarea>
+                    <button type="submit" class="AddNote" onmousemove="ResizeNote();">
+                        <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <?php endif;?>
+    </div>
+    <div class="Navigation">
+        <h3 class="left">Расчеты для проекта</h3>
+        <div class="Tabs">
+            <style>
+                .Page .Navigation .Tabs #TabAll:checked ~ #WindowTabAll,
+                <?foreach ($calculations as $calculation):?>
+                .Page .Navigation .Tabs #Tab<?=$calculation->id;?>:checked ~ #WindowTab<?=$calculation->id;?>,
+                <?endforeach;?>
+                .Page .Navigation .Tabs #TabAdd:checked ~ #WindowTabAdd {
+                    display: inline-block;
+                }
+            </style>
+            <input name="Tab" class="Tab" id="TabAll" type="radio" checked>
+            <label for="TabAll" class="TabLabel"><span>Общее</span></label>
+            <?php foreach ($calculations as $calculation):?>
+                <input name="Tab" class="Tab" id="Tab<?=$calculation->id;?>"  type="radio">
+                <label for="Tab<?=$calculation->id;?>" class="TabLabel"><span><?=$calculation->calculation_title;?></span></label>
+            <?php endforeach;?>
+            <?php if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
+                <input name="Tab" class="Tab" id="TabAdd" type="radio">
+                <label for="TabAdd" class="TabLabel"><span>Добавить потолок</span> <i class="fa fa-plus-square-o" aria-hidden="true"></i></label>
+            <?php endif;?>
+            <div class="WindowTab" id="WindowTabAll">
+                    <table class="Information">
+                    <tbody>
+                    <tr class="CalcTitle TableTitle" data-child="Calculate" data-show="false">
+                        <td colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></td>
+                    </tr>
+                    <?php foreach ($calculations as $calculation):?>
+                        <tr class="Calculate">
+                            <td class="CheckBox" colspan="4">
+                                <input class="CalcCheckBox" id="CalcCheckBox<?=$calculation->id;?>" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
+                                <label for="CalcCheckBox<?=$calculation->id;?>"><?=$calculation->calculation_title;?></label>
+                            </td>
+                        </tr>
+                        <tr class="Calculate">
+                            <td>Площадь:</td>
+                            <td><span><?=$calculation->square;?></span> м<sup>2</sup></td>
+                            <td>Периметр:</td>
+                            <td><span><?=$calculation->perimeter;?></span> м</td>
+                        </tr>
+                        <tr class="Calculate">
+                            <td>Итого:</td>
+                            <td>
+                                <span><?=fceil($calculation->client_sum->itog);?></span> руб.
+                            </td>
+                            <td><?php if($calculation->discount > 0):?>Итого -<?=$calculation->discount;?>%:<?php endif;?></td>
+                            <td>
+                                <?php if($calculation->discount > 0):?>
+                                    <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.
+                                <?php endif;?>
+                            </td>
+                        </tr>
+                    <?php endforeach;?>
+                    <tr class="TR">
+                        <th>Общая площадь:</th>
+                        <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup></td>
+                        <th>Общий периметр:</th>
+                        <td><span><?=$calculationsItog->perimeter;?></span> м</td>
+                    </tr>
+                    <tr class="TransportTH TableTitle" data-child="TransportTR" data-show="true">
+                        <td colspan="4">Транспортные расходы <i class="fa fa-sort-desc" aria-hidden="true"></i></td>
+                    </tr>
+                    <tr class="TransportTR">
+                        <td colspan="4">
+                            <form action="javascript:SendTransport();" class="Transports">
+                                <div class="Transport In">
+                                    <input name="transport" class="RadioT" id="transport_1" value="1" type="radio" <?=($$Project->transport == 1 )?"checked":"";?>>
+                                    <label for="transport_1">Транспорт по городу</label>
+                                    <div class="Block">
+                                        <div class="Name">Количество выездов:</div>
+                                        <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col;?>" placeholder="раз">
+                                        <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                                <div class="Transport Out">
+                                    <input name="transport" class="RadioT" id="transport_2" value="2" type="radio" <?=($$Project->transport == 2 )?"checked":"";?>>
+                                    <label for="transport_2">Выезд за город</label>
+                                    <div class="Block">
+                                        <div class="Name">Кол-во, км:</div>
+                                        <input class="Input" type="number" min="1" max="999" name="jform[distance]" id="distance" value="<?=$$Project->distance; ?>" placeholder="км.">
+                                        <div class="Name">Кол-во выездов:</div>
+                                        <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col; ?>" placeholder="раз">
+                                        <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                                <div class="Transport Empty">
+                                    <div class="Title">
+                                        <input name="transport" class="RadioT" id="transport_0" value="0" type="radio" <?=($$Project->transport == 0 )?"checked":"";?>>
+                                        <label for="transport_0">Без транспорта</label>
+                                    </div>
+                                    <div class="Block"></div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr class="TR">
+                        <th>Услуги транспорта:</th>
+                        <td><span><?=$Transport->itog_sum;?></span> руб.</td>
+                    </tr>
+                    <tr class="TR">
+                        <th>Итого:</th>
+                        <td><span><?=$calculationsItog->client_sum->itog;?></span> руб.</td>
+                        <th>Итого -<?=$calculationsItog->discount;?>%:</th>
+                        <td><span><?=$calculationsItog->client_sum->discount;?></span> руб.</td>
+                    </tr>
+                    <tr class="TR">
+                        <td><span><?=ceil($calculationsItog->dealer_sum->CanvasAndComponents);?></span></td>
+                        <td><span><?=ceil($calculationsItog->dealer_sum->mounting);?></span></td>
+                        <td></td>
+                        <td><span><?=ceil($calculationsItog->dealer_sum->itog);?></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <?php foreach ($calculations as $k => $calculation):?>
+                <div class="WindowTab" id="WindowTab<?=$calculation->id;?>">
+
+                </div>
+            <?php endforeach;?>
+            <div class="WindowTab" id="WindowTabAdd">
 
             </div>
-        <?php endforeach;?>
-        <div class="WindowTab" id="WindowTabAdd">
-
         </div>
     </div>
 </div>
@@ -563,7 +568,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
 <?php endif;?>
 
-<?php if(false):?>
+<?php if(true):?>
 
 <style>
     @media screen and (max-width: 500px) {
