@@ -1727,9 +1727,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                     </table>
                                                 <?php } ?>
                                         </div>
-                                        <button class="btn  btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
+                                        <button class="btn btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
                                         <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
-                                        <!-- <div class="span6"></div> -->
                                     </div>
                                 </div>
                             </div>
@@ -1738,23 +1737,16 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <?php } ?>
         </div>
     </div>
-
-    <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
-
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
     <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
         <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
             <table <?php if ($this->item->id_client == 1) {echo "style='display:none'";} ?> >
                 <tr>
-                    <td>
-                        <a class="btn  btn-success" id="accept_project" >
-                            Договор
-                        </a>
+                    <td style="padding: 0 10px">
+                        <a class="btn  btn-success" id="accept_project" >Договор</a>
                     </td>
-                    <td>
-                        <a class="btn  btn-danger" id="refuse_project">
-                            Отказ
-                        </a>
+                    <td style="padding: 0 10px">
+                        <a class="btn  btn-danger" id="refuse_project">Отказ</a>
                     </td>
                 </tr>
             </table>
@@ -1804,6 +1796,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         </label>
                         <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
                                     aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                     </td>
                 </tr>
                 <tr>
