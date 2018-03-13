@@ -924,22 +924,22 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
             </p>
             <p>
-                <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $house ?>" class="inputactive" placeholder="Дом"  aria-required="true" type="text">
+                <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $house ?>" placeholder="Дом"  aria-required="true" type="text">
             </p>
             <p>                
-                <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) { echo $_SESSION['bdq']; } else echo $bdq ?>" class="inputactive" placeholder="Корпус" aria-required="true" type="text">
+                <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) { echo $_SESSION['bdq']; } else echo $bdq ?>" placeholder="Корпус" aria-required="true" type="text">
             </p>
             <p>
-                <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $apartment ?>" class="inputactive" placeholder="Квартира"  aria-required="true" type="text">
+                <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $apartment ?>" placeholder="Квартира"  aria-required="true" type="text">
             </p>
             <p>
-                <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $porch ?>" class="inputactive" placeholder="Подъезд"  aria-required="true" type="text">
+                <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $porch ?>" placeholder="Подъезд"  aria-required="true" type="text">
             </p>
             <p>
-                <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $floor ?>" class="inputactive" placeholder="Этаж" aria-required="true" type="text">
+                <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $floor ?>" placeholder="Этаж" aria-required="true" type="text">
             </p>
             <p>
-                <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $code ?>" class="inputactive" placeholder="Код" aria-required="true" type="text">
+                <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $code ?>" placeholder="Код" aria-required="true" type="text">
             </p>
             <p>Дата и время замера: 
                 <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
@@ -974,7 +974,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </p>
             <?php if ($this->item->id_client != 1) { ?>
                 <p>
-                    <button type="submit" id="accept_changes" class="btn btn btn-success">Сохранить клиента</button>
+                    <button type="submit" id="accept_changes" class="btn btn btn-primary">Сохранить клиента</button>
                 </p>
             <?php } ?>
         </div>
