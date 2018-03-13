@@ -590,6 +590,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         max-width: 300px;
         font-size: 13px;
     }
+    #table1 button {
+        font-size: 13px;
+    }
     #table1 td, #table1 th {
         padding: 10px 5px;
     }
