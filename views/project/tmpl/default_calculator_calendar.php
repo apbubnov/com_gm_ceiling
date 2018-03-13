@@ -1465,10 +1465,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </div>
                                     <?php endif; ?>
                                     <div class="row">
-                                        <div class="col-xs-12">
+                                        <div class="col-xs-12 no_padding">
                                             <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
                                                 <h4>Материал</h4>
-                                                <table>
+                                                <table class="table_info2">
                                                     <tr>
                                                         <td>Тип потолка:</td>
                                                         <td><?php echo $calculation->n1; ?></td>
