@@ -1540,26 +1540,41 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                         </tr>
                                                     </table>
                                                 <?php } ?>
-                                            
-                                            <table class="table_info2">
+                                                <?php if ($calculation->n12) { ?>
+                                                    <h4 style="margin: 10px 0;">Установка люстры</h4>
+                                                    <table class="table_info2">
+                                                        <tr>
+                                                            <td><?php echo $calculation->n12; ?> шт.</td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </table>
+                                                <?php } ?>
+                                                <?php if ($calculation->n13) { ?>
+                                                    <h4>Установка светильников</h4>
+                                                    <table class="table_info2">
+                                                    <?php foreach ($calculation->n13 as $key => $n13_item) {
+                                                        echo "<tr><td><b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "</td></tr>";
+                                                        }
+                                                    }
+                                                ?>
+
+
+
+                                                <table class="table_info2">
                                                     <tr>
                                                         <td></td>
                                                         <td></td>
                                                     </tr>
                                                 </table>
-                                            <?php if ($calculation->n12) { ?>
-                                                <h4>Установка люстры</h4>
-                                                <?php echo $calculation->n12; ?> шт.
-                                            <?php } ?>
+                                            
 
-                                            <?php if ($calculation->n13) { ?>
-                                                <h4>Установка светильников</h4>
-                                                <?php foreach ($calculation->n13 as $key => $n13_item) {
-                                                    echo "<b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "<br>";
-                                                    ?>
-                                                <?php }
-                                            } ?>
-
+                                            
+                                                <table class="table_info2">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
                                             <?php if ($calculation->n14) { ?>
                                                 <h4>Обвод трубы</h4>
                                                 <?php foreach ($calculation->n14 as $key => $n14_item) {
