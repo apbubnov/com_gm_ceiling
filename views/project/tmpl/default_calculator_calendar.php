@@ -1178,87 +1178,91 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 </td>
                             </tr>
                             <tr>
-                            <?php 
-                            //-------------------------Себестоимость транспорта-------------------------------------
-                                
-                                $project_total_11 = $project_total_11 + $sum_transport_1;
-                                $project_total = $project_total + $sum_transport;
-                                $project_total_discount = $project_total_discount + $sum_transport;
+                                <?php 
+                                    //-------------------------Себестоимость транспорта-------------------------------------
+                                    $project_total_11 = $project_total_11 + $sum_transport_1;
+                                    $project_total = $project_total + $sum_transport;
+                                    $project_total_discount = $project_total_discount + $sum_transport;
                                 ?>
-                                <th colspan="2"> Транспорт</th>
-                                <td id="transport_sum"> <?=$sum_transport;?> руб. </td>
+                                <th colspan="2">Транспорт</th>
+                                <td id="transport_sum">
+                                    <?=$sum_transport;?> руб.
+                                </td>
                                 <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
                             </tr>
                             <tr>
-
                                 <?php if ($kol > 0) { ?>
                                     <th>Итого/ - %:</th>
-                                    <th id="project_total"><span class="sum"><?php echo round($project_total, 0); ?></span> руб. /</th>
+                                    <th id="project_total"><span class="sum">
+                                        <?php echo round($project_total, 0); ?></span> руб. /
+                                    </th>
                                     <th id="project_total_discount">
-                                        <?
-                                        //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                                        $old_price = $project_total_discount;
-                                        if($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum)
-                                            $project_total_discount = $min_components_sum;
-                                        elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum)
-                                            $project_total_discount = $min_components_sum;
-                                        elseif($project_total_discount <  $min_project_sum && $project_total_discount > 0)
-                                            $project_total_discount =  $min_project_sum;
+                                        <?php
+                                            //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                            $old_price = $project_total_discount;
+                                            if ($dealer_canvases_sum == 0 && $project_total_discount < $min_components_sum) {
+                                                $project_total_discount = $min_components_sum;
+                                            } elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total_discount < $min_components_sum) {
+                                                $project_total_discount = $min_components_sum;
+                                            } elseif ($project_total_discount <  $min_project_sum && $project_total_discount > 0) {
+                                                $project_total_discount =  $min_project_sum;
+                                            }
                                         ?>
                                         <span class="sum"><?= round($project_total_discount, 0);?> руб.</span>
-                                        <?if($old_price != $project_total_discount):?>
+                                        <?php if($old_price != $project_total_discount): ?>
+                                            <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
+                                        <?php endif; ?>
+                                    </th>
+                                <?php } else { ?>
+                                    <th>Итого</th>
+                                    <th id="project_total" colspan="2">
+                                        <?php
+                                            //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                            $old_price = $project_total;
+                                            if ($dealer_canvases_sum == 0 && $project_total < $min_components_sum) {
+                                                $project_total = $min_components_sum;
+                                            } elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total < $min_components_sum) {
+                                                $project_total = $min_components_sum;
+                                            } elseif ($project_total <  $min_project_sum && $project_total > 0) {
+                                                $project_total =  $min_project_sum;
+                                            }
+                                        ?>
+                                        <span class="sum"><?= round($project_total, 0);?> руб.</span>
+                                        <?php if($old_price != $project_total): ?>
                                             <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                                         <?endif;?>
                                     </th>
-                                <?php } else { ?>
-                                <th>Итого</th>
-                                <th id="project_total" colspan="2">
-                                    <?
-                                    //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                                    $old_price = $project_total;
-                                    if($dealer_canvases_sum == 0 && $project_total < $min_components_sum)
-                                        $project_total = $min_components_sum;
-                                    elseif ($dealer_gm_mounting_sum_11 == 0 && $project_total < $min_components_sum)
-                                        $project_total = $min_components_sum;
-                                    elseif($project_total <  $min_project_sum && $project_total > 0)
-                                        $project_total =  $min_project_sum;
-                                    ?>
-                                    <span class="sum"><?= round($project_total, 0);?> руб.
-                                    </span><?if($old_price != $project_total):?>
-                                        <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
-                                    <?endif;?>
-                                </th>
-                                <?};?>
+                                <?php } ?>
                             </tr>
                             <?php if ($user->dealer_type != 2) { ?>
                                 <tr>
-                                <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
-                                <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
-                                <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
-                                </tr><?php } ?>
+                                    <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
+                                    <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
+                                    <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
+                                </tr>
+                            <?php } ?>
                             <tr>
-                                <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
-                                                                                        aria-hidden="true"></i></th>
+                                <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                             </tr>
                             <?php foreach ($calculations as $calculation) { ?>
-                            <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                                <td colspan="2"><?php echo $calculation->calculation_title; ?></td>
-                                <td>
-                                    <?php
-                                    $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-
-                                    $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
-                                    ?>
-                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                    <?php } else { ?>
-                                        -
-                                    <?php } ?>
-                                </td>
-                                <?php }
+                                <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
+                                    <td colspan="2"><?php echo $calculation->calculation_title; ?></td>
+                                    <td>
+                                        <?php
+                                            $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
+                                            $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
+                                        ?>
+                                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                        <?php } else { ?>
+                                            -
+                                        <?php } ?>
+                                    </td>
+                                </tr>
+                            <?php
+                                }
                                 $json = json_encode($pdf_names);
                             ?>
-                            </tr>
                             <?php if (count($calculations) > 0) { ?>
                                 <tr class="section_estimate" style="display:none;">
                                     <td colspan="3"><b>Отправить все сметы <b></td>
