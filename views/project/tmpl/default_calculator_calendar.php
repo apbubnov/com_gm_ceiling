@@ -1897,7 +1897,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 jQuery("#modal-window-container-tar").hide();
                 jQuery("#modal-window-choose-tar").hide();
             }
-            var div6 = jQuery("#change_info");
+            var div6 = jQuery("#change_info_win");
             if (!div6.is(e.target)
                 && div6.has(e.target).length === 0) {
                 jQuery(".btn_close").hide();
@@ -2756,11 +2756,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             });*/
             
             jQuery("#change_data").click(function () {
-                /* jQuery(".FIO").toggle();
-                jQuery(".Contacts").toggle();
-                jQuery(".Address").toggle();
-                jQuery(".Date").toggle();
-                jQuery("#accept_changes").toggle(); */
                 jQuery(".btn_close").show();
                 jQuery("#change_info").show();
                 jQuery("#change_info_win").show();
@@ -2781,7 +2776,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
             jQuery("#accept_changes").click(function () {
                 jQuery("input[name='data_change']").val(1);
-                //
                 jQuery(".btn_close").hide();
                 jQuery("#change_info").hide();
                 jQuery("#change_info_win").hide();
