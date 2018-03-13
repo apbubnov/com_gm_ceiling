@@ -597,6 +597,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     #table1 td, #table1 th {
         padding: 10px 5px;
     }
+    .wtf_padding {
+        padding: 0;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
@@ -614,6 +617,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             width: auto;
             max-width: 200px;
         }
+        .wtf_padding {
+        padding: 15px;
+    }
     }
 </style>
 
@@ -1465,7 +1471,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </div>
                                     <?php endif; ?>
                                     <div class="row">
-                                        <div class="col-xs-12">
+                                        <div class="col-xs-12 wtf_padding">
                                             <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
                                                 <h4>Материал</h4>
                                                 <table class="table_info2">
