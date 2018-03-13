@@ -588,6 +588,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     #table1 {
         width: 100%;
         max-width: 300px;
+    }
+    #table1 td, #table1 th {
         padding: 10px 5px;
     }
     @media screen and (min-width: 768px) {
@@ -597,6 +599,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         #table1 {
             width: 100%;
             max-width: 1024px;
+        }
+        #table1 td, #table1 th {
             padding: 15px;
         }
     }
