@@ -1753,78 +1753,79 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         <?php } ?>
         <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?> id="project_activation">
             <?php if ($user->dealer_type != 2) { ?>
-            <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">
-                Примечание к договору
-            </label>
-            <div class="controls">
-                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору"
-                            aria-invalid="false"><?=($this->item->dealer_calculator_note)?$this->item->dealer_calculator_note:""?></textarea>
-            </div>
-            <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
-            </button>
-
-            <table id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
-                <tr>
-                    <td colspan="6">
-                        <h4 id="title" style="display: none;">
-                            Назначить монтажную бригаду
-                        </h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                    </td>
-                    <td colspan="2">
-                        <div id="calendar1">
-                            <?php echo $calendar1; ?>
-                        </div>
-                    </td>
-                    <td colspan="2">
-                        <div id="calendar2">
-                            <?php echo $calendar2; ?>
-                        </div>
-                    </td>
-                    <td>
-                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="6">
-                        <label id="jform_chief_note-lbl" for="jform_chief_note" class="">
-                            Примечание к монтажу
-                        </label>
-                        <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
-                                    aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
-                            производство
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button class="validate btn btn-primary" id="save_email" type="button" from="form-client"> Сохранить и запустить <br> в
-                            производство по email
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
-                        </button>
-                    </td>
-                </tr>
-                <?php } ?>
-            </table>
+                <table>
+                    <tr>
+                        <td>
+                            <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">Примечание к договору</label>
+                        </td>
+                        <td>
+                            <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"><?=($this->item->dealer_calculator_note)?$this->item->dealer_calculator_note:""?></textarea>
+                        </td>
+                    </tr>
+                </table>
+                <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
+                <table id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
+                    <tr>
+                        <td colspan="6">
+                            <h4 id="title" style="display: none;">
+                                Назначить монтажную бригаду
+                            </h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                        </td>
+                        <td colspan="2">
+                            <div id="calendar1">
+                                <?php echo $calendar1; ?>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div id="calendar2">
+                                <?php echo $calendar2; ?>
+                            </div>
+                        </td>
+                        <td>
+                            <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <label id="jform_chief_note-lbl" for="jform_chief_note" class="">
+                                Примечание к монтажу
+                            </label>
+                            <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
+                                        aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
+                                производство
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="validate btn btn-primary" id="save_email" type="button" from="form-client"> Сохранить и запустить <br> в
+                                производство по email
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
+                            </button>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                </table>
         </div>
     <?php } ?>
 
