@@ -355,7 +355,7 @@ $AllMounters = $model->FindAllMounters($where);
                         </td>
                         <td>
                             <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
-                            <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                            <?php if ($total_components_sum > 0 && file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                             <?php } else { ?>
                                 -
