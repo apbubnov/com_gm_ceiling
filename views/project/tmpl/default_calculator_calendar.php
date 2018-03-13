@@ -597,6 +597,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     #table1 td, #table1 th {
         padding: 10px 5px;
     }
+    .wtf_padding {
+        padding: 0;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
@@ -614,6 +617,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             width: auto;
             max-width: 200px;
         }
+        .wtf_padding {
+        padding: 15px;
+    }
     }
 </style>
 
@@ -1464,28 +1470,39 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    <div class="row-fluid">
-                                        <div class="span6">
+                                    <div class="row">
+                                        <div class="col-xs-12 wtf_padding">
                                             <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
                                                 <h4>Материал</h4>
-                                                <div>
-                                                    Тип потолка: <?php echo $calculation->n1; ?>
-                                                </div>
-                                                <div>
-                                                    Тип фактуры: <?php echo $calculation->n2; ?>
-                                                </div>
-                                                <div>
-                                                    Производитель, ширина: <?php echo $calculation->n3; ?>
-                                                </div>
+                                                <table class="table_info2">
+                                                    <tr>
+                                                        <td>Тип потолка:</td>
+                                                        <td><?php echo $calculation->n1; ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Тип фактуры:</td>
+                                                        <td><?php echo $calculation->n2; ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Производитель, ширина:</td>
+                                                        <td><?php echo $calculation->n3; ?></td>
+                                                    </tr>
+                                                    <?php
+                                                        if ($calculation->color > 0) {
+                                                            $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+                                                            $color = $color_model->getData($calculation->color);
+                                                    ?>
+                                                        <tr>
+                                                            <td>Цвет:</td>
+                                                            <td>
+                                                                <?php echo $color->colors_title; ?>
+                                                                <img src="/<?php echo $color->file; ?>" alt=""/>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </table>
 
-                                                <?php if ($calculation->color > 0) { ?>
-                                                    <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
-                                                    <?php $color = $color_model->getData($calculation->color); ?>
-                                                    <div>
-                                                        Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>"
-                                                                                                    alt=""/>
-                                                    </div>
-                                                <?php } ?>
+                                                
                                                 <h4>Размеры помещения</h4>
                                                 <div>
                                                     Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
@@ -1661,8 +1678,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </div>
                                         <button class="btn  btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
                                         <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
-                                        <div class="span6">
-                                        </div>
+                                        <!-- <div class="span6"></div> -->
                                     </div>
                                 </div>
                             </div>
