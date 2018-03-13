@@ -585,12 +585,22 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     .calculation_sum td {
         padding: 0 5px;
     }
+    #table1 {
+        width: 100%;
+        max-width: 300px;
+        padding: 10px 5px;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
         }
+        #table1 {
+            width: 100%;
+            max-width: 1024px;
+            padding: 15px;
+        }
     }
-    @media screen and (max-width: 500px) {
+   /*  @media screen and (max-width: 500px) {
         #table1 {
             width: 300px;
             float: none;
@@ -598,7 +608,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         #table1 th {
             max-width: 100px;
         }
-    }
+    } */
 </style>
 
 <?= parent::getButtonBack(); ?>
