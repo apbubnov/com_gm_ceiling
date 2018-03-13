@@ -969,6 +969,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </p>
         </div>
     </div>
+
     <!-- расчеты для проекта -->
     <?php echo "<h3>Расчеты для проекта</h3>"; ?>
     <!-- Nav tabs -->
@@ -2058,7 +2059,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             
             window.time = undefined;
             window.gauger = undefined;
-            $("#modal_window_container #ok").click(function() { click_ok(this); });
+
+            $("#modal_window_container #ok").click(function() {
+                 click_ok(this); 
+            });
+
             if (document.getElementById('comments'))
             {
                 show_comments();
@@ -2300,6 +2305,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 jQuery("#close-tar").hide();
                 jQuery("#modal_window_g_container").hide();
                 jQuery("#modal_window_g_choose").hide();
+                jQuery(".btn_close").show();
+                jQuery("#change_info").show();
+                jQuery("#change_info_win").show();
             });
             jQuery("#projects_gaugers").on("click", "td", function(){
                 var times = jQuery(this).closest('tr').find("input:radio[name='choose_time_gauger']");
