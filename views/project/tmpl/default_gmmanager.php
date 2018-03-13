@@ -21,6 +21,7 @@ foreach($calculations as $calc){
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 
 $user = JFactory::getUser();
 $userId = $user->get('id');
@@ -321,7 +322,7 @@ $AllMounters = $model->FindAllMounters($where);
                         <td>
                             <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                            <?php echo $total_components_sum - $baget2 + $itog - $brus2 + $itog2 - $price_provod + $price_provod1; ?>
+                            <?php echo $total_components_sum;// - $baget2 + $itog - $brus2 + $itog2 - $price_provod + $price_provod1; ?>
                             руб.
                             <?php } else { ?>
                                 0
