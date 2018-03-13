@@ -899,7 +899,31 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				}	
 				if($isDiscountChange&&(!empty($new_discount)||$new_discount==0)){
 					$model->change_discount($project_id,$new_discount);
+/* Доделать генерацию pdf client
+					$calculationsID = $model->getCalculationIdById($project_id);
+					$modal_calc = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
+                    foreach ($calculationsID as $item) {
+                        $calc_id = $item->id;
+                        $item = $modal_calc->getData($item->id);
+                        $item["extra_mounting_array"] = array();
+                        foreach (json_decode($item["extra_mounting"]) as $extra_mounting)
+                            $item["extra_mounting_array"][] = $extra_mounting;
 
+                        if (floatval($item["mounting_sum"]) == 0)
+                            Gm_ceilingHelpersGm_ceiling::create_client_single_estimate(0, $calc_id);
+                        else if (empty($item["extra_mounting_array"]))
+                            Gm_ceilingHelpersGm_ceiling::create_client_single_estimate(1, $calc_id);
+                        else {
+                            $item["need_mount"] = false;
+                            $first = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, null, $item);
+                            $item["need_mount"] = true;
+                            $last = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, null, $item);
+                            print_r(floatval($item["mounting_sum"]));
+                            print_r($first);
+                            print_r($last);
+                            exit();
+                        }
+					}*/
 				}
 				$this->setMessage("Данные успешно изменены");
 				if($type === "gmcalculator" && $subtype === "calendar") {
