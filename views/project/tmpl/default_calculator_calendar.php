@@ -20,6 +20,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $sum_transport = $transport['client_sum'];
 $sum_transport_1 = $transport['mounter_sum'];
