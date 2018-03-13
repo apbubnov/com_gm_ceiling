@@ -1022,7 +1022,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" id="summary" role="tabpanel">
-                        <table id="table1" class="table table-striped one-touch-view">
+                        <table id="table1" class="table-striped one-touch-view">
                             <tr>
                                 <th colspan="3" class="section_header" id="sh_ceilings">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                             </tr>
