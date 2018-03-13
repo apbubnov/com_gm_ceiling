@@ -1814,7 +1814,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </div>
 
         <style>
-            @media (max-width: 1024px) {
+            /* @media (max-width: 1024px) {
                 .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul *, .ClientContainer, .ClientContainer *  {
                     font-size: 10px !important;
                     padding: .1rem !important;
@@ -1842,7 +1842,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 .section_content img {
                     width: 100% !important;
                 }
-            }
+            } */
         </style>
 
     <script type="text/javascript">
