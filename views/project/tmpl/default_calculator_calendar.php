@@ -1755,7 +1755,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <?php if ($user->dealer_type != 2) { ?>
                 <table>
                     <tr>
-                        <td>
+                        <td Style="padding-right: 15px;">
                             <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">Примечание к договору</label>
                         </td>
                         <td>
