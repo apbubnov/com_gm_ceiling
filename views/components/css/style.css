@@ -36,7 +36,7 @@ body {
 }
 
 .FormSimple {
-    width: auto !important;
+    width: auto;
     overflow: hidden !important;
     border-radius: 5px;
     float: left;
@@ -68,12 +68,9 @@ body {
     text-align: center;
 }
 
-.FormSimple input[type="text"],
-.FormSimple input[type="number"] {
+.FormSimple input {
     display: inline-block;
     width: 81px;
-    max-width: 81px;
-    min-width: 81px;
     height: 38px;
     line-height: 38px;
     font-size: 16px;
@@ -83,6 +80,10 @@ body {
     border: 1px solid rgb(64, 65, 154);
     margin: 0;
     float: left;
+}
+
+.FormSimple.col-fs-2 input {
+    width: calc((100% - 38px * 3) / 2);
 }
 
 .Page .Title {
@@ -174,6 +175,65 @@ body {
 
 .Page .Body .Level3 {
     background-color: rgba(211, 212, 243, .1);
+}
+
+.Page .Modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    line-height: 100vh;
+    background-color: rgba(0,0,0,.4);
+    z-index: 1000;
+    text-align: center;
+}
+
+.Page .Modal .ModalPage {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    max-height: calc(100vh - 40px);
+    min-height: 50px;
+    line-height: normal;
+    vertical-align: middle;
+    float: none;
+    background: rgb(255,255,255);
+    border-radius: 3px;
+    overflow: auto;
+}
+
+.Page .Modal .ModalClose {
+    position: absolute;
+    top:0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    cursor: pointer;
+}
+
+.Page .Modal .ModalPage.PayList .PayListTable {
+    width: 100%;
+    height: auto;
+    display: inline-table;
+    float: left;
+}
+
+.Page .Modal .ModalPage.PayList .PayListTable thead tr td,
+.Page .Modal .ModalPage.PayList .PayListTable tfoot tr td{
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+    font-size: 16px;
+    background: rgb(64, 65, 154);
+    color: rgb(255,255,255);
+    font-weight: bold;
+}
+
+.Page .Modal .ModalPage.PayList .FormPay .FormSimple {
+    border-radius: 0;
 }
 
 .MarginLeft {

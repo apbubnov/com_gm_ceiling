@@ -87,7 +87,7 @@ function dealer_margin($price, $margin, $value, $type) {
             </form>
         <?endif;?>
         <?if(!($managerGM || $stock)):?>
-            <button type="button" class="Current Basket" id="Basket">
+            <button type="button" class="Current Basket" id="Basket" onclick="ModalAction('PayList');">
                 <i class="fa fa-shopping-basket"></i> <span class="sum">0</span> руб.
             </button>
         <?endif;?>
@@ -260,34 +260,44 @@ function dealer_margin($price, $margin, $value, $type) {
         </tfoot>
     </table>
     </div>
-    <div class="Modal">
-        <div class="ModalPage">
-            <div class="ListPay">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>Стоимость</th>
-                        <th>Количество</th>
-                        <th>Цена</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td colspan="3">Итого:</td>
-                        <td></td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
+    <div class="Modal" style="display: none;">
+        <div class="ModalClose"></div>
+        <form class="ModalPage PayList" style="display: none;">
+            <table class="PayListTable">
+                <thead>
+                <tr>
+                    <td>Название</td>
+                    <td>Стоимость</td>
+                    <td>Количество</td>
+                    <td>Цена</td>
+                </tr>
+                <tr class="ComponentPay" hidden>
+                    <td class="ComponentPayName"></td>
+                    <td class="ComponentPay"></td>
+                    <td class="ComponentPayCost"></td>
+                    <td class="ComponentPayItog"></td>
+                </tr>
+                </thead>
+                <tbody class="ComponentsList">
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="2"></td>
+                    <td>Итого:</td>
+                    <td class="ComponentsPayItog"></td>
+                </tr>
+                </tfoot>
+            </table>
             <div class="FormPay">
-                <div class="InputLine">
-
+                <div class="FormSimple col-fs-2">
+                    <label for="Comment"><i class="fa fa-comment"></i></label>
+                    <input type="text" id="Comment" name="Comment" placeholder="Комментарий" title="Комментарий">
+                    <label for="Date"><i class="fa fa-calendar"></i></label>
+                    <input type="datetime-local" id="Date" name="Date" title="Дата к которой заказ должен быть готов">
+                    <button type="submit" title="Отправить в производство"><i class="fa fa-shopping-cart"></i></button>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <script type="text/javascript">
@@ -326,6 +336,9 @@ function dealer_margin($price, $margin, $value, $type) {
         Data.Scroll = {};
 
         Data.Dealer = <?=isset($dealer)?$dealer->id:"null";?>;
+
+        Data.Modal = Data.Page.find(".Modal");
+        Data.Modal.find(".ModalClose").click(ModalAction);
 
         ScrollInit();
         ResizeHead();
@@ -528,5 +541,19 @@ function dealer_margin($price, $margin, $value, $type) {
 
         console.log(Data.Pay);
         $("#Basket .sum").text(Data.Pay.sum);
+    }
+
+    function ModalAction(page = null) {
+        var modal = Data.Modal,
+            modalPages = modal.find(".ModalPage");
+        console.log(modalPages);
+
+        if (modal.is(":visible")){
+            modalPages.hide();
+            modal.hide();
+        } else if (page !== null) {
+            modal.show();
+            modal.find("." + page).show();
+        }
     }
 </script>
