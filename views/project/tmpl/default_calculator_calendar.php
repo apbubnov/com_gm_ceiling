@@ -612,15 +612,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         font-size: 1em;
     }
     }
-   /*  @media screen and (max-width: 500px) {
-        #table1 {
-            width: 300px;
-            float: none;
-        }
-        #table1 th {
-            max-width: 100px;
-        }
-    } */
 </style>
 
 <?= parent::getButtonBack(); ?>
@@ -1206,8 +1197,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     $project_total = $project_total + $sum_transport;
                                     $project_total_discount = $project_total_discount + $sum_transport;
                                 ?>
-                                <th colspan="2">Транспорт</th>
-                                <td id="transport_sum">
+                                <th>Транспорт</th>
+                                <td colspan="2" id="transport_sum">
                                     <?=$sum_transport;?> руб.
                                 </td>
                                 <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
@@ -1268,8 +1259,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </tr>
                             <?php foreach ($calculations as $calculation) { ?>
                                 <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                                    <td colspan="2"><?php echo $calculation->calculation_title; ?></td>
-                                    <td>
+                                    <td><?php echo $calculation->calculation_title; ?></td>
+                                    <td colspan="2">
                                         <?php
                                             $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
                                             $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
@@ -1290,7 +1281,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <td colspan="3"><b>Отправить все сметы <b></td>
                                 </tr>
                                 <tr class="section_estimate" style="display:none;">
-                                    <td colspan="2">
+                                    <td>
                                         <div class="email-all" style="float: left;">
                                             <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
                                             <datalist id="email">
@@ -1315,7 +1306,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             </script>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td colspan="2">
                                         <button class="btn btn-primary" id="send_all_to_email1" type="button">Отправить</button>
                                     </td>
                                 </tr>
@@ -1326,8 +1317,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 </tr>
                                 <?php foreach ($calculations as $calculation) { ?>
                                     <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
-                                        <td colspan="2"><?php echo $calculation->calculation_title; ?></td>
-                                        <td>
+                                        <td><?php echo $calculation->calculation_title; ?></td>
+                                        <td colspan="2">
                                             <?php 
                                                 $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";
                                                 $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
@@ -1348,7 +1339,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <td colspan="3"><b>Отправить все наряды на монтаж<b></td>
                                     </tr>
                                     <tr class="section_mount" style="display:none;">
-                                        <td colspan="2">
+                                        <td>
                                             <div class="email-all" style="float: left;">
                                                 <input name="all-email" id="all-email2" class="form-control" style="width:200px;" value="" placeholder="Адрес эл.почты" type="text">
                                             </div>
@@ -1368,7 +1359,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 </script>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td colspan="2">
                                             <button class="btn btn-primary" id="send_all_to_email2" type="button">Отправить</button>
                                         </td>
                                     </tr>
@@ -1376,8 +1367,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <?php } ?>
                             <!--------------- Общая смета для клиента -------------->
                             <tr>
-                                <td colspan="2"><b>Отправить общую смету <b></td>
-                                <td>
+                                <td><b>Отправить общую смету <b></td>
+                                <td colspan="2">
                                     <?php
                                         $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf";
                                         if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
@@ -1393,7 +1384,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </tr>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                 <tr>
-                                    <td colspan="2">
+                                    <td>
                                         <div class="email-all" style="float: left;">
                                             <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
                                             <datalist id="email">
@@ -1418,7 +1409,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             </script>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td colspan="2">
                                         <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
                                     </td>
                                 </tr>
@@ -1426,8 +1417,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <!-- общий наряд на монтаж--> 
                             <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                                 <tr>
-                                    <td colspan="2"><b>Общий наряд на монтаж <b></td>
-                                    <td>
+                                    <td><b>Общий наряд на монтаж <b></td>
+                                    <td colspan="2">
                                         <?php
                                             $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; 
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
