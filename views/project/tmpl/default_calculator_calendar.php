@@ -1742,10 +1742,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
             <table <?php if ($this->item->id_client == 1) {echo "style='display:none'";} ?> >
                 <tr>
-                    <td style="padding: 0 10px">
+                    <td style="padding: 25px 10px">
                         <a class="btn  btn-success" id="accept_project" >Договор</a>
                     </td>
-                    <td style="padding: 0 10px">
+                    <td style="padding: 25px 10px">
                         <a class="btn  btn-danger" id="refuse_project">Отказ</a>
                     </td>
                 </tr>
