@@ -614,7 +614,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         }
         #table1 button, #table1 a, #table1 input {
         font-size: 1em;
-        width: 200px;
+        max-width: 100px;
     }
     }
 </style>
