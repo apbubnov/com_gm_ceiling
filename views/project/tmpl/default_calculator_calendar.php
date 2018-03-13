@@ -1763,13 +1763,13 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         </td>
                     </tr>
                 </table>
-                <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
+                <!-- стиль не сделала, не вижу ее -->
+                    <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
+                <!-- конец -->
                 <table id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
                     <tr>
                         <td colspan="6">
-                            <h4 id="title" style="display: none;">
-                                Назначить монтажную бригаду
-                            </h4>
+                            <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
                         </td>
                     </tr>
                     <tr>
