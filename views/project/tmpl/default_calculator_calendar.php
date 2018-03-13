@@ -909,25 +909,50 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </p>
             <p>Адрес клиента: <span class="star">&nbsp;*</span></p>
             <p>
-                <input name="new_address" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
-            </p>
-            <p>
-                <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $house ?>" placeholder="Дом"  aria-required="true" type="text">
-            </p>
-            <p>                
-                <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) { echo $_SESSION['bdq']; } else echo $bdq ?>" placeholder="Корпус" aria-required="true" type="text">
-            </p>
-            <p>
-                <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $apartment ?>" placeholder="Квартира"  aria-required="true" type="text">
-            </p>
-            <p>
-                <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $porch ?>" placeholder="Подъезд"  aria-required="true" type="text">
-            </p>
-            <p>
-                <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $floor ?>" placeholder="Этаж" aria-required="true" type="text">
-            </p>
-            <p>
-                <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $code ?>" placeholder="Код" aria-required="true" type="text">
+                <table>
+                    <tr>
+                        <td>Улица:</td>
+                        <td>
+                            <input name="new_address" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Дом:</td>
+                        <td>
+                            <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $house ?>" placeholder="Дом"  aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Корпус:</td>
+                        <td>
+                            <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) { echo $_SESSION['bdq']; } else echo $bdq ?>" placeholder="Корпус" aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Квартира:</td>
+                        <td>
+                            <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $apartment ?>" placeholder="Квартира"  aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Подъезд:</td>
+                        <td>
+                            <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $porch ?>" placeholder="Подъезд"  aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Этаж:</td>
+                        <td>
+                            <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $floor ?>" placeholder="Этаж" aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Код:</td>
+                        <td>                
+                            <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $code ?>" placeholder="Код" aria-required="true" type="text">
+                        </td>
+                    </tr>
+                </table>
             </p>
             <p>Дата и время замера: 
                 <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
