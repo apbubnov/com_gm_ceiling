@@ -909,7 +909,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </p>
             <p>Адрес клиента: <span class="star">&nbsp;*</span></p>
             <p>
-                <table style="width: 100%">
+                <table style="width: 100%; padding-bottom: 10px;">
                     <tr>
                         <td>Улица:</td>
                         <td>
