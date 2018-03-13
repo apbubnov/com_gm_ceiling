@@ -596,6 +596,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     #table1 td, #table1 th {
         padding: 10px 5px;
     }
+    .file_name2 {
+        width: auto;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
