@@ -1270,56 +1270,57 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <tr class="section_estimate" style="display:none;">
                                     <td colspan="2">
                                         <div class="email-all" style="float: left;">
-                                            <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;"
-                                                placeholder="Адрес эл.почты" type="text">
-                                                <datalist id="email">
-                                                    <?php foreach ($contact_email AS $em) {?>
-                                                    <option value="<?=$em->contact;?>"> <?php }?>
-                                                </datalist>
+                                            <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
+                                            <datalist id="email">
+                                                <?php foreach ($contact_email AS $em) { ?>
+                                                    <option value="<?=$em->contact;?>">
+                                                <?php }?>
+                                            </datalist>
                                         </div>
                                         <div class="file_data">
                                             <div class="file_upload">
                                                 <input type="file" class="dopfile" name="dopfile" id="dopfile">
                                             </div>
                                             <div class="file_name"></div>
-                                            <script>jQuery(function () {
+                                            <script>
+                                                jQuery(function () {
                                                     jQuery("div.file_name").html("Файл не выбран");
                                                     jQuery("div.file_upload input.dopfile").change(function () {
                                                         var filename = jQuery(this).val().replace(/.*\\/, "");
                                                         jQuery("div.file_name").html((filename != "") ? filename : "Файл не выбран");
                                                     });
-                                                });</script>
+                                                });
+                                            </script>
                                         </div>
                                     </td>
                                     <td>
-
                                         <button class="btn btn-primary" id="send_all_to_email1" type="button">Отправить</button>
                                     </td>
                                 </tr>
-
                             <?php } ?>
-
                             <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                                 <tr>
                                     <th id="sh_mount" colspan="3"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                                 </tr>
-
                                 <?php foreach ($calculations as $calculation) { ?>
                                     <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
-                                    <td colspan="2"><?php echo $calculation->calculation_title; ?></td>
-                                    <td>
-                                        <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
-                                        <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id); ?>
-                                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                        <?php } else { ?>
-                                            После договора
-                                        <?php } ?>
-                                    </td>
-
-                                <?php }
-                                $json1 = json_encode($pdf_names_mount); ?>
-                                </tr>
+                                        <td colspan="2"><?php echo $calculation->calculation_title; ?></td>
+                                        <td>
+                                            <?php 
+                                                $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";
+                                                $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
+                                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                            ?>
+                                                <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                            <?php } else { ?>
+                                                После договора
+                                            <?php } ?>
+                                        </td>
+                                    </tr>
+                                <?php
+                                    }
+                                    $json1 = json_encode($pdf_names_mount);
+                                ?>
                                 <?php if (count($calculations) > 0) { ?>
                                     <tr class="section_mount" style="display:none;">
                                         <td colspan="3"><b>Отправить все наряды на монтаж<b></td>
@@ -1327,22 +1328,22 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <tr class="section_mount" style="display:none;">
                                         <td colspan="2">
                                             <div class="email-all" style="float: left;">
-                                                <input name="all-email" id="all-email2" class="form-control" style="width:200px;"
-                                                        value="" placeholder="Адрес эл.почты" type="text">
-
+                                                <input name="all-email" id="all-email2" class="form-control" style="width:200px;" value="" placeholder="Адрес эл.почты" type="text">
                                             </div>
                                             <div class="file_data">
                                                 <div class="file_upload">
                                                     <input type="file" class="dopfile1" name="dopfile1" id="dopfile1">
                                                 </div>
                                                 <div class="file_name1"></div>
-                                                <script>jQuery(function () {
+                                                <script>
+                                                    jQuery(function () {
                                                         jQuery("div.file_name1").html("Файл не выбран");
                                                         jQuery("div.file_upload input.dopfile1").change(function () {
                                                             var filename = jQuery(this).val().replace(/.*\\/, "");
                                                             jQuery("div.file_name1").html((filename != "") ? filename : "Файл не выбран");
                                                         });
-                                                    });</script>
+                                                    });
+                                                </script>
                                             </div>
                                         </td>
                                         <td>
@@ -1351,71 +1352,74 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     </tr>
                                 <?php } ?>
                             <?php } ?>
-                            <!-------------------------------- Общая смета для клиента ------------------------------------------>
-
+                            <!--------------- Общая смета для клиента -------------->
                             <tr>
                                 <td colspan="2"><b>Отправить общую смету <b></td>
                                 <td>
                                     <?php
-                                    $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf";
-                                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                        $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf";
+                                        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                    ?>
                                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                                     <?php } else { ?>
                                         <span data-href="<?=$path;?>">-
                                     <?php }
-                                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
-                                    $json2 = json_encode($pdf_names); ?>
+                                        $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
+                                        $json2 = json_encode($pdf_names);
+                                    ?>
                                 </td>
                             </tr>
                             <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                            <tr >
-                                <td colspan="2">
-                                    <div class="email-all" style="float: left;">
-                                        <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;"
-                                                placeholder="Адрес эл.почты" type="text">
-                                                <datalist id="email">
-                                                    <?php foreach ($contact_email AS $em) {?>
-                                                    <option value="<?=$em->contact;?>"> <?php }?>
-                                                </datalist>
-                                    </div>
-                                    <div class="file_data">
-                                        <div class="file_upload">
-                                            <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="email-all" style="float: left;">
+                                            <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
+                                            <datalist id="email">
+                                                <?php foreach ($contact_email AS $em) { ?>
+                                                    <option value="<?=$em->contact;?>">
+                                                <?php } ?>
+                                            </datalist>
                                         </div>
-                                        <div class="file_name2"></div>
-                                        <script>jQuery(function () {
-                                                jQuery("div.file_name2").html("Файл не выбран");
-                                                jQuery("div.file_upload input.dopfile2").change(function () {
-                                                    var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                    jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
+                                        <div class="file_data">
+                                            <div class="file_upload">
+                                                <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
+                                            </div>
+                                            <div class="file_name2"></div>
+                                            <script>
+                                                jQuery(function () {
+                                                    jQuery("div.file_name2").html("Файл не выбран");
+                                                    jQuery("div.file_upload input.dopfile2").change(function () {
+                                                        var filename = jQuery(this).val().replace(/.*\\/, "");
+                                                        jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
+                                                    });
                                                 });
-                                            });</script>
-                                    </div>
-                                </td>
-                                <td><button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button></td>
-                            </tr>
-                            <?php }?>
-                            <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
-                            <!-- общий наряд на монтаж--> 
-                            <tr>
-                                <td colspan="2"><b>Общий наряд на монтаж <b></td>
-                                <td>
-                                    <?php
-                                    $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                    <?php } else { ?>
-                                        -
-                                    <?php }
-                                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
-                                    $json2 = json_encode($pdf_names); ?>
-                                </td>
-                            </tr>
+                                            </script>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
+                                    </td>
+                                </tr>
                             <?php } ?>
-                            <tr>
-                                <td colspan="3">
-                                    <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
-                                </td>
-                            </tr>
+                            <!-- общий наряд на монтаж--> 
+                            <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
+                                <tr>
+                                    <td colspan="2"><b>Общий наряд на монтаж <b></td>
+                                    <td>
+                                        <?php
+                                            $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; 
+                                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                        ?>
+                                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                        <?php } else { ?>
+                                            -
+                                        <?php }
+                                            $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
+                                            $json2 = json_encode($pdf_names);
+                                        ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
                         </table>
                         <!-- чтото для клиентского кабинета 
                             <?php// if ($user->dealer_type == 2) { ?>
@@ -1650,7 +1654,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <?php } ?>
         </div>
     </div>
-    
+
+    <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
     <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
         <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
