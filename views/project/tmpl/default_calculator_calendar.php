@@ -1460,7 +1460,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <div class="sketch_image_block">
                                             <h4>Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
                                             <div class="section_content">
-                                                <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
+                                                <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>"/>
                                             </div>
                                         </div>
                                     <?php endif; ?>
