@@ -618,8 +618,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             max-width: 200px;
         }
         .wtf_padding {
-        padding: 15px;
-    }
+            padding: 15px;
+        }
     }
 </style>
 
@@ -1501,36 +1501,52 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                         </tr>
                                                     <?php } ?>
                                                 </table>
-
-                                                
-                                                <h4>Размеры помещения</h4>
-                                                <div>
-                                                    Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
-                                                </div>
-                                                <div>
-                                                    Периметр, м: <?php echo $calculation->n5; ?>
-                                                </div>
-                                                <?php if ($calculation->n6 > 0) {?>
-                                                    <div>
-                                                        <h4> Вставка</h4>
-                                                    </div>
-                                                    <?php if ($calculation->n6 == 314) {?>
-                                                        <div> Белая </div>
-                                                    <?php } else  {?>
-                                                        <?php $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components'); ?>
-                                                        <?php $color_1 = $color_model_1->getColorId($calculation->n6); ?>
-                                                        <div>
-                                                            Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>"
-                                                                                                            alt=""/>
-                                                        </div>
-                                                    <?php }?>
+                                                <h4 style="margin: 10px 0;">Размеры помещения</h4>
+                                                <table class="table_info2">
+                                                    <tr>
+                                                        <td>Площадь, м<sup>2</sup>:</td>
+                                                        <td><?php echo $calculation->n4; ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Периметр, м:</td>
+                                                        <td><?php echo $calculation->n5; ?></td>
+                                                    </tr>
+                                                </table>
+                                                <h4 style="margin: 10px 0;">Вставка</h4>
+                                                <?php if ($calculation->n6 > 0) { ?>
+                                                    <table class="table_info2">
+                                                        <tr>
+                                                            <?php if ($calculation->n6 == 314) { ?>
+                                                                <td>Белая</td>
+                                                                <td></td>
+                                                            <?php
+                                                                } else  {
+                                                                $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
+                                                                $color_1 = $color_model_1->getColorId($calculation->n6);
+                                                            ?>
+                                                                    <td>Цветная:</td>
+                                                                    <td>
+                                                                        <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>" alt=""/>
+                                                                    </td>
+                                                            <?php } ?>
+                                                        </tr>
+                                                    </table>
                                                 <?php } endif; ?>
-                                            <?php if ($calculation->n16) { ?>
-                                                <div>
-                                                    Скрытый карниз: <?php echo $calculation->n16; ?>
-                                                </div>
-                                            <?php } ?>
-
+                                                <?php if ($calculation->n16) { ?>
+                                                    <table class="table_info2">
+                                                        <tr>
+                                                            <td>Скрытый карниз:</td>
+                                                            <td><?php echo $calculation->n16; ?></td>
+                                                        </tr>
+                                                    </table>
+                                                <?php } ?>
+                                            
+                                            <table class="table_info2">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
                                             <?php if ($calculation->n12) { ?>
                                                 <h4>Установка люстры</h4>
                                                 <?php echo $calculation->n12; ?> шт.
