@@ -1465,7 +1465,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         </div>
                                     <?php endif; ?>
                                     <div class="row">
-                                        <div class="col-xs-12 no_padding">
+                                        <div class="col-xs-12 no_padding" style="@media screen and (min-width: 768px) {padding: 15px;}">
                                             <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
                                                 <h4>Материал</h4>
                                                 <table class="table_info2">
