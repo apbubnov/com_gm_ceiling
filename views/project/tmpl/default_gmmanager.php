@@ -238,7 +238,7 @@ $AllMounters = $model->FindAllMounters($where);
                         </tr>
                     <?php } ?>
                     <tr>
-                        <td>Общая:</td>
+                        <th>Общая информация:</th>
                         <td><?=$common_canvases_sum;?> руб.</td>
                         <td>
                             <?php $path = "/costsheets/".md5($this->item->id."common_manager").".pdf"; ?>
@@ -258,6 +258,7 @@ $AllMounters = $model->FindAllMounters($where);
                                 -
                             <?php } ?>
                         </td>
+                        <td></td>
                     </tr>
                 </table>
                 <h4>Расходные материалы</h4>
