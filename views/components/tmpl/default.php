@@ -124,7 +124,7 @@ function dealer_margin($price, $margin, $value, $type) {
                     <td><?=JHtml::_( 'grid.sort', 'Цена для дилера', 'option_price', $listDirn, $listOrder);?></td>
                     <td>Изменить</td>
                 <?else:?>
-                    <td><?=JHtml::_( 'grid.sort', 'Себестоймость', 'option_price', $listDirn, $listOrder);?></td>
+                    <td><?=JHtml::_( 'grid.sort', 'Себестоимость', 'option_price', $listDirn, $listOrder);?></td>
                     <td><?=JHtml::_( 'grid.sort', 'Цена для клиента', 'option_price', $listDirn, $listOrder);?></td>
                     <td>Купить</td>
                 <?endif;?>
@@ -259,6 +259,35 @@ function dealer_margin($price, $margin, $value, $type) {
         </tr>
         </tfoot>
     </table>
+    </div>
+    <div class="Modal">
+        <div class="ModalPage">
+            <div class="ListPay">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Стоимость</th>
+                        <th>Количество</th>
+                        <th>Цена</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="3">Итого:</td>
+                        <td></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="FormPay">
+                <div class="InputLine">
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
@@ -488,11 +517,16 @@ function dealer_margin($price, $margin, $value, $type) {
 
         Data.Pay[id] = json;
         Data.Pay.sum = 0;
+        Data.Pay.count = 0;
 
         $.each(Data.Pay, function (i, v) {
-            if (v != null) Data.Pay.sum += parseFloat(v.price) * parseInt(v.count);
+            if (v != null) {
+                Data.Pay.sum += parseFloat(v.price) * parseInt(v.count);
+                Data.Pay.count++;
+            }
         });
 
+        console.log(Data.Pay);
         $("#Basket .sum").text(Data.Pay.sum);
     }
 </script>

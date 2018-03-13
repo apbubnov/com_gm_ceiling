@@ -3235,6 +3235,26 @@ class Gm_ceilingHelpersGm_ceiling
         return 1;
     }
 
+    public static function create_common_manager_estimate($project_id) {
+        if (!empty($project_id))
+        {
+            $filename = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . md5($project_id . "common_manager") . ".pdf";
+            $model = self::getModel("project");
+            $calculations_id = $model->getCalculationIdById($project_id);
+            $array_files = [];
+            foreach ($calculations_id as $id) {
+                $array_files[$id] = '/costsheets/' .md5($id . "manager") . ".pdf";
+            }
+            self::save_pdf($array_files, $filename);
+            echo $filename;
+        }
+
+    }
+
+    public static function create_common_cut_pdf($project_id) {
+
+    }
+
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
     public static function print_components($project_id, $components_data){
         //throw new Exception($project_id, 1);

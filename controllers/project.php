@@ -899,6 +899,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				}	
 				if($isDiscountChange&&(!empty($new_discount)||$new_discount==0)){
 					$model->change_discount($project_id,$new_discount);
+
 				}
 				$this->setMessage("Данные успешно изменены");
 				if($type === "gmcalculator" && $subtype === "calendar") {
