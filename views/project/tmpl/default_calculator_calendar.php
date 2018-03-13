@@ -1580,137 +1580,155 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                         ?>
                                                     </table> 
                                                 <?php } ?>
-
+                                                <?php if ($calculation->n27> 0) { ?>
+                                                    <h4 style="margin: 10px 0;">Шторный карниз</h4>
+                                                    <table class="table_info2">
+                                                        <tr>
+                                                            <td>
+                                                                <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
+                                                                <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo $calculation->n27; ?> м.
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                <?php } ?>
+                                                <?php if ($calculation->n26) { ?>
+                                                    <h4 style="margin: 10px 0;">Светильники Эcola</h4>
+                                                    <table class="table_info2">
+                                                        <?php
+                                                            foreach ($calculation->n26 as $key => $n26_item) {
+                                                                echo "<tr><td><b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "</td></tr>";
+                                                            }
+                                                        ?>
+                                                    </table> 
+                                                <?php } ?>
+                                                <?php if ($calculation->n22) { ?>
+                                                    <h4 style="margin: 10px 0;">Вентиляция</h4>
+                                                    <table class="table_info2">
+                                                        <?php
+                                                            foreach ($calculation->n22 as $key => $n22_item) {
+                                                                echo "<tr><td><b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "</td></tr>";
+                                                            }
+                                                        ?>
+                                                    </table>
+                                                <?php } ?>
+                                                <?php if ($calculation->n23) { ?>
+                                                    <h4 style="margin: 10px 0;">Диффузор</h4>
+                                                    <table class="table_info2">
+                                                        <?php
+                                                            foreach ($calculation->n23 as $key => $n23_item) {
+                                                                echo "<tr><td><b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "</td></tr>";
+                                                            }
+                                                        ?>
+                                                    </table>
+                                                <?php } ?>
+                                                <?php if ($calculation->n29) { ?>
+                                                    <h4 style="margin: 10px 0;">Переход уровня</h4>
+                                                    <table class="table_info2">
+                                                        <?php
+                                                            foreach ($calculation->n29 as $key => $n29_item) {
+                                                                echo "<tr><td><b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . "</td></tr>";
+                                                            }
+                                                        ?>
+                                                    </table>
+                                                <?php } ?>
+                                                <h4 style="margin: 10px 0;">Прочее</h4>
                                                 <table class="table_info2">
-                                                    <tr>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
+                                                    <?php if ($calculation->n9> 0) { ?>
+                                                        <tr>
+                                                            <td>Углы, шт.:</td>
+                                                            <td><?php echo $calculation->n9; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n10> 0) { ?>
+                                                        <tr>
+                                                            <td> Криволинейный вырез, м:</td>
+                                                            <td><?php echo $calculation->n10; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n11> 0) { ?>
+                                                        <tr>
+                                                            <td>Внутренний вырез, м:</td>
+                                                            <td><?php echo $calculation->n11; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n7> 0) { ?>
+                                                        <tr>
+                                                            <td>Крепление в плитку, м:</td>
+                                                            <td><?php echo $calculation->n7; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n8> 0) { ?>
+                                                        <tr>
+                                                            <td>Крепление в керамогранит, м:</td>
+                                                            <td><?php echo $calculation->n8; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n17> 0) { ?>
+                                                        <tr>
+                                                            <td>Закладная брусом, м:</td>
+                                                            <td><?php echo $calculation->n17; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n19> 0) { ?>
+                                                        <tr>
+                                                            <td> Провод, м:</td>
+                                                            <td><?php echo $calculation->n19; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n20> 0) { ?>
+                                                        <tr>
+                                                            <td>Разделитель, м:</td>
+                                                            <td><?php echo $calculation->n20; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n21> 0) { ?>
+                                                        <tr>
+                                                            <td>Пожарная сигнализация, м:</td>
+                                                            <td><?php echo $calculation->n21; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->dop_krepezh> 0) { ?>
+                                                        <tr>
+                                                            <td>Дополнительный крепеж:</td>
+                                                            <td><?php echo $calculation->dop_krepezh; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n24> 0) { ?>
+                                                        <tr>
+                                                            <td>Сложность доступа к месту монтажа, м:</td>
+                                                            <td><?php echo $calculation->n24; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n30> 0) { ?>
+                                                        <tr>
+                                                            <td>Парящий потолок, м:</td>
+                                                            <td><?php echo $calculation->n30; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if ($calculation->n32> 0) { ?>
+                                                        <tr>
+                                                            <td>Слив воды, кол-во комнат:</td>
+                                                            <td><?php echo $calculation->n32; ?></td>
+                                                        </tr>
+                                                    <?php } ?>
                                                 </table>
-
-                                            
-
-                                            
-                                            <?php if ($calculation->n27> 0) { ?>
-                                                <h4>Шторный карниз</h4>
-                                                <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
-                                                <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
-                                                <?php echo $calculation->n27; ?> м.
-                                            <?php } ?>
-
-                                            <?php if ($calculation->n26) { ?>
-                                                <h4>Светильники Эcola</h4>
-                                                <?php foreach ($calculation->n26 as $key => $n26_item) {
-                                                    echo "<b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "<br>";
-                                                    ?>
-                                                <?php }
-                                            } ?>
-
-                                            <?php if ($calculation->n22) { ?>
-                                                <h4>Вентиляция</h4>
-                                                <?php foreach ($calculation->n22 as $key => $n22_item) {
-                                                    echo "<b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "<br>";
-                                                    ?>
-                                                <?php }
-                                            } ?>
-
-                                            <?php if ($calculation->n23) { ?>
-                                                <h4>Диффузор</h4>
-                                                <?php foreach ($calculation->n23 as $key => $n23_item) {
-                                                    echo "<b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "<br>";
-                                                    ?>
-                                                <?php }
-                                            } ?>
-
-                                            <?php if ($calculation->n29) { ?>
-                                                <h4>Переход уровня</h4>
-                                                <?php foreach ($calculation->n29 as $key => $n29_item) {
-                                                    echo "<b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . " <br>";
-                                                    ?>
-                                                <?php }
-                                            } ?>
-                                            <h4>Прочее</h4>
-                                            <?php if ($calculation->n9> 0) { ?>
-                                                <div>
-                                                    Углы, шт.: <?php echo $calculation->n9; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if ($calculation->n10> 0) { ?>
-                                                <div>
-                                                    Криволинейный вырез, м: <?php echo $calculation->n10; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if ($calculation->n11> 0) { ?>
-                                                <div>
-                                                    Внутренний вырез, м: <?php echo $calculation->n11; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if ($calculation->n7> 0) { ?>
-                                                <div>
-                                                    Крепление в плитку, м: <?php echo $calculation->n7; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if ($calculation->n8> 0) { ?>
-                                                <div>
-                                                    Крепление в керамогранит, м: <?php echo $calculation->n8; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if ($calculation->n17> 0) { ?>
-                                                <div>
-                                                    Закладная брусом, м: <?php echo $calculation->n17; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if ($calculation->n19> 0) { ?>
-                                                <div>
-                                                    Провод, м: <?php echo $calculation->n19; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if ($calculation->n20> 0) { ?>
-                                                <div>
-                                                    Разделитель, м: <?php echo $calculation->n20; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if ($calculation->n21> 0) { ?>
-                                                <div>
-                                                    Пожарная сигнализация, м: <?php echo $calculation->n21; ?>
-                                                </div>
-                                            <?php } ?>
-
-                                            <?php if ($calculation->dop_krepezh> 0) { ?>
-                                                <div>
-                                                    Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
-                                                </div>
-                                            <?php } ?>
-
-                                            <?php if ($calculation->n24> 0) { ?>
-                                                <div>
-                                                    Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
-                                                </div>
-                                            <?php } ?>
-
-                                            <?php if ($calculation->n30> 0) { ?>
-                                                <div>
-                                                    Парящий потолок, м: <?php echo $calculation->n30; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php if ($calculation->n32> 0) { ?>
-                                                <div>
-                                                    Слив воды, кол-во комнат: <?php echo $calculation->n32; ?>
-                                                </div>
-                                            <?php } ?>
-                                            <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
-                                            <?php if (!empty($extra_mounting) ) { ?>
-                                                <div>
-                                                    <h4>Дополнительные работы</h4>
-                                                    <?php foreach($extra_mounting as $dop) {
-                                                        echo "<b>Название:</b> " . $dop->title .  "<br>";
-                                                    }?>
-                                                </div>
-                                            <?php } ?>
+                                                <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
+                                                <?php if (!empty($extra_mounting) ) { ?>
+                                                    <h4 style="margin: 10px 0;">Дополнительные работы</h4>
+                                                    <table class="table_info2">
+                                                        <?php
+                                                            foreach($extra_mounting as $dop) {
+                                                                echo "<tr><td><b>Название:</b></td><td>" . $dop->title .  "</td></tr>";
+                                                            }
+                                                        ?>
+                                                    </table>
+                                                <?php } ?>
                                         </div>
-                                        <button class="btn  btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
+                                        <button class="btn btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
                                         <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
-                                        <!-- <div class="span6"></div> -->
                                     </div>
                                 </div>
                             </div>
@@ -1719,96 +1737,95 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <?php } ?>
         </div>
     </div>
-
-    <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
-
     <!-- активация проекта (назначение на монтаж, заключение договора) -->
     <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
         <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
             <table <?php if ($this->item->id_client == 1) {echo "style='display:none'";} ?> >
                 <tr>
-                    <td>
-                        <a class="btn  btn-success" id="accept_project" >
-                            Договор
-                        </a>
+                    <td style="padding: 25px 10px">
+                        <a class="btn  btn-success" id="accept_project" >Договор</a>
                     </td>
-                    <td>
-                        <a class="btn  btn-danger" id="refuse_project">
-                            Отказ
-                        </a>
+                    <td style="padding: 25px 10px">
+                        <a class="btn  btn-danger" id="refuse_project">Отказ</a>
                     </td>
                 </tr>
             </table>
         <?php } ?>
         <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?> id="project_activation">
             <?php if ($user->dealer_type != 2) { ?>
-            <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">
-                Примечание к договору
-            </label>
-            <div class="controls">
-                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору"
-                            aria-invalid="false"><?=($this->item->dealer_calculator_note)?$this->item->dealer_calculator_note:""?></textarea>
-            </div>
-            <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы
-            </button>
-
-            <table id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
-                <tr>
-                    <td colspan="6">
-                        <h4 id="title" style="display: none;">
-                            Назначить монтажную бригаду
-                        </h4>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                    </td>
-                    <td colspan="2">
-                        <div id="calendar1">
-                            <?php echo $calendar1; ?>
-                        </div>
-                    </td>
-                    <td colspan="2">
-                        <div id="calendar2">
-                            <?php echo $calendar2; ?>
-                        </div>
-                    </td>
-                    <td>
-                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="6">
-                        <label id="jform_chief_note-lbl" for="jform_chief_note" class="">
-                            Примечание к монтажу
-                        </label>
-                        <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
-                                    aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
-                            производство
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button class="validate btn btn-primary" id="save_email" type="button" from="form-client"> Сохранить и запустить <br> в
-                            производство по email
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
-                        </button>
-                    </td>
-                </tr>
-                <?php } ?>
-            </table>
+                <table>
+                    <tr>
+                        <td Style="padding-right: 15px;">
+                            <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">Примечание к договору</label>
+                        </td>
+                        <td>
+                            <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"><?=($this->item->dealer_calculator_note)?$this->item->dealer_calculator_note:""?></textarea>
+                        </td>
+                    </tr>
+                </table>
+                <!-- стиль не сделала, не вижу ее -->
+                    <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
+                <!-- конец -->
+                <table id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
+                    <tr>
+                        <td colspan="6">
+                            <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                        </td>
+                        <td colspan="2">
+                            <div id="calendar1">
+                                <?php echo $calendar1; ?>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div id="calendar2">
+                                <?php echo $calendar2; ?>
+                            </div>
+                        </td>
+                        <td>
+                            <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <label id="jform_chief_note-lbl" for="jform_chief_note" class="">
+                                Примечание к монтажу
+                            </label>
+                            <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
+                                        aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
+                                производство
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="validate btn btn-primary" id="save_email" type="button" from="form-client"> Сохранить и запустить <br> в
+                                производство по email
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
+                            </button>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                </table>
         </div>
     <?php } ?>
 
