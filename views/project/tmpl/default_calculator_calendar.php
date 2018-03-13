@@ -661,12 +661,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             <?php echo $this->item->client_id; ?>
                                         </a>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <div class="FIO" style="display: none;">
                                             <label id="jform_client_name-lbl" for="jform_client_name">ФИО клиента<span class="star">&nbsp;*</span></label>
                                             <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
                                         </div>
-                                    </td>
+                                    </td> -->
                                 </tr>
                                 <?php
                                     if ($user->dealer_type == 0) {
@@ -702,12 +702,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             } 
                                         ?>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <div class="Contacts" style="display: none;">
                                             <label id="jform_client_contacts-lbl" for="jform_client_contacts">Телефон клиента<span class="star">&nbsp;*</span></label>
                                             <input name="new_client_contacts" id="jform_client_contacts" value="" placeholder="Телефон клиента" type="text">
                                         </div>
-                                    </td>
+                                    </td> -->
                                 </tr>
                                 <?php if ($this->item->id_client!=1) { ?>
                                     <tr>
@@ -733,14 +733,14 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             <?=$this->item->project_info;?>
                                         </a>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <div class="Address" style="display: none; position:relative;">
                                             <label id="jform_address_lbl" for="jform_address">Адрес<span class="star">&nbsp;*</span></label>
                                             <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
                                         </div>
-                                    </td>
+                                    </td> -->
                                 </tr>
-                                <tr class="Address" style="display: none;">
+                                <!-- <tr class="Address" style="display: none;">
                                     <td>Дом</td>
                                     <td>Корпус</td>
                                     <td>
@@ -760,8 +760,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             ?>
                                         " class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
                                     </td>
-                                </tr>
-                                <tr class="Address" style="display: none;">
+                                </tr> -->
+                                <!-- <tr class="Address" style="display: none;">
                                     <td>Квартира  </td><td>Подъезд</td>
                                     <td>
                                         <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment'];
@@ -770,8 +770,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch'];
                                                 } else echo $porch ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
                                     </td>
-                                </tr>
-                                <tr class="Address" style="display: none;">
+                                </tr> -->
+                                <!-- <tr class="Address" style="display: none;">
                                     <td> Этаж  </td><td>Код домофона</td>
                                     <td>
                                         <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor'];
@@ -780,7 +780,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code'];
                                                 } else echo $code ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код" aria-required="true" type="text">
                                     </td>
-                                </tr>
+                                </tr> -->
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
                                     <td>
@@ -788,10 +788,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                             -
                                         <?php } else { ?>
                                             <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                            <?php echo $jdate->format('d.m.Y'); ?>
+                                            <?php echo $jdate->format('d.m.Y H:i'); ?>
                                         <?php } ?>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <div id = "calendar_container"class="Date" style="display: none;position: relative;">
                                             <div class="btn-small-l">
                                                 <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
@@ -813,33 +813,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                     </p>
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Примечание менеджера</th>
-                                    <td>
-                                        <?php echo $this->item->dealer_manager_note; ?>
-                                    </td>
-                                    <?php if ($this->item->id_client != 1) { ?>
-                                    <td>
-                                        <button type="submit" id="accept_changes" class="btn btn btn-success"
-                                                style="display: none;">
-                                            Сохранить клиента
-                                        </button>
-                                    </td>
-                                    <?php } ?>
-                                </tr>
-                                <tr>
-                                    <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
-                                    <td>
-                                        <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                            -
-                                        <?php } else { ?>
-                                            <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                            <?php echo $jdate->format('H:i'); ?>
-                                        <?php } ?>
-                                    </td>
-
+                                    </td> -->
                                 </tr>
                                 <?php if(!empty($this->item->project_calculator)):?>
                                     <tr>
@@ -853,6 +827,33 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <td><?php echo JFactory::getUser($this->item->project_mounter)->name;?></td>
                                     </tr>
                                 <?php endif;?>
+                                <tr>
+                                    <th>Примечание менеджера</th>
+                                    <td>
+                                        <?php echo $this->item->dealer_manager_note; ?>
+                                    </td>
+                                    <!-- <?php// if ($this->item->id_client != 1) { ?>
+                                        <td>
+                                            <button type="submit" id="accept_changes" class="btn btn btn-success"
+                                                    style="display: none;">
+                                                Сохранить клиента
+                                            </button>
+                                        </td>
+                                    <?php// } ?>
+                                    -->
+                                </tr>
+                                <tr>
+                                    <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
+                                    <td>
+                                        <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                                            -
+                                        <?php } else { ?>
+                                            <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
+                                            <?php echo $jdate->format('H:i'); ?>
+                                        <?php } ?>
+                                    </td>
+
+                                </tr>
                             </table>
                         </div>
                     <?php } ?>
@@ -904,7 +905,82 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <?php } ?>
         </div>
     </div>
+    <!-- модальное окно - изменение инфы о клиенте -->
+    <div id="change_info" class="modal-window-container">
+        <button class="btn-close" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="change_info_win" class="modal-window-tar">
+            <p><strong>Изменение данных</strong></p>
+            <br>
+            <p>ФИО клиента: <span class="star">&nbsp;*</span> <?php echo $this->item->client_id; ?></p>
+            <p>
+                <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
+            </p>
+            <p>Телефон клиента: <span class="star">&nbsp;*</span></p>
+            <p>
+                <input name="new_client_contacts" id="jform_client_contacts" value="" placeholder="Телефон клиента" type="text">
+            </p>
+            <p>Адрес клиента: <span class="star">&nbsp;*</span></p>
+            <p>
+                <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
+            </p>
+            <p>
+                <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $house ?>" class="inputactive" placeholder="Дом"  aria-required="true" type="text">
+            </p>
+            <p>                
+                <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) { echo $_SESSION['bdq']; } else echo $bdq ?>" class="inputactive" placeholder="Корпус" aria-required="true" type="text">
+            </p>
+            <p>
+                <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $apartment ?>" class="inputactive" placeholder="Квартира"  aria-required="true" type="text">
+            </p>
+            <p>
+                <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $porch ?>" class="inputactive" placeholder="Подъезд"  aria-required="true" type="text">
+            </p>
+            <p>
+                <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $floor ?>" class="inputactive" placeholder="Этаж" aria-required="true" type="text">
+            </p>
+            <p>
+                <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $code ?>" class="inputactive" placeholder="Код" aria-required="true" type="text">
+            </p>
+            <p>Дата и время замера: 
+                <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                    -
+                <?php } else { ?>
+                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
+                    <?php echo $jdate->format('d.m.Y H:i'); ?>
+                <?php } ?>
+            </p>
+            <p>
+                <div id = "calendar_container"class="Date" style="display: none;position: relative;">
+                    <div class="btn-small-l">
+                        <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                    </div>
+                    <div id = "g_calendar">
+                        <?php echo $g_calendar; ?>
+                    </div>
+                    <div class="btn-small-r">
+                        <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div id="modal_window_g_container" class = "modal_window_container">
+                    <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+                    <div id="modal_window_g_choose" class = "modal_window">
+                        <p id="g_date-modal"></p>
+                        <p><strong>Выберите время замера (и замерщика):</strong></p>
+                        <p>
+                            <table id="projects_gaugers"></table>
+                        </p>
+                    </div>
+                </div>
+            </p>
+            <?php if ($this->item->id_client != 1) { ?>
+                <p>
+                    <button type="submit" id="accept_changes" class="btn btn btn-success">Сохранить клиента</button>
+                </p>
+            <?php } ?>
+        </div>
+    </div>
 
+    <!-- расчеты для проекта -->
     <?php echo "<h3>Расчеты для проекта</h3>"; ?>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
@@ -1814,6 +1890,20 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 jQuery("#modal_window_activate").hide();
                 jQuery("#modal_window_by_email").hide();
             }
+            var div5 = jQuery("#modal-window-choose-tar");
+            if (!div5.is(e.target)
+                && div5.has(e.target).length === 0) {
+                jQuery("#close-tar").hide();
+                jQuery("#modal-window-container-tar").hide();
+                jQuery("#modal-window-choose-tar").hide();
+            }
+            var div6 = jQuery("#change_info");
+            if (!div6.is(e.target)
+                && div6.has(e.target).length === 0) {
+                jQuery(".btn_close").hide();
+                jQuery("#change_info").hide();
+                jQuery("#change_info_win").hide();
+            }
         });
         // -----------------------------------------------------------------------------------------
         // листание календаря
@@ -1920,7 +2010,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             update_calendar(month1, year1,"#calendar1");
             update_calendar(month2, year2,"#calendar2");
         });
-
         function update_calendar(month, year,type) {
             var flag = (type == "#g_calendar" ) ? 3 : 2;
             jQuery.ajax({
@@ -1951,20 +2040,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 }
             });
         }
-
         //----------------------------------------
-
-        //скрыть модальное окно
-        jQuery(document).mouseup(function (e) {
-            var div = jQuery("#modal-window-choose-tar");
-            if (!div.is(e.target)
-                && div.has(e.target).length === 0) {
-                jQuery("#close-tar").hide();
-                jQuery("#modal-window-container-tar").hide();
-                jQuery("#modal-window-choose-tar").hide();
-            }
-        });
-        //--------------------------------------------------
 
         // функция подсвета сегоднешней даты
         var Today = function (day, month, year) {
@@ -2680,18 +2756,22 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             });*/
             
             jQuery("#change_data").click(function () {
-                jQuery(".FIO").toggle();
+                /* jQuery(".FIO").toggle();
                 jQuery(".Contacts").toggle();
                 jQuery(".Address").toggle();
                 jQuery(".Date").toggle();
-                jQuery("#accept_changes").toggle();
+                jQuery("#accept_changes").toggle(); */
+                jQuery(".btn_close").show();
+                jQuery("#change_info").show();
+                jQuery("#change_info_win").show();
             });
-            if(client_id==1){
-                //console.log("12312");
+
+            if (client_id==1) {
                 jQuery("input[name='data_change']").val(1);
                 jQuery("#change_data").trigger('click');
                 jQuery("#accept_project").trigger('click');
             }
+
             jQuery("#save_email").click(function(){
                 jQuery("#activate_by_email").val(1);
                 jQuery("#close").show();
@@ -2701,6 +2781,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
 
             jQuery("#accept_changes").click(function () {
                 jQuery("input[name='data_change']").val(1);
+                //
+                jQuery(".btn_close").hide();
+                jQuery("#change_info").hide();
+                jQuery("#change_info_win").hide();
             });
 
             var temp = 0;
