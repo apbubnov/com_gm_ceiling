@@ -411,12 +411,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <tr class="Calculate">
                             <td>Итого:</td>
                             <td>
-                                <span><?=fceil($calculation->client_sum->itog);?></span> руб.
+                                <span><?=fceil($calculation->client_sum->itog);?></span> р.
                             </td>
                             <td><?php if($calculation->discount > 0):?>Итого -<?=$calculation->discount;?>%:<?php endif;?></td>
                             <td>
                                 <?php if($calculation->discount > 0):?>
-                                    <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> руб.
+                                    <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> р.
                                 <?php endif;?>
                             </td>
                         </tr>
@@ -465,13 +465,13 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     </tr>
                     <tr class="TR">
                         <th>Услуги транспорта:</th>
-                        <td><span><?=$Transport->itog_sum;?></span> руб.</td>
+                        <td><span><?=$Transport->itog_sum;?></span> р.</td>
                     </tr>
                     <tr class="TR">
                         <th>Итого:</th>
-                        <td><span><?=$calculationsItog->client_sum->itog;?></span> руб.</td>
+                        <td><span><?=$calculationsItog->client_sum->itog;?></span> р.</td>
                         <th>Итого -<?=$calculationsItog->discount;?>%:</th>
-                        <td><span><?=$calculationsItog->client_sum->discount;?></span> руб.</td>
+                        <td><span><?=$calculationsItog->client_sum->discount;?></span> р.</td>
                     </tr>
                     <tr class="TR">
                         <td><span><?=ceil($calculationsItog->dealer_sum->CanvasAndComponents);?></span></td>
@@ -1108,13 +1108,13 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             <tr class="section_ceilings">
                                 <?php if ($calculation->discount != 0) { ?>
                                     <td>Цена / -<?php echo $calculation->discount ?>% :</td>
-                                    <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб. /</td>
+                                    <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> р. /</td>
                                     <td id="calculation_total_discount"> <?php echo round($calculation_total_discount , 0); ?>
-                                        руб.
+                                        р.
                                     </td>
                                 <?php } else { ?>
                                     <td>Итого</td>
-                                    <td colspan="2" id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб.</td>
+                                    <td colspan="2" id="calculation_total"> <?php echo round($calculation_total, 0); ?> р.</td>
                                 <?php } ?>
                             </tr>
                             <?php
@@ -1202,7 +1202,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 ?>
                                 <th>Транспорт</th>
                                 <td colspan="2" id="transport_sum">
-                                    <?=$sum_transport;?> руб.
+                                    <?=$sum_transport;?> р.
                                 </td>
                                 <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
                             </tr>
@@ -1210,7 +1210,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <?php if ($kol > 0) { ?>
                                     <th>Итого/ - %:</th>
                                     <th id="project_total"><span class="sum">
-                                        <?php echo round($project_total, 0); ?></span> руб. /
+                                        <?php echo round($project_total, 0); ?></span> р. /
                                     </th>
                                     <th id="project_total_discount">
                                         <?php
@@ -1224,7 +1224,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 $project_total_discount =  $min_project_sum;
                                             }
                                         ?>
-                                        <span class="sum"><?= round($project_total_discount, 0);?> руб.</span>
+                                        <span class="sum"><?= round($project_total_discount, 0);?> р.</span>
                                         <?php if($old_price != $project_total_discount): ?>
                                             <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                                         <?php endif; ?>
@@ -1243,7 +1243,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 $project_total =  $min_project_sum;
                                             }
                                         ?>
-                                        <span class="sum"><?= round($project_total, 0);?> руб.</span>
+                                        <span class="sum"><?= round($project_total, 0);?> р.</span>
                                         <?php if($old_price != $project_total): ?>
                                             <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                                         <?endif;?>
@@ -3213,9 +3213,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     sum = Math.round(sum * 100) / 100;
                     sum_total = Math.round(sum_total * 100) / 100;
 
-                    jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
+                    jQuery("#transport_sum").text(transport_sum.toFixed(0) + " р.");
                     jQuery("#project_total span.sum").text(sum_total);
-                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
+                    jQuery("#project_total_discount span.sum").text(sum  + " р.");
                     jQuery("#project_sum_transport").val(sum);
                     jQuery(" #project_sum").val(sum);
 
