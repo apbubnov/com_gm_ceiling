@@ -457,7 +457,7 @@ class Gm_ceilingHelpersGm_ceiling
             $components_data = self::calculate_components(null,$data,$del_flag);
             //считаем монтаж
 
-            $data["need_mount_extra"] = $extra_mounting;
+            $data["need_mount_extra"] = !empty($extra_mounting);
             if ($need_mount || !empty($extra_mounting)) {
                 $mounting_data = self::calculate_mount($del_flag,null,$data);
             } else {
@@ -576,7 +576,7 @@ class Gm_ceilingHelpersGm_ceiling
            
             //Пошла печать PDF
             if ($pdf == 1) {//наряд монтажной бригаде
-                if($need_mount || !empty($extra_components)){
+                if($need_mount || $data["need_mount_extra"]){
                     self::create_single_mount_estimate(null,$data,$mounting_data);
                 }
                 //PDF раскроя
@@ -713,7 +713,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . round($canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $dealer_components_sum + $total_with_gm_dealer_margin_guild + $guild_data_itog, 2) . '</th></tr>';
             $html .= '</tbody></table><p>&nbsp;</p>';
-            if ($need_mount || !empty($data["need_mount_extra"])) {
+            if ($need_mount || $data["need_mount_extra"]) {
                 $html .= '<h1>Смета по монтажным работам</h1>
                         <h2>Дата: ' . date("d.m.Y") . '</h2>
                         <table border="0" cellspacing="0" width="100%">
