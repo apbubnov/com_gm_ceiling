@@ -378,6 +378,7 @@
                     $tmp = 0;
                     $sum_transport_discount_total = 0;
                     $sum_transport_total = 0;
+                $dealer_comp_all =0;
                     $JS_Calcs_Sum = array();
                     foreach ($calculations as $calculation) {
                         $dealer_canvases_sum = double_margin($calculation->canvases_sum, 0 /*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
@@ -393,6 +394,7 @@
                             $calculation_total_11 += $calculation_total_1;
                             $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
                             $project_total_11 += $project_total_1;
+                            $dealer_comp_all += $dealer_components_sum_1;
                         }
                         $calculation->calculation_title;
                         $total_square += $calculation->n4;
