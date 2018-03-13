@@ -910,45 +910,45 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <p>Адрес клиента: <span class="star">&nbsp;*</span></p>
             <p>
                 <table style="width: 100%;">
-                    <tr style="padding-bottom: 10px;">
+                    <tr>
                         <td>Улица:</td>
-                        <td>
+                        <td style="padding-bottom: 10px;">
                             <input name="new_address" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">                            
                         </td>
                     </tr>
-                    <tr style="padding-bottom: 10px;">
+                    <tr>
                         <td>Дом:</td>
-                        <td>
+                        <td style="padding-bottom: 10px;">
                             <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $house ?>" placeholder="Дом"  aria-required="true" type="text">
                         </td>
                     </tr>
-                    <tr style="padding-bottom: 10px;">
+                    <tr>
                         <td>Корпус:</td>
-                        <td>
+                        <td style="padding-bottom: 10px;">
                             <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) { echo $_SESSION['bdq']; } else echo $bdq ?>" placeholder="Корпус" aria-required="true" type="text">
                         </td>
                     </tr>
-                    <tr style="padding-bottom: 10px;">
+                    <tr>
                         <td>Квартира:</td>
-                        <td>
+                        <td style="padding-bottom: 10px;">
                             <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment']; } else echo $apartment ?>" placeholder="Квартира"  aria-required="true" type="text">
                         </td>
                     </tr>
-                    <tr style="padding-bottom: 10px;">
+                    <tr>
                         <td>Подъезд:</td>
-                        <td>
+                        <td style="padding-bottom: 10px;">
                             <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch']; } else echo $porch ?>" placeholder="Подъезд"  aria-required="true" type="text">
                         </td>
                     </tr>
-                    <tr style="padding-bottom: 10px;">
+                    <tr>
                         <td>Этаж:</td>
-                        <td>
+                        <td style="padding-bottom: 10px;">
                             <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor']; } else echo $floor ?>" placeholder="Этаж" aria-required="true" type="text">
                         </td>
                     </tr>
-                    <tr style="padding-bottom: 10px;">
+                    <tr>
                         <td>Код:</td>
-                        <td>                
+                        <td style="padding-bottom: 10px;">                
                             <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code']; } else echo $code ?>" placeholder="Код" aria-required="true" type="text">
                         </td>
                     </tr>
