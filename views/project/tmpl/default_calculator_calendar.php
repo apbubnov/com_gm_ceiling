@@ -1458,9 +1458,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить расчет</a>
                                     <?php if (!empty($filename)):?>
                                         <div class="sketch_image_block">
-                                            <h3 class="section_header">
-                                                Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                                            </h3>
+                                            <h4>Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
                                             <div class="section_content">
                                                 <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>" style="width:80vw;"/>
                                             </div>
