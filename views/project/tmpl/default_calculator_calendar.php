@@ -1288,7 +1288,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <tr class="section_estimate" style="display:none;">
                                     <td>
                                         <div class="email-all" style="float: left;">
-                                            <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
+                                            <input list="email" name="all-email" id="all-email1" class="form-control" placeholder="Адрес эл.почты" type="text">
                                             <datalist id="email">
                                                 <?php foreach ($contact_email AS $em) { ?>
                                                     <option value="<?=$em->contact;?>">
@@ -1346,7 +1346,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <tr class="section_mount" style="display:none;">
                                         <td>
                                             <div class="email-all" style="float: left;">
-                                                <input name="all-email" id="all-email2" class="form-control" style="width:200px;" value="" placeholder="Адрес эл.почты" type="text">
+                                                <input name="all-email" id="all-email2" class="form-control" value="" placeholder="Адрес эл.почты" type="text">
                                             </div>
                                             <div class="file_data">
                                                 <div class="file_upload">
@@ -1391,7 +1391,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <tr>
                                     <td>
                                         <div class="email-all" style="float: left;">
-                                            <input list="email" name="all-email" id="all-email3" class="form-control" style="width:200px;" placeholder="Адрес эл.почты" type="text">
+                                            <input list="email" name="all-email" id="all-email3" class="form-control" placeholder="Адрес эл.почты" type="text">
                                             <datalist id="email">
                                                 <?php foreach ($contact_email AS $em) { ?>
                                                     <option value="<?=$em->contact;?>">
