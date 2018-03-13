@@ -3242,17 +3242,23 @@ class Gm_ceilingHelpersGm_ceiling
             $model = self::getModel("project");
             $calculations_id = $model->getCalculationIdById($project_id);
             $array_files = [];
-            foreach ($calculations_id as $id) {
-                $array_files[$id] = '/costsheets/' .md5($id . "manager") . ".pdf";
-            }
-            self::save_pdf($array_files, $filename);
-            echo $filename;
+            foreach ($calculations_id as $item)
+                $array_files[$item->id] = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' .md5($item->id . "manager") . ".pdf";
+            self::save_pdf($array_files, $filename, "A4");
         }
-
     }
 
     public static function create_common_cut_pdf($project_id) {
-
+        if (!empty($project_id))
+        {
+            $filename = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' . md5($project_id . "common_cutpdf") . ".pdf";
+            $model = self::getModel("project");
+            $calculations_id = $model->getCalculationIdById($project_id);
+            $array_files = [];
+            foreach ($calculations_id as $item)
+                $array_files[$item->id] = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/' .md5($item->id . "cutpdf") . ".pdf";
+            self::save_pdf($array_files, $filename, "A4");
+        }
     }
 
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
