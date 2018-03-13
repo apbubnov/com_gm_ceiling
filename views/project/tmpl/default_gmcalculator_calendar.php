@@ -2577,6 +2577,20 @@
 
     var mountArray = {};
 
+    jQuery("input[name^='smeta']").change(function () {
+        comp_sum = <?php echo $dealer_comp_all;?>;
+        console.log(comp_sum);
+        var sum = jQuery("#calculation_total1")[0].innerText;
+        if(jQuery("input[name^='smeta']").attr("checked") == 'checked'){
+            jQuery("#calculation_total1")[0].innerText = +sum-comp_sum;
+
+        }
+        else{
+            jQuery("#calculation_total1")[0].innerText = +sum+comp_sum;
+
+        }
+    });
+
     jQuery("#spend-form input").on("keyup", function () {
         jQuery('#extra_spend_submit').fadeIn();
     });
