@@ -842,18 +842,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                     <?php// } ?>
                                     -->
                                 </tr>
-                                <tr>
-                                    <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DAYPART'); ?></th>
-                                    <td>
-                                        <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                            -
-                                        <?php } else { ?>
-                                            <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                            <?php echo $jdate->format('H:i'); ?>
-                                        <?php } ?>
-                                    </td>
-
-                                </tr>
                             </table>
                         </div>
                     <?php } ?>
@@ -921,7 +909,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             </p>
             <p>Адрес клиента: <span class="star">&nbsp;*</span></p>
             <p>
-                <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
+                <input name="new_address" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
             </p>
             <p>
                 <input name="new_house" id="jform_house" value=" <?php if (isset($_SESSION['house'])) { echo $_SESSION['house']; } else echo $house ?>" placeholder="Дом"  aria-required="true" type="text">
@@ -949,8 +937,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <?php echo $jdate->format('d.m.Y H:i'); ?>
                 <?php } ?>
             </p>
+            <p>Замерщик: <?php echo JFactory::getUser($this->item->project_calculator)->name;?></p>
             <p>
-                <div id = "calendar_container"class="Date" style="display: none;position: relative;">
+                <div id = "calendar_container" class="Date" style="position: relative;">
                     <div class="btn-small-l">
                         <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                     </div>
@@ -961,16 +950,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                     </div>
                 </div>
-                <div id="modal_window_g_container" class = "modal_window_container">
-                    <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-                    <div id="modal_window_g_choose" class = "modal_window">
-                        <p id="g_date-modal"></p>
-                        <p><strong>Выберите время замера (и замерщика):</strong></p>
-                        <p>
-                            <table id="projects_gaugers"></table>
-                        </p>
-                    </div>
-                </div>
             </p>
             <?php if ($this->item->id_client != 1) { ?>
                 <p>
@@ -979,7 +958,17 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             <?php } ?>
         </div>
     </div>
-
+    <!-- окно выбора замерщика -->
+    <div id="modal_window_g_container" class = "modal_window_container">
+        <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="modal_window_g_choose" class = "modal_window">
+            <p id="g_date-modal"></p>
+            <p><strong>Выберите время замера (и замерщика):</strong></p>
+            <p>
+                <table id="projects_gaugers"></table>
+            </p>
+        </div>
+    </div>
     <!-- расчеты для проекта -->
     <?php echo "<h3>Расчеты для проекта</h3>"; ?>
     <!-- Nav tabs -->
