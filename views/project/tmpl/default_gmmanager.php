@@ -22,6 +22,7 @@ Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
 
 $user = JFactory::getUser();
 $userId = $user->get('id');
@@ -197,6 +198,7 @@ $AllMounters = $model->FindAllMounters($where);
                     <?php
                     $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
                     $mount = $mount_model->getDataAll();
+                    $common_canvases_sum = 0;
                     ?>
                     <?php foreach ($calculations as $calculation) {
                         $guild_data = Gm_ceilingHelpersGm_ceiling::calculate_guild_jobs($calculation->id);
@@ -204,7 +206,7 @@ $AllMounters = $model->FindAllMounters($where);
                         <tr>
                             <th><?php echo $calculation->calculation_title; ?></th>
                             <td>
-                                <?php echo $calculation->canvases_sum; ?> руб.
+                                <?php echo $calculation->canvases_sum; $common_canvases_sum += $calculation->canvases_sum;?> руб.
                             </td>
                             <td>
                                 <?php /*Позже удалить!!!*/ Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1, $calculation->id);?>
@@ -235,6 +237,29 @@ $AllMounters = $model->FindAllMounters($where);
                             </td>
                         </tr>
                     <?php } ?>
+                    <tr>
+                        <th>Общая информация:</th>
+                        <td><?=$common_canvases_sum;?> руб.</td>
+                        <td>
+                            <?php $path = "/costsheets/".md5($this->item->id."common_manager").".pdf"; ?>
+                            <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                <a href="<?php echo $path; ?>" class="btn btn-secondary"
+                                   target="_blank">Посмотреть общую</a>
+                            <?php } else { ?>
+                                -
+                            <?php } ?>
+                        </td>
+                        <td>
+                            <?php $path = "/costsheets/".md5($this->item->id."common_cutpdf").".pdf"; ?>
+                            <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                <a href="<?php echo $path; ?>" class="btn btn-secondary"
+                                   target="_blank">Посмотреть общий раскрой</a>
+                            <?php } else { ?>
+                                -
+                            <?php } ?>
+                        </td>
+                        <td></td>
+                    </tr>
                 </table>
                 <h4>Расходные материалы</h4>
                 <table class="table">

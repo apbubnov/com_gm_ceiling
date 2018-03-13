@@ -198,10 +198,9 @@ class Gm_ceilingModelProject extends JModelItem
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
-                ->from('`#__gm_ceiling_calculation`')
+                ->from('`#__gm_ceiling_calculations`')
                 ->select('id')
                 ->where("project_id = '$project_id'");
-
             $db->setQuery($query);
             $result = $db->loadObjectList();
             return $result;
