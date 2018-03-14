@@ -186,74 +186,73 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane active" id="summary" role="tabpanel">
-                        <table id="table1" class="/*table calculation_sum*/table-striped one-touch-view">
+                        <table id="table1" class="table-striped one-touch-view">
                             <tr>
                                 <th colspan="3" class="section_header" id="sh_ceilings">
                                     Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i>
                                 </th>
                             </tr>
-                            <?php $project_total = 0;
-                            $project_total_discount = 0;
-                            $dealer_gm_mounting_sum_1 = 0;
-                            $calculation_total_1 = 0;
-                            $project_total_1 = 0;
-                            $dealer_gm_mounting_sum_11 = 0;
-                            $calculation_total_11 = 0;
-                            $project_total_11 = 0;
-                            $tmp = 0;
-                            $sum_transport_discount_total = 0;
-                            $sum_transport_total = 0;
-                            foreach ($calculations as $calculation) {
-                                $dealer_canvases_sum = $calculation->dealer_canvases_sum;
-                                $dealer_components_sum = $calculation->dealer_components_sum;
-                                $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-                                $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum;
-                                $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
-                                $project_total += $calculation_total;
-                                $project_total_discount += $calculation_total_discount;
-                                if ($user->dealer_type != 2) {
-                                    $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-                                    $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
-                                    $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
-                                    $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
-                                    $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
-                                    $calculation_total_11 += $calculation_total_1;
-                                    $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
-                                    $project_total_11 += $project_total_1;
-                                }
-                                $calculation->calculation_title;
-                                $total_square += $calculation->n4;
-                                $total_perimeter += $calculation->n5;
-
-                            // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
-                                $sum_transport = 0;
-                                $sum_transport_discount = 0;
-                                $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-                                $mount_transport = $mountModel->getDataAll();
-                                if ($calculation->transport == 1 && $calculation->mounting_sum != 0) {
-                                    $tmp = 1;
-                                    $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-                                    $sum_transport_total = $sum_transport;
-                                }
-                                if ($calculation->distance > 0 && $calculation->distance_col > 0 && $calculation->mounting_sum != 0) {
-                                    $tmp = 2;
-                                    $sum_transport = double_margin($mount_transport->distance * $calculation->distance * $calculation->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-                                    $sum_transport_total = $sum_transport;
-                                }
-                                if ($calculation->discount > 0 && $sum_transport > 0) {
-                                    $sum_transport_discount = $sum_transport * ((100 - $calculation->discount) / 100);
-                                    $sum_transport_discount_total = $sum_transport_discount;
-                                }
-
-                                ?>
+                            <?php 
+                                $project_total = 0;
+                                $project_total_discount = 0;
+                                $dealer_gm_mounting_sum_1 = 0;
+                                $calculation_total_1 = 0;
+                                $project_total_1 = 0;
+                                $dealer_gm_mounting_sum_11 = 0;
+                                $calculation_total_11 = 0;
+                                $project_total_11 = 0;
+                                $tmp = 0;
+                                $sum_transport_discount_total = 0;
+                                $sum_transport_total = 0;
+                                foreach ($calculations as $calculation) {
+                                    $dealer_canvases_sum = $calculation->dealer_canvases_sum;
+                                    $dealer_components_sum = $calculation->dealer_components_sum;
+                                    $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
+                                    $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum;
+                                    $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
+                                    $project_total += $calculation_total;
+                                    $project_total_discount += $calculation_total_discount;
+                                    if ($user->dealer_type != 2) {
+                                        $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
+                                        $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
+                                        $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
+                                        $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
+                                        $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
+                                        $calculation_total_11 += $calculation_total_1;
+                                        $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
+                                        $project_total_11 += $project_total_1;
+                                    }
+                                    $calculation->calculation_title;
+                                    $total_square += $calculation->n4;
+                                    $total_perimeter += $calculation->n5;
+                                    // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
+                                    $sum_transport = 0;
+                                    $sum_transport_discount = 0;
+                                    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+                                    $mount_transport = $mountModel->getDataAll();
+                                    if ($calculation->transport == 1 && $calculation->mounting_sum != 0) {
+                                        $tmp = 1;
+                                        $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+                                        $sum_transport_total = $sum_transport;
+                                    }
+                                    if ($calculation->distance > 0 && $calculation->distance_col > 0 && $calculation->mounting_sum != 0) {
+                                        $tmp = 2;
+                                        $sum_transport = double_margin($mount_transport->distance * $calculation->distance * $calculation->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+                                        $sum_transport_total = $sum_transport;
+                                    }
+                                    if ($calculation->discount > 0 && $sum_transport > 0) {
+                                        $sum_transport_discount = $sum_transport * ((100 - $calculation->discount) / 100);
+                                        $sum_transport_discount_total = $sum_transport_discount;
+                                    }
+                            ?>
                                 <tr class="section_ceilings">
-                                    <td class="include_calculation">
+                                    <td colspan="3" class="include_calculation">
                                         <?php echo $calculation->calculation_title; ?>
                                     </td>
                                 </tr>
                                 <tr class="section_ceilings" id="">
                                     <td>Площадь/Периметр :</td>
-                                    <td>
+                                    <td colspan="2">
                                         <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
                                     </td>
                                 </tr>
@@ -268,14 +267,11 @@
                                         </td>
                                     <?php } else { ?>
                                         <td>Итого</td>
-                                        <td id="calculation_total"> <?php echo round($calculation_total - $sum_transport, 0); ?>
+                                        <td colspan="2" id="calculation_total"> <?php echo round($calculation_total - $sum_transport, 0); ?>
                                             руб.
                                         </td>
-                                        <td></td>
                                     <?php } ?>
-
                                 </tr>
-
                             <?php } ?>
                             <tr>
                                 <th>Общая площадь/общий периметр :</th>
