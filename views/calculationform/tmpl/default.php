@@ -1717,7 +1717,7 @@
 						<?php } ?>
 					</div>
 				</div>			
-				<div class="container">
+				<div class="container smeta_hide">
 					<div class="row" style="margin-bottom: 5px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
@@ -1726,7 +1726,7 @@
 						<div class="col-sm-4"></div>
 					</div>
 				</div>
-				<div class="container">
+				<div class="container smeta_hide">
 					<div class="row">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
@@ -1737,7 +1737,7 @@
 						<div class="col-sm-4"></div>
 					</div>
 				</div>
-				<div class="container">
+				<div class="container smeta_hide">
 					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
@@ -1746,7 +1746,7 @@
 						<div class="col-sm-4"></div>
 					</div>
 				</div>
-				<div class="container">
+				<div class="container smeta_hide">
 					<div class="row">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
@@ -2069,6 +2069,7 @@
 		precalculation = <?php echo $_GET['precalculation']; ?>;
 		if (precalculation == 1) {
 			jQuery("#precalculation_container_hide").hide();
+			jQuery(".smeta_hide").hide();
 		} else {
 			jQuery("#btn_precalculation").hide();
 			jQuery("#precalculation_container_hide").show();
