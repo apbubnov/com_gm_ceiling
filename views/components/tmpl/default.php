@@ -293,7 +293,7 @@ function dealer_margin($price, $margin, $value, $type) {
                     <label for="Comment"><i class="fa fa-comment"></i></label>
                     <input type="text" id="Comment" name="Comment" placeholder="Комментарий" title="Комментарий">
                     <label for="Date"><i class="fa fa-calendar"></i></label>
-                    <input type="datetime-local" id="Date" name="Date" title="Дата к которой заказ должен быть готов">
+                    <input type="datetime-local" id="Date" name="Date" title="Дата к которой заказ должен быть готов" required>
                     <button type="submit" title="Отправить в производство"><i class="fa fa-shopping-cart"></i></button>
                 </div>
             </div>
