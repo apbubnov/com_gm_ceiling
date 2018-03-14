@@ -119,6 +119,7 @@
 		<input name="jform[modified_by]" value="<?php echo $this->item->modified_by; ?>" type="hidden">
 		<input name="jform[transport]" value="<?php echo $this->item->transport; ?>" type="hidden">
 		<input id="jform_n1" class="n1" name="jform[n1]" value="28" type="hidden">
+		<input type="hidden" id="precalculation" value="<?php if ($_GET['precalculation']) { echo $_GET['precalculation']; } ?>">
 		<?php if ($user->dealer_type !=2 ){
 			$del_flag = 1;
 		} ?>
@@ -2051,8 +2052,8 @@
 
 	jQuery(document).ready(function() {
 
+		alert (jQuery("#precalculation").val());
 		// кнопки открытия скрытых полей
-		
 		jQuery("#btn_baguette").click( function () {
 			jQuery("#baguette").toggle();
 			if (jQuery("#btn_baguette").css("background-color") == "rgb(65, 64, 153)") {
