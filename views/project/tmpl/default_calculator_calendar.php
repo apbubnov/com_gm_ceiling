@@ -148,427 +148,7 @@ $flagGaugerCalendar = [3, $user->dealer_id];
 $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year, $flagGaugerCalendar);
 //------------------------------
 
-if(false):
-/***************************************************************************************************************************************************************************************************************************************************/
-/* Клиент */
-$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
-$calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-$birthday = $client_model->getClientBirthday($this->item->id_client);
-$phones = $calc_model->getClientPhones($this->item->id_client);
-$emails = $clients_dop_contacts_model->getContact($this->item->id_client);
-$Client = $this->item;
-$Client->birthday = $birthday->birthday;
-$Client->birthday_date = date("d.m.Y", strtotime($Client->birthday));
-$Client->phones = [];
-foreach ($phones AS $contact) {
-    $phone = preg_replace("/([+\-\s\(\)]*)/i", "", $contact->client_contacts);
-    $phone = "+".substr($phone, 0, 1)." (".substr($phone, 1, 3).") ".substr($phone, 3, 3) . " " .substr($phone, 5, 2) . " " . substr($phone, 7, 2);
-    $Client->phones[] = $phone;
-}
-$Client->emails = [];
-foreach ($emails AS $email) {
-    $Client->emails[] = $email->contact;
-}
-$Client->address = (object) [];
-$Client->address->full = $Client->project_info;
-$Client->address->street = preg_split("/,.дом([\S\s]*)/", $Client->project_info)[0];
-preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $Client->project_info,$house);
-$Client->address->house = $house[1];
-preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $Client->project_info,$bdq);
-$Client->address->bdq = $bdq[1];
-preg_match("/,.квартира:.([\d\s]{1,4}),/", $Client->project_info,$apartment);
-$Client->address->apartment = $apartment[1];
-preg_match("/,.подъезд:.([\d\s]{1,4}),/", $Client->project_info,$porch);
-$Client->address->porch = $porch[1];
-preg_match("/,.этаж:.([\d\s]{1,4})/", $Client->project_info,$floor);
-$Client->address->floor = $floor[1];
-preg_match("/,.код:.([\d\S\s]{1,10})/", $Client->project_info,$code);
-$Client->address->code = $code[1];
-$Client->calc_date = (object) [];
-$Client->calc_date->date = date("d.m.Y", strtotime($Client->project_calculation_date));
-$Client->calc_date->time = date("H:i", strtotime($Client->project_calculation_date));
-$Client->discount = (object) [];
-$Client->discount->min = 0;
-$Client->discount->max = ($calculation_total - $project_total_1) / $calculation_total * 100;
-$Project = "Client";
-
-/* Калькуляции */
-$calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations = $model->getProjectItems($$Project->id);
-$calculationsItog = (object) [];
-
-$calculationsItog->dealer_sum = (object) [];
-$calculationsItog->dealer_sum->canvas = 0;
-$calculationsItog->dealer_sum->components = 0;
-$calculationsItog->dealer_sum->mounting = 0;
-$calculationsItog->dealer_sum->itog = 0;
-$calculationsItog->dealer_sum->discount = 0;
-
-$calculationsItog->client_sum = (object) [];
-$calculationsItog->client_sum->canvas = 0;
-$calculationsItog->client_sum->components = 0;
-$calculationsItog->client_sum->mounting = 0;
-$calculationsItog->client_sum->itog = 0;
-$calculationsItog->client_sum->discount = 0;
-
-$calculationsItog->square = 0;
-$calculationsItog->perimeter = 0;
-
-$calculationsItog->discount = $$Project->project_discount;
-
-function discount($sum, $discount = 0) {
-    return ceil($sum * ((100 - $discount) / 100) * 100) / 100;
-}
-function fceil($number, $r = 0) {
-    $k = pow(10, $r);
-    return ceil($number * $k) / $k;
-}
-foreach ($calculations as $key => $calculation)
-{
-    $calculation->square = $calculation->n4;
-    $calculation->perimeter = $calculation->n5;
-
-    $calculation->dealer_sum = (object) [];
-    $calculation->dealer_sum->canvas = margin($calculation->canvases_sum, $$Project->gm_canvases_margin);
-    $calculation->dealer_sum->components = margin($calculation->components_sum, $$Project->gm_components_margin);
-    $calculation->dealer_sum->mounting = margin($calculation->mounting_sum, $$Project->gm_mounting_margin);
-    $calculation->dealer_sum->itog = $calculation->dealer_sum->canvas + $calculation->dealer_sum->components + $calculation->dealer_sum->mounting;
-
-    $calculationsItog->dealer_sum->itog += $calculation->dealer_sum->itog;
-    $calculationsItog->dealer_sum->discount += discount($calculation->dealer_sum->itog, $calculation->discount);
-
-    $calculationsItog->dealer_sum->canvas += $calculation->dealer_sum->canvases;
-    $calculationsItog->dealer_sum->components += $calculation->dealer_sum->components;
-    $calculationsItog->dealer_sum->mounting += $calculation->dealer_sum->mounting;
-
-    $calculation->client_sum = (object) [];
-    $calculation->client_sum->canvas = double_margin($calculation->canvases_sum, $$Project->gm_canvases_margin, $$Project->dealer_canvases_margin);
-    $calculation->client_sum->components = double_margin($calculation->components_sum, $$Project->gm_components_margin, $$Project->dealer_components_margin);
-    $calculation->client_sum->mounting = double_margin($calculation->mounting_sum, $$Project->gm_mounting_margin, $$Project->dealer_mounting_margin);
-    $calculation->client_sum->itog = $calculation->client_sum->canvas + $calculation->client_sum->components + $calculation->client_sum->mounting;
-
-    $calculationsItog->client_sum->itog += $calculation->client_sum->itog;
-    $calculationsItog->client_sum->discount += discount($calculation->client_sum->itog, $calculation->discount);
-
-    $calculationsItog->client_sum->canvas = $calculation->client_sum->canvas;
-    $calculationsItog->client_sum->components = $calculation->client_sum->components;
-    $calculationsItog->client_sum->mounting = $calculation->client_sum->mounting;
-
-    $calculationsItog->square += $calculation->square;
-    $calculationsItog->perimeter += $calculation->perimeter;
-
-    $calculations[$key] = $calculation;
-}
-$calculationsItog->discount = 100 - floor((100 * $calculationsItog->client_sum->discount) / $calculationsItog->client_sum->itog);
-$calculationsItog->dealer_sum->CanvasAndComponents = $calculationsItog->dealer_sum->canvas + $calculationsItog->dealer_sum->components;
-/* Транспорт */
-$mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-$Transport = $mount_model->getDataAll();
-$Transport->itog_sum = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
 ?>
-<link type="text/css" rel="stylesheet"  href="/components/com_gm_ceiling/views/project/css/calculator_calendar.css?v=<?=date("H.i.s");?>">
-<?=parent::getPreloader();?>
-<div>
-    /* Правит - @CEH4TOP */
-    /* Не обращайте внимания! */
-</div>
-<div class="Page">
-    <div class="TitlePage">
-        <h2 class="center">Просмотр проекта</h2>
-        <h3 class="left">Информация по проекту № <?= $this->item->id ?></h3>
-    </div>
-    <div class="Actions">
-        <div class="Back"><?= parent::getButtonBack(); ?></div>
-        <div class="Update">
-            <button class="Update">
-                <?=($this->item->client_id == 1)?"Заполнить данные о клиенте":"Изменить данные";?>
-            </button>
-        </div>
-    </div>
-    <div class="Body row">
-        <div class="Client col col-12 <?=($user->dealer_type == 0)?"col-md-6":"col-md-12"?>">
-            <table class="Client" db-id="<?=$Client->id_client;?>">
-                <tbody>
-                <tr>
-                    <th class="ClientName">Клиент:</th>
-                    <td id="ClientName"><a href="/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$Client->id_client;?>"><?=$Client->client_id;?></a></td>
-                </tr>
-                <tr>
-                    <th class="ClientBDay">Дата рождения:</th>
-                    <td id="ClientBDay"><?=$Client->birthday_date;?></td>
-                </tr>
-                <tr>
-                    <th class="ClientPhones">Телефоны:</th>
-                    <td id="ClientPhones">
-                        <?php
-                        foreach ($Client->phones as $Phone)
-                            echo "<a href='tel:$Phone'>$Phone</a>";
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="ClientEmails">Почты:</th>
-                    <td id="ClientEmails">
-                        <?php
-                        foreach ($Client->emails as $Email)
-                            echo "<a href='mailto:$Email'>$Email</a>";
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="ClientAddress">Адрес:</th>
-                    <td id="ClientAddress" json="<?=json_encode($Client->address);?>">
-                        <a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$Client->address->full;?>"><?=$Client->address->full;?></a>
-                    </td>
-                </tr>
-                <tr>
-                    <th class="ClientCalcDate">Дата замера:</th>
-                    <td id="ClientCalcDate"><?=$Client->calc_date->date;?></td>
-                </tr>
-                <tr>
-                    <th class="ClientNote">Примечание менеджера:</th>
-                    <td id="ClientNote"><?=$Client->dealer_manager_note;?></td>
-                </tr>
-                <tr>
-                    <th class="ClientCalcTime">Время замера:</th>
-                    <td id="ClientCalcTime"><?=$Client->calc_date->time;?></td>
-                </tr>
-                <?php if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
-                    <tr>
-                        <th class="ClientDiscount">Изменить величину скидки:</th>
-                        <td id="ClientDiscount">
-                            <form action="javascript:SendDiscount();">
-                                <input type="number" class="Discount"
-                                       min="<?$Client->discount->min;?>"
-                                       max="<?=$Client->discount->max;?>">
-                                <button type="submit" class="AddDiscount">
-                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endif;?>
-                </tbody>
-            </table>
-        </div>
-        <?php if($user->dealer_type == 0):?>
-        <div class="Messages col col-12 col-md-6">
-            <div class="Title">История клиента:</div>
-            <div class="Note">
-                <textarea id="Notes" class="Notes" rows="11" readonly></textarea>
-                <form class="Add" action="javascript:SendNote();">
-                    <div class="Title">Добавить комментарий:</div>
-                    <textarea class="Note" placeholder="Введите новое примечание" onmousemove="ResizeNote();"></textarea>
-                    <button type="submit" class="AddNote" onmousemove="ResizeNote();">
-                        <i class="fa fa-paper-plane" aria-hidden="true"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-        <?php endif;?>
-    </div>
-    <div class="Navigation">
-        <h3 class="left">Расчеты для проекта</h3>
-        <div class="Tabs">
-            <style>
-                .Page .Navigation .Tabs #TabAll:checked ~ #WindowTabAll,
-                <?foreach ($calculations as $calculation):?>
-                .Page .Navigation .Tabs #Tab<?=$calculation->id;?>:checked ~ #WindowTab<?=$calculation->id;?>,
-                <?endforeach;?>
-                .Page .Navigation .Tabs #TabAdd:checked ~ #WindowTabAdd {
-                    display: inline-block;
-                }
-            </style>
-            <input name="Tab" class="Tab" id="TabAll" type="radio" checked>
-            <label for="TabAll" class="TabLabel"><span>Общее</span></label>
-            <?php foreach ($calculations as $calculation):?>
-                <input name="Tab" class="Tab" id="Tab<?=$calculation->id;?>"  type="radio">
-                <label for="Tab<?=$calculation->id;?>" class="TabLabel"><span><?=$calculation->calculation_title;?></span></label>
-            <?php endforeach;?>
-            <?php if($this->item->project_verdict == 0 && $user->dealer_type != 2 || true):?>
-                <input name="Tab" class="Tab" id="TabAdd" type="radio">
-                <label for="TabAdd" class="TabLabel"><span>Добавить потолок</span> <i class="fa fa-plus-square-o" aria-hidden="true"></i></label>
-            <?php endif;?>
-            <div class="WindowTab" id="WindowTabAll">
-                    <table class="Information">
-                    <tbody>
-                    <tr class="CalcTitle TableTitle" data-child="Calculate" data-show="false">
-                        <td colspan="4">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></td>
-                    </tr>
-                    <?php foreach ($calculations as $calculation):?>
-                        <tr class="Calculate">
-                            <td class="CheckBox" colspan="4">
-                                <input class="CalcCheckBox" id="CalcCheckBox<?=$calculation->id;?>" name='include_calculation[]' value='<?=$calculation->id;?>' type='checkbox' checked="checked">
-                                <label for="CalcCheckBox<?=$calculation->id;?>"><?=$calculation->calculation_title;?></label>
-                            </td>
-                        </tr>
-                        <tr class="Calculate">
-                            <td>Площадь:</td>
-                            <td><span><?=$calculation->square;?></span> м<sup>2</sup></td>
-                            <td>Периметр:</td>
-                            <td><span><?=$calculation->perimeter;?></span> м</td>
-                        </tr>
-                        <tr class="Calculate">
-                            <td>Итого:</td>
-                            <td>
-                                <span><?=fceil($calculation->client_sum->itog);?></span> р.
-                            </td>
-                            <td><?php if($calculation->discount > 0):?>Итого -<?=$calculation->discount;?>%:<?php endif;?></td>
-                            <td>
-                                <?php if($calculation->discount > 0):?>
-                                    <span><?=fceil(discount($calculation->client_sum->itog, $calculation->discount));?></span> р.
-                                <?php endif;?>
-                            </td>
-                        </tr>
-                    <?php endforeach;?>
-                    <tr class="TR">
-                        <th>Общая площадь:</th>
-                        <td><span><?=$calculationsItog->square;?></span> м<sup>2</sup></td>
-                        <th>Общий периметр:</th>
-                        <td><span><?=$calculationsItog->perimeter;?></span> м</td>
-                    </tr>
-                    <tr class="TransportTH TableTitle" data-child="TransportTR" data-show="true">
-                        <td colspan="4">Транспортные расходы <i class="fa fa-sort-desc" aria-hidden="true"></i></td>
-                    </tr>
-                    <tr class="TransportTR">
-                        <td colspan="4">
-                            <form action="javascript:SendTransport();" class="Transports">
-                                <div class="Transport In">
-                                    <input name="transport" class="RadioT" id="transport_1" value="1" type="radio" <?=($$Project->transport == 1 )?"checked":"";?>>
-                                    <label for="transport_1">Транспорт по городу</label>
-                                    <div class="Block">
-                                        <div class="Name">Количество выездов:</div>
-                                        <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col;?>" placeholder="раз">
-                                        <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                                    </div>
-                                </div>
-                                <div class="Transport Out">
-                                    <input name="transport" class="RadioT" id="transport_2" value="2" type="radio" <?=($$Project->transport == 2 )?"checked":"";?>>
-                                    <label for="transport_2">Выезд за город</label>
-                                    <div class="Block">
-                                        <div class="Name">Кол-во, км:</div>
-                                        <input class="Input" type="number" min="1" max="999" name="jform[distance]" id="distance" value="<?=$$Project->distance; ?>" placeholder="км.">
-                                        <div class="Name">Кол-во выездов:</div>
-                                        <input class="Input" type="number" min="1" max="999" name="jform[distance_col]" id="distance_col" value="<?=$$Project->distance_col; ?>" placeholder="раз">
-                                        <button class="Button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-                                    </div>
-                                </div>
-                                <div class="Transport Empty">
-                                    <div class="Title">
-                                        <input name="transport" class="RadioT" id="transport_0" value="0" type="radio" <?=($$Project->transport == 0 )?"checked":"";?>>
-                                        <label for="transport_0">Без транспорта</label>
-                                    </div>
-                                    <div class="Block"></div>
-                                </div>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr class="TR">
-                        <th>Услуги транспорта:</th>
-                        <td><span><?=$Transport->itog_sum;?></span> р.</td>
-                    </tr>
-                    <tr class="TR">
-                        <th>Итого:</th>
-                        <td><span><?=$calculationsItog->client_sum->itog;?></span> р.</td>
-                        <th>Итого -<?=$calculationsItog->discount;?>%:</th>
-                        <td><span><?=$calculationsItog->client_sum->discount;?></span> р.</td>
-                    </tr>
-                    <tr class="TR">
-                        <td><span><?=ceil($calculationsItog->dealer_sum->CanvasAndComponents);?></span></td>
-                        <td><span><?=ceil($calculationsItog->dealer_sum->mounting);?></span></td>
-                        <td></td>
-                        <td><span><?=ceil($calculationsItog->dealer_sum->itog);?></span></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <?php foreach ($calculations as $k => $calculation):?>
-                <div class="WindowTab" id="WindowTab<?=$calculation->id;?>">
-
-                </div>
-            <?php endforeach;?>
-            <div class="WindowTab" id="WindowTabAdd">
-
-            </div>
-        </div>
-    </div>
-</div>
-<script type="text/javascript">
-    var $ = jQuery,
-        DATA = {};
-
-    $(document).ready(Init);
-    $(window).resize(Resize);
-
-    function Init() {
-        DATA.Window = null;
-
-        DATA.Massage = {};
-        DATA.Massage.Note = $(".Page .Body .Messages textarea.Note");
-        DATA.Massage.Add = DATA.Massage.Note.siblings(".AddNote");
-
-        DATA.Page = $(".Page");
-        DATA.Page.Navigation = DATA.Page.find(".Navigation");
-        DATA.Page.Navigation.Tabs = DATA.Page.Navigation.find(".Tabs");
-        DATA.Page.Navigation.Tab = DATA.Page.Navigation.Tabs.find(".Tab");
-        DATA.Page.Navigation.TabLabel = DATA.Page.Navigation.Tabs.find(".TabLabel");
-        DATA.Page.Navigation.WindowTab = DATA.Page.Navigation.Tabs.find(".WindowTab");
-        DATA.Page.Navigation.WindowTab.Table = DATA.Page.Navigation.WindowTab.find("table");
-
-        AddActions();
-        Resize();
-    }
-
-    function Resize() {
-        console.log(DATA.Window);
-        if ($(window).width() < 767 && DATA.Window !== "Mobile") MobileWindow();
-        else if ($(window).width() >= 767 && DATA.Window !== "Desktop") DesktopWindow();
-        ResizeNote();
-    }
-
-    function MobileWindow() {
-        $.each(DATA.Page.Navigation.TabLabel, function (index, value) {
-            var WindowTab = DATA.Page.Navigation.WindowTab[index];
-            $(WindowTab).insertAfter($(value));
-        });
-    }
-
-    function DesktopWindow() {
-        $.each(DATA.Page.Navigation.WindowTab, function (index, value) {
-            DATA.Page.Navigation.Tabs.append($(value));
-        });
-    }
-
-    function ResizeNote() {
-        DATA.Massage.Add.css({"height":DATA.Massage.Note.outerHeight()});
-    }
-
-    function AddActions() {
-        var tr = DATA.Page.Navigation.WindowTab.Table.find("tr");
-        $.each(tr, function (index, value) { if (value.dataset.child) { value.onclick = Trigger; $(value).click().click(); } });
-    }
-
-    function Trigger() {
-        var _this = $(this),
-            show = !(this.dataset.show === "true"),
-            child = "." + this.dataset.child;
-        if (show) {
-            _this.siblings(child).show();
-            _this.find("i").removeClass("fa-sort-desc").addClass("fa-sort-asc");
-        } else {
-            _this.siblings(child).hide();
-            _this.find("i").removeClass("fa-sort-asc").addClass("fa-sort-desc");
-        }
-        this.dataset.show = show;
-    }
-</script>
-<?php endif;?>
-
-
-
-
-<?php if(true):?>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
@@ -707,12 +287,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 <?php echo $this->item->client_id; ?>
                                             </a>
                                         </td>
-                                        <!-- <td>
-                                            <div class="FIO" style="display: none;">
-                                                <label id="jform_client_name-lbl" for="jform_client_name">ФИО клиента<span class="star">&nbsp;*</span></label>
-                                                <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
-                                            </div>
-                                        </td> -->
                                     </tr>
                                     <?php
                                         if ($user->dealer_type == 0) {
@@ -748,12 +322,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 } 
                                             ?>
                                         </td>
-                                        <!-- <td>
-                                            <div class="Contacts" style="display: none;">
-                                                <label id="jform_client_contacts-lbl" for="jform_client_contacts">Телефон клиента<span class="star">&nbsp;*</span></label>
-                                                <input name="new_client_contacts" id="jform_client_contacts" value="" placeholder="Телефон клиента" type="text">
-                                            </div>
-                                        </td> -->
                                     </tr>
                                     <?php if ($this->item->id_client!=1) { ?>
                                         <tr>
@@ -779,54 +347,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 <?=$this->item->project_info;?>
                                             </a>
                                         </td>
-                                        <!-- <td>
-                                            <div class="Address" style="display: none; position:relative;">
-                                                <label id="jform_address_lbl" for="jform_address">Адрес<span class="star">&nbsp;*</span></label>
-                                                <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
-                                            </div>
-                                        </td> -->
                                     </tr>
-                                    <!-- <tr class="Address" style="display: none;">
-                                        <td>Дом</td>
-                                        <td>Корпус</td>
-                                        <td>
-                                            <input name="new_house" id="jform_house" value="
-                                                <?php
-                                                    if (isset($_SESSION['house'])) {
-                                                        echo $_SESSION['house'];
-                                                    } else echo $house
-                                                ?>
-                                            " class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом"  aria-required="true" type="text">
-                                    
-                                            <input name="new_bdq" id="jform_bdq"  value="
-                                                <?php
-                                                    if (isset($_SESSION['bdq'])) {
-                                                        echo $_SESSION['bdq'];
-                                                    } else echo $bdq
-                                                ?>
-                                            " class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
-                                        </td>
-                                    </tr> -->
-                                    <!-- <tr class="Address" style="display: none;">
-                                        <td>Квартира  </td><td>Подъезд</td>
-                                        <td>
-                                            <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment'];
-                                                    } else echo $apartment ?>" class="inputactive" style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;" placeholder="Квартира"  aria-required="true" type="text">
-                                    
-                                            <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch'];
-                                                    } else echo $porch ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
-                                        </td>
-                                    </tr> -->
-                                    <!-- <tr class="Address" style="display: none;">
-                                        <td> Этаж  </td><td>Код домофона</td>
-                                        <td>
-                                            <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor'];
-                                                    } else echo $floor ?>" class="inputactive" style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;" placeholder="Этаж" aria-required="true" type="text">
-                                    
-                                            <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code'];
-                                                    } else echo $code ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код" aria-required="true" type="text">
-                                        </td>
-                                    </tr> -->
                                     <tr>
                                         <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
                                         <td>
@@ -837,29 +358,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                                 <?php echo $jdate->format('d.m.Y H:i'); ?>
                                             <?php } ?>
                                         </td>
-                                        <!-- <td>
-                                            <div id = "calendar_container"class="Date" style="display: none;position: relative;">
-                                                <div class="btn-small-l">
-                                                    <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                                                </div>
-                                                <div id = "g_calendar">
-                                                    <?php echo $g_calendar; ?>
-                                                </div>
-                                                <div class="btn-small-r">
-                                                    <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                                </div>
-                                            </div>
-                                            <div id="modal_window_g_container" class = "modal_window_container">
-                                                <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-                                                <div id="modal_window_g_choose" class = "modal_window">
-                                                        <p id="g_date-modal"></p>
-                                                        <p><strong>Выберите время замера (и замерщика):</strong></p>
-                                                        <p>
-                                                            <table id="projects_gaugers"></table>
-                                                        </p>
-                                                </div>
-                                            </div>
-                                        </td> -->
                                     </tr>
                                     <?php if(!empty($this->item->project_calculator)):?>
                                         <tr>
@@ -878,20 +376,11 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                         <td>
                                             <?php echo $this->item->dealer_manager_note; ?>
                                         </td>
-                                        <!-- <?php// if ($this->item->id_client != 1) { ?>
-                                            <td>
-                                                <button type="submit" id="accept_changes" class="btn btn btn-success"
-                                                        style="display: none;">
-                                                    Сохранить клиента
-                                                </button>
-                                            </td>
-                                        <?php// } ?>
-                                        -->
                                     </tr>
                                 </table>
                             </div>
                         <?php } ?>
-                        <!-- стиль поменяю, когда буду править гм страницы -->
+                        <!-- стиль поменяю, когда буду править расширенного диллера страницы -->
                             <?php if($user->dealer_type == 0) { ?>
                                 <div  class="col-12 col-md-6">
                                     <div class="comment">
@@ -1070,7 +559,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         <div class="tab-pane <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" id="summary" role="tabpanel">
                             <table id="table1" class="table-striped one-touch-view">
                                 <tr>
-                                    <th colspan="3" class="section_header" id="sh_ceilings">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                                    <th colspan="3" class="section_header" id="sh_ceilings">
+                                        Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                                    </th>
                                 </tr>
                                 <?php 
                                     $project_total = 0;
@@ -1774,9 +1265,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     </tr>
                 </table>
             <?php } ?>
-            <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?> id="project_activation">
+            <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
                 <?php if ($user->dealer_type != 2) { ?>
-                    <table>
+                    <table style="margin-top: 25px;">
                         <tr>
                             <td Style="padding-right: 15px;">
                                 <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">Примечание к договору</label>
@@ -1786,10 +1277,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </td>
                         </tr>
                     </table>
-                    <!-- стиль не сделала, не вижу ее -->
-                        <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
-                    <!-- конец -->
-                    <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
+                    <button id="refuse" class="btn btn-success" type="submit" style="display: none; margin-top: 25px;">Переместить в отказы</button>
+                    <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
                         <table id="container_calendars">
                             <tr>
                                 <td colspan="3">
@@ -1816,7 +1305,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </tr>
                         </table>
                     </div>
-                    <table style="margin-top: 25px;">
+                    <table class="contract" style="margin-top: 25px;">
                         <tr>
                             <td Style="padding-right: 15px;">
                                 <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label>
@@ -1826,10 +1315,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                             </td>
                         </tr>
                     </table>
-                    <p style="margin-top: 25px; margin-bottom: 0;">
+                    <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
                         <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                     </p>
-                    <div class="row">
+                    <div class="contract" class="row">
                         <div class="col-xs-12 col-md-4" style="padding-top: 25px;">
                             <button class="validate btn btn-primary" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство</button>
                         </div>
@@ -1872,7 +1361,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </div>
         <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
     </form>
-<!-- </div> -->
     <div id="modal-window-container-tar">
         <div id="modal-window-1-tar">
             <p>Введите данные для связи с Вами</p>
@@ -2760,12 +2248,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 jQuery("input[name='project_verdict']").val(1);
             });
             $tmp_accept = 0; $tmp_refuse = 0;
+
             jQuery("#accept_project").click(function () {
                 jQuery("input[name='project_verdict']").val(1);
-                
                 if($tmp_accept == 0) {
-                    
                     jQuery("#mounter_wraper").show();
+                    jQuery(".contract").show();
                     jQuery("#title").show();
                     jQuery(".calendar_wrapper").show();
                     jQuery(".buttons_wrapper").show();
@@ -2776,6 +2264,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     $tmp_refuse = 0;
                 } else {
                     jQuery(".project_activation").hide();
+                    jQuery(".contract").hide();
                     jQuery("#mounter_wraper").hide();
                     jQuery("#title").hide();
                     jQuery(".calendar_wrapper").hide();
@@ -2784,7 +2273,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     $tmp_accept = 0;
                     $tmp_refuse = 0;
                 }
-                
                 setTimeout(() => {
                     window.location = "#project_activation";
                 }, 100); 
@@ -2795,6 +2283,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     jQuery(".project_activation").show();
                     jQuery("#refuse").show();
                     jQuery("#mounter_wraper").hide();
+                    jQuery(".contract").hide();
                     jQuery("#title").hide();
                     jQuery(".calendar_wrapper").hide();
                     jQuery(".buttons_wrapper").hide();
@@ -3436,4 +2925,3 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
     endif;
 ?>
-<?endif;?>
