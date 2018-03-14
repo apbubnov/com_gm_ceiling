@@ -35,7 +35,6 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations = $model->getProjectItems($this->item->id);
 //$need_mount = 1;
 
-
 $sum_transport = 0;  $sum_transport_discount = 0;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount_transport = $mountModel->getDataAll();
@@ -63,7 +62,6 @@ $components_data = array();
 $project_sum = 0;
 $counter = 0;
 
-
 // календарь
 $month = date("n");
 $year = date("Y");
@@ -75,17 +73,17 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
 //----------------------------------------------------------------------------------
 
-
 ?>
+
+<style>
+
+</style>
+
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
 <?= parent::getButtonBack(); ?>
-
-<h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
-    <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-    <?php $calculations = $model->getProjectItems($this->item->id); ?>
     <?php
         $need_choose = false;
         $jinput = JFactory::getApplication()->input;
@@ -126,61 +124,47 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
         $all_recoil = $recoil_model->getData();
     ?>
-    <div id="modal-window-container">
-		<button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-		<div id="modal-window-call-tar">
-			<h6>Введите ФИО</h6>
-			<p><input type="text" id="new_fio" placeholder="ФИО" required></p>
-            <h6>Введите номер телефона</h6>
-			<p><input type="text" id="new_phone" placeholder="ФИО" required></p>
-			<p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
-	    </div>
-    </div>
-    <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
-<div class="container">
+    <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
     <div class="row">
-        <div class="item_fields">
-            <form id="form-client"
-                  action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar"
-                  method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+        <div class="col-xs-12 col-md-6 no_padding">
+            <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                 <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
                 <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
                 <input name="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
-                <input name="comments_id" id="comments_id"
-                       value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
+                <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
                 <input name="status" id="project_status" value="" type="hidden">
                 <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
                 <input name="type" value="manager" type="hidden">
                 <input name="subtype" value="calendar" type="hidden">
                 <input name="data_change" value="0" type="hidden">
                 <input name="data_delete" value="0" type="hidden">
-                <input name="selected_advt" id="selected_advt"
-                       value="<?php echo (!empty($this->item->api_phone_id)) ? $this->item->api_phone_id : '0' ?>"
-                       type="hidden">
+                <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id)) ? $this->item->api_phone_id : '0' ?>" type="hidden">
                 <input name="recoil" id="recoil" value="" type="hidden">
-                <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart"
-                       value="<?php if (isset($_SESSION['time'])) {
-                           echo $_SESSION['time'];
-                       } else if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") {
-                           echo substr($this->item->project_calculation_date, 11);
-                       } ?>" class="inputactive" type="hidden">
-                <input name="project_new_calc_date" id="jform_project_new_calc_date" class="inputactive"
-                       value="<?php if (isset($_SESSION['date'])) {
-                           echo $_SESSION['date'];
-                       } else if (isset($this->item->project_calculation_date)) {
-                           echo $this->item->project_calculation_date;
-                       } ?>" type="hidden">
-                <input name="project_gauger" id="jform_project_gauger" class="inputactive"
-                       value="<?php if (isset($_SESSION['gauger'])) {
-                           echo $_SESSION['gauger'];
-                       } else if ($this->item->project_calculator != null) {
-                           echo $this->item->project_calculator;
-                       } else {
-                           echo "0";
-                       } ?>" type="hidden">
+                <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value="
+                    <?php if (isset($_SESSION['time'])) {
+                        echo $_SESSION['time'];
+                    } else if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") {
+                        echo substr($this->item->project_calculation_date, 11);
+                    } ?>
+                    " class="inputactive" type="hidden">
+                <input name="project_new_calc_date" id="jform_project_new_calc_date" class="inputactive" value="
+                    <?php if (isset($_SESSION['date'])) {
+                        echo $_SESSION['date'];
+                    } else if (isset($this->item->project_calculation_date)) {
+                        echo $this->item->project_calculation_date;
+                    } ?>
+                    " type="hidden">
+                <input name="project_gauger" id="jform_project_gauger" class="inputactive" value="
+                    <?php if (isset($_SESSION['gauger'])) {
+                        echo $_SESSION['gauger'];
+                    } else if ($this->item->project_calculator != null) {
+                        echo $this->item->project_calculator;
+                    } else {
+                        echo "0";
+                    } ?>
+                    " type="hidden">
                 <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
-                <input id="project_sum_transport" name="project_sum_transport"
-                       value="<?php echo $project_total_discount_transport ?>" type="hidden">
+                <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                 <input id="emails" name="emails" value="" type="hidden">
                 <input name="without_advt" value="1" type="hidden">
                 <div class="row">
@@ -189,11 +173,11 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                             <tr>
                                 <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
                                 <td><input name="new_client_name"
-                                           class="<?php if ($this->item->id_client != "1") echo "inputactive"; else echo "inputactive"; ?>"
-                                           id="jform_client_name" value="<?php if (isset($_SESSION['FIO'])) {
+                                        class="<?php if ($this->item->id_client != "1") echo "inputactive"; else echo "inputactive"; ?>"
+                                        id="jform_client_name" value="<?php if (isset($_SESSION['FIO'])) {
                                         echo $_SESSION['FIO'];
                                     } else echo $this->item->client_id; ?>"
-                                           placeholder="ФИО клиента" type="text"></td>
+                                        placeholder="ФИО клиента" type="text"></td>
                                 <?php if ($this->item->id_client == "1") { ?>
                                     <td>
                                         <button id="find_old_client" type="button" class="btn btn-primary"><i
@@ -208,10 +192,10 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 <td>
 
                                     <input id='male' type='radio' class="radio" name='slider-sex'
-                                           value='0' <?php if ($client_sex == "0") echo "checked"; ?>>
+                                        value='0' <?php if ($client_sex == "0") echo "checked"; ?>>
                                     <label for='male'>Mужской</label>
                                     <input id='female' type='radio' class="radio" name='slider-sex'
-                                           value='1' <?php if ($client_sex == "1") echo "checked"; ?> >
+                                        value='1' <?php if ($client_sex == "1") echo "checked"; ?> >
                                     <label for='female'>Женский</label>
                                 </td>
                             </tr>
@@ -229,8 +213,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                             <tr>
                                 <th>Дата рождения</th>
                                 <td><input name="new_birthday" id="jform_birthday" class="inputactive"
-                                           value="<? if ($birthday->birthday != 0000 - 00 - 00) echo $birthday->birthday; ?>"
-                                           placeholder="Дата рождения" type="date"></td>
+                                        value="<? if ($birthday->birthday != 0000 - 00 - 00) echo $birthday->birthday; ?>"
+                                        placeholder="Дата рождения" type="date"></td>
                                 <td>
                                     <button type="button" class="btn btn-primary" id="add_birthday">Ок</button>
                                 </td>
@@ -243,20 +227,20 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                 <td>
                                     <?php if ($this->item->id_client == 1) { ?>
                                         <input name="new_client_contacts[]" id="jform_client_contacts"
-                                               class="inputactive" value="<?php echo $phonefrom; ?>"
-                                               placeholder="Телефон клиента" type="text">
+                                            class="inputactive" value="<?php echo $phonefrom; ?>"
+                                            placeholder="Телефон клиента" type="text">
                                     <?php } elseif (count($cl_phones) == 1) { ?>
                                         <input name="new_client_contacts[<?php echo '\'' . $cl_phones[0]->phone . '\'' ?>]"
-                                               id="jform_client_contacts"
-                                               class="inputactive" value="<?php echo $cl_phones[0]->phone; ?>"
-                                               type="text">
+                                            id="jform_client_contacts"
+                                            class="inputactive" value="<?php echo $cl_phones[0]->phone; ?>"
+                                            type="text">
 
                                     <?php } elseif (count($cl_phones) > 1) {
                                         foreach ($cl_phones as $value) { ?>
                                             <input name="new_client_contacts[<?php echo '\'' . $value->phone . '\'' ?>]"
-                                                   id="jform_client_contacts"
-                                                   class="inputactive" value="<?php echo strval($value->phone); ?>"
-                                                   type="text">
+                                                id="jform_client_contacts"
+                                                class="inputactive" value="<?php echo strval($value->phone); ?>"
+                                                type="text">
                                         <?php }
                                     } ?>
                                 </td>
@@ -273,9 +257,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                         <th></th>
                                         <td>
                                             <input name='new_client_contacts[<?php echo $i; ?>]'
-                                                   id='jform_client_contacts'
-                                                   class='inputactive'
-                                                   value="<?php echo $_SESSION['phones'][$i]; ?>">
+                                                id='jform_client_contacts'
+                                                class='inputactive'
+                                                value="<?php echo $_SESSION['phones'][$i]; ?>">
                                         </td>
                                         <td>
                                             <button class='clear_form_group btn btn-danger' type='button'><i
@@ -289,8 +273,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                     <tr>
                                         <th>e-mail</th>
                                         <td><input name="new_email[]" id="jform_email" class="inputhidden"
-                                                   value="<?php echo $value->contact; ?>" placeholder="e-mail"
-                                                   type="text">
+                                                value="<?php echo $value->contact; ?>" placeholder="e-mail"
+                                                type="text">
                                         </td>
                                     </tr>
                                 <?php }
@@ -298,7 +282,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                             <tr>
                                 <th>Добавить адрес эл.почты</th>
                                 <td><input name="new_email" id="jform_email" class="inputactive"
-                                           value="" placeholder="e-mail" type="text"></td>
+                                        value="" placeholder="e-mail" type="text"></td>
                                 <td>
                                     <button type="button" class="btn btn-primary" id="add_email">Ок</button>
                                 </td>
@@ -323,26 +307,26 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                             <tr>
                                 <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
                                 <td><input name="new_address" id="jform_address" class="inputactive"
-                                           value="<?php if (isset($_SESSION['address'])) {
-                                               if ($_SESSION['address'] != $this->item->project_info) {
-                                                   echo $_SESSION['address'];
-                                               } else echo $street;
-                                           } else echo $street; ?>" placeholder="Адрес"
-                                           type="text" required="required"></td>
+                                        value="<?php if (isset($_SESSION['address'])) {
+                                            if ($_SESSION['address'] != $this->item->project_info) {
+                                                echo $_SESSION['address'];
+                                            } else echo $street;
+                                        } else echo $street; ?>" placeholder="Адрес"
+                                        type="text" required="required"></td>
                             </tr>
                             <tr class="controls">
                                 <td>Дом / Корпус</td>
                                 <td>
                                     <input name="new_house" id="jform_house"
-                                           value="<?php if (isset($_SESSION['house'])) {
-                                               if (empty($_SESSION['house'])) {
-                                                   echo $house;
-                                               } else {
-                                                   echo $_SESSION['house'];
-                                               }
-                                           } else echo $house ?>" class="inputactive"
-                                           style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;"
-                                           placeholder="Дом" required="required" aria-required="true" type="text">
+                                        value="<?php if (isset($_SESSION['house'])) {
+                                            if (empty($_SESSION['house'])) {
+                                                echo $house;
+                                            } else {
+                                                echo $_SESSION['house'];
+                                            }
+                                        } else echo $house ?>" class="inputactive"
+                                        style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;"
+                                        placeholder="Дом" required="required" aria-required="true" type="text">
 
                                     <input name="new_bdq" id="jform_bdq" value="<?php if (isset($_SESSION['bdq'])) {
                                         if (empty($_SESSION['bdq'])) {
@@ -351,43 +335,43 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                             echo $_SESSION['bdq'];
                                         }
                                     } else echo $bdq ?>" class="inputactive"
-                                           style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус"
-                                           aria-required="true" type="text">
+                                        style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус"
+                                        aria-required="true" type="text">
                                 </td>
                             </tr>
                             <tr class="controls">
                                 <td> Квартира / Подъезд</td>
                                 <td>
                                     <input name="new_apartment" id="jform_apartment"
-                                           value="<?php if (isset($_SESSION['apartment'])) {
-                                               echo $_SESSION['apartment'];
-                                           } else echo $apartment ?>" class="inputactive"
-                                           style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;"
-                                           placeholder="Квартира" aria-required="true" type="text">
+                                        value="<?php if (isset($_SESSION['apartment'])) {
+                                            echo $_SESSION['apartment'];
+                                        } else echo $apartment ?>" class="inputactive"
+                                        style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;"
+                                        placeholder="Квартира" aria-required="true" type="text">
 
                                     <input name="new_porch" id="jform_porch"
-                                           value="<?php if (isset($_SESSION['porch'])) {
-                                               echo $_SESSION['porch'];
-                                           } else echo $porch ?>" class="inputactive"
-                                           style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"
-                                           aria-required="true" type="text">
+                                        value="<?php if (isset($_SESSION['porch'])) {
+                                            echo $_SESSION['porch'];
+                                        } else echo $porch ?>" class="inputactive"
+                                        style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"
+                                        aria-required="true" type="text">
                                 </td>
                             </tr>
                             <tr class="controls">
                                 <td> Этаж / Код домофона</td>
                                 <td>
                                     <input name="new_floor" id="jform_floor"
-                                           value="<?php if (isset($_SESSION['floor'])) {
-                                               echo $_SESSION['floor'];
-                                           } else echo $floor ?>" class="inputactive"
-                                           style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;"
-                                           placeholder="Этаж" aria-required="true" type="text">
+                                        value="<?php if (isset($_SESSION['floor'])) {
+                                            echo $_SESSION['floor'];
+                                        } else echo $floor ?>" class="inputactive"
+                                        style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;"
+                                        placeholder="Этаж" aria-required="true" type="text">
 
                                     <input name="new_code" id="jform_code" value="<?php if (isset($_SESSION['code'])) {
                                         echo $_SESSION['code'];
                                     } else echo $code ?>" class="inputactive"
-                                           style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код"
-                                           aria-required="true" type="text">
+                                        style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код"
+                                        aria-required="true" type="text">
                                 </td>
                             </tr>
                             <tr>
@@ -406,13 +390,13 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                                         <div class="btn-small-l">
                                             <button id="button-prev" class="button-prev-small" type="button"
                                                     class="btn btn-primary"><i class="fa fa-arrow-left"
-                                                                               aria-hidden="true"></i></button>
+                                                                            aria-hidden="true"></i></button>
                                         </div>
                                         <?php echo $calendar; ?>
                                         <div class="btn-small-r">
                                             <button id="button-next" class="button-next-small" type="button"
                                                     class="btn btn-primary"><i class="fa fa-arrow-right"
-                                                                               aria-hidden="true"></i></button>
+                                                                            aria-hidden="true"></i></button>
                                         </div>
                                     </div>
                                 </td>
@@ -445,8 +429,8 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         <input name="idCalcDelete" id="idCalcDelete" value="<?= $calculation->id; ?>" type="hidden">
         </form>
     </div>
-</div>
 <?endif;?>
+
 <div id="modal_window_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
     </button>
@@ -458,9 +442,19 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         </p>
     </div>
 </div>
+<div id="modal-window-container">
+    <button type="button" id="close-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal-window-call-tar">
+        <h6>Введите ФИО</h6>
+        <p><input type="text" id="new_fio" placeholder="ФИО" required></p>
+        <h6>Введите номер телефона</h6>
+        <p><input type="text" id="new_phone" placeholder="ФИО" required></p>
+        <p><button type="button" id="add_recoil" class="btn btn-primary">Сохранить</button>  <button type="button" id="cancel" class="btn btn-primary">Отмена</button></p>
+    </div>
+</div>
 
 <style>
-    @media (max-width: 1024px) {
+    /* @media (max-width: 1024px) {
         .component-content, .component-content * {
             font-size: 10px !important;
         }
@@ -468,14 +462,14 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         table, table *:not(label) {
             padding: .1rem !important;
         }
-/*
+    
         table, table * {
             font-size: 10px !important;
             padding: .1rem !important;
             width: auto !important;
             margin: 0 !important;
             text-align: center !important;
-        }*/
+        }
 
         .container {
             margin: 0 -30px !important;
@@ -487,7 +481,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             margin: 0 30px !important;
             width: calc(100% - 60px) !important;
         }
-    }
+    } */
 </style>
 
 <script language="JavaScript">

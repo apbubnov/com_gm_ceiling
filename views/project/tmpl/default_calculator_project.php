@@ -44,18 +44,6 @@
 ?>
 
 <style>
-    /* .center-left {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-    .calculation_sum {
-        width: 100%;
-        margin-bottom: 25px;
-    }
-    .calculation_sum td {
-        padding: 0 5px;
-    } */
     .container {
         padding: 0;
     }
@@ -77,24 +65,7 @@
     .wtf_padding {
         padding: 0;
     }
-    /* .no_yes_padding {
-        padding: 0;
-    }
-    #calendar1, #calendar2 {
-        display: inline-block;
-        width: 100%;
-        padding: 0;
-    }
-    #container_calendars {
-        width: 100%;
-    }
-    #button-prev, #button-next {
-        padding: 0;
-    } */
     @media screen and (min-width: 768px) {
-        /* .center-left {
-            text-align: left;
-        } */
         #table1 {
             width: 100%;
             max-width: 3000px;
@@ -114,24 +85,14 @@
         .wtf_padding {
             padding: 15px;
         }
-        /* .no_yes_padding {
-            padding: 15px;
-        }
-        #calendar1, #calendar2 {
-            width: calc(50% - 25px);
-        }
-        #calendar2 {
-            margin-left: 30px;
-        } */
     }
 </style>
 
 <?= parent::getButtonBack(); ?>
 <input name="url" value="" type="hidden">
-<h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Просмотр проекта <?php echo $this->item->id ?></h2>
+<h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
 <div class="row">
-    <div class="col-xs-12 col-md-6 no_padding /*item_fields*/">
-        <h4 style="margin-bottom: 15px;">Информация по проекту № <?= $this->item->id; ?></h4>
+    <div class="col-xs-12 col-md-6 no_padding">
         <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
             <table class="table_info" style="margin-bottom: 25px;">
                 <tr>
@@ -711,11 +672,11 @@
             <?php } ?>
         </div>
     </div>
-
-
-    <?php if ($user->dealer_type == 2) { ?>
-        <button type="button" class="btn btn-primary" id="btn_pay">Оплатить с помощью карты</button>
-    <?php } ?>
+    <!-- чтото для клиенткого кабинета, потом стили применю, если не уберется это вообще -->
+        <?php if ($user->dealer_type == 2) { ?>
+            <button type="button" class="btn btn-primary" id="btn_pay">Оплатить с помощью карты</button>
+        <?php } ?>
+    <!-- конец -->
 
     <script>
         var $ = jQuery;
@@ -733,8 +694,6 @@
                 e.val(!e.val());
             });
 
-
-
             var id = "<?php echo $sb_project_id; ?>";
             orderId = id != 0 ? id : "";
             jQuery.ajax({
@@ -742,7 +701,6 @@
                 url: "index.php?option=com_gm_ceiling&task=get_paymanet_status&",
                 data: {
                     orderId: orderId
-
                 },
                 dataType: "json",
                 success: function (data) {
@@ -795,7 +753,6 @@
                     if (el.attr("vis") == "hide") el.hide();
                 })
             });
-
 
             var flag2 = 0;
             jQuery("#sh_mount").click(function () {
