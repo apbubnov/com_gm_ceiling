@@ -1816,7 +1816,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         </tr>
                     </table>
                 </div>
-                <table style="padding-top: 25px;">
+                <table style="margin-top: 25px;">
                     <tr>
                         <td Style="padding-right: 15px;">
                             <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label>
@@ -1826,7 +1826,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                         </td>
                     </tr>
                 </table>
-                <p>
+                <p style="margin-top: 25px; margin-bottom: 0;">
                     <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                 </p>
                 <div class="row">
