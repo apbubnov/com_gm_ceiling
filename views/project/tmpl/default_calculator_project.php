@@ -318,74 +318,74 @@
                                         <?php } else echo round($project_total_discount, 0)." р."; ?>
                                     </th>
                                 <?php } else { ?>
-                                    <th colspan="2">Итого</th>
-                                    <th id="project_total">
-                                    <span class="sum">
-                                        <?php
-                                        if ($this->item->new_project_sum == 0) {
-                                            if ($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0) {
-                                                $project_total = 3500;
-                                            }
-                                            echo round($project_total_discount, 2);
-                                        } else {
-                                            echo round($this->item->new_project_sum, 2);
-                                        }
-                                } ?>
-                                    </span>
+                                    <th>Итого</th>
+                                    <th colspan="2" id="project_total">
+                                        <span class="sum">
+                                            <?php
+                                                if ($this->item->new_project_sum == 0) {
+                                                    if ($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0) {
+                                                        $project_total = 3500;
+                                                    }
+                                                    echo round($project_total_discount, 2);
+                                                } else {
+                                                    echo round($this->item->new_project_sum, 2);
+                                                }
+                                            ?>
+                                        </span>
                                         <span class="dop" style="font-size: 9px;">
-                            <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
-                                * минимальная сумма заказа 3500р.<?php } ?>
-                                </span>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc"
-                                                                                    aria-hidden="true"></i></th>
-                            </tr>
-                            <?php foreach ($calculations as $calculation) { ?>
-                            <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                                <td><?php echo $calculation->calculation_title; ?></td>
-                                <td colspan="2">
-                                    <?php
-                                    $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-                                    $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
-
-                                    ?>
-                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                    <?php } else { ?>
-                                        -
-                                    <?php } ?>
-                                </td>
-                            </tr>
-                            <?php } ?>
-                            <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
-                            <tr>
-                                <th id="sh_mount"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
-                            </tr>
-
-                            <?php foreach ($calculations
-
-                            as $calculation) { ?>
-                            <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
-                                <td><?php echo $calculation->calculation_title; ?></td>
-                                <td>
-                                    <?php $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; ?>
-                                    <?php $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id); ?>
-                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                    <?php } else { ?>
-                                        После договора
-                                    <?php } ?>
-                                </td>
-
-                                <?php }
-                                $json = json_encode($pdf_names_mount); ?>
+                                        <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
+                                            * минимальная сумма заказа 3500р.
+                                        <?php } ?>
+                                    </span>
+                                    </th>
                                 <?php } ?>
                             </tr>
                             <tr>
-                                <th colspan="2"> Стоймость работ и комплектующих "Гильдии Мастеров"</th>
-                                <td>
+                                <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                            </tr>
+                            <?php foreach ($calculations as $calculation) { ?>
+                                <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
+                                    <td><?php echo $calculation->calculation_title; ?></td>
+                                    <td colspan="2">
+                                        <?php
+                                            $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
+                                            $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
+                                        ?>
+                                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                        <?php } else { ?>
+                                            -
+                                        <?php } ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
+                                <tr>
+                                    <th colspan="3" id="sh_mount">Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                                </tr>
+                                <?php foreach ($calculations as $calculation) { ?>
+                                    <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
+                                        <td><?php echo $calculation->calculation_title; ?></td>
+                                        <td colspan="2">
+                                            <?php 
+                                                $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";
+                                                $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
+                                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                            ?>
+                                                <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                            <?php } else { ?>
+                                                После договора
+                                            <?php } ?>
+                                        </td>
+                                    </tr>
+                            <?php
+                                    }
+                                    $json = json_encode($pdf_names_mount); 
+                                }
+                            ?>
+                            <tr>
+                                <th> Стоймость работ и комплектующих "Гильдии Мастеров"</th>
+                                <td colspan="2">
                                     <?= abs(floatval($recoil_map_project->sum)); ?>
                                 </td>
                             </tr>
@@ -394,29 +394,31 @@
                                     Накладные <i class="fa fa-sort-asc" aria-hidden="true"></i>
                                 </th>
                             </tr>
-                            <?foreach ($calculations as $calculation):?>
-                            <tr class="section_comsumables">
-                                <th><?=$calculation->calculation_title;?></th>
-                                <td>
-                                    <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
-                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary"
-                                        target="_blank" >Потолок</a>
-                                    <?php } else { ?>
-                                        -
-                                    <?php } ?>
-                                </td>
-                                <td>
-                                    <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
-                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary"
-                                        target="_blank">Комплектующие</a>
-                                    <?php } else { ?>
-                                        -
-                                    <?php } ?>
-                                </td>
-                            </tr>
-                            <?endforeach;?>
+                            <?php foreach ($calculations as $calculation): ?>
+                                <tr class="section_comsumables">
+                                    <th><?=$calculation->calculation_title;?></th>
+                                    <td>
+                                        <?php 
+                                            $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; 
+                                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                        ?>
+                                                <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank" >Потолок</a>
+                                        <?php } else { ?>
+                                            -
+                                        <?php } ?>
+                                    </td>
+                                    <td>
+                                        <?php 
+                                            $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; 
+                                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                        ?>
+                                                <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Комплектующие</a>
+                                        <?php } else { ?>
+                                            -
+                                        <?php } ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </table>
                     </div>
                     <?php foreach ($calculations as $k => $calculation) { ?>
