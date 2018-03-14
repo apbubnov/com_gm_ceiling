@@ -1356,7 +1356,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             <?php } ?>
             <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
                 <?php if ($user->dealer_type != 2) { ?>
-                    <table>
+                    <table style="margin-top: 25px;">
                         <tr>
                             <td Style="padding-right: 15px;">
                                 <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">Примечание к договору</label>
