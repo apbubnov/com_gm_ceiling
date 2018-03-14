@@ -112,6 +112,16 @@
 
 ?>
 
+<style>
+    .calculation_sum {
+        width: 100%;
+        margin-bottom: 25px;
+    }
+    .calculation_sum td {
+        padding: 0 5px;
+    }
+</style>
+
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
