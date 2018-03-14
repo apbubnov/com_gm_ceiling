@@ -282,7 +282,7 @@
                                     <?php echo $total_perimeter; ?> м
                                 </th>
                             </tr>
-                            <?if($tmp != 0):?>
+                            <?if ($tmp != 0):?>
                                 <tr>
                                     <?php if ($tmp == 1 && $sum_transport_discount_total != 0) { ?>
                                         <th> Транспорт / - %</th>
@@ -317,7 +317,7 @@
                                         <span class="dop" style="font-size: 9px;"> * минимальная сумма заказа 3500р. </span>
                                         <?php } else echo round($project_total_discount, 0)." р."; ?>
                                     </th>
-                                <?php } else  ?>
+                                <?php } else { ?>
                                     <th colspan="2">Итого</th>
                                     <th id="project_total">
                                     <span class="sum">
