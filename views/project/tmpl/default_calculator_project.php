@@ -56,6 +56,9 @@
     .calculation_sum td {
         padding: 0 5px;
     } */
+    .container {
+        padding: 0;
+    }
     #table1 {
         width: 100%;
         max-width: 300px;
