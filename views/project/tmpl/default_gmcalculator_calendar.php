@@ -340,6 +340,31 @@
             </div>
         </div>
     </div>
+    <!-- скидка -->
+        <div class="center-left">
+            <a class="btn btn-primary" id="change_discount">Изменить величину скидки</a>
+        </div>
+        <table class="calculation_sum">
+            <?php $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100; ?>
+            <tbody class="new_discount" style="display: none">
+                <tr>
+                    <td>
+                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input name="new_discount" id="jform_new_discount" value="" onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки" max='<?= round($skidka, 0); ?>' type="number" style="width: 100%;">
+                        <input name="isDiscountChange" value="0" type="hidden">
+                    </td>
+                    <td>
+                        <button id="update_discount" class="btn btn btn-primary">Ок</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    <!-- конец скидки -->
     <h3>Расчеты для проекта</h3>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">

@@ -1787,7 +1787,7 @@
 									</td>
 								</tr>
 							</table>
-							<input type="text" id="comment" name="jform_details" value="<?php echo $this->item->details; ?>" class="form-control"  placeholder="комментарий" style="display: none; margin-bottom: 5px;">
+							<input type="text" id="comment" name="jform[details]" value="<?php echo $this->item->details; ?>" class="form-control"  placeholder="комментарий" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
@@ -2389,7 +2389,6 @@
 			jQuery("#comment").show();
 			jQuery("#btn_comment").css("background-color", "#010084");
 		}
-		
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
