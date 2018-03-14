@@ -1354,7 +1354,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     </tr>
                 </table>
             <?php } ?>
-            <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?> id="project_activation">
+            <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
                 <?php if ($user->dealer_type != 2) { ?>
                     <table>
                         <tr>
@@ -2337,11 +2337,10 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 jQuery("input[name='project_verdict']").val(1);
             });
             $tmp_accept = 0; $tmp_refuse = 0;
+
             jQuery("#accept_project").click(function () {
                 jQuery("input[name='project_verdict']").val(1);
-                
                 if($tmp_accept == 0) {
-                    
                     jQuery("#mounter_wraper").show();
                     jQuery(".contract").show();
                     jQuery("#title").show();
@@ -2363,7 +2362,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     $tmp_accept = 0;
                     $tmp_refuse = 0;
                 }
-                
                 setTimeout(() => {
                     window.location = "#project_activation";
                 }, 100); 
