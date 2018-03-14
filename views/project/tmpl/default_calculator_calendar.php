@@ -609,8 +609,8 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         width: 100%;
         padding: 0;
     }
-    #mounter_wraper tr {
-        eidth: 100%;
+    #container_calendars {
+        width: 100%;
     }
     @media screen and (min-width: 768px) {
         .center-left {
@@ -1787,7 +1787,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
                 <!-- конец -->
                 <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
-                    <table style="width: 100%;">
+                    <table id="container_calendars">
                         <tr>
                             <td colspan="3">
                                 <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
