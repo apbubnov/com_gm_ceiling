@@ -1872,7 +1872,6 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         </div>
         <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
     </form>
-<!-- </div> -->
     <div id="modal-window-container-tar">
         <div id="modal-window-1-tar">
             <p>Введите данные для связи с Вами</p>
