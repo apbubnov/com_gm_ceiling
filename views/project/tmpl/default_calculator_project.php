@@ -69,7 +69,7 @@
         padding: 10px 5px;
     }
     .small_complectuushie a {
-        font-size: 9px !important;
+        padding: 6px 12px;
     }
     /* .wtf_padding {
         padding: 0;
@@ -106,7 +106,7 @@
             max-width: 200px;
         }
         .small_complectuushie a {
-            font-size: 1em !important;
+            padding: 8px 16px;
         }
         /* .wtf_padding {
             padding: 15px;
@@ -403,7 +403,7 @@
                             <?php foreach ($calculations as $calculation): ?>
                                 <tr class="section_comsumables">
                                     <th><?=$calculation->calculation_title;?></th>
-                                    <td>
+                                    <td class="small_complectuushie">
                                         <?php 
                                             $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; 
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
@@ -413,7 +413,7 @@
                                             -
                                         <?php } ?>
                                     </td>
-                                    <td class="/*small_complectuushie*/">
+                                    <td class="small_complectuushie">
                                         <?php 
                                             $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; 
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
