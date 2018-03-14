@@ -1396,7 +1396,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                             </tr>
                         </table>
                     </div>
-                    <table style="margin-top: 25px;">
+                    <table class="contract" style="margin-top: 25px;">
                         <tr>
                             <td Style="padding-right: 15px;">
                                 <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label>
@@ -1406,10 +1406,10 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                             </td>
                         </tr>
                     </table>
-                    <p style="margin-top: 25px; margin-bottom: 0;">
+                    <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
                         <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                     </p>
-                    <div class="row">
+                    <div class="contract" class="row">
                         <div class="col-xs-12 col-md-4" style="padding-top: 25px;">
                             <button class="validate btn btn-primary" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство</button>
                         </div>
@@ -2345,6 +2345,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 if($tmp_accept == 0) {
                     
                     jQuery("#mounter_wraper").show();
+                    jQuery(".contract").show();
                     jQuery("#title").show();
                     jQuery(".calendar_wrapper").show();
                     jQuery(".buttons_wrapper").show();
@@ -2355,6 +2356,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     $tmp_refuse = 0;
                 } else {
                     jQuery(".project_activation").hide();
+                    jQuery(".contract").hide();
                     jQuery("#mounter_wraper").hide();
                     jQuery("#title").hide();
                     jQuery(".calendar_wrapper").hide();
@@ -2374,6 +2376,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     jQuery(".project_activation").show();
                     jQuery("#refuse").show();
                     jQuery("#mounter_wraper").hide();
+                    jQuery(".contract").hide();
                     jQuery("#title").hide();
                     jQuery(".calendar_wrapper").hide();
                     jQuery(".buttons_wrapper").hide();
