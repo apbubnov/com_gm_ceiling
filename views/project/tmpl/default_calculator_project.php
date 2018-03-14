@@ -68,6 +68,9 @@
     #table1 td, #table1 th {
         padding: 10px 5px;
     }
+    .small_complectuushie {
+        font-size: 9px;
+    }
     /* .wtf_padding {
         padding: 0;
     }
@@ -101,6 +104,9 @@
             font-size: 1em;
             width: auto;
             max-width: 200px;
+        }
+        .small_complectuushie {
+            font-size: 1em;
         }
         /* .wtf_padding {
             padding: 15px;
@@ -407,7 +413,7 @@
                                             -
                                         <?php } ?>
                                     </td>
-                                    <td>
+                                    <td class="small_complectuushie">
                                         <?php 
                                             $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; 
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
@@ -421,6 +427,7 @@
                             <?php endforeach; ?>
                         </table>
                     </div>
+
                     <?php foreach ($calculations as $k => $calculation) { ?>
                         <?php $mounters = json_decode($calculation->mounting_sum); ?>
                         <?php $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg"; ?>
