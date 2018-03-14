@@ -2063,8 +2063,8 @@
 	jQuery(document).ready(function() {
 
 		// кнопки открытия скрытых полей
-		precalculation = $_GET['precalculation'];
-		if (precalculation == 1 ) {
+		precalculation = <?php echo $_GET['precalculation']; ?>;
+		if (precalculation == 1) {
 			jQuery("#precalculation_container_hide").hide();
 		} else {
 			jQuery("#btn_precalculation").hide();
