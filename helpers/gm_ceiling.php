@@ -183,9 +183,13 @@ class Gm_ceilingHelpersGm_ceiling
                 //Загружаем из БД
                 $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
                 $calculation_data = $calculation_model->getData($calculation_id);
+                $calculation_data2 = (array) $calculation_model->getDataById($calculation_id);
 
                 foreach ($calculation_data as $key => $item) {
-                    $data[$key] = $item;
+                    if (empty($item) && array_key_exists($key, $calculation_data2))
+                        $data[$key] = $calculation_data2[$key];
+                    else
+                        $data[$key] = $item;
                 }
 
                 //throw  new Exception("Test", 3);
@@ -251,7 +255,6 @@ class Gm_ceilingHelpersGm_ceiling
                     )
                 ));
                 $data = $data['jform'];
-                $data["need_mount"] = $need_mount;
 
                 $color = $data['color'];
                 $color_filter = $color ? "= " .$color : "IS NULL";       
@@ -423,6 +426,9 @@ class Gm_ceilingHelpersGm_ceiling
                 $data['extra_mounting'] = json_encode($extra_mounting, JSON_FORCE_OBJECT);
 
             }
+
+            $data["need_mount"] = $need_mount;
+
             if($data['n2'] == 29){
                 $data['n1'] = 29;
             } 
@@ -457,8 +463,8 @@ class Gm_ceilingHelpersGm_ceiling
             $components_data = self::calculate_components(null,$data,$del_flag);
             //считаем монтаж
 
-            $data["need_mount_extra"] = !empty($extra_mounting);
-            if ($need_mount || !empty($extra_mounting)) {
+            $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
+            if ($need_mount || $data["need_mount_extra"]) {
                 $mounting_data = self::calculate_mount($del_flag,null,$data);
             } else {
                 $mounting_data = [
@@ -807,7 +813,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<td class="center">' . $transport['client_sum'] . '</td>';
         $html .= '</tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
-        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['mounter_sum'] + $sum, 2) . ' руб.</div>';
+        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['client_sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
         //$html .= "<pagebreak />";
         $array = [];
@@ -1504,6 +1510,34 @@ class Gm_ceilingHelpersGm_ceiling
         }
         else {
             $calculation_data = $calculation_model->getData($calc_id);
+            $calculation_data2 = (array) $calculation_model->getDataById($calc_id);
+
+            foreach ($calculation_data as $key => $item) {
+                if (empty($item) && array_key_exists($key, $calculation_data2))
+                    $calculation_data[$key] = $calculation_data2[$key];
+            }
+
+            $calculation_data["extra_mounting_array"] = array();
+            foreach (json_decode($calculation_data["extra_mounting"]) as $extra_mounting)
+                $calculation_data["extra_mounting_array"][] = $extra_mounting;
+
+            $calculation_data["need_mount_extra"] = !empty($calculation_data["extra_mounting_array"]);
+
+            if (floatval($item["mounting_sum"]) == 0)
+                $calculation_data["need_mount"] = 0;
+            else if (!$item["need_mount_extra"])
+                $calculation_data["need_mount"] = 1;
+            else {
+                $calculation_data["need_mount"] = 0;
+                $first = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, null, $calculation_data);
+                $first = round($first["total_gm_mounting"], 0);
+
+                if ($first == floatval($calculation_data["mounting_sum"]))
+                    $calculation_data["need_mount"] = 0;
+                else
+                    $calculation_data["need_mount"] = 1;
+            }
+
             $project_id = $calculation_data->project_id;
         }
         $project_model = self::getModel('project');
@@ -1557,6 +1591,10 @@ class Gm_ceilingHelpersGm_ceiling
             $n15 = json_decode($data['n15']);
             $n29 = json_decode($data['n29']);
         }
+
+        if (!array_key_exists('need_mount', $data))
+            $data["need_mount"] = true;
+
         if ($data["need_mount"]) {
             if ($data['n1'] == 28 && $data['n9'] > 4) {
                 //Обработка 1 угла
@@ -2666,7 +2704,8 @@ class Gm_ceilingHelpersGm_ceiling
         //$html .= "<pagebreak />";
         $array = [$html];
         foreach($calculations as $calc){
-            $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
+            if ($calc->mounting_sum > 0)
+                $array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc->id . "mount_single") . ".pdf";
             //$html .= self::create_single_mounter_estimate_html($calc->id,$phones,$brigade,$brigade_names);
         }
         $filename = md5($project_id . "mount_common") . ".pdf";
