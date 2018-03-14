@@ -307,7 +307,7 @@
 			<div class="row">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<button type="button" id="btn_precalculation" class="btn add_fields">Добавить комплектующие</button>
+					<button type="button" id="btn_precalculation" class="btn add_fields" style="margin-bottom: 25px;">Добавить комплектующие</button>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -2072,6 +2072,11 @@
 		}
 		jQuery("#btn_precalculation").clock( function () {
 			jQuery("#precalculation_container_hide").toggle();
+			if (jQuery("#btn_precalculation").css("background-color") == "rgb(65, 64, 153)") {
+				jQuery("#btn_precalculation").css("background-color", "#010084");
+			} else {
+				jQuery("#btn_precalculation").css("background-color", "#414099");
+			}
 		});
 		jQuery("#btn_baguette").click( function () {
 			jQuery("#baguette").toggle();
