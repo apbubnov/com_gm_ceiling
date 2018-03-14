@@ -2067,7 +2067,6 @@
 
 		// кнопки открытия скрытых полей
 		precalculation = <?php if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
-		console.log(precalculation);
 		if (precalculation == 1) {
 			jQuery("#precalculation_container_hide").hide();
 			jQuery(".smeta_hide").hide();
