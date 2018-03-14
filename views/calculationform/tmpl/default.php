@@ -304,7 +304,13 @@
 			</div>
 		</div>
 		<div id="precalculation_container">
-			<button type="button" id="btn_precalculation" class="btn add_fields">Добавить комплектующие</button>
+			<div class="row">
+				<div class="col-sm-4"></div>
+				<div class="col-sm-4">
+					<button type="button" id="btn_precalculation" class="btn add_fields">Добавить комплектующие</button>
+				</div>
+				<div class="col-sm-4"></div>
+			</div>
 			<div id="precalculation_container_hide">
 				<!-- Багет -->
 				<div class="container" id="block_n28">
