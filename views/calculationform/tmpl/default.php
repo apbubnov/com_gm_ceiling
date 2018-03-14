@@ -2070,7 +2070,7 @@
 			jQuery("#btn_precalculation").hide();
 			jQuery("#precalculation_container_hide").show();
 		}
-		jQuery("#btn_precalculation").clock( function () {
+		jQuery("#btn_precalculation").click( function () {
 			jQuery("#precalculation_container_hide").toggle();
 			if (jQuery("#btn_precalculation").css("background-color") == "rgb(65, 64, 153)") {
 				jQuery("#btn_precalculation").css("background-color", "#010084");
