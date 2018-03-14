@@ -260,15 +260,15 @@
                                     <?php if ($calculation->discount != 0) { ?>
                                         <td>Цена / -<?php echo $calculation->discount ?>% :</td>
                                         <td id="calculation_total"> <?php echo round($calculation_total - $sum_transport, 0); ?>
-                                            руб. /
+                                            р. /
                                         </td>
                                         <td id="calculation_total_discount"> <?php echo round($calculation_total_discount - $sum_transport_discount, 0); ?>
-                                            руб.
+                                            р.
                                         </td>
                                     <?php } else { ?>
                                         <td>Итого</td>
                                         <td colspan="2" id="calculation_total"> <?php echo round($calculation_total - $sum_transport, 0); ?>
-                                            руб.
+                                            р.
                                         </td>
                                     <?php } ?>
                                 </tr>
@@ -282,60 +282,57 @@
                                     <?php echo $total_perimeter; ?> м
                                 </th>
                             </tr>
-                            <?if($tmp != 0):?>
-                            <tr>
-                                <?php if ($tmp == 1 && $sum_transport_discount_total != 0) { ?>
-                                    <th> Транспорт / - %</th>
-                                    <td> <?= $sum_transport_total; ?> руб. / <?= $sum_transport_discount_total; ?> руб.</td>
-                                    <td></td>
-                                <?php } elseif ($tmp == 1 && $sum_transport_discount_total == 0) { ?>
-                                    <th> Транспорт</th>
-                                    <td> <?= $sum_transport_total; ?> руб.</td>
-                                    <td></td>
-                                <?php } elseif ($tmp == 2 && $sum_transport_discount_total != 0) { ?>
-                                    <th> Выезд за город / - %</th>
-                                    <td> <?= $sum_transport_total; ?> руб. / <?= $sum_transport_discount_total; ?> руб.</td>
-                                    <td></td>
-                                <?php } elseif ($tmp == 2 && $sum_transport_discount_total == 0) { ?>
-                                    <th> Выезд за город</th>
-                                    <td> <?= $sum_transport_total; ?> руб.</td>
-                                    <td></td>
-                                <?php } ?>
-                            </tr>
+                            <?if ($tmp != 0):?>
+                                <tr>
+                                    <?php if ($tmp == 1 && $sum_transport_discount_total != 0) { ?>
+                                        <th> Транспорт / - %</th>
+                                        <td colspan="2"><?= $sum_transport_total; ?> р. / <?= $sum_transport_discount_total; ?> р.</td>
+                                    <?php } elseif ($tmp == 1 && $sum_transport_discount_total == 0) { ?>
+                                        <th> Транспорт</th>
+                                        <td colspan="2"> <?= $sum_transport_total; ?> р.</td>
+                                    <?php } elseif ($tmp == 2 && $sum_transport_discount_total != 0) { ?>
+                                        <th> Выезд за город / - %</th>
+                                        <td colspan="2"> <?= $sum_transport_total; ?> р. / <?= $sum_transport_discount_total; ?> р.</td>
+                                    <?php } elseif ($tmp == 2 && $sum_transport_discount_total == 0) { ?>
+                                        <th> Выезд за город</th>
+                                        <td colspan="2"> <?= $sum_transport_total; ?> р.</td>
+                                    <?php } ?>
+                                </tr>
                             <?endif;?>
                             <tr>
                                 <?php if ($kol > 0) { ?>
-                                    <th>Итого/ - %:
-                                    </th>
-                                    <th id="project_total"> <?php echo round($project_total, 0); ?> руб. /</th>
+                                    <th>Итого/ - %:</th>
+                                    <th id="project_total"> <?php echo round($project_total, 0); ?> р. /</th>
                                     <th id="project_total_discount">
+                                        <span class="sum">
+                                        <?php 
+                                            //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                            if ($dealer_gm_mounting_sum_11 == 0) {
+                                                echo round($project_total_discount, 0)." р.";
+                                            } elseif ($project_total_discount < 3500 && $project_total_discount > 0) {
+                                                $project_total_discount = 3500;
+                                                echo round($project_total_discount, 0)." р.";
+                                        ?>
+                                        </span>
+                                        <span class="dop" style="font-size: 9px;"> * минимальная сумма заказа 3500р. </span>
+                                        <?php } else echo round($project_total_discount, 0)." р."; ?>
+                                    </th>
+                                <?php } else { ?>
+                                    <th colspan="2">Итого</th>
+                                    <th id="project_total">
                                     <span class="sum">
-                                    <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                                    if ($dealer_gm_mounting_sum_11 == 0) {
-                                        echo round($project_total_discount, 0); ?> руб.</th> <?
-                                    } elseif ($project_total_discount < 3500 && $project_total_discount > 0) {
-                                        $project_total_discount = 3500;
-                                        echo round($project_total_discount, 0); ?> руб.</th>
-                                        </span> <span class="dop" style="font-size: 9px;"> * минимальная сумма заказа 3500р. </span>
-                                    <?php } else echo round($project_total_discount, 0); ?> руб.</th>
-
-                                <?php }
-                                else { ?>
-                                <th colspan="2">Итого</th>
-                                <th id="project_total">
-                                <span class="sum">
-                                    <?php
-                                    if ($this->item->new_project_sum == 0) {
-                                        if ($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0) {
-                                            $project_total = 3500;
+                                        <?php
+                                        if ($this->item->new_project_sum == 0) {
+                                            if ($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0) {
+                                                $project_total = 3500;
+                                            }
+                                            echo round($project_total_discount, 2);
+                                        } else {
+                                            echo round($this->item->new_project_sum, 2);
                                         }
-                                        echo round($project_total_discount, 2);
-                                    } else {
-                                        echo round($this->item->new_project_sum, 2);
-                                    }
-                                    } ?>
-                                </span>
-                                    <span class="dop" style="font-size: 9px;">
+                                } ?>
+                                    </span>
+                                        <span class="dop" style="font-size: 9px;">
                             <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
                                 * минимальная сумма заказа 3500р.<?php } ?>
                                 </span>
