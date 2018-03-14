@@ -607,6 +607,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     #calendar1, #calendar2 {
         display: inline-block;
         width: 100%;
+        padding: 0;
     }
     #mounter_wraper tr {
         eidth: 100%;
@@ -635,7 +636,10 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
             padding: 15px;
         }
         #calendar1, #calendar2 {
-            width: 50%;
+            width: calc(50% - 25px);
+        }
+        #calendar2 {
+            margin-left: 30px;
         }
     }
 </style>
