@@ -601,6 +601,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     .wtf_padding {
         padding: 0;
     }
+    .no_yes_padding {
+        padding: 0;
+    }
+    #calendar1, #calendar2 {
+        width: 100%;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
@@ -620,6 +626,12 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
         }
         .wtf_padding {
             padding: 15px;
+        }
+        .no_yes_padding {
+            padding: 15px;
+        }
+        #calendar1, #calendar2 {
+            width: 50%;
         }
     }
 </style>
@@ -1768,28 +1780,28 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 <!-- конец -->
                 <table id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
                     <tr>
-                        <td colspan="6">
+                        <td colspan="3">
                             <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="no_yes_padding">
                             <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                         </td>
-                        <td colspan="2">
+                        <td>
                             <div id="calendar1">
                                 <?php echo $calendar1; ?>
                             </div>
-                        </td>
-                        <td colspan="2">
                             <div id="calendar2">
                                 <?php echo $calendar2; ?>
                             </div>
                         </td>
-                        <td>
+                        <td class="no_yes_padding">
                             <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
                         </td>
                     </tr>
+                </table>
+                <table>
                     <tr>
                         <td colspan="6">
                             <label id="jform_chief_note-lbl" for="jform_chief_note" class="">
