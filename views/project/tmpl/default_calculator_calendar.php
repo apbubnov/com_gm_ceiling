@@ -1798,7 +1798,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                             </td>
                             <td>
-                                <div style="display: inline-block;">
+                                <div style="display: inline-block; width: 100%;">
                                     <div id="calendar1">
                                         <?php echo $calendar1; ?>
                                     </div>
