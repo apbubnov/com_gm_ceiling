@@ -612,6 +612,9 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
     #container_calendars {
         width: 100%;
     }
+    #button-prev, #button-next {
+        padding: 0;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
