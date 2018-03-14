@@ -234,7 +234,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4 ">
-					<button id="sketch_switch" class="btn btn-primary" type="button">Начертить потолок</button>
+					<button id="sketch_switch" class="btn btn-primary btn-big" type="button">Начертить потолок</button>
 					<div id="sketch_image_block">
 						<?php
 							if ($this->item->id > 0)
@@ -308,7 +308,7 @@
 			<div class="row">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<button type="button" id="btn_precalculation" class="btn add_fields" style="margin-bottom: 25px;">Добавить монтаж и комплектующие</button>
+					<button type="button" id="btn_precalculation" class="btn add_fields btn-big" style="margin-bottom: 25px;">Добавить монтаж и комплектующие</button>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -1679,7 +1679,7 @@
 		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-md-4 pull-center">
-					<button id="calculate_button" class="btn btn-primary" type="button">
+					<button id="calculate_button" class="btn btn-primary btn-big" type="button">
 						<span class="loading" style="display: none;">
 							Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
 						</span>
