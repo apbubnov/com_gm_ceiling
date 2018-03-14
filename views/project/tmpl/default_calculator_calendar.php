@@ -1783,7 +1783,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
                 <!-- конец -->
                 <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block;\""; else echo "style=\"display: none;\""?>>
-                    <table>
+                    <table style="width: 100%;">
                         <tr>
                             <td colspan="3">
                                 <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
@@ -1794,7 +1794,7 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                                 <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                             </td>
                             <td>
-                                <div style="display: inline-block; width:100%;">
+                                <div style="display: inline-block;">
                                     <div id="calendar1">
                                         <?php echo $calendar1; ?>
                                     </div>
