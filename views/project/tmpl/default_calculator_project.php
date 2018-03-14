@@ -427,22 +427,20 @@
                             <?php endforeach; ?>
                         </table>
                     </div>
-
                     <?php foreach ($calculations as $k => $calculation) { ?>
                         <?php $mounters = json_decode($calculation->mounting_sum); ?>
                         <?php $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg"; ?>
                         <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                         <h3><?php echo $calculation->calculation_title; ?></h3>
                         <?php if (!empty($filename)): ?>
-                            <div class="sketch_image_block">
-                                <h3 class="section_header">
-                                    Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                                </h3>
+                            <div class="sketch_image_block" style="margin-top: 15px;">
+                                <h4>Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
                                 <div class="section_content">
-                                    <img class="sketch_image" src="<?php echo $filename . '?t=' . time(); ?>" style="width:80vw;"/>
+                                    <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>"/>
                                 </div>
                             </div>
                         <?php endif; ?>
+
                         <div class="row-fluid">
                             <div class="span6">
                                 <?php if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
