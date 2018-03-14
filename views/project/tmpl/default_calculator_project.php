@@ -413,12 +413,12 @@
                                             -
                                         <?php } ?>
                                     </td>
-                                    <td class="small_complectuushie">
+                                    <td class="/*small_complectuushie*/">
                                         <?php 
                                             $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; 
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
                                         ?>
-                                                <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Комплектующие</a>
+                                                <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Расходка</a>
                                         <?php } else { ?>
                                             -
                                         <?php } ?>
