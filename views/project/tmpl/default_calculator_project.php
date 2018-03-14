@@ -1,97 +1,98 @@
 <?php
-/**
- * @version    CVS: 0.1.7
- * @package    Com_Gm_ceiling
- * @author     SpectralEye <Xander@spectraleye.ru>
- * @copyright  2016 SpectralEye
- * @license    GNU General Public License version 2 or later; see LICENSE.txt
+ /**
+     * @version    CVS: 0.1.7
+     * @package    Com_Gm_ceiling
+     * @author     SpectralEye <Xander@spectraleye.ru>
+     * @copyright  2016 SpectralEye
+     * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-// No direct access
-defined('_JEXEC') or die;
+ // No direct access
+    defined('_JEXEC') or die;
 
-$canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
-    $canEdit = JFactory::getUser()->id == $this->item->created_by;
-}
+    $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
+    if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
+        $canEdit = JFactory::getUser()->id == $this->item->created_by;
+    }
 
-Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
-$user = JFactory::getUser();
-$dealer = JFactory::getUser($user->dealer_id);
-$model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations = $model->getProjectItems($this->item->id);
-$project_id = $this->item->id;
-foreach ($calculations as $calculation) {
-    $calculation->dealer_gm_mounting_sum = double_margin($calculation->gm_mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+    $user = JFactory::getUser();
+    $dealer = JFactory::getUser($user->dealer_id);
+    $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+    $calculations = $model->getProjectItems($this->item->id);
+    $project_id = $this->item->id;
+    foreach ($calculations as $calculation) {
+        $calculation->dealer_gm_mounting_sum = double_margin($calculation->gm_mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
+        $calculation->calculation_total = round($calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum, 2);
+        $calculation->calculation_total_discount = round($calculation->calculation_total * ((100 - $this->item->project_discount) / 100), 2);
+        $project_total += $calculation->calculation_total;
+        $project_total_discount += $calculation->calculation_total_discount;
+    }
+    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+    $phones = $client_model->getItemsByClientId($this->item->id_client);
+    $project_total = round($project_total, 2);
+    $project_total_discount = round($project_total_discount, 2);
+    if (!empty($this->item->sb_order_id))
+        $sb_project_id = $this->item->sb_order_id;
+    else  $sb_project_id = 0;
 
-    $calculation->calculation_total = round($calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum, 2);
-    $calculation->calculation_total_discount = round($calculation->calculation_total * ((100 - $this->item->project_discount) / 100), 2);
-    $project_total += $calculation->calculation_total;
-    $project_total_discount += $calculation->calculation_total_discount;
+    $recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+    $recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
 
-}
-$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-$phones = $client_model->getItemsByClientId($this->item->id_client);
-$project_total = round($project_total, 2);
-$project_total_discount = round($project_total_discount, 2);
-if (!empty($this->item->sb_order_id))
-    $sb_project_id = $this->item->sb_order_id;
-else  $sb_project_id = 0;
-
-$recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
-$recoil_map_project = $recoil_map_project_model->getDataForProject($project_id);
 ?>
 
-    <input name="url" value="" type="hidden">
 <?= parent::getButtonBack(); ?>
-    <h2 class="center">Просмотр проекта <?php echo $this->item->id ?></h2>
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-6 item_fields">
-                <h4>Информация по проекту № <?= $this->item->id; ?></h4>
-                <form id="form-client"
-                      action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar"
-                      method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                    <table class="table">
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><?php echo $this->item->client_id; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                            <td><?php foreach ($phones AS $contact) {
+<input name="url" value="" type="hidden">
+<h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Просмотр проекта <?php echo $this->item->id ?></h2>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-md-6 no_padding /*item_fields*/">
+            <h4 style="margin-bottom: 15px;">Информация по проекту № <?= $this->item->id; ?></h4>
+            <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+                <table class="table_info" style="margin-bottom: 25px;">
+                    <tr>
+                        <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
+                        <td><?php echo $this->item->client_id; ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
+                        <td>
+                            <?php
+                                foreach ($phones AS $contact) {
                                     echo $contact->phone;
                                     echo "<br>";
-                                } ?></td>
-                        </tr>
+                                } 
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
+                        <td><?php echo $this->item->project_info; ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
+                        <td><?php if ($this->item->project_mounting_date == '0000-00-00 00:00:00') echo "-"; else echo $this->item->project_mounting_date; ?></td>
+                    </tr>
+                    <?php if(!empty($this->item->project_calculator)):?>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                            <td><?php echo $this->item->project_info; ?></td>
+                            <th>Замерщик</th>
+                            <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
                         </tr>
+                    <?php endif;?>
+                    <?php if(!empty($this->item->project_mounter)):?>
                         <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
-                            <td><?php if ($this->item->project_mounting_date == '0000-00-00 00:00:00') echo "-"; else echo $this->item->project_mounting_date; ?></td>
+                            <th>Монтажная бригада</th>
+                            <td><?php echo JFactory::getUser($this->item->project_mounter)->name;?></td>
                         </tr>
-                        <?php if(!empty($this->item->project_calculator)):?>
-                            <tr>
-                                <th>Замерщик</th>
-                                <td><?php echo JFactory::getUser($this->item->project_calculator)->name;?></td>
-                            </tr>
-                        <?php endif;?>
-                        <?php if(!empty($this->item->project_mounter)):?>
-                            <tr>
-                                <th>Монтажная бригада</th>
-                                <td><?php echo JFactory::getUser($this->item->project_mounter)->name;?></td>
-                            </tr>
-                        <?php endif;?>
-                    </table>
-
-                </form>
-            </div>
+                    <?php endif;?>
+                </table>
+            </form>
         </div>
     </div>
+</div>
+
 <?php if ($this->item) : ?>
     <?php if (sizeof($calculations) > 0) { ?>
         <?php echo "<h3>Расчеты для проекта</h3>"; ?>

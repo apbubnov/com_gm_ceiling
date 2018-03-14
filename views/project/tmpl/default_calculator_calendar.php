@@ -287,12 +287,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                 <?php echo $this->item->client_id; ?>
                                             </a>
                                         </td>
-                                        <!-- <td>
-                                            <div class="FIO" style="display: none;">
-                                                <label id="jform_client_name-lbl" for="jform_client_name">ФИО клиента<span class="star">&nbsp;*</span></label>
-                                                <input name="new_client_name" id="jform_client_name" value="" placeholder="ФИО клиента" type="text">
-                                            </div>
-                                        </td> -->
                                     </tr>
                                     <?php
                                         if ($user->dealer_type == 0) {
@@ -328,12 +322,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                 } 
                                             ?>
                                         </td>
-                                        <!-- <td>
-                                            <div class="Contacts" style="display: none;">
-                                                <label id="jform_client_contacts-lbl" for="jform_client_contacts">Телефон клиента<span class="star">&nbsp;*</span></label>
-                                                <input name="new_client_contacts" id="jform_client_contacts" value="" placeholder="Телефон клиента" type="text">
-                                            </div>
-                                        </td> -->
                                     </tr>
                                     <?php if ($this->item->id_client!=1) { ?>
                                         <tr>
@@ -359,54 +347,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                 <?=$this->item->project_info;?>
                                             </a>
                                         </td>
-                                        <!-- <td>
-                                            <div class="Address" style="display: none; position:relative;">
-                                                <label id="jform_address_lbl" for="jform_address">Адрес<span class="star">&nbsp;*</span></label>
-                                                <input name="new_address" class="inputactive" id="jform_address" value="<?=$street?>" placeholder="Улица" type="text">
-                                            </div>
-                                        </td> -->
                                     </tr>
-                                    <!-- <tr class="Address" style="display: none;">
-                                        <td>Дом</td>
-                                        <td>Корпус</td>
-                                        <td>
-                                            <input name="new_house" id="jform_house" value="
-                                                <?php
-                                                    if (isset($_SESSION['house'])) {
-                                                        echo $_SESSION['house'];
-                                                    } else echo $house
-                                                ?>
-                                            " class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом"  aria-required="true" type="text">
-                                    
-                                            <input name="new_bdq" id="jform_bdq"  value="
-                                                <?php
-                                                    if (isset($_SESSION['bdq'])) {
-                                                        echo $_SESSION['bdq'];
-                                                    } else echo $bdq
-                                                ?>
-                                            " class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
-                                        </td>
-                                    </tr> -->
-                                    <!-- <tr class="Address" style="display: none;">
-                                        <td>Квартира  </td><td>Подъезд</td>
-                                        <td>
-                                            <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment'];
-                                                    } else echo $apartment ?>" class="inputactive" style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;" placeholder="Квартира"  aria-required="true" type="text">
-                                    
-                                            <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch'];
-                                                    } else echo $porch ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
-                                        </td>
-                                    </tr> -->
-                                    <!-- <tr class="Address" style="display: none;">
-                                        <td> Этаж  </td><td>Код домофона</td>
-                                        <td>
-                                            <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor'];
-                                                    } else echo $floor ?>" class="inputactive" style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;" placeholder="Этаж" aria-required="true" type="text">
-                                    
-                                            <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code'];
-                                                    } else echo $code ?>" class="inputactive" style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код" aria-required="true" type="text">
-                                        </td>
-                                    </tr> -->
                                     <tr>
                                         <th><?php echo JText::_('COM_GM_CEILING_PROJECTS_PROJECT_CALCULATION_DATE'); ?></th>
                                         <td>
@@ -417,29 +358,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                 <?php echo $jdate->format('d.m.Y H:i'); ?>
                                             <?php } ?>
                                         </td>
-                                        <!-- <td>
-                                            <div id = "calendar_container"class="Date" style="display: none;position: relative;">
-                                                <div class="btn-small-l">
-                                                    <button id="g_button-prev" class="button-prev-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                                                </div>
-                                                <div id = "g_calendar">
-                                                    <?php echo $g_calendar; ?>
-                                                </div>
-                                                <div class="btn-small-r">
-                                                    <button id="g_button-next" class="button-next-small" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                                </div>
-                                            </div>
-                                            <div id="modal_window_g_container" class = "modal_window_container">
-                                                <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-                                                <div id="modal_window_g_choose" class = "modal_window">
-                                                        <p id="g_date-modal"></p>
-                                                        <p><strong>Выберите время замера (и замерщика):</strong></p>
-                                                        <p>
-                                                            <table id="projects_gaugers"></table>
-                                                        </p>
-                                                </div>
-                                            </div>
-                                        </td> -->
                                     </tr>
                                     <?php if(!empty($this->item->project_calculator)):?>
                                         <tr>
@@ -458,20 +376,11 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         <td>
                                             <?php echo $this->item->dealer_manager_note; ?>
                                         </td>
-                                        <!-- <?php// if ($this->item->id_client != 1) { ?>
-                                            <td>
-                                                <button type="submit" id="accept_changes" class="btn btn btn-success"
-                                                        style="display: none;">
-                                                    Сохранить клиента
-                                                </button>
-                                            </td>
-                                        <?php// } ?>
-                                        -->
                                     </tr>
                                 </table>
                             </div>
                         <?php } ?>
-                        <!-- стиль поменяю, когда буду править гм страницы -->
+                        <!-- стиль поменяю, когда буду править расширенного диллера страницы -->
                             <?php if($user->dealer_type == 0) { ?>
                                 <div  class="col-12 col-md-6">
                                     <div class="comment">
