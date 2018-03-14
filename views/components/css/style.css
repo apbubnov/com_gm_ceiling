@@ -192,7 +192,7 @@ body {
 .Page .Modal .ModalPage {
     position: relative;
     display: inline-block;
-    width: 100%;
+    width: calc(100% - 20px);
     max-width: 600px;
     height: auto;
     max-height: calc(100vh - 40px);
@@ -203,6 +203,7 @@ body {
     background: rgb(255,255,255);
     border-radius: 3px;
     overflow: auto;
+    margin: 0 10px;
 }
 
 .Page .Modal .ModalClose {
@@ -221,6 +222,10 @@ body {
     float: left;
 }
 
+.Page .Modal .ModalPage.PayList .PayListTable tr td {
+    padding: 0 5px;
+}
+
 .Page .Modal .ModalPage.PayList .PayListTable thead tr td,
 .Page .Modal .ModalPage.PayList .PayListTable tfoot tr td{
     text-align: center;
@@ -230,6 +235,15 @@ body {
     background: rgb(64, 65, 154);
     color: rgb(255,255,255);
     font-weight: bold;
+}
+
+.Page .Modal .ModalPage.PayList .PayListTable tbody tr td:not(:first-child) {
+    text-align: center;
+    border-left: 1px solid rgb(64, 65, 154);
+}
+
+.Page .Modal .ModalPage.PayList .PayListTable tbody tr:not(:first-child) {
+    border-top: 1px solid rgb(64, 65, 154);
 }
 
 .Page .Modal .ModalPage.PayList .FormPay .FormSimple {

@@ -165,7 +165,7 @@ function dealer_margin($price, $margin, $value, $type) {
                     data-option="<?=$key_o;?>" data-level="2">
                     <td><i class="fa <?=($stock)?"fa-caret-down":"fa-caret-right";?>" aria-hidden="true"></i></td>
                     <td><?=$key_o;?></td>
-                    <td><?=$component->title;?> <?=$option->title;?></td>
+                    <td class="ComponentName"><?=$component->title;?> <?=$option->title;?></td>
                     <?if($stock):?>
                         <td><?=$option->count;?></td>
                         <td><?=$option->ocount;?></td>
@@ -273,8 +273,8 @@ function dealer_margin($price, $margin, $value, $type) {
                 </tr>
                 <tr class="ComponentPay" hidden>
                     <td class="ComponentPayName"></td>
-                    <td class="ComponentPay"></td>
                     <td class="ComponentPayCost"></td>
+                    <td class="ComponentPayCount"></td>
                     <td class="ComponentPayItog"></td>
                 </tr>
                 </thead>
@@ -539,14 +539,12 @@ function dealer_margin($price, $margin, $value, $type) {
             }
         });
 
-        console.log(Data.Pay);
         $("#Basket .sum").text(Data.Pay.sum);
     }
 
     function ModalAction(page = null) {
         var modal = Data.Modal,
             modalPages = modal.find(".ModalPage");
-        console.log(modalPages);
 
         if (modal.is(":visible")){
             modalPages.hide();
@@ -554,6 +552,34 @@ function dealer_margin($price, $margin, $value, $type) {
         } else if (page !== null) {
             modal.show();
             modal.find("." + page).show();
+            window[page]();
         }
+    }
+
+    var s = false;
+    function PayList() {
+        var $this = Data.Modal.find(".PayList"),
+            tr = $this.find("thead tr.ComponentPay").clone().removeAttr("hidden"),
+            tbody = $this.find("tbody.ComponentsList"),
+            itog = $this.find(".ComponentsPayItog");
+
+        tbody.empty();
+        console.log("</>");
+        console.log("</>");
+        $.each(Data.Pay, function (i, v) {
+            if (v != null) {
+                console.log(v);
+                var tr_clone = tr.clone(),
+                    name = $("[data-option='" + i + "']").find(".ComponentName").text();
+                tr_clone.find(".ComponentPayName").text(name);
+                tr_clone.find(".ComponentPayCost").text(v.price);
+                tr_clone.find(".ComponentPayCount").text(v.count);
+                tr_clone.find(".ComponentPayItog").text(v.price * v.count);
+                console.log(tr_clone);
+                tbody.append(tr_clone);
+            }
+        });
+
+        itog.text(Data.Pay.sum);
     }
 </script>

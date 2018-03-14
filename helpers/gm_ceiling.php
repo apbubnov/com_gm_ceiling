@@ -146,7 +146,12 @@ class Gm_ceilingHelpersGm_ceiling
 
             $gm_margin = $margin_model->getDataById(1);
             $margin_model->save(0,0,0,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
-            $gm_mount = $mount_model->getDataAll(0);
+
+            if ($type == 3)
+                $gm_mount = $mount_model->getDataAll(1);
+            else
+                $gm_mount = $mount_model->getDataAll(0);
+
             $gm_mount->user_id = $userID;
             $mount_model->insert($gm_mount);
         
