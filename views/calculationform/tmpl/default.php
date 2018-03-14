@@ -1678,7 +1678,7 @@
 		<!-- расчитать -->
 		<div class="container">
 			<div class="row sm-margin-bottom">
-				<div class="col-md-4 pull-center">
+				<div class="col-md-4">
 					<button id="calculate_button" class="btn btn-primary btn-big" type="button">
 						<span class="loading" style="display: none;">
 							Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
