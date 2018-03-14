@@ -1818,41 +1818,29 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                 </div>
                 <table>
                     <tr>
-                        <td colspan="6">
-                            <label id="jform_chief_note-lbl" for="jform_chief_note" class="">
-                                Примечание к монтажу
-                            </label>
-                            <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу"
-                                        aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
+                        <td Style="padding-right: 15px;">
+                            <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label>
                         </td>
-                    </tr>
-                    <tr>
                         <td>
-                            <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+                            <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2">
-                            <button class="validate btn btn-primary" id="save" type="submit" from="form-client"> Сохранить и запустить <br> в
-                                производство
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <button class="validate btn btn-primary" id="save_email" type="button" from="form-client"> Сохранить и запустить <br> в
-                                производство по email
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client"> Сохранить и выйти
-                            </button>
-                        </td>
-                    </tr>
-                    <?php } ?>
                 </table>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <p>
+                            <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
+                        </p>
+                        <button class="validate btn btn-primary" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство</button>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <button class="validate btn btn-primary" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
+                    </div>
+                </div>
+            <?php } ?>
         </div>
     <?php } ?>
 
