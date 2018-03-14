@@ -1827,16 +1827,16 @@ $Transport->itog_sum = $mount_transport->distance * $this->item->distance * $thi
                     </tr>
                 </table>
                 <div class="row">
-                    <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12 col-md-4" style="padding-top: 25px;">
                         <p>
                             <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                         </p>
                         <button class="validate btn btn-primary" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство</button>
                     </div>
-                    <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12 col-md-4" style="padding-top: 25px;">
                         <button class="validate btn btn-primary" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
                     </div>
-                    <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12 col-md-4" style="padding-top: 25px;">
                         <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
                     </div>
                 </div>
