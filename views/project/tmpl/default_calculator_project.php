@@ -61,7 +61,7 @@
     }
     #table1 {
         width: 100%;
-        max-width: 300px;
+        max-width: 330px;
         font-size: 13px;
     }
     #table1 button, #table1 a, #table1 input {
@@ -445,9 +445,8 @@
                                         </div>
                                     </div>
                                 <?php endif; ?>
-
-                                <div class="row-fluid">
-                                    <div class="span6">
+                                <div class="row">
+                                    <div class="col-xs-12">
                                         <?php if ($calculation->n1 && $calculation->n2 && $calculation->n3): ?>
                                             <h4>Материал</h4>
                                             <div>
