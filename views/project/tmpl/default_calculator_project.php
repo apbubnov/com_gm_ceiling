@@ -68,8 +68,8 @@
     #table1 td, #table1 th {
         padding: 10px 5px;
     }
-    .small_complectuushie {
-        font-size: 9px;
+    .small_complectuushie a {
+        font-size: 9px !important;
     }
     /* .wtf_padding {
         padding: 0;
@@ -105,8 +105,8 @@
             width: auto;
             max-width: 200px;
         }
-        .small_complectuushie {
-            font-size: 1em;
+        .small_complectuushie a {
+            font-size: 1em !important;
         }
         /* .wtf_padding {
             padding: 15px;
