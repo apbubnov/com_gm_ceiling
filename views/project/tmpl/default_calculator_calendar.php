@@ -1281,7 +1281,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         <table id="container_calendars">
                             <tr>
                                 <td colspan="3">
-                                    <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
+                                    <h4 class="center" id="title" style="display: none; margin-bottom: 25px;">Назначить монтажную бригаду</h4>
                                 </td>
                             </tr>
                             <tr>
