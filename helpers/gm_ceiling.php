@@ -144,13 +144,17 @@ class Gm_ceilingHelpersGm_ceiling
         $margin_model = self::getModel('Dealer_info');
         $mount_model = self::getModel('mount');
 
-            $gm_margin = $margin_model->getDataById(1);
+        $gm_margin = $margin_model->getDataById(1);
+        if ($type == 3)
+        {
+            $gm_mount = $mount_model->getDataAll(1);
+            $margin_model->save($gm_margin->dealer_canvases_margin,$gm_margin->dealer_components_margin,$gm_margin->dealer_mounting_margin,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
+        }
+        else
+        {
+            $gm_mount = $mount_model->getDataAll(0);
             $margin_model->save(0,0,0,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
-
-            if ($type == 3)
-                $gm_mount = $mount_model->getDataAll(1);
-            else
-                $gm_mount = $mount_model->getDataAll(0);
+        }
 
             $gm_mount->user_id = $userID;
             $mount_model->insert($gm_mount);
