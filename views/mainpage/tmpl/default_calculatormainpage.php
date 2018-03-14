@@ -25,8 +25,7 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
 
 <style>
 	body {
-		padding: 0;
-		margin: 0;
+		overflow-y: hidden;
 	}
 </style>
 
