@@ -304,7 +304,7 @@
 			</div>
 		</div>
 		<!-- добавить комплектующие и монтаж -->
-		<div id="precalculation_container">
+		<div id="precalculation_container" class="container">
 			<div class="row">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
