@@ -125,9 +125,9 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
         $all_recoil = $recoil_model->getData();
     ?>
     <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
-    <div class="row">
-        <div class="col-xs-12 col-md-6 no_padding">
-            <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+    <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=manager&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-xs-12 col-md-6 no_padding">
                 <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
                 <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
                 <input name="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
@@ -167,270 +167,267 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
                 <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                 <input id="emails" name="emails" value="" type="hidden">
                 <input name="without_advt" value="1" type="hidden">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <table class="table">
-                            <tr>
-                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                                <td><input name="new_client_name"
-                                        class="<?php if ($this->item->id_client != "1") echo "inputactive"; else echo "inputactive"; ?>"
-                                        id="jform_client_name" value="<?php if (isset($_SESSION['FIO'])) {
-                                        echo $_SESSION['FIO'];
-                                    } else echo $this->item->client_id; ?>"
-                                        placeholder="ФИО клиента" type="text"></td>
-                                <?php if ($this->item->id_client == "1") { ?>
-                                    <td>
-                                        <button id="find_old_client" type="button" class="btn btn-primary"><i
-                                                    class="fa fa-search" aria-hidden="true"></i></button>
-                                    </td>
-                                <?php } ?>
-                            </tr>
-                            <tr>
-                                <th>
-                                    Пол клиента
-                                </th>
-                                <td>
+                <table class="table">
+                    <tr>
+                        <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
+                        <td><input name="new_client_name"
+                                class="<?php if ($this->item->id_client != "1") echo "inputactive"; else echo "inputactive"; ?>"
+                                id="jform_client_name" value="<?php if (isset($_SESSION['FIO'])) {
+                                echo $_SESSION['FIO'];
+                            } else echo $this->item->client_id; ?>"
+                                placeholder="ФИО клиента" type="text"></td>
+                        <?php if ($this->item->id_client == "1") { ?>
+                            <td>
+                                <button id="find_old_client" type="button" class="btn btn-primary"><i
+                                            class="fa fa-search" aria-hidden="true"></i></button>
+                            </td>
+                        <?php } ?>
+                    </tr>
+                    <tr>
+                        <th>
+                            Пол клиента
+                        </th>
+                        <td>
 
-                                    <input id='male' type='radio' class="radio" name='slider-sex'
-                                        value='0' <?php if ($client_sex == "0") echo "checked"; ?>>
-                                    <label for='male'>Mужской</label>
-                                    <input id='female' type='radio' class="radio" name='slider-sex'
-                                        value='1' <?php if ($client_sex == "1") echo "checked"; ?> >
-                                    <label for='female'>Женский</label>
-                                </td>
-                            </tr>
-                            <tr id="search" style="display : none;">
-                                <th>
-                                    Выберите клиента из списка:
-                                </th>
-                                <td>
-                                    <select id="found_clients" class="inputactive">
-                                    </select>
-                                </td>
-                            </tr>
-                            <? $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
-                            $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
-                            <tr>
-                                <th>Дата рождения</th>
-                                <td><input name="new_birthday" id="jform_birthday" class="inputactive"
-                                        value="<? if ($birthday->birthday != 0000 - 00 - 00) echo $birthday->birthday; ?>"
-                                        placeholder="Дата рождения" type="date"></td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" id="add_birthday">Ок</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
-                                    <button type="button" class="btn btn-primary" id="add_phone"><i
-                                                class="fa fa-plus-square" aria-hidden="true"></i></button>
-                                </th>
-                                <td>
-                                    <?php if ($this->item->id_client == 1) { ?>
-                                        <input name="new_client_contacts[]" id="jform_client_contacts"
-                                            class="inputactive" value="<?php echo $phonefrom; ?>"
-                                            placeholder="Телефон клиента" type="text">
-                                    <?php } elseif (count($cl_phones) == 1) { ?>
-                                        <input name="new_client_contacts[<?php echo '\'' . $cl_phones[0]->phone . '\'' ?>]"
-                                            id="jform_client_contacts"
-                                            class="inputactive" value="<?php echo $cl_phones[0]->phone; ?>"
-                                            type="text">
+                            <input id='male' type='radio' class="radio" name='slider-sex'
+                                value='0' <?php if ($client_sex == "0") echo "checked"; ?>>
+                            <label for='male'>Mужской</label>
+                            <input id='female' type='radio' class="radio" name='slider-sex'
+                                value='1' <?php if ($client_sex == "1") echo "checked"; ?> >
+                            <label for='female'>Женский</label>
+                        </td>
+                    </tr>
+                    <tr id="search" style="display : none;">
+                        <th>
+                            Выберите клиента из списка:
+                        </th>
+                        <td>
+                            <select id="found_clients" class="inputactive">
+                            </select>
+                        </td>
+                    </tr>
+                    <? $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+                    $birthday = $client_model->getClientBirthday($this->item->id_client); ?>
+                    <tr>
+                        <th>Дата рождения</th>
+                        <td><input name="new_birthday" id="jform_birthday" class="inputactive"
+                                value="<? if ($birthday->birthday != 0000 - 00 - 00) echo $birthday->birthday; ?>"
+                                placeholder="Дата рождения" type="date"></td>
+                        <td>
+                            <button type="button" class="btn btn-primary" id="add_birthday">Ок</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?>
+                            <button type="button" class="btn btn-primary" id="add_phone"><i
+                                        class="fa fa-plus-square" aria-hidden="true"></i></button>
+                        </th>
+                        <td>
+                            <?php if ($this->item->id_client == 1) { ?>
+                                <input name="new_client_contacts[]" id="jform_client_contacts"
+                                    class="inputactive" value="<?php echo $phonefrom; ?>"
+                                    placeholder="Телефон клиента" type="text">
+                            <?php } elseif (count($cl_phones) == 1) { ?>
+                                <input name="new_client_contacts[<?php echo '\'' . $cl_phones[0]->phone . '\'' ?>]"
+                                    id="jform_client_contacts"
+                                    class="inputactive" value="<?php echo $cl_phones[0]->phone; ?>"
+                                    type="text">
 
-                                    <?php } elseif (count($cl_phones) > 1) {
-                                        foreach ($cl_phones as $value) { ?>
-                                            <input name="new_client_contacts[<?php echo '\'' . $value->phone . '\'' ?>]"
-                                                id="jform_client_contacts"
-                                                class="inputactive" value="<?php echo strval($value->phone); ?>"
-                                                type="text">
-                                        <?php }
-                                    } ?>
-                                </td>
-                            </tr>
-                            <tr>
+                            <?php } elseif (count($cl_phones) > 1) {
+                                foreach ($cl_phones as $value) { ?>
+                                    <input name="new_client_contacts[<?php echo '\'' . $value->phone . '\'' ?>]"
+                                        id="jform_client_contacts"
+                                        class="inputactive" value="<?php echo strval($value->phone); ?>"
+                                        type="text">
+                                <?php }
+                            } ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td colspan=2>
+                            <div id="phones-block"></div>
+                        </td>
+                    </tr>
+                    <?php if (isset($_SESSION['phones']) && count($_SESSION['phones'] > 1)) {
+                        for ($i = 1; $i < count($_SESSION['phones']); $i++) { ?>
+                            <tr class='dop-phone'>
                                 <th></th>
-                                <td colspan=2>
-                                    <div id="phones-block"></div>
+                                <td>
+                                    <input name='new_client_contacts[<?php echo $i; ?>]'
+                                        id='jform_client_contacts'
+                                        class='inputactive'
+                                        value="<?php echo $_SESSION['phones'][$i]; ?>">
+                                </td>
+                                <td>
+                                    <button class='clear_form_group btn btn-danger' type='button'><i
+                                                class='fa fa-trash' aria-hidden='true'></i></button>
                                 </td>
                             </tr>
-                            <?php if (isset($_SESSION['phones']) && count($_SESSION['phones'] > 1)) {
-                                for ($i = 1; $i < count($_SESSION['phones']); $i++) { ?>
-                                    <tr class='dop-phone'>
-                                        <th></th>
-                                        <td>
-                                            <input name='new_client_contacts[<?php echo $i; ?>]'
-                                                id='jform_client_contacts'
-                                                class='inputactive'
-                                                value="<?php echo $_SESSION['phones'][$i]; ?>">
-                                        </td>
-                                        <td>
-                                            <button class='clear_form_group btn btn-danger' type='button'><i
-                                                        class='fa fa-trash' aria-hidden='true'></i></button>
-                                        </td>
-                                    </tr>
-                                <?php }
-                            } ?>
-                            <?php if (count($email) > 0) {
-                                foreach ($email as $value) { ?>
-                                    <tr>
-                                        <th>e-mail</th>
-                                        <td><input name="new_email[]" id="jform_email" class="inputhidden"
-                                                value="<?php echo $value->contact; ?>" placeholder="e-mail"
-                                                type="text">
-                                        </td>
-                                    </tr>
-                                <?php }
-                            } ?>
+                        <?php }
+                    } ?>
+                    <?php if (count($email) > 0) {
+                        foreach ($email as $value) { ?>
                             <tr>
-                                <th>Добавить адрес эл.почты</th>
-                                <td><input name="new_email" id="jform_email" class="inputactive"
-                                        value="" placeholder="e-mail" type="text"></td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" id="add_email">Ок</button>
+                                <th>e-mail</th>
+                                <td><input name="new_email[]" id="jform_email" class="inputhidden"
+                                        value="<?php echo $value->contact; ?>" placeholder="e-mail"
+                                        type="text">
                                 </td>
                             </tr>
-                            <?
+                        <?php }
+                    } ?>
+                    <tr>
+                        <th>Добавить адрес эл.почты</th>
+                        <td><input name="new_email" id="jform_email" class="inputactive"
+                                value="" placeholder="e-mail" type="text"></td>
+                        <td>
+                            <button type="button" class="btn btn-primary" id="add_email">Ок</button>
+                        </td>
+                    </tr>
+                    <?
 
-                            $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
-                            preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info, $house);
-                            $house = $house[1];
-                            preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info, $bdq);
-                            $bdq = $bdq[1];
-                            preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info, $apartment);
-                            $apartment = $apartment[1];
-                            preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info, $porch);
-                            $porch = $porch[1];
-                            preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info, $floor);
-                            $floor = $floor[1];
-                            preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info, $code);
-                            $code = $code[1];
+                        $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
+                        preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info, $house);
+                        $house = $house[1];
+                        preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info, $bdq);
+                        $bdq = $bdq[1];
+                        preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info, $apartment);
+                        $apartment = $apartment[1];
+                        preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info, $porch);
+                        $porch = $porch[1];
+                        preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info, $floor);
+                        $floor = $floor[1];
+                        preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info, $code);
+                        $code = $code[1];
 
-                            ?>
-                            <tr>
-                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                                <td><input name="new_address" id="jform_address" class="inputactive"
-                                        value="<?php if (isset($_SESSION['address'])) {
-                                            if ($_SESSION['address'] != $this->item->project_info) {
-                                                echo $_SESSION['address'];
-                                            } else echo $street;
-                                        } else echo $street; ?>" placeholder="Адрес"
-                                        type="text" required="required"></td>
-                            </tr>
-                            <tr class="controls">
-                                <td>Дом / Корпус</td>
-                                <td>
-                                    <input name="new_house" id="jform_house"
-                                        value="<?php if (isset($_SESSION['house'])) {
-                                            if (empty($_SESSION['house'])) {
-                                                echo $house;
-                                            } else {
-                                                echo $_SESSION['house'];
-                                            }
-                                        } else echo $house ?>" class="inputactive"
-                                        style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;"
-                                        placeholder="Дом" required="required" aria-required="true" type="text">
+                    ?>
+                    <tr>
+                        <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
+                        <td><input name="new_address" id="jform_address" class="inputactive"
+                                value="<?php if (isset($_SESSION['address'])) {
+                                    if ($_SESSION['address'] != $this->item->project_info) {
+                                        echo $_SESSION['address'];
+                                    } else echo $street;
+                                } else echo $street; ?>" placeholder="Адрес"
+                                type="text" required="required"></td>
+                    </tr>
+                    <tr class="controls">
+                        <td>Дом / Корпус</td>
+                        <td>
+                            <input name="new_house" id="jform_house"
+                                value="<?php if (isset($_SESSION['house'])) {
+                                    if (empty($_SESSION['house'])) {
+                                        echo $house;
+                                    } else {
+                                        echo $_SESSION['house'];
+                                    }
+                                } else echo $house ?>" class="inputactive"
+                                style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;"
+                                placeholder="Дом" required="required" aria-required="true" type="text">
 
-                                    <input name="new_bdq" id="jform_bdq" value="<?php if (isset($_SESSION['bdq'])) {
-                                        if (empty($_SESSION['bdq'])) {
-                                            echo $bdq;
-                                        } else {
-                                            echo $_SESSION['bdq'];
-                                        }
-                                    } else echo $bdq ?>" class="inputactive"
-                                        style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус"
-                                        aria-required="true" type="text">
-                                </td>
-                            </tr>
-                            <tr class="controls">
-                                <td> Квартира / Подъезд</td>
-                                <td>
-                                    <input name="new_apartment" id="jform_apartment"
-                                        value="<?php if (isset($_SESSION['apartment'])) {
-                                            echo $_SESSION['apartment'];
-                                        } else echo $apartment ?>" class="inputactive"
-                                        style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;"
-                                        placeholder="Квартира" aria-required="true" type="text">
+                            <input name="new_bdq" id="jform_bdq" value="<?php if (isset($_SESSION['bdq'])) {
+                                if (empty($_SESSION['bdq'])) {
+                                    echo $bdq;
+                                } else {
+                                    echo $_SESSION['bdq'];
+                                }
+                            } else echo $bdq ?>" class="inputactive"
+                                style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус"
+                                aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr class="controls">
+                        <td> Квартира / Подъезд</td>
+                        <td>
+                            <input name="new_apartment" id="jform_apartment"
+                                value="<?php if (isset($_SESSION['apartment'])) {
+                                    echo $_SESSION['apartment'];
+                                } else echo $apartment ?>" class="inputactive"
+                                style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;"
+                                placeholder="Квартира" aria-required="true" type="text">
 
-                                    <input name="new_porch" id="jform_porch"
-                                        value="<?php if (isset($_SESSION['porch'])) {
-                                            echo $_SESSION['porch'];
-                                        } else echo $porch ?>" class="inputactive"
-                                        style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"
-                                        aria-required="true" type="text">
-                                </td>
-                            </tr>
-                            <tr class="controls">
-                                <td> Этаж / Код домофона</td>
-                                <td>
-                                    <input name="new_floor" id="jform_floor"
-                                        value="<?php if (isset($_SESSION['floor'])) {
-                                            echo $_SESSION['floor'];
-                                        } else echo $floor ?>" class="inputactive"
-                                        style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;"
-                                        placeholder="Этаж" aria-required="true" type="text">
+                            <input name="new_porch" id="jform_porch"
+                                value="<?php if (isset($_SESSION['porch'])) {
+                                    echo $_SESSION['porch'];
+                                } else echo $porch ?>" class="inputactive"
+                                style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"
+                                aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr class="controls">
+                        <td> Этаж / Код домофона</td>
+                        <td>
+                            <input name="new_floor" id="jform_floor"
+                                value="<?php if (isset($_SESSION['floor'])) {
+                                    echo $_SESSION['floor'];
+                                } else echo $floor ?>" class="inputactive"
+                                style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;"
+                                placeholder="Этаж" aria-required="true" type="text">
 
-                                    <input name="new_code" id="jform_code" value="<?php if (isset($_SESSION['code'])) {
-                                        echo $_SESSION['code'];
-                                    } else echo $code ?>" class="inputactive"
-                                        style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код"
-                                        aria-required="true" type="text">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Примечание</th>
-                                <td>
-                                    <input name="manager_note" id="manager_note" class="inputactive"
-                                        value="<?php if (isset($_SESSION['manager_comment'])) {
-                                        echo $_SESSION['manager_comment'];
-                                        } else echo $this->item->manager_note; ?>">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Дата и время замера</th>
-                                <td>
-                                    <div id="calendar-container">
-                                        <div class="btn-small-l">
-                                            <button id="button-prev" class="button-prev-small" type="button"
-                                                    class="btn btn-primary"><i class="fa fa-arrow-left"
-                                                                            aria-hidden="true"></i></button>
-                                        </div>
-                                        <?php echo $calendar; ?>
-                                        <div class="btn-small-r">
-                                            <button id="button-next" class="button-next-small" type="button"
-                                                    class="btn btn-primary"><i class="fa fa-arrow-right"
-                                                                            aria-hidden="true"></i></button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                    </div>
-                    </table>
-                </div>
-        </div>
-        <?php if ($this->item->project_verdict == 0) { ?>
-            <table class="TabelAction">
-                <tr>
-                    <td>
-                        <a class="btn  btn-primary" id="rec_to_measurement">
-                            Записать на замер
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        <?php } ?>
-        <div id="modal-window-container-tar">
-            <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-            <div id="modal-window-choose-tar">
-                <p id="date-modal"></p>
-                <p><strong>Выберите время замера:</strong></p>
-                <p>
-                <table id="projects_gaugers"></table>
-                </p>
+                            <input name="new_code" id="jform_code" value="<?php if (isset($_SESSION['code'])) {
+                                echo $_SESSION['code'];
+                            } else echo $code ?>" class="inputactive"
+                                style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код"
+                                aria-required="true" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Примечание</th>
+                        <td>
+                            <input name="manager_note" id="manager_note" class="inputactive"
+                                value="<?php if (isset($_SESSION['manager_comment'])) {
+                                echo $_SESSION['manager_comment'];
+                                } else echo $this->item->manager_note; ?>">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Дата и время замера</th>
+                        <td>
+                            <div id="calendar-container">
+                                <div class="btn-small-l">
+                                    <button id="button-prev" class="button-prev-small" type="button"
+                                            class="btn btn-primary"><i class="fa fa-arrow-left"
+                                                                    aria-hidden="true"></i></button>
+                                </div>
+                                <?php echo $calendar; ?>
+                                <div class="btn-small-r">
+                                    <button id="button-next" class="button-next-small" type="button"
+                                            class="btn btn-primary"><i class="fa fa-arrow-right"
+                                                                    aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
-        </div>
-        <input name="idCalcDelete" id="idCalcDelete" value="<?= $calculation->id; ?>" type="hidden">
-        </form>
-    </div>
-<?endif;?>
 
+            <?php if ($this->item->project_verdict == 0) { ?>
+                <table class="TabelAction">
+                    <tr>
+                        <td>
+                            <a class="btn  btn-primary" id="rec_to_measurement">
+                                Записать на замер
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            <?php } ?>
+            <input name="idCalcDelete" id="idCalcDelete" value="<?= $calculation->id; ?>" type="hidden">
+        </div>
+    </form>
+<?pfp endif; ?>
+
+<div id="modal-window-container-tar">
+    <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div id="modal-window-choose-tar">
+        <p id="date-modal"></p>
+        <p><strong>Выберите время замера:</strong></p>
+        <p>
+        <table id="projects_gaugers"></table>
+        </p>
+    </div>
+</div>
 <div id="modal_window_container" class="modal_window_container">
     <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
     </button>
