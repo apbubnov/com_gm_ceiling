@@ -2648,7 +2648,6 @@ class Gm_ceilingHelpersGm_ceiling
                 foreach ($discount as $d) if($d->discount > $max) $max = $d->discount;
 
                 $result['client_sum'] = $result['client_sum'] * ((100 - $max)/100);
-                $result['mounter_sum'] = $result['mounter_sum'] * ((100 - $max)/100);
             }
             return $result;
         }
@@ -4453,5 +4452,4 @@ class Gm_ceilingHelpersGm_ceiling
 
         return $Calendar;
     }
-
 }

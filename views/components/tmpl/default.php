@@ -225,7 +225,7 @@ function dealer_margin($price, $margin, $value, $type) {
                             <form class="FormSimple Pay MarginLeft" data-id="<?=$key_o;?>" action="javascript:Pay(<?=$key_o;?>);">
                                 <label for="CountPay" title="Введите количество"><i class="fa fa-cubes"></i></label>
                                 <input type="number" name="CountPay" id="CountPay" placeholder="0"
-                                       title="Введите количество" size="5"
+                                       title="Введите количество" size="5" min="1"
                                        data-JsonSend='{
                                        "id": "<?=$key_o;?>",
                                        "price": "<?=dealer_margin($TempPrice, 0, $value, $type);?>"
@@ -262,7 +262,7 @@ function dealer_margin($price, $margin, $value, $type) {
     </div>
     <div class="Modal" style="display: none;">
         <div class="ModalClose"></div>
-        <form class="ModalPage PayList" style="display: none;">
+        <form class="ModalPage PayList" style="display: none;" action="/index.php?option=com_gm_ceiling&task=payComponents" method="post">
             <table class="PayListTable">
                 <thead>
                 <tr>
@@ -276,6 +276,10 @@ function dealer_margin($price, $margin, $value, $type) {
                     <td class="ComponentPayCost"></td>
                     <td class="ComponentPayCount"></td>
                     <td class="ComponentPayItog"></td>
+                    <td hidden>
+                        <input class="ComponentPayID" type="number" name="Сomponents[]" readonly>
+                        <input class="ComponentPayC" type="number" name="Сount[]" readonly>
+                    </td>
                 </tr>
                 </thead>
                 <tbody class="ComponentsList">
@@ -294,7 +298,7 @@ function dealer_margin($price, $margin, $value, $type) {
                     <input type="text" id="Comment" name="Comment" placeholder="Комментарий" title="Комментарий">
                     <label for="Date"><i class="fa fa-calendar"></i></label>
                     <input type="datetime-local" id="Date" name="Date" title="Дата к которой заказ должен быть готов" required>
-                    <button type="submit" title="Отправить в производство"><i class="fa fa-shopping-cart"></i></button>
+                    <button type="submit" title="Отправить в производство"><i class="fa fa-money"></i></button>
                 </div>
             </div>
         </form>
@@ -564,22 +568,21 @@ function dealer_margin($price, $margin, $value, $type) {
             itog = $this.find(".ComponentsPayItog");
 
         tbody.empty();
-        console.log("</>");
-        console.log("</>");
         $.each(Data.Pay, function (i, v) {
             if (v != null) {
                 console.log(v);
                 var tr_clone = tr.clone(),
                     name = $("[data-option='" + i + "']").find(".ComponentName").text();
                 tr_clone.find(".ComponentPayName").text(name);
-                tr_clone.find(".ComponentPayCost").text(v.price);
+                tr_clone.find(".ComponentPayCost").text(v.price + " р.");
                 tr_clone.find(".ComponentPayCount").text(v.count);
-                tr_clone.find(".ComponentPayItog").text(v.price * v.count);
-                console.log(tr_clone);
+                tr_clone.find(".ComponentPayItog").text(v.price * v.count + " р.");
+                tr_clone.find(".ComponentPayID").val(i);
+                tr_clone.find(".ComponentPayC").val(v.count);
                 tbody.append(tr_clone);
             }
         });
 
-        itog.text(Data.Pay.sum);
+        itog.text(Data.Pay.sum + " р.");
     }
 </script>
