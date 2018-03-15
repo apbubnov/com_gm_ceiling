@@ -1562,6 +1562,7 @@ class Gm_ceilingController extends JControllerLegacy
                     $DATA->Components[$key] = (object) ["id" => $value, "count" => $Count[$key]];
 
             $ID_PROJECT = NULL;
+            $USER_ID = $user->id;
             if ("Create project" || true) {
                 $client_id = $user->associated_client;
 
@@ -1593,10 +1594,16 @@ class Gm_ceilingController extends JControllerLegacy
                 $ID_PROJECT = $project_model->save($project_data);
             }
 
+            $_POST["id"] = 0;
             $_POST["project_id"] = $ID_PROJECT;
-            $_POST["dealer_id"] = $user->id;
-            $_POST["components_value_stock"] = serialize($Components);
-            Gm_ceilingHelpersGm_ceiling::calculate(0, null, 1, 1, 0, 0);
+            $_POST["dealer_id"] = $USER_ID;
+            $_POST["components_title_stock"] = $Components;
+            $_POST["components_value_stock"] = $Count;
+            $_POST["n1"] = "NULL";
+            $_POST["n2"] = "NULL";
+            $_POST["n3"] = "NULL";
+            $result = Gm_ceilingHelpersGm_ceiling::calculate(0, null, 1, 1, 0, 0);
+            print_r($result); exit();
         }
         catch(Exception $e)
         {

@@ -265,6 +265,13 @@ class Gm_ceilingHelpersGm_ceiling
                     )
                 ));
                 $data = $data['jform'];
+                foreach ($data as $key => $value)
+                {
+                    if (array_key_exists($key, $_POST))
+                        $data[$key] = $_POST[$key];
+                    else if ($value == '')
+                        $data[$key] = 0;
+                }
 
                 $color = $data['color'];
                 $color_filter = $color ? "= " .$color : "IS NULL";       
@@ -394,7 +401,13 @@ class Gm_ceilingHelpersGm_ceiling
 
                 //Получаем массив из переменной дополнительных комплектующих со склада
                 $components_title_stock = $jinput->get('components_title_stock', '-', 'ARRAY');
+                if (empty($components_title_stock))
+                    $components_title_stock = $_POST['components_title_stock'];
+
                 $components_value_stock = $jinput->get('components_value_stock', '-', 'ARRAY');
+                if (empty($components_value_stock))
+                    $components_value_stock = $_POST['components_value_stock'];
+
                 $components_stock = array();
                 if ($components_title_stock !== '-') {
                     foreach ($components_title_stock as $key => $title) {
@@ -612,8 +625,6 @@ class Gm_ceilingHelpersGm_ceiling
             $return = json_encode($ajax_return);
            
             return $return;
-
-            print_r($comment_ceiling);
             exit();
         }
         catch(Exception $e)
