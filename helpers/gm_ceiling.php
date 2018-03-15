@@ -268,7 +268,7 @@ class Gm_ceilingHelpersGm_ceiling
 
                 $color = $data['color'];
                 $color_filter = $color ? "= " .$color : "IS NULL";       
-                $filter = "texture_id = ".$data['n2']." and `name` = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
+                $filter = "texture_id = '".$data['n2']."' and `name` = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
                 $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
                 $items = $model->getIdFilteredItems($filter);
                 if(count($items)>0){
