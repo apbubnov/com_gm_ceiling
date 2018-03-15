@@ -1538,7 +1538,7 @@ class Gm_ceilingHelpersGm_ceiling
             $project_id = $data['project_id'];
         }
         else {
-            $calculation_data = $calculation_model->getData($calc_id);
+            $calculation_data = (array) $calculation_model->getData($calc_id);
             $calculation_data2 = (array) $calculation_model->getDataById($calc_id);
 
             foreach ($calculation_data as $key => $item) {
