@@ -47,6 +47,10 @@
 		$calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
 		$calculation_data = $calculation_model->getData($_GET['id']);
 		$calculation_data2 = (array) $calculation_model->getDataById($_GET['id']);
+	 print_r($calculation_data);
+	 echo "<br>";
+	 print_r($calculation_data2);
+	 exit;
 		foreach ($calculation_data as $key => $item) {
 			if (empty($item) && array_key_exists($key, $calculation_data2))
 				$calculation_data[$key] = $calculation_data2[$key];
@@ -71,7 +75,6 @@
 				$calculation_data["need_mount"] = 1;
 		}
 		$need_mount_for_radio = $calculation_data["need_mount"];
-		echo($calculation_data["need_mount"]);
 	}
 	//-----------------------------------
 ?>
