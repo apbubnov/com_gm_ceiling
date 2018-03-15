@@ -279,6 +279,13 @@ class Gm_ceilingHelpersGm_ceiling
                     $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;
                 }
 
+                //коментарий
+                $comment_ceiling = $jinput->get('details', '', 'STRING');
+                throw new Exception($comment_ceiling);
+                
+                $data['details'] = json_encode($comment_ceiling);
+                //------------------
+
                 //ecola
                 $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
                 $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -541,11 +548,6 @@ class Gm_ceilingHelpersGm_ceiling
                 if (empty($data["n13"])) $data['n13'] = json_encode($temp_calculation_data->n13);
             }
             /*-----------------------------------------------------------------------------*/
-
-            //коментарий
-            $comment_ceiling = $jinput->get('details', '', 'STRING');
-            $data['details'] = json_encode($comment_ceiling);
-            //------------------
 
             if (empty($data['calculation_title']))
             {

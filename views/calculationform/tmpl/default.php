@@ -1795,9 +1795,7 @@
 							<table class="table_calcform">
 								<tr>
 									<td class="td_calcform3">
-										<button type="button" id="btn_comment" class="btn add_fields">
-											Комментарий
-										</button>
+										<button type="button" id="btn_comment" class="btn add_fields">Комментарий</button>
 									</td>
 								</tr>
 							</table>
