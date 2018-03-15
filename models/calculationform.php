@@ -1181,6 +1181,8 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         . $db->quote($data['discount']));
  //print_r((string) $query); exit;
                 $db->setQuery($query);
+                throw new Exception($query);
+                
                 $db->execute();
 
 
