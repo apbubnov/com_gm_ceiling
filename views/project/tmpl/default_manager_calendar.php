@@ -416,7 +416,7 @@ $AllGauger = $model->FindAllGauger($user->dealer_id, 14);
             <input name="idCalcDelete" id="idCalcDelete" value="<?= $calculation->id; ?>" type="hidden">
         </div>
     </form>
-<?pfp endif; ?>
+<?php endif; ?>
 
 <div id="modal-window-container-tar">
     <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
