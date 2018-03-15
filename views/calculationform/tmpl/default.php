@@ -2199,6 +2199,7 @@
 					jQuery("#btn_fixtures").css("background-color", "#414099");
 				}
 			});
+			// не работает
 			if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
 				jQuery("#btn_fixtures").click();
 			}
@@ -2256,9 +2257,13 @@
 			if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
 				jQuery("#btn_tile").click();
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n12").change( function () {
+				if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
+					jQuery("#btn_tile").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_tile").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_stoneware").click( function () {
 				jQuery("#jform_n8").toggle();
 				if (jQuery("#btn_stoneware").css("background-color") == "rgb(65, 64, 153)") {
