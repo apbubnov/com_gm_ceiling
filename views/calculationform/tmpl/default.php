@@ -2185,7 +2185,6 @@
 				jQuery("#btn_chandelier").attr("disabled", false);
 			}
 			jQuery("#jform_n12").change( function () {
-				console.log(jQuery("#jform_n12").val());
 				if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
 					jQuery("#btn_chandelier").attr("disabled", "disabled");
 				} else {
@@ -2203,9 +2202,13 @@
 			if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
 				jQuery("#btn_fixtures").click();
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#n13_count").change( function () {
+				if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
+					jQuery("#btn_fixtures").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_fixtures").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_cornice").click( function () {
 				jQuery(".cornice").toggle();
 				if (jQuery("#btn_cornice").css("background-color") == "rgb(65, 64, 153)") {
@@ -2217,9 +2220,13 @@
 			if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0)) {
 				jQuery("#btn_cornice").click();
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n12").change( function () {
+				if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0)) {
+					jQuery("#btn_cornice").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_cornice").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_pipes").click( function () {
 				jQuery("#pipes").toggle();
 				if (jQuery("#btn_pipes").css("background-color") == "rgb(65, 64, 153)") {
@@ -2231,9 +2238,13 @@
 			if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) {
 				jQuery("#btn_pipes").click();
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n12").change( function () {
+				if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) {
+					jQuery("#btn_pipes").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_pipes").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_tile").click( function () {
 				jQuery("#jform_n7").toggle();
 				if (jQuery("#btn_tile").css("background-color") == "rgb(65, 64, 153)") {
