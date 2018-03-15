@@ -540,9 +540,9 @@
 				</div>
 				<!-- Светильники -->
 				<div class="container">
-					<div class="row sm-margin-bottom">
+					<div class="row">
 						<div class="col-sm-4"></div>
-						<div class="col-sm-4">
+						<div class="col-sm-4" style="margin-bottom: 15px;">
 							<table class="table_calcform">
 								<tr>
 									<td class="td_calcform1">
@@ -558,7 +558,7 @@
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
-					<div class="row fixtures" style="display: none; width: 100%;">
+					<div class="row fixtures sm-margin-bottom" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div id="jform_n13_block" >
@@ -2156,11 +2156,11 @@
 			});
 			if (jQuery("input[name='radio']:radio:checked").val() != 0) {
 				jQuery("#btn_insert").click();
-				//jQuery("#btn_insert").attr("disabled", "disabled");
+				jQuery("#btn_insert").attr("disabled", "disabled");
 			}
 			jQuery("input[name='radio']:radio").change(function () {
 				console.log(jQuery("input[name='radio']:radio:checked").val());
-				if (jQuery("input[name='radio']:radio:checked").val() != 0 || jQuery("input[name='radio']:radio:checked").val() != "") {
+				if (jQuery("input[name='radio']:radio:checked").val() != 0 && jQuery("input[name='radio']:radio:checked").val() != "") {
 					jQuery("#btn_insert").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_insert").attr("disabled", false);
