@@ -313,7 +313,11 @@
 								<tr>
 									<td class="td_calcform1">
 										<button type="button" id="btn_baguette" class="btn add_fields">
-											Изменить багет
+											<?php if ($_GET['precalculation']) { ?>
+												Добавить багет
+											<?php } else { ?>
+												Изменить багет
+											<?php } ?>
 										</button>
 									</td>
 									<td class="td_calcform2">
@@ -335,6 +339,9 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="padding-right: 0px;">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
+								<div style="display: inline-block;"><input name="jform[n28]" id="jform_n28_3" class="radio" value="4" type="radio" <?php if ($this->item->n28 == 3) echo "checked='checked'" ?>>
+									<label for="jform_n28_3"> Без багета</label>
+								</div>
 								<div style="display: inline-block;"><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($this->item->n28 == 0) echo "checked='checked'" ?>>
 									<label for="jform_n28"> Обычный багет</label>
 								</div>
