@@ -39,6 +39,8 @@
 	$del_flag = 1;
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
+
+	echo("вставка".$this->item->n28);
 ?>
 
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
@@ -313,7 +315,11 @@
 								<tr>
 									<td class="td_calcform1">
 										<button type="button" id="btn_baguette" class="btn add_fields">
-											Изменить багет
+											<?php if ($_GET['precalculation']) { ?>
+												Добавить багет
+											<?php } else { ?>
+												Изменить багет
+											<?php } ?>
 										</button>
 									</td>
 									<td class="td_calcform2">
@@ -335,13 +341,20 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="padding-right: 0px;">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
-								<div style="display: inline-block;"><input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($this->item->n28 == 0) echo "checked='checked'" ?>>
+								<div style="display: inline-block; width: 100%;">
+									<input name="jform[n28]" id="jform_n28_3" class="radio" value="4" type="radio" <?php if ($this->item->n28 == 3) echo "checked='checked'" ?>>
+									<label for="jform_n28_3"> Без багета</label>
+								</div>
+								<div style="display: inline-block;">
+									<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php// if ($this->item->n28 == 0) echo "checked='checked'" ?>>
 									<label for="jform_n28"> Обычный багет</label>
 								</div>
-								<div style="display: inline-block;"><input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" <?php if ($this->item->n28 == 1) echo "checked='checked'" ?>>
+								<div style="display: inline-block;">
+									<input name="jform[n28]" id="jform_n28_1" class="radio" value="1" type="radio" <?php if ($this->item->n28 == 1) echo "checked='checked'" ?>>
 									<label for="jform_n28_1"> Потолочный багет</label>
 								</div>
-								<div style="display: inline-block;"><input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio" <?php if ($this->item->n28 == 2) echo "checked='checked'" ?>>
+								<div style="display: inline-block;">
+									<input name="jform[n28]" id="jform_n28_2" class="radio" value="2" type="radio" <?php if ($this->item->n28 == 2) echo "checked='checked'" ?>>
 									<label for="jform_n28_2"> Алюминиевый багет</label>
 								</div>
 							</div>
@@ -2033,8 +2046,6 @@
 		
 	}
 
-	/* //////////////////////////////// Убрать банер, при тыке в другое место Таранцева //////////////////////////////// */
-
 	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
 		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
 		if (!div.is(e.target) // если клик был не по нашему блоку
@@ -2056,357 +2067,336 @@
 
 		// кнопки открытия скрытых полей
 		precalculation = <?php if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
-		if (precalculation == 1) {
-			jQuery("#precalculation_container_hide").hide();
-			jQuery(".smeta_hide").hide();
-		} else {
-			jQuery("#btn_precalculation").hide();
-			jQuery("#precalculation_container_hide").show();
-		}
-		jQuery("#btn_precalculation").click( function () {
-			jQuery("#precalculation_container_hide").toggle();
-			if (jQuery("#btn_precalculation").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_precalculation").css("background-color", "#010084");
+			if (precalculation == 1) {
+				jQuery("#precalculation_container_hide").hide();
+				jQuery(".smeta_hide").hide();
 			} else {
-				jQuery("#btn_precalculation").css("background-color", "#414099");
+				jQuery("#btn_precalculation").hide();
+				jQuery("#precalculation_container_hide").show();
 			}
-		});
-		jQuery("#btn_baguette").click( function () {
-			jQuery("#baguette").toggle();
-			if (jQuery("#btn_baguette").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_baguette").css("background-color", "#010084");
+			jQuery("#btn_precalculation").click( function () {
+				jQuery("#precalculation_container_hide").toggle();
+				if (jQuery("#btn_precalculation").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_precalculation").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_precalculation").css("background-color", "#414099");
+				}
+			});
+			jQuery("#btn_baguette").click( function () {
+				jQuery("#baguette").toggle();
+				if (jQuery("#btn_baguette").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_baguette").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_baguette").css("background-color", "#414099");
+				}
+			});
+			who = <?php if ($user->dealer_id == 1) {echo 1;} else {echo 0;} ?>;
+			if (who == 1) {
+				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
+					jQuery("#btn_baguette").click();
+				}
 			} else {
-				jQuery("#btn_baguette").css("background-color", "#414099");
+				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
+					jQuery("#btn_baguette").click();
+				}
 			}
-		});
-		if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
-			jQuery("#baguette").show();
-			jQuery("#btn_baguette").css("background-color", "#010084");
-		}
-		jQuery("#btn_insert").click( function () {
-			jQuery("#insert").toggle();
-			if (jQuery("#btn_insert").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_insert").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_insert").css("background-color", "#414099");
+			jQuery("#btn_insert").click( function () {
+				jQuery("#insert").toggle();
+				if (jQuery("#btn_insert").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_insert").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_insert").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("input[name='radio']:radio:checked").val() != 0) {
+				jQuery("#btn_insert").click();
 			}
-		});
-		if (jQuery("input[name='radio']:radio:checked").val() != 0) {
-			jQuery("#insert").show();
-			jQuery("#btn_insert").css("background-color", "#010084");
-		}
-		jQuery("#btn_chandelier").click( function () {
-			jQuery("#chandelier").toggle();
-			if (jQuery("#btn_chandelier").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_chandelier").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_chandelier").css("background-color", "#414099");
+			jQuery("#btn_chandelier").click( function () {
+				jQuery("#chandelier").toggle();
+				if (jQuery("#btn_chandelier").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_chandelier").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_chandelier").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
+				jQuery("#btn_chandelier").click();
 			}
-		});
-		if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
-			jQuery("#chandelier").show();
-			jQuery("#btn_chandelier").css("background-color", "#010084");
-		}
-		jQuery("#btn_fixtures").click( function () {
-			jQuery(".fixtures").toggle();
-			if (jQuery("#btn_fixtures").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_fixtures").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_fixtures").css("background-color", "#414099");
+			jQuery("#btn_fixtures").click( function () {
+				jQuery(".fixtures").toggle();
+				if (jQuery("#btn_fixtures").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_fixtures").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_fixtures").css("background-color", "#414099");
+				}
+			});
+			if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
+				jQuery("#btn_fixtures").click();
 			}
-		});
-		if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
-			jQuery(".fixtures").show();
-			jQuery("#btn_fixtures").css("background-color", "#010084");
-		}
-		jQuery("#btn_cornice").click( function () {
-			jQuery(".cornice").toggle();
-			if (jQuery("#btn_cornice").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_cornice").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_cornice").css("background-color", "#414099");
+			jQuery("#btn_cornice").click( function () {
+				jQuery(".cornice").toggle();
+				if (jQuery("#btn_cornice").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_cornice").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_cornice").css("background-color", "#414099");
+				}
+			});
+			if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0)) {
+				jQuery("#btn_cornice").click();
 			}
-		});
-		if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0)) {
-			jQuery(".cornice").show();
-			jQuery("#btn_cornice").css("background-color", "#010084");
-		}
-		jQuery("#btn_pipes").click( function () {
-			jQuery("#pipes").toggle();
-			if (jQuery("#btn_pipes").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_pipes").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_pipes").css("background-color", "#414099");
+			jQuery("#btn_pipes").click( function () {
+				jQuery("#pipes").toggle();
+				if (jQuery("#btn_pipes").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_pipes").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_pipes").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) {
+				jQuery("#btn_pipes").click();
 			}
-		});
-		if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) {
-			jQuery("#pipes").show();
-			jQuery("#btn_pipes").css("background-color", "#010084");
-		}
-		jQuery("#btn_tile").click( function () {
-			jQuery("#jform_n7").toggle();
-			if (jQuery("#btn_tile").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_tile").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_tile").css("background-color", "#414099");
+			jQuery("#btn_tile").click( function () {
+				jQuery("#jform_n7").toggle();
+				if (jQuery("#btn_tile").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_tile").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_tile").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
+				jQuery("#btn_tile").click();
 			}
-		});
-		if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
-			jQuery("#jform_n7").show();
-			jQuery("#btn_tile").css("background-color", "#010084");
-		}
-		jQuery("#btn_stoneware").click( function () {
-			jQuery("#jform_n8").toggle();
-			if (jQuery("#btn_stoneware").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_stoneware").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_stoneware").css("background-color", "#414099");
+			jQuery("#btn_stoneware").click( function () {
+				jQuery("#jform_n8").toggle();
+				if (jQuery("#btn_stoneware").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_stoneware").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_stoneware").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "" && jQuery("#jform_n8").val() != 0) {
+				jQuery("#btn_stoneware").click();
 			}
-		});
-		if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "" && jQuery("#jform_n8").val() != 0) {
-			jQuery("#jform_n8").show();
-			jQuery("#btn_stoneware").css("background-color", "#010084");
-		}
-		jQuery("#btn_wire").click( function () {
-			jQuery("#jform_n19").toggle();
-			if (jQuery("#btn_wire").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_wire").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_wire").css("background-color", "#414099");
+			jQuery("#btn_wire").click( function () {
+				jQuery("#jform_n19").toggle();
+				if (jQuery("#btn_wire").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_wire").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_wire").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "" && jQuery("#jform_n19").val() != 0) {
+				jQuery("#btn_wire").click();
 			}
-		});
-		if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "" && jQuery("#jform_n19").val() != 0) {
-			jQuery("#jform_n19").show();
-			jQuery("#btn_wire").css("background-color", "#010084");
-		}
-		jQuery("#btn_bar").click( function () {
-			jQuery("#jform_n17").toggle();
-			if (jQuery("#btn_wire").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_wire").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_wire").css("background-color", "#414099");
+			jQuery("#btn_bar").click( function () {
+				jQuery("#jform_n17").toggle();
+				if (jQuery("#btn_wire").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_wire").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_wire").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "" && jQuery("#jform_n17").val() != 0) {
+				jQuery("#btn_bar").click();
 			}
-		});
-		if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "" && jQuery("#jform_n17").val() != 0) {
-			jQuery("#jform_n17").show();
-			jQuery("#btn_wire").css("background-color", "#010084");
-		}
-		jQuery("#btn_soaring").click( function () {
-			jQuery("#jform_n30").toggle();
-			if (jQuery("#btn_soaring").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_soaring").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_soaring").css("background-color", "#414099");
+			jQuery("#btn_soaring").click( function () {
+				jQuery("#jform_n30").toggle();
+				if (jQuery("#btn_soaring").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_soaring").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_soaring").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "" && jQuery("#jform_n30").val() != 0) {
+				jQuery("#btn_soaring").click();
 			}
-		});
-		if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "" && jQuery("#jform_n30").val() != 0) {
-			jQuery("#jform_n30").show();
-			jQuery("#btn_soaring").css("background-color", "#010084");
-		}
-		jQuery("#btn_level").click( function () {
-			jQuery("#level").toggle();
-			if (jQuery("#btn_level").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_level").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_level").css("background-color", "#414099");
+			jQuery("#btn_level").click( function () {
+				jQuery("#level").toggle();
+				if (jQuery("#btn_level").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_level").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_level").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
+				jQuery("#btn_level").click();
 			}
-		});
-		if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
-			jQuery("#level").show();
-			jQuery("#btn_level").css("background-color", "#010084");
-		}
-		jQuery("#btn_firealarm").click( function () {
-			jQuery("#jform_n21").toggle();
-			if (jQuery("#btn_firealarm").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_firealarm").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_firealarm").css("background-color", "#414099");
+			jQuery("#btn_firealarm").click( function () {
+				jQuery("#jform_n21").toggle();
+				if (jQuery("#btn_firealarm").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_firealarm").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_firealarm").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "" && jQuery("#jform_n21").val() != 0) {
+				jQuery("#btn_firealarm").click();
 			}
-		});
-		if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "" && jQuery("#jform_n21").val() != 0) {
-			jQuery("#jform_n21").show();
-			jQuery("#btn_firealarm").css("background-color", "#010084");
-		}
-		jQuery("#btn_delimiter").click( function () {
-			jQuery("#jform_n20").toggle();
-			if (jQuery("#btn_delimiter").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_delimiter").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_delimiter").css("background-color", "#414099");
+			jQuery("#btn_delimiter").click( function () {
+				jQuery("#jform_n20").toggle();
+				if (jQuery("#btn_delimiter").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_delimiter").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_delimiter").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
+				jQuery("#btn_delimiter").click();
 			}
-		});
-		if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
-			jQuery("#jform_n20").show();
-			jQuery("#btn_delimiter").css("background-color", "#010084");
-		}
-		jQuery("#btn_access").click( function () {
-			jQuery("#jform_n24").toggle();
-			if (jQuery("#btn_access").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_access").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_access").css("background-color", "#414099");
+			jQuery("#btn_access").click( function () {
+				jQuery("#jform_n24").toggle();
+				if (jQuery("#btn_access").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_access").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_access").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
+				jQuery("#btn_access").click();
 			}
-		});
-		if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
-			jQuery("#jform_n24").show();
-			jQuery("#btn_access").css("background-color", "#010084");
-		}
-		jQuery("#btn_notch1").click( function () {
-			jQuery("#jform_n11").toggle();
-			if (jQuery("#btn_notch1").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_notch1").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_notch1").css("background-color", "#414099");
+			jQuery("#btn_notch1").click( function () {
+				jQuery("#jform_n11").toggle();
+				if (jQuery("#btn_notch1").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_notch1").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_notch1").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
+				jQuery("#btn_notch1").click();
 			}
-		});
-		if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
-			jQuery("#jform_n11").show();
-			jQuery("#btn_notch1").css("background-color", "#010084");
-		}
-		jQuery("#btn_notch2").click( function () {
-			jQuery("#jform_n31").toggle();
-			if (jQuery("#btn_notch2").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_notch2").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_notch2").css("background-color", "#414099");
+			jQuery("#btn_notch2").click( function () {
+				jQuery("#jform_n31").toggle();
+				if (jQuery("#btn_notch2").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_notch2").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_notch2").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
+				jQuery("#btn_notch2").click();
 			}
-		});
-		if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
-			jQuery("#jform_n31").show();
-			jQuery("#btn_notch2").css("background-color", "#010084");
-		}
-		jQuery("#btn_draining").click( function () {
-			jQuery("#jform_n32").toggle();
-			if (jQuery("#btn_draining").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_draining").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_draining").css("background-color", "#414099");
+			jQuery("#btn_draining").click( function () {
+				jQuery("#jform_n32").toggle();
+				if (jQuery("#btn_draining").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_draining").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_draining").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
+				jQuery("#btn_draining").click();
 			}
-		});
-		if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
-			jQuery("#jform_n32").show();
-			jQuery("#btn_draining").css("background-color", "#010084");
-		}
-		jQuery("#btn_fixture2").click( function () {
-			jQuery("#jform_dop_krepezh").toggle();
-			if (jQuery("#btn_fixture2").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_fixture2").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_fixture2").css("background-color", "#414099");
+			jQuery("#btn_fixture2").click( function () {
+				jQuery("#jform_dop_krepezh").toggle();
+				if (jQuery("#btn_fixture2").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_fixture2").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_fixture2").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
+				jQuery("#btn_fixture2").click();
 			}
-		});
-		if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
-			jQuery("#jform_dop_krepezh").show();
-			jQuery("#btn_fixture2").css("background-color", "#010084");
-		}
-		jQuery("#btn_gain").click( function () {
-			jQuery("#jform_n18").toggle();
-			if (jQuery("#btn_gain").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_gain").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_gain").css("background-color", "#414099");
+			jQuery("#btn_gain").click( function () {
+				jQuery("#jform_n18").toggle();
+				if (jQuery("#btn_gain").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_gain").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_gain").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
+				jQuery("#btn_gain").click();
 			}
-		});
-		if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
-			jQuery("#jform_n18").show();
-			jQuery("#btn_gain").css("background-color", "#010084");
-		}
-		jQuery("#btn_hoods").click( function () {
-			jQuery("#hoods").toggle();
-			if (jQuery("#btn_hoods").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_hoods").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_hoods").css("background-color", "#414099");
+			jQuery("#btn_hoods").click( function () {
+				jQuery("#hoods").toggle();
+				if (jQuery("#btn_hoods").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_hoods").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_hoods").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) {
+				jQuery("#btn_hoods").click();
 			}
-		});
-		if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) {
-			jQuery("#hoods").show();
-			jQuery("#btn_hoods").css("background-color", "#010084");
-		}
-		jQuery("#btn_diffuser").click( function () {
-			jQuery("#diffuser").toggle();
-			if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_diffuser").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_diffuser").css("background-color", "#414099");
+			jQuery("#btn_diffuser").click( function () {
+				jQuery("#diffuser").toggle();
+				if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_diffuser").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_diffuser").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) {
+				jQuery("#btn_diffuser").click();
 			}
-		});
-		if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) {
-			jQuery("#diffuser").show();
-			jQuery("#btn_diffuser").css("background-color", "#010084");
-		}
-		jQuery("#btn_accessories").click( function () {
-			jQuery(".accessories").toggle();
-			if (jQuery("#btn_accessories").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_accessories").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_accessories").css("background-color", "#414099");
+			jQuery("#btn_accessories").click( function () {
+				jQuery(".accessories").toggle();
+				if (jQuery("#btn_accessories").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_accessories").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_accessories").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) {
+				jQuery("#btn_accessories").click();
 			}
-		});
-		if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) {
-			jQuery(".accessories").show();
-			jQuery("#btn_accessories").css("background-color", "#010084");
-		}
-		jQuery("#btn_accessories2").click( function () {
-			jQuery(".accessories2").toggle();
-			if (jQuery("#btn_accessories2").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_accessories2").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_accessories2").css("background-color", "#414099");
+			jQuery("#btn_accessories2").click( function () {
+				jQuery(".accessories2").toggle();
+				if (jQuery("#btn_accessories2").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_accessories2").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_accessories2").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
+				jQuery("#btn_accessories2").click();
 			}
-		});
-		if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
-			jQuery(".accessories2").show();
-			jQuery("#btn_accessories2").css("background-color", "#010084");
-		}
-		jQuery("#btn_mount").click( function () {
-			jQuery(".mount").toggle();
-			if (jQuery("#btn_mount").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_mount").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_mount").css("background-color", "#414099");
+			jQuery("#btn_mount").click( function () {
+				jQuery(".mount").toggle();
+				if (jQuery("#btn_mount").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_mount").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_mount").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) {
+				jQuery("#btn_mount").click();
 			}
-		});
-		if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) {
-			jQuery(".mount").show();
-			jQuery("#btn_mount").css("background-color", "#010084");
-		}
-		jQuery("#btn_height").click( function () {
-			jQuery("#row_height").toggle();
-			if (jQuery("#btn_height").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_height").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_height").css("background-color", "#414099");
+			jQuery("#btn_height").click( function () {
+				jQuery("#row_height").toggle();
+				if (jQuery("#btn_height").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_height").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_height").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
+				jQuery("#btn_height").click();
 			}
-		});
-		if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
-			jQuery("#row_height").show();
-			jQuery("#btn_height").css("background-color", "#010084");
-		}
-		jQuery("#btn_mount2").click( function () {
-			jQuery("#mount2").toggle();
-			if (jQuery("#btn_mount2").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_mount2").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_mount2").css("background-color", "#414099");
+			jQuery("#btn_mount2").click( function () {
+				jQuery("#mount2").toggle();
+				if (jQuery("#btn_mount2").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_mount2").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_mount2").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
+				jQuery("#btn_mount2").click();
 			}
-		});
-		if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
-			jQuery("#mount2").show();
-			jQuery("#btn_mount2").css("background-color", "#010084");
-		}
-		jQuery("#btn_comment").click( function () {
-			jQuery("#comment").toggle();
-			if (jQuery("#btn_comment").css("background-color") == "rgb(65, 64, 153)") {
-				jQuery("#btn_comment").css("background-color", "#010084");
-			} else {
-				jQuery("#btn_comment").css("background-color", "#414099");
+			jQuery("#btn_comment").click( function () {
+				jQuery("#comment").toggle();
+				if (jQuery("#btn_comment").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_comment").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_comment").css("background-color", "#414099");
+				}
+			});
+			if (jQuery("#comment").val() != null && jQuery("#comment").val() != undefined && jQuery("#comment").val() != "" && jQuery("#comment").val() != 0) {
+				jQuery("#btn_comment").click();
 			}
-		});
-		if (jQuery("#comment").val() != null && jQuery("#comment").val() != undefined && jQuery("#comment").val() != "" && jQuery("#comment").val() != 0) {
-			jQuery("#comment").show();
-			jQuery("#btn_comment").css("background-color", "#010084");
-		}
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
