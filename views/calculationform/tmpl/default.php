@@ -304,7 +304,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 			<div id="precalculation_container_hide">
-				<?php if ($user->dealer_type != 1) { ?>
+				<?php if ($user->dealer_id != 1) { ?>
 					<div class="container">
 						<div class="row">
 							<div class="col-sm-4"></div>
