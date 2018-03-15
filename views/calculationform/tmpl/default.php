@@ -39,7 +39,7 @@
 	$del_flag = 1;
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
-	echo $user->id; 
+	echo $user->dealer_id; 
 ?>
 
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
