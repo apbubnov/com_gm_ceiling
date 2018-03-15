@@ -280,7 +280,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
 
                 //коментарий
-                $comment_ceiling = $jinput->get('details', '', 'STRING');
+                $comment_ceiling = $jinput->get('details', array(), 'ARRAY');
                 $data['details'] = json_encode($comment_ceiling);
                 
                 //------------------
@@ -613,9 +613,6 @@ class Gm_ceilingHelpersGm_ceiling
             $return = json_encode($ajax_return);
            
             return $return;
-
-            print_r($comment_ceiling);
-                exit();
         }
         catch(Exception $e)
         {
