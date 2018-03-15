@@ -40,7 +40,7 @@
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
 
-	echo($this->item->n28);
+	echo("вставка".$this->item->n28);
 ?>
 
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
