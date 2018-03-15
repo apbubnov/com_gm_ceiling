@@ -1593,8 +1593,10 @@ class Gm_ceilingController extends JControllerLegacy
                 $ID_PROJECT = $project_model->save($project_data);
             }
 
+            $_POST["project_id"] = $ID_PROJECT;
+            $_POST["dealer_id"] = $user->id;
+            $_POST["components_value_stock"] = serialize($Components);
             Gm_ceilingHelpersGm_ceiling::calculate(0, null, 1, 1, 0, 0);
-
         }
         catch(Exception $e)
         {
