@@ -71,6 +71,7 @@
 				$calculation_data["need_mount"] = 1;
 		}
 		$need_mount_for_radio = $calculation_data["need_mount"];
+		echo($calculation_data["need_mount"]);
 	}
 	//-----------------------------------
 ?>
