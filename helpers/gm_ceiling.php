@@ -543,7 +543,7 @@ class Gm_ceilingHelpersGm_ceiling
             /*-----------------------------------------------------------------------------*/
 
             //коментарий
-            $comment_ceiling = $jinput->get('details', null,'string');
+            $comment_ceiling = $jinput->get('details', '', 'STRING');
             $data['details'] = json_encode($comment_ceiling);
             //------------------
 
