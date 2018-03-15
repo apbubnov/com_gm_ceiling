@@ -44,7 +44,7 @@
 	if ($_GET['id'] = 0) {
 		$need_mount_for_radio = 0;
 	} else {
-		$calculation_model = self::getModel('calculation');
+		$calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
 		$calculation_data = $calculation_model->getData($_GET['id']);
 		$calculation_data2 = (array) $calculation_model->getDataById($_GET['id']);
 		foreach ($calculation_data as $key => $item) {
