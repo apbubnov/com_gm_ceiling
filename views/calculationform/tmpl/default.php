@@ -2161,7 +2161,6 @@
 			jQuery("input[name='radio']:radio").change(function () {
 				console.log("fdsf");
 				if (jQuery("input[name='radio']:radio:checked").val() != 0) {
-					jQuery("#btn_insert").click();
 					jQuery("#btn_insert").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_insert").attr("disabled", false);
