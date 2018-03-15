@@ -41,7 +41,7 @@
 	$user_group = $user->groups;
 
 	//определение с монтажными работами или без
-	if ($_GET['id'] = 0) {
+	if ($_GET['id'] == 0) {
 		$need_mount_for_radio = 0;
 	} else {
 		$calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
@@ -64,7 +64,7 @@
 			$calculation_data["need_mount"] = 0;
 			$first = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, null, $calculation_data);
 			$first = round($first["total_gm_mounting"], 0);
-	
+
 			if ($first == floatval($calculation_data["mounting_sum"]))
 				$calculation_data["need_mount"] = 0;
 			else
