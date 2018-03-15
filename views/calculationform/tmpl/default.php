@@ -2156,8 +2156,16 @@
 			});
 			if (jQuery("input[name='radio']:radio:checked").val() != 0) {
 				jQuery("#btn_insert").click();
-				jQuery("#btn_insert").attr("disabled", "disabled");
+				//jQuery("#btn_insert").attr("disabled", "disabled");
 			}
+			jQuery("input[name='radio']:radio:checked").change(function () {
+				if (jQuery("input[name='radio']:radio:checked").val() != 0) {
+					jQuery("#btn_insert").click();
+					jQuery("#btn_insert").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_insert").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_chandelier").click( function () {
 				jQuery("#chandelier").toggle();
 				if (jQuery("#btn_chandelier").css("background-color") == "rgb(65, 64, 153)") {
