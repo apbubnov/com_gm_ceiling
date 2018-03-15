@@ -39,6 +39,40 @@
 	$del_flag = 1;
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
+
+	//определение с монтажными работами или без
+	if ($_GET['id'] = 0) {
+		$need_mount_for_radio = 0;
+	} else {
+		$calculation_model = self::getModel('calculation');
+		$calculation_data = $calculation_model->getData($_GET['id']);
+		$calculation_data2 = (array) $calculation_model->getDataById($_GET['id']);
+		foreach ($calculation_data as $key => $item) {
+			if (empty($item) && array_key_exists($key, $calculation_data2))
+				$calculation_data[$key] = $calculation_data2[$key];
+		}
+		$calculation_data["extra_mounting_array"] = array();
+		foreach (json_decode($calculation_data["extra_mounting"]) as $extra_mounting)
+			$calculation_data["extra_mounting_array"][] = $extra_mounting;
+
+		$calculation_data["need_mount_extra"] = !empty($calculation_data["extra_mounting_array"]);
+		if (floatval($calculation_data["mounting_sum"]) == 0)
+			$calculation_data["need_mount"] = 0;
+		else if (!$calculation_data["need_mount_extra"])
+			$calculation_data["need_mount"] = 1;
+		else {
+			$calculation_data["need_mount"] = 0;
+			$first = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, null, $calculation_data);
+			$first = round($first["total_gm_mounting"], 0);
+	
+			if ($first == floatval($calculation_data["mounting_sum"]))
+				$calculation_data["need_mount"] = 0;
+			else
+				$calculation_data["need_mount"] = 1;
+		}
+		$need_mount_for_radio = $calculation_data["need_mount"];
+	}
+	//-----------------------------------
 ?>
 
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
@@ -1656,12 +1690,12 @@
 								<div class="col-sm-4" id = "need_mount">
 									<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">
 										<div style="display: inline-block;">
-											<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" checked>
+											<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" <?php if ($need_mount_for_radio == 1) {echo "checked='checked'";} elseif ($user->dealer_id == 1) { echo "checked='checked'"; } ?> >
 											<label for="with_mount">Нужен</label>
 										</div>
 										<br>
 										<div style="display: inline-block;">
-											<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0">
+											<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0" <?php if ($need_mount_for_radio == 0) {echo "checked='checked'";} elseif ($user->dealer_id != 1) { echo "checked='checked'"; } ?> >
 											<label for="without">Не нужен</label>
 										</div>
 									</div>

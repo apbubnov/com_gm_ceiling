@@ -1552,9 +1552,9 @@ class Gm_ceilingHelpersGm_ceiling
 
             $calculation_data["need_mount_extra"] = !empty($calculation_data["extra_mounting_array"]);
 
-            if (floatval($item["mounting_sum"]) == 0)
+            if (floatval($calculation_data["mounting_sum"]) == 0)
                 $calculation_data["need_mount"] = 0;
-            else if (!$item["need_mount_extra"])
+            else if (!$calculation_data["need_mount_extra"])
                 $calculation_data["need_mount"] = 1;
             else {
                 $calculation_data["need_mount"] = 0;
