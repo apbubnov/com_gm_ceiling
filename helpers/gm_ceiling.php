@@ -401,11 +401,11 @@ class Gm_ceilingHelpersGm_ceiling
 
                 //Получаем массив из переменной дополнительных комплектующих со склада
                 $components_title_stock = $jinput->get('components_title_stock', '-', 'ARRAY');
-                if (empty($components_title_stock))
+                if ($components_title_stock == '-')
                     $components_title_stock = $_POST['components_title_stock'];
 
                 $components_value_stock = $jinput->get('components_value_stock', '-', 'ARRAY');
-                if (empty($components_value_stock))
+                if ($components_value_stock == '-')
                     $components_value_stock = $_POST['components_value_stock'];
 
                 $components_stock = array();
