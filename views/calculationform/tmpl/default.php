@@ -2089,8 +2089,8 @@
 					jQuery("#btn_baguette").css("background-color", "#414099");
 				}
 			});
-			who = <?php if ($user->dealer_id == 1) echo true; else echo false; ?>;
-			if (who == true) {
+			who = <?php if ($user->dealer_id == 1) {echo 1;} else {echo 0;} ?>;
+			if (who == 1) {
 				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
 					jQuery("#btn_baguette").click();
 				}
