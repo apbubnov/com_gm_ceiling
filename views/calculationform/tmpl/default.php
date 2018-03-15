@@ -2186,11 +2186,11 @@
 			}
 			jQuery("#jform_n12").change( function () {
 				console.log(jQuery("#jform_n12").val());
-				/* if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
+				if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
 					jQuery("#btn_chandelier").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_chandelier").attr("disabled", false);
-				} */
+				}
 			});
 			jQuery("#btn_fixtures").click( function () {
 				jQuery(".fixtures").toggle();
