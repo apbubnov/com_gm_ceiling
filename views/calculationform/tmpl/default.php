@@ -2159,7 +2159,7 @@
 				//jQuery("#btn_insert").attr("disabled", "disabled");
 			}
 			jQuery("input[name='radio']:radio").change(function () {
-				console.log("fdsf");
+				console.log(jQuery("input[name='radio']:radio:checked").val());
 				if (jQuery("input[name='radio']:radio:checked").val() != 0) {
 					jQuery("#btn_insert").attr("disabled", "disabled");
 				} else {
