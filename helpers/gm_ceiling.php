@@ -1622,7 +1622,10 @@ class Gm_ceilingHelpersGm_ceiling
         }
 
         if (!array_key_exists('need_mount', $data))
-            $data["need_mount"] = true;
+            $data["need_mount"] = 1;
+
+        $mounting_data = [];
+        $guild_data = [];
 
         if ($data["need_mount"]) {
             if ($data['n1'] == 28 && $data['n9'] > 4) {
@@ -1638,6 +1641,7 @@ class Gm_ceilingHelpersGm_ceiling
                     );
                 }
             }
+
             if ($data['n1'] == 28 && $data['n11'] > 0) {
                 //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
                 $mounting_data[] = array(
@@ -2513,6 +2517,8 @@ class Gm_ceilingHelpersGm_ceiling
                 );
             }
         }
+
+
         //Дополнительный монтаж
         $extra_mounting = json_decode($data['extra_mounting']);
         foreach ($extra_mounting as $extra_mount) {
@@ -2525,6 +2531,7 @@ class Gm_ceilingHelpersGm_ceiling
                 "dealer_salary_total" => $extra_mount->value                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
+
         $margins = self::get_margin($data['project_id']);
         $gm_mounting_margin = $margins['gm_mounting_margin'];
         $dealer_mounting_margin = $margins['dealer_mounting_margin'];
