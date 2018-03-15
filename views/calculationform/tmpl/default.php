@@ -558,7 +558,7 @@
 						</div>
 						<div class="col-sm-4" style="margin-bottom: 30px;"></div>
 					</div>
-					<div class="row sm-margin-bottom fixtures" style="display: none; width: 100%;">
+					<div class="row fixtures" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<div id="jform_n13_block" >
@@ -2158,7 +2158,8 @@
 				jQuery("#btn_insert").click();
 				//jQuery("#btn_insert").attr("disabled", "disabled");
 			}
-			jQuery("input[name='radio']:radio:checked").change(function () {
+			jQuery("input[name='radio']:radio").change(function () {
+				console.log("fdsf");
 				if (jQuery("input[name='radio']:radio:checked").val() != 0) {
 					jQuery("#btn_insert").click();
 					jQuery("#btn_insert").attr("disabled", "disabled");
