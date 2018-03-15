@@ -442,7 +442,7 @@
 									}
 								?>
 								<div style="display: inline-block;">
-									<input name="radio" id="jform_n6" class="radio" value="<?=($this->item->n6)?$this->item->n6:'314'?>" type="radio" <?php if($this->item->n6 == 314) echo "checked=\"checked\""?>>
+									<input name="radio" id="jform_n6" class="radio" value="314" type="radio" <?php if($this->item->n6 == 314) echo "checked=\"checked\""?>>
 									<label for="jform_n6">Белая вставка</label>
 								</div>
 								<br>
@@ -452,7 +452,7 @@
 								</div>
 								<br>
 								<div style="display: inline-block;">
-									<input name="radio" id="jform_n6_2" class="radio" value="<?=($this->item->n6)?$this->item->n6:'0'?>" type="radio" <?php if(empty($this->item->n6)) echo "checked=\"checked\""?>>
+									<input name="radio" id="jform_n6_2" class="radio" value="0" type="radio" <?php if(empty($this->item->n6)) echo "checked=\"checked\""?>>
 									<label for="jform_n6_2">Вставка не нужна</label>
 								</div>
 							</div>
@@ -2146,6 +2146,13 @@
 
 				}
 			}
+			jQuery("#jform_n12").change( function () {
+				if () {
+
+				} else {
+					
+				}
+			});
 			jQuery("#btn_insert").click( function () {
 				jQuery("#insert").toggle();
 				if (jQuery("#btn_insert").css("background-color") == "rgb(65, 64, 153)") {
@@ -2159,7 +2166,6 @@
 				jQuery("#btn_insert").attr("disabled", "disabled");
 			}
 			jQuery("input[name='radio']:radio").change(function () {
-				console.log(jQuery("input[name='radio']:radio:checked").val());
 				if (jQuery("input[name='radio']:radio:checked").val() == 0) {
 					jQuery("#btn_insert").attr("disabled", false);
 				} else {
@@ -2176,7 +2182,15 @@
 			});
 			if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
 				jQuery("#btn_chandelier").click();
+				jQuery("#btn_chandelier").attr("disabled", false);
 			}
+			jQuery("#jform_n12").change( function () {
+				if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
+					jQuery("#btn_chandelier").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_chandelier").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_fixtures").click( function () {
 				jQuery(".fixtures").toggle();
 				if (jQuery("#btn_fixtures").css("background-color") == "rgb(65, 64, 153)") {
@@ -2188,6 +2202,9 @@
 			if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
 				jQuery("#btn_fixtures").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_cornice").click( function () {
 				jQuery(".cornice").toggle();
 				if (jQuery("#btn_cornice").css("background-color") == "rgb(65, 64, 153)") {
@@ -2199,6 +2216,9 @@
 			if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0)) {
 				jQuery("#btn_cornice").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_pipes").click( function () {
 				jQuery("#pipes").toggle();
 				if (jQuery("#btn_pipes").css("background-color") == "rgb(65, 64, 153)") {
@@ -2210,6 +2230,9 @@
 			if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) {
 				jQuery("#btn_pipes").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_tile").click( function () {
 				jQuery("#jform_n7").toggle();
 				if (jQuery("#btn_tile").css("background-color") == "rgb(65, 64, 153)") {
@@ -2221,6 +2244,9 @@
 			if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
 				jQuery("#btn_tile").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_stoneware").click( function () {
 				jQuery("#jform_n8").toggle();
 				if (jQuery("#btn_stoneware").css("background-color") == "rgb(65, 64, 153)") {
@@ -2232,6 +2258,9 @@
 			if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "" && jQuery("#jform_n8").val() != 0) {
 				jQuery("#btn_stoneware").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_wire").click( function () {
 				jQuery("#jform_n19").toggle();
 				if (jQuery("#btn_wire").css("background-color") == "rgb(65, 64, 153)") {
@@ -2243,6 +2272,9 @@
 			if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "" && jQuery("#jform_n19").val() != 0) {
 				jQuery("#btn_wire").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_bar").click( function () {
 				jQuery("#jform_n17").toggle();
 				if (jQuery("#btn_wire").css("background-color") == "rgb(65, 64, 153)") {
@@ -2254,6 +2286,9 @@
 			if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "" && jQuery("#jform_n17").val() != 0) {
 				jQuery("#btn_bar").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_soaring").click( function () {
 				jQuery("#jform_n30").toggle();
 				if (jQuery("#btn_soaring").css("background-color") == "rgb(65, 64, 153)") {
@@ -2265,6 +2300,9 @@
 			if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "" && jQuery("#jform_n30").val() != 0) {
 				jQuery("#btn_soaring").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_level").click( function () {
 				jQuery("#level").toggle();
 				if (jQuery("#btn_level").css("background-color") == "rgb(65, 64, 153)") {
@@ -2276,6 +2314,9 @@
 			if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
 				jQuery("#btn_level").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_firealarm").click( function () {
 				jQuery("#jform_n21").toggle();
 				if (jQuery("#btn_firealarm").css("background-color") == "rgb(65, 64, 153)") {
@@ -2287,6 +2328,9 @@
 			if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "" && jQuery("#jform_n21").val() != 0) {
 				jQuery("#btn_firealarm").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_delimiter").click( function () {
 				jQuery("#jform_n20").toggle();
 				if (jQuery("#btn_delimiter").css("background-color") == "rgb(65, 64, 153)") {
@@ -2298,6 +2342,9 @@
 			if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
 				jQuery("#btn_delimiter").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_access").click( function () {
 				jQuery("#jform_n24").toggle();
 				if (jQuery("#btn_access").css("background-color") == "rgb(65, 64, 153)") {
@@ -2309,6 +2356,9 @@
 			if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
 				jQuery("#btn_access").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_notch1").click( function () {
 				jQuery("#jform_n11").toggle();
 				if (jQuery("#btn_notch1").css("background-color") == "rgb(65, 64, 153)") {
@@ -2320,6 +2370,9 @@
 			if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
 				jQuery("#btn_notch1").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_notch2").click( function () {
 				jQuery("#jform_n31").toggle();
 				if (jQuery("#btn_notch2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2331,6 +2384,9 @@
 			if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
 				jQuery("#btn_notch2").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_draining").click( function () {
 				jQuery("#jform_n32").toggle();
 				if (jQuery("#btn_draining").css("background-color") == "rgb(65, 64, 153)") {
@@ -2342,6 +2398,9 @@
 			if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
 				jQuery("#btn_draining").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_fixture2").click( function () {
 				jQuery("#jform_dop_krepezh").toggle();
 				if (jQuery("#btn_fixture2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2353,6 +2412,9 @@
 			if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
 				jQuery("#btn_fixture2").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_gain").click( function () {
 				jQuery("#jform_n18").toggle();
 				if (jQuery("#btn_gain").css("background-color") == "rgb(65, 64, 153)") {
@@ -2364,6 +2426,9 @@
 			if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
 				jQuery("#btn_gain").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_hoods").click( function () {
 				jQuery("#hoods").toggle();
 				if (jQuery("#btn_hoods").css("background-color") == "rgb(65, 64, 153)") {
@@ -2375,6 +2440,9 @@
 			if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) {
 				jQuery("#btn_hoods").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_diffuser").click( function () {
 				jQuery("#diffuser").toggle();
 				if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
@@ -2386,6 +2454,9 @@
 			if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) {
 				jQuery("#btn_diffuser").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_accessories").click( function () {
 				jQuery(".accessories").toggle();
 				if (jQuery("#btn_accessories").css("background-color") == "rgb(65, 64, 153)") {
@@ -2397,6 +2468,9 @@
 			if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) {
 				jQuery("#btn_accessories").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_accessories2").click( function () {
 				jQuery(".accessories2").toggle();
 				if (jQuery("#btn_accessories2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2408,6 +2482,9 @@
 			if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
 				jQuery("#btn_accessories2").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_mount").click( function () {
 				jQuery(".mount").toggle();
 				if (jQuery("#btn_mount").css("background-color") == "rgb(65, 64, 153)") {
@@ -2419,6 +2496,9 @@
 			if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) {
 				jQuery("#btn_mount").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_height").click( function () {
 				jQuery("#row_height").toggle();
 				if (jQuery("#btn_height").css("background-color") == "rgb(65, 64, 153)") {
@@ -2430,6 +2510,9 @@
 			if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
 				jQuery("#btn_height").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_mount2").click( function () {
 				jQuery("#mount2").toggle();
 				if (jQuery("#btn_mount2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2447,6 +2530,9 @@
 					jQuery("#btn_mount2").click();
 				}
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 			jQuery("#btn_comment").click( function () {
 				jQuery("#comment").toggle();
 				if (jQuery("#btn_comment").css("background-color") == "rgb(65, 64, 153)") {
@@ -2458,6 +2544,9 @@
 			if (jQuery("#comment").val() != null && jQuery("#comment").val() != undefined && jQuery("#comment").val() != "" && jQuery("#comment").val() != 0) {
 				jQuery("#btn_comment").click();
 			}
+			jQuery("#jform_n12").change( function () {
+				
+			});
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
