@@ -2160,10 +2160,10 @@
 			}
 			jQuery("input[name='radio']:radio").change(function () {
 				console.log(jQuery("input[name='radio']:radio:checked").val());
-				if (jQuery("input[name='radio']:radio:checked").val() != 0 && jQuery("input[name='radio']:radio:checked").val() != "") {
-					jQuery("#btn_insert").attr("disabled", "disabled");
-				} else {
+				if (jQuery("input[name='radio']:radio:checked").val() == 0) {
 					jQuery("#btn_insert").attr("disabled", false);
+				} else {
+					jQuery("#btn_insert").attr("disabled", "disabled");
 				}
 			});
 			jQuery("#btn_chandelier").click( function () {
