@@ -281,8 +281,6 @@ class Gm_ceilingHelpersGm_ceiling
 
                 //коментарий
                 $comment_ceiling = $jinput->get('details', '', 'STRING');
-                throw new Exception($comment_ceiling);
-                
                 $data['details'] = json_encode($comment_ceiling);
                 //------------------
 
