@@ -304,6 +304,21 @@
 				<div class="col-sm-4"></div>
 			</div>
 			<div id="precalculation_container_hide">
+				<?php if ($user->dealer_id != 1) { ?>
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-4"></div>
+							<div class="col-sm-4" style="margin-bottom: 30px;">
+								<p>
+									ВНИМАНИЕ! <br>
+									Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой. <br>
+									<a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary">Изменить прайс монтажа</a>
+								</p>
+							</div>
+							<div class="col-sm-4"></div>
+						</div>
+					</div>
+				<?php } ?>
 				<!-- Багет -->
 				<div class="container" id="block_n28">
 					<div class="row">
