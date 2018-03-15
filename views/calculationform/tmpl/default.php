@@ -540,7 +540,7 @@
 				</div>
 				<!-- Светильники -->
 				<div class="container">
-					<div class="row sm">
+					<div class="row sm-margin-bottom">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<table class="table_calcform">
@@ -556,7 +556,7 @@
 								</tr>
 							</table>
 						</div>
-						<div class="col-sm-4" style="margin-bottom: 30px;"></div>
+						<div class="col-sm-4"></div>
 					</div>
 					<div class="row fixtures" style="display: none; width: 100%;">
 						<div class="col-sm-4"></div>
@@ -2160,7 +2160,7 @@
 			}
 			jQuery("input[name='radio']:radio").change(function () {
 				console.log(jQuery("input[name='radio']:radio:checked").val());
-				if (jQuery("input[name='radio']:radio:checked").val() != 0) {
+				if (jQuery("input[name='radio']:radio:checked").val() != 0 || jQuery("input[name='radio']:radio:checked").val() != "") {
 					jQuery("#btn_insert").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_insert").attr("disabled", false);
