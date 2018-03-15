@@ -311,9 +311,9 @@
 							<div class="col-sm-4">
 								<p>
 									ВНИМАНИЕ! <br>
-									Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой.
+									Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой. <br>
+									<a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary">Изменить прайс монтажа</a>
 								</p>
-								<a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary">Изменить прайс монтажа</a>
 							</div>
 							<div class="col-sm-4"></div>
 						</div>
