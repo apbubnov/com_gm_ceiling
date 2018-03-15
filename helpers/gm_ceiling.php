@@ -281,7 +281,8 @@ class Gm_ceilingHelpersGm_ceiling
 
                 //коментарий
                 $comment_ceiling = $jinput->get('details', '', 'STRING');
-                $data['details'] = json_encode($comment_ceiling);
+                print_r($comment_ceiling);
+                 $data['details'] = json_encode($comment_ceiling);
                 //------------------
 
                 //ecola
