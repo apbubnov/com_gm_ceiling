@@ -2054,5 +2054,4 @@ class Gm_ceilingModelProject extends JModelItem
         $db->setQuery($query);
         return $db->loadObject();
     }
-
 }

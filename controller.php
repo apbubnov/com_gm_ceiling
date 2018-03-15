@@ -1540,6 +1540,71 @@ class Gm_ceilingController extends JControllerLegacy
          }
     }
 
+    public function payComponents() {
+        try
+        {
+            $user = JFactory::getUser();
+            $user->getDealerInfo();
+
+            $jinput = JFactory::getApplication()->input;
+
+            $DATA = (object) [];
+
+            $Components = $jinput->get('Сomponents', null, "ARRAY");
+            $Count = $jinput->get('Сount', null, "ARRAY");
+
+            $DATA->Date = $jinput->get('Date', null, 'STRING');
+            $DATA->Comment = $jinput->get('Comment', null, "STRING");
+            $DATA->Components = [];
+
+            foreach ($Components as $key => $value)
+                if (!empty($value))
+                    $DATA->Components[$key] = (object) ["id" => $value, "count" => $Count[$key]];
+
+            $ID_PROJECT = NULL;
+            if ("Create project" || true) {
+                $client_id = $user->associated_client;
+
+                $project_data = [];
+                $project_data['ready_time'] = $DATA->Date;
+                $project_data['project_note'] = $DATA->Comment;
+
+                $project_data['client_id'] = $client_id;
+
+                $project_data['project_info'] = "";
+                $project_data['project_status'] = 5;
+                $project_data['project_calculation_daypart'] = 0;
+
+                $project_data['project_calculation_date'] = "0000-00-00 00:00";
+                $project_data['project_mounting_date'] = "00.00.0000";
+                $project_data['who_calculate'] = 0;
+                $project_data['created'] = date("Y.m.d");
+                $project_data['project_discount'] = 0;
+
+                $project_data['gm_canvases_margin'] = $user->gm_canvases_margin;
+                $project_data['gm_components_margin'] = $user->gm_components_margin;
+                $project_data['gm_mounting_margin'] = $user->gm_mounting_margin;
+
+                $project_data['dealer_canvases_margin'] = $user->dealer_canvases_margin;
+                $project_data['dealer_components_margin'] = $user->dealer_components_margin;
+                $project_data['dealer_mounting_margin'] = $user->dealer_mounting_margin;
+
+                $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
+                $ID_PROJECT = $project_model->save($project_data);
+            }
+
+            Gm_ceilingHelpersGm_ceiling::calculate(0, null, 1, 1, 0, 0);
+
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function notify_new()
     {
         try
