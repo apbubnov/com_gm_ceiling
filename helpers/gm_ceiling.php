@@ -260,7 +260,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'original_name' => 'string',
                         'cuts' => 'string',
                         'rek' => 'int',
-                        'proizv' => 'string'
+                        'proizv' => 'string',
+                        'details' => 'string'
                     )
                 ));
                 $data = $data['jform'];
@@ -540,6 +541,11 @@ class Gm_ceilingHelpersGm_ceiling
                 if (empty($data["n13"])) $data['n13'] = json_encode($temp_calculation_data->n13);
             }
             /*-----------------------------------------------------------------------------*/
+
+            //коментарий
+            $comment_ceiling = $jinput->get('details', null,'string');
+            $data['details'] = json_encode($comment_ceiling);
+            //------------------
 
             if (empty($data['calculation_title']))
             {
