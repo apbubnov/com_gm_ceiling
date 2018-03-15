@@ -299,7 +299,7 @@
 			<div class="row">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<button type="button" id="btn_precalculation" class="btn btn-primary" style="margin-bottom: 25px;">Добавить монтаж и комплектующие</button>
+					<button type="button" id="btn_precalculation" class="btn btn-primary" style="width: 100%; margin-bottom: 25px;">Добавить монтаж и комплектующие</button>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
