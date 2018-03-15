@@ -308,7 +308,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-sm-4"></div>
-							<div class="col-sm-4">
+							<div class="col-sm-4" style="margin-bottom: 10px;">
 								<p>
 									ВНИМАНИЕ! <br>
 									Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой. <br>
