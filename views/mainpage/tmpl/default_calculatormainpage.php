@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
 
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
@@ -23,9 +22,8 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
 //--------------------------------------
 
 ?>
-<!-- <?=parent::getButtonBack();?> -->
-<h2 class="center">Замерщик</h2>
 
+<h2 class="center">Замерщик</h2>
 <div class="start_page">
 	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
 		<div class="container-for-circl">

@@ -228,16 +228,15 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 </style>
 
 <?= parent::getButtonBack(); ?>
-<h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
     <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" enctype="multipart/form-data">
         <?php
             $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $calculations = $model->getProjectItems($this->item->id);
         ?>
+        <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
-                <h4 style="margin-bottom: 15px;">Информация по проекту № <?php echo $this->item->id ?></h4>
                     <?php if ($this->type === "calculator" && $this->subtype === "calendar") { ?>
                         <?php if ($this->item->project_verdict == 0) { ?>
                             <?php if ($user->dealer_type != 2) { ?>
@@ -1282,7 +1281,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         <table id="container_calendars">
                             <tr>
                                 <td colspan="3">
-                                    <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
+                                    <h4 class="center" id="title" style="display: none; margin-bottom: 25px;">Назначить монтажную бригаду</h4>
                                 </td>
                             </tr>
                             <tr>
@@ -2343,7 +2342,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 
             if (client_id==1) {
                 jQuery("input[name='data_change']").val(1);
-                jQuery("#change_data").trigger('click');
                 jQuery("#accept_project").trigger('click');
             }
 

@@ -144,13 +144,17 @@ class Gm_ceilingHelpersGm_ceiling
         $margin_model = self::getModel('Dealer_info');
         $mount_model = self::getModel('mount');
 
-            $gm_margin = $margin_model->getDataById(1);
+        $gm_margin = $margin_model->getDataById(1);
+        if ($type == 3)
+        {
+            $gm_mount = $mount_model->getDataAll(1);
+            $margin_model->save($gm_margin->dealer_canvases_margin,$gm_margin->dealer_components_margin,$gm_margin->dealer_mounting_margin,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
+        }
+        else
+        {
+            $gm_mount = $mount_model->getDataAll(0);
             $margin_model->save(0,0,0,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
-
-            if ($type == 3)
-                $gm_mount = $mount_model->getDataAll(1);
-            else
-                $gm_mount = $mount_model->getDataAll(0);
+        }
 
             $gm_mount->user_id = $userID;
             $mount_model->insert($gm_mount);
@@ -256,7 +260,8 @@ class Gm_ceilingHelpersGm_ceiling
                         'original_name' => 'string',
                         'cuts' => 'string',
                         'rek' => 'int',
-                        'proizv' => 'string'
+                        'proizv' => 'string',
+                        'details' => 'string'
                     )
                 ));
                 $data = $data['jform'];
@@ -273,6 +278,13 @@ class Gm_ceilingHelpersGm_ceiling
                 if($data['n2'] == 0) {
                     $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;
                 }
+
+                //коментарий
+                $comment_ceiling = $jinput->get('details', '', 'STRING');
+                $data['details'] = json_encode($comment_ceiling);
+                print_r($comment_ceiling);
+                exit();
+                //------------------
 
                 //ecola
                 $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
