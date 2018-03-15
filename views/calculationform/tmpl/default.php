@@ -74,6 +74,7 @@
 		$need_mount_for_radio = $calculation_data["need_mount"];
 	}
 	//-----------------------------------
+	echo $need_mount_for_radio;
 ?>
 
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
