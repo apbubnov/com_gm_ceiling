@@ -2143,6 +2143,7 @@
 			} else {
 				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
 					jQuery("#btn_baguette").click();
+
 				}
 			}
 			jQuery("#btn_insert").click( function () {
@@ -2155,6 +2156,7 @@
 			});
 			if (jQuery("input[name='radio']:radio:checked").val() != 0) {
 				jQuery("#btn_insert").click();
+				jQuery("#btn_insert").attr("disabled", "disabled");
 			}
 			jQuery("#btn_chandelier").click( function () {
 				jQuery("#chandelier").toggle();
@@ -2428,8 +2430,14 @@
 					jQuery("#btn_mount2").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
-				jQuery("#btn_mount2").click();
+			if (who == 1) {
+				if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
+					jQuery("#btn_mount2").click();
+				}
+			} else {
+				if (jQuery("input[name='need_mount']:radio:checked").val() != 0) {
+					jQuery("#btn_mount2").click();
+				}
 			}
 			jQuery("#btn_comment").click( function () {
 				jQuery("#comment").toggle();
