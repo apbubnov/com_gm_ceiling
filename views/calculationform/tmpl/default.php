@@ -225,8 +225,8 @@
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4 ">
 					<button id="sketch_switch" class="btn btn-primary btn-big" type="button">Начертить потолок</button>
-					<h3>Размеры помещения</h3>
 					<div id="sketch_image_block">
+						<h3>Размеры помещения</h3>
 						<?php
 							if ($this->item->id > 0)
 							{
