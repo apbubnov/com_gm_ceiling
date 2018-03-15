@@ -1570,6 +1570,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $project_data['ready_time'] = $DATA->Date;
                 $project_data['project_note'] = $DATA->Comment;
                 $project_data['project_verdict'] = 1;
+                $project_data['state'] = 1;
 
                 $project_data['client_id'] = $client_id;
 
