@@ -2257,13 +2257,6 @@
 					jQuery("#btn_pipes").attr("disabled", false);
 				}
 			});
-			/* jQuery("input[name='jform[n28]']:radio").change( function () {
-				if () {
-
-				} else {
-					
-				}
-			}); */
 			jQuery("#btn_tile").click( function () {
 				jQuery("#jform_n7").toggle();
 				if (jQuery("#btn_tile").css("background-color") == "rgb(65, 64, 153)") {
@@ -2274,7 +2267,15 @@
 			});
 			if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
 				jQuery("#btn_tile").click();
+				jQuery("#btn_tile").attr("disabled", "disabled");
 			}
+			jQuery("#jform_n7").change( function () {
+				if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
+					jQuery("#btn_tile").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_tile").attr("disabled", false);
+				}
+			});
 			jQuery("#jform_n12").change( function () {
 				if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
 					jQuery("#btn_tile").attr("disabled", "disabled");
