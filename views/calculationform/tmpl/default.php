@@ -2137,22 +2137,27 @@
 			});
 			who = <?php if ($user->dealer_id == 1) {echo 1;} else {echo 0;} ?>;
 			if (who == 1) {
-				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
+				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 || jQuery("input[name='jform[n28]']:radio:checked").val() == 3) {
 					jQuery("#btn_baguette").click();
 				}
 			} else {
 				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
 					jQuery("#btn_baguette").click();
-
 				}
 			}
-			/* jQuery("#jform_n12").change( function () {
-				if () {
-
+			if (who == 1) {
+				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 || jQuery("input[name='jform[n28]']:radio:checked").val() == 3) {
+					jQuery("#btn_baguette").attr("disabled", "disabled");
 				} else {
-					
+					jQuery("#btn_baguette").attr("disabled", false);
 				}
-			}); */
+			} else {
+				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
+					jQuery("#btn_baguette").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_baguette").attr("disabled", false);
+				}
+			}
 			jQuery("#btn_insert").click( function () {
 				jQuery("#insert").toggle();
 				if (jQuery("#btn_insert").css("background-color") == "rgb(65, 64, 153)") {
@@ -2210,6 +2215,13 @@
 					jQuery("#btn_fixtures").attr("disabled", false);
 				}
 			});
+			/* jQuery("input[name='jform[n28]']:radio").change( function () {
+				if () {
+
+				} else {
+					
+				}
+			}); */
 			jQuery("#btn_cornice").click( function () {
 				jQuery(".cornice").toggle();
 				if (jQuery("#btn_cornice").css("background-color") == "rgb(65, 64, 153)") {
