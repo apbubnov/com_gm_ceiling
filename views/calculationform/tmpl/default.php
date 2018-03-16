@@ -2208,12 +2208,12 @@
 					jQuery("#btn_fixtures").css("background-color", "#414099");
 				}
 			});
-			// не работает
 			if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0) || (jQuery("#n13").val() != null && jQuery("#n13").val() != undefined && jQuery("#n13").val() != "" && jQuery("#n13").val() != 0) || (jQuery(".ecola2").val() != null && jQuery(".ecola2").val() != undefined && jQuery(".ecola2").val() != "" && jQuery(".ecola2").val() != 0)) {
 				jQuery("#btn_fixtures").click();
 				jQuery("#btn_fixtures").attr("disabled", "disabled");
 			}
-			jQuery("#n13_count #ecola_count #n13 .ecola2").change( function () {
+			jQuery(".container").on("change", "#n13_count #ecola_count #n13 .ecola2", function () {
+			//jQuery("#n13_count #ecola_count #n13 .ecola2").change( function () {
 				console.log("ыщвшоаыв");
 				if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0) || (jQuery("#n13").val() != null && jQuery("#n13").val() != undefined && jQuery("#n13").val() != "" && jQuery("#n13").val() != 0) || (jQuery(".ecola2").val() != null && jQuery(".ecola2").val() != undefined && jQuery(".ecola2").val() != "" && jQuery(".ecola2").val() != 0)) {
 					jQuery("#btn_fixtures").attr("disabled", "disabled");
