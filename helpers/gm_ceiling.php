@@ -260,8 +260,7 @@ class Gm_ceilingHelpersGm_ceiling
                         'original_name' => 'string',
                         'cuts' => 'string',
                         'rek' => 'int',
-                        'proizv' => 'string',
-                        'details' => 'string'
+                        'proizv' => 'string'
                     )
                 ));
                 $data = $data['jform'];
@@ -285,11 +284,6 @@ class Gm_ceilingHelpersGm_ceiling
                 if($data['n2'] == 0) {
                     $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;
                 }
-
-                //коментарий
-                $comment_ceiling = $jinput->get('details', array(), 'ARRAY');
-                $data['details'] = json_encode($comment_ceiling);
-                //------------------
 
                 //ecola
                 $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
