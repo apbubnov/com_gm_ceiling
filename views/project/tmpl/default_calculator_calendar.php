@@ -532,27 +532,27 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         <div class="row">
             <div class="col-xs-12 no_padding">
                 <h4>Расчеты для проекта</h4>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" data-toggle="tab" href="#summary" role="tab">Общее</a>
+                    </li>
+                    <?php $first = true; foreach ($calculations as $k => $calculation) { ?>
+                        <li class="nav-item">
+                            <a class="nav-link <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>" role="tab">
+                                <?php echo $calculation->calculation_title; ?>
+                            </a>
+                        </li>
+                    <?php } ?>
+                    <li class="nav-item"> 
+                        <a class="nav-link" style="color:white;" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' . $this->item->id); ?>">
+                            Добавить потолок <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                </ul>
                 <?php if($user->dealer_type == 1 && count($calculations) <= 0) { ?>
                     <p>У Вас еще нет потолков</p>
                 <?php } else { ?>
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" data-toggle="tab" href="#summary" role="tab">Общее</a>
-                        </li>
-                        <?php $first = true; foreach ($calculations as $k => $calculation) { ?>
-                            <li class="nav-item">
-                                <a class="nav-link <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>" role="tab">
-                                    <?php echo $calculation->calculation_title; ?>
-                                </a>
-                            </li>
-                        <?php } ?>
-                        <li class="nav-item"> 
-                            <a class="nav-link" style="color:white;" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' . $this->item->id); ?>">
-                                Добавить потолок <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                    </ul>
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div class="tab-pane <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" id="summary" role="tabpanel">
