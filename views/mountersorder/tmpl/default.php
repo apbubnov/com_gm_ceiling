@@ -371,7 +371,7 @@ if (!empty($calculation_ids)) {
                             <td>Стоимость, ₽</td>
                         </tr>
                         <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
-                        <?php if (!empty($DataOfProject)) { print_r($calculation_ids);
+                        <?php if (!empty($DataOfProject)) { print_r($DataOfProjectnj);
 exit();?>
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <tr>
