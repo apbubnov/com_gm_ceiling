@@ -2191,7 +2191,7 @@
 				jQuery("#btn_chandelier").click();
 				jQuery("#btn_chandelier").attr("disabled", false);
 			}
-			jQuery("#jform_n12").keydown( function () {
+			jQuery("#jform_n12").change( function () {
 				if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
 					jQuery("#btn_chandelier").attr("disabled", "disabled");
 				} else {
@@ -2210,7 +2210,7 @@
 			if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
 				jQuery("#btn_fixtures").click();
 			}
-			jQuery("#n13_count").change( function () {
+			jQuery("#n13_count #ecola_count").change( function () {
 				if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
 					jQuery("#btn_fixtures").attr("disabled", "disabled");
 				} else {
