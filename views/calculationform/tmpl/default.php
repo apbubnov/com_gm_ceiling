@@ -2290,9 +2290,9 @@
 			}
 			jQuery("#jform_n8").change( function () {
 				if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "" && jQuery("#jform_n8").val() != 0) {
-					jQuery("#btn_tile").attr("disabled", "disabled");
+					jQuery("#btn_stoneware").attr("disabled", "disabled");
 				} else {
-					jQuery("#btn_tile").attr("disabled", false);
+					jQuery("#btn_stoneware").attr("disabled", false);
 				}
 			});
 			jQuery("#btn_wire").click( function () {
@@ -2305,10 +2305,15 @@
 			});
 			if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "" && jQuery("#jform_n19").val() != 0) {
 				jQuery("#btn_wire").click();
+				jQuery("#btn_wire").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n19").change( function () {
+				if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "" && jQuery("#jform_n19").val() != 0) {
+					jQuery("#btn_wire").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_wire").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_bar").click( function () {
 				jQuery("#jform_n17").toggle();
 				if (jQuery("#btn_wire").css("background-color") == "rgb(65, 64, 153)") {
