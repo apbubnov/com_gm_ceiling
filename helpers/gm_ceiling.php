@@ -1527,7 +1527,8 @@ class Gm_ceilingHelpersGm_ceiling
         //        $margins = self::get_margin($data['project_id']);
         //        $gm_mounting_margin = $margins['gm_mounting_margin'];
         //        $dealer_mounting_margin = $margins['dealer_mounting_margin'];
-       
+
+        $calculation_data = null;
         if(empty($calc_id)){
             $project_id = $data['project_id'];
         }
@@ -1536,7 +1537,7 @@ class Gm_ceilingHelpersGm_ceiling
             $calculation_data2 = (array) $calculation_model->getDataById($calc_id);
 
             foreach ($calculation_data as $key => $item) {
-                if (empty($item) && array_key_exists($key, $calculation_data2))
+                if ((empty($item) || strripos($key, "n") == 0) && array_key_exists($key, $calculation_data2))
                     $calculation_data[$key] = $calculation_data2[$key];
             }
 
@@ -1560,7 +1561,6 @@ class Gm_ceilingHelpersGm_ceiling
                 else
                     $calculation_data["need_mount"] = 1;
             }
-
             $project_id = $calculation_data->project_id;
         }
         $project_model = self::getModel('project');
@@ -1582,9 +1582,6 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
             }
-            $data['n1'] = $calculation_data->n1_id;
-            $data['n2'] = $calculation_data->n2_id;
-            $data['n3'] = $calculation_data->n3_id;
             $n13 = $data['n13'];
             $n26 = $data['n26'];
             $n22 = $data['n22'];
