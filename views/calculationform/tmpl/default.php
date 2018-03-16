@@ -2360,12 +2360,12 @@
 					jQuery("#btn_level").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
+			if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29").val() != null && jQuery("#n29").val() != undefined && jQuery("#n29").val() != "" && jQuery("#n29").val() != 0)) {
 				jQuery("#btn_level").click();
 				jQuery("#btn_level").attr("disabled", "disabled");
 			}
 			jQuery("#n29_count").change( function () {
-				if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
+				if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29").val() != null && jQuery("#n29").val() != undefined && jQuery("#n29").val() != "" && jQuery("#n29").val() != 0)) {
 					jQuery("#btn_level").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_level").attr("disabled", false);
@@ -3598,7 +3598,7 @@
                 block = element.siblings("#level_block_html");
             var html = "<div class='form-group'>";
             html+= "<div class='advanced_col1'>";
-            html+= "<input name='n29_count[]' class='form-control' value=''  placeholder='м.' type='tel'>";
+            html+= "<input id='n29' name='n29_count[]' class='form-control' value=''  placeholder='м.' type='tel'>";
             html+= "</div>";
             html+= "<div class='advanced_col5'>";
             html+= "<select class='form-control' name='n29_type[]' placeholder=''>";
