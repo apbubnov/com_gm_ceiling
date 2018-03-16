@@ -2213,12 +2213,29 @@
 				jQuery("#btn_fixtures").attr("disabled", "disabled");
 			}
 			jQuery("body").on("change", "#n13_count, #ecola_count, #n13, .ecola2", function () {
-			//jQuery("#n13_count, #ecola_count, #n13, .ecola2").change( function () {
-				console.log("ыщвшоаыв");
 				if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0) || (jQuery("#n13").val() != null && jQuery("#n13").val() != undefined && jQuery("#n13").val() != "" && jQuery("#n13").val() != 0) || (jQuery(".ecola2").val() != null && jQuery(".ecola2").val() != undefined && jQuery(".ecola2").val() != "" && jQuery(".ecola2").val() != 0)) {
 					jQuery("#btn_fixtures").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_fixtures").attr("disabled", false);
+				}
+			});
+			jQuery("#btn_cornice").click( function () {
+				jQuery(".cornice").toggle();
+				if (jQuery("#btn_cornice").css("background-color") == "rgb(65, 64, 153)") {
+					jQuery("#btn_cornice").css("background-color", "#010084");
+				} else {
+					jQuery("#btn_cornice").css("background-color", "#414099");
+				}
+			});
+			if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0) || (jQuery("#n15").val() != null && jQuery("#n15").val() != undefined && jQuery("#n15").val() != "" && jQuery("#n15").val() != 0)) {
+				jQuery("#btn_cornice").click();
+				jQuery("#btn_cornice").attr("disabled", "disabled");
+			}
+			jQuery("body").on("change", "#jform_n27, #n15_count, #n15", function () {
+				if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0) || (jQuery("#n15").val() != null && jQuery("#n15").val() != undefined && jQuery("#n15").val() != "" && jQuery("#n15").val() != 0)) {
+					jQuery("#btn_cornice").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_cornice").attr("disabled", false);
 				}
 			});
 			/* jQuery("input[name='jform[n28]']:radio").change( function () {
@@ -2228,24 +2245,6 @@
 					
 				}
 			}); */
-			jQuery("#btn_cornice").click( function () {
-				jQuery(".cornice").toggle();
-				if (jQuery("#btn_cornice").css("background-color") == "rgb(65, 64, 153)") {
-					jQuery("#btn_cornice").css("background-color", "#010084");
-				} else {
-					jQuery("#btn_cornice").css("background-color", "#414099");
-				}
-			});
-			if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0)) {
-				jQuery("#btn_cornice").click();
-			}
-			jQuery("#jform_n12").change( function () {
-				if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0)) {
-					jQuery("#btn_cornice").attr("disabled", "disabled");
-				} else {
-					jQuery("#btn_cornice").attr("disabled", false);
-				}
-			});
 			jQuery("#btn_pipes").click( function () {
 				jQuery("#pipes").toggle();
 				if (jQuery("#btn_pipes").css("background-color") == "rgb(65, 64, 153)") {
