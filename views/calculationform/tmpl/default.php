@@ -2352,6 +2352,7 @@
 					jQuery("#btn_soaring").attr("disabled", false);
 				}
 			});
+			//не работает
 			jQuery("#btn_level").click( function () {
 				jQuery("#level").toggle();
 				if (jQuery("#btn_level").css("background-color") == "rgb(65, 64, 153)") {
@@ -2371,6 +2372,7 @@
 					jQuery("#btn_level").attr("disabled", false);
 				}
 			});
+			// работает
 			jQuery("#btn_firealarm").click( function () {
 				jQuery("#jform_n21").toggle();
 				if (jQuery("#btn_firealarm").css("background-color") == "rgb(65, 64, 153)") {
