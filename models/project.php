@@ -1041,7 +1041,8 @@ class Gm_ceilingModelProject extends JModelItem
 	        $query->update('`#__gm_ceiling_projects` AS projects');
 	        $data = $this->getData($id);
             $user = JFactory::getUser($data->dealer_id);
-	        if ($data->id_client == $user->associated_client)
+            $is_components = $data->id_client == $user->associated_client;
+	        if ($is_components)
                 $query->set('projects.project_status = 19');
             else
                 $query->set('projects.project_status = 10');
@@ -1049,8 +1050,8 @@ class Gm_ceilingModelProject extends JModelItem
             if(!empty($ready_date)&&!empty($quickly)){
                 $query->set("projects.ready_time = '$ready_date'");
                 $query->set("projects.quickly = $quickly");
-
             }
+
             $query->where('projects.id = ' . $id);
             
 	        $db->setQuery($query);
