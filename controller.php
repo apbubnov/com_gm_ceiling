@@ -1605,7 +1605,8 @@ class Gm_ceilingController extends JControllerLegacy
             $_POST["n2"] = "NULL";
             $_POST["n3"] = "NULL";
             $result = Gm_ceilingHelpersGm_ceiling::calculate(0, null, 1, 1, 0, 0);
-            print_r($result); exit();
+            $this->setMessage("Проект успешно отправлен на производство! Цена за работу производителем изменится после одобрения! Итоговую цену можно увидеть в расходке.");
+            $this->setRedirect(JRoute::_('http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.$ID_PROJECT, false));
         }
         catch(Exception $e)
         {
