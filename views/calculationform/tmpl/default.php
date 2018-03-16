@@ -2145,19 +2145,21 @@
 					jQuery("#btn_baguette").click();
 				}
 			}
-			if (who == 1) {
-				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 || jQuery("input[name='jform[n28]']:radio:checked").val() == 3) {
-					jQuery("#btn_baguette").attr("disabled", "disabled");
+			jQuery("input[name='jform[n28]']:radio").change( function() {
+				if (who == 1) {
+					if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 || jQuery("input[name='jform[n28]']:radio:checked").val() == 3) {
+						jQuery("#btn_baguette").attr("disabled", "disabled");
+					} else {
+						jQuery("#btn_baguette").attr("disabled", false);
+					}
 				} else {
-					jQuery("#btn_baguette").attr("disabled", false);
+					if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
+						jQuery("#btn_baguette").attr("disabled", "disabled");
+					} else {
+						jQuery("#btn_baguette").attr("disabled", false);
+					}
 				}
-			} else {
-				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
-					jQuery("#btn_baguette").attr("disabled", "disabled");
-				} else {
-					jQuery("#btn_baguette").attr("disabled", false);
-				}
-			}
+			});
 			jQuery("#btn_insert").click( function () {
 				jQuery("#insert").toggle();
 				if (jQuery("#btn_insert").css("background-color") == "rgb(65, 64, 153)") {
