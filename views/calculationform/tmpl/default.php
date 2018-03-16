@@ -2364,7 +2364,7 @@
 				jQuery("#btn_level").click();
 				jQuery("#btn_level").attr("disabled", "disabled");
 			}
-			jQuery("#jform_n30").change( function () {
+			jQuery("#n29_count").change( function () {
 				if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
 					jQuery("#btn_level").attr("disabled", "disabled");
 				} else {
@@ -2381,10 +2381,15 @@
 			});
 			if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "" && jQuery("#jform_n21").val() != 0) {
 				jQuery("#btn_firealarm").click();
+				jQuery("#btn_firealarm").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n21").change( function () {
+				if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "" && jQuery("#jform_n21").val() != 0) {
+					jQuery("#btn_firealarm").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_firealarm").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_delimiter").click( function () {
 				jQuery("#jform_n20").toggle();
 				if (jQuery("#btn_delimiter").css("background-color") == "rgb(65, 64, 153)") {
