@@ -2238,13 +2238,6 @@
 					jQuery("#btn_cornice").attr("disabled", false);
 				}
 			});
-			/* jQuery("input[name='jform[n28]']:radio").change( function () {
-				if () {
-
-				} else {
-					
-				}
-			}); */
 			jQuery("#btn_pipes").click( function () {
 				jQuery("#pipes").toggle();
 				if (jQuery("#btn_pipes").css("background-color") == "rgb(65, 64, 153)") {
@@ -2253,16 +2246,24 @@
 					jQuery("#btn_pipes").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) {
+			if ((jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) || (jQuery("#n14").val() != null && jQuery("#n14").val() != undefined && jQuery("#n14").val() != "" && jQuery("#n14").val() != 0)) {
 				jQuery("#btn_pipes").click();
+				jQuery("#btn_pipes").attr("disabled", "disabled");
 			}
-			jQuery("#jform_n12").change( function () {
-				if (jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) {
+			jQuery("body").on("change", "#n14_count, #n14", function () {
+				if ((jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) || (jQuery("#n14").val() != null && jQuery("#n14").val() != undefined && jQuery("#n14").val() != "" && jQuery("#n14").val() != 0)) {
 					jQuery("#btn_pipes").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_pipes").attr("disabled", false);
 				}
 			});
+			/* jQuery("input[name='jform[n28]']:radio").change( function () {
+				if () {
+
+				} else {
+					
+				}
+			}); */
 			jQuery("#btn_tile").click( function () {
 				jQuery("#jform_n7").toggle();
 				if (jQuery("#btn_tile").css("background-color") == "rgb(65, 64, 153)") {
@@ -3490,7 +3491,7 @@
 		jQuery( "#add_n14" ).click(function(){
 			var html = "<div class='form-group'>";
 			html+= "<div class='advanced_col1'>";
-			html+= "<input name='n14_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
+			html+= "<input id='n14' name='n14_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
 			html+= "</div>";
 			html+= "<div class='advanced_col5'>";
 			html+= "<select class='form-control' name='n14_type[]' placeholder='Платформа'>";
