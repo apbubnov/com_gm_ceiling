@@ -26,8 +26,7 @@ $calculation_ids = $model->GetCalculation($project);
 if (!empty($calculation_ids)) {
     $DataOfTransport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project);
 }
-print_r($calculation_ids);
-exit();
+
 ?>
 
 <?=parent::getButtonBack();?>
@@ -372,7 +371,8 @@ exit();
                             <td>Стоимость, ₽</td>
                         </tr>
                         <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
-                        <?php if (!empty($DataOfProject)) { ?>
+                        <?php if (!empty($DataOfProject)) { print_r($calculation_ids);
+exit();?>
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <tr>
                                     <td class="left">
