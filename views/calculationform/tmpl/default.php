@@ -2276,13 +2276,6 @@
 					jQuery("#btn_tile").attr("disabled", false);
 				}
 			});
-			jQuery("#jform_n12").change( function () {
-				if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
-					jQuery("#btn_tile").attr("disabled", "disabled");
-				} else {
-					jQuery("#btn_tile").attr("disabled", false);
-				}
-			});
 			jQuery("#btn_stoneware").click( function () {
 				jQuery("#jform_n8").toggle();
 				if (jQuery("#btn_stoneware").css("background-color") == "rgb(65, 64, 153)") {
