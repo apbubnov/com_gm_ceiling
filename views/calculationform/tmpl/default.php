@@ -2209,12 +2209,12 @@
 				}
 			});
 			// не работает
-			if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
+			if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0) || (jQuery("#n13").val() != null && jQuery("#n13").val() != undefined && jQuery("#n13").val() != "" && jQuery("#n13").val() != 0) || (jQuery(".ecola2").val() != null && jQuery(".ecola2").val() != undefined && jQuery(".ecola2").val() != "" && jQuery(".ecola2").val() != 0)) {
 				jQuery("#btn_fixtures").click();
 				jQuery("#btn_fixtures").attr("disabled", "disabled");
 			}
-			jQuery("#n13_count #ecola_count").change( function () {
-				if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0)) {
+			jQuery("#n13_count #ecola_count #n13 .ecola2").change( function () {
+				if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0) || (jQuery("#n13").val() != null && jQuery("#n13").val() != undefined && jQuery("#n13").val() != "" && jQuery("#n13").val() != 0) || (jQuery(".ecola2").val() != null && jQuery(".ecola2").val() != undefined && jQuery(".ecola2").val() != "" && jQuery(".ecola2").val() != 0)) {
 					jQuery("#btn_fixtures").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_fixtures").attr("disabled", false);
@@ -3543,7 +3543,7 @@
 		jQuery( "#add_ecola" ).click(function(){
 			var html = "<div class='form-group'>";
 			html+= "<div class='advanced_col1'>";
-			html+= "<input name='ecola_count[]' class='form-control' value=''  placeholder='шт.' type='tel'>";
+			html+= "<input name='ecola_count[]' class='form-control ecola2' value=''  placeholder='шт.' type='tel'>";
 			html+= "</div>";
 			html+= "<div class='advanced_col2'>";
 			html+= "<select class='form-control' name='light_color[]' placeholder='Светильник'>";
