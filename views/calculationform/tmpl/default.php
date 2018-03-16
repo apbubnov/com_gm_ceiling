@@ -2362,10 +2362,15 @@
 			});
 			if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
 				jQuery("#btn_level").click();
+				jQuery("#btn_level").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n30").change( function () {
+				if (jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) {
+					jQuery("#btn_level").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_level").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_firealarm").click( function () {
 				jQuery("#jform_n21").toggle();
 				if (jQuery("#btn_firealarm").css("background-color") == "rgb(65, 64, 153)") {
