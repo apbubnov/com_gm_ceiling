@@ -3156,7 +3156,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<table>';
         $html .= '<tbody>';
         $html .= '<tr>';
-        $html .= '<th>Стороны: </th><td style="font-size: 11pt">' . $us_walls. '</td>';
+        $html .= '<th>Стороны: </th><td style="font-size: 14pt">' . $us_walls. '</td>';
         $html .= '</tr>';
         $html .= '</tbody>';
         $html .= '</table>';
