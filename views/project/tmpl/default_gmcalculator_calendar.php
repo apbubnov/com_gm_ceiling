@@ -20,7 +20,9 @@
     $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
     $sum_transport = $transport['client_sum'];
     $sum_transport_1 = $transport['mounter_sum'];
-
+    //генерация общих смет
+    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
     $project_total = 0;
     $project_total_discount = 0;
     $total_square = 0;
@@ -817,7 +819,7 @@
                     </div>
                 <?php endif; ?>
                 <div class="row-fluid">
-                    <div class="span6">
+                    <div class="span6"> 
                         <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
                         <h4>Материал</h4>
                         <div>

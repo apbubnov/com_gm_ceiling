@@ -350,7 +350,7 @@ $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 					text: 'Выполнено', //Button Text
 					val: 0, //Button Value
 					eKey: true, //Enter Keypress
-					addClass: 'btn-danger', //Button Classes (btn-large | btn-small | btn-green | btn-light-green | btn-purple | btn-orange | btn-pink | btn-turquoise | btn-blue | btn-light-blue | btn-light-red | btn-red | btn-yellow | btn-white | btn-black | btn-rounded | btn-circle | btn-square | btn-disabled)
+					//addClass: 'btn-danger', //Button Classes (btn-large | btn-small | btn-green | btn-light-green | btn-purple | btn-orange | btn-pink | btn-turquoise | btn-blue | btn-light-blue | btn-light-red | btn-red | btn-yellow | btn-white | btn-black | btn-rounded | btn-circle | btn-square | btn-disabled)
 					onClick: function(dialog) {
                         var input_value = jQuery("#input_check").val();
                         var input_mounting = jQuery("#input_mounting").val();
