@@ -503,12 +503,12 @@
 										<h3>Освещение</h3>
 									</td>
 									<td>
-										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+										<!-- <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
 												Если на потолке будут люстры или светильники укажите их количество и характеристики. Если их не будет просто пропустите этот пункт
 											</span>
-										</div>
+										</div> -->
 									</td>
 								</tr>
 							</table>
