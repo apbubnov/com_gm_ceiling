@@ -3149,8 +3149,12 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<table>';
         $html .= '<tbody>';
         $html .= '<tr>';
-        $html .= '<th>Полотна: </th><td>' . str_replace(';', ";<br>", $cut_data) . '</td>';
+        $html .= '<th>Полотна: </th><td style="font-size: 14pt">' . str_replace(';', ";<br>", $cut_data) . '</td>';
         $html .= '</tr>';
+        $html .= '</tbody>';
+        $html .= '</table>';
+        $html .= '<table>';
+        $html .= '<tbody>';
         $html .= '<tr>';
         $html .= '<th>Стороны: </th><td>' . $us_walls. '</td>';
         $html .= '</tr>';
