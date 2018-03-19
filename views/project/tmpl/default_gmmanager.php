@@ -145,7 +145,7 @@ $AllMounters = $model->FindAllMounters($where);
                             <td>
                                 <?php
                                 if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?> -
-                                <? } else { ?>
+                                <?php } else { ?>
                                     <?php $jdate = new JDate($this->item->project_calculation_date); ?>
                                     <?php echo $jdate->format('d.m.Y H:i');
                                 } ?>
@@ -156,7 +156,7 @@ $AllMounters = $model->FindAllMounters($where);
                             <td>
                                 <?php
                                 if ($this->item->project_mounting_date == "0000-00-00 00:00:00") { ?> -
-                                <? } else { ?>
+                                <?php } else { ?>
                                     <?php $jdate = new JDate($this->item->project_mounting_date); ?>
                                     <?php echo $jdate->format('d.m.Y H:i');
                                 } ?>
@@ -172,7 +172,7 @@ $AllMounters = $model->FindAllMounters($where);
                         </tr>
                         <tr>
                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                            <? $contacts = $model->getClientPhones($this->item->id_client); ?>
+                            <?php $contacts = $model->getClientPhones($this->item->id_client); ?>
                             <td><?php foreach ($contacts as $phone) {
                                     echo $phone->client_contacts;
                                     echo "<br>";
@@ -229,11 +229,11 @@ $AllMounters = $model->FindAllMounters($where);
                                 <?php } ?>
                             </td>
                             <td>
-                                <? if ($this->item->project_status != 12) { ?>
+                                <?php if ($this->item->project_status != 12) { ?>
                                     <button onclick='send_ajax(<?php echo $calculation->id; ?>)'
                                             class="btn btn-primary">Изменить раскрой
                                     </button>
-                                <? } ?>
+                                <?php } ?>
                             </td>
                         </tr>
                     <?php } ?>
@@ -472,7 +472,7 @@ $AllMounters = $model->FindAllMounters($where);
                 </div>
             </div>
         </form>
-    <? } else { ?>
+    <?php } else { ?>
         <form id="form-project"
               action="/index.php?option=com_gm_ceiling&task=project.refusing&id=<?= $this->item->id ?>"
               method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
@@ -520,7 +520,7 @@ $AllMounters = $model->FindAllMounters($where);
                 </tbody>
             </table>
         </form>
-    <? } ?>
+    <?php } ?>
     <form action="/sketch/cut_redactor/index.php" id="data_form" method="POST" style="display : none;">
         <input type="hidden" name="walls" id="input_walls">
         <input type="hidden" name="calc_id" id="calc_id">
