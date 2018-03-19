@@ -76,6 +76,12 @@
 	//-----------------------------------
 ?>
 
+<style>
+	#sketch_image {
+		max-width: 330px;
+	}
+</style>
+
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
 	<input name="url" id="url" value="" type="hidden">
 	<input name="user_id" id="user_id" value=<?php echo "\"".$user->id."\"";?> type="hidden">
@@ -346,7 +352,7 @@
 								<p>
 									ВНИМАНИЕ! <br>
 									Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой. <br>
-									<a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary">Изменить прайс монтажа</a>
+									Изменить прайс монтажа <a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary"><i class="fa fa-file-alt"></i></a>
 								</p>
 							</div>
 							<div class="col-sm-4"></div>
@@ -2109,6 +2115,7 @@
 	});
 
 	jQuery(document).ready(function() {
+		jQuery("body").addClass("yellow_home");
 
 		// кнопки открытия скрытых полей
 			precalculation = <?php if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
@@ -2659,7 +2666,6 @@
 				}
 			}
 			jQuery("input[name='need_mount']:radio").change( function() {
-				console.log("трям");
 				if (who == 1) {
 					if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
 						jQuery("#btn_mount2").attr("disabled", "disabled");
@@ -2673,7 +2679,6 @@
 						jQuery("#btn_mount2").attr("disabled", false);
 					}
 				}
-				
 			});
 			jQuery("#btn_comment").click( function () {
 				jQuery("#comment").toggle();
@@ -2696,7 +2701,6 @@
 			});
 		//------------------------------
 
-		jQuery("body").addClass("yellow_home");
 
 		if(jQuery("#jform_n4").val()==0 && jQuery("#jform_n5").val()==0 && jQuery("#jform_n9").val()==0)
 		{
