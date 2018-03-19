@@ -2613,7 +2613,7 @@
 				jQuery("#btn_mount").click();
 				jQuery("#btn_mount").attr("disabled", "disabled");
 			}
-			jQuery("body").on("change", "#extra_components_title, .mounttar", function () {
+			jQuery("body").on("change", "#extra_mounting_title, .mounttar", function () {
 				console.log(jQuery("#extra_mounting_title").val());
 				console.log(jQuery(".mounttar").val());
 				if ((jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) || (jQuery(".mounttar").val() != null && jQuery(".mounttar").val() != undefined && jQuery(".mounttar").val() != "" && jQuery(".mounttar").val() != 0)) {
