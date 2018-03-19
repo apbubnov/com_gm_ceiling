@@ -2658,16 +2658,16 @@
 					jQuery("#btn_mount2").attr("disabled", "disabled");
 				}
 			}
-			jQuery("input[name='jform[need_mount]']:radio").change( function() {
+			jQuery("input[name='need_mount']:radio").change( function() {
 				console.log("трям");
 				if (who == 1) {
-					if (jQuery("input[name='jform[need_mount]']:radio:checked").val() != 1) {
+					if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
 						jQuery("#btn_mount2").attr("disabled", "disabled");
 					} else {
 						jQuery("#btn_mount2").attr("disabled", false);
 					}
 				} else {
-					if (jQuery("input[name='jform[need_mount]']:radio:checked").val() != 0) {
+					if (jQuery("input[name='need_mount']:radio:checked").val() != 0) {
 						jQuery("#btn_mount2").attr("disabled", "disabled");
 					} else {
 						jQuery("#btn_mount2").attr("disabled", false);
