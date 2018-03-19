@@ -1528,7 +1528,7 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-												Наценка на монтажные работы за труднодоступные места. Считается по метрам.
+													Наценка на монтажные работы за труднодоступные места. Считается по метрам.
 												</span>
 											</div>
 										</td>
