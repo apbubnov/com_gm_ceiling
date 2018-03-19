@@ -352,7 +352,7 @@
 								<p>
 									ВНИМАНИЕ! <br>
 									Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой. <br>
-									Изменить прайс монтажа <a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary"><i class="fa fa-file-alt"></i></a>
+									Изменить прайс монтажа <a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary"><i class="fa fa-edit"></i></a>
 								</p>
 							</div>
 							<div class="col-sm-4"></div>
@@ -376,12 +376,18 @@
 										</button>
 									</td>
 									<td class="td_calcform2">
-										<a class="help">
+										<div class="btn btn-primary btn-hidden help">
+											<i class="fas fa-question"></i>
+											<span class="airhelp">
+												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
+											</span>
+										</div>
+										<!-- <a class="help">
 											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; />
 											<span class="airhelp">
 												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
 											</span>
-										</a>
+										</a> -->
 									</td>
 								</tr>
 							</table>
