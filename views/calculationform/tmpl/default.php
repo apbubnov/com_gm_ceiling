@@ -76,6 +76,12 @@
 	//-----------------------------------
 ?>
 
+<style>
+	#sketch_image {
+		max-width: 330px;
+	}
+</style>
+
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
 	<input name="url" id="url" value="" type="hidden">
 	<input name="user_id" id="user_id" value=<?php echo "\"".$user->id."\"";?> type="hidden">
@@ -346,7 +352,7 @@
 								<p>
 									ВНИМАНИЕ! <br>
 									Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой. <br>
-									<a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary">Изменить прайс монтажа</a>
+									Изменить прайс монтажа <a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary"><i class="fa fa-edit"></i></a>
 								</p>
 							</div>
 							<div class="col-sm-4"></div>
@@ -370,12 +376,18 @@
 										</button>
 									</td>
 									<td class="td_calcform2">
-										<a class="help">
+										<div class="btn btn-primary btn-hidden help">
+											<i class="fa fa-question"></i>
+											<span class="airhelp">
+												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
+											</span>
+										</div>
+										<!-- <a class="help">
 											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; />
 											<span class="airhelp">
 												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
 											</span>
-										</a>
+										</a> -->
 									</td>
 								</tr>
 							</table>
@@ -2109,6 +2121,7 @@
 	});
 
 	jQuery(document).ready(function() {
+		jQuery("body").addClass("yellow_home");
 
 		// кнопки открытия скрытых полей
 			precalculation = <?php if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
@@ -2614,8 +2627,6 @@
 				jQuery("#btn_mount").attr("disabled", "disabled");
 			}
 			jQuery("body").on("change", "#extra_mounting_title, .mounttar", function () {
-				console.log(jQuery("#extra_mounting_title").val());
-				console.log(jQuery(".mounttar").val());
 				if ((jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) || (jQuery(".mounttar").val() != null && jQuery(".mounttar").val() != undefined && jQuery(".mounttar").val() != "" && jQuery(".mounttar").val() != 0)) {
 					jQuery("#btn_mount").attr("disabled", "disabled");
 				} else {
@@ -2632,10 +2643,15 @@
 			});
 			if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
 				jQuery("#btn_height").click();
+				jQuery("#btn_height").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("input[name='jform[height]']:radio").change( function() {
+				if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
+					jQuery("#btn_height").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_height").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_mount2").click( function () {
 				jQuery("#mount2").toggle();
 				if (jQuery("#btn_mount2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2647,15 +2663,29 @@
 			if (who == 1) {
 				if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
 					jQuery("#btn_mount2").click();
+					jQuery("#btn_mount2").attr("disabled", "disabled");
 				}
 			} else {
 				if (jQuery("input[name='need_mount']:radio:checked").val() != 0) {
 					jQuery("#btn_mount2").click();
+					jQuery("#btn_mount2").attr("disabled", "disabled");
 				}
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("input[name='need_mount']:radio").change( function() {
+				if (who == 1) {
+					if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
+						jQuery("#btn_mount2").attr("disabled", "disabled");
+					} else {
+						jQuery("#btn_mount2").attr("disabled", false);
+					}
+				} else {
+					if (jQuery("input[name='need_mount']:radio:checked").val() != 0) {
+						jQuery("#btn_mount2").attr("disabled", "disabled");
+					} else {
+						jQuery("#btn_mount2").attr("disabled", false);
+					}
+				}
+			});
 			jQuery("#btn_comment").click( function () {
 				jQuery("#comment").toggle();
 				if (jQuery("#btn_comment").css("background-color") == "rgb(65, 64, 153)") {
@@ -2666,13 +2696,17 @@
 			});
 			if (jQuery("#comment").val() != null && jQuery("#comment").val() != undefined && jQuery("#comment").val() != "" && jQuery("#comment").val() != 0) {
 				jQuery("#btn_comment").click();
+				jQuery("#btn_comment").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#comment", function () {
+				if (jQuery("#comment").val() != null && jQuery("#comment").val() != undefined && jQuery("#comment").val() != "" && jQuery("#comment").val() != 0) {
+					jQuery("#btn_comment").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_comment").attr("disabled", false);
+				}
+			});
 		//------------------------------
 
-		jQuery("body").addClass("yellow_home");
 
 		if(jQuery("#jform_n4").val()==0 && jQuery("#jform_n5").val()==0 && jQuery("#jform_n9").val()==0)
 		{
