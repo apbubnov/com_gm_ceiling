@@ -2459,10 +2459,15 @@
 			});
 			if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
 				jQuery("#btn_notch2").click();
+				jQuery("#btn_notch2").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n31").change( function () {
+				if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
+					jQuery("#btn_notch2").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_notch2").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_draining").click( function () {
 				jQuery("#jform_n32").toggle();
 				if (jQuery("#btn_draining").css("background-color") == "rgb(65, 64, 153)") {
@@ -2473,10 +2478,15 @@
 			});
 			if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
 				jQuery("#btn_draining").click();
+				jQuery("#btn_draining").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n31").change( function () {
+				if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
+					jQuery("#btn_draining").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_draining").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_fixture2").click( function () {
 				jQuery("#jform_dop_krepezh").toggle();
 				if (jQuery("#btn_fixture2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2487,10 +2497,15 @@
 			});
 			if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
 				jQuery("#btn_fixture2").click();
+				jQuery("#btn_fixture2").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n31").change( function () {
+				if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
+					jQuery("#btn_fixture2").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_fixture2").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_gain").click( function () {
 				jQuery("#jform_n18").toggle();
 				if (jQuery("#btn_gain").css("background-color") == "rgb(65, 64, 153)") {
@@ -2501,10 +2516,15 @@
 			});
 			if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
 				jQuery("#btn_gain").click();
+				jQuery("#btn_gain").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n18").change( function () {
+				if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
+					jQuery("#btn_gain").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_gain").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_hoods").click( function () {
 				jQuery("#hoods").toggle();
 				if (jQuery("#btn_hoods").css("background-color") == "rgb(65, 64, 153)") {
@@ -2513,12 +2533,17 @@
 					jQuery("#btn_hoods").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) {
+			if ((jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) || (jQuery("#n22tar").val() != null && jQuery("#n22tar").val() != undefined && jQuery("#n22tar").val() != "" && jQuery("#n22tar").val() != 0)) {
 				jQuery("#btn_hoods").click();
+				jQuery("#btn_hoods").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#n22_count").change( function () {
+				if ((jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) || (jQuery("#n22tar").val() != null && jQuery("#n22tar").val() != undefined && jQuery("#n22tar").val() != "" && jQuery("#n22tar").val() != 0)) {
+					jQuery("#btn_hoods").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_hoods").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_diffuser").click( function () {
 				jQuery("#diffuser").toggle();
 				if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
@@ -3641,7 +3666,7 @@
 		jQuery( "#add_n22" ).click(function(){
 			var html = "<div class='form-group'>";
 			html+= "<div class='advanced_col1'>";
-			html+= "<input name='n22_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
+			html+= "<input id='n22tar' name='n22_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
 			html+= "</div>";
 			html+= "<div class='advanced_col2'>"; 
 			html+= "<select id='n22' class='form-control n22_control' name='n22_type[]'>";
