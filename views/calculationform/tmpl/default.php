@@ -2634,9 +2634,9 @@
 			}
 			jQuery("input[name='jform[height]']:radio").change( function() {
 				if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
-					jQuery("#btn_baguette").attr("disabled", "disabled");
+					jQuery("#btn_height").attr("disabled", "disabled");
 				} else {
-					jQuery("#btn_baguette").attr("disabled", false);
+					jQuery("#btn_height").attr("disabled", false);
 				}
 			});
 			jQuery("#btn_mount2").click( function () {
