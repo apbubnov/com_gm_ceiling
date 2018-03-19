@@ -710,10 +710,12 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" >
-												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-												<span class="airhelp">На 1м провода используется:  <br> Провод ПВС 2 х 0,75  + 2 * Дюбель полим. 6 * 51 + 2 * Саморез ГДК 3,5 * 51</span>
-											</a>
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
+												<span class="airhelp">
+													На 1м провода используется:  <br> Провод ПВС 2 х 0,75  + 2 * Дюбель полим. 6 * 51 + 2 * Саморез ГДК 3,5 * 51
+												</span>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -748,13 +750,14 @@
 										</button>
 									</td>
 									<td class="td_calcform2">
-										<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
 											<span class="airhelp">
-												<img src="/images/obvod.png" width="380" height="250" align="center"/>
-												<br>На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
+												<img src="/images/obvod.png" width="380" height="250" align="center"/><br>
+												На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
 												<img src="/images/obvod2.png" width="380" height="250" align="center"/>
 											</span>
-										</a>						
+										</div>
 									</td>
 								</tr>
 							</table>
@@ -823,8 +826,8 @@
 										</button>
 									</td>
 									<td class="td_calcform2">
-										<a class="help" >
-											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
 											<span class="airhelp">
 												Если его не будет или он будет крепиться к стене просто пропустите этот пункт.<br>
 												Шторный карниз можно крепить на потолок двумя способами:<br> 
@@ -834,7 +837,7 @@
 												</ul>
 												<br>Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз
 											</span>
-										</a>							
+										</div>							
 									</td>
 								</tr>
 							</table>
@@ -943,10 +946,13 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" >
-												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-												<span class="airhelp">На 1м  используется:  <br> Брус 40*50  + 3 * Подвес прямой П 60 (0,8) +  6 * Дюбель полим. 6 * 51 + 6 * Саморез ГДК 3,5 * 51 + 6 * Саморез ГДК 3,5 * 41</span>
-											</a>
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
+												<span class="airhelp">
+													На 1м  используется:<br>
+													Брус 40*50  + 3 * Подвес прямой П 60 (0,8) +  6 * Дюбель полим. 6 * 51 + 6 * Саморез ГДК 3,5 * 51 + 6 * Саморез ГДК 3,5 * 41
+												</span>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -970,11 +976,13 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
 												<span class="airhelp">
-													На 1м разделителя используется:  <br> Брус 40*50  + 3 * Саморез ГКД 4,2 * 102 +  3 * Дюбель полим. 6 * 51 + 20 * Саморез ГДК 3,5 * 51 +  Вставка в разд 303 гриб + Багет разделительный аллюм (2.5 м.)
+													На 1м разделителя используется:<br>
+													Брус 40*50  + 3 * Саморез ГКД 4,2 * 102 +  3 * Дюбель полим. 6 * 51 + 20 * Саморез ГДК 3,5 * 51 +  Вставка в разд 303 гриб + Багет разделительный аллюм (2.5 м.)
 												</span>
-											</a>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -999,10 +1007,12 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" >
-												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-												<span class="airhelp">Считается дополнительная работа монтажникам по креплению багета в плитку</span>
-											</a>						
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
+												<span class="airhelp">
+													Считается дополнительная работа монтажникам по креплению багета в плитку
+												</span>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -1026,12 +1036,12 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" >
-												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
 												<span class="airhelp">
 													Считается дополнительная работа монтажникам по креплению багета в керамогранит
 												</span>
-											</a>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -1053,13 +1063,15 @@
 											<button type="button" id="btn_gain" class="btn add_fields">
 												<label id="jform_n18-lbl" for="jform_n18" class="no_margin">Усиление стен</label>
 											</button>
-										</td class="td_calcform2">
-										<td>
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+										</td>
+										<td class="td_calcform2">
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
 												<span class="airhelp">
-													На 1м усиления стен используется:  <br> Брус 40*50 + 3 * Саморез 3,5 * 51  + 3 * Дюбель полим. 6 * 51 + 3 * Кронштейн 15 * 12,5 см.
+													На 1м усиления стен используется:<br>
+													Брус 40*50 + 3 * Саморез 3,5 * 51  + 3 * Дюбель полим. 6 * 51 + 3 * Кронштейн 15 * 12,5 см.
 												</span>
-											</a>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -1083,12 +1095,13 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
 												<span class="airhelp">
 													На 1м дополнительного крепежа используется:<br>
-													10 * Саморез 3,5 * 51  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  
+													10 * Саморез 3,5 * 51  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)
 												</span>
-											</a>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -1113,12 +1126,12 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" >
-												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
 												<span class="airhelp">
 													Если на основном потолке установлена пожарная сигнализация или Вы планируете сделать ее установку на натяжной потолок,укажите количество пожарных сигнализаций в данной комнате для комплектации стоек под них
 												</span>
-											</a>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -1215,10 +1228,12 @@
 										</button>
 									</td>
 									<td class="td_calcform2">
-										<a class="help">
-											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-											<span class="airhelp">Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство <br></span>
-										</a>
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство
+											</span>
+										</div>
 									</td>
 								</tr>
 							</table>
@@ -1287,10 +1302,13 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" >
-												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-												<span class="airhelp">На 1м парящего потолка используется:  <br> Багет для парящих пот аллюм + Вставка для парящих потолков </span>
-										</a>
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
+												<span class="airhelp">
+													На 1м парящего потолка используется:<br>
+													Багет для парящих пот аллюм + Вставка для парящих потолков
+												</span>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -1381,12 +1399,13 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
 												<span class="airhelp">
 													На 1м внутреннего выреза используется:<br>
 													Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм)  + 10 * Саморез 3,5 * 51 +  10 * Дюбель полим. 6 * 51 + Вставка
 												</span>
-											</a>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -1410,12 +1429,13 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
 												<span class="airhelp">
 													На 1м внутреннего выреза используется:<br>
 													Брус 40*50  + Багет (на выбор: ПВХ (2,5 м) , стеновой аллюм, потолочный аллюм) + 3 * Кронштейн 15 * 12,5 см. + + 22 * Саморез 3,5 * 41 +  16 * Дюбель полим. 6 * 51 + Гарпун 
 												</span>
-											</a>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -1440,9 +1460,12 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-
-										В работу входит слив воды. Укажите колиество комнат.</span></a>
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
+												<span class="airhelp">
+													В работу входит слив воды. Укажите колиество комнат
+												</span>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -1502,11 +1525,12 @@
 											</button>
 										</td>
 										<td class="td_calcform2">
-											<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
 												<span class="airhelp">
-													Наценка на монтажные работы за труднодоступные места. Считается по метрам.  
+												Наценка на монтажные работы за труднодоступные места. Считается по метрам.
 												</span>
-											</a>
+											</div>
 										</td>
 									</tr>
 								</table>
