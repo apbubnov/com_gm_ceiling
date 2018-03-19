@@ -376,7 +376,7 @@
 										</button>
 									</td>
 									<td class="td_calcform2">
-										<div class="btn btn-primary btn-hidden help">
+										<div class="btn btn-primary help" style="padding: 5px 10px;">
 											<i class="fa fa-question"></i>
 											<span class="airhelp">
 												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
