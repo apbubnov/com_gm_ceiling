@@ -2537,7 +2537,7 @@
 				jQuery("#btn_hoods").click();
 				jQuery("#btn_hoods").attr("disabled", "disabled");
 			}
-			jQuery("#n22_count").change( function () {
+			jQuery("body").on("change", "#n22_count, #n22tar", function () {
 				if ((jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) || (jQuery("#n22tar").val() != null && jQuery("#n22tar").val() != undefined && jQuery("#n22tar").val() != "" && jQuery("#n22tar").val() != 0)) {
 					jQuery("#btn_hoods").attr("disabled", "disabled");
 				} else {
