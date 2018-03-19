@@ -2629,9 +2629,8 @@
 				}
 			});
 			if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
-				console.log("трям");
 				jQuery("#btn_height").click();
-				jQuery("#row_height").attr("disabled", "disabled");
+				jQuery("#btn_height").attr("disabled", "disabled");
 			}
 			jQuery("input[name='jform[height]']:radio").change( function() {
 				if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
@@ -2651,15 +2650,30 @@
 			if (who == 1) {
 				if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
 					jQuery("#btn_mount2").click();
+					jQuery("#btn_mount2").attr("disabled", "disabled");
 				}
 			} else {
 				if (jQuery("input[name='need_mount']:radio:checked").val() != 0) {
 					jQuery("#btn_mount2").click();
+					jQuery("#btn_mount2").attr("disabled", "disabled");
 				}
 			}
-			/* jQuery("#jform_n12").change( function () {
+			jQuery("input[name='jform[need_mount]']:radio").change( function() {
+				if (who == 1) {
+					if (jQuery("input[name='jform[need_mount]']:radio:checked").val() != 1) {
+						jQuery("#btn_mount2").attr("disabled", "disabled");
+					} else {
+						jQuery("#btn_mount2").attr("disabled", false);
+					}
+				} else {
+					if (jQuery("input[name='jform[need_mount]']:radio:checked").val() != 0) {
+						jQuery("#btn_mount2").attr("disabled", "disabled");
+					} else {
+						jQuery("#btn_mount2").attr("disabled", false);
+					}
+				}
 				
-			}); */
+			});
 			jQuery("#btn_comment").click( function () {
 				jQuery("#comment").toggle();
 				if (jQuery("#btn_comment").css("background-color") == "rgb(65, 64, 153)") {
@@ -2670,10 +2684,15 @@
 			});
 			if (jQuery("#comment").val() != null && jQuery("#comment").val() != undefined && jQuery("#comment").val() != "" && jQuery("#comment").val() != 0) {
 				jQuery("#btn_comment").click();
+				jQuery("#btn_comment").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#comment", function () {
+				if (jQuery("#comment").val() != null && jQuery("#comment").val() != undefined && jQuery("#comment").val() != "" && jQuery("#comment").val() != 0) {
+					jQuery("#btn_comment").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_comment").attr("disabled", false);
+				}
+			});
 		//------------------------------
 
 		jQuery("body").addClass("yellow_home");
