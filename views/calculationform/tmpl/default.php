@@ -2365,15 +2365,15 @@
 				jQuery("#btn_level").click();
 				jQuery("#btn_level").attr("disabled", "disabled");
 			}
-			jQuery("#n29_count").change( function () {
-				if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29").val() != null && jQuery("#n29").val() != undefined && jQuery("#n29").val() != "" && jQuery("#n29").val() != 0)) {
+			jQuery("body").on("change", "#n29_count, #n29", function () {
+				if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29tar").val() != null && jQuery("#n29tar").val() != undefined && jQuery("#n29tar").val() != "" && jQuery("#n29tar").val() != 0)) {
 					jQuery("#btn_level").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_level").attr("disabled", false);
 				}
 			});
 			// работает
-			jQuery("#btn_firealarm").click( function () {
+			jQuery("#btn_firealarm").click( function () {null
 				jQuery("#jform_n21").toggle();
 				if (jQuery("#btn_firealarm").css("background-color") == "rgb(65, 64, 153)") {
 					jQuery("#btn_firealarm").css("background-color", "#010084");
@@ -2402,10 +2402,15 @@
 			});
 			if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
 				jQuery("#btn_delimiter").click();
+				jQuery("#btn_delimiter").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n20").change( function () {
+				if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
+					jQuery("#btn_delimiter").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_delimiter").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_access").click( function () {
 				jQuery("#jform_n24").toggle();
 				if (jQuery("#btn_access").css("background-color") == "rgb(65, 64, 153)") {
@@ -2416,10 +2421,15 @@
 			});
 			if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
 				jQuery("#btn_access").click();
+				jQuery("#btn_access").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n24").change( function () {
+				if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
+					jQuery("#btn_access").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_access").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_notch1").click( function () {
 				jQuery("#jform_n11").toggle();
 				if (jQuery("#btn_notch1").css("background-color") == "rgb(65, 64, 153)") {
@@ -2430,10 +2440,15 @@
 			});
 			if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
 				jQuery("#btn_notch1").click();
+				jQuery("#btn_notch1").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n11").change( function () {
+				if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
+					jQuery("#btn_notch1").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_notch1").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_notch2").click( function () {
 				jQuery("#jform_n31").toggle();
 				if (jQuery("#btn_notch2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2444,10 +2459,15 @@
 			});
 			if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
 				jQuery("#btn_notch2").click();
+				jQuery("#btn_notch2").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n31").change( function () {
+				if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
+					jQuery("#btn_notch2").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_notch2").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_draining").click( function () {
 				jQuery("#jform_n32").toggle();
 				if (jQuery("#btn_draining").css("background-color") == "rgb(65, 64, 153)") {
@@ -2458,10 +2478,15 @@
 			});
 			if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
 				jQuery("#btn_draining").click();
+				jQuery("#btn_draining").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n31").change( function () {
+				if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
+					jQuery("#btn_draining").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_draining").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_fixture2").click( function () {
 				jQuery("#jform_dop_krepezh").toggle();
 				if (jQuery("#btn_fixture2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2472,10 +2497,15 @@
 			});
 			if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
 				jQuery("#btn_fixture2").click();
+				jQuery("#btn_fixture2").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n31").change( function () {
+				if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
+					jQuery("#btn_fixture2").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_fixture2").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_gain").click( function () {
 				jQuery("#jform_n18").toggle();
 				if (jQuery("#btn_gain").css("background-color") == "rgb(65, 64, 153)") {
@@ -2486,10 +2516,15 @@
 			});
 			if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
 				jQuery("#btn_gain").click();
+				jQuery("#btn_gain").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n18").change( function () {
+				if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
+					jQuery("#btn_gain").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_gain").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_hoods").click( function () {
 				jQuery("#hoods").toggle();
 				if (jQuery("#btn_hoods").css("background-color") == "rgb(65, 64, 153)") {
@@ -2498,12 +2533,17 @@
 					jQuery("#btn_hoods").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) {
+			if ((jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) || (jQuery("#n22tar").val() != null && jQuery("#n22tar").val() != undefined && jQuery("#n22tar").val() != "" && jQuery("#n22tar").val() != 0)) {
 				jQuery("#btn_hoods").click();
+				jQuery("#btn_hoods").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#n22_count, #n22tar", function () {
+				if ((jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) || (jQuery("#n22tar").val() != null && jQuery("#n22tar").val() != undefined && jQuery("#n22tar").val() != "" && jQuery("#n22tar").val() != 0)) {
+					jQuery("#btn_hoods").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_hoods").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_diffuser").click( function () {
 				jQuery("#diffuser").toggle();
 				if (jQuery("#btn_diffuser").css("background-color") == "rgb(65, 64, 153)") {
@@ -2512,12 +2552,17 @@
 					jQuery("#btn_diffuser").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) {
+			if ((jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) || (jQuery("#n23tar").val() != null && jQuery("#n23tar").val() != undefined && jQuery("#n23tar").val() != "" && jQuery("#n23tar").val() != 0))  {
 				jQuery("#btn_diffuser").click();
+				jQuery("#btn_diffuser").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#n23_count, #n23tar", function () {
+				if ((jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) || (jQuery("#n23tar").val() != null && jQuery("#n23tar").val() != undefined && jQuery("#n23tar").val() != "" && jQuery("#n23tar").val() != 0)) {
+					jQuery("#btn_diffuser").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_diffuser").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_accessories").click( function () {
 				jQuery(".accessories").toggle();
 				if (jQuery("#btn_accessories").css("background-color") == "rgb(65, 64, 153)") {
@@ -2526,12 +2571,17 @@
 					jQuery("#btn_accessories").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) {
+			if ((jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) || (jQuery(".extra_components_tar").val() != null && jQuery(".extra_components_tar").val() != undefined && jQuery(".extra_components_tar").val() != "" && jQuery(".extra_components_tar").val() != 0)) {
 				jQuery("#btn_accessories").click();
+				jQuery("#btn_accessories").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#extra_components_title, .extra_components_tar", function () {
+				if ((jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) || (jQuery(".extra_components_tar").val() != null && jQuery(".extra_components_tar").val() != undefined && jQuery(".extra_components_tar").val() != "" && jQuery(".extra_components_tar").val() != 0)) {
+					jQuery("#btn_accessories").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_accessories").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_accessories2").click( function () {
 				jQuery(".accessories2").toggle();
 				if (jQuery("#btn_accessories2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2542,10 +2592,15 @@
 			});
 			if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
 				jQuery("#btn_accessories2").click();
+				jQuery("#btn_accessories2").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#Type", function () {
+				if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
+					jQuery("#btn_accessories2").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_accessories2").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_mount").click( function () {
 				jQuery(".mount").toggle();
 				if (jQuery("#btn_mount").css("background-color") == "rgb(65, 64, 153)") {
@@ -2554,12 +2609,19 @@
 					jQuery("#btn_mount").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) {
+			if ((jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) || (jQuery(".mounttar").val() != null && jQuery(".mounttar").val() != undefined && jQuery(".mounttar").val() != "" && jQuery(".mounttar").val() != 0)) {
 				jQuery("#btn_mount").click();
+				jQuery("#btn_mount").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#extra_mounting_title, .mounttar", function () {
+				console.log(jQuery("#extra_mounting_title").val());
+				console.log(jQuery(".mounttar").val());
+				if ((jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) || (jQuery(".mounttar").val() != null && jQuery(".mounttar").val() != undefined && jQuery(".mounttar").val() != "" && jQuery(".mounttar").val() != 0)) {
+					jQuery("#btn_mount").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_mount").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_height").click( function () {
 				jQuery("#row_height").toggle();
 				if (jQuery("#btn_height").css("background-color") == "rgb(65, 64, 153)") {
@@ -2790,14 +2852,14 @@
 		jQuery( "#extra_components_button" ).click(function(){
 			var extra_components_title_container = jQuery( "#extra_components_title_container" ),
 			extra_components_value_container = jQuery( "#extra_components_value_container" );
-			jQuery( "<div class='form-group'><input name='extra_components_title[]' value='' class='form-control' type='text'></div>" ).appendTo( extra_components_title_container );
+			jQuery( "<div class='form-group'><input name='extra_components_title[]' value='' class='form-control extra_components_tar' type='text'></div>" ).appendTo( extra_components_title_container );
 			jQuery( "<div class='form-group'><input name='extra_components_value[]' value='' class='form-control' type='tel'></div>" ).appendTo( extra_components_value_container );
 		});
 		
 		jQuery( "#extra_mounting_button" ).click(function(){
 			var extra_mounting_title_container = jQuery( "#extra_mounting_title_container"),
 			extra_mounting_value_container = jQuery( "#extra_mounting_value_container");
-			jQuery( "<div class='form-group'><input name='extra_mounting_title[]' value='' class='form-control' type='text'></div>" ).appendTo( extra_mounting_title_container );
+			jQuery( "<div class='form-group'><input name='extra_mounting_title[]' value='' class='form-control mounttar' type='text'></div>" ).appendTo( extra_mounting_title_container );
 			jQuery( "<div class='form-group'><input name='extra_mounting_value[]' value='' class='form-control' type='tel'></div>" ).appendTo( extra_mounting_value_container );
 		});
 
@@ -3600,7 +3662,7 @@
                 block = element.siblings("#level_block_html");
             var html = "<div class='form-group'>";
             html+= "<div class='advanced_col1'>";
-            html+= "<input id='n29' name='n29_count[]' class='form-control' value=''  placeholder='м.' type='tel'>";
+            html+= "<input id='n29tar' name='n29_count[]' class='form-control' value=''  placeholder='м.' type='tel'>";
             html+= "</div>";
             html+= "<div class='advanced_col5'>";
             html+= "<select class='form-control' name='n29_type[]' placeholder=''>";
@@ -3626,7 +3688,7 @@
 		jQuery( "#add_n22" ).click(function(){
 			var html = "<div class='form-group'>";
 			html+= "<div class='advanced_col1'>";
-			html+= "<input name='n22_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
+			html+= "<input id='n22tar' name='n22_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
 			html+= "</div>";
 			html+= "<div class='advanced_col2'>"; 
 			html+= "<select id='n22' class='form-control n22_control' name='n22_type[]'>";
@@ -3660,7 +3722,7 @@
 		jQuery( "#add_n23" ).click(function(){
 			var html = "<div class='form-group'>";
 			html+= "<div class='advanced_col1'>";
-			html+= "<input name='n23_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
+			html+= "<input id='n23tar' name='n23_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
 			html+= "</div>";
 			html+= "<div class='advanced_col5'>";
 			html+= "<select class='form-control' name='n23_size[]' placeholder='Тип'>";
