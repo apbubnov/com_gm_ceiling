@@ -2367,8 +2367,8 @@
 			}
 			jQuery("body").on("change", "#n29_count, #n29", function () {
 				console.log(jQuery("#n29_count").val());
-				console.log(jQuery("#n29").val());
-				if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29").val() != null && jQuery("#n29").val() != undefined && jQuery("#n29").val() != "" && jQuery("#n29").val() != 0)) {
+				console.log(jQuery("#n29tar").val());
+				if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29tar").val() != null && jQuery("#n29tar").val() != undefined && jQuery("#n29tar").val() != "" && jQuery("#n29tar").val() != 0)) {
 					jQuery("#btn_level").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_level").attr("disabled", false);
@@ -3602,7 +3602,7 @@
                 block = element.siblings("#level_block_html");
             var html = "<div class='form-group'>";
             html+= "<div class='advanced_col1'>";
-            html+= "<input id='n29' name='n29_count[]' class='form-control' value=''  placeholder='м.' type='tel'>";
+            html+= "<input id='n29tar' name='n29_count[]' class='form-control' value=''  placeholder='м.' type='tel'>";
             html+= "</div>";
             html+= "<div class='advanced_col5'>";
             html+= "<select class='form-control' name='n29_type[]' placeholder=''>";
