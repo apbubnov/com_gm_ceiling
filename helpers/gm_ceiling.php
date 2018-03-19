@@ -3149,7 +3149,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '<table>';
         $html .= '<tbody>';
         $html .= '<tr>';
-        $html .= '<b><th>Полотна: </th><td>' . str_replace(';', ";<br>", $cut_data) . '</td></b>';
+        $html .= '<th>Полотна: </th><td>' . str_replace(';', ";<br>", $cut_data) . '</td>';
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<th>Стороны: </th><td>' . $us_walls. '</td>';
