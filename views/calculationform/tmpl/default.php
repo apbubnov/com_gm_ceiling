@@ -2594,7 +2594,7 @@
 				jQuery("#btn_accessories2").click();
 				jQuery("#btn_accessories2").attr("disabled", "disabled");
 			}
-			jQuery("body").on("change", "#extra_components_title, .extra_components_tar", function () {
+			jQuery("body").on("change", "#Type", function () {
 				if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
 					jQuery("#btn_accessories2").attr("disabled", "disabled");
 				} else {
