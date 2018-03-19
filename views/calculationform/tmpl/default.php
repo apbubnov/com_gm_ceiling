@@ -382,12 +382,6 @@
 												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
 											</span>
 										</div>
-										<!-- <a class="help">
-											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; />
-											<span class="airhelp">
-												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
-											</span>
-										</a> -->
 									</td>
 								</tr>
 							</table>
@@ -434,13 +428,13 @@
 										</button>
 									</td>
 									<td class="td_calcform2" style="text-align: center;">
-										<a class="help" >
-											<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
 											<span class="airhelp">
-												<img src="/images/vstavka.png" width="380" height="250"/>
-												<br>Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой 
+												<img src="/images/vstavka.png" width="380" height="250"/><br>
+												Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой 
 											</span>
-										</a>
+										</div>
 									</td>
 								</tr>
 							</table>
@@ -509,9 +503,12 @@
 										<h3>Освещение</h3>
 									</td>
 									<td>
-										<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">
-										Если на потолке будут люстры или светильники укажите их количество и характеристики. Если их не будет просто пропустите этот пункт
-										</span></a>
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												Если на потолке будут люстры или светильники укажите их количество и характеристики. Если их не будет просто пропустите этот пункт
+											</span>
+										</div>
 									</td>
 								</tr>
 							</table>
@@ -532,7 +529,12 @@
 										</button>
 									</td>
 									<td class="td_calcform2">
-										<a class="help"><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px"; /><span class="airhelp">В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия</span></a>
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
+											</span>
+										</div>
 									</td>
 								</tr>
 							</table>
@@ -563,7 +565,12 @@
 										</button>
 									</td>
 									<td class="td_calcform2">
-										<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">На упаковке светильника указан диаметр технологического отверстия</span></a>
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												На упаковке светильника указан диаметр технологического отверстия
+											</span>
+										</div>
 									</td>
 								</tr>
 							</table>
