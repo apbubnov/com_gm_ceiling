@@ -2629,6 +2629,7 @@
 				}
 			});
 			if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
+				console.log("трям");
 				jQuery("#btn_height").click();
 				jQuery("#row_height").attr("disabled", "disabled");
 			}
