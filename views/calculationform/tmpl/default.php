@@ -2609,12 +2609,17 @@
 					jQuery("#btn_mount").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) {
+			if ((jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) || (jQuery(".mounttar").val() != null && jQuery(".mounttar").val() != undefined && jQuery(".mounttar").val() != "" && jQuery(".mounttar").val() != 0)) {
 				jQuery("#btn_mount").click();
+				jQuery("#btn_mount").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#extra_components_title, .mounttar", function () {
+				if ((jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) || (jQuery(".mounttar").val() != null && jQuery(".mounttar").val() != undefined && jQuery(".mounttar").val() != "" && jQuery(".mounttar").val() != 0)) {
+					jQuery("#btn_mount").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_mount").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_height").click( function () {
 				jQuery("#row_height").toggle();
 				if (jQuery("#btn_height").css("background-color") == "rgb(65, 64, 153)") {
@@ -2852,7 +2857,7 @@
 		jQuery( "#extra_mounting_button" ).click(function(){
 			var extra_mounting_title_container = jQuery( "#extra_mounting_title_container"),
 			extra_mounting_value_container = jQuery( "#extra_mounting_value_container");
-			jQuery( "<div class='form-group'><input name='extra_mounting_title[]' value='' class='form-control' type='text'></div>" ).appendTo( extra_mounting_title_container );
+			jQuery( "<div class='form-group'><input name='extra_mounting_title[]' value='' class='form-control mounttar' type='text'></div>" ).appendTo( extra_mounting_title_container );
 			jQuery( "<div class='form-group'><input name='extra_mounting_value[]' value='' class='form-control' type='tel'></div>" ).appendTo( extra_mounting_value_container );
 		});
 
