@@ -2202,6 +2202,11 @@
 	jQuery(document).ready(function() {
 		jQuery("body").addClass("yellow_home");
 
+		jQuery(".airhelp").click( function () {
+			jQuery(".airhelp").toggle();
+		});
+		
+
 		// кнопки открытия скрытых полей
 			precalculation = <?php if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
 			if (precalculation == 1) {
