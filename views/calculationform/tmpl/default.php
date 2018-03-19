@@ -2361,13 +2361,11 @@
 					jQuery("#btn_level").css("background-color", "#414099");
 				}
 			});
-			if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29").val() != null && jQuery("#n29").val() != undefined && jQuery("#n29").val() != "" && jQuery("#n29").val() != 0)) {
+			if ((jQuery("#n29_count").val() !=  && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29").val() != null && jQuery("#n29").val() != undefined && jQuery("#n29").val() != "" && jQuery("#n29").val() != 0)) {
 				jQuery("#btn_level").click();
 				jQuery("#btn_level").attr("disabled", "disabled");
 			}
 			jQuery("body").on("change", "#n29_count, #n29", function () {
-				console.log(jQuery("#n29_count").val());
-				console.log(jQuery("#n29tar").val());
 				if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29tar").val() != null && jQuery("#n29tar").val() != undefined && jQuery("#n29tar").val() != "" && jQuery("#n29tar").val() != 0)) {
 					jQuery("#btn_level").attr("disabled", "disabled");
 				} else {
@@ -2375,7 +2373,7 @@
 				}
 			});
 			// работает
-			jQuery("#btn_firealarm").click( function () {
+			jQuery("#btn_firealarm").click( function () {null
 				jQuery("#jform_n21").toggle();
 				if (jQuery("#btn_firealarm").css("background-color") == "rgb(65, 64, 153)") {
 					jQuery("#btn_firealarm").css("background-color", "#010084");
@@ -2404,10 +2402,15 @@
 			});
 			if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
 				jQuery("#btn_delimiter").click();
+				jQuery("#btn_delimiter").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n20").change( function () {
+				if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
+					jQuery("#btn_delimiter").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_delimiter").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_access").click( function () {
 				jQuery("#jform_n24").toggle();
 				if (jQuery("#btn_access").css("background-color") == "rgb(65, 64, 153)") {
@@ -2418,10 +2421,15 @@
 			});
 			if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
 				jQuery("#btn_access").click();
+				jQuery("#btn_access").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n24").change( function () {
+				if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
+					jQuery("#btn_access").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_access").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_notch1").click( function () {
 				jQuery("#jform_n11").toggle();
 				if (jQuery("#btn_notch1").css("background-color") == "rgb(65, 64, 153)") {
@@ -2432,10 +2440,15 @@
 			});
 			if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
 				jQuery("#btn_notch1").click();
+				jQuery("#btn_notch1").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("#jform_n11").change( function () {
+				if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
+					jQuery("#btn_notch1").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_notch1").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_notch2").click( function () {
 				jQuery("#jform_n31").toggle();
 				if (jQuery("#btn_notch2").css("background-color") == "rgb(65, 64, 153)") {
