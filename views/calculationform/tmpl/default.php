@@ -2201,8 +2201,7 @@
 
 	jQuery(document).ready(function() {
 		jQuery("body").addClass("yellow_home");
-
-		jQuery("body")on("click", ".airhelp, .help", function () {
+		jQuery("body").on("click", ".airhelp, .help", function () {
 			jQuery(".airhelp").toggle();
 		});
 
