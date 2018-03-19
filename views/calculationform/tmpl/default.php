@@ -1153,7 +1153,14 @@
 											Вентиляция
 										</button>
 									</td>
-									<td class="td_calcform2"></td>
+									<td class="td_calcform2">
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												
+											</span>
+										</div>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -1331,6 +1338,12 @@
 										</button>
 									</td>
 									<td class="td_calcform2">
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												
+											</span>
+										</div>
 									</td>
 								</tr>
 							</table>
@@ -1487,7 +1500,14 @@
 											Высота помещения
 										</button>
 									</td>
-									<td class="td_calcform2"></td>
+									<td class="td_calcform2">
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												
+											</span>
+										</div>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -1553,7 +1573,14 @@
 											Другие комплектующие
 										</button>
 									</td>
-									<td class="td_calcform2"></td>
+									<td class="td_calcform2">
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												
+											</span>
+										</div>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -1609,7 +1636,14 @@
 											Другие комплектующие со склада
 										</button>
 									</td>
-									<td class="td_calcform2"></td>
+									<td class="td_calcform2">
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												
+											</span>
+										</div>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -1667,7 +1701,14 @@
 											Другие работы по монтажу
 										</button>
 									</td>
-									<td class="td_calcform2"></td>
+									<td class="td_calcform2">
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												
+											</span>
+										</div>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -1722,7 +1763,14 @@
 											Отменить монтаж
 										</button>
 									</td>
-									<td class="td_calcform2"></td>
+									<td class="td_calcform2">
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												
+											</span>
+										</div>
+									</td>
 								</tr>
 							</table>
 						</div>
