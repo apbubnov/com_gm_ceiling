@@ -2365,7 +2365,8 @@
 				jQuery("#btn_level").click();
 				jQuery("#btn_level").attr("disabled", "disabled");
 			}
-			jQuery("#n29_count, #n29").change( function () {
+			jQuery("body").on("change", "#n29_count, #n29", function () {
+			//jQuery("#n29_count, #n29").change( function () {
 				if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29").val() != null && jQuery("#n29").val() != undefined && jQuery("#n29").val() != "" && jQuery("#n29").val() != 0)) {
 					jQuery("#btn_level").attr("disabled", "disabled");
 				} else {
