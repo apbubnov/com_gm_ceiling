@@ -2552,12 +2552,17 @@
 					jQuery("#btn_diffuser").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) {
+			if ((jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) || (jQuery("#n23tar").val() != null && jQuery("#n23tar").val() != undefined && jQuery("#n23tar").val() != "" && jQuery("#n23tar").val() != 0))  {
 				jQuery("#btn_diffuser").click();
+				jQuery("#btn_diffuser").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#n23_count, #n23tar", function () {
+				if ((jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) || (jQuery("#n23tar").val() != null && jQuery("#n23tar").val() != undefined && jQuery("#n23tar").val() != "" && jQuery("#n23tar").val() != 0)) {
+					jQuery("#btn_diffuser").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_diffuser").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_accessories").click( function () {
 				jQuery(".accessories").toggle();
 				if (jQuery("#btn_accessories").css("background-color") == "rgb(65, 64, 153)") {
@@ -2566,12 +2571,17 @@
 					jQuery("#btn_accessories").css("background-color", "#414099");
 				}
 			});
-			if (jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) {
+			if ((jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) || (jQuery(".extra_components_tar").val() != null && jQuery(".extra_components_tar").val() != undefined && jQuery(".extra_components_tar").val() != "" && jQuery(".extra_components_tar").val() != 0)) {
 				jQuery("#btn_accessories").click();
+				jQuery("#btn_accessories").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#extra_components_title, .extra_components_tar", function () {
+				if ((jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) || (jQuery(".extra_components_tar").val() != null && jQuery(".extra_components_tar").val() != undefined && jQuery(".extra_components_tar").val() != "" && jQuery(".extra_components_tar").val() != 0)) {
+					jQuery("#btn_accessories").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_accessories").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_accessories2").click( function () {
 				jQuery(".accessories2").toggle();
 				if (jQuery("#btn_accessories2").css("background-color") == "rgb(65, 64, 153)") {
@@ -2582,10 +2592,15 @@
 			});
 			if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
 				jQuery("#btn_accessories2").click();
+				jQuery("#btn_accessories2").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("body").on("change", "#extra_components_title, .extra_components_tar", function () {
+				if ((jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) || (jQuery(".extra_components_tar").val() != null && jQuery(".extra_components_tar").val() != undefined && jQuery(".extra_components_tar").val() != "" && jQuery(".extra_components_tar").val() != 0)) {
+					jQuery("#btn_accessories2").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_accessories2").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_mount").click( function () {
 				jQuery(".mount").toggle();
 				if (jQuery("#btn_mount").css("background-color") == "rgb(65, 64, 153)") {
@@ -2830,7 +2845,7 @@
 		jQuery( "#extra_components_button" ).click(function(){
 			var extra_components_title_container = jQuery( "#extra_components_title_container" ),
 			extra_components_value_container = jQuery( "#extra_components_value_container" );
-			jQuery( "<div class='form-group'><input name='extra_components_title[]' value='' class='form-control' type='text'></div>" ).appendTo( extra_components_title_container );
+			jQuery( "<div class='form-group extra_components_tar'><input name='extra_components_title[]' value='' class='form-control' type='text'></div>" ).appendTo( extra_components_title_container );
 			jQuery( "<div class='form-group'><input name='extra_components_value[]' value='' class='form-control' type='tel'></div>" ).appendTo( extra_components_value_container );
 		});
 		
@@ -3700,7 +3715,7 @@
 		jQuery( "#add_n23" ).click(function(){
 			var html = "<div class='form-group'>";
 			html+= "<div class='advanced_col1'>";
-			html+= "<input name='n23_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
+			html+= "<input id='n23tar' name='n23_count[]' class='form-control' value='' placeholder='шт.' type='tel'>";
 			html+= "</div>";
 			html+= "<div class='advanced_col5'>";
 			html+= "<select class='form-control' name='n23_size[]' placeholder='Тип'>";
