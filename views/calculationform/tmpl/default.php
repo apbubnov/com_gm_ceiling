@@ -2595,7 +2595,7 @@
 				jQuery("#btn_accessories2").attr("disabled", "disabled");
 			}
 			jQuery("body").on("change", "#extra_components_title, .extra_components_tar", function () {
-				if ((jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) || (jQuery(".extra_components_tar").val() != null && jQuery(".extra_components_tar").val() != undefined && jQuery(".extra_components_tar").val() != "" && jQuery(".extra_components_tar").val() != 0)) {
+				if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
 					jQuery("#btn_accessories2").attr("disabled", "disabled");
 				} else {
 					jQuery("#btn_accessories2").attr("disabled", false);
