@@ -2845,7 +2845,7 @@
 		jQuery( "#extra_components_button" ).click(function(){
 			var extra_components_title_container = jQuery( "#extra_components_title_container" ),
 			extra_components_value_container = jQuery( "#extra_components_value_container" );
-			jQuery( "<div class='form-group extra_components_tar'><input name='extra_components_title[]' value='' class='form-control' type='text'></div>" ).appendTo( extra_components_title_container );
+			jQuery( "<div class='form-group'><input name='extra_components_title[]' value='' class='form-control extra_components_tar' type='text'></div>" ).appendTo( extra_components_title_container );
 			jQuery( "<div class='form-group'><input name='extra_components_value[]' value='' class='form-control' type='tel'></div>" ).appendTo( extra_components_value_container );
 		});
 		
