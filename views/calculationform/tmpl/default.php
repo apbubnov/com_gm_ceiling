@@ -2659,6 +2659,7 @@
 				}
 			}
 			jQuery("input[name='jform[need_mount]']:radio").change( function() {
+				console.log("трям");
 				if (who == 1) {
 					if (jQuery("input[name='jform[need_mount]']:radio:checked").val() != 1) {
 						jQuery("#btn_mount2").attr("disabled", "disabled");
