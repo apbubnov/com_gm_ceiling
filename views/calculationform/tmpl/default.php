@@ -2614,8 +2614,6 @@
 				jQuery("#btn_mount").attr("disabled", "disabled");
 			}
 			jQuery("body").on("change", "#extra_mounting_title, .mounttar", function () {
-				console.log(jQuery("#extra_mounting_title").val());
-				console.log(jQuery(".mounttar").val());
 				if ((jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) || (jQuery(".mounttar").val() != null && jQuery(".mounttar").val() != undefined && jQuery(".mounttar").val() != "" && jQuery(".mounttar").val() != 0)) {
 					jQuery("#btn_mount").attr("disabled", "disabled");
 				} else {
@@ -2632,10 +2630,15 @@
 			});
 			if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
 				jQuery("#btn_height").click();
+				jQuery("#row_height").attr("disabled", "disabled");
 			}
-			/* jQuery("#jform_n12").change( function () {
-				
-			}); */
+			jQuery("input[name='jform[height]']:radio").change( function() {
+				if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
+					jQuery("#btn_baguette").attr("disabled", "disabled");
+				} else {
+					jQuery("#btn_baguette").attr("disabled", false);
+				}
+			});
 			jQuery("#btn_mount2").click( function () {
 				jQuery("#mount2").toggle();
 				if (jQuery("#btn_mount2").css("background-color") == "rgb(65, 64, 153)") {
