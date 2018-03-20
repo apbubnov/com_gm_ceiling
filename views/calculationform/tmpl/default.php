@@ -2210,9 +2210,19 @@
 	jQuery(document).click(function (e) {
 		jQuery(".airhelp").hide();
 		if (e.target.hasClass("help")) {
-			jQuery(e.target).children(".airhelp").toggle();
+			if (jQuery(jQuery(e.target).children(".airhelp")).css("display") == "none") {
+				jQuery(e.target).children(".airhelp").show();
+			} else {
+				jQuery(".airhelp").hide();
+			}
+			//jQuery(e.target).children(".airhelp").toggle();
 		} if (e.target.hasClass("help_question")) {
-			jQuery(e.target).closest(".help").children(".airhelp").toggle();
+			if (jQuery(jQuery(e.target).closest(".help").children(".airhelp")).css("display") == "none") {
+				jQuery(e.target).children(".airhelp").show();
+			} else {
+				jQuery(".airhelp").hide();
+			}
+			//jQuery(e.target).closest(".help").children(".airhelp").toggle();
 		} else if (e.target.hasClass("airhelp")) {
 			jQuery(e.target).hide();
 		} else if (jQuery(e.target.closest("span")).hasClass("airhelp")) {
