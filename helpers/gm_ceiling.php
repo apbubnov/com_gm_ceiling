@@ -2061,6 +2061,12 @@ class Gm_ceilingHelpersGm_ceiling
 
                     }
                 }
+                if($data['n16']){
+                    $cornice = "Шторный карниз / Скрытый";
+                }
+                else {
+                    $cornice = "Шторный карниз / Обычный";
+                }
                 //шторный карниз
                 if ($data['n27'] > 0) {
                     $mounting_data[] = array(
