@@ -2201,7 +2201,11 @@
 
 	//Скрытие подсказок
 	jQuery(document).click(function (e) {
-		this.closest("td").child("div").css("display", "none");
+		console.log("клик по доку");
+		if (this.class == "airhelp") {
+			console.log("клик по подсказке");
+			this.closest("td").child("div").css("display", "none");
+		}
 	});
 
 	jQuery(document).ready(function() {
