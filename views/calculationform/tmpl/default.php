@@ -2210,9 +2210,12 @@
 	jQuery(document).click(function (e) {
 		jQuery(".airhelp").hide();
 		if (e.target.hasClass("help")) {
+			console.log("нажали кнопку");
 			if (jQuery(e.target).children(".airhelp").css("display") == "none") {
+				console.log("была не видна");
 				jQuery(e.target).children(".airhelp").show();
 			} else {
+				console.log("была видна");
 				jQuery(".airhelp").hide();
 			}
 			//jQuery(e.target).children(".airhelp").toggle();
