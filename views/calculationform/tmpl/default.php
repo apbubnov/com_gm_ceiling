@@ -2191,22 +2191,19 @@
 
 	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
 		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
-		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
-		console.log("fsdfs");
 		if (!div.is(e.target) // если клик был не по нашему блоку
 		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
 			jQuery("#close-tar").hide();
 			jQuery("#modal-window-container-tar").hide();
 			jQuery("#modal-window-call-tar").hide();
-		} else if (!div1.is(e.target) // если клик был не по нашему блоку
+		} 
+		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
+		if (!div1.is(e.target) // если клик был не по нашему блоку
 		    && div1.has(e.target).length === 0) { // и не по его дочерним элементам
 			jQuery("#close2-tar").hide();
 			jQuery("#modal-window-container2-tar").hide();
 			jQuery("#modal-window-enroll-tar").hide();
-		}// else {
-			//console.log("fsdfsfhbgf");
-			//jQuery(".airhelp").hide();
-		//}
+		}
 	});
 
 	//показ/Скрытие подсказок
@@ -2216,11 +2213,11 @@
 			jQuery(e.target).children(".airhelp").toggle();
 		} if (e.target.hasClass("help_question")) {
 			jQuery(e.target).closest(".help").children(".airhelp").toggle();
-		}/*  else if (e.target.hasClass("airhelp")) {
+		} else if (e.target.hasClass("airhelp")) {
 			jQuery(e.target).toggle();
 		} else if (jQuery(e.target.closest("span")).hasClass("airhelp")) {
 			jQuery(e.target.closest("span")).toggle();
-		} */
+		}
 	});
 
 	jQuery(document).ready(function() {
