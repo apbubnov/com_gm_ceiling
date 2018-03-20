@@ -21,7 +21,7 @@ $user_group = $user->groups;
     <table class="table table-striped one-touch-view" id="manufacturers">
         <tbody>
             <?php foreach($this->item as $item){?>
-                <tr connected = <?php echo $item->connect ?>>
+                <tr data-connected = <?php echo $item->connect ?>>
                     <td>
                         <?php echo $item->name;?>
                     </td>
@@ -35,12 +35,35 @@ $user_group = $user->groups;
             <?php }?>
         </tbody>
     </table>
+    <div id="mv_container" class="modal_window_container">
+        <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="modal_window_not_connected" class="modal_window">
+            <p><strong>Производитель еще не подключен к системе.
+            Отправьте ему запрос на подключение</strong></p>
+            <p><button type="button" id="send" class="btn btn-primary">Отправить</button></p>
+        </div>
+    </div>
 </form>
 
 <script>
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery("#modal_window_fio"); // тут указываем ID элемента
+        if (!div.is(e.target) && div.has(e.target).length === 0) {
+            jQuery("#close").hide();
+            jQuery("#mv_container").hide();
+            jQuery("#modal_window_not_connected").hide();            
+        }
+    });
     jQuery(document).ready(function(){
         jQuery("#manufacturers > tbody > tr").click(function(){
-            console.log(this.prop('connected'));
+            if(jQuery(this).data('connected')==0 || jQuery(this).data('connected') == ''){
+                jQuery("#close").show();
+                jQuery("#mv_container").show();
+                jQuery("#modal_window_not_connected").show(); 
+            }
         });
+    });
+    jQuery("#send").click(function(){
+        alert("send");
     });
 </script>
