@@ -2211,14 +2211,16 @@
 		jQuery(".airhelp").hide();
 		if (e.target.hasClass("help")) {
 			console.log("нажали кнопку");
-			console.log(jQuery(e.target).children(".airhelp"));
-			if (jQuery(e.target).children(".airhelp").css("display") == "none") {
-				console.log("была не видна");
-				jQuery(e.target).children(".airhelp").show();
-			} else {
-				console.log("была видна");
-				jQuery(".airhelp").hide();
-			}
+			setTimeout(function {
+				console.log(jQuery(e.target).children(".airhelp").css("display"));
+					if (jQuery(e.target).children(".airhelp").css("display") == "none") {
+					console.log("была не видна");
+					jQuery(e.target).children(".airhelp").show();
+				} else {
+					console.log("была видна");
+					jQuery(".airhelp").hide();
+				}
+			}, 10);
 			//jQuery(e.target).children(".airhelp").toggle();
 		} if (e.target.hasClass("help_question")) {
 			if (jQuery(e.target).closest(".help").children(".airhelp").css("display") == "none") {
