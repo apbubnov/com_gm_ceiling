@@ -3069,7 +3069,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= '<tr>';
         
-        /*
+/*
         if (empty($data['n3_id']))
         {
             $canvas_id = $data['n3'];
@@ -3099,7 +3099,7 @@ class Gm_ceilingHelpersGm_ceiling
         $name = $canvases[0]->name;
 
         $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name;
-        */
+*/
 
         $html .= '<th>Цвет: </th><td colspan="2" >' . $canvases_data["title"] . '</td>';
         $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
