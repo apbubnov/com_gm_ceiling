@@ -2201,14 +2201,14 @@
 
 	//показ/Скрытие подсказок
 	jQuery(document).mouseover(function (e) {
-		console.log(e.target);
-		if (e.target.hasClass("help") || e.target.hasClass("help_question")) {
+		if (e.target.hasClass("help")) {
 			jQuery(e.target).children("airhelp").toggle();
 		}
 	});
 	jQuery(document).click(function (e) {
-		console.log(e.target);
 		if (e.target.hasClass("help")) {
+			console.log(e.target);
+			console.log(jQuery(e.target).children("airhelp"));
 			jQuery(e.target).children("airhelp").toggle();
 		} if (e.target.hasClass("help_question")) {
 			jQuery(e.target).closest("help_question").children("airhelp").toggle();
