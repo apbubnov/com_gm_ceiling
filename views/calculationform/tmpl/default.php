@@ -443,7 +443,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												<img src="/images/vstavka.png" width="380" height="250"/><br>
+												<img src="/images/vstavka.png" width="280"/><br>
 												Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой.<br>
 												В расчет входит вставка по периметру
 											</span>
@@ -785,10 +785,10 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												<img src="/images/obvod.png" width="380" height="250" align="center"/><br>
+												<img src="/images/obvod.png" width="280" align="center"/><br>
 												На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
-												<img src="/images/obvod2.png" width="380" height="250" align="center"/>
-												В расчет на 1 трубу входит 1 пластина
+												<img src="/images/obvod2.png" width="280" align="center"/>
+												В расчет на 1 трубу входит 1 пластина.
 											</span>
 										</div>
 									</td>
@@ -868,24 +868,22 @@
 												<img src="/images/karniz.png" width="280"/><br>
 												В расчет на 1м карниза входит:<br>
 												<ul style="text-align: left;">
-													<li>брус (40*50)</li>
+													<li>1 брус (40*50)</li>
 													<li>6 саморезов (ГДК 3,5*51)</li>
 													<li>6 дюбелей (красн. 6*51)</li>
 													<li>9 саморезов (ГДК 3,5*41)</li>
 													<li>3 подвеса прямых (П 60 (0,8))</li>
 												</ul>
-												<ul>
-													<li>Видимый<br><img src="/images/karniz.png" width="280"/></li>
-													<li>Скрытый<br><img src="/images/karniz2.png" width="280"/></li>
-												</ul>
-												Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз<br>
+												Скрытый (надо указывать длину стены, на которой окно, и поставить галочку напротив надписи "скрытый шторный карниз"):<br>
+												<img src="/images/karniz2.png" width="280"/><br>
 												В расчет на 1м скрытого карниза входит:<br>
 												<ul style="text-align: left;">
-													<li>брус (40*50)</li>
+													<li>1 брус (40*50)</li>
 													<li>6 саморезов (ГДК 3,5*51)</li>
 													<li>6 дюбелей (красн. 6*51)</li>
-													<li>9 саморезов (ГДК 3,5*41)</li>
+													<li>13 саморезов (ГДК 3,5*41)</li>
 													<li>3 подвеса прямых (П 60 (0,8))</li>
+													<li>2 белых кронштейна (15*12,5)</li>
 												</ul>
 											</span>
 										</div>							
@@ -1000,8 +998,14 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													На 1м  используется:<br>
-													Брус 40*50  + 3 * Подвес прямой П 60 (0,8) +  6 * Дюбель полим. 6 * 51 + 6 * Саморез ГДК 3,5 * 51 + 6 * Саморез ГДК 3,5 * 41
+													В расчет на 1м бруса входит:<br>
+													<ul style="text-align: left;">
+														<li>1 брус (40*50)</li>
+														<li>6 саморезов (ГДК 3,5*51)</li>
+														<li>6 дюбелей (красн. 6*51)</li>
+														<li>6 саморезов (ГДК 3,5*41)</li>
+														<li>3 подвеса прямых (П 60 (0,8))</li>
+													</ul>
 												</span>
 											</div>
 										</td>
@@ -1030,8 +1034,15 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													На 1м разделителя используется:<br>
-													Брус 40*50  + 3 * Саморез ГКД 4,2 * 102 +  3 * Дюбель полим. 6 * 51 + 20 * Саморез ГДК 3,5 * 51 +  Вставка в разд 303 гриб + Багет разделительный аллюм (2.5 м.)
+													В расчет на 1м разделителя входит разделительный багет алюминиевый (2,5)<br>
+													А также:
+													<ul style="text-align: left;">
+														<li>1 брус (40*50)</li>
+														<li>1 белая вставка в разделитель (гриб)</li>
+														<li>3 дюбеля (красн. 6*51)</li>
+														<li>20 саморезов (ГДК 3,5*41)</li>
+														<li>3 самореза (ГКД 4,2*102 окс)</li>
+													</ul>
 												</span>
 											</div>
 										</td>
@@ -1119,8 +1130,13 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													На 1м усиления стен используется:<br>
-													Брус 40*50 + 3 * Саморез 3,5 * 51  + 3 * Дюбель полим. 6 * 51 + 3 * Кронштейн 15 * 12,5 см.
+													В расчет на 1м усиления входит:<br>
+													<ul style="text-align: left;">
+														<li>1 брус (40*50)</li>
+														<li>3 дюбеля (красн. 6*51)</li>
+														<li>3 белых кронштейна (15*12,5)</li>
+														<li>3 самореза (ГКД 4,2*102 окс)</li>
+													</ul>
 												</span>
 											</div>
 										</td>
