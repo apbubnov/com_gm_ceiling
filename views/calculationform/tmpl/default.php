@@ -39,6 +39,12 @@
 	$del_flag = 1;
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
+	if(in_array('16',$user_group)){
+		$triangulator_pro = 1;
+	}
+	else{
+		$triangulator_pro = 0;
+	}
 
 	//определение с монтажными работами или без
 	if ($_GET['id'] == 0) {
@@ -94,7 +100,8 @@
     <input name = "walls" id = "walls" value="" type= "hidden">
     <input name = "n4" id = "n4" value ="" type ="hidden">
     <input name = "n5" id = "n5" value ="" type ="hidden">
-    <input name = "n9" id = "n9" value ="" type ="hidden">
+	<input name = "n9" id = "n9" value ="" type ="hidden">
+	<input name = "triangulator_pro" id = "triangulator_pro" value = <?php echo $triangulator_pro?> type = "hidden">
 </form>
 
 <?php
