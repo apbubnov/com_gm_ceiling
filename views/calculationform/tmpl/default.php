@@ -183,16 +183,18 @@
 							<td>
 								<label id="jform_n2-lbl" for="jform_n2">Выберите фактуру полотна</label>
 							</td>
-							<td> 
-								<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
-									<span class="airhelp"><strong>Выберите фактуру для Вашего будущего потолка</strong>
+							<td>
+								<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+									<div class="help_question">?</div>
+									<span class="airhelp">
+										<strong>Выберите фактуру для Вашего будущего потолка</strong>
 										<ul>
 											<li>Матовый больше похож на побелку.</li>
 											<li>Сатин – на, крашенный потолок.</li>
 											<li>Глянец – имеет легкий отблеск.</li>
-										</ul>
+										</ul>									
 									</span>
-								</a>
+								</div>
 							</td>
 						</tr>
 					</table>
@@ -246,7 +248,12 @@
 									<label id="jform_proizv-lbl" for="jform_proizv">Выберите производителя</label>
 								</td>
 								<td>
-									<a class="help" ><img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" /><span class="airhelp">От производителя материала зависит качество потолка и его цена!</span></a>
+									<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+										<div class="help_question">?</div>
+										<span class="airhelp">
+											От производителя материала зависит качество потолка и его цена!									
+										</span>
+									</div>
 								</td>
 							</tr>
 						</table>
