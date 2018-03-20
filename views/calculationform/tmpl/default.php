@@ -2210,8 +2210,9 @@
 			jQuery(e.target).children("airhelp").toggle();
 		} if (e.target.hasClass("help_question")) {
 			console.log(e.target);
-			console.log(jQuery(e.target).children("airhelp"));
-			jQuery(e.target).closest("help").children("airhelp").toggle();
+			tt = jQuery(e.target).closest("help");
+			console.log(tt);
+			//.children("airhelp").toggle();
 		} else if (e.target.hasClass("airhelp")) {
 			jQuery(e.target).toggle();
 		} else if (jQuery(e.target.closest("span")).hasClass("airhelp")) {
