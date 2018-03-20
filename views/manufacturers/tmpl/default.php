@@ -21,7 +21,7 @@ $user_group = $user->groups;
     <table class="table table-striped one-touch-view" id="manufacturers">
         <tbody>
             <?php foreach($this->item as $item){?>
-                <tr connected = <?php echo $item->connected ?>>
+                <tr connected = <?php echo $item->connect ?>>
                     <td>
                         <?php echo $item->name;?>
                     </td>
