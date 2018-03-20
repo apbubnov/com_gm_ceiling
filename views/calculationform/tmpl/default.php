@@ -188,9 +188,9 @@
 									<div class="help_question">?</div>
 									<span class="airhelp">
 										<strong>Выберите фактуру для Вашего будущего потолка</strong>
-										<ul>
+										<ul style="text-align: left;">
 											<li>Матовый больше похож на побелку.</li>
-											<li>Сатин – на, крашенный потолок.</li>
+											<li>Сатин – на крашенный потолок.</li>
 											<li>Глянец – имеет легкий отблеск.</li>
 										</ul>									
 									</span>
