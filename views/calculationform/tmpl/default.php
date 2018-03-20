@@ -2202,8 +2202,8 @@
 	//Скрытие подсказок
 	jQuery(document).click(function (e) {
 		console.log("клик по доку");
-		console.log(this.hasClass());
-		if (this.hasClass() == "airhelp") {
+		console.log(this.hasClass("airhelp"));
+		if (this.hasClass("airhelp")) {
 			console.log("клик по подсказке");
 			this.closest("td").child("div").css("display", "none");
 		}
