@@ -2199,6 +2199,11 @@
 		}
 	});
 
+	//Скрытие подсказок
+	jQuery(document).click(function (e) {
+		this.closest("td").child("div").css("display", "none");
+	});
+
 	jQuery(document).ready(function() {
 		jQuery("body").addClass("yellow_home");
 
