@@ -2201,7 +2201,7 @@
 
 	//Скрытие подсказок
 	jQuery(document).click(function (e) {
-		console.log(e.target.closest("span"));
+		console.log(jQuery(e.target.closest("span")).hasClass("airhelp"));
 		if (e.target.hasClass("airhelp")/*  || e.target.closest("span").hasClass("airhelp") */) {
 			console.log(e.target);
 			jQuery(e.target).css("display", "none");
