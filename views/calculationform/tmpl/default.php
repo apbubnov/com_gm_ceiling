@@ -2208,8 +2208,8 @@
 	jQuery(document).click(function (e) {
 		if (e.target.hasClass("help")) {
 			console.log(e.target);
-			console.log(e.target.children("airhelp"));
-			jQuery(e.target.children("airhelp")).toggle();
+			console.log(jQuery(e.target).children("airhelp"));
+			//jQuery(e.target.children("airhelp")).toggle();
 		} if (e.target.hasClass("help_question")) {
 			jQuery(e.target).closest("help_question").children("airhelp").toggle();
 		} else if (e.target.hasClass("airhelp")) {
