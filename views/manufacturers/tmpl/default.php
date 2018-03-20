@@ -26,10 +26,10 @@ $user_group = $user->groups;
                         <?php echo $item->name;?>
                     </td>
                     <td>
-                        Коммент
+                        <?php echo $item->text;?>
                     </td>
                     <td>
-                        Состояние счета
+                        <!-- Здесь будет выводится счет по этому производителю -->
                     </td>
                 </tr>
             <?php }?>
@@ -40,6 +40,6 @@ $user_group = $user->groups;
 <script>
     jQuery(document).ready(function()
     {
-        
+
     });
 </script>
