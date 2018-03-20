@@ -40,7 +40,7 @@ $user_group = $user->groups;
 <script>
     jQuery(document).ready(function(){
         jQuery("#manufacturers > tbody > tr").click(function(){
-            console.log(this.data('connected'));
+            console.log(jQuery(this).data('connected'));
         });
     });
 </script>
