@@ -21,7 +21,7 @@ $user_group = $user->groups;
     <table class="table table-striped one-touch-view" id="manufacturers">
         <tbody>
             <?php foreach($this->item as $item){?>
-                <tr connected = <?php echo $item->connect ?>>
+                <tr data-connected = <?php echo $item->connect ?>>
                     <td>
                         <?php echo $item->name;?>
                     </td>
@@ -40,7 +40,7 @@ $user_group = $user->groups;
 <script>
     jQuery(document).ready(function(){
         jQuery("#manufacturers > tbody > tr").click(function(){
-            console.log(this);
+            console.log(this.data('connected'));
         });
     });
 </script>
