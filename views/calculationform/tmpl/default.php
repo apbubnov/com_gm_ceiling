@@ -2210,14 +2210,14 @@
 	jQuery(document).click(function (e) {
 		jQuery(".airhelp").hide();
 		if (e.target.hasClass("help")) {
-			if (jQuery(jQuery(e.target).children(".airhelp")).css("display") == "none") {
+			if (jQuery(e.target).children(".airhelp").css("display") == "none") {
 				jQuery(e.target).children(".airhelp").show();
 			} else {
 				jQuery(".airhelp").hide();
 			}
 			//jQuery(e.target).children(".airhelp").toggle();
 		} if (e.target.hasClass("help_question")) {
-			if (jQuery(jQuery(e.target).closest(".help").children(".airhelp")).css("display") == "none") {
+			if (jQuery(e.target).closest(".help").children(".airhelp").css("display") == "none") {
 				jQuery(e.target).children(".airhelp").show();
 			} else {
 				jQuery(".airhelp").hide();
