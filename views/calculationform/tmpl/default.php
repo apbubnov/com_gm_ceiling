@@ -2205,21 +2205,22 @@
 			jQuery("#modal-window-enroll-tar").hide();
 		}// else {
 			//console.log("fsdfsfhbgf");
-			jQuery(".airhelp").hide();
+			//jQuery(".airhelp").hide();
 		//}
 	});
 
 	//показ/Скрытие подсказок
 	jQuery(document).click(function (e) {
+		jQuery(".airhelp").hide();
 		if (e.target.hasClass("help")) {
 			jQuery(e.target).children(".airhelp").toggle();
 		} if (e.target.hasClass("help_question")) {
 			jQuery(e.target).closest(".help").children(".airhelp").toggle();
-		} else if (e.target.hasClass("airhelp")) {
+		}/*  else if (e.target.hasClass("airhelp")) {
 			jQuery(e.target).toggle();
 		} else if (jQuery(e.target.closest("span")).hasClass("airhelp")) {
 			jQuery(e.target.closest("span")).toggle();
-		}
+		} */
 	});
 
 	jQuery(document).ready(function() {
