@@ -2203,6 +2203,8 @@
 	jQuery(document).mouseover(function (e) {
 		if (e.target.hasClass("help")) {
 			jQuery(e.target).children(".airhelp").toggle();
+		} else if (e.target.hasClass("help_question")) {
+			jQuery(e.target).closest(".help").children(".airhelp").toggle();
 		}
 	});
 
