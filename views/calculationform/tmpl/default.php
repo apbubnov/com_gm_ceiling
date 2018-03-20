@@ -2202,11 +2202,11 @@
 	//Скрытие подсказок
 	jQuery(document).click(function (e) {
 		console.log("клик по доку");
-		console.log(e.target.hasClass("airhelp")/* .hasClass("airhelp") */);
-		/* if (this.hasClass("airhelp")) {
+		console.log(e.target.hasClass("airhelp"));
+		if (e.target.hasClass("airhelp")) {
 			console.log("клик по подсказке");
 			this.closest("td").child("div").css("display", "none");
-		} */
+		}
 	});
 
 	jQuery(document).ready(function() {
