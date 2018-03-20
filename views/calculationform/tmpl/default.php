@@ -2211,7 +2211,7 @@
 		jQuery(".airhelp").hide();
 		if (e.target.hasClass("help")) {
 			console.log("нажали кнопку");
-			setTimeout(function {
+			setTimeout(function () {
 				console.log(jQuery(e.target).children(".airhelp").css("display"));
 					if (jQuery(e.target).children(".airhelp").css("display") == "none") {
 					console.log("была не видна");
