@@ -2203,6 +2203,7 @@
 	jQuery(document).click(function (e) {
 		if (e.target.hasClass("airhelp")) {
 			console.log(e.target);
+			console.log(jQuery("#btn_precalculation"));
 			//e.target.css("display", "none");
 		}
 	});
