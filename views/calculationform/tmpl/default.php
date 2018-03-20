@@ -2214,9 +2214,9 @@
 		} if (e.target.hasClass("help_question")) {
 			jQuery(e.target).closest(".help").children(".airhelp").toggle();
 		} else if (e.target.hasClass("airhelp")) {
-			jQuery(e.target).toggle();
+			jQuery(e.target).show();
 		} else if (jQuery(e.target.closest("span")).hasClass("airhelp")) {
-			jQuery(e.target.closest("span")).toggle();
+			jQuery(e.target.closest("span")).show();
 		}
 	});
 
