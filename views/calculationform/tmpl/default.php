@@ -2208,8 +2208,10 @@
 	});
 	jQuery(document).click(function (e) {
 		console.log(e.target);
-		if (e.target.hasClass("help") || e.target.hasClass("help_question")) {
+		if (e.target.hasClass("help")) {
 			jQuery(e.target).children("airhelp").toggle();
+		} if (e.target.hasClass("help_question")) {
+			jQuery(e.target).closest("help_question").children("airhelp").toggle();
 		} else if (e.target.hasClass("airhelp")) {
 			jQuery(e.target).toggle();
 		} else if (jQuery(e.target.closest("span")).hasClass("airhelp")) {
