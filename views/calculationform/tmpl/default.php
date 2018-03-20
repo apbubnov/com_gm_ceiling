@@ -2203,6 +2203,7 @@
 			jQuery("#modal-window-container2-tar").hide();
 			jQuery("#modal-window-enroll-tar").hide();
 		} else {
+			console.log("fsdfs");
 			jQuery(".airhelp").toggle();
 		}
 	});
