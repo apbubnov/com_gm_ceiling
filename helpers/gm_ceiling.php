@@ -982,6 +982,7 @@ class Gm_ceilingHelpersGm_ceiling
 
             $component_count[$items_9[0]->id] += $data['n5'] * 10;
             $component_count[$items_5[0]->id] += $data['n5'] * 10;
+            throw new Exception($data['n28']);
             if ($data['n28'] == 0) $component_count[$items_11[0]->id] += $data['n5'];
             elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n5'];
             elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n5'];
