@@ -2201,7 +2201,7 @@
 
 	//Скрытие подсказок
 	jQuery(document).click(function (e) {
-		if (e.target.hasClass("airhelp") && e.target.has(e.target).length) {
+		if (e.target.hasClass("airhelp") || e.target.has("img")) {
 			console.log(e.target);
 			jQuery(e.target).css("display", "none");
 		}
@@ -2209,10 +2209,6 @@
 
 	jQuery(document).ready(function() {
 		jQuery("body").addClass("yellow_home");
-
-		/* jQuery("body").on("click", ".airhelp", function () {
-			jQuery(".airhelp").toggle();
-		}); */
 
 		// кнопки открытия скрытых полей
 			precalculation = <?php if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
