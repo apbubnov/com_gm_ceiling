@@ -407,7 +407,7 @@
 						<div class="col-sm-4" style="padding-right: 0px;">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
 								<div style="display: inline-block; width: 100%;">
-									<input name="jform[n28]" id="jform_n28_3" class="radio" value="4" type="radio" <?php if ($this->item->n28 == 3) {echo "checked='checked'";} elseif ($user->dealer_id != 1 && $this->item->n28 !== 0) {echo "checked='checked'";} ?>>
+									<input name="jform[n28]" id="jform_n28_3" class="radio" value="3" type="radio" <?php if ($this->item->n28 == 3) {echo "checked='checked'";} elseif ($user->dealer_id != 1 && $this->item->n28 !== 0) {echo "checked='checked'";} ?>>
 									<label for="jform_n28_3"> Без багета</label>
 								</div>
 								<div style="display: inline-block;">
@@ -866,7 +866,7 @@
 												Шторный карниз можно крепить на потолок двумя способами.<br> 
 												Видимый:<br>
 												<img src="/images/karniz.png" width="280"/><br>
-												В расчет на 1м карниза (ПВС 2*0,75) входит:<br>
+												В расчет на 1м карниза входит:<br>
 												<ul style="text-align: left;">
 													<li>брус (40*50)</li>
 													<li>6 саморезов (ГДК 3,5*51)</li>
@@ -879,7 +879,7 @@
 													<li>Скрытый<br><img src="/images/karniz2.png" width="280"/></li>
 												</ul>
 												Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз<br>
-												В расчет на 1м провода (ПВС 2*0,75) входит:<br>
+												В расчет на 1м скрытого карниза входит:<br>
 												<ul style="text-align: left;">
 													<li>брус (40*50)</li>
 													<li>6 саморезов (ГДК 3,5*51)</li>
