@@ -2203,7 +2203,7 @@
 	jQuery(document).click(function (e) {
 		if (e.target.hasClass("airhelp")) {
 			console.log("клик по подсказке");
-			e.target.closest("td").child("div").css("display", "none");
+			e.target.css("display", "none");
 		}
 	});
 
