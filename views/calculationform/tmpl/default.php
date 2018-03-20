@@ -2192,6 +2192,7 @@
 	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
 		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
 		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
+		console.log("fsdfs");
 		if (!div.is(e.target) // если клик был не по нашему блоку
 		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
 			jQuery("#close-tar").hide();
