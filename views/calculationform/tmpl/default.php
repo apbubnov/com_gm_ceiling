@@ -2201,10 +2201,13 @@
 
 	//Скрытие подсказок
 	jQuery(document).click(function (e) {
-		console.log(jQuery(e.target.closest("span")).hasClass("airhelp"));
-		if (e.target.hasClass("airhelp") || jQuery(e.target.closest("span")).hasClass("airhelp")) {
-			console.log(e.target);
-			jQuery(e.target).css("display", "none");
+		console.log(e.target);
+		if (e.target.hasClass("airhelp")) {
+			//jQuery(e.target).css("display", "none");
+			jQuery(e.target).toggle();
+		} else if (jQuery(e.target.closest("span")).hasClass("airhelp")) {
+			//jQuery(e.target.closest("span")).css("display", "none");
+			jQuery(e.target.closest("span")).toggle();
 		}
 	});
 
