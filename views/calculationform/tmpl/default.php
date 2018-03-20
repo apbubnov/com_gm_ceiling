@@ -178,12 +178,12 @@
 			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
-					<table>
+					<table class="table_calcform">
 						<tr>
-							<td>
+							<td class="td_calcform1" style="text-align: left;">
 								<label id="jform_n2-lbl" for="jform_n2">Выберите фактуру полотна</label>
 							</td>
-							<td>
+							<td class="td_calcform2">
 								<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 									<div class="help_question">?</div>
 									<span class="airhelp">
@@ -242,12 +242,12 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
 					<div class="form-group">
-						<table>
+						<table class="table_calcform">
 							<tr>
-								<td>
+								<td class="td_calcform1" style="text-align: left;">
 									<label id="jform_proizv-lbl" for="jform_proizv">Выберите производителя</label>
 								</td>
-								<td>
+								<td class="td_calcform2">
 									<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 										<div class="help_question">?</div>
 										<span class="airhelp">
