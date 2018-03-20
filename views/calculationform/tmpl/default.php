@@ -178,7 +178,7 @@
 			<div class="col-sm-4"></div>
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
-					<table class="table_calcform">
+					<table class="table_calcform" style="margin-bottom: 5px;">
 						<tr>
 							<td class="td_calcform1" style="text-align: left;">
 								<label id="jform_n2-lbl" for="jform_n2">Выберите фактуру полотна</label>
@@ -242,7 +242,7 @@
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4">
 					<div class="form-group">
-						<table class="table_calcform">
+						<table class="table_calcform" style="margin-bottom: 5px;">
 							<tr>
 								<td class="td_calcform1" style="text-align: left;">
 									<label id="jform_proizv-lbl" for="jform_proizv">Выберите производителя</label>
