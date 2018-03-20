@@ -2202,9 +2202,10 @@
 	//показ/Скрытие подсказок
 	jQuery(document).mouseover(function (e) {
 		if (e.target.hasClass("help")) {
-			jQuery(e.target).children("airhelp").toggle();
+			jQuery(e.target).children(".airhelp").toggle();
 		}
 	});
+
 	jQuery(document).click(function (e) {
 		if (e.target.hasClass("help")) {
 			jQuery(e.target).children(".airhelp").toggle();
