@@ -21,7 +21,7 @@ class Gm_ceilingModelManufacturers extends JModelList
 			$query = $db->getQuery(true);
 
             $query
-                ->select('u.name,i.text')
+                ->select('u.name,i.text,i.connected,i.request_count')
                 ->from('`#__users` AS `u`')
                 ->leftJoin('#__gm_ceiling_manufacturer_info as i on u.id = i.manufacturer_id')
                 ->where('u.dealer_type = 6');

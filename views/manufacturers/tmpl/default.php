@@ -18,10 +18,10 @@ $user_group = $user->groups;
 
 <form>
     <h2>Выберите производителя</h2>
-    <table class="table table-striped one-touch-view" id="callbacksList">
+    <table class="table table-striped one-touch-view" id="manufacturers">
         <tbody>
             <?php foreach($this->item as $item){?>
-                <tr>
+                <tr connected = <?php echo $item->connected ?>>
                     <td>
                         <?php echo $item->name;?>
                     </td>
@@ -38,8 +38,9 @@ $user_group = $user->groups;
 </form>
 
 <script>
-    jQuery(document).ready(function()
-    {
-
+    jQuery(document).ready(function(){
+        jQuery("#manufacturers > tbody > tr").click(function(){
+            console.log(this.connected);
+        });
     });
 </script>
