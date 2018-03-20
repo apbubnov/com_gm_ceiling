@@ -393,7 +393,12 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
+												В расчет входит багет (2,5 м) </br>
+												А также на 1 м багета:
+												<ul style="text-align: left;">
+													<li>10 саморезов (ГДК 3,5*51)</li>
+													<li>10 дюбелей (красн. 6*51)</li>
+												</ul>
 											</span>
 										</div>
 									</td>
@@ -409,11 +414,11 @@
 						<div class="col-sm-4" style="padding-right: 0px;">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
 								<div style="display: inline-block; width: 100%;">
-									<input name="jform[n28]" id="jform_n28_3" class="radio" value="4" type="radio" <?php if ($this->item->n28 == 3) {echo "checked='checked'";} elseif ($user->dealer_id != 1 && $this->item->n28 !== 0) {echo "checked='checked'";} ?>>
+									<input name="jform[n28]" id="jform_n28_3" class="radio" value="3" type="radio" <?php if ($user->dealer_id != 1 && $this->item->n28 !== 0) {echo "checked='checked'";} elseif ($this->item->n28 == 3) {echo "checked='checked'";}?>>
 									<label for="jform_n28_3"> Без багета</label>
 								</div>
 								<div style="display: inline-block;">
-									<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($this->item->n28 === 0) {echo "checked='checked'";} elseif ($user->dealer_id == 1) {echo "checked='checked'";} ?>>
+									<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($user->dealer_id == 1) {echo "checked='checked'";} elseif ($this->item->n28 === 0) {echo "checked='checked'";} ?>>
 									<label for="jform_n28"> Обычный багет</label>
 								</div>
 								<div style="display: inline-block;">
@@ -446,7 +451,8 @@
 											<div class="help_question">?</div>
 											<span class="airhelp">
 												<img src="/images/vstavka.png" width="380" height="250"/><br>
-												Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой 
+												Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой.<br>
+												В расчет входит вставка по периметру
 											</span>
 										</div>
 									</td>
@@ -517,12 +523,6 @@
 										<h3>Освещение</h3>
 									</td>
 									<td>
-										<!-- <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
-											<div class="help_question">?</div>
-											<span class="airhelp">
-												Если на потолке будут люстры или светильники укажите их количество и характеристики. Если их не будет просто пропустите этот пункт
-											</span>
-										</div> -->
 									</td>
 								</tr>
 							</table>
@@ -546,7 +546,18 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												В паспорте на люстру есть описание системы крепежа и диаметр технологического отверстия
+												В расчет входит:
+												<ul style="text-align: left;">
+													<li>3 самореза (ГДК 3,5*51)</li>
+													<li>3 дюбеля (красн. 6*51)</li>
+													<li>8 саморезов (п/сф 305*9,5 цинк)</li>
+													<li>1 шуруп кольцо (6*40)</li>
+													<li>2 клеммных колодок (2,5 мм<sup>2</sup> (Umax=450В Tmax=110C полиамид ДКС))</li>
+													<li>1 круглое кольцо (50)</li>
+													<li>1 платформа под люстру (тарелка)</li>
+													<li>4 подвеса прямых (П 60 (0,8))</li>
+													<li>0,5 провода (ПВС 2*0,75)</li>
+												</ul>
 											</span>
 										</div>
 									</td>
@@ -582,7 +593,18 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												На упаковке светильника указан диаметр технологического отверстия
+												В расчет входит:
+												<ul style="text-align: left;">
+													<li>4 самореза (ГДК 3,5*51)</li>
+													<li>2 дюбеля (красн. 6*51)</li>
+														<li>8 саморезов (п/сф 305*9,5 цинк)</li>
+													<	li>1 шуруп кольцо (6*40)</li>
+													<li>2 клеммных колодок (2,5 мм<sup>2</sup> (Umax=450В Tmax=110C полиамид ДКС))</li>
+														<li>1 круглое кольцо (50)</li>
+													<li>1 платформа под светильник</li>
+													<li>2 подвеса прямых (П 60 (0,8))</li>
+													<li>0,5 провода (ПВС 2*0,75)</li>
+												</ul>
 											</span>
 										</div>
 									</td>
@@ -2218,7 +2240,6 @@
 		jQuery(".airhelp").hide();
 		if (e.target.hasClass("help")) {
 			console.log("нажали кнопку");
-			console.log(jQuery(e.target).children(".airhelp"));
 			console.log(jQuery(e.target).children(".airhelp").css("display"));
 				if (jQuery(e.target).children(".airhelp").css("display") == "none") {
 				console.log("была не видна");
