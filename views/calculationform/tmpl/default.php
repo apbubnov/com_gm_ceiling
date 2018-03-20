@@ -2218,7 +2218,7 @@
 			//jQuery(e.target).children(".airhelp").toggle();
 		} if (e.target.hasClass("help_question")) {
 			if (jQuery(e.target).closest(".help").children(".airhelp").css("display") == "none") {
-				jQuery(e.target).children(".airhelp").show();
+				jQuery(e.target).closest(".help").children(".airhelp").show();
 			} else {
 				jQuery(".airhelp").hide();
 			}
