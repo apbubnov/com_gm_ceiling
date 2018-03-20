@@ -2201,9 +2201,8 @@
 
 	//Скрытие подсказок
 	jQuery(document).click(function (e) {
-		if (e.target.hasClass("airhelp")) {
+		if (e.target.hasClass("airhelp") && e.target.has(e.target).length) {
 			console.log(e.target);
-			console.log(jQuery("#btn_precalculation"));
 			jQuery(e.target).css("display", "none");
 		}
 	});
