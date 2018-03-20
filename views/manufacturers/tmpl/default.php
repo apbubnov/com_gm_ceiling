@@ -38,7 +38,7 @@ $user_group = $user->groups;
     <div id="mv_container" class="modal_window_container">
         <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="modal_window_not_connected" class="modal_window">
-            <p><strong>Производитель еще не подключен к системе.<br>
+            <p><strong>Производитель еще не подключен к системе.
             Отправьте ему запрос на подключение</strong></p>
             <p><button type="button" id="send" class="btn btn-primary">Отправить</button></p>
         </div>
@@ -62,5 +62,8 @@ $user_group = $user->groups;
                 jQuery("#modal_window_not_connected").show(); 
             }
         });
+    });
+    jQuery("#send").click(function(){
+        alert("send");
     });
 </script>

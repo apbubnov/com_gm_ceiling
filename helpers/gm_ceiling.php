@@ -2175,9 +2175,15 @@ class Gm_ceilingHelpersGm_ceiling
                     );
                 }
                 //шторный карниз
+                if($data['n16']){
+                    $cornice = "Шторный карниз / Скрытый";
+                }
+                else {
+                    $cornice = "Шторный карниз / Обычный";
+                }
                 if ($data['n27'] > 0) {
                     $mounting_data[] = array(
-                        "title" => "Шторный карниз",                                                    //Название
+                        "title" =>  $cornice,                                                    //Название
                         "quantity" => $data['n27'],                                                        //Кол-во
                         "gm_salary" => $results->mp41,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
                         "gm_salary_total" => $data['n27'] * $results->mp41,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
@@ -2883,10 +2889,10 @@ class Gm_ceilingHelpersGm_ceiling
                 }
 
                 /*Новый костыль*/
-                if ($data["n16"])
+                /* if ($data["n16"])
                     $html = str_replace("Шторный карниз", "Шторный карниз / Скрытый", $html);
                 else
-                    $html = str_replace("Шторный карниз", "Шторный карниз / Обычный", $html);
+                    $html = str_replace("Шторный карниз", "Шторный карниз / Обычный", $html); */
                 /****************************/
 
                 return $html;
