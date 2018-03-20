@@ -189,9 +189,9 @@
 									<span class="airhelp">
 										<strong>Выберите фактуру для Вашего будущего потолка</strong>
 										<ul style="text-align: left;">
-											<li>Матовый больше похож на побелку.</li>
-											<li>Сатин – на крашенный потолок.</li>
-											<li>Глянец – имеет легкий отблеск.</li>
+											<li>Матовый больше похож на побелку</li>
+											<li>Сатин – на крашенный потолок</li>
+											<li>Глянец – имеет легкий отблеск</li>
 										</ul>									
 									</span>
 								</div>
@@ -2191,18 +2191,19 @@
 
 	jQuery(document).mouseup(function (e){ // событие клика по веб-документу
 		var div = jQuery("#modal-window-call-tar"); // тут указываем ID элемента
+		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
 		if (!div.is(e.target) // если клик был не по нашему блоку
 		    && div.has(e.target).length === 0) { // и не по его дочерним элементам
 			jQuery("#close-tar").hide();
 			jQuery("#modal-window-container-tar").hide();
 			jQuery("#modal-window-call-tar").hide();
-		}
-		var div1 = jQuery("#modal-window-enroll-tar"); // тут указываем ID элемента
-		if (!div1.is(e.target) // если клик был не по нашему блоку
+		} else if (!div1.is(e.target) // если клик был не по нашему блоку
 		    && div1.has(e.target).length === 0) { // и не по его дочерним элементам
 			jQuery("#close2-tar").hide();
 			jQuery("#modal-window-container2-tar").hide();
 			jQuery("#modal-window-enroll-tar").hide();
+		} else {
+			jQuery(".airhelp").toggle();
 		}
 	});
 
