@@ -2201,7 +2201,7 @@
 
 	//Скрытие подсказок
 	jQuery(document).click(function (e) {
-		if (e.target.hasClass("airhelp") || e.target.has("img")) {
+		if (e.target.hasClass("airhelp")) {
 			console.log(e.target);
 			jQuery(e.target).css("display", "none");
 		}
