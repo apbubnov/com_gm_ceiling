@@ -2202,8 +2202,6 @@
 	//показ/Скрытие подсказок
 	jQuery(document).mouseover(function (e) {
 		if (e.target.hasClass("help")) {
-			console.log(e.target);
-			console.log(jQuery(e.target).children("airhelp"));
 			jQuery(e.target).children("airhelp").toggle();
 		}
 	});
@@ -2211,7 +2209,7 @@
 		if (e.target.hasClass("help")) {
 			console.log(e.target);
 			console.log(jQuery(e.target).children("airhelp"));
-			//jQuery(e.target.children("airhelp")).toggle();
+			jQuery(e.target).children("airhelp").toggle();
 		} if (e.target.hasClass("help_question")) {
 			jQuery(e.target).closest("help_question").children("airhelp").toggle();
 		} else if (e.target.hasClass("airhelp")) {
