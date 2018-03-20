@@ -1482,7 +1482,7 @@ class Gm_ceilingController extends JControllerLegacy
                 }
                 $points_polonta = substr($points_polonta, 0, -2);
 
-                $str .= "Полотно" . ($i + 1) . ": " . $points_polonta . "; ";
+                $str .= "Полотно" . ($i + 1) . ": " . $points_polonta . "| ";
             }
             $str .= '||'.$p_usadki;
             $filename = md5($user_id . "cut-" . date("d-m-Y H:i:s"));
