@@ -39,12 +39,6 @@
 	$del_flag = 1;
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
-	if(in_array('16',$user_group)){
-		$triangulator_pro = 1;
-	}
-	else{
-		$triangulator_pro = 0;
-	}
 
 	//определение с монтажными работами или без
 	if ($_GET['id'] == 0) {
@@ -100,8 +94,7 @@
     <input name = "walls" id = "walls" value="" type= "hidden">
     <input name = "n4" id = "n4" value ="" type ="hidden">
     <input name = "n5" id = "n5" value ="" type ="hidden">
-	<input name = "n9" id = "n9" value ="" type ="hidden">
-	<input name = "triangulator_pro" id = "triangulator_pro" value = <?php echo $triangulator_pro?> type = "hidden">
+    <input name = "n9" id = "n9" value ="" type ="hidden">
 </form>
 
 <?php
@@ -414,11 +407,11 @@
 						<div class="col-sm-4" style="padding-right: 0px;">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
 								<div style="display: inline-block; width: 100%;">
-									<input name="jform[n28]" id="jform_n28_3" class="radio" value="3" type="radio" <?php if ($user->dealer_id != 1 && $this->item->n28 !== 0) {echo "checked='checked'";} elseif ($this->item->n28 == 3) {echo "checked='checked'";}?>>
+									<input name="jform[n28]" id="jform_n28_3" class="radio" value="4" type="radio" <?php if ($this->item->n28 == 3) {echo "checked='checked'";} elseif ($user->dealer_id != 1 && $this->item->n28 !== 0) {echo "checked='checked'";} ?>>
 									<label for="jform_n28_3"> Без багета</label>
 								</div>
 								<div style="display: inline-block;">
-									<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($user->dealer_id == 1) {echo "checked='checked'";} elseif ($this->item->n28 === 0) {echo "checked='checked'";} ?>>
+									<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($this->item->n28 === 0) {echo "checked='checked'";} elseif ($user->dealer_id == 1) {echo "checked='checked'";} ?>>
 									<label for="jform_n28"> Обычный багет</label>
 								</div>
 								<div style="display: inline-block;">
@@ -597,10 +590,9 @@
 												<ul style="text-align: left;">
 													<li>4 самореза (ГДК 3,5*51)</li>
 													<li>2 дюбеля (красн. 6*51)</li>
-														<li>8 саморезов (п/сф 305*9,5 цинк)</li>
-													<	li>1 шуруп кольцо (6*40)</li>
+													<li>4 саморезов (п/сф 305*9,5 цинк)</li>
+													<li>термоквадрат или круглое кольцо</li>
 													<li>2 клеммных колодок (2,5 мм<sup>2</sup> (Umax=450В Tmax=110C полиамид ДКС))</li>
-														<li>1 круглое кольцо (50)</li>
 													<li>1 платформа под светильник</li>
 													<li>2 подвеса прямых (П 60 (0,8))</li>
 													<li>0,5 провода (ПВС 2*0,75)</li>
@@ -749,7 +741,11 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													На 1м провода используется:  <br> Провод ПВС 2 х 0,75  + 2 * Дюбель полим. 6 * 51 + 2 * Саморез ГДК 3,5 * 51
+													В расчет на 1м провода (ПВС 2*0,75) входит:
+													<ul style="text-align: left;">
+														<li>2 самореза (ГДК 3,5*51)</li>
+														<li>2 дюбеля (красн. 6*51)</li>
+													</ul>
 												</span>
 											</div>
 										</td>
@@ -792,6 +788,7 @@
 												<img src="/images/obvod.png" width="380" height="250" align="center"/><br>
 												На картинке изображены 3 трубы разного диаметра. Выбираем отдельно одну трубу 45-55, а две других трубы 32<br>
 												<img src="/images/obvod2.png" width="380" height="250" align="center"/>
+												В расчет на 1 трубу входит 1 пластина
 											</span>
 										</div>
 									</td>
@@ -868,10 +865,18 @@
 												Если его не будет или он будет крепиться к стене просто пропустите этот пункт.<br>
 												Шторный карниз можно крепить на потолок двумя способами:<br> 
 												<ul>
-													<li>Видимый <br> <img src="/images/karniz.png" width="350" height="250"/></li>
-													<li>Скрытый <br> <img src="/images/karniz2.png" width="350" height="250"/></li>
+													<li>Видимый<br><img src="/images/karniz.png" width="280"/></li>
+													<li>Скрытый<br><img src="/images/karniz2.png" width="280"/></li>
 												</ul>
-												<br>Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз
+												Во 2 случае надо указывать длину стены, на которой окно и ставить галочку напротив надписи скрытый шторный карниз<br>
+												В расчет на 1м провода (ПВС 2*0,75) входит:<br>
+												<ul style="text-align: left;">
+													<li>брус (40*50)</li>
+													<li>6 саморезов (ГДК 3,5*51)</li>
+													<li>6 дюбелей (красн. 6*51)</li>
+													<li>9 саморезов (ГДК 3,5*41)</li>
+													<li>3 подвеса прямых (П 60 (0,8))</li>
+												</ul>
 											</span>
 										</div>							
 									</td>
