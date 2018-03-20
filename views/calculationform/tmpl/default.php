@@ -2203,10 +2203,10 @@
 			jQuery("#close2-tar").hide();
 			jQuery("#modal-window-container2-tar").hide();
 			jQuery("#modal-window-enroll-tar").hide();
-		} else {
-			console.log("fsdfs");
-			jQuery(".airhelp").toggle();
-		}
+		}// else {
+			//console.log("fsdfsfhbgf");
+			jQuery(".airhelp").hide();
+		//}
 	});
 
 	//показ/Скрытие подсказок
