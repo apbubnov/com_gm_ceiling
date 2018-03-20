@@ -2202,8 +2202,8 @@
 	//Скрытие подсказок
 	jQuery(document).click(function (e) {
 		if (e.target.hasClass("airhelp")) {
-			console.log("клик по подсказке");
-			e.target.css("display", "none");
+			console.log(e.target);
+			//e.target.css("display", "none");
 		}
 	});
 
