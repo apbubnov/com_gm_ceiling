@@ -97,8 +97,10 @@ if(!$user->getDealerInfo()->update_check) {
 	</div>
 	<?php if ($user->dealer_type == 1 && $user->dealer_mounters == 0): ?>
 		<h3 class="caption1">Редактирование прайса монтажа</h3>
-		<button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
-		<button id = "reset" class="btn btn-primary" type = "button" >Сбросить</button>
+		<div>
+			<button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
+			<button id = "reset_ap" class="btn btn-primary" type = "button" >Сбросить</button>
+		</div>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="control-group">
@@ -434,11 +436,11 @@ if(!$user->getDealerInfo()->update_check) {
 		</div>
 	<?php endif ?>
 	<div  class = "col-md-12" style="margin-top:15px;">
-		<div  class = "col-md-4">
-		</div>
-		<div  class = "col-md-4">
+		<div class = "col-md-4"></div>
+		<div class = "col-md-4">
 			<button class="btn btn-primary" style="width:100%;"> Сохранить </button>
 		</div>
+		<div class = "col-md-4"></div>
 	</div>	
 </form>
 <script>
@@ -447,7 +449,7 @@ if(!$user->getDealerInfo()->update_check) {
 		jQuery("#fill_default").click(function(){
 			fill_inputs(gm_mount,"fill");
 		});
-		jQuery("#reset").click(function(){
+		jQuery("#reset_ap").click(function(){
 			fill_inputs(gm_mount,"reset");
 		});
 	}); 
