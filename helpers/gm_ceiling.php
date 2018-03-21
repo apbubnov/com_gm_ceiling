@@ -2772,6 +2772,7 @@ class Gm_ceilingHelpersGm_ceiling
                             <th class="center">Площадь, м<sup>2</sup>.</th>
                             <th class="center">Периметр, м </th>
                             <th class="center">Стоимость, руб.</th>
+                            <th class="center">Примечание</th>
                         </tr>';
         foreach ($calculations as $calc) {
             $html .= '<tr>';
@@ -2779,6 +2780,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td class="center">' . $calc->n4 . '</td>';
             $html .= '<td class="center">' . $calc->n5 . '</td>';
             $html .= '<td class="center">' . $calc->mounting_sum . '</td>';
+            $html .= '<td class="center">' . $calc->details . '</td>';
             $html .= '</tr>';
             $sum += $calc->mounting_sum;
         }
@@ -2872,7 +2874,10 @@ class Gm_ceilingHelpersGm_ceiling
                     if ($project->dealer_chief_note) {
                         $html .= "<b>Примечание начальника МС дилера: </b>" . $project->dealer_chief_note . "<br>";
                     }
-                } 
+                }
+                if(isset($data['details'])){
+                    $html .= "<b>Примечание : </b>" . $data['details'] . "<br>";
+                }
                 if ($project->project_mounting_date != '0000-00-00 00:00:00') {
                     $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
                     $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
@@ -3143,7 +3148,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= '<tr>';
         
-/*
+        /*
         if (empty($data['n3_id']))
         {
             $canvas_id = $data['n3'];
@@ -3173,7 +3178,7 @@ class Gm_ceilingHelpersGm_ceiling
         $name = $canvases[0]->name;
 
         $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name;
-*/
+        */
 
         $html .= '<th>Цвет: </th><td colspan="2" >' . $canvases_data["title"] . '</td>';
         $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
