@@ -1171,7 +1171,7 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													В расчет на 1м дополнительного крепежа входит 10 саморезов (ГДК 3,5*51)
+													В расчет на 1м дополнительного крепежа входит багет ПВХ (2,5) и 10 саморезов (ГДК 3,5*51) + монтажная работа по установке дополнительного крепежа
 												</span>
 											</div>
 										</td>
@@ -1415,7 +1415,7 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													В расчет на 1м парящего потолка входит багет для парящих потолков (2,5 алюм), а также 1 вставка для парящих потолков (профиль ПВХ)
+													В расчет на 1м парящего потолка входит багет для парящих потолков (2,5 алюм), а также 1 вставка для парящих потолков (профиль ПВХ) + монтажная работа по установке парящего потолка
 												</span>
 											</div>
 										</td>
@@ -1443,7 +1443,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												
+												В расчет входит монтажная работа по установке перехода уровня
 											</span>
 										</div>
 									</td>
@@ -1517,13 +1517,13 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													В расчет на 1м внутреннего выреза входит:<br>
+													В расчет на 1м внутреннего выреза входит багет ПВХ (2,5):<br>
 													<ul style="text-align: left;">
 														<li>1 белая вставка</li>
 														<li>10 дюбеля (красн. 6*51)</li>
 														<li>10 самореза (ГКД 3,5*51)</li>
 														<li>4 саморезов (п/сф 3,5*9,5 цинк)</li>
-														<li>Внутренний вырез???? и багет гдето?</li>
+														<li>1 внутренний вырез</li>
 													</ul>
 												</span>
 											</div>
@@ -1553,14 +1553,16 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													В расчет на 1м внутреннего выреза входит:<br>
+													В расчет на 1м внутреннего выреза входит багет ПВХ (2,5)<br>
+													А также:
 													<ul style="text-align: left;">
 														<li>1 брус (40*50)</li>
 														<li>16 дюбеля (красн. 6*51)</li>
 														<li>22 самореза (ГКД 3,5*41)</li>
 														<li>3 белых кронштейн (15*12,5)</li>
-														<li>гарпун???? и багет гдето?</li>
+														<li>1 гарпун</li>
 													</ul>
+													+ монтажная работа по внутреннему вырезу
 												</span>
 											</div>
 										</td>
@@ -1590,7 +1592,8 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													В работу входит слив воды. Укажите колиество комнат
+													В расчет входит монтажная работа по сливу воды</br>
+													Укажите колиество комнат
 												</span>
 											</div>
 										</td>
@@ -1662,7 +1665,7 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													Наценка на монтажные работы за труднодоступные места. Считается по метрам.
+													В расчет входит наценка на монтажные работы за труднодоступные места. Считается по метрам.
 												</span>
 											</div>
 										</td>
@@ -1819,7 +1822,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												
+												В расчет входят цены за указанные Вами работы
 											</span>
 										</div>
 									</td>
