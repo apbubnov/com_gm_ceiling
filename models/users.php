@@ -50,7 +50,7 @@ class Gm_ceilingModelUsers extends JModelList
 				->select('COUNT(*)')
 				->from('`#__users_dealer_instruction` as di')
 				->where('di.user_id = u.id');
-			$query->select('`u`.`id`,`u`.`name`,`u`.`dealer_type`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`,i.city,c.manager_id');
+			$query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`,i.city,c.manager_id');
 			$query->select("($kp_cnt_query) as kp_cnt");
 			$query->select("($comments_cnt_query) as cmnt_cnt");
 			$query->select("($dealer_instr_cnt_query) as inst_cnt");
@@ -59,7 +59,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
 			$query->leftJoin('`#__gm_ceiling_dealer_info` as i on u.id = i.dealer_id');
-			$query->where('`#__user_usergroup_map`.`group_id`= 14 AND (u.dealer_type < 2 OR u.dealer_type = 6)');
+			$query->where('`#__user_usergroup_map`.`group_id`=14 AND `dealer_type` < 2');
 			$query->group('`id`');
 			$query->order('`id` DESC');
 			$db->setQuery($query);
