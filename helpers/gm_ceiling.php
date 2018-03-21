@@ -2803,11 +2803,11 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p><br>';
         $html .= '<h2>Примечания: </h2>';
         foreach ($calculations as $calc) {
-            if(isset($calc->details)){
+            if(!empty($calc->details)){
                 $html .= "$calc->calculation_title: $calc->details;<br>";
             }
             else 
-                $html .= "Отсутствуют";
+                $html .= "$calc->calculation_title:Отсутствует;<br>";
         }
         //$html .= "<pagebreak />";
         $array = [$html];
