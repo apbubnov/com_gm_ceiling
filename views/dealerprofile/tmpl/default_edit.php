@@ -443,6 +443,9 @@ if(!$user->getDealerInfo()->update_check) {
 <script>
 	jQuery(document).ready(function(){
 		var gm_mount = JSON.parse('<?php echo $gm_mount?>');
-		console.log("${gm_mount['mp2']}");
+		for(let i = 0;i<Object.keys(gm_mount).length){
+			console.log(`jform_${Object.keys(gm_mount)[i]}`);
+		}
+		
 	}); 
 </script>
