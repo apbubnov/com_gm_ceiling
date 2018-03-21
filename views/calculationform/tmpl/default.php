@@ -2917,6 +2917,7 @@
 				}
 			}
 			jQuery("input[name='need_mount']:radio").change( function() {
+				console.log('was event!');
 				if (who == 1) {
 					if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
 						jQuery("#btn_mount2").attr("disabled", "disabled");
