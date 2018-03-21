@@ -2772,7 +2772,6 @@ class Gm_ceilingHelpersGm_ceiling
                             <th class="center">Площадь, м<sup>2</sup>.</th>
                             <th class="center">Периметр, м </th>
                             <th class="center">Стоимость, руб.</th>
-                            <th class="center">Примечание</th>
                         </tr>';
         foreach ($calculations as $calc) {
             $html .= '<tr>';
@@ -2780,7 +2779,6 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td class="center">' . $calc->n4 . '</td>';
             $html .= '<td class="center">' . $calc->n5 . '</td>';
             $html .= '<td class="center">' . $calc->mounting_sum . '</td>';
-            $html .= '<td class="center">' . $calc->details . '</td>';
             $html .= '</tr>';
             $sum += $calc->mounting_sum;
         }
@@ -2803,6 +2801,10 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['mounter_sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
+        $html .= '<h2>Примечания: </h2>';
+        foreach ($calculations as $calc) {
+           $html .= "$calc->calculation_title: $calc->details;<br>"
+        }
         //$html .= "<pagebreak />";
         $array = [$html];
         foreach($calculations as $calc){
