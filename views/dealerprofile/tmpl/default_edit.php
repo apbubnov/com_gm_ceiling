@@ -97,10 +97,14 @@ if(!$user->getDealerInfo()->update_check) {
 	</div>
 	<?php if ($user->dealer_type == 1 && $user->dealer_mounters == 0): ?>
 		<h3 class="caption1">Редактирование прайса монтажа</h3>
-		<p>
-			<button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
-			<button id = "reset" class="btn btn-primary" type = "button" >Сбросить</button>
-		</p>	
+		<div class = "row">
+			<div class="col-md-4">
+				<div class="control-group">
+					<button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
+					<button id = "reset" class="btn btn-primary" type = "button" >Сбросить</button>
+				</div>
+			</div>
+		</div>	
 		
 		
 		<div class="row">
@@ -459,7 +463,6 @@ if(!$user->getDealerInfo()->update_check) {
 		for(let i = 0;i<Object.keys(gm_mount).length;i++){
 				let id =`#jform_${Object.keys(gm_mount)[i]}`;
 				if(jQuery("input").is(id)&&id != '#jform_min_sum'){
-					console.log(id);
 					jQuery(id).val((type == "fill") ? gm_mount[Object.keys(gm_mount)[i]] : 0);
 				}
 			}
