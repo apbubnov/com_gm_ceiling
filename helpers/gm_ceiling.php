@@ -2803,7 +2803,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p><br>';
         $html .= '<h2>Примечания: </h2>';
         foreach ($calculations as $calc) {
-           $html .= "$calc->calculation_title: $calc->details;<br>"
+           $html .= "$calc->calculation_title: $calc->details;<br>";
         }
         //$html .= "<pagebreak />";
         $array = [$html];
