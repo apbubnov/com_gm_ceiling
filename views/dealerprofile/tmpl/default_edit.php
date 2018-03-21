@@ -437,10 +437,9 @@ if(!$user->getDealerInfo()->update_check) {
 		</div>
 	</div>	
 </form>
-<script type="text/javascript">
-	jQuery(document).ready(function()
-    {
+<!-- <script type="text/javascript">
+	jQuery(document).ready(function(){
 		var gm_mount = <?php echo $gm_mount;?>;
 		console.log(gm_mount);
 	});
-</script>
+</script> -->
