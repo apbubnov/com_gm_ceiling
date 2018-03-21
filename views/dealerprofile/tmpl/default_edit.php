@@ -19,11 +19,11 @@ $model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
 $margin = $model_dealer_info->getData();
 $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount = $model_mount->getDataAll();
-$gm_mount = $model_mount->getDataAll(1);
-if(!$user->getDealerInfo()->update_check) {
-	$user->setDealerInfo(["update_check" => true]);
-}
+
 ?>
+
+<?if(!$user->getDealerInfo()->update_check) { $user->setDealerInfo(["update_check" => true]);}?>
+
 <style>
 	body {
 		color: #414099;
@@ -94,12 +94,12 @@ if(!$user->getDealerInfo()->update_check) {
 		</div>
 	</div>
 	<?php if ($user->dealer_type == 1 && $user->dealer_mounters == 0): ?>
-		<h3 class="caption1">Редактирование прайса монтажа</h3><!-- <button id = "default_fill" class="btn btn-primary">Заполнить по умолчанию</button> -->
+		<h3 class="caption1">Редактирование прайса монтажа</h3>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="control-group">
 					<div class="control-label">
-						<label id="jform_mp1-lbl" for="jform_mp1">Монтаж</label>
+						<label id="jform_mp1-lbl" for="jform_mp1" >Монтаж</label>
 					</div>
 					<div class="controls">
 						<input type="text" name="jform[mp1]" id="jform_mp1" value=<?php echo ($mount->mp1)?$mount->mp1:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
@@ -437,9 +437,3 @@ if(!$user->getDealerInfo()->update_check) {
 		</div>
 	</div>	
 </form>
-<script type="text/javascript">
-	jQuery(document).ready(function(){
-		var gm_mount = <?php echo $gm_mount;?>;
-		console.log(gm_mount);
-	});
-</script>
