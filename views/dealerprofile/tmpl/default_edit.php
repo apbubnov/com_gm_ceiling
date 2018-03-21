@@ -440,9 +440,9 @@ $gm_mount = $model_mount->getDataAll(1);
 		</div>
 	</div>	
 </form>
-<script>
+<!-- <script>
 	jQuery(document).ready(function(){
-		var gm_count = <?php echo $gm_mount;?>;
+		//var gm_count = <?php //echo $gm_mount;?>;
 		console.log(gm_count);
 	});
-</script>
+</script> -->
