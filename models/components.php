@@ -140,7 +140,7 @@ class Gm_ceilingModelComponents extends JModelList
             $query->join('LEFT', '`#__gm_ceiling_components` AS component ON a.component_id = component.id');
             $query->group('component.title, a.title');
             if ($filter) $query->where($filter);
-            throw new Exception($query);
+        
             $db->setQuery($query);
             $return = $db->loadObjectList();
             return $return;
