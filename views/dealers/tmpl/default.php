@@ -311,7 +311,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         html += '<td>' + data[i].created + '</td>';
                         html += '<td>' + data[i].manager_name + '</td>';
                         if(data[i].dealer_type == 6){
-                            html += '<td> &#127981; </td>';
+                            html += '<td><font face="webdings"> @ </font></td>';
                         }
                         else{
                             html += '<td></td>';
