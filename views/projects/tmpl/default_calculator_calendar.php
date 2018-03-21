@@ -36,8 +36,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
     }
     #projectListMobil {
         font-size: 12px;
-        /* padding-left', '0
-        padding', '0.5rem */
+        padding: 6px;
     }
 </style>
 
