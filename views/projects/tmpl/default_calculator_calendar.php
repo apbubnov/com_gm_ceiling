@@ -40,6 +40,8 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
     }
     #projectListMobil td, #projectListMobil th {
         padding: 6px;
+        vertical-align: middle;
+        border-bottom: 1px solid #eceeef;
     }
 
 </style>
