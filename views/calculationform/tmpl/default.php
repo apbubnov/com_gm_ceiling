@@ -2962,6 +2962,7 @@
 					) {
 						jQuery("[value=1][name='need_mount']").attr("checked", "checked");
 					} else {
+						jQuery("[value=1][name='need_mount']").removeAttr("checked");
 						jQuery("[value=0][name='need_mount']").attr("checked", "checked");
 					}
 				});
