@@ -94,7 +94,7 @@ if(!$user->getDealerInfo()->update_check) {
 		</div>
 	</div>
 	<?php if ($user->dealer_type == 1 && $user->dealer_mounters == 0): ?>
-		<h3 class="caption1">Редактирование прайса монтажа</h3><button id = "default_fill" class="btn btn-primary">Заполнить по умолчанию</button>
+		<h3 class="caption1">Редактирование прайса монтажа</h3><!-- <button id = "default_fill" class="btn btn-primary">Заполнить по умолчанию</button> -->
 		<div class="row">
 			<div class="col-md-4">
 				<div class="control-group">
@@ -437,9 +437,9 @@ if(!$user->getDealerInfo()->update_check) {
 		</div>
 	</div>	
 </form>
-<!-- <script type="text/javascript">
+<script type="text/javascript">
 	jQuery(document).ready(function(){
 		var gm_mount = <?php echo $gm_mount;?>;
 		console.log(gm_mount);
 	});
-</script> -->
+</script>
