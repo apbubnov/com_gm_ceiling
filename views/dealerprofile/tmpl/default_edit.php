@@ -96,10 +96,13 @@ if(!$user->getDealerInfo()->update_check) {
 		</div>
 	</div>
 	<?php if ($user->dealer_type == 1 && $user->dealer_mounters == 0): ?>
+		<h3 class="caption1">Редактирование прайса монтажа</h3>
 		<p>
-			<h3 class="caption1">Редактирование прайса монтажа</h3>
 			<button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
-		</p>
+			<button id = "reset" class="btn btn-primary" type = "button" >Сбросить</button>
+		</p>	
+		
+		
 		<div class="row">
 			<div class="col-md-4">
 				<div class="control-group">
@@ -446,13 +449,18 @@ if(!$user->getDealerInfo()->update_check) {
 	jQuery(document).ready(function(){
 		var gm_mount = JSON.parse('<?php echo $gm_mount?>');
 		jQuery("#fill_default").click(function(){
-			for(let i = 0;i<Object.keys(gm_mount).length;i++){
+			fill_inputs(gm_mount,"fill");
+		});
+		jQuery("#reset").click(function(){
+			fill_inputs(gm_mount,"reset");
+		});
+	}); 
+	function fill_inputs(gm_mount,type){
+		for(let i = 0;i<Object.keys(gm_mount).length;i++){
 				let id =`#jform_${Object.keys(gm_mount)[i]}`;
 				if(jQuery("input").is(id)){
-					jQuery(id).val(gm_mount[Object.keys(gm_mount)[i]]);
+					jQuery(id).val((type == "fill") ? gm_mount[Object.keys(gm_mount)[i]] : 0);
 				}
 			}
-		});
-		
-	}); 
+	}
 </script>
