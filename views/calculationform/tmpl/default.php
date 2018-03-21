@@ -2738,7 +2738,7 @@
 				jQuery("#btn_draining").click();
 				jQuery("#btn_draining").attr("disabled", "disabled");
 			}
-			jQuery("#jform_n31").change( function () {
+			jQuery("#jform_n32").change( function () {
 				if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
 					jQuery("#btn_draining").attr("disabled", "disabled");
 				} else {
@@ -2757,7 +2757,7 @@
 				jQuery("#btn_fixture2").click();
 				jQuery("#btn_fixture2").attr("disabled", "disabled");
 			}
-			jQuery("#jform_n31").change( function () {
+			jQuery("#jform_dop_krepezh").change( function () {
 				if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
 					jQuery("#btn_fixture2").attr("disabled", "disabled");
 				} else {
@@ -2932,10 +2932,48 @@
 				}
 			});
 			if (who != 1) {
-				/* jQuery("body").on("", "", function() {
-
-				}); */
-				// если кнопки содержат свойство дизейблд, то нид маунт ставить один. если нет, но ноль ПРИ ИЗМЕНЕНИИ
+				jQuery("body").on("change", "input[name='jform[n28]']:radio, input[name='radio']:radio, #jform_n12, #n13_count, #n13, #jform_n27, #n14_count, #n14, #jform_n7, #jform_n8, #jform_n17, #jform_n30, #n29_count, #n29, #jform_n21, #jform_n20, #jform_n24, #jform_n11, #jform_n32, #jform_dop_krepezh, #jform_n18, #n22_count, #n22tar, #n23_count, #n23tar", function() {
+					var radio_mount = jQuery("input[name='need_mount']:radio");
+					if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 ||
+						jQuery("input[name='radio']:radio ").val() != 0 ||
+						jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != undefined || jQuery("#jform_n12").val() != "" || jQuery("#jform_n12").val() != 0 ||
+						jQuery("#n13_count").val() != null || jQuery("#n13_count").val() != undefined || jQuery("#n13_count").val() != "" || jQuery("#n13_count").val() != 0 ||
+						jQuery("#n13").val() != null || jQuery("#n13").val() != undefined || jQuery("#n13").val() != "" || jQuery("#n13").val() != 0 ||
+						jQuery("#jform_n27").val() != null || jQuery("#jform_n27").val() != undefined || jQuery("#jform_n27").val() != "" || jQuery("#jform_n27").val() != 0 ||
+						jQuery("#n14_count").val() != null || jQuery("#n14_count").val() != undefined || jQuery("#n14_count").val() != "" || jQuery("#n14_count").val() != 0 ||
+						jQuery("#n14").val() != null || jQuery("#n14").val() != undefined || jQuery("#n14").val() != "" || jQuery("#n14").val() != 0 ||
+						jQuery("#jform_n7").val() != null || jQuery("#jform_n7").val() != undefined || jQuery("#jform_n7").val() != "" || jQuery("#jform_n7").val() != 0 ||
+						jQuery("#jform_n8").val() != null || jQuery("#jform_n8").val() != undefined || jQuery("#jform_n8").val() != "" || jQuery("#jform_n8").val() != 0 ||
+						jQuery("#jform_n17").val() != null || jQuery("#jform_n17").val() != undefined || jQuery("#jform_n17").val() != "" || jQuery("#jform_n17").val() != 0 ||
+						jQuery("#jform_n30").val() != null || jQuery("#jform_n30").val() != undefined || jQuery("#jform_n30").val() != "" || jQuery("#jform_n30").val() != 0 ||
+						jQuery("#n29_count").val() != null || jQuery("#n29_count").val() != undefined || jQuery("#n29_count").val() != "" || jQuery("#n29_count").val() != 0 ||
+						jQuery("#n29tar").val() != null || jQuery("#n29tar").val() != undefined || jQuery("#n29tar").val() != "" || jQuery("#n29tar").val() != 0 ||
+						jQuery("#jform_n21").val() != null || jQuery("#jform_n21").val() != undefined || jQuery("#jform_n21").val() != "" || jQuery("#jform_n21").val() != 0 ||
+						jQuery("#jform_n20").val() != null || jQuery("#jform_n20").val() != undefined || jQuery("#jform_n20").val() != "" || jQuery("#jform_n20").val() != 0 ||
+						jQuery("#jform_n24").val() != null || jQuery("#jform_n24").val() != undefined || jQuery("#jform_n24").val() != "" || jQuery("#jform_n24").val() != 0 || 
+						jQuery("#jform_n11").val() != null || jQuery("#jform_n11").val() != undefined || jQuery("#jform_n11").val() != "" || jQuery("#jform_n11").val() != 0 || 
+						jQuery("#jform_n31").val() != null || jQuery("#jform_n31").val() != undefined || jQuery("#jform_n31").val() != "" || jQuery("#jform_n31").val() != 0 || 
+						jQuery("#jform_n32").val() != null || jQuery("#jform_n32").val() != undefined || jQuery("#jform_n32").val() != "" || jQuery("#jform_n32").val() != 0 ||
+						jQuery("#jform_dop_krepezh").val() != null || jQuery("#jform_dop_krepezh").val() != undefined || jQuery("#jform_dop_krepezh").val() != "" || jQuery("#jform_dop_krepezh").val() != 0 ||
+						jQuery("#jform_n18").val() != null || jQuery("#jform_n18").val() != undefined || jQuery("#jform_n18").val() != "" || jQuery("#jform_n18").val() != 0 ||
+						jQuery("#n22_count").val() != null || jQuery("#n22_count").val() != undefined || jQuery("#n22_count").val() != "" || jQuery("#n22_count").val() != 0 ||
+						jQuery("#n22tar").val() != null || jQuery("#n22tar").val() != undefined || jQuery("#n22tar").val() != "" || jQuery("#n22tar").val() != 0 ||
+						jQuery("#n23_count").val() != null || jQuery("#n23_count").val() != undefined || jQuery("#n23_count").val() != "" || jQuery("#n23_count").val() != 0 ||
+						jQuery("#n23tar").val() != null || jQuery("#n23tar").val() != undefined || jQuery("#n23tar").val() != "" || jQuery("#n23tar").val() != 0
+					) {
+						for (var y=0; y<radio_mount; y++) {
+							if (jQuery("input[name='need_mount']:radio")[y].val() == 1) {
+								jQuery("input[name='need_mount']:radio")[y].attr("checked", "checked");
+							}
+						}
+					} else {
+						for (var y=0; y<radio_mount; y++) {
+							if (jQuery("input[name='need_mount']:radio")[y].val() == 0) {
+								jQuery("input[name='need_mount']:radio")[y].attr("checked", "checked");
+							}
+						}
+					}
+				});
 			}
 			jQuery("#btn_comment").click( function () {
 				jQuery("#comment").toggle();
