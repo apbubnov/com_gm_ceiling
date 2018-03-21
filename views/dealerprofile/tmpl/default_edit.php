@@ -96,8 +96,10 @@ if(!$user->getDealerInfo()->update_check) {
 		</div>
 	</div>
 	<?php if ($user->dealer_type == 1 && $user->dealer_mounters == 0): ?>
-		<h3 class="caption1">Редактирование прайса монтажа</h3>
-		<button id = "fill_default" class="btn btn-primary" style="display:inline-block">Заполнить по умолчанию</button>
+		<p>
+			<h3 class="caption1">Редактирование прайса монтажа</h3>
+			<button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
+		</p>
 		<div class="row">
 			<div class="col-md-4">
 				<div class="control-group">
