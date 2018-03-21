@@ -354,7 +354,7 @@ if (empty($list['direction']))
 				->innerJoin('`rgzbn_users` AS `u` ON `c`.`id` = `u`.`associated_client`')
 				->leftJoin('`#__user_usergroup_map` ON `u`.`id`=`rgzbn_user_usergroup_map`.`user_id`')
 				->leftJoin('`#__gm_ceiling_dealer_info` as `i` on `u`.`id` = `i`.`dealer_id`')
-				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1) AND `#__user_usergroup_map`.`group_id`=14")
+				->where("(`c`.`client_name` LIKE '%$client_name%' OR `b`.`phone` LIKE '%$client_name%') AND (`u`.`dealer_type` = 0 OR `u`.`dealer_type` = 1 OR `u`.`dealer_type` = 6) AND `#__user_usergroup_map`.`group_id`=14")
 				->order('`c`.`id` DESC')
 				->group('`c`.`id`');
 				if (!empty($manager_id))
