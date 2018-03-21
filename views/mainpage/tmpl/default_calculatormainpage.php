@@ -23,12 +23,6 @@ $answer1 = $model->getDataByStatus("GaugingsGraph");
 
 ?>
 
-<style>
-	body {
-		overflow-y: hidden;
-	}
-</style>
-
 <h2 class="center">Замерщик</h2>
 <div class="start_page">
 	<div style="width: 100%; margin-left: calc(50% - 100px); padding-bottom: 1em;">
