@@ -310,7 +310,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $id = $jinput->get('user_id', null, 'INT');
             $type = $jinput->get('type', null, 'INT');
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-            $user_model->change_dealer_type($id,$type);
+            $users_model->change_dealer_type($id,$type);
             die(true);
         }
         catch(Exception $e)
