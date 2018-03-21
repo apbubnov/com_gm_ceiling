@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @version    CVS: 1.0.0
+ * @version    CVS: 0.1.7
  * @package    Com_Gm_ceiling
- * @author     Mikhail "Spectral Eye" Vinyukov <vms@itctl.ru>
- * @copyright  2016 Mikhail "Spectral Eye" Vinyukov
+ * @author     SpectralEye <Xander@spectraleye.ru>
+ * @copyright  2016 SpectralEye
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 // No direct access
@@ -13,17 +13,17 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 
 /**
- * View class for a list of Gm_ceiling.
+ * View to edit
  *
  * @since  1.6
  */
-class Gm_ceilingViewDealerProfile extends JViewLegacy
+class Gm_ceilingViewProject extends JViewLegacy
 {
-	protected $items;
-
-	protected $pagination;
-
 	protected $state;
+
+	protected $item;
+
+	protected $form;
 
 	protected $params;
 
@@ -38,22 +38,48 @@ class Gm_ceilingViewDealerProfile extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-	    $app = JFactory::getApplication();
+		$app  = JFactory::getApplication();
+		$user = JFactory::getUser();
 
-		$this->state      = $this->get('State');
-		$this->items = $this->get('Items');
-		$this->pagination = $this->get('Pagination');
-		$this->params     = $app->getParams('com_gm_ceiling');
-		$this->filterForm = $this->get('FilterForm');
-		$this->activeFilters = $this->get('ActiveFilters');
+		$this->state  = $this->get('State');
+		$this->item   = $this->get('Data');
+		
+		$this->params = $app->getParams('com_gm_ceiling');
+		
+		$tpl = $app->input->getString('type', NULL);
+
+		if (!empty($this->item))
+		{
+			$this->form = $this->get('Form');
+		}
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
 		{
 			throw new Exception(implode("\n", $errors));
 		}
-		$tpl = $app->input->getString('type', NULL);
 
+		
+
+		if ($this->_layout == 'edit')
+		{
+			$authorised = $user->authorise('core.create', 'com_gm_ceiling');
+
+			if ($authorised !== true)
+			{
+				throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
+			}
+		}
+		
+		$this->type = $app->input->getString('type', NULL);
+		$this->subtype = $app->input->getString('subtype', NULL);
+		if($this->subtype != NULL) {
+		    if ($this->subtype == "run") $tpl = $this->type;
+			else $tpl = $this->type . "_" . $this->subtype;
+		} else {
+			$tpl = $this->type;
+		}
+		
 		$user = JFactory::getUser();
 		if($user->guest) {
 			$mainframe = &JFactory::getApplication();
@@ -61,6 +87,7 @@ class Gm_ceilingViewDealerProfile extends JViewLegacy
 		}
 
 		$this->_prepareDocument();
+
 		parent::display($tpl);
 	}
 
@@ -78,7 +105,7 @@ class Gm_ceilingViewDealerProfile extends JViewLegacy
 		$title = null;
 
 		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
+		// We need to get it from the menu item itself
 		$menu = $menus->getActive();
 
 		if ($menu)
@@ -121,17 +148,5 @@ class Gm_ceilingViewDealerProfile extends JViewLegacy
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
-	}
-
-	/**
-	 * Check if state is set
-	 *
-	 * @param   mixed  $state  State
-	 *
-	 * @return bool
-	 */
-	public function getState($state)
-	{
-		return isset($this->state->{$state}) ? $this->state->{$state} : false;
 	}
 }
