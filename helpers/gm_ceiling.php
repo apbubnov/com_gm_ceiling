@@ -1761,7 +1761,12 @@ class Gm_ceilingHelpersGm_ceiling
                         "dealer_salary_total" => $data['n12'] * $results->mp2//max($dealer->mp4, $dealer->mp5)				//Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
-
+                if($data['n16']){
+                    $cornice = "Шторный карниз / Скрытый";
+                }
+                else {
+                    $cornice = "Шторный карниз / Обычный";
+                }
                 if ($del_flag == 0) {
                     //Установка светильников
                     if (count($n13) > 0) {
@@ -2061,21 +2066,16 @@ class Gm_ceilingHelpersGm_ceiling
 
                     }
                 }
-                if($data['n16']){
-                    $cornice = "Шторный карниз / Скрытый";
-                }
-                else {
-                    $cornice = "Шторный карниз / Обычный";
-                }
+                
                 //шторный карниз
                 if ($data['n27'] > 0) {
                     $mounting_data[] = array(
-                        "title" => "Шторный карниз",                                                    //Название
-                        "quantity" => $data['n27'],                                                        //Кол-во
-                        "gm_salary" => $results->mp11,                                                        //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['n27'] * $results->mp11,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $results->mp11,                                                //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n27'] * $results->mp11                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "title" => $cornice,                                                            //Название
+                        "quantity" => $data['n27'],                                                     //Кол-во
+                        "gm_salary" => $results->mp11,                                                  //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n27'] * $results->mp11,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp11,                                              //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n27'] * $results->mp11                          //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
 
@@ -2181,12 +2181,6 @@ class Gm_ceilingHelpersGm_ceiling
                     );
                 }
                 //шторный карниз
-                if($data['n16']){
-                    $cornice = "Шторный карниз / Скрытый";
-                }
-                else {
-                    $cornice = "Шторный карниз / Обычный";
-                }
                 if ($data['n27'] > 0) {
                     $mounting_data[] = array(
                         "title" =>  $cornice,                                                    //Название
