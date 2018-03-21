@@ -2933,7 +2933,7 @@
 			});
 			if (who != 1) {
 				jQuery("body").on("change", "input[name='jform[n28]']:radio, input[name='radio']:radio, #jform_n12, #n13_count, #n13, #jform_n27, #n14_count, #n14, #jform_n7, #jform_n8, #jform_n17, #jform_n30, #n29_count, #n29, #jform_n21, #jform_n20, #jform_n24, #jform_n11, #jform_n32, #jform_dop_krepezh, #jform_n18, #n22_count, #n22tar, #n23_count, #n23tar", function() {
-					if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 &&
+					if ((jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) &&
 						jQuery("input[name='radio']:radio ").val() != 0 &&
 						jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0 &&
 						jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0 &&
