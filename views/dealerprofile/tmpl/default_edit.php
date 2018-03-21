@@ -443,10 +443,14 @@ if(!$user->getDealerInfo()->update_check) {
 <script>
 	jQuery(document).ready(function(){
 		var gm_mount = JSON.parse('<?php echo $gm_mount?>');
-		for(let i = 0;i<Object.keys(gm_mount).length;i++){
-			if(jQuery("input").is(`#jform_${Object.keys(gm_mount)[i]}`)){
-				console.log(`#jform_${Object.keys(gm_mount)[i]}`);
+		jQuery("#fill_default").click(function(){
+			for(let i = 0;i<Object.keys(gm_mount).length;i++){
+				let id =`#jform_${Object.keys(gm_mount)[i]}`;
+				if(jQuery("input").is(id)){
+					jQuery(id).val(gm_mount[Object.keys(gm_mount)[i]]);
+				}
 			}
-		}
+		});
+		
 	}); 
 </script>
