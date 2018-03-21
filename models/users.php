@@ -59,7 +59,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
 			$query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
 			$query->leftJoin('`#__gm_ceiling_dealer_info` as i on u.id = i.dealer_id');
-			$query->where('`#__user_usergroup_map`.`group_id`=14 AND (`dealer_type` < 2 OR `dealer_type = 6`)');
+			$query->where('`#__user_usergroup_map`.`group_id`=14 AND (`dealer_type` < 2 OR `dealer_type` = 6)');
 			$query->group('`id`');
 			$query->order('`id` DESC');
 			$db->setQuery($query);
