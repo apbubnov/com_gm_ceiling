@@ -974,7 +974,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $filter = "component.title LIKE('%Переход уровня%') ";
         $items_659 = $components_model->getFilteredItems($filter);
-
+        
         $filter = "component.title LIKE('%Переход уровня с нишей%') ";
         $items_660 = $components_model->getFilteredItems($filter);
 
@@ -1005,13 +1005,14 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['n11'] > 0) {
             $component_count[$items_1[0]->id] += $data['n11'];
             if ($data['n1'] == 29) $component_count[$items_233[0]->id] += $data['n11']; 
-            else /* if ($data['n28'] == 0) */ $component_count[$items_11[0]->id] += $data['n11'];
-           /*  elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n11'];
-            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n11']; */
+            else $component_count[$items_11[0]->id] += $data['n11'];
             $component_count[$items_430[0]->id] += $data['n11'] * 3;
             $component_count[$items_8[0]->id] += $data['n11'] * 22;
             $component_count[$items_5[0]->id] += $data['n11'] * 16;
             $component_count[$items_360[0]->id] += $data['n11'];
+            if (!empty($data['n6'])) {
+                $component_count[$data['n6']] += $data['n11'];
+            } else $component_count[$items_vstavka_bel[0]->id] += $data['n11'];
         }
         //для Димы
         if ($data['n31'] > 0) {
@@ -1019,11 +1020,10 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[$items_5[0]->id] += $data['n31'] * 10;
             $n31_count = ceil($data['n31']);
             if (!empty($data['n6'])) {
-            $component_count[$data['n6']] += $n31_count;
+                $component_count[$data['n6']] += $n31_count;
             } else $component_count[$items_vstavka_bel[0]->id] += $n31_count;
-          /*   if ($data['n28'] == 0) */ $component_count[$items_11[0]->id] += $data['n31'];
-         /*    elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n31'];
-            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n31']; */
+            $component_count[$items_11[0]->id] += $data['n31'];
+         
             
         }
         if ($data['n1'] == 28 && $data['n6']) {
@@ -1053,9 +1053,9 @@ class Gm_ceilingHelpersGm_ceiling
             $n23 = json_decode($data['n23']);
             $n15 = json_decode($data['n15']);
             $n29 = json_decode($data['n29']);
-            print_r($n29);
-            exit();
+           
             if (count($n29) > 0) {
+                
                 foreach ($n29 as $profil) {
                     if ($profil[0] > 0) {
                         if ($profil[1] == 12 || $profil[1] == 13) {
@@ -1168,8 +1168,6 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             $n29 = $data['n29'];
-            print_r($n29);
-            exit();
             if (count($n29) > 0) {
                 foreach ($n29 as $profil) {
                     if ($profil->n29_count > 0) {
@@ -1495,12 +1493,12 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_mp20 = margin($results->mp20, $margin['gm_canvases_margin']);
             $dealer_mp20 = margin($gm_mp20, $margin['dealer_canvases_margin']);
             $guild_data[] = array(
-                "title" => "Обработка 1 угла",                                                                //Название
-                "quantity" => $data['n9'] - 4,                                                                //Кол-во
-                "gm_salary" => $gm_mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                "gm_salary_total" => ($data['n9'] - 4) * $gm_mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                "dealer_salary" => $dealer_mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                "dealer_salary_total" => ($data['n9'] - 4) * $dealer_mp20                                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                "title" => "Обработка 1 угла",                                                   //Название
+                "quantity" => $data['n9'] - 4,                                                   //Кол-во
+                "gm_salary" => $gm_mp20,                                                         //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => ($data['n9'] - 4) * $gm_mp20,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $dealer_mp20,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => ($data['n9'] - 4) * $dealer_mp20                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
         if ( $data['n31'] > 0) {  
@@ -1508,12 +1506,12 @@ class Gm_ceilingHelpersGm_ceiling
             $gm_mp22 = margin($results->mp22, $margin['gm_canvases_margin']);
             $dealer_mp22 = margin($gm_mp22, $margin['dealer_canvases_margin']);
             $guild_data[] = array(
-                "title" => "Внутренний вырез(в цеху)",                                                                    //Название
-                "quantity" => $data['n31'],                                                                //Кол-во
-                "gm_salary" => $gm_mp22,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                "gm_salary_total" => $data['n31'] * $gm_mp22,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                "dealer_salary" => $dealer_mp22,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                "dealer_salary_total" => $data['n31'] * $dealer_mp22                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                "title" => "Внутренний вырез(в цеху)",                                           //Название
+                "quantity" => $data['n31'],                                                      //Кол-во
+                "gm_salary" => $gm_mp22,                                                         //Себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => $data['n31'] * $gm_mp22,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "dealer_salary" => $dealer_mp22,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => $data['n31'] * $dealer_mp22                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
 
@@ -1607,7 +1605,8 @@ class Gm_ceilingHelpersGm_ceiling
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
         $guild_data = array();
-        $count_svet = 0;
+        $count_round_lamp = 0;
+        $count_square_lamp = 0;
         $count_ventilation = 0;
         $count_ventilation_1 = 0;
         $count_diffuzor = 0;
@@ -1774,23 +1773,35 @@ class Gm_ceilingHelpersGm_ceiling
                 if ($del_flag == 0) {
                     //Установка светильников
                     if (count($n13) > 0) {
-
                         foreach ($n13 as $svet) {
                             if ($svet->n13_count > 0) {
-
-                                $count_svet += $svet->n13_count;
-
+                                if($svet->n13_type == 2){
+                                    $count_round_lamp += $svet->n13_count;
+                                }
+                                if($svet->n13_type == 3){
+                                    $count_square_lamp += $svet->n13_count;
+                                }
                             }
                         }
 
-                        if ($count_svet > 0) {
+                        if ($count_round_lamp > 0) {
                             $mounting_data[] = array(
-                                "title" => "Установка светильников",                                                //Название
-                                "quantity" => $count_svet,                                                          //Кол-во
-                                "gm_salary" => max($results->mp4, $results->mp5),                                   //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_svet * max($results->mp4, $results->mp5),               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => max($results->mp4, $results->mp5),                               //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_svet * max($results->mp4, $results->mp5)            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "title" => "Установка круглых светильников",                                //Название
+                                "quantity" => $count_round_lamp,                                            //Кол-во
+                                "gm_salary" => $results->mp4,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_round_lamp * $results->mp4,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp4,                                           //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_round_lamp * $results->mp4                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            );
+                        }
+                        if ($count_square_lamp > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Установка квадратных светильников",                 //Название
+                                "quantity" => $count_square_lamp,                               //Кол-во
+                                "gm_salary" => $results->mp5,                                   //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_square_lamp * $results->mp5,        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp5,                               //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_square_lamp * $results->mp5     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                     }
@@ -1926,17 +1937,33 @@ class Gm_ceilingHelpersGm_ceiling
                     if (count($n13) > 0) {
                         foreach ($n13 as $svet) {
                             if ($svet[0] > 0) {
-                                $count_svet += $svet[0];
+                                if($svet[1] == 2){
+                                    $count_round_lamp += $svet[0];
+                                }
+                                if($svet[1] == 3){
+                                    $count_square_lamp += $svet[0];
+                                }
+                               
                             }
                         }
-                        if ($count_svet > 0) {
+                        if ($count_round_lamp > 0) {
                             $mounting_data[] = array(
-                                "title" => "Установка светильников",                                                //Название
-                                "quantity" => $count_svet,                                                            //Кол-во
-                                "gm_salary" => max($results->mp4, $results->mp5),                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_svet * max($results->mp4, $results->mp5),                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => max($results->mp4, $results->mp5),                                    //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_svet * max($results->mp4, $results->mp5)                //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "title" => "Установка круглых светильников",                                 //Название
+                                "quantity" => $count_round_lamp,                                             //Кол-во
+                                "gm_salary" => $results->mp4,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_round_lamp * $results->mp4,                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp4,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_round_lamp * $results->mp4                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            );
+                        }
+                        if ($count_square_lamp > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Установка квадратных светильников",                              //Название
+                                "quantity" => $count_square_lamp,                                            //Кол-во
+                                "gm_salary" => $results->mp5,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_square_lamp * $results->mp5,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp5,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_square_lamp * $results->mp5                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                     }
@@ -2222,20 +2249,33 @@ class Gm_ceilingHelpersGm_ceiling
                     if (count($n13) > 0) {
                         foreach ($n13 as $svet) {
                             if ($svet->n13_count > 0) {
-
-                                $count_svet += $svet->n13_count;
-
+                                if($svet->n13_type == 2){
+                                    $count_round_lamp += $svet->n13_count;
+                                }
+                                if($svet->n13_type == 3){
+                                    $count_square_lamp += $svet->n13_count;
+                                }
                             }
                         }
 
-                        if ($count_svet > 0) {
+                        if ($count_round_lamp > 0) {
                             $mounting_data[] = array(
-                                "title" => "Установка светильников",                                                //Название
-                                "quantity" => $count_svet,                                                          //Кол-во
-                                "gm_salary" => max($results->mp36, $results->mp37),                                   //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_svet * max($results->mp36, $results->mp37),               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => max($results->mp36, $results->mp37),                               //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_svet * max($results->mp36, $results->mp37)            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "title" => "Установка круглых светильников",                                //Название
+                                "quantity" => $count_round_lamp,                                            //Кол-во
+                                "gm_salary" => $results->mp4,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_round_lamp * $results->mp4,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp4,                                           //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_round_lamp * $results->mp4                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            );
+                        }
+                        if ($count_square_lamp > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Установка квадратных светильников",                 //Название
+                                "quantity" => $count_square_lamp,                               //Кол-во
+                                "gm_salary" => $results->mp5,                                   //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_square_lamp * $results->mp5,        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp5,                               //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_square_lamp * $results->mp5     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                     }
@@ -2348,19 +2388,33 @@ class Gm_ceilingHelpersGm_ceiling
                     if (count($n13) > 0) {
                         foreach ($n13 as $svet) {
                             if ($svet[0] > 0) {
-
-                                $count_svet += $svet[0];
-
+                                if($svet[1] == 2){
+                                    $count_round_lamp += $svet[0];
+                                }
+                                if($svet[1] == 3){
+                                    $count_square_lamp += $svet[0];
+                                }
+                               
                             }
                         }
-                        if ($count_svet > 0) {
+                        if ($count_round_lamp > 0) {
                             $mounting_data[] = array(
-                                "title" => "Установка светильников",                                                //Название
-                                "quantity" => $count_svet,                                                            //Кол-во
-                                "gm_salary" => max($results->mp36, $results->mp37),                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_svet * max($results->mp36, $results->mp37),                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => max($results->mp36, $results->mp37),                                    //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_svet * max($results->mp36, $results->mp37)                //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "title" => "Установка круглых светильников",                                 //Название
+                                "quantity" => $count_round_lamp,                                             //Кол-во
+                                "gm_salary" => $results->mp4,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_round_lamp * $results->mp4,                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp4,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_round_lamp * $results->mp4                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            );
+                        }
+                        if ($count_square_lamp > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Установка квадратных светильников",                              //Название
+                                "quantity" => $count_square_lamp,                                            //Кол-во
+                                "gm_salary" => $results->mp5,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_square_lamp * $results->mp5,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp5,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_square_lamp * $results->mp5                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                     }
