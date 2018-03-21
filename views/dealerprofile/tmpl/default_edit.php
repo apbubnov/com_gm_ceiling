@@ -99,7 +99,7 @@ if(!$user->getDealerInfo()->update_check) {
 		<h3 class="caption1">Редактирование прайса монтажа</h3>
 		<div>
 			<button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
-			<button id = "reset" class="btn btn-primary" type = "button" >Сбросить</button>
+			<button id = "reset_ap" class="btn btn-primary" type = "button" >Сбросить</button>
 		</div>
 		<div class="row">
 			<div class="col-md-4">
@@ -449,7 +449,7 @@ if(!$user->getDealerInfo()->update_check) {
 		jQuery("#fill_default").click(function(){
 			fill_inputs(gm_mount,"fill");
 		});
-		jQuery("#reset").click(function(){
+		jQuery("#reset_ap").click(function(){
 			fill_inputs(gm_mount,"reset");
 		});
 	}); 
