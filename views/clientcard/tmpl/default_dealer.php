@@ -95,6 +95,11 @@ foreach ($dealer_history as $key => $item) {
            <button id = "new_send_email" type = "button" class = "btn btn-primary">Написать e-mail</button>
         </td>
     </tr>
+    <tr>
+        <td colspan = 2 class = "td-left">
+            <button class="btn btn-primary" type="button" id="btn_made_mnfct">Это производитель</button>
+        </td>
+    </tr>
 </table>
 <div style="width: 98%;">
     <div style="display: inline-block; width: 48%;">
@@ -790,7 +795,40 @@ foreach ($dealer_history as $key => $item) {
                 }
             });
         });
-
+        
+        jQuery("#btn_made_mnfct").click(function(){
+            var user_id = <?php echo $client->dealer_id; ?>;
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=big_smeta.changeDealerType",
+                data: {
+                    user_id: user_id,
+                    type : 6
+                },
+                dataType: "json",
+                async: false,
+                success: function(data) {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Дилер переведен в производителя"
+                    });
+                },
+                error: function(data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Произошла ошибка"
+                    });
+                }
+            });
+        });
         jQuery("#send_login").click(function(){
             var user_id = <?php echo $client->dealer_id; ?>;
             jQuery.ajax({

@@ -409,4 +409,24 @@ class Gm_ceilingModelUsers extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
+	function change_dealer_type($id,$type){
+		try
+		{
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->update("`#__users`");
+			$query->set("`dealer_type` = $type");
+			$query->where("`id` = $id");
+			$db->setQuery($query);
+			$db->execute();
+			return true;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }
