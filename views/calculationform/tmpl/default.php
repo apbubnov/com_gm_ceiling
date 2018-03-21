@@ -1116,7 +1116,7 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-												В расчет считается добавочная стоимость на сложность крепления в керамогранит
+													В расчет считается добавочная стоимость на сложность крепления в керамогранит
 												</span>
 											</div>
 										</td>
@@ -1354,7 +1354,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												Вентиляционная решетка для отвода воздуха, который попадает за потолочное пространство</br>
+												<img src="/images/diffuser.png" width="280"/><br>
 												В расчет входит 1 диффузор + монтжаная работа по установке диффузора
 											</span>
 										</div>
@@ -1429,7 +1429,12 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													В расчет на 1м парящего потолка входит багет для парящих потолков (2,5 алюм), а также 1 вставка для парящих потолков (профиль ПВХ) + монтажная работа по установке парящего потолка
+													В расчет на 1м парящего потолка входит:
+													<ul style="text-align: left;">
+														<li>1м багета для парящих потолков (а из периметра вычитается 1м стенового багета)</li>
+														<li>1м светопропускающей вставки для парящих потолков</li>
+													</ul>
+													+ монтажная работа по установке профиля для парящих потолков
 												</span>
 											</div>
 										</td>
@@ -1457,7 +1462,9 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												В расчет входит монтажная работа по установке перехода уровня
+												Для перехода без нишей в расчет входит 343 р. + маржа на комплектующие</br>
+												Для перехода с нишей в расчет входит 532 о. + маржа на комплектующие</br>
+												+ монтажная работа "переход уровня с нишей или без"
 											</span>
 										</div>
 									</td>
@@ -1531,12 +1538,13 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													В расчет на 1м внутреннего выреза входит багет ПВХ (2,5):<br>
+													В расчет на 1м внутреннего выреза в цеху входит:<br>
 													<ul style="text-align: left;">
-														<li>1 белая вставка</li>
-														<li>10 дюбеля (красн. 6*51)</li>
-														<li>10 самореза (ГКД 3,5*51)</li>
-														<li>4 саморезов (п/сф 3,5*9,5 цинк)</li>
+														<li>1м багета ПВХ (2,5)</li>
+														<li>1м белой вставки</li>
+														<li>10 дюбелей (красн. 6*51)</li>
+														<li>10 саморезов (ГКД 3,5*51)</li>
+														<li>4 самореза (п/сф 3,5*9,5 цинк)</li>
 														<li>1 внутренний вырез</li>
 													</ul>
 												</span>
@@ -1567,16 +1575,17 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													В расчет на 1м внутреннего выреза входит багет ПВХ (2,5)<br>
-													А также:
+													В расчет на 1м внутреннего выреза на месте входит:
 													<ul style="text-align: left;">
-														<li>1 брус (40*50)</li>
-														<li>16 дюбеля (красн. 6*51)</li>
+														<li>1м багета ПВХ (2,5)</li>
+														<li>1м белой вставки</li>
+														<li>1м бруса (40*50)</li>
+														<li>16 дюбелей(красн. 6*51)</li>
 														<li>22 самореза (ГКД 3,5*41)</li>
-														<li>3 белых кронштейн (15*12,5)</li>
-														<li>1 гарпун</li>
+														<li>3 белых кронштейна (15*12,5)</li>
+														<li>1м гарпуна</li>
 													</ul>
-													+ монтажная работа по внутреннему вырезу
+													+ монтажная работа "внутренний вырез"
 												</span>
 											</div>
 										</td>
@@ -1607,7 +1616,7 @@
 												<div class="help_question">?</div>
 												<span class="airhelp">
 													В расчет входит монтажная работа по сливу воды</br>
-													Укажите колиество комнат
+													Укажите количество комнат
 												</span>
 											</div>
 										</td>
@@ -1635,7 +1644,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												
+												В расчет входит добавочная стоимость на высоту помещения выше 3х метров
 											</span>
 										</div>
 									</td>
@@ -1679,7 +1688,7 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-													В расчет входит наценка на монтажные работы за труднодоступные места. Считается по метрам.
+													В расчет входит монтажная работа "сложность доступа". Считается по метрам.
 												</span>
 											</div>
 										</td>
@@ -1708,7 +1717,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												
+												Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.
 											</span>
 										</div>
 									</td>
@@ -1771,7 +1780,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												
+												В данном поле вы можете выбрать любой расходный материал данного производителя
 											</span>
 										</div>
 									</td>
@@ -1836,7 +1845,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												В расчет входят цены за указанные Вами работы
+												Это поле предназначено для введения непредусмотренных программной монтажных работ. Вы можете произвольно написать названия монтажных работ и их себестоимость. Программа сама сделает наценку, как и на все остальные монтажных работ и выдаст введенное Вами название в прайсе для клиента.
 											</span>
 										</div>
 									</td>
@@ -1898,7 +1907,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												
+												Данная кнопка может отменить все монтажные работы
 											</span>
 										</div>
 									</td>
@@ -2036,18 +2045,18 @@
 						<div class="row">
 							<div class="col-sm-4"></div>
 							<div class="col-sm-4">
-								<table>	
+								<table class="table_calcform">
 									<tr>
-										<td>
+										<td class="td_calcform1">
 											<label id="jform_calculation_title-lbl" for="jform_calculation_title" class="">Название расчета:</label>
 										</td>
-										<td>
-											<a class="help">
-												<img src="/images/hint.png" alt="подсказка" style="margin-bottom: 16px" />
+										<td class="td_calcform2">
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
 												<span class="airhelp">
-													Назовите чертеж, по названию комнаты, в которой производится замер, что бы легче было потом ориентироваться. Например: "Спальня" 
+													Назовите чертеж, по названию комнаты, в которой производится замер, что бы легче было потом ориентироваться. Например: "Спальня".
 												</span>
-											</a>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -2923,8 +2932,10 @@
 				}
 			});
 			if (who != 1) {
-				// если кнопки содержат свойство дизейблд, то нид маунт ставить один. если нет, но ноль ПРИ ИЗМЕНЕНИИ
+				/* jQuery("body").on("", "", function() {
 
+				}); */
+				// если кнопки содержат свойство дизейблд, то нид маунт ставить один. если нет, но ноль ПРИ ИЗМЕНЕНИИ
 			}
 			jQuery("#btn_comment").click( function () {
 				jQuery("#comment").toggle();
