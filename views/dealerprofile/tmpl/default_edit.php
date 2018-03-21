@@ -459,6 +459,7 @@ if(!$user->getDealerInfo()->update_check) {
 		for(let i = 0;i<Object.keys(gm_mount).length;i++){
 				let id =`#jform_${Object.keys(gm_mount)[i]}`;
 				if(jQuery("input").is(id)&&id != 'jform_min_sum'){
+					console.log(id);
 					jQuery(id).val((type == "fill") ? gm_mount[Object.keys(gm_mount)[i]] : 0);
 				}
 			}
