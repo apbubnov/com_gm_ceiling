@@ -2960,11 +2960,14 @@
 						jQuery("#n23_count").val() != null || jQuery("#n23_count").val() != undefined || jQuery("#n23_count").val() != "" || jQuery("#n23_count").val() != 0 ||
 						jQuery("#n23tar").val() != null || jQuery("#n23tar").val() != undefined || jQuery("#n23tar").val() != "" || jQuery("#n23tar").val() != 0
 					) {
+						console.log(jQuery("[name='need_mount']:radio:checked").val());
 						jQuery("[value=1][name='need_mount']").attr("checked", "checked");
+						console.log(jQuery("[name='need_mount']:radio:checked").val());
 					} else {
 						console.log(jQuery("[name='need_mount']:radio:checked").val());
 						jQuery("[value=1][name='need_mount']").removeAttr("checked");
 						jQuery("[value=0][name='need_mount']").attr("checked", "checked");
+						console.log(jQuery("[name='need_mount']:radio:checked").val());
 					}
 				});
 			}
