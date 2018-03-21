@@ -2918,6 +2918,8 @@
 			}
 			jQuery("input[name='need_mount']:radio").change( function() {
 				console.log('was event!');
+				jQuery("[value=0][name='need_mount']").attr("data-locked", "1");
+				jQuery("[value=1][name='need_mount']").attr("data-locked", "1");
 				if (who == 1) {
 					if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
 						jQuery("#btn_mount2").attr("disabled", "disabled");
@@ -2963,10 +2965,22 @@
 						(jQuery("#n23tar").val() == null || jQuery("#n23tar").val() == undefined || jQuery("#n23tar").val() == "" || jQuery("#n23tar").val() == 0)
 					) {
 						console.log("все пусто");
-						jQuery("[value=0][name='need_mount']").attr("checked", "checked");
+						if (jQuery("[value=0][name='need_mount']").attr("data-locked") == 0) {
+							console.log("человек не выбрал");
+							jQuery("[value=0][name='need_mount']").attr("checked", "checked");
+							jQuery("#btn_mount2").attr("disabled", false);
+						} else {
+							console.log("человек выбрал");
+						}
 					} else {
 						console.log("хоть одно заполнено");
-						jQuery("[value=1][name='need_mount']").attr("checked", "checked");
+						if (jQuery("[value=0][name='need_mount']").attr("data-locked") == 0) {
+							console.log("человек не выбрал");
+							jQuery("[value=1][name='need_mount']").attr("checked", "checked");
+							jQuery("#btn_mount2").attr("disabled", "disabled");
+						} else {
+							console.log("человек выбрал");
+						}
 					}
 				});
 			}
