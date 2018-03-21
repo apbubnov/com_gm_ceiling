@@ -1921,12 +1921,12 @@
 						<div class="col-sm-4" id = "need_mount">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">
 								<div style="display: inline-block;">
-									<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0" <?php if ($need_mount_for_radio == 0) {echo "checked='checked'";} ?> >
+									<input type="radio" name = "need_mount" id = "without" class = "radio" value = "0" data-locked="0" <?php if ($need_mount_for_radio == 0) {echo "checked='checked'";} ?> >
 									<label for="without">Не нужен</label>
 								</div>
 								<br>
 								<div style="display: inline-block;">
-									<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" <?php if ($need_mount_for_radio == 1) {echo "checked='checked'";} elseif ($user->dealer_id == 1 && $need_mount_for_radio == 0) { echo "checked='checked'"; } ?> >
+									<input type="radio" name = "need_mount" id = "with_mount" class = "radio" value = "1" data-locked="0" <?php if ($need_mount_for_radio == 1) {echo "checked='checked'";} elseif ($user->dealer_id == 1 && $need_mount_for_radio == 0) { echo "checked='checked'"; } ?> >
 									<label for="with_mount">Нужен</label>
 								</div>
 							</div>
