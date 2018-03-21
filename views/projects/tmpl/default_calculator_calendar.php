@@ -38,6 +38,10 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         font-size: 12px;
         padding: 6px;
     }
+    #projectListMobil td, #projectListMobil th {
+        padding: 6px;
+    }
+
 </style>
 
 <h2 class="center">График замеров</h2>
