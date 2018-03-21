@@ -20,11 +20,11 @@ $margin = $model_dealer_info->getData();
 $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount = $model_mount->getDataAll();
 $gm_mount = $model_mount->getDataAll(1);
-
-?>
-<?php if(!$user->getDealerInfo()->update_check) {
+if(!$user->getDealerInfo()->update_check) {
 	$user->setDealerInfo(["update_check" => true]);
-}?>
+}
+?>
+
 
 <style>
 	body {
@@ -440,9 +440,9 @@ $gm_mount = $model_mount->getDataAll(1);
 		</div>
 	</div>	
 </form>
-<!-- <script>
-	jQuery(document).ready(function(){
-		//var gm_count = <?php //echo $gm_mount;?>;
+<script>
+	$(document).ready(function(){
+		var gm_count = <?php echo $gm_mount;?>;
 		console.log(gm_count);
 	});
-</script> -->
+</script>
