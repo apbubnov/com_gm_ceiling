@@ -96,7 +96,7 @@ foreach ($dealer_history as $key => $item) {
         </td>
     </tr>
     <tr>
-        <td colspan = 2 class = "td-left">
+        <td class = "td-left">
             <button class="btn btn-primary" type="button" id="btn_made_mnfct">Это производитель</button>
         </td>
     </tr>
