@@ -1116,7 +1116,7 @@
 											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 												<div class="help_question">?</div>
 												<span class="airhelp">
-												В расчет считается добавочная стоимость на сложность крепления в керамогранит
+													В расчет считается добавочная стоимость на сложность крепления в керамогранит
 												</span>
 											</div>
 										</td>
@@ -1354,7 +1354,7 @@
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
 											<span class="airhelp">
-												фото</br>
+												<img src="/images/diffuser.png" width="280"/><br>
 												В расчет входит 1 диффузор + монтжаная работа по установке диффузора
 											</span>
 										</div>
