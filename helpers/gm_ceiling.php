@@ -1005,9 +1005,9 @@ class Gm_ceilingHelpersGm_ceiling
         if ($data['n11'] > 0) {
             $component_count[$items_1[0]->id] += $data['n11'];
             if ($data['n1'] == 29) $component_count[$items_233[0]->id] += $data['n11']; 
-            else if ($data['n28'] == 0) $component_count[$items_11[0]->id] += $data['n11'];
-            elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n11'];
-            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n11'];
+            else /* if ($data['n28'] == 0) */ $component_count[$items_11[0]->id] += $data['n11'];
+           /*  elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n11'];
+            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n11']; */
             $component_count[$items_430[0]->id] += $data['n11'] * 3;
             $component_count[$items_8[0]->id] += $data['n11'] * 22;
             $component_count[$items_5[0]->id] += $data['n11'] * 16;
@@ -1021,9 +1021,9 @@ class Gm_ceilingHelpersGm_ceiling
             if (!empty($data['n6'])) {
             $component_count[$data['n6']] += $n31_count;
             } else $component_count[$items_vstavka_bel[0]->id] += $n31_count;
-            if ($data['n28'] == 0) $component_count[$items_11[0]->id] += $data['n31'];
-            elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n31'];
-            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n31'];
+          /*   if ($data['n28'] == 0) */ $component_count[$items_11[0]->id] += $data['n31'];
+         /*    elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['n31'];
+            elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['n31']; */
             
         }
         if ($data['n1'] == 28 && $data['n6']) {
@@ -1225,9 +1225,9 @@ class Gm_ceilingHelpersGm_ceiling
         //Дополнительный крепеж
         $component_count[$items_9[0]->id] += $data['dop_krepezh'] * 10;
         if ($data['n1'] == 29) $component_count[$items_233[0]->id] += $data['dop_krepezh'] / 2;
-        else if ($data['n28'] == 0) $component_count[$items_11[0]->id] += $data['dop_krepezh'] / 2;
-        elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['dop_krepezh'] / 2;
-        elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['dop_krepezh'] / 2;
+        else/*  if ($data['n28'] == 0) */ $component_count[$items_11[0]->id] += $data['dop_krepezh'] / 2;
+       /*  elseif ($data['n28'] == 1) $component_count[$items_236[0]->id] += $data['dop_krepezh'] / 2;
+        elseif ($data['n28'] == 2) $component_count[$items_239[0]->id] += $data['dop_krepezh'] / 2; */
         //пожарная сигнализация
         $component_count[$items_9[0]->id] += $data['n21'] * 3;
         $component_count[$items_10[0]->id] += $data['n21'] * 6;
