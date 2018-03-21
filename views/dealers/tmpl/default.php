@@ -57,6 +57,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             <th>
                 Менеджер
             </th>
+            <th>
+
+            </th>
            <!--  <th>
                 Взнос
             </th>
@@ -306,7 +309,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].city + '</td>';
                         html += '<td>' + data[i].created + '</td>';
-                        html += '<td>' + data[i].manager_name + '</td></tr>';
+                        html += '<td>' + data[i].manager_name + '</td>';
+                        if(data[i].dealer_type == 6){
+                            html += '<td> &#127981; </td>';
+                        }
+                        html += '</tr>';
                     }
                     tbody.innerHTML = html;
                     html = '';
