@@ -13,7 +13,7 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-$result_users = $users_model->getDealers();
+$dealers = $users_model->getDealers();
 $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 ?>
