@@ -101,9 +101,14 @@ if(!$user->getDealerInfo()->update_check) {
 			<div class="col-md-4">
 				<div class="control-group">
 					<button id = "fill_default" class="btn btn-primary" type = "button" >Заполнить по умолчанию</button>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="control-group">
 					<button id = "reset" class="btn btn-primary" type = "button" >Сбросить</button>
 				</div>
 			</div>
+		
 		</div>	
 		
 		
