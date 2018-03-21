@@ -55,7 +55,7 @@ if(!$user->getDealerInfo()->update_check) {
 	}
 </style>
 
-<?=parent::getButtonBack();?>
+<!-- <?=//parent::getButtonBack();?> -->
 
 <div style="width: 100%; text-align: right; margin-top: 15px;">
 	<a href="/index.php?option=com_users&view=profile&layout=edit" class="btn btn-large btn-primary">Изменить личные данные</a>
@@ -441,8 +441,8 @@ if(!$user->getDealerInfo()->update_check) {
 	</div>	
 </form>
 <script>
-	$(document).ready(function(){
-		var gm_count = <?php echo $gm_mount;?>;
-		console.log(gm_count);
+	(document).ready(function(){
+		var gm_mount = <?php echo $gm_mount;?>;
+		console.log(gm_mount);
 	});
 </script>
