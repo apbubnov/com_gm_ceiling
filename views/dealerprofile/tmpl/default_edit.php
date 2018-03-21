@@ -19,10 +19,11 @@ $model_dealer_info = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
 $margin = $model_dealer_info->getData();
 $model_mount = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount = $model_mount->getDataAll();
-
+if(!$user->getDealerInfo()->update_check) {
+	$user->setDealerInfo(["update_check" => true]);
+}
 ?>
 
-<?if(!$user->getDealerInfo()->update_check) { $user->setDealerInfo(["update_check" => true]);}?>
 
 <style>
 	body {
