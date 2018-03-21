@@ -1053,6 +1053,8 @@ class Gm_ceilingHelpersGm_ceiling
             $n23 = json_decode($data['n23']);
             $n15 = json_decode($data['n15']);
             $n29 = json_decode($data['n29']);
+            print_r($n29);
+            exit();
             if (count($n29) > 0) {
                 foreach ($n29 as $profil) {
                     if ($profil[0] > 0) {
@@ -1166,6 +1168,8 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
             $n29 = $data['n29'];
+            print_r($n29);
+            exit();
             if (count($n29) > 0) {
                 foreach ($n29 as $profil) {
                     if ($profil->n29_count > 0) {
