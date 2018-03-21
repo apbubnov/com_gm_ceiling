@@ -2801,6 +2801,10 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['mounter_sum'] + $sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
+        $html .= '<h2>Примечания: </h2>';
+        foreach ($calculations as $calc) {
+           $html .= "$calc->calculation_title: $calc->details;<br>";
+        }
         //$html .= "<pagebreak />";
         $array = [$html];
         foreach($calculations as $calc){
@@ -2872,7 +2876,10 @@ class Gm_ceilingHelpersGm_ceiling
                     if ($project->dealer_chief_note) {
                         $html .= "<b>Примечание начальника МС дилера: </b>" . $project->dealer_chief_note . "<br>";
                     }
-                } 
+                }
+                if(isset($data['details'])){
+                    $html .= "<b>Примечание : </b>" . $data['details'] . "<br>";
+                }
                 if ($project->project_mounting_date != '0000-00-00 00:00:00') {
                     $jdate = new JDate(JFactory::getDate($project->project_mounting_date));
                     $html .= "<b>Дата монтажа: </b>" . $jdate->format('d.m.Y  H:i') . "<br>";
@@ -3143,7 +3150,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= '<tr>';
         
-/*
+        /*
         if (empty($data['n3_id']))
         {
             $canvas_id = $data['n3'];
@@ -3173,7 +3180,7 @@ class Gm_ceilingHelpersGm_ceiling
         $name = $canvases[0]->name;
 
         $canv_name = $facture.'-'.$color_title.'-'.$width.' '.$name;
-*/
+        */
 
         $html .= '<th>Цвет: </th><td colspan="2" >' . $canvases_data["title"] . '</td>';
         $html .= '<th>Дата:</th><td >' . date("d.m.y") . '</td>';
