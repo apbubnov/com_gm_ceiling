@@ -313,6 +313,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         if(data[i].dealer_type == 6){
                             html += '<td> &#127981; </td>';
                         }
+                        else{
+                            html += '<td></td>';
+                        }
                         html += '</tr>';
                     }
                     tbody.innerHTML = html;
