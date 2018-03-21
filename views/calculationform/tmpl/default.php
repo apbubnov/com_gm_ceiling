@@ -408,11 +408,11 @@
 						<div class="col-sm-4" style="padding-right: 0px;">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
 								<div style="display: inline-block; width: 100%;">
-									<input name="jform[n28]" id="jform_n28_3" class="radio" value="3" type="radio" <?php if ($this->item->n28 == 3) {echo "checked='checked'";} elseif ($user->dealer_id != 1 && $this->item->n28 !== 0) {echo "checked='checked'";} ?>>
+									<input name="jform[n28]" id="jform_n28_3" class="radio" value="3" type="radio" <?php if ($this->item->n28 == 3) {echo "checked='checked'";} elseif ($user->dealer_id != 1 && $this->item->n28 !== 0 && $this->item->n28 !== 1 && $this->item->n28 !== 2) {echo "checked='checked'";} ?>>
 									<label for="jform_n28_3"> Без багета</label>
 								</div>
 								<div style="display: inline-block;">
-									<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($this->item->n28 === 0) {echo "checked='checked'";} elseif ($user->dealer_id == 1) {echo "checked='checked'";} ?>>
+									<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($this->item->n28 === 0) {echo "checked='checked'";} elseif ($user->dealer_id == 1 && $this->item->n28 != 3 && $this->item->n28 !== 1 && $this->item->n28 !== 2) {echo "checked='checked'";} ?>>
 									<label for="jform_n28"> Обычный багет</label>
 								</div>
 								<div style="display: inline-block;">
