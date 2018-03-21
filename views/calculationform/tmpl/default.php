@@ -2933,32 +2933,32 @@
 			});
 			if (who != 1) {
 				jQuery("body").on("change", "input[name='jform[n28]']:radio, input[name='radio']:radio, #jform_n12, #n13_count, #n13, #jform_n27, #n14_count, #n14, #jform_n7, #jform_n8, #jform_n17, #jform_n30, #n29_count, #n29, #jform_n21, #jform_n20, #jform_n24, #jform_n11, #jform_n32, #jform_dop_krepezh, #jform_n18, #n22_count, #n22tar, #n23_count, #n23tar", function() {
-					if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 ||
-						jQuery("input[name='radio']:radio ").val() != 0 ||
-						jQuery("#jform_n12").val() != null || jQuery("#jform_n12").val() != undefined || jQuery("#jform_n12").val() != "" || jQuery("#jform_n12").val() != 0 ||
-						jQuery("#n13_count").val() != null || jQuery("#n13_count").val() != undefined || jQuery("#n13_count").val() != "" || jQuery("#n13_count").val() != 0 ||
-						jQuery("#n13").val() != null || jQuery("#n13").val() != undefined || jQuery("#n13").val() != "" || jQuery("#n13").val() != 0 ||
-						jQuery("#jform_n27").val() != null || jQuery("#jform_n27").val() != undefined || jQuery("#jform_n27").val() != "" || jQuery("#jform_n27").val() != 0 ||
-						jQuery("#n14_count").val() != null || jQuery("#n14_count").val() != undefined || jQuery("#n14_count").val() != "" || jQuery("#n14_count").val() != 0 ||
-						jQuery("#n14").val() != null || jQuery("#n14").val() != undefined || jQuery("#n14").val() != "" || jQuery("#n14").val() != 0 ||
-						jQuery("#jform_n7").val() != null || jQuery("#jform_n7").val() != undefined || jQuery("#jform_n7").val() != "" || jQuery("#jform_n7").val() != 0 ||
-						jQuery("#jform_n8").val() != null || jQuery("#jform_n8").val() != undefined || jQuery("#jform_n8").val() != "" || jQuery("#jform_n8").val() != 0 ||
-						jQuery("#jform_n17").val() != null || jQuery("#jform_n17").val() != undefined || jQuery("#jform_n17").val() != "" || jQuery("#jform_n17").val() != 0 ||
-						jQuery("#jform_n30").val() != null || jQuery("#jform_n30").val() != undefined || jQuery("#jform_n30").val() != "" || jQuery("#jform_n30").val() != 0 ||
-						jQuery("#n29_count").val() != null || jQuery("#n29_count").val() != undefined || jQuery("#n29_count").val() != "" || jQuery("#n29_count").val() != 0 ||
-						jQuery("#n29tar").val() != null || jQuery("#n29tar").val() != undefined || jQuery("#n29tar").val() != "" || jQuery("#n29tar").val() != 0 ||
-						jQuery("#jform_n21").val() != null || jQuery("#jform_n21").val() != undefined || jQuery("#jform_n21").val() != "" || jQuery("#jform_n21").val() != 0 ||
-						jQuery("#jform_n20").val() != null || jQuery("#jform_n20").val() != undefined || jQuery("#jform_n20").val() != "" || jQuery("#jform_n20").val() != 0 ||
-						jQuery("#jform_n24").val() != null || jQuery("#jform_n24").val() != undefined || jQuery("#jform_n24").val() != "" || jQuery("#jform_n24").val() != 0 || 
-						jQuery("#jform_n11").val() != null || jQuery("#jform_n11").val() != undefined || jQuery("#jform_n11").val() != "" || jQuery("#jform_n11").val() != 0 || 
-						jQuery("#jform_n31").val() != null || jQuery("#jform_n31").val() != undefined || jQuery("#jform_n31").val() != "" || jQuery("#jform_n31").val() != 0 || 
-						jQuery("#jform_n32").val() != null || jQuery("#jform_n32").val() != undefined || jQuery("#jform_n32").val() != "" || jQuery("#jform_n32").val() != 0 ||
-						jQuery("#jform_dop_krepezh").val() != null || jQuery("#jform_dop_krepezh").val() != undefined || jQuery("#jform_dop_krepezh").val() != "" || jQuery("#jform_dop_krepezh").val() != 0 ||
-						jQuery("#jform_n18").val() != null || jQuery("#jform_n18").val() != undefined || jQuery("#jform_n18").val() != "" || jQuery("#jform_n18").val() != 0 ||
-						jQuery("#n22_count").val() != null || jQuery("#n22_count").val() != undefined || jQuery("#n22_count").val() != "" || jQuery("#n22_count").val() != 0 ||
-						jQuery("#n22tar").val() != null || jQuery("#n22tar").val() != undefined || jQuery("#n22tar").val() != "" || jQuery("#n22tar").val() != 0 ||
-						jQuery("#n23_count").val() != null || jQuery("#n23_count").val() != undefined || jQuery("#n23_count").val() != "" || jQuery("#n23_count").val() != 0 ||
-						jQuery("#n23tar").val() != null || jQuery("#n23tar").val() != undefined || jQuery("#n23tar").val() != "" || jQuery("#n23tar").val() != 0
+					if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 &&
+						jQuery("input[name='radio']:radio ").val() != 0 &&
+						jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0 &&
+						jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0 &&
+						jQuery("#n13").val() != null && jQuery("#n13").val() != undefined || jQuery("#n13").val() != "" && jQuery("#n13").val() != 0 &&
+						jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0 &&
+						jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0 &&
+						jQuery("#n14").val() != null && jQuery("#n14").val() != undefined && jQuery("#n14").val() != "" && jQuery("#n14").val() != 0 &&
+						jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0 &&
+						jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "" && jQuery("#jform_n8").val() != 0 &&
+						jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "" && jQuery("#jform_n17").val() != 0 &&
+						jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "" && jQuery("#jform_n30").val() != 0 &&
+						jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0 &&
+						jQuery("#n29tar").val() != null && jQuery("#n29tar").val() != undefined && jQuery("#n29tar").val() != "" && jQuery("#n29tar").val() != 0 &&
+						jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "" && jQuery("#jform_n21").val() != 0 &&
+						jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0 &&
+						jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0 && 
+						jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0 && 
+						jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0 && 
+						jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0 &&
+						jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0 &&
+						jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0 &&
+						jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0 &&
+						jQuery("#n22tar").val() != null && jQuery("#n22tar").val() != undefined && jQuery("#n22tar").val() != "" && jQuery("#n22tar").val() != 0 &&
+						jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0 &&
+						jQuery("#n23tar").val() != null && jQuery("#n23tar").val() != undefined && jQuery("#n23tar").val() != "" && jQuery("#n23tar").val() != 0
 					) {
 						console.log(jQuery("[name='need_mount']:radio:checked").val());
 						jQuery("[value=1][name='need_mount']").attr("checked", "checked");
