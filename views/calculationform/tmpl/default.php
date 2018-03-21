@@ -169,7 +169,7 @@
 				<div class="col-sm-4"></div>
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4">
-						<h3>Потолок: <?php $this->item->calculation_title; ?></h3>		
+						<h3>Потолок: <?php echo $this->item->calculation_title; ?></h3>		
 					</div>
 				</div>
 				<div class="col-sm-4"></div>
