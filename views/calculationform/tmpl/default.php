@@ -96,7 +96,11 @@
     <input name = "n5" id = "n5" value ="" type ="hidden">
     <input name = "n9" id = "n9" value ="" type ="hidden">
 </form>
-
+<form action="/sketch/cut_redactor_2/index.php" id="data_form" method="POST" style="display : none;">
+        <input type="hidden" name="walls" id="input_walls">
+        <input type="hidden" name="calc_id" id="calc_id">
+        <input type="hidden" name="proj_id" id="proj_id">
+    </form>
 <?php
 	if($type === "calculator" || $type === "gmcalculator" || $type === "gmmanager" || $type === "manager" )
 	{
@@ -302,6 +306,15 @@
 							}
 						?>
 					</div>
+				</div>
+				<div class="col-sm-4"></div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4"></div>
+				<div class="col-sm-4 ">
+					<button id="redactor" class="btn btn-primary" type="button">Редактор</button>
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
@@ -3623,7 +3636,27 @@
 				jQuery("#send_email").focus();
 			}
 		});
+		jQuery("#redactor").click(function(){
+			jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=send_sketch",
+                data: {
+                    filename: jQuery("#jform_original_name").val(),
+                    from_db:0  
+                },
+                success: function (data) {
+                    jQuery("#input_walls").val(data);
+                    jQuery("#calc_id").val(jQuery("#jform_id").val());
+                    jQuery("#proj_id").val(<?php echo $project_id; ?>);
+                    jQuery("#data_form").submit();
 
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+
+            });
+		});
 		jQuery( "#calculate_button" ).click(function(){
 			// открытие следующих кнопок
 			jQuery("#under_calculate").show();
