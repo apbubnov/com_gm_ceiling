@@ -2479,7 +2479,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         jQuery("#send_all").click(function () {
             jQuery(".email-all").toggle();
         });
-        jQuery("[name = include_calculation[]]").change(function(){
+        jQuery("[name = 'include_calculation[]']").change(function(){
             alert("change");
         });
         jQuery("#send_all_to_email1").click(function () {
