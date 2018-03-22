@@ -136,16 +136,9 @@
 
 <?=parent::getButtonBack();?>
 <?php if ($whatCalendar == 0) { ?>
-    <a class="btn btn-primary"
-        href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings'); ?>"
-        title="">Вернуться к замерам
-    </a>
+    <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief&subtype=gaugings'); ?>" title="">Вернуться к замерам</a>
 <?php } else { ?>
-    <a class="btn btn-primary"
-        href="<?php if ($userId == $user->dealer_id) echo JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage');
-            else echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>"
-        title="">Вернуться к монтажам
-    </a>
+    <a class="btn btn-primary" href="<?php if ($userId == $user->dealer_id) echo JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=chiefmainpage'); else echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=gmchief'); ?>" title="">Вернуться к монтажам</a>
 <?php } ?>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/projectform/tmpl/css/style.css" type="text/css" />
@@ -156,7 +149,39 @@
     }
 </style>
 
-<h2>Просмотр проекта</h2>
+<style>
+    @media (max-width: 1024px) {
+        .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul *, .containerMobile, .containerMobile *  {
+            font-size: 10px !important;
+            padding: .1rem !important;
+            width: auto !important;
+            margin: 0 !important;
+        }
+
+        .project_activation div, .tab-content div {
+            display: inline-block;
+            width: auto;
+            float: left;
+        }
+
+        ul, .tab-content {
+            margin: 0 -30px !important;
+            width: calc(100% + 60px) !important;
+        }
+        .tab-content .file_data {
+            min-width: auto !important;
+        }
+        .tab-content .file_upload {
+            width: 15px !important;
+        }
+
+        .section_content img {
+            width: 100% !important;
+        }
+    }
+</style>
+
+<h2 class="center" style="margin-bottom: 1em;">Просмотр проекта № <?php echo $this->item->id; ?></h2>
 <form id="form-client">
 <?php if ($this->item) { ?>
     <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
@@ -1089,38 +1114,6 @@
         </div>
     </div>
 <?php } ?>
-
-<style>
-    @media (max-width: 1024px) {
-        .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul *, .containerMobile, .containerMobile *  {
-            font-size: 10px !important;
-            padding: .1rem !important;
-            width: auto !important;
-            margin: 0 !important;
-        }
-
-        .project_activation div, .tab-content div {
-            display: inline-block;
-            width: auto;
-            float: left;
-        }
-
-        ul, .tab-content {
-            margin: 0 -30px !important;
-            width: calc(100% + 60px) !important;
-        }
-        .tab-content .file_data {
-            min-width: auto !important;
-        }
-        .tab-content .file_upload {
-            width: 15px !important;
-        }
-
-        .section_content img {
-            width: 100% !important;
-        }
-    }
-</style>
 
 <script>
 
