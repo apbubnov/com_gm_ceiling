@@ -41,7 +41,7 @@ $rest = -($total_sum) - $contributed;
 </style>
 <!-- <?=parent::getButtonBack();?> -->
 <h2 class = "center">Детализация счета</h2>
-<div class = "center">Состояние счета: <?php echo 0-$rest ?></div>;
+<div class = "center"><strong><?php echo 0-$rest; ?></strong></div>
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=dealermainpage&type=score'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="row-fluid toolbar" style="margin: 30px 0 0 0;">
         <div class="span3">
