@@ -2022,7 +2022,7 @@ class Gm_ceilingHelpersGm_ceiling
                     //обвод трубы
                     if (count($n14) > 0) {
                         foreach ($n14 as $truba) {
-                            throw new Exception($truba[1]);
+                            throw new Exception(implode('|',$truba[1]));
                             if ($truba[0] > 0) {
                                 $count_truba += $truba[0];
 
