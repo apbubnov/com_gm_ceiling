@@ -2384,8 +2384,9 @@
 		jQuery("body").addClass("yellow_home");
 
 		// кнопки открытия скрытых полей
-			precalculation = <?php if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
-			if (precalculation == 1) {
+			who = <?php if ($user->dealer_id == 1) {echo 1;} else {echo 0;} ?>;
+			//precalculation = <?php// if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
+			if (who == 1) {
 				jQuery("#precalculation_container_hide").hide();
 				jQuery(".smeta_hide").hide();
 			} else {
@@ -2408,7 +2409,7 @@
 					jQuery("#btn_baguette").css("background-color", "#414099");
 				}
 			});
-			who = <?php if ($user->dealer_id == 1) {echo 1;} else {echo 0;} ?>;
+			
 			if (who == 1) {
 				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 || jQuery("input[name='jform[n28]']:radio:checked").val() == 3) {
 					jQuery("#btn_baguette").click();
@@ -2934,14 +2935,14 @@
 				jQuery("[value=1][name='need_mount']").attr("data-locked", "1");
 				if (who == 1) {
 					if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
-						jQuery("#mount2").show();
-						jQuery("#btn_mount2").css("background-color", "#010084");
 						jQuery("#btn_mount2").attr("disabled", "disabled");
 					} else {
 						jQuery("#btn_mount2").attr("disabled", false);
 					}
 				} else {
 					if (jQuery("input[name='need_mount']:radio:checked").val() != 0) {
+						jQuery("#mount2").show();
+						jQuery("#btn_mount2").css("background-color", "#010084");
 						jQuery("#btn_mount2").attr("disabled", "disabled");
 					} else {
 						jQuery("#btn_mount2").attr("disabled", false);
