@@ -45,13 +45,13 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         text-align: center !important;
     }
     .btn-done {
-        font-size: 1em;
-        padding: 8px 12px;
+        font-size: 12px;
+        padding: 6px;
     }
     @media screen and (min-width: 768px) {
         .btn-done {
-            font-size: 12px;
-            padding: 6px;
+            font-size: 1em;
+            padding: 8px 12px;
         }
     }
 </style>
