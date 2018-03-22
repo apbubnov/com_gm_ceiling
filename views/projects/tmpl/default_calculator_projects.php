@@ -25,6 +25,7 @@ $canChange = $user->authorise('core.edit.state', 'com_gm_ceiling');
 $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
 ?>
+
 <style>
     #projectList th:nth-child(1) {
         width: 1%;
@@ -36,14 +37,12 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         width: 5%;
     }
 </style>
+
+<?=parent::getButtonBack();?>
 <h2 class="center">Запущенные в производство</h2>
-<form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects'); ?>"
-      method="post"
-      name="adminForm" id="adminForm">
+<form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=projects'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="row-fluid toolbar">
-        <div class="span3">
-            <?=parent::getButtonBack();?>
-        </div>
+        <div class="span3"></div>
         <? if (false): ?>
             <div class="toolbar">
                 <?= JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
@@ -52,62 +51,67 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
     </div>
     <table class="table table-striped one-touch-view" id="projectList">
         <thead>
-        <tr>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Дата и время замера', 'calculation_date', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
-            </th>
-            <th class='center'>
-                <?= JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
-            </th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <? foreach ($this->items as $i => $item) : ?>
-            <?
-            $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
-            if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
-                $canEdit = JFactory::getUser()->id == $item->created_by;
-            ?>
-
-            <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id=' . $item->id); ?>">
-                <td class="center one-touch"><?= $item->id; ?></td>
-                <td class="center one-touch">
-                    <? if ($item->calculation_date == "00.00.0000"): ?>-
-                    <? else: ?><?= $item->calculation_date; ?>
-                    <? endif; ?><br>
-                    <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
-                    <? else: ?><?= $item->calculation_time; ?>
-                    <? endif; ?>
-                </td>
-                <td class="center one-touch"><?= $item->address; ?></td>
-                <td class="center one-touch"><?= $item->client_contacts; ?><br><?= $item->client_name; ?></td>
-                <td class="center one-touch"><?= $item->status; ?></td>
+            <tr>
+                <th class='center'>
+                    <?= //JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
+                    Номер договора
+                </th>
+                <th class='center'>
+                    <?= //JHtml::_('grid.sort', 'Дата и время замера', 'calculation_date', $listDirn, $listOrder); ?>
+                    Дата и время замера
+                </th>
+                <th class='center'>
+                    <?= //JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+                    Адрес
+                </th>
+                <th class='center'>
+                    <?= //JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
+                    Клиент
+                </th>
+                <th class='center'>
+                    <?= //JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
+                    Статус
+                </th>
             </tr>
-        <? endforeach; ?>
+        </thead>
+        <tbody>
+            <?php
+                foreach ($this->items as $i => $item) : 
+                    $canEdit = $user->authorise('core.edit', 'com_gm_ceiling');
+                    if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling'))
+                        $canEdit = JFactory::getUser()->id == $item->created_by;
+            ?>
+                <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id=' . $item->id); ?>">
+                    <td class="center one-touch"><?= $item->id; ?></td>
+                    <td class="center one-touch">
+                        <? if ($item->calculation_date == "00.00.0000"): ?>-
+                        <? else: ?><?= $item->calculation_date; ?>
+                        <? endif; ?><br>
+                        <? if ($item->calculation_time == "00:00-01:00" || $item->calculation_time == ""): ?>-
+                        <? else: ?><?= $item->calculation_time; ?>
+                        <? endif; ?>
+                    </td>
+                    <td class="center one-touch"><?= $item->address; ?></td>
+                    <td class="center one-touch"><?= $item->client_contacts; ?><br><?= $item->client_name; ?></td>
+                    <td class="center one-touch"><?= $item->status; ?></td>
+                </tr>
+            <? endforeach; ?>
         </tbody>
     </table>
-
     <table class="table table-striped one-touch-view" id="projectListMobil">
         <thead>
         <tr>
             <th class='center'>
-                <?php echo JHtml::_('grid.sort',  '№', 'a.id', $listDirn, $listOrder); ?>
+                <?php //echo JHtml::_('grid.sort',  '№', 'a.id', $listDirn, $listOrder); ?>
+                №
             </th>
             <th class='center'>
-                <?php echo JHtml::_('grid.sort',  'Дата(время) замера', 'a.project_mounting_date', $listDirn, $listOrder); ?>
+                <?php //echo JHtml::_('grid.sort',  'Дата(время) замера', 'a.project_mounting_date', $listDirn, $listOrder); ?>
+                Дата/Время замера
             </th>
             <th class='center'>
-                <?php echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+                <?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_PROJECTS_PROJECT_INFO', 'a.project_info', $listDirn, $listOrder); ?>
+                Адрес
             </th>
             <th class='center'>
                 Статус

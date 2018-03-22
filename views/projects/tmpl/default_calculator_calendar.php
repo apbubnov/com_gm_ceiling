@@ -35,7 +35,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         width: 15%;
     }
     #projectListMobil {
-        font-size: 11px;
+        font-size: 12px;
         padding: 6px;
     }
     #projectListMobil td, #projectListMobil th {
@@ -119,7 +119,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             <tr>
                 <th class='center'>
                     <?php //JHtml::_('grid.sort', '№', 'a.id', $listDirn, $listOrder); ?>
-                    Номер договора
+                    №
                 </th>
                 <th class='center'>
                     <?php //JHtml::_('grid.sort', 'Дата/Время замера', 'a.calculation_date', $listDirn, $listOrder); ?>
