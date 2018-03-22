@@ -196,5 +196,4 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
     // вызовем событие resize
     $(window).resize();
-
 </script>
