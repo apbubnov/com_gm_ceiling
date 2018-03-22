@@ -788,9 +788,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
                                     </tr>
                                     <tr>
-                                        <td id="calcs_self_canvases_total">П <?php echo round($self_canvases_sum, 0) ?></td>
-                                        <td id="calcs_self_components_total">К <?php echo round($self_components_sum, 0) ?></td>
-                                        <td id="calcs_self_mount_total">M <?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
+                                        <td id="calcs_self_canvases_total"><?php echo round($self_canvases_sum, 0) ?></td>
+                                        <td id="calcs_self_components_total"><?php echo round($self_components_sum, 0) ?></td>
+                                        <td id="calcs_self_mount_total"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
                                         <td id="calcs_total"><?php echo round($project_self_total  , 0); ?></td>
                                     </tr>
                                 <?php } ?>
@@ -2480,7 +2480,26 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             jQuery(".email-all").toggle();
         });
         jQuery("[name = 'include_calculation[]']").change(function(){
-            alert("change");
+            let canv_data = (self_data[jQuery(this).val()].canv_data).toFixed(0);
+            let comp_data = (self_data[jQuery(this).val()].comp_data).toFixed(0);
+            let mount_data = (self_data[jQuery(this).val()].mount_data).toFixed(0);
+            let old_canv = parseInt(jQuery("#calcs_self_canvases_total").text());
+            let old_comp = parseInt(jQuery("#calcs_self_components_total").text());
+            let old_mount = parseInt(jQuery("#calcs_self_mount_total").text());
+            let old_all = parseInt(jQuery("#calcs_total").text());
+            console.log(old_canv,old_comp,old_mount);
+            if(jQuery(this).prop("checked") == true){
+               jQuery("#calcs_self_canvases_total").text(parseInt(old_canv) + parseInt(canv_data));
+               jQuery("#calcs_self_components_total").text(parseInt(old_comp) + parseInt(comp_data));
+               jQuery("#calcs_self_mount_total").text(parseInt(old_mount) + parseInt(mount_data));
+               jQuery("#calcs_total").text(parseInt(old_all) + parseInt(canv_data) +  parseInt(comp_data) + parseInt(mount_data));
+            }
+            else{
+                jQuery("#calcs_self_canvases_total").text(old_canv-canv_data);
+                jQuery("#calcs_self_components_total").text(old_comp-comp_data);
+                jQuery("#calcs_self_mount_total").text(old_mount-mount_data);
+                jQuery("#calcs_total").text(old_all - canv_data - comp_data - mount_data);
+            }
         });
         jQuery("#send_all_to_email1").click(function () {
 
