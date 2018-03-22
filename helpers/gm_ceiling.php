@@ -1916,7 +1916,6 @@ class Gm_ceilingHelpersGm_ceiling
                     //обвод трубы
                     if (count($n14) > 0) {
                         foreach ($n14 as $truba) {
-                            throw new Exception($truba->n14_size);
                             if ($truba->n14_count > 0) {
                                 $count_truba += $truba->n14_count;
 
@@ -1925,9 +1924,9 @@ class Gm_ceilingHelpersGm_ceiling
                         if ($count_truba > 0) {
                             $mounting_data[] = array(
                                 "title" => "Обвод трубы",                                                    //Название
-                                "quantity" => $count_truba,                                                    //Кол-во
-                                "gm_salary" => $results->mp8,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_truba * $results->mp8,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "quantity" => $count_truba,                                                  //Кол-во
+                                "gm_salary" => $results->mp8,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_truba * $results->mp8,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                                 "dealer_salary_total" => $count_truba * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
@@ -2023,6 +2022,7 @@ class Gm_ceilingHelpersGm_ceiling
                     //обвод трубы
                     if (count($n14) > 0) {
                         foreach ($n14 as $truba) {
+                            throw new Exception($truba->n14_size);
                             if ($truba[0] > 0) {
                                 $count_truba += $truba[0];
 
