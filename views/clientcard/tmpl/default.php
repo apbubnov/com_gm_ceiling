@@ -69,6 +69,7 @@
 </style>
 
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
+<h3 class="center">Карточка клиента</h3>
 <div id="FIO-container-tar" style="margin-top: 15px;">
     <h4 style="text-align: left;">Имя клиента:</h4>
     <p style="text-align: left;">
