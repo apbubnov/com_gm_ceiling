@@ -525,9 +525,7 @@
                             <tr class="section_mount" style="display:none;">
                                 <td colspan="2">
                                     <div class="email-all" style="float: left;">
-                                        <input name="all-email" id="all-email2" class="form-control" style="width:200px;"
-                                                value="" placeholder="Адрес эл.почты" type="text">
-
+                                        <input name="all-email" id="all-email2" class="form-control" style="width:200px;" value="" placeholder="Адрес эл.почты" type="text">
                                     </div>
                                     <div class="file_data">
                                         <div class="file_upload">
@@ -655,7 +653,6 @@
                             "MerchantLogin=$mrh_login&OutSum=$out_summ&InvoiceID=$inv_id" .
                             "&Description=$inv_desc&SignatureValue=$crc&shp_Item=$shp_item" .
                             "&Culture=$culture&Encoding=$encoding'></script></html>";
-
                     }
                 } ?>
             </div>
@@ -723,12 +720,10 @@
                                     Скрытый карниз: <?php echo $calculation->n16; ?>
                                 </div>
                             <?php } ?>
-
                             <?php if ($calculation->n12) { ?>
                                 <h4>Установка люстры</h4>
                                 <?php echo $calculation->n12; ?> шт.
                             <?php } ?>
-
                             <?php if ($calculation->n13) { ?>
                                 <h4>Установка светильников</h4>
                                 <?php foreach ($calculation->n13 as $key => $n13_item) {
@@ -736,7 +731,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n14) { ?>
                                 <h4>Обвод трубы</h4>
                                 <?php foreach ($calculation->n14 as $key => $n14_item) {
@@ -744,7 +738,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n15) { ?>
                                 <h4>Шторный карниз Гильдии мастеров</h4>
                                 <?php foreach ($calculation->n15 as $key => $n15_item) {
@@ -758,7 +751,6 @@
                                 <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
                                 <?php echo $calculation->n27; ?> м.
                             <?php } ?>
-
                             <?php if ($calculation->n26) { ?>
                                 <h4>Светильники Эcola</h4>
                                 <?php foreach ($calculation->n26 as $key => $n26_item) {
@@ -766,7 +758,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n22) { ?>
                                 <h4>Вентиляция</h4>
                                 <?php foreach ($calculation->n22 as $key => $n22_item) {
@@ -774,7 +765,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n23) { ?>
                                 <h4>Диффузор</h4>
                                 <?php foreach ($calculation->n23 as $key => $n23_item) {
@@ -782,7 +772,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n29) { ?>
                                 <h4>Переход уровня</h4>
                                 <?php foreach ($calculation->n29 as $key => $n29_item) {
@@ -842,7 +831,6 @@
                                     Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
                                 </div>
                             <?php } ?>
-
                             <?php if ($calculation->n24> 0) { ?>
                                 <div>
                                     Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
