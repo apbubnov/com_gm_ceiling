@@ -406,59 +406,66 @@
                                 <span class="sum"><?php echo round($project_total, 0); ?></span> руб. /
                             </th>
                             <th id="project_total_discount">
-                            <span class="sum">
-                            <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                            if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0);  ?> руб.</th> <?php }
-                            elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
-                                </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
-                            <?php } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
+                                <span class="sum">
+                                <?php 
+                                    //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                    if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0);  ?> руб.
+                            </th>
+                                <?php }
+                                    elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.
+                            </th>
+                                </span>
+                                <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р.</span>
+                                <?php } else echo round($project_total_discount, 0);  ?> руб.</span>
+                                <span class="dop" style="font-size: 9px;" ></span>
+                            </th>
                         <?php }
                         else { ?>
                         <th>Итого</th>
                         <th id="project_total" colspan="2">
-                        <span class="sum">
-                            <?php
-                            if ($this->item->new_project_sum == 0) {
-                                if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
-                                echo round($project_total, 2);
-                            } else {
-                                echo round($this->item->new_project_sum, 2);
-                            }
-                            } ?>
-                        </span>
-                            <span class="dop" style="font-size: 9px;">
-                        <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
-                            * минимальная сумма заказа 3500р.<?php }?>
+                            <span class="sum">
+                                <?php
+                                if ($this->item->new_project_sum == 0) {
+                                    if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                                    echo round($project_total, 2);
+                                } else {
+                                    echo round($this->item->new_project_sum, 2);
+                                }
+                                } ?>
                             </span>
+                                <span class="dop" style="font-size: 9px;">
+                            <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
+                                * минимальная сумма заказа 3500р.<?php }?>
+                                </span>
                         </th>
                     </tr>
                     <?php if ($user->dealer_type != 2) { ?>
                         <tr>
-                        <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
-                        <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
-                        <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
+                            <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
+                            <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
+                            <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
                         </tr>
                     <?php } ?>
                     <tr>
                         <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?php foreach ($calculations as $calculation) { ?>
-                    <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                        <td><?php echo $calculation->calculation_title; ?></td>
-                        <td colspan="2">
-                            <?php
-                            $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-                            $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
-                            ?>
-                            <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                            <?php } else { ?>
-                                -
-                            <?php } ?>
-                        </td>
-                        <?php }
-                        $json = json_encode($pdf_names); ?>
-                    </tr>
+                        <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
+                            <td><?php echo $calculation->calculation_title; ?></td>
+                            <td colspan="2">
+                                <?php
+                                $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
+                                $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
+                                ?>
+                                <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                    <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                <?php } else { ?>
+                                    -
+                                <?php } ?>
+                            </td>
+                            <?php }
+                            $json = json_encode($pdf_names); ?>
+                        </tr>
                     <?php if (count($calculations) > 0) { ?>
                         <tr class="section_estimate" style="display:none;">
                             <td colspan="3"><b>Отправить все сметы <b></td>
