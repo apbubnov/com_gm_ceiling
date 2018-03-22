@@ -785,7 +785,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         <td id="calcs_self_canvases_total">П <?php echo round($self_canvases_sum, 0) ?></td>
                                         <td id="calcs_self_components_total">К <?php echo round($self_components_sum, 0) ?></td>
                                         <td id="calcs_self_mount_total">M <?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
-                                        <td id="calcs_total"></td> <?php echo round($self_canvases_sum + $self_components_sum +$self_mounting_sum+$self_sum_transport  , 0); ?></td>
+                                        <td id="calcs_total"><?php echo round($project_self_total  , 0); ?></td>
                                     </tr>
                                 <?php } ?>
                                 <tr>
