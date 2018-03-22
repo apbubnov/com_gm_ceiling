@@ -777,10 +777,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 </tr>
                                 <?php if ($user->dealer_type != 2) { ?>
                                     <tr>
-                                        <td id="calculation_total1">П <?php echo round($calculation_total_11, 0) ?></td>
-                                        <td id="calculation_total2">К <?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
-                                        <td id="calculation_total3">M <?php echo round($project_total_11, 0); ?></td>
-                                        <td id="calculation_total4"> <?php echo round($project_total_11, 0); ?></td>
+                                        <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
+                                        <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
+                                        <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
                                     </tr>
                                     <tr>
                                         <td id="calcs_self_canvases_total">П <?php echo round($self_canvases_sum, 0) ?></td>
