@@ -52,9 +52,9 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
 
 <?= parent::getButtonBack(); ?>
 <? if ($user->dealer_type != 2): ?>
-    <h2 class="center">Назначенные на монтаж и запущенные в производство</h2>
+    <h2 class="center" style="margin-bottom: 1em;">Назначенные на монтаж и запущенные в производство</h2>
 <? else: ?>
-    <h2 class="center">Заказы</h2>
+    <h2 class="center" style="margin-bottom: 1em;">Заказы</h2>
 <? endif; ?>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>" method="post" name="adminForm" id="adminForm">
     <? if (false): ?>
