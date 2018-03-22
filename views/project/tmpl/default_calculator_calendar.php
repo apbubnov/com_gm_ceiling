@@ -2342,6 +2342,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 
             if (client_id==1) {
                 jQuery("input[name='data_change']").val(1);
+                jQuery("#change_data").trigger('click');
                 jQuery("#accept_project").trigger('click');
             }
 
