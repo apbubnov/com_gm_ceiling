@@ -64,7 +64,7 @@ foreach ($calculations as $calculation) {
 
     $calculation_total = $calculation->calculation_total;
 }
-$project_self_total = $self_sum_transport+$self_components_sum+$self_canvases_sum+$self_mounting_sum;
+$project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
 $min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
@@ -785,7 +785,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         <td id="calcs_self_canvases_total">П <?php echo round($self_canvases_sum, 0) ?></td>
                                         <td id="calcs_self_components_total">К <?php echo round($self_components_sum, 0) ?></td>
                                         <td id="calcs_self_mount_total">M <?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
-                                        <td id="calcs_total"></td> <?php echo round($project_self_total, 0); ?></td>
+                                        <td id="calcs_total"></td> <?php echo round($self_canvases_sum + $self_components_sum +$self_mounting_sum+$self_sum_transport  , 0); ?></td>
                                     </tr>
                                 <?php } ?>
                                 <tr>
