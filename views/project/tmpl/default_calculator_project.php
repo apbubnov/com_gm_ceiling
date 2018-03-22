@@ -94,6 +94,7 @@
 <div class="row">
     <div class="col-xs-12 col-md-6 no_padding">
         <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+            <h4>Информация о клиенте</h4>
             <table class="table_info" style="margin-bottom: 25px;">
                 <tr>
                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>

@@ -471,7 +471,7 @@
 											<span class="airhelp">
 												<img src="/images/vstavka.png" width="280"/><br>
 												Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой.<br>
-												В расчет входит вставка по периметру + монтжаная работа по установке вставки
+												В расчет входит вставка по периметру + монтажная работа по установке вставки
 											</span>
 										</div>
 									</td>
@@ -576,7 +576,7 @@
 													<li>4 подвеса прямых (П 60 (0,8))</li>
 													<li>0,5м провода (ПВС 2*0,75)</li>
 												</ul>
-												+ монтжаная работа по установке люстр
+												+ монтажная работа по установке люстр
 											</span>
 										</div>
 									</td>
@@ -621,9 +621,8 @@
 													<li>1 клеммная пара</li>
 													<li>1 платформа под светильник (квадратная или круглая)</li>
 													<li>2 подвеса прямых (П 60 (0,8))</li>
-													<li>0,5м провода (ПВС 2*0,75)</li>
 												</ul>
-												+ монтжаная работа по установке светильников
+												+ монтажная работа по установке светильников
 											</span>
 										</div>
 									</td>
@@ -814,7 +813,7 @@
 											<div class="help_question">?</div>
 											<span class="airhelp">
 												В расчет на 1 трубу входит 1 пластина</br>
-												+ монтжаная работа по обводу трубы
+												+ монтажная работа по обводу трубы
 											</span>
 										</div>
 									</td>
@@ -2384,8 +2383,9 @@
 		jQuery("body").addClass("yellow_home");
 
 		// кнопки открытия скрытых полей
-			precalculation = <?php if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
-			if (precalculation == 1) {
+			who = <?php if ($user->dealer_id == 1) {echo 1;} else {echo 0;} ?>;
+			//precalculation = <?php// if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
+			if (who != 1) {
 				jQuery("#precalculation_container_hide").hide();
 				jQuery(".smeta_hide").hide();
 			} else {
@@ -2408,7 +2408,6 @@
 					jQuery("#btn_baguette").css("background-color", "#414099");
 				}
 			});
-			who = <?php if ($user->dealer_id == 1) {echo 1;} else {echo 0;} ?>;
 			if (who == 1) {
 				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2 || jQuery("input[name='jform[n28]']:radio:checked").val() == 3) {
 					jQuery("#btn_baguette").click();
@@ -2416,6 +2415,8 @@
 				}
 			} else {
 				if (jQuery("input[name='jform[n28]']:radio:checked").val() == 0 || jQuery("input[name='jform[n28]']:radio:checked").val() == 1 || jQuery("input[name='jform[n28]']:radio:checked").val() == 2) {
+					jQuery("#precalculation_container_hide").show();
+					jQuery("#btn_precalculation").css("background-color", "#010084");
 					jQuery("#btn_baguette").click();
 					jQuery("#btn_baguette").attr("disabled", "disabled");
 				}
@@ -2444,6 +2445,8 @@
 				}
 			});
 			if (jQuery("input[name='radio']:radio:checked").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_insert").click();
 				jQuery("#btn_insert").attr("disabled", "disabled");
 			}
@@ -2463,6 +2466,8 @@
 				}
 			});
 			if (jQuery("#jform_n12").val() != null && jQuery("#jform_n12").val() != undefined && jQuery("#jform_n12").val() != "" && jQuery("#jform_n12").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_chandelier").click();
 				jQuery("#btn_chandelier").attr("disabled", "disabled");
 			}
@@ -2482,6 +2487,8 @@
 				}
 			});
 			if ((jQuery("#n13_count").val() != null && jQuery("#n13_count").val() != undefined && jQuery("#n13_count").val() != "" && jQuery("#n13_count").val() != 0) || (jQuery("#ecola_count").val() != null && jQuery("#ecola_count").val() != undefined && jQuery("#ecola_count").val() != "" && jQuery("#ecola_count").val() != 0) || (jQuery("#n13").val() != null && jQuery("#n13").val() != undefined && jQuery("#n13").val() != "" && jQuery("#n13").val() != 0) || (jQuery(".ecola2").val() != null && jQuery(".ecola2").val() != undefined && jQuery(".ecola2").val() != "" && jQuery(".ecola2").val() != 0)) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_fixtures").click();
 				jQuery("#btn_fixtures").attr("disabled", "disabled");
 			}
@@ -2501,6 +2508,8 @@
 				}
 			});
 			if ((jQuery("#jform_n27").val() != null && jQuery("#jform_n27").val() != undefined && jQuery("#jform_n27").val() != "" && jQuery("#jform_n27").val() != 0) || (jQuery("#n15_count").val() != null && jQuery("#n15_count").val() != undefined && jQuery("#n15_count").val() != "" && jQuery("#n15_count").val() != 0) || (jQuery("#n15").val() != null && jQuery("#n15").val() != undefined && jQuery("#n15").val() != "" && jQuery("#n15").val() != 0)) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_cornice").click();
 				jQuery("#btn_cornice").attr("disabled", "disabled");
 			}
@@ -2520,6 +2529,8 @@
 				}
 			});
 			if ((jQuery("#n14_count").val() != null && jQuery("#n14_count").val() != undefined && jQuery("#n14_count").val() != "" && jQuery("#n14_count").val() != 0) || (jQuery("#n14").val() != null && jQuery("#n14").val() != undefined && jQuery("#n14").val() != "" && jQuery("#n14").val() != 0)) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_pipes").click();
 				jQuery("#btn_pipes").attr("disabled", "disabled");
 			}
@@ -2539,6 +2550,8 @@
 				}
 			});
 			if (jQuery("#jform_n7").val() != null && jQuery("#jform_n7").val() != undefined && jQuery("#jform_n7").val() != "" && jQuery("#jform_n7").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_tile").click();
 				jQuery("#btn_tile").attr("disabled", "disabled");
 			}
@@ -2558,6 +2571,8 @@
 				}
 			});
 			if (jQuery("#jform_n8").val() != null && jQuery("#jform_n8").val() != undefined && jQuery("#jform_n8").val() != "" && jQuery("#jform_n8").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_stoneware").click();
 				jQuery("#btn_stoneware").attr("disabled", "disabled");
 			}
@@ -2577,6 +2592,8 @@
 				}
 			});
 			if (jQuery("#jform_n19").val() != null && jQuery("#jform_n19").val() != undefined && jQuery("#jform_n19").val() != "" && jQuery("#jform_n19").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_wire").click();
 				jQuery("#btn_wire").attr("disabled", "disabled");
 			}
@@ -2596,6 +2613,8 @@
 				}
 			});
 			if (jQuery("#jform_n17").val() != null && jQuery("#jform_n17").val() != undefined && jQuery("#jform_n17").val() != "" && jQuery("#jform_n17").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_bar").click();
 				jQuery("#btn_bar").attr("disabled", "disabled");
 			}
@@ -2615,6 +2634,8 @@
 				}
 			});
 			if (jQuery("#jform_n30").val() != null && jQuery("#jform_n30").val() != undefined && jQuery("#jform_n30").val() != "" && jQuery("#jform_n30").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_soaring").click();
 				jQuery("#btn_soaring").attr("disabled", "disabled");
 			}
@@ -2634,6 +2655,8 @@
 				}
 			});
 			if ((jQuery("#n29_count").val() != null && jQuery("#n29_count").val() != undefined && jQuery("#n29_count").val() != "" && jQuery("#n29_count").val() != 0) || (jQuery("#n29").val() != null && jQuery("#n29").val() != undefined && jQuery("#n29").val() != "" && jQuery("#n29").val() != 0)) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_level").click();
 				jQuery("#btn_level").attr("disabled", "disabled");
 			}
@@ -2653,6 +2676,8 @@
 				}
 			});
 			if (jQuery("#jform_n21").val() != null && jQuery("#jform_n21").val() != undefined && jQuery("#jform_n21").val() != "" && jQuery("#jform_n21").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_firealarm").click();
 				jQuery("#btn_firealarm").attr("disabled", "disabled");
 			}
@@ -2672,6 +2697,8 @@
 				}
 			});
 			if (jQuery("#jform_n20").val() != null && jQuery("#jform_n20").val() != undefined && jQuery("#jform_n20").val() != "" && jQuery("#jform_n20").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_delimiter").click();
 				jQuery("#btn_delimiter").attr("disabled", "disabled");
 			}
@@ -2691,6 +2718,8 @@
 				}
 			});
 			if (jQuery("#jform_n24").val() != null && jQuery("#jform_n24").val() != undefined && jQuery("#jform_n24").val() != "" && jQuery("#jform_n24").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_access").click();
 				jQuery("#btn_access").attr("disabled", "disabled");
 			}
@@ -2710,6 +2739,8 @@
 				}
 			});
 			if (jQuery("#jform_n11").val() != null && jQuery("#jform_n11").val() != undefined && jQuery("#jform_n11").val() != "" && jQuery("#jform_n11").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_notch1").click();
 				jQuery("#btn_notch1").attr("disabled", "disabled");
 			}
@@ -2729,6 +2760,8 @@
 				}
 			});
 			if (jQuery("#jform_n31").val() != null && jQuery("#jform_n31").val() != undefined && jQuery("#jform_n31").val() != "" && jQuery("#jform_n31").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_notch2").click();
 				jQuery("#btn_notch2").attr("disabled", "disabled");
 			}
@@ -2748,6 +2781,8 @@
 				}
 			});
 			if (jQuery("#jform_n32").val() != null && jQuery("#jform_n32").val() != undefined && jQuery("#jform_n32").val() != "" && jQuery("#jform_n32").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_draining").click();
 				jQuery("#btn_draining").attr("disabled", "disabled");
 			}
@@ -2767,6 +2802,8 @@
 				}
 			});
 			if (jQuery("#jform_dop_krepezh").val() != null && jQuery("#jform_dop_krepezh").val() != undefined && jQuery("#jform_dop_krepezh").val() != "" && jQuery("#jform_dop_krepezh").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_fixture2").click();
 				jQuery("#btn_fixture2").attr("disabled", "disabled");
 			}
@@ -2786,6 +2823,8 @@
 				}
 			});
 			if (jQuery("#jform_n18").val() != null && jQuery("#jform_n18").val() != undefined && jQuery("#jform_n18").val() != "" && jQuery("#jform_n18").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_gain").click();
 				jQuery("#btn_gain").attr("disabled", "disabled");
 			}
@@ -2805,6 +2844,8 @@
 				}
 			});
 			if ((jQuery("#n22_count").val() != null && jQuery("#n22_count").val() != undefined && jQuery("#n22_count").val() != "" && jQuery("#n22_count").val() != 0) || (jQuery("#n22tar").val() != null && jQuery("#n22tar").val() != undefined && jQuery("#n22tar").val() != "" && jQuery("#n22tar").val() != 0)) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_hoods").click();
 				jQuery("#btn_hoods").attr("disabled", "disabled");
 			}
@@ -2824,6 +2865,8 @@
 				}
 			});
 			if ((jQuery("#n23_count").val() != null && jQuery("#n23_count").val() != undefined && jQuery("#n23_count").val() != "" && jQuery("#n23_count").val() != 0) || (jQuery("#n23tar").val() != null && jQuery("#n23tar").val() != undefined && jQuery("#n23tar").val() != "" && jQuery("#n23tar").val() != 0))  {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_diffuser").click();
 				jQuery("#btn_diffuser").attr("disabled", "disabled");
 			}
@@ -2843,6 +2886,8 @@
 				}
 			});
 			if ((jQuery("#extra_components_title").val() != null && jQuery("#extra_components_title").val() != undefined && jQuery("#extra_components_title").val() != "" && jQuery("#extra_components_title").val() != 0) || (jQuery(".extra_components_tar").val() != null && jQuery(".extra_components_tar").val() != undefined && jQuery(".extra_components_tar").val() != "" && jQuery(".extra_components_tar").val() != 0)) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_accessories").click();
 				jQuery("#btn_accessories").attr("disabled", "disabled");
 			}
@@ -2862,6 +2907,8 @@
 				}
 			});
 			if (jQuery("#Type").val() != null && jQuery("#Type").val() != undefined && jQuery("#Type").val() != "" && jQuery("#Type").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_accessories2").click();
 				jQuery("#btn_accessories2").attr("disabled", "disabled");
 			}
@@ -2881,6 +2928,8 @@
 				}
 			});
 			if ((jQuery("#extra_mounting_title").val() != null && jQuery("#extra_mounting_title").val() != undefined && jQuery("#extra_mounting_title").val() != "" && jQuery("#extra_mounting_title").val() != 0) || (jQuery(".mounttar").val() != null && jQuery(".mounttar").val() != undefined && jQuery(".mounttar").val() != "" && jQuery(".mounttar").val() != 0)) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_mount").click();
 				jQuery("#btn_mount").attr("disabled", "disabled");
 			}
@@ -2900,6 +2949,8 @@
 				}
 			});
 			if (jQuery("input[name='jform[height]']:radio:checked").val() != 0) {
+				jQuery("#precalculation_container_hide").show();
+				jQuery("#btn_precalculation").css("background-color", "#010084");
 				jQuery("#btn_height").click();
 				jQuery("#btn_height").attr("disabled", "disabled");
 			}
@@ -2925,6 +2976,8 @@
 				}
 			} else {
 				if (jQuery("input[name='need_mount']:radio:checked").val() != 0) {
+					jQuery("#precalculation_container_hide").show();
+					jQuery("#btn_precalculation").css("background-color", "#010084");
 					jQuery("#btn_mount2").click();
 					jQuery("#btn_mount2").attr("disabled", "disabled");
 				}
@@ -2934,8 +2987,6 @@
 				jQuery("[value=1][name='need_mount']").attr("data-locked", "1");
 				if (who == 1) {
 					if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
-						jQuery("#mount2").show();
-						jQuery("#btn_mount2").css("background-color", "#010084");
 						jQuery("#btn_mount2").attr("disabled", "disabled");
 					} else {
 						jQuery("#btn_mount2").attr("disabled", false);
@@ -2986,6 +3037,8 @@
 						if (jQuery("[value=0][name='need_mount']").attr("data-locked") == 0) {
 							jQuery("[value=1][name='need_mount']").attr("checked", "checked");
 							jQuery("#btn_mount2").attr("disabled", "disabled");
+							jQuery("#mount2").show();
+							jQuery("#btn_mount2").css("background-color", "#010084");
 						}
 					}
 				});

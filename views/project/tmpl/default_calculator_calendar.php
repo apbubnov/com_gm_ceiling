@@ -1384,8 +1384,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
     </div>
     <div id="modal_window_container" class="modal_window_container">
         <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="modal_window_del" class="modal_window">
-            <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
+        <div id="modal_window_del" class="modal-window-tar">
+            <p style="/*margin-top:10px*/"><strong>Вы действительно хотите удалить?</strong></p>
             <p>
                 <button type="button" id="ok" class="btn btn-primary">Да</button>
                 <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
