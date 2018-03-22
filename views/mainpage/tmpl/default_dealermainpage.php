@@ -331,6 +331,7 @@ $rest = -($total_sum) - $contributed;
         }
         jQuery("#precalc_btn").click(function () {
             user_id = "<?php echo $userId;?>";
+            create_new_client(user_id);
         });
         jQuery("#toProfile").click(function(){
 		    location.href = "index.php?option=com_gm_ceiling&view=dealerprofile&type=edit";
