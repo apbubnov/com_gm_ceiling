@@ -150,7 +150,34 @@
 </style>
 
 <style>
-    @media (max-width: 1024px) {
+    #table1 {
+        width: 100%;
+        max-width: 300px;
+        font-size: 13px;
+    }
+    #table1 button, #table1 a, #table1 input {
+        font-size: 13px;
+        max-width: 150px;
+    }
+    #table1 td, #table1 th {
+        padding: 10px 5px;
+    }
+    @media screen and (min-width: 768px) {
+        #table1 {
+            width: 100%;
+            max-width: 3000px;
+            font-size: 1em;
+        }
+        #table1 td, #table1 th {
+            padding: 15px;
+        }
+        #table1 button, #table1 a, #table1 input {
+            font-size: 1em;
+            width: auto;
+            max-width: 200px;
+        }
+    }
+    /* @media (max-width: 1024px) {
         .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul *, .containerMobile, .containerMobile *  {
             font-size: 10px !important;
             padding: .1rem !important;
@@ -178,7 +205,7 @@
         .section_content img {
             width: 100% !important;
         }
-    }
+    } */
 </style>
 
 <h2 class="center" style="margin-bottom: 1em;">Просмотр проекта № <?php echo $this->item->id; ?></h2>
@@ -186,7 +213,7 @@
 <?php if ($this->item) { ?>
     <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
     <?php if (sizeof($calculations) > 0) { ?>
-        <?php echo "<h3>Расчеты для проекта № ".$this->item->id." </h3>"; ?>
+        <h3>Расчеты для проекта</h3>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
@@ -201,9 +228,9 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div class="tab-pane active" id="calculationAll" role="tabpanel">
-                <table>
+                <table id="table1" class="table-striped one-touch-view">
                     <tr>
-                        <th class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                        <th colspan="3" class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?php
                         $project_total = 0;
@@ -243,8 +270,8 @@
 
                             // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
                             //$sum_transport = 0;  $sum_transport_discount = 0;
-                        // $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-                        // $mount_transport = $mountModel->getDataAll();
+                            // $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+                            // $mount_transport = $mountModel->getDataAll();
                             /*if($calculation->transport == 1 && $calculation->mounting_sum != 0) {
                                 $tmp = 1;
                                 $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
@@ -296,7 +323,7 @@
                             <td id="calculation_total" colspan="2"> <?php echo round($calculation_total, 0); ?> руб.</td>
                         <?php } ?>
                     </tr>
-                    <?php if($calculation->discount > 0) $kol++;} ?>
+                    <?php if($calculation->discount > 0) $kol++; } ?>
                     <tr>
                         <th>Общая S/общий P:</th>
                         <th id="total_square">
