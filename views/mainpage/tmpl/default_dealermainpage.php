@@ -305,7 +305,8 @@ $rest = -($total_sum) - $contributed;
         jQuery("#precalc_btn").click(function () {
             user_id = "<?php echo $userId;?>";
             client_id = create_new_client(user_id);
-            jQuery.ajax({
+            alert(client_id);
+            /* jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=create_empty_project",
                 data: {
@@ -329,7 +330,7 @@ $rest = -($total_sum) - $contributed;
                         text: "Ошибка при создании заказа. Сервер не отвечает"
                     });
                 }
-            });
+            }); */
         });
         jQuery("#toProfile").click(function(){
 		    location.href = "index.php?option=com_gm_ceiling&view=dealerprofile&type=edit";
