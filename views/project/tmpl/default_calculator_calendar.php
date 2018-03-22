@@ -22,8 +22,12 @@ Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
-$sum_transport = $transport['client_sum'];
-$sum_transport_1 = $transport['mounter_sum'];
+$client_sum_transport = $transport['client_sum'];
+$self_sum_transport = $transport['mounter_sum'];//идет в монтаж
+$self_canvases_sum = 0;
+$self_components_sum = 0;
+$self_mounting_sum = 0;
+$project_self_total = 0;
 $project_total = 0;
 $project_total_discount = 0;
 $total_square = 0;
@@ -35,10 +39,12 @@ foreach ($calculations as $calculation) {
     $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
     $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
 
-    $calculation->dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-    $calculation->dealer_components_sum_1 = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
-    $calculation->dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-
+    $calculation->dealer_self_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
+    $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
+    $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
+    $self_components_sum += $calculation->dealer_self_components_sum;
+    $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+    $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
     $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
     //$calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $this->item->project_discount) / 100);
     $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
@@ -58,6 +64,7 @@ foreach ($calculations as $calculation) {
 
     $calculation_total = $calculation->calculation_total;
 }
+$project_self_total = $self_sum_transport+$self_components_sum+$self_canvases_sum+$self_mounting_sum;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
 $min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
@@ -716,7 +723,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 <tr>
                                     <?php 
                                         //-------------------------Себестоимость транспорта-------------------------------------
-                                        $project_total_11 = $project_total_11 + $sum_transport_1;
+                                        //$project_total_11 = $project_total_11 + $sum_transport_1;
                                         $project_total = $project_total + $sum_transport;
                                         $project_total_discount = $project_total_discount + $sum_transport;
                                     ?>
@@ -772,9 +779,16 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 </tr>
                                 <?php if ($user->dealer_type != 2) { ?>
                                     <tr>
-                                        <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
-                                        <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
-                                        <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
+                                        <td id="calculation_total1">П <?php echo round($calculation_total_11, 0) ?></td>
+                                        <td id="calculation_total2">К <?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
+                                        <td id="calculation_total3">M <?php echo round($project_total_11, 0); ?></td>
+                                        <td id="calculation_total4">M <?php echo round($project_total_11, 0); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="calcs_self_canvases_total">П <?php echo round($self_canvases_sum, 0) ?></td>
+                                        <td id="calcs_self_components_total">К <?php echo round($self_components_sum, 0) ?></td>
+                                        <td id="calcs_self_mount_total">M <?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
+                                        <td id="calcs_total"></td> <?php echo round($project_self_total, 0); ?></td>
                                     </tr>
                                 <?php } ?>
                                 <tr>
@@ -957,13 +971,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                     </tr>
                                 <?php } ?>
                             </table>
-                            <!-- чтото для клиентского кабинета 
-                                <?php// if ($user->dealer_type == 2) { ?>
-                                <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
-                                    формирование заказа
-                                </button>
-                                <?php// } ?>
-                            -->
                         </div>
                         <?php
                             $first = true;

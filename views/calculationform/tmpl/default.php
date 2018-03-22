@@ -39,7 +39,12 @@
 	$del_flag = 1;
 	$rek = $jinput->getInt('rek', 8);
 	$user_group = $user->groups;
-
+	if(in_array('16',$user_group)){
+		$triangulator_pro = 1;
+	}
+	else{
+		$triangulator_pro = 0;
+	}
 	//определение с монтажными работами или без
 	if ($_GET['id'] == 0) {
 		$need_mount_for_radio = 0;
@@ -95,6 +100,7 @@
     <input name = "n4" id = "n4" value ="" type ="hidden">
     <input name = "n5" id = "n5" value ="" type ="hidden">
     <input name = "n9" id = "n9" value ="" type ="hidden">
+	<input name = "triangulator_pro" id = "triangulator_pro" value = <?php echo $triangulator_pro?> type = "hidden">
 </form>
 <form action="/sketch/cut_redactor_2/index.php" id="data_form" method="POST" style="display : none;">
         <input type="hidden" name="walls" id="input_walls">
@@ -310,7 +316,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		<div class="container">
+		<!-- <div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4 ">
@@ -318,7 +324,7 @@
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
-		</div>
+		</div> -->
 		<!-- S,P,углы -->
 		<div class="container">
 			<div id="data-wrapper">
