@@ -250,7 +250,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 <div class="center-left">
                                     <a class="btn btn-primary" id="change_data">
                                         <?php
-                                            if ($this->item->client_id == 1){
+                                            if ($_GET['precalculation'] == 1){
                                                 echo "Заполнить данные о клиенте";
                                             }
                                             else {
@@ -517,11 +517,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         </div>
                     </div>
                 </p>
-                <?php if ($this->item->id_client != 1) { ?>
-                    <p>
-                        <button type="submit" id="accept_changes" class="btn btn btn-primary">Сохранить клиента</button>
-                    </p>
-                <?php } ?>
+                <p>
+                    <button type="submit" id="accept_changes" class="btn btn btn-primary">Сохранить клиента</button>
+                </p>
             </div>
         </div>
         <!-- окно выбора замерщика -->
@@ -1404,6 +1402,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         var $ = jQuery;
         var min_project_sum = <?php echo  $min_project_sum;?>;
         var min_components_sum = <?php echo $min_components_sum;?>;
+
+        var precalculation = <?php echo $_GET['precalculation']; ?>;
 
         function PressEnter(your_text, your_event) {
             if (your_text != "" && your_event.keyCode == 13)
@@ -2347,7 +2347,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 jQuery("#change_info_win").show();
             });
 
-            if (client_id==1) {
+            
+            if (precalculation == 1) {
                 jQuery("input[name='data_change']").val(1);
                 jQuery("#change_data").trigger('click');
                 jQuery("#accept_project").trigger('click');
