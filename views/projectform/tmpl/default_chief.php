@@ -150,7 +150,34 @@
 </style>
 
 <style>
-    @media (max-width: 1024px) {
+    #table1 {
+        width: 100%;
+        max-width: 300px;
+        font-size: 13px;
+    }
+    #table1 button, #table1 a, #table1 input {
+        font-size: 13px;
+        max-width: 150px;
+    }
+    #table1 td, #table1 th {
+        padding: 10px 5px;
+    }
+    @media screen and (min-width: 768px) {
+        #table1 {
+            width: 100%;
+            max-width: 3000px;
+            font-size: 1em;
+        }
+        #table1 td, #table1 th {
+            padding: 15px;
+        }
+        #table1 button, #table1 a, #table1 input {
+            font-size: 1em;
+            width: auto;
+            max-width: 200px;
+        }
+    }
+    /* @media (max-width: 1024px) {
         .project_activation, .project_activation *, .tab-content, .tab-content *:not(label), ul, ul *, .containerMobile, .containerMobile *  {
             font-size: 10px !important;
             padding: .1rem !important;
@@ -178,7 +205,7 @@
         .section_content img {
             width: 100% !important;
         }
-    }
+    } */
 </style>
 
 <h2 class="center" style="margin-bottom: 1em;">Просмотр проекта № <?php echo $this->item->id; ?></h2>
@@ -186,7 +213,7 @@
 <?php if ($this->item) { ?>
     <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
     <?php if (sizeof($calculations) > 0) { ?>
-        <?php echo "<h3>Расчеты для проекта № ".$this->item->id." </h3>"; ?>
+        <h3>Расчеты для проекта</h3>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
@@ -201,9 +228,9 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <div class="tab-pane active" id="calculationAll" role="tabpanel">
-                <table>
+                <table id="table1" class="table-striped one-touch-view">
                     <tr>
-                        <th class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                        <th colspan="3" class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?php
                         $project_total = 0;
@@ -243,8 +270,8 @@
 
                             // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
                             //$sum_transport = 0;  $sum_transport_discount = 0;
-                        // $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-                        // $mount_transport = $mountModel->getDataAll();
+                            // $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+                            // $mount_transport = $mountModel->getDataAll();
                             /*if($calculation->transport == 1 && $calculation->mounting_sum != 0) {
                                 $tmp = 1;
                                 $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
@@ -296,7 +323,7 @@
                             <td id="calculation_total" colspan="2"> <?php echo round($calculation_total, 0); ?> руб.</td>
                         <?php } ?>
                     </tr>
-                    <?php if($calculation->discount > 0) $kol++;} ?>
+                    <?php if($calculation->discount > 0) $kol++; } ?>
                     <tr>
                         <th>Общая S/общий P:</th>
                         <th id="total_square">
@@ -375,61 +402,70 @@
                     <tr>
                         <?php if ($kol > 0) { ?>
                             <th>Итого/ - %:</th>
-                            <th id="project_total"><span class="sum"><?php echo round($project_total, 0); ?></span> руб. /</th>
+                            <th id="project_total">
+                                <span class="sum"><?php echo round($project_total, 0); ?></span> руб. /
+                            </th>
                             <th id="project_total_discount">
-                            <span class="sum">
-                            <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                            if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0);  ?> руб.</th> <?php }
-                            elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.</th>
-                                </span> <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р. </span>
-                            <?php } else echo round($project_total_discount, 0);  ?> руб.</span> <span class="dop" style="font-size: 9px;" ></span></th>
+                                <span class="sum">
+                                <?php 
+                                    //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                    if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0);  ?> руб.
+                            </th>
+                                <?php }
+                                    elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.
+                            </th>
+                                </span>
+                                <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р.</span>
+                                <?php } else echo round($project_total_discount, 0);  ?> руб.</span>
+                                <span class="dop" style="font-size: 9px;" ></span>
+                            </th>
                         <?php }
                         else { ?>
                         <th>Итого</th>
                         <th id="project_total" colspan="2">
-                        <span class="sum">
-                            <?php
-                            if ($this->item->new_project_sum == 0) {
-                                if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
-                                echo round($project_total, 2);
-                            } else {
-                                echo round($this->item->new_project_sum, 2);
-                            }
-                            } ?>
-                        </span>
-                            <span class="dop" style="font-size: 9px;">
-                        <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
-                            * минимальная сумма заказа 3500р.<?php }?>
+                            <span class="sum">
+                                <?php
+                                if ($this->item->new_project_sum == 0) {
+                                    if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                                    echo round($project_total, 2);
+                                } else {
+                                    echo round($this->item->new_project_sum, 2);
+                                }
+                                } ?>
                             </span>
+                                <span class="dop" style="font-size: 9px;">
+                            <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
+                                * минимальная сумма заказа 3500р.<?php }?>
+                                </span>
                         </th>
                     </tr>
                     <?php if ($user->dealer_type != 2) { ?>
                         <tr>
-                        <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
-                        <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
-                        <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
+                            <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
+                            <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
+                            <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
                         </tr>
                     <?php } ?>
                     <tr>
                         <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?php foreach ($calculations as $calculation) { ?>
-                    <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                        <td><?php echo $calculation->calculation_title; ?></td>
-                        <td colspan="2">
-                            <?php
-                            $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-                            $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
-                            ?>
-                            <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                            <?php } else { ?>
-                                -
-                            <?php } ?>
-                        </td>
-                        <?php }
-                        $json = json_encode($pdf_names); ?>
-                    </tr>
+                        <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
+                            <td><?php echo $calculation->calculation_title; ?></td>
+                            <td colspan="2">
+                                <?php
+                                $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
+                                $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
+                                ?>
+                                <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                    <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                <?php } else { ?>
+                                    -
+                                <?php } ?>
+                            </td>
+                            <?php }
+                            $json = json_encode($pdf_names); ?>
+                        </tr>
                     <?php if (count($calculations) > 0) { ?>
                         <tr class="section_estimate" style="display:none;">
                             <td colspan="3"><b>Отправить все сметы <b></td>
@@ -489,9 +525,7 @@
                             <tr class="section_mount" style="display:none;">
                                 <td colspan="2">
                                     <div class="email-all" style="float: left;">
-                                        <input name="all-email" id="all-email2" class="form-control" style="width:200px;"
-                                                value="" placeholder="Адрес эл.почты" type="text">
-
+                                        <input name="all-email" id="all-email2" class="form-control" style="width:200px;" value="" placeholder="Адрес эл.почты" type="text">
                                     </div>
                                     <div class="file_data">
                                         <div class="file_upload">
@@ -619,7 +653,6 @@
                             "MerchantLogin=$mrh_login&OutSum=$out_summ&InvoiceID=$inv_id" .
                             "&Description=$inv_desc&SignatureValue=$crc&shp_Item=$shp_item" .
                             "&Culture=$culture&Encoding=$encoding'></script></html>";
-
                     }
                 } ?>
             </div>
@@ -687,12 +720,10 @@
                                     Скрытый карниз: <?php echo $calculation->n16; ?>
                                 </div>
                             <?php } ?>
-
                             <?php if ($calculation->n12) { ?>
                                 <h4>Установка люстры</h4>
                                 <?php echo $calculation->n12; ?> шт.
                             <?php } ?>
-
                             <?php if ($calculation->n13) { ?>
                                 <h4>Установка светильников</h4>
                                 <?php foreach ($calculation->n13 as $key => $n13_item) {
@@ -700,7 +731,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n14) { ?>
                                 <h4>Обвод трубы</h4>
                                 <?php foreach ($calculation->n14 as $key => $n14_item) {
@@ -708,7 +738,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n15) { ?>
                                 <h4>Шторный карниз Гильдии мастеров</h4>
                                 <?php foreach ($calculation->n15 as $key => $n15_item) {
@@ -722,7 +751,6 @@
                                 <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
                                 <?php echo $calculation->n27; ?> м.
                             <?php } ?>
-
                             <?php if ($calculation->n26) { ?>
                                 <h4>Светильники Эcola</h4>
                                 <?php foreach ($calculation->n26 as $key => $n26_item) {
@@ -730,7 +758,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n22) { ?>
                                 <h4>Вентиляция</h4>
                                 <?php foreach ($calculation->n22 as $key => $n22_item) {
@@ -738,7 +765,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n23) { ?>
                                 <h4>Диффузор</h4>
                                 <?php foreach ($calculation->n23 as $key => $n23_item) {
@@ -746,7 +772,6 @@
                                     ?>
                                 <?php }
                             } ?>
-
                             <?php if ($calculation->n29) { ?>
                                 <h4>Переход уровня</h4>
                                 <?php foreach ($calculation->n29 as $key => $n29_item) {
@@ -806,7 +831,6 @@
                                     Дополнительный крепеж: <?php echo $calculation->dop_krepezh; ?>
                                 </div>
                             <?php } ?>
-
                             <?php if ($calculation->n24> 0) { ?>
                                 <div>
                                     Сложность доступа к месту монтажа, м: <?php echo $calculation->n24; ?>
