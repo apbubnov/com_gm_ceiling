@@ -24,6 +24,7 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
 $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
+$self_calc_data = [];
 $self_canvases_sum = 0;
 $self_components_sum = 0;
 $self_mounting_sum = 0;
@@ -50,7 +51,11 @@ foreach ($calculations as $calculation) {
     $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
     $project_total += $calculation->calculation_total;
     $project_total_discount += $calculation->calculation_total_discount;
-    
+    $self_calc_data[$calculation->id] = array(
+        "canv_data" => $dealer_self_canvases_sum,
+        "comp_data" => $dealer_self_components_sum,
+        "mount_data" => $dealer_self_gm_mounting_sum,
+    );
     if ($user->dealer_type != 2) {
         $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
         $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
@@ -64,6 +69,7 @@ foreach ($calculations as $calculation) {
 
     $calculation_total = $calculation->calculation_total;
 }
+$self_calc_data = json_encode($self_calc_data);
 $project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum;
 $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
@@ -1401,7 +1407,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         var $ = jQuery;
         var min_project_sum = <?php echo  $min_project_sum;?>;
         var min_components_sum = <?php echo $min_components_sum;?>;
-
+        var self_data = JSON.parse('<?php echo $self_calc_data;?>');
+        console.log(self_data);
         var precalculation = <?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>;
 
         function PressEnter(your_text, your_event) {
