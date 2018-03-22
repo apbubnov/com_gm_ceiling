@@ -2479,7 +2479,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         jQuery("#send_all").click(function () {
             jQuery(".email-all").toggle();
         });
-
+        jQuery("[name = include_calculation[]]").change(function(){
+            alert("change");
+        });
         jQuery("#send_all_to_email1").click(function () {
 
             var email = jQuery("#all-email1").val();
@@ -2506,13 +2508,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=send_estimate",
-                data: formData, /*{
-                    filenames: JSON.stringify(filenames),
-                    email: email,
-                    type: 0,
-                    client_id: client_id,
-                    dop_file : serialize
-                },*/
+                data: formData, 
                 type: "POST",
                 dataType: 'json',
                 processData: false,
