@@ -2116,9 +2116,9 @@
 										<?php } ?>
 									<?php } elseif ($this->type === "calculator") { ?>
 										<?php if($this->item->project_id) { ?>
-											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?>">Сохранить</a>
+											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $this->item->project_id; ?><?php if ($_GET['precalculation']) { echo("&precalculation=1"); } else { echo 0; } ?>">Сохранить</a>
 										<?php } elseif ($project_id) { ?>
-											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a>
+											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?><?php if ($_GET['precalculation']) { echo("&precalculation=1"); } else { echo 0; } ?>">Сохранить</a>
 										<?php } else { ?>
 											<a class="btn btn-success" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
 										<?php } ?>
