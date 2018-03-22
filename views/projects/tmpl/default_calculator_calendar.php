@@ -35,16 +35,21 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         width: 15%;
     }
     #projectListMobil {
-        font-size: 12px;
+        font-size: 11px;
         padding: 6px;
     }
+    #projectListMobil td, #projectListMobil th {
+        padding: 6px;
+        vertical-align: middle;
+    }
+
 </style>
 
+<?=parent::getButtonBack();?>
 <h2 class="center">График замеров</h2>
 <form action="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar'); ?>" method="post" name="adminForm" id="adminForm">
     <div class="row-fluid toolbar">
         <div class="span3">
-            <?=parent::getButtonBack();?>
             <a href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=addproject&type=calculator', false, 2); ?>" class="btn btn-success">
                 <i class="icon-plus"></i> Добавить замер
             </a>
