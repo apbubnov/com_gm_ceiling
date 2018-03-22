@@ -119,7 +119,7 @@
                 </div>
             <?php } ?>
             <div>
-                <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 125px);">
+                <input type="text" id="new_email" placeholder="Почта" required style="width: calc(100% - 130px);">
                 <button type="button" id="add_email" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
             </div>
         </div>
@@ -138,7 +138,7 @@
                 <?php } ?>
             </div>
             <div>
-                <input type="text" id="new_phone" placeholder="Телефон" required style="width: calc(100% - 125px);">
+                <input type="text" id="new_phone" placeholder="Телефон" required style="width: calc(100% - 130px);">
                 <button type="button" id="add_phone" class="btn btn-primary" style="margin-left: 15px;">Добавить</button>
             </div>
         </div>
