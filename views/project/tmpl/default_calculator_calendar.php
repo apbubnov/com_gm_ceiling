@@ -1402,7 +1402,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         var min_project_sum = <?php echo  $min_project_sum;?>;
         var min_components_sum = <?php echo $min_components_sum;?>;
 
-        var precalculation = <?php echo $_GET['precalculation']; ?>;
+        var precalculation = <?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>;
 
         function PressEnter(your_text, your_event) {
             if (your_text != "" && your_event.keyCode == 13)
