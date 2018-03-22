@@ -71,8 +71,8 @@
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar" style="margin-top: 15px;">
     <h4 style="text-align: left;">Имя клиента:</h4>
-    <p style="font-size: 1em;">
-        <label id = "FIO"><?php echo $this->item->client_name; ?></label>
+    <p>
+        <label id = "FIO" style="font-size: 1em;"><?php echo $this->item->client_name; ?></label>
         <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
         <?php if ($user->dealer_type != 1):?>
             <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
