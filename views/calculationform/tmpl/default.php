@@ -2993,8 +2993,6 @@
 					}
 				} else {
 					if (jQuery("input[name='need_mount']:radio:checked").val() != 0) {
-						jQuery("#mount2").show();
-						jQuery("#btn_mount2").css("background-color", "#010084");
 						jQuery("#btn_mount2").attr("disabled", "disabled");
 					} else {
 						jQuery("#btn_mount2").attr("disabled", false);
@@ -3039,6 +3037,8 @@
 						if (jQuery("[value=0][name='need_mount']").attr("data-locked") == 0) {
 							jQuery("[value=1][name='need_mount']").attr("checked", "checked");
 							jQuery("#btn_mount2").attr("disabled", "disabled");
+							jQuery("#mount2").show();
+							jQuery("#btn_mount2").css("background-color", "#010084");
 						}
 					}
 				});
