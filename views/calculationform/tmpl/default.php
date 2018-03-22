@@ -2934,6 +2934,8 @@
 				jQuery("[value=1][name='need_mount']").attr("data-locked", "1");
 				if (who == 1) {
 					if (jQuery("input[name='need_mount']:radio:checked").val() != 1) {
+						jQuery("#mount2").show();
+						jQuery("#btn_mount2").css("background-color", "#010084");
 						jQuery("#btn_mount2").attr("disabled", "disabled");
 					} else {
 						jQuery("#btn_mount2").attr("disabled", false);
