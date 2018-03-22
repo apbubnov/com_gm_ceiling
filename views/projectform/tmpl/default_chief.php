@@ -402,7 +402,9 @@
                     <tr>
                         <?php if ($kol > 0) { ?>
                             <th>Итого/ - %:</th>
-                            <th id="project_total"><span class="sum"><?php echo round($project_total, 0); ?></span> руб. /</th>
+                            <th id="project_total">
+                                <span class="sum"><?php echo round($project_total, 0); ?></span> руб. /
+                            </th>
                             <th id="project_total_discount">
                             <span class="sum">
                             <?php //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
