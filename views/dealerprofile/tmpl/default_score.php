@@ -46,7 +46,7 @@ $rest = -($total_sum) - $contributed;
     <div class="row-fluid toolbar" style="margin: 30px 0 0 0;">
         <div class="span3">
             <div class = "date-actions" style="text-align: right; padding-bottom: 1em;">
-                Выбрать с <input type = "date" id = "c_date1" style="padding-bottom: 15px;"> по <input type ="date" id = "c_date2"> <button type="button" class = "btn btn-primary" id = "c_show_all">Показать всё</button>
+                Выбрать с <input type = "date" id = "c_date1" style="margin-bottom: 15px;"> по <input type ="date" id = "c_date2"> <button type="button" class = "btn btn-primary" id = "c_show_all">Показать всё</button>
             </div>
         </div>
     </div>
