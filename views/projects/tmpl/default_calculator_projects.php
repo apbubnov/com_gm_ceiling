@@ -53,23 +53,23 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
         <thead>
             <tr>
                 <th class='center'>
-                    <?= //JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
+                    <? // echo JHtml::_('grid.sort', 'Номер договора', 'id', $listDirn, $listOrder); ?>
                     Номер договора
                 </th>
                 <th class='center'>
-                    <?= //JHtml::_('grid.sort', 'Дата и время замера', 'calculation_date', $listDirn, $listOrder); ?>
+                    <? // echo JHtml::_('grid.sort', 'Дата и время замера', 'calculation_date', $listDirn, $listOrder); ?>
                     Дата и время замера
                 </th>
                 <th class='center'>
-                    <?= //JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
+                    <? // echo JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
                     Адрес
                 </th>
                 <th class='center'>
-                    <?= //JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
+                    <? // echo JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
                     Клиент
                 </th>
                 <th class='center'>
-                    <?= //JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
+                    <? // echo JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
                     Статус
                 </th>
             </tr>
