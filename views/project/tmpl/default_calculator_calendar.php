@@ -52,9 +52,9 @@ foreach ($calculations as $calculation) {
     $project_total += $calculation->calculation_total;
     $project_total_discount += $calculation->calculation_total_discount;
     $self_calc_data[$calculation->id] = array(
-        "canv_data" => $dealer_self_canvases_sum,
-        "comp_data" => $dealer_self_components_sum,
-        "mount_data" => $dealer_self_gm_mounting_sum,
+        "canv_data" => $calculation->dealer_self_canvases_sum,
+        "comp_data" => $calculation->dealer_self_components_sum,
+        "mount_data" => $calculation->dealer_self_gm_mounting_sum,
     );
     if ($user->dealer_type != 2) {
         $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
