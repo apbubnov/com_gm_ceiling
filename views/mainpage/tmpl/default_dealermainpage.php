@@ -277,12 +277,39 @@ $rest = -($total_sum) - $contributed;
             jQuery("#components_price_btn").toggle();
             jQuery("#mounting_price_btn").toggle();
         });
+        function create_new_client(id){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=client.create",
+                data: {
+                    user_id: id
+                },
+                success: function (data) {
+                    return data;
+                },
+                dataType: "text",
+                timeout: 10000,
+                async: false,
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при создании. Сервер не отвечает"
+                    });
+                }
+            });
+        }
         jQuery("#precalc_btn").click(function () {
+            user_id = "<?php echo $userId;?>";
+            client_id = create_new_client(user_id);
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=create_empty_project",
                 data: {
-                    client_id: "1",
+                    client_id: client_id,
                     owner: "<?php echo $userId?>"
                 },
                 success: function (data) {
