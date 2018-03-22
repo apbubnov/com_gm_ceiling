@@ -782,14 +782,14 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         <td id="calculation_total1">П <?php echo round($calculation_total_11, 0) ?></td>
                                         <td id="calculation_total2">К <?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
                                         <td id="calculation_total3">M <?php echo round($project_total_11, 0); ?></td>
-                                        <td id="calculation_total4">M <?php echo round($project_total_11, 0); ?></td>
+                                        <td id="calculation_total4"> <?php echo round($project_total_11, 0); ?></td>
                                     </tr>
-                                    <tr>
-                                        <td id="calcs_self_canvases_total">П <?php echo round($self_canvases_sum, 0) ?></td>
-                                        <td id="calcs_self_components_total">К <?php echo round($self_components_sum, 0) ?></td>
-                                        <td id="calcs_self_mount_total">M <?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
-                                        <td id="calcs_total"></td> <?php echo round($project_self_total, 0); ?></td>
-                                    </tr>
+                                    <!-- <tr>
+                                        <td id="calcs_self_canvases_total">П <?php //echo round($self_canvases_sum, 0) ?></td>
+                                        <td id="calcs_self_components_total">К <?php //echo round($self_components_sum, 0) ?></td>
+                                        <td id="calcs_self_mount_total">M <?php //echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
+                                        <td id="calcs_total"></td> <?php //echo round($project_self_total, 0); ?></td>
+                                    </tr> -->
                                 <?php } ?>
                                 <tr>
                                     <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
