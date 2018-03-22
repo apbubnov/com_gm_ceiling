@@ -1044,7 +1044,6 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[$items_2[0]->id] += 2;
         }
         if ($del_flag == 1) {
-            //светильники
             $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
             $n13 = json_decode($data['n13']);
             $n26 = json_decode($data['n26']);
@@ -1080,8 +1079,15 @@ class Gm_ceilingHelpersGm_ceiling
             if (count($n13) > 0 && $n13 != 0) {
                 foreach ($n13 as $lamp) {
                     $fix_components = $calcform_model->components_list_n13_n22($lamp[1], $lamp[2]);
-                    foreach ($fix_components as $comp) $component_count[$comp['id']] += ($comp['count'] * $lamp[0]);
-
+                    foreach ($fix_components as $comp)
+                    {
+                        
+                        if($comp['id']!=4){/* Костыль */
+                            $component_count[$comp['id']] += ($comp['count'] * $lamp[0]);
+                        }
+                        
+                    }
+                   
                     if ($lamp[1] == 2 && $lamp[2] == 66) {
                         $component_count[66] -= $k;
                         if ($component_count[66] < 0) $component_count[66] = 0;
@@ -1101,6 +1107,7 @@ class Gm_ceilingHelpersGm_ceiling
                 foreach ($n14 as $truba) {
                     if ($truba[0] > 0) $component_count[$truba[1]] += $truba[0];
                 }
+               
             }
             if (count($n23) > 0) {
                 foreach ($n23 as $diffuzor) {
@@ -1535,11 +1542,11 @@ class Gm_ceilingHelpersGm_ceiling
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
         $calculation_model = self::getModel('calculation');
-
-        //        $margins = self::get_margin($data['project_id']);
-        //        $gm_mounting_margin = $margins['gm_mounting_margin'];
-        //        $dealer_mounting_margin = $margins['dealer_mounting_margin'];
-
+        $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+        $components_list = $components_model->getFilteredItems();
+        foreach ($components_list as $i => $component) {
+            $components[$component->id] = $component;
+        }
         $calculation_data = null;
         if(empty($calc_id)){
             $project_id = $data['project_id'];
@@ -1610,7 +1617,8 @@ class Gm_ceilingHelpersGm_ceiling
         $count_ventilation = 0;
         $count_ventilation_1 = 0;
         $count_diffuzor = 0;
-        $count_truba = 0;
+        $count_pipe = 0;
+        $count_big_pipe = 0;
         $count_profil_1 = 0;
         $count_profil_2 = 0;
         $count_profil_3 = 0;
@@ -1917,18 +1925,36 @@ class Gm_ceilingHelpersGm_ceiling
                     if (count($n14) > 0) {
                         foreach ($n14 as $truba) {
                             if ($truba->n14_count > 0) {
-                                $count_truba += $truba->n14_count;
-
+                                $size_str = $components[$truba->n14_type]->title;
+                                $size = preg_replace("/[^-0-9]/", '', $size_str);
+                                $size_arr = explode('-',$size);
+                                (empty($size_arr[1])) ? $diam = $size_arr[0] : $diam = $size_arr[1];
+                                if($diam > 100){
+                                    $count_big_pipe += $truba->n14_count;
+                                }
+                                else{
+                                    $count_pipe += $truba->n14_count;
+                                }
                             }
                         }
-                        if ($count_truba > 0) {
+                        if ($count_pipe > 0) {
                             $mounting_data[] = array(
-                                "title" => "Обвод трубы",                                                    //Название
-                                "quantity" => $count_truba,                                                  //Кол-во
+                                "title" => "Обвод трубы(<100мм)",                                                    //Название
+                                "quantity" => $count_pipe,                                                  //Кол-во
                                 "gm_salary" => $results->mp8,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_truba * $results->mp8,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_pipe * $results->mp8,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_truba * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_pipe * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            );
+                        }
+                        if ($count_big_pipe > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Обвод трубы(>100мм)",                                                    //Название
+                                "quantity" => $count_big_pipe,                                                  //Кол-во
+                                "gm_salary" => $results->mp7,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_big_pipe * $results->mp7,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp7,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_big_pipe * $results->mp7                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                     }
@@ -2022,20 +2048,37 @@ class Gm_ceilingHelpersGm_ceiling
                     //обвод трубы
                     if (count($n14) > 0) {
                         foreach ($n14 as $truba) {
-                            throw new Exception(implode('|',$truba));
                             if ($truba[0] > 0) {
-                                $count_truba += $truba[0];
-
+                                $size_str = $components[$truba[1]]->title;
+                                $size = preg_replace("/[^-0-9]/", '', $size_str);
+                                $size_arr = explode('-',$size);
+                                (empty($size_arr[1])) ? $diam = $size_arr[0] : $diam = $size_arr[1];
+                                if($diam > 100){
+                                    $count_big_pipe += $truba[0];
+                                }
+                                else{
+                                    $count_pipe += $truba[0];
+                                }
                             }
                         }
-                        if ($count_truba > 0) {
+                        if ($count_pipe > 0) {
                             $mounting_data[] = array(
-                                "title" => "Обвод трубы",                                                    //Название
-                                "quantity" => $count_truba,                                                    //Кол-во
-                                "gm_salary" => $results->mp8,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_truba * $results->mp8,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "title" => "Обвод трубы(<100мм)",                                                    //Название
+                                "quantity" => $count_pipe,                                                    //Кол-во
+                                "gm_salary" => $results->mp8,                                                 //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_pipe * $results->mp8,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_truba * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_pipe * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            );
+                        }
+                        if ($count_big_pipe > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Обвод трубы(>100мм)",                                                    //Название
+                                "quantity" => $count_big_pipe,                                                    //Кол-во
+                                "gm_salary" => $results->mp7,                                                 //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_big_pipe * $results->mp7,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp7,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_big_pipe * $results->mp7                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                     }
@@ -2369,18 +2412,38 @@ class Gm_ceilingHelpersGm_ceiling
                     if (count($n14) > 0) {
                         foreach ($n14 as $truba) {
                             if ($truba->n14_count > 0) {
-                                $count_truba += $truba->n14_count;
+                                $size_str = $components[$truba->n14_type]->title;
+                                $size = preg_replace("/[^-0-9]/", '', $size_str);
+                                $size_arr = explode('-',$size);
+                                (empty($size_arr[1])) ? $diam = $size_arr[0] : $diam = $size_arr[1];
+                                if($diam > 100){
+                                    $count_big_pipe += $truba->n14_count;
+                                }
+                                else{
+                                    $count_pipe += $truba->n14_count;
+                                }
+                                
 
                             }
                         }
-                        if ($count_truba > 0) {
+                        if ($count_pipe > 0) {
                             $mounting_data[] = array(
-                                "title" => "Обвод трубы",                                                    //Название
-                                "quantity" => $count_truba,                                                    //Кол-во
+                                "title" => "Обвод трубы(<100мм ткань)",                                                    //Название
+                                "quantity" => $count_pipe,                                                    //Кол-во
                                 "gm_salary" => $results->mp40,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_truba * $results->mp40,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_pipe * $results->mp40,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp40,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_truba * $results->mp40                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_pipe * $results->mp40                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            );
+                        }
+                        if ($count_big_pipe > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Обвод трубы(>100мм ткань)",                                                    //Название
+                                "quantity" => $count_big_pipe,                                                    //Кол-во
+                                "gm_salary" => $results->mp40,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_big_pipe * $results->mp40,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp40,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_big_pipe * $results->mp40                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                     }
@@ -2400,22 +2463,22 @@ class Gm_ceilingHelpersGm_ceiling
                         }
                         if ($count_round_lamp > 0) {
                             $mounting_data[] = array(
-                                "title" => "Установка круглых светильников",                                 //Название
+                                "title" => "Установка круглых светильников(ткань)",                          //Название
                                 "quantity" => $count_round_lamp,                                             //Кол-во
-                                "gm_salary" => $results->mp4,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_round_lamp * $results->mp4,                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp4,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_round_lamp * $results->mp4                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "gm_salary" => $results->mp36,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_round_lamp * $results->mp36,                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp36,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_round_lamp * $results->mp36                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                         if ($count_square_lamp > 0) {
                             $mounting_data[] = array(
-                                "title" => "Установка квадратных светильников",                              //Название
+                                "title" => "Установка квадратных светильников(ткань)",                              //Название
                                 "quantity" => $count_square_lamp,                                            //Кол-во
-                                "gm_salary" => $results->mp5,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_square_lamp * $results->mp5,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp5,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_square_lamp * $results->mp5                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "gm_salary" => $results->mp37,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_square_lamp * $results->mp37,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp37,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_square_lamp * $results->mp37                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                     }
@@ -2474,18 +2537,37 @@ class Gm_ceilingHelpersGm_ceiling
                     if (count($n14) > 0) {
                         foreach ($n14 as $truba) {
                             if ($truba[0] > 0) {
-                                $count_truba += $truba[0];
+                                $size_str = $components[$truba[1]]->title;
+                                $size = preg_replace("/[^-0-9]/", '', $size_str);
+                                $size_arr = explode('-',$size);
+                                (empty($size_arr[1])) ? $diam = $size_arr[0] : $diam = $size_arr[1];
+                                if($diam > 100){
+                                    $count_big_pipe += $truba[0];
+                                }
+                                else{
+                                    $count_pipe += $truba[0];
+                                }
 
                             }
                         }
-                        if ($count_truba > 0) {
+                        if ($count_pipe > 0) {
                             $mounting_data[] = array(
-                                "title" => "Обвод трубы",                                                    //Название
-                                "quantity" => $count_truba,                                                    //Кол-во
+                                "title" => "Обвод трубы(<100мм ткань)",                                                    //Название
+                                "quantity" => $count_pipe,                                                    //Кол-во
                                 "gm_salary" => $results->mp40,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_truba * $results->mp40,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_pipe * $results->mp40,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                                 "dealer_salary" => $results->mp40,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_truba * $results->mp40                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_pipe * $results->mp40                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            );
+                        }
+                        if ($count_big_pipe > 0) {
+                            $mounting_data[] = array(
+                                "title" => "Обвод трубы(>100мм ткань)",                                                    //Название
+                                "quantity" => $count_big_pipe,                                                    //Кол-во
+                                "gm_salary" => $results->mp44,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                                "gm_salary_total" => $count_big_pipe * $results->mp44,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                                "dealer_salary" => $results->mp44,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                                "dealer_salary_total" => $count_big_pipe * $results->mp44                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                             );
                         }
                     }

@@ -265,4 +265,22 @@ class Gm_ceilingControllerClient extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
 	}
+	public function create(){
+		try
+		{
+			$jinput = JFactory::getApplication()->input;
+            $user_id = $jinput->get('user_id', null, 'STRING');
+            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+            $result = $client_model->create($user_id);
+            die(json_encode($result));
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+
+	}
 }

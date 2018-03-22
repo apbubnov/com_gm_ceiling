@@ -169,7 +169,7 @@ if(!$user->getDealerInfo()->update_check) {
 				</div>
 				<div class="control-group">
 					<div class="control-label">
-						<label id="jform_mp7-lbl" for="jform_mp7">Обвод трубы D > 120мм</label>
+						<label id="jform_mp7-lbl" for="jform_mp7">Обвод трубы D > 100мм</label>
 					</div>
 					<div class="controls">
 						<input type="text" name="jform[mp7]" id="jform_mp7" value=<?php echo ($mount->mp7)?$mount->mp7:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />				
@@ -177,7 +177,7 @@ if(!$user->getDealerInfo()->update_check) {
 				</div>
 				<div class="control-group">
 					<div class="control-label">
-						<label id="jform_mp8-lbl" for="jform_mp8" >Обвод трубы D < 120мм</label>
+						<label id="jform_mp8-lbl" for="jform_mp8" >Обвод трубы D < 100мм</label>
 					</div>
 					<div class="controls">
 						<input type="text" name="jform[mp8]" id="jform_mp8" value=<?php echo ($mount->mp8)?$mount->mp8:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />			
@@ -373,10 +373,18 @@ if(!$user->getDealerInfo()->update_check) {
 				</div>
 				<div class="control-group">
 					<div class="control-label">
-						<label id="jform_mp40-lbl" for="jform_mp40" >Обвод трубы D < 120мм (ткань)</label>
+						<label id="jform_mp40-lbl" for="jform_mp40" >Обвод трубы D < 100мм (ткань)</label>
 					</div>
 					<div class="controls">
 						<input type="text" name="jform[mp40]" id="jform_mp40" value=<?php echo $mount->mp40?$mount->mp40:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<label id="jform_mp44-lbl" for="jform_mp44" >Обвод трубы D > 100мм (ткань)</label>
+					</div>
+					<div class="controls">
+						<input type="text" name="jform[mp44]" id="jform_mp44" value=<?php echo $mount->mp44?$mount->mp44:0 ?> class="required" style="width:100%;" size="3" required aria-required="true" />						
 					</div>
 				</div>
 				<div class="control-group">
