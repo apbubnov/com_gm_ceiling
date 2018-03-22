@@ -70,7 +70,7 @@
 
 <button id="back_btn" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <div id="FIO-container-tar" style="margin-top: 15px;">
-    <p>Имя клиента:</p><br>
+    <p style="text-align: left;">Имя клиента:</p>
     <p>
         <label id = "FIO" style="font-size: 2rem;"><?php echo $this->item->client_name; ?></label>
         <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
