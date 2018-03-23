@@ -281,6 +281,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                             <input name = "new_project_calculation_daypart" id = "new_project_calculation_daypart" type = "hidden">
                             <input name = "project_gauger" id = "project_gauger" type = "hidden">
                             <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
+                            <input name = "self_transport" id = "self_transport" type = "hidden" value = "<?php echo $self_sum_transport;?>">
                         </div>
                         <?php if ($user->dealer_type != 2) { ?>
                             <div>
@@ -678,7 +679,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 <tr>
                                     <th>Транспорт</th>
                                     <td colspan="2" id="transport_sum">
-                                        <?=$client_sum_transport;?> р.
+                                        <span class = "sum"><?=$client_sum_transport;?></span> р.
                                     </td>
                                     <input id="transport_suma" value='<?php echo $client_sum_transport; ?>' type='hidden'>
                                 </tr>
@@ -1207,7 +1208,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         <!-- активация проекта (назначение на монтаж, заключение договора) -->
         <?php if($user->dealer_type == 1 && count($calculations) <= 0) { } else {?>
             <?php if (($this->item->project_verdict == 0 && $user->dealer_type != 2) || ($this->item->project_verdict == 1 && $user->dealer_type == 1 && $this->item->project_status == 4)) { ?>
-                <table <?php if ($this->item->id_client == 1) {echo "style='display:none'";} ?> >
+                <table <?php if (!empty($_GET['precalculation'])) {echo "style='display:none'";} ?> >
                     <tr>
                         <td style="padding: 25px 10px">
                             <a class="btn  btn-success" id="accept_project" >Договор</a>
@@ -2327,35 +2328,11 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             });
 
 
-            jQuery("input[name='transport']").click(function () {
-                var transport = jQuery("input[name='transport']:checked").val();
-
-                if (transport == '2') {
-                    jQuery("#transport_dist").show();
-                    jQuery("#transport_dist_col").hide();
-                    jQuery("#distance").val('');
-                    jQuery("#distance_col_1").val('');
-                }
-                else if(transport == '1') {
-                    jQuery("#transport_dist").hide();
-                    jQuery("#transport_dist_col").show();
-                    jQuery("#distance_col").val('');
-                    jQuery("#distance").val('');
-                }
-                else {
-                    jQuery("#transport_dist").hide();
-                    jQuery("#transport_dist_col").hide();
-                    jQuery("#distance").val('');
-                    jQuery("#distance_col").val('');
-                }
-                if(transport == 0){
-                    trans();
-                }
-            });
+           
 
             
             jQuery("[name = click_transport]").click(function () {
-                trans();
+                calculate_transport();
             });
 
             if (jQuery("input[name='transport']:checked").val() == '2') {
@@ -2652,7 +2629,48 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             return true;
         }
 
+        jQuery("input[name='transport']").click(function () {
+            var transport = jQuery("input[name='transport']:checked").val();
+            if (transport == '2') {
+                jQuery("#transport_dist").show();
+                jQuery("#transport_dist_col").hide();
+                jQuery("#distance").val('');
+                jQuery("#distance_col_1").val('');
+            }
+            else if(transport == '1') {
+                jQuery("#transport_dist").hide();
+                jQuery("#transport_dist_col").show();
+                jQuery("#distance_col").val('');
+                jQuery("#distance").val('');
+            }
+            else {
+                jQuery("#transport_dist").hide();
+                jQuery("#transport_dist_col").hide();
+                jQuery("#distance").val('');
+                jQuery("#distance_col").val('');
+            }
+            if(transport == 0){
+                calculate_transport();
+            }
+        });
+        function change_transport(sum){
+            sum = JSON.parse(sum);
+            let old_transport = jQuery("#transport_sum span.sum").text();
+            let new_transport = sum.client_sum;
+            let new_self_transport = sum.mounter_sum;
+            let old_self_transport = jQuery("#self_transport").val();
+            jQuery("#project_sum_transport").val(new_transport);
+            jQuery("#transport_sum span.sum").text(sum);
+            let old_self_mount = jQuery("#calcs_self_mount_total").text();
+            let old_self_total = jQuery("#calcs_total").text();
+            let old_total = jQuery("#project_total span.sum").text();
+            let old_total_discount = jQuery("#project_total_discount span.sum").text();
+            jQuery("#project_total span.sum").text(parseInt(old_total) - old_transport + parseInt(new_transport));
+            jQuery("#project_total_discount span.sum").text(old_total_discount - old_transport + new_transport);
+            jQuery("#calcs_self_mount_total").text(old_self_mount - old_self_transport + new_self_transport);
+            jQuery("#calcs_self_mount_total").text(old_self_total - old_self_transport + new_self_transport);
 
+        }
         function update_transport(id,transport,distance,distance_col){
             jQuery.ajax({
                 type: 'POST',
@@ -2664,7 +2682,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     distance_col : distance_col
                 },
                 success: function(data){
-                    
+                    change_transport(data);
                 },
                 dataType: "json",
                 timeout: 10000,
@@ -2681,9 +2699,28 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             }); 
         }
 
-         function calculate_transport(transport){
-                
+        function calculate_transport(){
+            var id = <?php echo $this->item->id; ?>;
+            var transport = jQuery("input[name='transport']:checked").val();
+            var distance = jQuery("#distance").val();
+            var distance_col = jQuery("#distance_col").val();
+            var distance_col_1 = jQuery("#distance_col_1").val();
+            console.log(distance,distance_col,distance_col_1);
+            switch(transport){
+                case "0" :
+                   
+                    update_transport(id,0,0,0);
+                    break;
+                case "1":
+                   
+                    update_transport(id,transport,distance,distance_col_1);
+                    break;
+                case "2" :
+                                       
+                    update_transport(id,transport,distance,distance_col);
+                    break;
             }
+        }
         function trans()
         {
             var id = <?php echo $this->item->id; ?>;
@@ -2781,100 +2818,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         function Float(x, y = 2) {
             return Math.round(parseFloat(""+x) * Math.pow(10,y)) / Math.pow(10,y);
         }
-
-        /* function calculate_total() {
-            var project_total = 0,
-                project_total_discount = 0,
-                pr_total2 = 0,
-                canvas = 0;
-                
-
-            jQuery("input[name^='include_calculation']:checked").each(function () {
-                var parent = jQuery(this).closest(".include_calculation"),
-                    calculation_total = parent.find("input[name^='calculation_total']").val(),
-                    calculation_total_discount = parent.find("input[name^='calculation_total_discount']").val(),
-                    project_total2 = parent.find("input[name^='calculation_total2']").val(),
-                    canv = parent.find("input[name^='canvas']").val();
-
-                project_total += parseFloat(calculation_total);
-                project_total_discount += parseFloat(calculation_total_discount);
-                pr_total2 += parseFloat(project_total2);
-                canvas += parseFloat(canv);
-            });
-            //var canvas = jQuery("#canvas").val();
-            
-            if(canvas == 0) {
-                if(project_total < min_components_sum && pr_total2 !== 0)  if(min_components_sum>0){project_total = min_components_sum;}
-                if(project_total_discount < min_components_sum && pr_total2 !== 0)  if(min_components_sum>0){project_total_discount = min_components_sum;}
-
-                jQuery("#project_total span.sum").text(project_total.toFixed(2));
-                if (project_total > min_components_sum) { jQuery("#project_total span.dop").html(" "); }
-                if (project_total <= min_components_sum && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа "+min_components_sum+"."); }
-                if (project_total <= min_components_sum && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
-                jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
-                if (project_total_discount > min_components_sum) { jQuery("#project_total_discount span.dop").html(" "); }
-                if (project_total_discount <= min_components_sum && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа "+min_components_sum+"."); }
-                if (project_total_discount <= min_components_sum && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
-                //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
-                jQuery("#project_sum").val(project_total_discount);
-            }
-            else {
-                if(project_total < min_project_sum && pr_total2 !== 0)  project_total = min_project_sum;
-                if(project_total_discount < min_project_sum && pr_total2 !== 0)  project_total_discount = min_project_sum;
-
-                jQuery("#project_total span.sum").text(project_total.toFixed(2));
-                if (project_total > min_project_sum) { jQuery("#project_total span.dop").html(" "); }
-                if (project_total <= min_project_sum && pr_total2 != 0) { jQuery("#project_total span.dop").html(" * минимальная сумма заказа"+min_project_sum+"р."); }
-                if (project_total <= min_project_sum && pr_total2 == 0) { jQuery("#project_total span.dop").html(""); }
-                jQuery("#project_total_discount span.sum").text(project_total_discount.toFixed(2));
-                if (project_total_discount > min_project_sum) { jQuery("#project_total_discount span.dop").html(" "); }
-                if (project_total_discount <= min_project_sum && pr_total2 != 0) { jQuery("#project_total_discount span.dop").html(" * минимальная сумма заказа "+min_project_sum+"р."); }
-                if (project_total_discount <= min_project_sum && pr_total2 == 0) { jQuery("#project_total_discount span.dop").html(""); }
-                //jQuery("#project_total_discount").text(project_total_discount.toFixed(2) );
-                jQuery("#project_sum").val(project_total_discount);
-            }
-            
-        } */
-
-/* 
-        function square_total() {
-            var square = 0,
-                perimeter = 0;
-            var total_sq = 0, total_p = 0;
-            jQuery("input[name^='include_calculation']:checked").each(function () {
-                var parent = jQuery(this).closest(".include_calculation"),
-                    square = parent.find("input[name^='total_square']").val(),
-                    perimeter = parent.find("input[name^='total_perimeter']").val();
-                total_sq += parseFloat(square);
-                total_p += parseFloat(perimeter);
-            });
-
-            jQuery("#total_square").text(total_sq.toFixed(2));
-            jQuery("#total_perimeter").text(total_p.toFixed(2));
-        }
- */
-        /*function calculate_total1() {
-            var project_total1 = 0,
-                project_total2 = 0,
-                project_total3 = 0,
-                pr_total1 = 0,
-                pr_total2 = 0,
-                pr_total3 = 0;
-
-            jQuery("input[name^='include_calculation']:checked").each(function () {
-                var parent = jQuery(this).closest(".include_calculation"),
-                    project_total1 = parent.find("input[name^='calculation_total1']").val(),
-                    project_total2 = parent.find("input[name^='calculation_total2']").val(),
-                    project_total3 = parent.find("input[name^='calculation_total3']").val();
-
-                pr_total1 += parseFloat(project_total1);
-                pr_total2 += parseFloat(project_total2);
-                pr_total3 += parseFloat(project_total3);
-            });
-            jQuery("#calculation_total1").text(pr_total1.toFixed(0));
-            jQuery("#calculation_total2").text(pr_total2.toFixed(0));
-            jQuery("#calculation_total3").text(pr_total3.toFixed(0));
-        } */
 
         var mountArray = {};
 
