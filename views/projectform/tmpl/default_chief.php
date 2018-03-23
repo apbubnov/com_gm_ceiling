@@ -440,17 +440,19 @@
                         </tr>
                     <?php } ?>
                     <tr>
-                        <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                        <th colspan="4" class="section_header" id="sh_estimate">
+                            Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                        </th>
                     </tr>
                     <?php foreach ($calculations as $calculation) { ?>
                         <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
                             <td><?php echo $calculation->calculation_title; ?></td>
-                            <td colspan="2">
+                            <td colspan="3">
                                 <?php
-                                $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-                                $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
+                                    $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
+                                    $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
+                                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
                                 ?>
-                                <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                                 <?php } else { ?>
                                     -
@@ -461,30 +463,32 @@
                         </tr>
                     <?php if (count($calculations) > 0) { ?>
                         <tr class="section_estimate" style="display:none;">
-                            <td colspan="3"><b>Отправить все сметы <b></td>
+                            <td colspan="4"><b>Отправить все сметы <b></td>
                         </tr>
                         <tr class="section_estimate" style="display:none;">
-                            <td colspan="2">
+                            <td colspan="3">
                                 <div class="email-all" style="float: left;">
-                                    <input list="email" name="all-email" id="all-email1" class="form-control" style="width:200px;"
-                                        placeholder="Адрес эл.почты" type="text">
-                                        <datalist id="email">
-                                            <?php foreach ($contact_email AS $em) {?>
-                                            <option value="<?=$em->contact;?>"> <?php }?>
-                                        </datalist>
+                                    <input list="email" name="all-email" id="all-email1" class="form-control" placeholder="Адрес эл.почты" type="text">
+                                    <datalist id="email">
+                                        <?php foreach ($contact_email AS $em) {?>
+                                            <option value="<?=$em->contact;?>">
+                                        <?php }?>
+                                    </datalist>
                                 </div>
                                 <div class="file_data">
                                     <div class="file_upload">
                                         <input type="file" class="dopfile" name="dopfile" id="dopfile">
                                     </div>
                                     <div class="file_name"></div>
-                                    <script>jQuery(function () {
+                                    <script>
+                                        jQuery(function () {
                                             jQuery("div.file_name").html("Файл не выбран");
                                             jQuery("div.file_upload input.dopfile").change(function () {
                                                 var filename = jQuery(this).val().replace(/.*\\/, "");
                                                 jQuery("div.file_name").html((filename != "") ? filename : "Файл не выбран");
                                             });
-                                        });</script>
+                                        });
+                                    </script>
                                 </div>
                             </td>
                             <td>
