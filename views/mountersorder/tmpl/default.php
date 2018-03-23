@@ -27,7 +27,6 @@ if (!empty($calculation_ids)) {
     $DataOfTransport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project);
 }
 
-var_dump($calculation_ids);
 ?>
 
 <?=parent::getButtonBack();?>
@@ -360,7 +359,6 @@ var_dump($calculation_ids);
         </div>
         <?php foreach ($calculation_ids as $value) { ?>
             <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
-                <?php echo $value->details; ?>
                 <?php if (!empty($value->details)) { ?>
                     <div>
                         Примечание к потолку: <?php echo $value->details; ?>
