@@ -303,7 +303,7 @@
                                     note2 = "<br>Примечание замерщика: "+element.dealer_calculator_note;
                                 }
                             }
-                            if (element.details != 0) {
+                            if (element.details == 1) {
                                 comment_calc = "<br>Есть примечание к потолку";
                             } else {
                                 comment_calc = "";
