@@ -230,7 +230,7 @@
             <div class="tab-pane active" id="calculationAll" role="tabpanel">
                 <table id="table1" class="table-striped one-touch-view">
                     <tr>
-                        <th colspan="3" class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                        <th colspan="4" class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                     </tr>
                     <?php
                         $project_total = 0;
@@ -252,8 +252,6 @@
                             $dealer_components_sum = $calculation->dealer_components_sum;
                             $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
 
-                            //$calculation_total_discount = $calculation_total * ((100 - $this->item->project_discount) / 100);
-
                             if ($user->dealer_type != 2) {
                                 $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
                                 $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
@@ -268,26 +266,6 @@
                             $total_square += $calculation->n4;
                             $total_perimeter += $calculation->n5;
 
-                            // --------------------------Высчитываем транспорт в отдельную строчку -----------------------------------------------------
-                            //$sum_transport = 0;  $sum_transport_discount = 0;
-                            // $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-                            // $mount_transport = $mountModel->getDataAll();
-                            /*if($calculation->transport == 1 && $calculation->mounting_sum != 0) {
-                                $tmp = 1;
-                                $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-                                $sum_transport_total = $sum_transport;
-                            }
-                            if($calculation->distance > 0  && $calculation->distance_col > 0 && $calculation->mounting_sum != 0) {
-                                $tmp = 2;
-                                $sum_transport = double_margin($mount_transport->distance * $calculation->distance * $calculation->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-                                $sum_transport_total = $sum_transport;
-                            }
-                            if($calculation->discount > 0 && $sum_transport > 0) {
-                                $sum_transport_discount = $sum_transport * ((100 - $calculation->discount) / 100);
-                                $sum_transport_discount_total = $sum_transport_discount;
-                            }
-                            */
-
                             $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
                             $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
                             $project_total += $calculation_total;
@@ -295,7 +273,7 @@
                             $JS_Calcs_Sum[] = round($calculation_total, 0);
                     ?>
                     <tr class="section_ceilings">
-                        <td class="include_calculation" colspan="3">
+                        <td class="include_calculation" colspan="4">
                             <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
                             <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
                             <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
@@ -309,18 +287,18 @@
                     </tr>
                     <tr class="section_ceilings" id="">
                         <td>S/P :</td>
-                        <td colspan="2"><?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м</td>
+                        <td colspan="3"><?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м</td>
                     </tr>
                     <tr class="section_ceilings">
                         <?php if ($calculation->discount != 0) { ?>
                             <td>Цена / -<?php echo $calculation->discount ?>% :</td>
-                            <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> руб. /</td>
-                            <td id="calculation_total_discount"> <?php echo round($calculation_total_discount, 0); ?>
-                                руб.
+                            <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> р. /</td>
+                            <td colspan="2" id="calculation_total_discount">
+                                <?php echo round($calculation_total_discount, 0); ?> р.
                             </td>
                         <?php } else { ?>
                             <td>Итого</td>
-                            <td id="calculation_total" colspan="2"> <?php echo round($calculation_total, 0); ?> руб.</td>
+                            <td id="calculation_total" colspan="3"> <?php echo round($calculation_total, 0); ?> р.</td>
                         <?php } ?>
                     </tr>
                     <?php if($calculation->discount > 0) $kol++; } ?>
@@ -329,16 +307,19 @@
                         <th id="total_square">
                             <?php echo $total_square; ?>м<sup>2</sup> /
                         </th>
-                        <th id="total_perimeter">
+                        <th colspan="2" id="total_perimeter">
                             <?php echo $total_perimeter; ?> м
                         </th>
                     </tr>
                     <tr>
-                        <th colspan="3">Транспортные расходы</th>
+                        <th colspan="4">Транспортные расходы</th>
                     </tr>
                     <tr>
-                        <td style="width: 45%;" colspan="3">
-                            <p><input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?php if($this->item->transport == 1 ) echo "checked"?>><label for = "transport">Транспорт по городу</label></p>
+                        <td style="width: 45%;" colspan="4">
+                            <p>
+                                <input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?php if($this->item->transport == 1 ) echo "checked"?>>
+                                <label for = "transport">Транспорт по городу</label>
+                            </p>
                             <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -357,7 +338,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <p><input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?php if( $this->item->transport == 2) echo "checked"?>><label for = "distanceId">Выезд за город</label></p>
+                            <p>
+                                <input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?php if( $this->item->transport == 2) echo "checked"?>>
+                                <label for = "distanceId">Выезд за город</label>
+                            </p>
                             <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist" >
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -382,7 +366,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <p><input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?php if($this->item->transport == 0 ) echo "checked"?>> <label for="no_transport">Без транспорта</label></p>
+                            <p>
+                                <input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?php if($this->item->transport == 0 ) echo "checked"?>>
+                                <label for="no_transport">Без транспорта</label>
+                            </p>
                         </td>
                     </tr>
                     <tr>
@@ -396,27 +383,31 @@
                             $project_total_discount = $project_total_discount + $sum_transport;
                         ?>
                         <th>Транспорт</th>
-                        <td colspan="2" id="transport_sum"> <?=$sum_transport;?> руб.</td>
+                        <td colspan="3" id="transport_sum"> <?=$sum_transport;?> р.</td>
                         <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
                     </tr>
                     <tr>
                         <?php if ($kol > 0) { ?>
                             <th>Итого/ - %:</th>
                             <th id="project_total">
-                                <span class="sum"><?php echo round($project_total, 0); ?></span> руб. /
+                                <span class="sum"><?php echo round($project_total, 0); ?></span> р. /
                             </th>
                             <th id="project_total_discount">
                                 <span class="sum">
-                                <?php 
-                                    //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                                    if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0);  ?> руб.
-                            </th>
-                                <?php }
-                                    elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0);  ?> руб.
-                            </th>
+                                    <?php 
+                                        //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                        if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0); 
+                                    ?>
+                                    р.
+                                    <?php }
+                                        elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0); 
+                                    ?>
+                                    р.
                                 </span>
                                 <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р.</span>
-                                <?php } else echo round($project_total_discount, 0);  ?> руб.</span>
+                                <span>
+                                    <?php } else echo round($project_total_discount, 0);  ?> р.
+                                </span>
                                 <span class="dop" style="font-size: 9px;" ></span>
                             </th>
                         <?php }
@@ -2117,11 +2108,11 @@
                     var sum_total = Float(calc_total + transport_sum);
                     if(sum < 3500 )sum = 3500;
                     if(sum_total < 3500 )sum_total = 3500;
-                    jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
-                    //jQuery("#project_total").text(sum  + " руб.");
+                    jQuery("#transport_sum").text(transport_sum.toFixed(0) + " р.");
+                    //jQuery("#project_total").text(sum  + " р.");
                     jQuery("#project_total span.sum").text(sum_total);
                     jQuery("#project_total span.dop").html((sum_total <= 3500)?" * минимальная сумма заказа 3500р.":"");
-                    jQuery("#project_total_discount span.sum").text(sum  + " руб.");
+                    jQuery("#project_total_discount span.sum").text(sum  + " р.");
                     jQuery("#project_total_discount span.dop").html((sum <= 3500)?" * минимальная сумма заказа 3500р.":"");
                     jQuery("#project_sum_transport").val(sum);
                     jQuery(" #project_sum").val(sum);
