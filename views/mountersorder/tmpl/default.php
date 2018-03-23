@@ -359,6 +359,11 @@ if (!empty($calculation_ids)) {
         </div>
         <?php foreach ($calculation_ids as $value) { ?>
             <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
+                <?php if ($value->details != null && $value->details != 0) { ?>
+                    <div>
+                        Примечание к потолку: <?php echo $value->details; ?>
+                    </div>
+                <?php } ?>
                 <div class="ceiling">
                     <img src="/calculation_images/<?php echo md5("calculation_sketch".$value->id); ?>.svg" class="image-ceiling">
                 </div>

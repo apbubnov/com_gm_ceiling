@@ -29,7 +29,7 @@ class Gm_ceilingModelMountersorder extends JModelItem {
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			
-			$query->select('calculations.id, calculations.calculation_title, calculations.n1')
+			$query->select('calculations.id, calculations.calculation_title, calculations.n1, calculations.details')
 				->from('#__gm_ceiling_projects as projects')
 				->innerJoin('#__gm_ceiling_calculations as calculations ON calculations.project_id = projects.id')
 				->where("projects.id = '$project'")
