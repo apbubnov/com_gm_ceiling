@@ -73,34 +73,14 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             <? if ($user->dealer_type != 2): ?>
                 <thead>
                     <tr>
-                        <th class='center'>
-                            <? //echo JHtml::_('grid.sort', '№', 'id', $listDirn, $listOrder); ?>
-                            №
-                        </th>
+                        <th class='center'>№</th>
                         <th class='center'></th>
-                        <th class='center'>
-                            <? //echo JHtml::_('grid.sort', 'Дата и время монтажа', 'mounting_date', $listDirn, $listOrder); ?>
-                            Дата / время монтажа
-                        </th>
-                        <th class='center'>
-                            <? //echo JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
-                            Адрес
-                        </th>
-                        <th class='center'>
-                            <? //echo JHtml::_('grid.sort', 'Клиент', 'client_name', $listDirn, $listOrder); ?>
-                            Клиент
-                        </th>
-                        <th class="center">
-                            <? //echo JHtml::_('grid.sort', 'Квадратура', 'quadrature', $listDirn, $listOrder); ?>
-                            Квадратура
-                        </th>
-                        <th class="center">
-                            <? //echo JHtml::_('grid.sort', 'Бригада', 'group_name', $listDirn, $listOrder); ?>
-                            Бригада
-                        </th>
-                        <th class="center">
-                            Примечание
-                        </th>
+                        <th class='center'>Дата / время монтажа</th>
+                        <th class='center'>Адрес</th>
+                        <th class='center'>Клиент</th>
+                        <th class="center">Квадратура</th>
+                        <th class="center">Бригада</th>
+                        <th class="center">Примечание</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -115,7 +95,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                             <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
                                 <td class="center one-touch"><?= $item->id; ?></td>
                                 <td>
-                                    <? if ($item->project_status == 10): ?>
+                                    <? if (($item->project_status == 10 && $item->dealer_id == 1) || ($item->project_status >= 5 && $item->dealer_id != 1)): ?>
                                         <? // //elseif ($item->project_status == 8): ?><!-- Требует утверждения-->
                                         <? // //elseif ($item->project_status == 10): ?>
                                         <? //if ($user->dealer_id == $item->brigadir_id): ?>
@@ -199,21 +179,10 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
             <? if ($user->dealer_type != 2): ?>
                 <thead>
                     <tr>
-                        <th class='center'>
-                            <? //= //JHtml::_('grid.sort', 'Статус', 'status', $listDirn, $listOrder); ?>
-                        </th>
-                        <th class='center'>
-                            <?//= JHtml::_('grid.sort', '№', 'id', $listDirn, $listOrder); ?>
-                            №
-                        </th>
-                        <th class='center'>
-                            <?//= JHtml::_('grid.sort', 'Время монтажа', 'mounting_date', $listDirn, $listOrder); ?>
-                            Дата / время монтажа
-                        </th>
-                        <th class='center'>
-                            <?//= JHtml::_('grid.sort', 'Адрес', 'address', $listDirn, $listOrder); ?>
-                            Адрес
-                        </th>
+                        <th class='center'></th>
+                        <th class='center'>№</th>
+                        <th class='center'>Дата / время монтажа</th>
+                        <th class='center'>Адрес</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -227,7 +196,7 @@ $canDelete = $user->authorise('core.delete', 'com_gm_ceiling');
                         <? if ($userId == $item->dealer_id || $user->dealer_id == $item->dealer_id): ?>
                             <tr data-href="<?= JRoute::_('index.php?option=com_gm_ceiling&view=projectform&type=chief&id=' . (int)$item->id); ?>">
                                 <td>
-                                    <? if ($item->project_status == 10): ?>
+                                    <? if (($item->project_status == 10 && $item->dealer_id == 1) || ($item->project_status >= 5 && $item->dealer_id != 1)): ?>
                                         <button class="btn btn-primary btn-done" data-project_id="<?= $item->id; ?>" type="button">Выполнено</button>
                                     <? endif; ?>
                                 </td>
