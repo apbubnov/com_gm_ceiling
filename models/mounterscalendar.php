@@ -238,7 +238,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
             $db->setQuery($query);
             $items = $db->loadObjectList();
 
-            $query2->select('calculations.project_id, calculations.n5, calculations.mounting_sum')
+            $query2->select('calculations.project_id, calculations.n5, calculations.mounting_sum, calculations.details')
                 ->from('#__gm_ceiling_calculations as calculations')
                 ->innerJoin('#__gm_ceiling_projects as projects ON calculations.project_id = projects.id')
                 ->where("projects.project_mounter = '$id' and projects.`project_status` > 3 and projects.project_mounting_date between '$date 00:00:00' and '$date 23:59:59'");
@@ -252,24 +252,17 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                     if ($value->id == $val->project_id) {
                         $value->n5 += $val->n5;
                         $value->mounting_sum += $val->mounting_sum;
-                    }
+					}
+					if (!empty($val->details)) {
+						$value->details = 1;
+					} else {
+						if ($value->details != 1) {
+							$value->details = 0;
+						}
+					}
 				}
 				$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id);
 				$value->mounting_sum += $transport["mounter_sum"];
-				
-                /* $calc_transport = 0;
-                if ($value->transport == 1) {
-                    $calc_transport = $items3[0]->transport_mp * $value->distance_col;
-                } else if ($value->transport == 2) {
-                    $calc_transport = $items3[0]->distance_mp * $value->distance_col * $value->distance;
-                }
-                $value->mounting_sum += $calc_transport;
-                $value->transport_sum = $calc_transport;
-                $value->transport_mp = $items3[0]->transport_mp;
-                $value->distance_col = $value->distance_col;
-                $value->distance = $value->distance;
-                $value->distance_mp = $items3[0]->distance_mp;
-                $value->transport = $value->transport; */
             }
 
             $query4->select('date_from, date_to')

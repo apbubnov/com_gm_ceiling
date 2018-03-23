@@ -281,27 +281,32 @@
                             perimeter = element.n5;
                             // комменты
                             if (<?php echo $dealerId; ?> == 1) {
-                                if(element.gm_chief_note == null || element.gm_chief_note == undefined || element.gm_chief_note == "null") {
+                                if(element.gm_chief_note == null || element.gm_chief_note == undefined || element.gm_chief_note == "null" || element.gm_chief_note == "") {
                                     note = "";
                                 } else {
                                     note = "Примечание НМС: "+element.gm_chief_note;
                                 }
-                                if(element.gm_calculator_note == null || element.gm_calculator_note == undefined || element.gm_calculator_note == "null") {
+                                if(element.gm_calculator_note == null || element.gm_calculator_note == undefined || element.gm_calculator_note == "null" || element.gm_calculator_note == "") {
                                     note2 = "";
                                 } else {
-                                    note2 = "Примечание замерщика: "+element.gm_calculator_note;
+                                    note2 = "<br>Примечание замерщика: "+element.gm_calculator_note;
                                 }
                             } else {
-                                if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null") {
+                                if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null" || element.dealer_chief_note == "") {
                                     note = "";
                                 } else {
                                     note = "Примечание НМС: "+element.dealer_chief_note;
                                 }
-                                if(element.dealer_calculator_note == null || element.dealer_calculator_note == undefined || element.dealer_calculator_note == "null") {
+                                if(element.dealer_calculator_note == null || element.dealer_calculator_note == undefined || element.dealer_calculator_note == "null" || element.dealer_calculator_note == "") {
                                     note2 = "";
                                 } else {
-                                    note2 = "Примечание замерщика: "+element.dealer_calculator_note;
+                                    note2 = "<br>Примечание замерщика: "+element.dealer_calculator_note;
                                 }
+                            }
+                            if (element.details == 1) {
+                                comment_calc = "<br>Есть примечание к потолку";
+                            } else {
+                                comment_calc = "";
                             }
                             // статусы
                             status_proj = element.project_status;
@@ -340,7 +345,7 @@
                                 salary = 1500;
                             }
                             // рисовка таблицы
-                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'<br>'+note2+'</td><td>'+status+'</td></tr>';
+                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter});"><td>${element.project_mounting_date}</td><td>${adress}</td><td>${perimeter}</td><td>${salary}</td><td id="comment_calc${element.id}">${note}${note2}${comment_calc}</td><td>${status}</td></tr>`;
                             jQuery("#table-mounting").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';

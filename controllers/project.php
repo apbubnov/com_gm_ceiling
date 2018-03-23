@@ -1363,8 +1363,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             if(empty($material_sum)) $material_sum = 0;
             else $material_sum = -($material_sum);
             $recoil_map_model =Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
+<<<<<<< HEAD
             if($dealer_id != 1 && $dealer_id != 2)
                 $recoil_map_model->save($dealer_id, $id, $material_sum);
+=======
+            if($res->dealer_id != 1 && $res->dealer_id != 2)
+                $recoil_map_model->save($res->dealer_id, $id, $material_sum);
+>>>>>>> d499e52a6967dd112eb2dd44a6a9f1d3eba6033c
 			if ($data === false)
 			{
 				$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
