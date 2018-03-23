@@ -521,7 +521,7 @@
                         ?>
                         <?php if (count($calculations) > 0) { ?>
                             <tr class="section_mount" style="display:none;">
-                                <td colspan="3"><b>Отправить все наряды на монтаж<b></td>
+                                <td colspan="4"><b>Отправить все наряды на монтаж<b></td>
                             </tr>
                             <tr class="section_mount" style="display:none;">
                                 <td colspan="3">
