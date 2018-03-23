@@ -937,12 +937,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				else {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&task=mainpage', false));
 				}
-                if ($data->id_client == 1)
-                {
-                    goto metka;
-                }
 			} else {
-                metka:
+                
 				if($subtype === "refused") {
 					$model->return_project($project_id);
 				// Clear the profile id from the session.
@@ -1352,8 +1348,11 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $ready_date_time = $ready_date.' '.$time;
             $quickly = $jinput->get('quick',0,'INT');
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
-            $data = $model->approvemanager($id,$ready_date_time,$quickly);
-            $res = $model->getData($id);
+			$data = $model->approvemanager($id,$ready_date_time,$quickly);
+			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+			$res = $model->getNewData($id);
+			$client = $client_model->getClientById($res->client_id);
+			$dealer_id = $client->deaelr_id;
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $calculations = $calc_model->new_getProjectItems($id);
             $material_sum = 0;
@@ -1364,8 +1363,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             if(empty($material_sum)) $material_sum = 0;
             else $material_sum = -($material_sum);
             $recoil_map_model =Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
-            if($res->dealer_id != 1 || $res->dealer_id != 2)
-                $recoil_map_model->save($res->dealer_id, $id, $material_sum);
+            if($dealer_id != 1 && $dealer_id != 2)
+                $recoil_map_model->save($dealer_id, $id, $material_sum);
 			if ($data === false)
 			{
 				$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');

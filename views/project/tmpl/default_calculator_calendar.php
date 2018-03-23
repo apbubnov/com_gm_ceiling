@@ -1487,6 +1487,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 jQuery(".btn-close").hide();
                 jQuery("#change_info").hide();
                 jQuery("#change_info_win").hide();
+                jQuery("input[name='data_change']").val(0);
             }
         });
         // -----------------------------------------------------------------------------------------
