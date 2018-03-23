@@ -1347,16 +1347,17 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $time = $jinput->get('time','','STRING');
             $ready_date_time = $ready_date.' '.$time;
             $quickly = $jinput->get('quick',0,'INT');
-			$model = $this->getModel('Project', 'Gm_ceilingModel');
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
 			$data = $model->approvemanager($id,$ready_date_time,$quickly);
-			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 			$res = $model->getNewData($id);
-			$client = $client_model->getClientById($res->client_id);
-			$dealer_id = $client->deaelr_id;
+		
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $calculations = $calc_model->new_getProjectItems($id);
-            $material_sum = 0;
-
+			$material_sum = 0;
+			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+			$client  = $client_model->getClientById($res->client_id);
+			$dealer_id = $client->dealer_id;
+			
             foreach ($calculations as $calculation) {
                 $material_sum += $calculation->components_sum + $calculation->canvases_sum;
             }
