@@ -274,7 +274,6 @@
                     id : <?php echo $userId; ?>
                 },
                 success: function(msg) {
-                    console.log(msg);
                     msg.forEach(function(element) {
                         if (element.project_mounting_date.length < 6) {
                             project = element.id;
@@ -290,7 +289,7 @@
                                 if(element.gm_calculator_note == null || element.gm_calculator_note == undefined || element.gm_calculator_note == "null" || element.gm_calculator_note == "") {
                                     note2 = "";
                                 } else {
-                                    note2 = "Примечание замерщика: "+element.gm_calculator_note;
+                                    note2 = "<br>Примечание замерщика: "+element.gm_calculator_note;
                                 }
                             } else {
                                 if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null" || element.dealer_chief_note == "") {
@@ -301,7 +300,7 @@
                                 if(element.dealer_calculator_note == null || element.dealer_calculator_note == undefined || element.dealer_calculator_note == "null" || element.dealer_calculator_note == "") {
                                     note2 = "";
                                 } else {
-                                    note2 = "Примечание замерщика: "+element.dealer_calculator_note;
+                                    note2 = "<br>Примечание замерщика: "+element.dealer_calculator_note;
                                 }
                             }
                             if (element.details != 0) {
@@ -346,7 +345,7 @@
                                 salary = 1500;
                             }
                             // рисовка таблицы
-                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter});"><td>${element.project_mounting_date}</td><td>${adress}</td><td>${perimeter}</td><td>${salary}</td><td id="comment_calc${element.id}">${note}<br>${note2}${comment_calc}</td><td>${status}</td></tr>`;
+                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter});"><td>${element.project_mounting_date}</td><td>${adress}</td><td>${perimeter}</td><td>${salary}</td><td id="comment_calc${element.id}">${note}${note2}${comment_calc}</td><td>${status}</td></tr>`;
                             jQuery("#table-mounting").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
