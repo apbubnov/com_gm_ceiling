@@ -274,7 +274,6 @@
                     id : <?php echo $userId; ?>
                 },
                 success: function(msg) {
-                    comment_calc = [];
                     console.log(msg);
                     msg.forEach(function(element) {
                         if (element.project_mounting_date.length < 6) {
@@ -305,8 +304,10 @@
                                     note2 = "Примечание замерщика: "+element.dealer_calculator_note;
                                 }
                             }
-                            if (element.details != null && element.details != undefined && element.details != "null" && element.details != "") {
-                                comment_calc.push(element.id);
+                            if (element.details != 0) {
+                                comment_calc = "<br>Есть примечание к потолку";
+                            } else {
+                                comment_calc = "";
                             }
                             // статусы
                             status_proj = element.project_status;
@@ -345,16 +346,12 @@
                                 salary = 1500;
                             }
                             // рисовка таблицы
-                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter});"><td>${element.project_mounting_date}</td><td>${adress}</td><td>${perimeter}</td><td>${salary}</td><td id="comment_calc${element.id}">${note}<br>${note2}</td><td>${status}</td></tr>`;
+                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter});"><td>${element.project_mounting_date}</td><td>${adress}</td><td>${perimeter}</td><td>${salary}</td><td id="comment_calc${element.id}">${note}<br>${note2}${comment_calc}</td><td>${status}</td></tr>`;
                             jQuery("#table-mounting").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
                             jQuery("#table-mounting").append(TrOrders2);
                         }                  
-                    });
-                    console.log(comment_calc);
-                    comment_calc.forEach(function(element) {
-                        jQuery(`#comment_calc${element.id}`).append('<br>Есть примечание к потолку');
                     });
                 }
             });

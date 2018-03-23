@@ -252,7 +252,10 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
                     if ($value->id == $val->project_id) {
                         $value->n5 += $val->n5;
                         $value->mounting_sum += $val->mounting_sum;
-                    }
+					}
+					if (!empty($val->details)) {
+						$value->details = 1;
+					}
 				}
 				$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id);
 				$value->mounting_sum += $transport["mounter_sum"];
