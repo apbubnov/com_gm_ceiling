@@ -27,6 +27,7 @@ if (!empty($calculation_ids)) {
     $DataOfTransport = Gm_ceilingHelpersGm_ceiling::calculate_transport($project);
 }
 
+var_dump($calculation_ids);
 ?>
 
 <?=parent::getButtonBack();?>
