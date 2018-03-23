@@ -210,1013 +210,1015 @@
 
 <h2 class="center" style="margin-bottom: 1em;">Просмотр проекта № <?php echo $this->item->id; ?></h2>
 <form id="form-client">
-<?php if ($this->item) { ?>
-    <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
-    <?php if (sizeof($calculations) > 0) { ?>
-        <h3>Расчеты для проекта</h3>
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#calculationAll" role="tab">Общее</a>
-            </li>
-            <?php foreach ($calculations as $k => $calculation) { ?>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>" role="tab"><?php echo $calculation->calculation_title; ?></a>
-                </li>
-            <?php  $mount_sum += $calculation->mounting_sum; } ?>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div class="tab-pane active" id="calculationAll" role="tabpanel">
-                <table id="table1" class="table-striped one-touch-view">
-                    <tr>
-                        <th colspan="4" class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
-                    </tr>
-                    <?php
-                        $project_total = 0;
-                        $project_total_discount = 0;
-                        $dealer_gm_mounting_sum_1 = 0;
-                        $calculation_total_1 = 0;
-                        $project_total_1 = 0;
-                        $dealer_gm_mounting_sum_11 = 0;
-                        $calculation_total_11 = 0;
-                        $project_total_11 = 0;
-                        $kol = 0;
-                        $tmp = 0;
-                        $sum_transport_discount_total = 0;
-                        $sum_transport_total = 0;
-                        $JS_Calcs_Sum = array();
-
-                        foreach ($calculations as $calculation) {
-                            $dealer_canvases_sum = $calculation->dealer_canvases_sum;
-                            $dealer_components_sum = $calculation->dealer_components_sum;
-                            $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-
-                            if ($user->dealer_type != 2) {
-                                $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-                                $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
-                                $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
-                                $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
-                                $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
-                                $calculation_total_11 += $calculation_total_1;
-                                $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
-                                $project_total_11 += $project_total_1;
-                            }
-                            $calculation->calculation_title;
-                            $total_square += $calculation->n4;
-                            $total_perimeter += $calculation->n5;
-
-                            $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
-                            $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
-                            $project_total += $calculation_total;
-                            $project_total_discount += $calculation_total_discount;
-                            $JS_Calcs_Sum[] = round($calculation_total, 0);
-                    ?>
-                    <tr class="section_ceilings">
-                        <td class="include_calculation" colspan="4">
-                            <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
-                            <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
-                            <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
-                            <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
-                            <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>
-                            <input name='calculation_total1[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_1; ?>' type='hidden'>
-                            <input name='calculation_total2[<?php echo $calculation->id; ?>]' value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
-                            <input name='calculation_total3[<?php echo $calculation->id; ?>]' value='<?php echo $project_total_1; ?>' type='hidden'>
-                            <?php echo $calculation->calculation_title; ?>
-                        </td>
-                    </tr>
-                    <tr class="section_ceilings" id="">
-                        <td>S/P :</td>
-                        <td colspan="3"><?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м</td>
-                    </tr>
-                    <tr class="section_ceilings">
-                        <?php if ($calculation->discount != 0) { ?>
-                            <td>Цена / -<?php echo $calculation->discount ?>% :</td>
-                            <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> р. /</td>
-                            <td colspan="2" id="calculation_total_discount">
-                                <?php echo round($calculation_total_discount, 0); ?> р.
-                            </td>
-                        <?php } else { ?>
-                            <td>Итого</td>
-                            <td id="calculation_total" colspan="3"> <?php echo round($calculation_total, 0); ?> р.</td>
+    <?php if ($this->item) { ?>
+        <!-- не исправляла -->
+        <div class="container containerMobile">
+            <div class="row" style="padding-top: 1em;">
+                <div class="col-12 item_fields project-edit front-end-edit">
+                    <form id="form-project" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=project.approve'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+                        <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
+                        <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>"/>
+                        <input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>"/>
+                        <input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>"/>
+                        <input type="hidden" name="jform[checked_out]" value="<?php echo $this->item->checked_out; ?>"/>
+                        <input type="hidden" name="jform[checked_out_time]" value="<?php echo $this->item->checked_out_time; ?>"/>
+                        <?php if ($this->item->project_status == 3) { ?>
+                            <input type="hidden" name="jform[project_status]" value="4"/>
                         <?php } ?>
-                    </tr>
-                    <?php if($calculation->discount > 0) $kol++; } ?>
-                    <tr>
-                        <th>Общая S/общий P:</th>
-                        <th id="total_square">
-                            <?php echo $total_square; ?>м<sup>2</sup> /
-                        </th>
-                        <th colspan="2" id="total_perimeter">
-                            <?php echo $total_perimeter; ?> м
-                        </th>
-                    </tr>
-                    <tr>
-                        <th colspan="4">Транспортные расходы</th>
-                    </tr>
-                    <tr>
-                        <td style="width: 45%;" colspan="4">
-                            <p>
-                                <input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?php if($this->item->transport == 1 ) echo "checked"?>>
-                                <label for = "transport">Транспорт по городу</label>
-                            </p>
-                            <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <div class="advanced_col1" style="width: 35%;">
-                                            <label>Кол-во выездов</label>
-                                        </div>
-                                        <div class="advanced_col2" style="width: 20%;"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="advanced_col1" style="width: 35%;">
-                                            <input name="jform[distance_col_1]" id="distance_col_1" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
-                                        </div>
-                                        <div class="advanced_col2" style="width: 20%;">
-                                            <button type="button" id="click_transport_1" class="btn btn-primary">Ок</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p>
-                                <input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?php if( $this->item->transport == 2) echo "checked"?>>
-                                <label for = "distanceId">Выезд за город</label>
-                            </p>
-                            <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist" >
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <div class="advanced_col1" style="width: 35%;">
-                                            <label>Кол-во,км</label>
-                                        </div>
-                                        <div class="advanced_col2" style="width: 35%;">
-                                            <label>Кол-во выездов</label>
-                                        </div>
-                                        <div class="advanced_col3" style="width: 20%;"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="advanced_col1" style="width: 35%;">
-                                            <input name="jform[distance]" id="distance" style="width: 100%;" value="<?php echo $this->item->distance; ?>" class="form-control" placeholder="км." type="tel">
-                                        </div>
-                                        <div class="advanced_col2" style="width: 35%;">
-                                            <input name="jform[distance_col]" id="distance_col" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
-                                        </div>
-                                        <div class="advanced_col3" style="width: 20%;">
-                                            <button type="button" id="click_transport" class="btn btn-primary">Ок</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p>
-                                <input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?php if($this->item->transport == 0 ) echo "checked"?>>
-                                <label for="no_transport">Без транспорта</label>
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <?php
-                            //-------------------------Себестоимость транспорта-------------------------------------
-                            if($this->item->transport == 0 ) $sum_transport_1 = 0;
-                            if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
-                            if($this->item->transport == 2 ) $sum_transport_1 = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
-                            $project_total_11 = $project_total_11 + $sum_transport_1;
-                            $project_total = $project_total + $sum_transport;
-                            $project_total_discount = $project_total_discount + $sum_transport;
-                        ?>
-                        <th>Транспорт</th>
-                        <td colspan="3" id="transport_sum"> <?=$sum_transport;?> р.</td>
-                        <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
-                    </tr>
-                    <tr>
-                        <?php if ($kol > 0) { ?>
-                            <th>Итого/ - %:</th>
-                            <th id="project_total">
-                                <span class="sum"><?php echo round($project_total, 0); ?></span> р. /
-                            </th>
-                            <th colspan="2" id="project_total_discount">
-                                <span class="sum">
+                        <?php if (empty($this->item->created_by)): ?>
+                            <input type="hidden" name="jform[created_by]" value="<?php echo JFactory::getUser()->id; ?>"/>
+                        <?php else: ?>
+                            <input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>"/>
+                        <?php endif; ?>
+                        <?php if (empty($this->item->modified_by)): ?>
+                            <input type="hidden" name="jform[modified_by]" value="<?php echo JFactory::getUser()->id; ?>"/>
+                        <?php else: ?>
+                            <input type="hidden" name="jform[modified_by]" value="<?php echo $this->item->modified_by; ?>"/>
+                        <?php endif; ?>
+                        <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
+                        <input name = "jform[project_new_calc_date]" id = "jform_project_new_calc_date" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date; } ?>" type="hidden">
+                        <input name = "jform[project_gauger]" id = "jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type="hidden">
+                        <input id="jform_project_gauger_old" type="hidden" name="jform_project_gauger_old" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else { echo "0"; } ?>"/>
+                        <input id="jform_project_calculation_date_old" type="hidden" name="jform_project_calculation_date_old" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;} ?>"/>
+                        <input id="jform_project_mounting_date" type="hidden" name="jform[project_mounting_date]" value="<?php if (isset($this->item->project_mounting_date)) { echo $this->item->project_mounting_date; } ?>"/>
+                        <input id="jform_project_mounter" type="hidden" name="jform[project_mounting]" value="<?php if (isset($this->item->project_mounter)) { echo $this->item->project_mounter; } ?>"/>
+                        <input id="jform_project_mounter_old" type="hidden" name="jform_project_mounting_old" value="<?php if (isset($this->item->project_mounter)) { echo $this->item->project_mounter; } ?>"/>
+                        <input id="jform_project_mounting_date_old" type="hidden" name="jform_project_mounting_date_old" value="<?php if (isset($this->item->project_mounting_date)) { echo $this->item->project_mounting_date; } ?>"/>
+                        <input type="hidden" name="option" value="com_gm_ceiling"/>
+                        <input type="hidden" name="task" value="project.approve"/>
+                        <?php echo JHtml::_('form.token'); ?>
+                        <table class="table">
+                            <tr>
+                                <th>Номер договора</th>
+                                <td><?php echo $this->item->id; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Статус проекта</th>
+                                <td>
                                     <?php 
-                                        //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                                        if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0); 
-                                    ?>
-                                    р.
-                                    <?php }
-                                        elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0); 
-                                    ?>
-                                    р.
-                                </span>
-                                <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р.</span>
-                                <span>
-                                    <?php } else echo round($project_total_discount, 0);  ?> р.
-                                </span>
-                                <span class="dop" style="font-size: 9px;" ></span>
-                            </th>
-                        <?php } else { ?>
-                            <th>Итого</th>
-                            <th id="project_total" colspan="3">
-                                <span class="sum">
-                                    <?php
-                                        if ($this->item->new_project_sum == 0) {
-                                            if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
-                                            echo round($project_total, 2);
-                                        } else {
-                                            echo round($this->item->new_project_sum, 2);
+                                        if ($this->item->project_status == 1) {
+                                            $status = "Ждет замера";
+                                        } else if ($this->item->project_status == 5) {
+                                            $status = "В производстве";
+                                        } else if ($this->item->project_status == 6) {
+                                            $status = "На раскрое";
+                                        } else if ($this->item->project_status == 7) {
+                                            $status = "Укомплектован";
+                                        } else if ($this->item->project_status == 8) {
+                                            $status = "Выдан";
+                                        } else if ($this->item->project_status == 9) {
+                                            $status = "Деактевирован";
+                                        } else if ($this->item->project_status == 10) {
+                                            $status = "Ожидает монтаж";
+                                        } else if ($this->item->project_status == 11) {
+                                            $status = "Монтаж выполнен";
+                                        } else if ($this->item->project_status == 12) {
+                                            $status = "Закрыт";
+                                        } else if ($this->item->project_status == 13) {
+                                            $status = "Ожидает оплаты";
+                                        } else if ($this->item->project_status == 14) {
+                                            $status = "Оплачен";
+                                        } else if ($this->item->project_status == 15) {
+                                            $status = "Отказ от сотруднечества";
+                                        } else if ($this->item->project_status == 16) {
+                                            $status = "Монтаж";
+                                        } else if ($this->item->project_status == 17) {
+                                            $status = "Монтаж недовыполнен";
+                                        } else if ($this->item->project_status == 19) {
+                                            $status = "Собран";
+                                        } else if ($this->item->project_status == 22) {
+                                            $status = "Отказ от производства";
+                                        } else if ($this->item->project_status == 4) {
+                                            $status = "Не назначен на монтаж";
                                         }
+                                        echo $status; 
                                     ?>
-                                </span>
-                                <span class="dop" style="font-size: 9px;">
-                                    <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
-                                        * минимальная сумма заказа 3500р.
-                                    <?php }?>
-                                </span>
-                            </th>
-                        <?php } ?>
-                    </tr>
-                    <?php if ($user->dealer_type != 2) { ?>
-                        <tr>
-                            <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
-                            <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
-                            <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
-                            <td><!-- ДЛЯ САНИ --></td>
-                        </tr>
-                    <?php } ?>
-                    <tr>
-                        <th colspan="4" class="section_header" id="sh_estimate">
-                            Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                        </th>
-                    </tr>
-                    <?php foreach ($calculations as $calculation) { ?>
-                        <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                            <td><?php echo $calculation->calculation_title; ?></td>
-                            <td colspan="3">
+                                </td>
+                            </tr>
+                            <tr>
+                                <?php if ($this->item->project_status == 1) { ?>
+                                    <th>Дата замера</th>
+                                    <td>
+                                        <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
+                                            -
+                                        <?php } else { ?>
+                                            <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
+                                            <?php echo $jdate->format('d.m.Y H:i'); ?>
+                                        <?php } ?>
+                                    </td>
+                                <?php } else if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status != 17) { ?>
+                                    <th>Дата монтажа</th>
+                                    <td>
                                 <?php
-                                    $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-                                    $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
-                                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                    if ($this->item->project_mounting_date == "0000-00-00 00:00:00")
+                                    {
+                                        echo '-';
+                                    }
+                                    else
+                                    {
+                                        $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date));
+                                        echo $jdate->format('d.m.Y H:i');
+                                    }
                                 ?>
-                                    <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                    </td>
                                 <?php } else { ?>
-                                    -
+                                    <th>Удобная дата монтажа для клиента</th>
+                                    <td>
+                                <?php
+                                    if ($this->item->project_mounting_date == "0000-00-00 00:00:00")
+                                    {
+                                        echo '-';
+                                    }
+                                    else
+                                    {
+                                        $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date));
+                                        echo $jdate->format('d.m.Y H:i');
+                                    }
+                                ?>
+                                    </td>
                                 <?php } ?>
-                            </td>
-                            <?php }
-                            $json = json_encode($pdf_names); ?>
-                        </tr>
-                    <?php if (count($calculations) > 0) { ?>
-                        <tr class="section_estimate" style="display:none;">
-                            <td colspan="4"><b>Отправить все сметы <b></td>
-                        </tr>
-                        <tr class="section_estimate" style="display:none;">
-                            <td colspan="3">
-                                <div class="email-all" style="float: left;">
-                                    <input list="email" name="all-email" id="all-email1" class="form-control" placeholder="Адрес эл.почты" type="text">
-                                    <datalist id="email">
-                                        <?php foreach ($contact_email AS $em) {?>
-                                            <option value="<?=$em->contact;?>">
-                                        <?php }?>
-                                    </datalist>
-                                </div>
-                                <div class="file_data">
-                                    <div class="file_upload">
-                                        <input type="file" class="dopfile" name="dopfile" id="dopfile">
-                                    </div>
-                                    <div class="file_name"></div>
-                                    <script>
-                                        jQuery(function () {
-                                            jQuery("div.file_name").html("Файл не выбран");
-                                            jQuery("div.file_upload input.dopfile").change(function () {
-                                                var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                jQuery("div.file_name").html((filename != "") ? filename : "Файл не выбран");
-                                            });
-                                        });
-                                    </script>
-                                </div>
-                            </td>
-                            <td>
-                                <button class="btn btn-primary" id="send_all_to_email1" type="button">Отправить</button>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
+                            </tr>
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
+                                <td><?php echo $this->item->client_id; ?></td>
+                            </tr>
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
+                                <?php 
+                                    $mod = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
+                                    $contact = $mod->getData($this->item->id);
+                                ?>
+                                <td><?php echo $contact->client_contacts; ?></td>
+                            </tr>
+                            <tr>
+                                <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
+                                <td><?php echo $this->item->project_info; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Примечание менеджера</th>
+                                <td><?php echo $this->item->dealer_manager_note; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Примечание замерщика</th>
+                                <td><?php echo $this->item->dealer_calculator_note; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Примечание начальника МС</th>
+                                <td><textarea name="jform[dealer_chief_note]" id="jform_dealer_chief_note" placeholder="Примечание начальника МС" aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea></td>
+                            </tr>
+                            <tr>
+                                <th>Замерщик</th>
+                                <?php 
+                                    $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                                    $gauger = $gauger_model->getGauger($this->item->id); 
+                                ?>
+                                <td><?php echo $gauger->name; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Монтажная бригада</th>
+                                <?php 
+                                    $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+                                    $mount = $mount_model->getMount($this->item->id); 
+                                ?>
+                                <td><?php echo $mount->name; ?></td>
+                            </tr>
+                        </table>
+                        <?php if ($this->item->project_status == 1) { ?>
+                            <h4 style="text-align:center;">Изменить замерщика, время и дату замера</h4>
+                            <div class="calendar_wrapper" style="background: #ffffff">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                        </td>
+                                        <td style="width: 100%">
+                                            <div id="calendar1" style="padding: 1em">
+                                                <?php echo $calendar1; ?>
+                                            </div>
+                                            <div id="calendar2" style="padding: 1em">
+                                                <?php echo $calendar2; ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        <?php } else if ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) { ?>
+                            <h4 style="text-align:center;">Назначить/изменить монтажную бригаду, время и дату</h4>
+                            <div class="calendar_wrapper" style="background: #ffffff">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                        </td>
+                                        <td style="width: 100%">
+                                            <div id="calendar1" style="padding: 1em">
+                                                <?php echo $calendar1; ?>
+                                            </div>
+                                            <div id="calendar2" style="padding: 1em">
+                                                <?php echo $calendar2; ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        <?php } ?>
+                        <?php if ($userId == $user->dealer_id) { ?>
+                            <input name="type" value="chief" type="hidden">
+                        <?php } else { ?>
+                            <input name="type" value="gmchief" type="hidden">
+                        <?php } ?>
+                        <div class="control-group">
+                            <div class="controls">
+                            <?php if($this->item->project_status == 4) { ?>
+                                <button id="btn_submit" type="button" class="validate btn btn-primary">Сохранить и запустить в производство</button>
+                            <?php } else if($this->item->project_status == 5) { ?>
+                                <button id="btn_submit" type="button" class="validate btn btn-primary">Сохранить</button>
+                            <?php } ?>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <?php if($user->dealer_type == 0) { ?>
+                    <div class="col-xl-6">
+                        <div class="comment">
+                            <label style="font-weight: bold;"> История клиента: </label>
+                            <textarea id="comments" class="input-comment" rows=11 readonly style="resize: none; outline: none;"></textarea>
+                            <table>
+                                <tr>
+                                    <td><label style="font-weight: bold;"> Добавить комментарий: </label></td>
+                                </tr>
+                                <tr>
+                                    <td width = 100%><textarea  style="resize: none;" class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
+                                    <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                    </button></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+        <!-- исправляла -->
+        <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
+        <?php if (sizeof($calculations) > 0) { ?>
+            <h3>Расчеты для проекта</h3>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#calculationAll" role="tab">Общее</a>
+                </li>
+                <?php foreach ($calculations as $k => $calculation) { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>" role="tab"><?php echo $calculation->calculation_title; ?></a>
+                    </li>
+                <?php  $mount_sum += $calculation->mounting_sum; } ?>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="calculationAll" role="tabpanel">
+                    <table id="table1" class="table-striped one-touch-view">
                         <tr>
-                            <th id="sh_mount" colspan="4"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                            <th colspan="4" class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                        </tr>
+                        <?php
+                            $project_total = 0;
+                            $project_total_discount = 0;
+                            $dealer_gm_mounting_sum_1 = 0;
+                            $calculation_total_1 = 0;
+                            $project_total_1 = 0;
+                            $dealer_gm_mounting_sum_11 = 0;
+                            $calculation_total_11 = 0;
+                            $project_total_11 = 0;
+                            $kol = 0;
+                            $tmp = 0;
+                            $sum_transport_discount_total = 0;
+                            $sum_transport_total = 0;
+                            $JS_Calcs_Sum = array();
+
+                            foreach ($calculations as $calculation) {
+                                $dealer_canvases_sum = $calculation->dealer_canvases_sum;
+                                $dealer_components_sum = $calculation->dealer_components_sum;
+                                $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
+
+                                if ($user->dealer_type != 2) {
+                                    $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
+                                    $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
+                                    $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
+                                    $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
+                                    $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
+                                    $calculation_total_11 += $calculation_total_1;
+                                    $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
+                                    $project_total_11 += $project_total_1;
+                                }
+                                $calculation->calculation_title;
+                                $total_square += $calculation->n4;
+                                $total_perimeter += $calculation->n5;
+
+                                $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
+                                $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
+                                $project_total += $calculation_total;
+                                $project_total_discount += $calculation_total_discount;
+                                $JS_Calcs_Sum[] = round($calculation_total, 0);
+                        ?>
+                        <tr class="section_ceilings">
+                            <td class="include_calculation" colspan="4">
+                                <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
+                                <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
+                                <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
+                                <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
+                                <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>
+                                <input name='calculation_total1[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_1; ?>' type='hidden'>
+                                <input name='calculation_total2[<?php echo $calculation->id; ?>]' value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
+                                <input name='calculation_total3[<?php echo $calculation->id; ?>]' value='<?php echo $project_total_1; ?>' type='hidden'>
+                                <?php echo $calculation->calculation_title; ?>
+                            </td>
+                        </tr>
+                        <tr class="section_ceilings" id="">
+                            <td>S/P :</td>
+                            <td colspan="3"><?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м</td>
+                        </tr>
+                        <tr class="section_ceilings">
+                            <?php if ($calculation->discount != 0) { ?>
+                                <td>Цена / -<?php echo $calculation->discount ?>% :</td>
+                                <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> р. /</td>
+                                <td colspan="2" id="calculation_total_discount">
+                                    <?php echo round($calculation_total_discount, 0); ?> р.
+                                </td>
+                            <?php } else { ?>
+                                <td>Итого</td>
+                                <td id="calculation_total" colspan="3"> <?php echo round($calculation_total, 0); ?> р.</td>
+                            <?php } ?>
+                        </tr>
+                        <?php if($calculation->discount > 0) $kol++; } ?>
+                        <tr>
+                            <th>Общая S/общий P:</th>
+                            <th id="total_square">
+                                <?php echo $total_square; ?>м<sup>2</sup> /
+                            </th>
+                            <th colspan="2" id="total_perimeter">
+                                <?php echo $total_perimeter; ?> м
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="4">Транспортные расходы</th>
+                        </tr>
+                        <tr>
+                            <td style="width: 45%;" colspan="4">
+                                <p>
+                                    <input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?php if($this->item->transport == 1 ) echo "checked"?>>
+                                    <label for = "transport">Транспорт по городу</label>
+                                </p>
+                                <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <div class="advanced_col1" style="width: 35%;">
+                                                <label>Кол-во выездов</label>
+                                            </div>
+                                            <div class="advanced_col2" style="width: 20%;"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="advanced_col1" style="width: 35%;">
+                                                <input name="jform[distance_col_1]" id="distance_col_1" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
+                                            </div>
+                                            <div class="advanced_col2" style="width: 20%;">
+                                                <button type="button" id="click_transport_1" class="btn btn-primary">Ок</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p>
+                                    <input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?php if( $this->item->transport == 2) echo "checked"?>>
+                                    <label for = "distanceId">Выезд за город</label>
+                                </p>
+                                <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist" >
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <div class="advanced_col1" style="width: 35%;">
+                                                <label>Кол-во,км</label>
+                                            </div>
+                                            <div class="advanced_col2" style="width: 35%;">
+                                                <label>Кол-во выездов</label>
+                                            </div>
+                                            <div class="advanced_col3" style="width: 20%;"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="advanced_col1" style="width: 35%;">
+                                                <input name="jform[distance]" id="distance" style="width: 100%;" value="<?php echo $this->item->distance; ?>" class="form-control" placeholder="км." type="tel">
+                                            </div>
+                                            <div class="advanced_col2" style="width: 35%;">
+                                                <input name="jform[distance_col]" id="distance_col" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
+                                            </div>
+                                            <div class="advanced_col3" style="width: 20%;">
+                                                <button type="button" id="click_transport" class="btn btn-primary">Ок</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p>
+                                    <input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?php if($this->item->transport == 0 ) echo "checked"?>>
+                                    <label for="no_transport">Без транспорта</label>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <?php
+                                //-------------------------Себестоимость транспорта-------------------------------------
+                                if($this->item->transport == 0 ) $sum_transport_1 = 0;
+                                if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
+                                if($this->item->transport == 2 ) $sum_transport_1 = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
+                                $project_total_11 = $project_total_11 + $sum_transport_1;
+                                $project_total = $project_total + $sum_transport;
+                                $project_total_discount = $project_total_discount + $sum_transport;
+                            ?>
+                            <th>Транспорт</th>
+                            <td colspan="3" id="transport_sum"> <?=$sum_transport;?> р.</td>
+                            <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
+                        </tr>
+                        <tr>
+                            <?php if ($kol > 0) { ?>
+                                <th>Итого/ - %:</th>
+                                <th id="project_total">
+                                    <span class="sum"><?php echo round($project_total, 0); ?></span> р. /
+                                </th>
+                                <th colspan="2" id="project_total_discount">
+                                    <span class="sum">
+                                        <?php 
+                                            //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
+                                            if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0); 
+                                        ?>
+                                        р.
+                                        <?php }
+                                            elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0); 
+                                        ?>
+                                        р.
+                                    </span>
+                                    <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р.</span>
+                                    <span>
+                                        <?php } else echo round($project_total_discount, 0);  ?> р.
+                                    </span>
+                                    <span class="dop" style="font-size: 9px;" ></span>
+                                </th>
+                            <?php } else { ?>
+                                <th>Итого</th>
+                                <th id="project_total" colspan="3">
+                                    <span class="sum">
+                                        <?php
+                                            if ($this->item->new_project_sum == 0) {
+                                                if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                                                echo round($project_total, 2);
+                                            } else {
+                                                echo round($this->item->new_project_sum, 2);
+                                            }
+                                        ?>
+                                    </span>
+                                    <span class="dop" style="font-size: 9px;">
+                                        <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
+                                            * минимальная сумма заказа 3500р.
+                                        <?php }?>
+                                    </span>
+                                </th>
+                            <?php } ?>
+                        </tr>
+                        <?php if ($user->dealer_type != 2) { ?>
+                            <tr>
+                                <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
+                                <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
+                                <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
+                                <td><!-- ДЛЯ САНИ --></td>
+                            </tr>
+                        <?php } ?>
+                        <tr>
+                            <th colspan="4" class="section_header" id="sh_estimate">
+                                Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                            </th>
                         </tr>
                         <?php foreach ($calculations as $calculation) { ?>
-                            <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
+                            <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
                                 <td><?php echo $calculation->calculation_title; ?></td>
                                 <td colspan="3">
                                     <?php
-                                        $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; 
-                                        $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
+                                        $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
+                                        $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
                                         if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
                                     ?>
                                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                                     <?php } else { ?>
-                                        После договора
+                                        -
                                     <?php } ?>
                                 </td>
+                                <?php }
+                                $json = json_encode($pdf_names); ?>
                             </tr>
-                        <?php
-                            }
-                            $json1 = json_encode($pdf_names_mount);
-                        ?>
                         <?php if (count($calculations) > 0) { ?>
-                            <tr class="section_mount" style="display:none;">
-                                <td colspan="4"><b>Отправить все наряды на монтаж<b></td>
+                            <tr class="section_estimate" style="display:none;">
+                                <td colspan="4"><b>Отправить все сметы <b></td>
                             </tr>
-                            <tr class="section_mount" style="display:none;">
+                            <tr class="section_estimate" style="display:none;">
                                 <td colspan="3">
                                     <div class="email-all" style="float: left;">
-                                        <input name="all-email" id="all-email2" class="form-control" value="" placeholder="Адрес эл.почты" type="text">
+                                        <input list="email" name="all-email" id="all-email1" class="form-control" placeholder="Адрес эл.почты" type="text">
+                                        <datalist id="email">
+                                            <?php foreach ($contact_email AS $em) {?>
+                                                <option value="<?=$em->contact;?>">
+                                            <?php }?>
+                                        </datalist>
                                     </div>
                                     <div class="file_data">
                                         <div class="file_upload">
-                                            <input type="file" class="dopfile1" name="dopfile1" id="dopfile1">
+                                            <input type="file" class="dopfile" name="dopfile" id="dopfile">
                                         </div>
-                                        <div class="file_name1"></div>
+                                        <div class="file_name"></div>
                                         <script>
                                             jQuery(function () {
-                                                jQuery("div.file_name1").html("Файл не выбран");
-                                                jQuery("div.file_upload input.dopfile1").change(function () {
+                                                jQuery("div.file_name").html("Файл не выбран");
+                                                jQuery("div.file_upload input.dopfile").change(function () {
                                                     var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                    jQuery("div.file_name1").html((filename != "") ? filename : "Файл не выбран");
+                                                    jQuery("div.file_name").html((filename != "") ? filename : "Файл не выбран");
                                                 });
                                             });
                                         </script>
                                     </div>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary" id="send_all_to_email2" type="button">Отправить</button>
+                                    <button class="btn btn-primary" id="send_all_to_email1" type="button">Отправить</button>
                                 </td>
                             </tr>
                         <?php } ?>
-                    <?php } ?>
-                        <!-------------------------------- Общая смета для клиента ------------------------------------------>
-                    <tr>
-                        <td><b>Отправить общую смету<b></td>
-                        <td colspan="3">
-                            <?php
-                                $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
-                            ?>
-                                <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                            <?php } else { ?>
-                                -
-                            <?php }
-                                $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
-                                $json2 = json_encode($pdf_names);
-                            ?>
-                        </td>
-                    </tr>
-                    <?php  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                        <tr>
-                            <td colspan="3">
-                                <div class="email-all" style="float: left;">
-                                    <input list="email" name="all-email" id="all-email3" class="form-control" placeholder="Адрес эл.почты" type="text">
-                                    <datalist id="email">
-                                        <?php foreach ($contact_email AS $em) {?>
-                                            <option value="<?=$em->contact;?>">
-                                        <?php }?>
-                                    </datalist>
-                                </div>
-                                <div class="file_data">
-                                    <div class="file_upload">
-                                        <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
-                                    </div>
-                                    <div class="file_name2"></div>
-                                    <script>
-                                        jQuery(function () {
-                                            jQuery("div.file_name2").html("Файл не выбран");
-                                            jQuery("div.file_upload input.dopfile2").change(function () {
-                                                var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
-                                            });
-                                        });
-                                    </script>
-                                </div>
-                            </td>
-                            <td>
-                                <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
-                            </td>
-                        </tr>
                         <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
-                        <!-- общий наряд на монтаж--> 
+                            <tr>
+                                <th id="sh_mount" colspan="4"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                            </tr>
+                            <?php foreach ($calculations as $calculation) { ?>
+                                <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
+                                    <td><?php echo $calculation->calculation_title; ?></td>
+                                    <td colspan="3">
+                                        <?php
+                                            $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; 
+                                            $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
+                                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                        ?>
+                                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                        <?php } else { ?>
+                                            После договора
+                                        <?php } ?>
+                                    </td>
+                                </tr>
+                            <?php
+                                }
+                                $json1 = json_encode($pdf_names_mount);
+                            ?>
+                            <?php if (count($calculations) > 0) { ?>
+                                <tr class="section_mount" style="display:none;">
+                                    <td colspan="4"><b>Отправить все наряды на монтаж<b></td>
+                                </tr>
+                                <tr class="section_mount" style="display:none;">
+                                    <td colspan="3">
+                                        <div class="email-all" style="float: left;">
+                                            <input name="all-email" id="all-email2" class="form-control" value="" placeholder="Адрес эл.почты" type="text">
+                                        </div>
+                                        <div class="file_data">
+                                            <div class="file_upload">
+                                                <input type="file" class="dopfile1" name="dopfile1" id="dopfile1">
+                                            </div>
+                                            <div class="file_name1"></div>
+                                            <script>
+                                                jQuery(function () {
+                                                    jQuery("div.file_name1").html("Файл не выбран");
+                                                    jQuery("div.file_upload input.dopfile1").change(function () {
+                                                        var filename = jQuery(this).val().replace(/.*\\/, "");
+                                                        jQuery("div.file_name1").html((filename != "") ? filename : "Файл не выбран");
+                                                    });
+                                                });
+                                            </script>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary" id="send_all_to_email2" type="button">Отправить</button>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        <?php } ?>
+                            <!-------------------------------- Общая смета для клиента ------------------------------------------>
                         <tr>
-                            <td><b>Общий наряд на монтаж <b></td>
+                            <td><b>Отправить общую смету<b></td>
                             <td colspan="3">
                                 <?php
-                                    $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                    $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
                                 ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                                 <?php } else { ?>
                                     -
                                 <?php }
-                                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
+                                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
                                     $json2 = json_encode($pdf_names);
                                 ?>
                             </td>
                         </tr>
-                    <?php } } ?>
-                </table>
-                <!-- для клиента нафиг надо??? -->
-                    <?php if ($user->dealer_type == 2) { ?>
-                        <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
-                            формирование заказа
-                        </button>
-                        <?php if ($this->item->project_status == 7) {
-                            // регистрационная информация (логин, пароль #1)
-                            // registration info (login, password #1)
-                            $mrh_login = "demo";
-                            $mrh_pass1 = "password_1";
+                        <?php  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="email-all" style="float: left;">
+                                        <input list="email" name="all-email" id="all-email3" class="form-control" placeholder="Адрес эл.почты" type="text">
+                                        <datalist id="email">
+                                            <?php foreach ($contact_email AS $em) {?>
+                                                <option value="<?=$em->contact;?>">
+                                            <?php }?>
+                                        </datalist>
+                                    </div>
+                                    <div class="file_data">
+                                        <div class="file_upload">
+                                            <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
+                                        </div>
+                                        <div class="file_name2"></div>
+                                        <script>
+                                            jQuery(function () {
+                                                jQuery("div.file_name2").html("Файл не выбран");
+                                                jQuery("div.file_upload input.dopfile2").change(function () {
+                                                    var filename = jQuery(this).val().replace(/.*\\/, "");
+                                                    jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
+                                </td>
+                            </tr>
+                            <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
+                            <!-- общий наряд на монтаж--> 
+                            <tr>
+                                <td><b>Общий наряд на монтаж <b></td>
+                                <td colspan="3">
+                                    <?php
+                                        $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
+                                    ?>
+                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                    <?php } else { ?>
+                                        -
+                                    <?php }
+                                        $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
+                                        $json2 = json_encode($pdf_names);
+                                    ?>
+                                </td>
+                            </tr>
+                        <?php } } ?>
+                    </table>
+                    <!-- для клиента нафиг надо??? -->
+                        <?php if ($user->dealer_type == 2) { ?>
+                            <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить
+                                формирование заказа
+                            </button>
+                            <?php if ($this->item->project_status == 7) {
+                                // регистрационная информация (логин, пароль #1)
+                                // registration info (login, password #1)
+                                $mrh_login = "demo";
+                                $mrh_pass1 = "password_1";
 
-                            // номер заказа
-                            // number of order
-                            $inv_id = 0;
+                                // номер заказа
+                                // number of order
+                                $inv_id = 0;
 
-                            // описание заказа
-                            // order description
-                            $inv_desc = "Оплата заказа в Тестовом магазине ROBOKASSA";
+                                // описание заказа
+                                // order description
+                                $inv_desc = "Оплата заказа в Тестовом магазине ROBOKASSA";
 
-                            // сумма заказа
-                            // sum of order
-                            $out_summ = $project_total_discount;;
+                                // сумма заказа
+                                // sum of order
+                                $out_summ = $project_total_discount;;
 
-                            // тип товара
-                            // code of goods
-                            $shp_item = 1;
+                                // тип товара
+                                // code of goods
+                                $shp_item = 1;
 
-                            // язык
-                            // language
-                            $culture = "ru";
+                                // язык
+                                // language
+                                $culture = "ru";
 
-                            // кодировка
-                            // encoding
-                            $encoding = "utf-8";
+                                // кодировка
+                                // encoding
+                                $encoding = "utf-8";
 
-                            // формирование подписи
-                            // generate signature
-                            $crc = md5("$mrh_login:$out_summ:$inv_id:$mrh_pass1:shp_Item=$shp_item");
+                                // формирование подписи
+                                // generate signature
+                                $crc = md5("$mrh_login:$out_summ:$inv_id:$mrh_pass1:shp_Item=$shp_item");
 
-                            // HTML-страница с кассой
-                            // ROBOKASSA HTML-page
-                            print "<html><script language=JavaScript " .
-                                "src='https://auth.robokassa.ru/Merchant/PaymentForm/FormMS.js?" .
-                                "MerchantLogin=$mrh_login&OutSum=$out_summ&InvoiceID=$inv_id" .
-                                "&Description=$inv_desc&SignatureValue=$crc&shp_Item=$shp_item" .
-                                "&Culture=$culture&Encoding=$encoding'></script></html>";
-                        }
-                    } ?>
-                <!-- конец -->
-            </div>
-            <?php foreach ($calculations as $k => $calculation) { ?>
-                <?php 
-                    $mounters = json_decode($calculation->mounting_sum); 
-                    $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg";
-                ?>
-                <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
-                    <div class="other_tabs">
-                        <?php if (!empty($filename)):?>
-                            <div class="sketch_image_block">
-                                <h4> Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
-                                <div class="section_content">
-                                    <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>"/>
+                                // HTML-страница с кассой
+                                // ROBOKASSA HTML-page
+                                print "<html><script language=JavaScript " .
+                                    "src='https://auth.robokassa.ru/Merchant/PaymentForm/FormMS.js?" .
+                                    "MerchantLogin=$mrh_login&OutSum=$out_summ&InvoiceID=$inv_id" .
+                                    "&Description=$inv_desc&SignatureValue=$crc&shp_Item=$shp_item" .
+                                    "&Culture=$culture&Encoding=$encoding'></script></html>";
+                            }
+                        } ?>
+                    <!-- конец -->
+                </div>
+                <?php foreach ($calculations as $k => $calculation) { ?>
+                    <?php 
+                        $mounters = json_decode($calculation->mounting_sum); 
+                        $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg";
+                    ?>
+                    <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
+                        <div class="other_tabs">
+                            <?php if (!empty($filename)):?>
+                                <div class="sketch_image_block">
+                                    <h4> Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
+                                    <div class="section_content">
+                                        <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>"/>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                                        <h4>Материал</h4>
+                                        <table class="table_info2">
+                                            <tr>
+                                                <td>Тип потолка:</td>
+                                                <td><?php echo $calculation->n1; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Тип фактуры:</td>
+                                                <td><?php echo $calculation->n2; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Производитель, ширина:</td>
+                                                <td><?php echo $calculation->n3; ?></td>
+                                            </tr>
+                                            <?php 
+                                                if ($calculation->color > 0) { 
+                                                    $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); 
+                                                    $color = $color_model->getData($calculation->color);
+                                            ?>
+                                                <tr>
+                                                    <td>Цвет:</td>
+                                                    <td>
+                                                        <?php echo $color->colors_title; ?>
+                                                        <img src="/<?php echo $color->file; ?>" alt=""/>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
+                                        </table>
+                                        <h4 style="margin: 10px 0;">Размеры помещения</h4>
+                                        <table class="table_info2">
+                                            <tr>
+                                                <td>Площадь, м<sup>2</sup>:</td>
+                                                <td><?php echo $calculation->n4; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Периметр, м:</td>
+                                                <td><?php echo $calculation->n5; ?></td>
+                                            </tr>
+                                        </table>
+                                        <?php if ($calculation->n6 > 0) {?>
+                                            <h4 style="margin: 10px 0;">Вставка</h4>
+                                            <table class="table_info2">
+                                                <tr>
+                                                    <?php if ($calculation->n6 == 314) {?>
+                                                        <td>Белая</td>
+                                                        <td></td>
+                                                    <?php
+                                                        } else  {
+                                                            $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
+                                                            $color_1 = $color_model_1->getColorId($calculation->n6);
+                                                    ?>
+                                                        <td>Цветная:</td>
+                                                        <td>
+                                                            <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>" alt=""/>
+                                                        </td>
+                                                    <?php } ?>
+                                                </tr>
+                                            </table>
+                                        <?php } endif; ?>
+                                        <?php if ($calculation->n16) { ?>
+                                            <table class="table_info2">
+                                                <tr>
+                                                    <td>Скрытый карниз:</td>
+                                                    <td><?php echo $calculation->n16; ?></td>
+                                                </tr>
+                                            </table>
+                                        <?php } ?>
+                                        <?php if ($calculation->n12) { ?>
+                                            <h4 style="margin: 10px 0;">Установка люстры</h4>
+                                            <table class="table_info2">
+                                                <tr>
+                                                    <td><?php echo $calculation->n12; ?> шт.</td>
+                                                    <td></td>
+                                                </tr>
+                                            </table>
+                                        <?php } ?>
+                                        <?php if ($calculation->n13) { ?>
+                                            <h4 style="margin: 10px 0;">Установка светильников</h4>
+                                            <table class="table_info2">
+                                                <?php 
+                                                    foreach ($calculation->n13 as $key => $n13_item) {
+                                                        echo "<tr><td><b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "</td></tr>";
+                                                    }
+                                                ?>
+                                            </table>
+                                        <?php } ?>
+                                        <?php if ($calculation->n14) { ?>
+                                            <h4 style="margin: 10px 0;">Обвод трубы</h4>
+                                            <table class="table_info2">
+                                                <?php 
+                                                    foreach ($calculation->n14 as $key => $n14_item) {
+                                                        echo "<tr><td><b>Количество:</b> " . $n14_item->n14_count . " шт  -  <b>Диаметр:</b>  " . $n14_item->component_title . "</td></tr>";
+                                                    }
+                                                ?>
+                                            </table>
+                                        <?php } ?>
+                                        <?php if ($calculation->n15) { ?>
+                                            <h4 style="margin: 10px 0;">Шторный карниз Гильдии мастеров</h4>
+                                            <table class="table_info2">
+                                                <?php
+                                                    foreach ($calculation->n15 as $key => $n15_item) {
+                                                        echo "<tr><td><b>Количество:</b> " . $n15_item->n15_count . " шт - <b>Тип:</b>   " . $n15_item->type_title . " <b>Длина:</b> " . $n15_item->component_title . "</td></tr>";
+                                                    }
+                                                ?>
+                                            </table> 
+                                        <?php } ?>
+                                        <?php if ($calculation->n27> 0) { ?>
+                                            <h4 style="margin: 10px 0;">Шторный карниз</h4>
+                                            <table class="table_info2">
+                                                <tr>
+                                                    <td>
+                                                        <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
+                                                        <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $calculation->n27; ?> м.
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        <?php } ?>
+                                        <?php if ($calculation->n26) { ?>
+                                            <h4 style="margin: 10px 0;">Светильники Эcola</h4>
+                                            <table class="table_info2">
+                                                <?php
+                                                    foreach ($calculation->n26 as $key => $n26_item) {
+                                                        echo "<tr><td><b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "</td></tr>";
+                                                    }
+                                                ?>
+                                            </table> 
+                                        <?php } ?>
+                                        <?php if ($calculation->n22) { ?>
+                                            <h4 style="margin: 10px 0;">Вентиляция</h4>
+                                            <table class="table_info2">
+                                                <?php
+                                                    foreach ($calculation->n22 as $key => $n22_item) {
+                                                        echo "<tr><td><b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "</td></tr>";
+                                                    }
+                                                ?>
+                                            </table>
+                                        <?php } ?>
+                                        <?php if ($calculation->n23) { ?>
+                                            <h4 style="margin: 10px 0;">Диффузор</h4>
+                                            <table class="table_info2">
+                                                <?php
+                                                    foreach ($calculation->n23 as $key => $n23_item) {
+                                                        echo "<tr><td><b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "</td></tr>";
+                                                    }
+                                                ?>
+                                            </table>
+                                        <?php } ?>
+                                        <?php if ($calculation->n29) { ?>
+                                            <h4 style="margin: 10px 0;">Переход уровня</h4>
+                                            <table class="table_info2">
+                                                <?php
+                                                    foreach ($calculation->n29 as $key => $n29_item) {
+                                                        echo "<tr><td><b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . "</td></tr>";
+                                                    }
+                                                ?>
+                                            </table>
+                                        <?php } ?>
+                                        <h4 style="margin: 10px 0;">Прочее</h4>
+                                        <table class="table_info2">
+                                            <?php if ($calculation->n9> 0) { ?>
+                                                <tr>
+                                                    <td>Углы, шт.:</td>
+                                                    <td><?php echo $calculation->n9; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n10> 0) { ?>
+                                                <tr>
+                                                    <td> Криволинейный вырез, м:</td>
+                                                    <td><?php echo $calculation->n10; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n11> 0) { ?>
+                                                <tr>
+                                                    <td>Внутренний вырез, м:</td>
+                                                    <td><?php echo $calculation->n11; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n7> 0) { ?>
+                                                <tr>
+                                                    <td>Крепление в плитку, м:</td>
+                                                    <td><?php echo $calculation->n7; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n8> 0) { ?>
+                                                <tr>
+                                                    <td>Крепление в керамогранит, м:</td>
+                                                    <td><?php echo $calculation->n8; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n17> 0) { ?>
+                                                <tr>
+                                                    <td>Закладная брусом, м:</td>
+                                                    <td><?php echo $calculation->n17; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n19> 0) { ?>
+                                                <tr>
+                                                    <td> Провод, м:</td>
+                                                    <td><?php echo $calculation->n19; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n20> 0) { ?>
+                                                <tr>
+                                                    <td>Разделитель, м:</td>
+                                                    <td><?php echo $calculation->n20; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n21> 0) { ?>
+                                                <tr>
+                                                    <td>Пожарная сигнализация, м:</td>
+                                                    <td><?php echo $calculation->n21; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->dop_krepezh> 0) { ?>
+                                                <tr>
+                                                    <td>Дополнительный крепеж:</td>
+                                                    <td><?php echo $calculation->dop_krepezh; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n24> 0) { ?>
+                                                <tr>
+                                                    <td>Сложность доступа к месту монтажа, м:</td>
+                                                    <td><?php echo $calculation->n24; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n30> 0) { ?>
+                                                <tr>
+                                                    <td>Парящий потолок, м:</td>
+                                                    <td><?php echo $calculation->n30; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($calculation->n32> 0) { ?>
+                                                <tr>
+                                                    <td>Слив воды, кол-во комнат:</td>
+                                                    <td><?php echo $calculation->n32; ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                        </table>
+                                        <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
+                                        <?php if (!empty($extra_mounting) ) { ?>
+                                            <h4 style="margin: 10px 0;">Дополнительные работы</h4>
+                                            <table class="table_info2">
+                                                <?php
+                                                    foreach($extra_mounting as $dop) {
+                                                        echo "<tr><td><b>Название:</b></td><td>" . $dop->title .  "</td></tr>";
+                                                    }
+                                                ?>
+                                            </table>
+                                        <?php } ?>
                                 </div>
                             </div>
-                        <?php endif; ?>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
-                                    <h4>Материал</h4>
-                                    <table class="table_info2">
-                                        <tr>
-                                            <td>Тип потолка:</td>
-                                            <td><?php echo $calculation->n1; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Тип фактуры:</td>
-                                            <td><?php echo $calculation->n2; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Производитель, ширина:</td>
-                                            <td><?php echo $calculation->n3; ?></td>
-                                        </tr>
-                                        <?php 
-                                            if ($calculation->color > 0) { 
-                                                $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); 
-                                                $color = $color_model->getData($calculation->color);
-                                        ?>
-                                            <tr>
-                                                <td>Цвет:</td>
-                                                <td>
-                                                    <?php echo $color->colors_title; ?>
-                                                    <img src="/<?php echo $color->file; ?>" alt=""/>
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
-                                    </table>
-                                    <h4 style="margin: 10px 0;">Размеры помещения</h4>
-                                    <table class="table_info2">
-                                        <tr>
-                                            <td>Площадь, м<sup>2</sup>:</td>
-                                            <td><?php echo $calculation->n4; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Периметр, м:</td>
-                                            <td><?php echo $calculation->n5; ?></td>
-                                        </tr>
-                                    </table>
-                                    <?php if ($calculation->n6 > 0) {?>
-                                        <h4 style="margin: 10px 0;">Вставка</h4>
-                                        <table class="table_info2">
-                                            <tr>
-                                                <?php if ($calculation->n6 == 314) {?>
-                                                    <td>Белая</td>
-                                                    <td></td>
-                                                <?php
-                                                    } else  {
-                                                        $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
-                                                        $color_1 = $color_model_1->getColorId($calculation->n6);
-                                                ?>
-                                                    <td>Цветная:</td>
-                                                    <td>
-                                                        <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>" alt=""/>
-                                                    </td>
-                                                <?php } ?>
-                                            </tr>
-                                        </table>
-                                    <?php } endif; ?>
-                                    <?php if ($calculation->n16) { ?>
-                                        <table class="table_info2">
-                                            <tr>
-                                                <td>Скрытый карниз:</td>
-                                                <td><?php echo $calculation->n16; ?></td>
-                                            </tr>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n12) { ?>
-                                        <h4 style="margin: 10px 0;">Установка люстры</h4>
-                                        <table class="table_info2">
-                                            <tr>
-                                                <td><?php echo $calculation->n12; ?> шт.</td>
-                                                <td></td>
-                                            </tr>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n13) { ?>
-                                        <h4 style="margin: 10px 0;">Установка светильников</h4>
-                                        <table class="table_info2">
-                                            <?php 
-                                                foreach ($calculation->n13 as $key => $n13_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n14) { ?>
-                                        <h4 style="margin: 10px 0;">Обвод трубы</h4>
-                                        <table class="table_info2">
-                                            <?php 
-                                                foreach ($calculation->n14 as $key => $n14_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n14_item->n14_count . " шт  -  <b>Диаметр:</b>  " . $n14_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n15) { ?>
-                                        <h4 style="margin: 10px 0;">Шторный карниз Гильдии мастеров</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n15 as $key => $n15_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n15_item->n15_count . " шт - <b>Тип:</b>   " . $n15_item->type_title . " <b>Длина:</b> " . $n15_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table> 
-                                    <?php } ?>
-                                    <?php if ($calculation->n27> 0) { ?>
-                                        <h4 style="margin: 10px 0;">Шторный карниз</h4>
-                                        <table class="table_info2">
-                                            <tr>
-                                                <td>
-                                                    <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
-                                                    <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
-                                                </td>
-                                                <td>
-                                                    <?php echo $calculation->n27; ?> м.
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n26) { ?>
-                                        <h4 style="margin: 10px 0;">Светильники Эcola</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n26 as $key => $n26_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table> 
-                                    <?php } ?>
-                                    <?php if ($calculation->n22) { ?>
-                                        <h4 style="margin: 10px 0;">Вентиляция</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n22 as $key => $n22_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n23) { ?>
-                                        <h4 style="margin: 10px 0;">Диффузор</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n23 as $key => $n23_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n29) { ?>
-                                        <h4 style="margin: 10px 0;">Переход уровня</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n29 as $key => $n29_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <h4 style="margin: 10px 0;">Прочее</h4>
-                                    <table class="table_info2">
-                                        <?php if ($calculation->n9> 0) { ?>
-                                            <tr>
-                                                <td>Углы, шт.:</td>
-                                                <td><?php echo $calculation->n9; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n10> 0) { ?>
-                                            <tr>
-                                                <td> Криволинейный вырез, м:</td>
-                                                <td><?php echo $calculation->n10; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n11> 0) { ?>
-                                            <tr>
-                                                <td>Внутренний вырез, м:</td>
-                                                <td><?php echo $calculation->n11; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n7> 0) { ?>
-                                            <tr>
-                                                <td>Крепление в плитку, м:</td>
-                                                <td><?php echo $calculation->n7; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n8> 0) { ?>
-                                            <tr>
-                                                <td>Крепление в керамогранит, м:</td>
-                                                <td><?php echo $calculation->n8; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n17> 0) { ?>
-                                            <tr>
-                                                <td>Закладная брусом, м:</td>
-                                                <td><?php echo $calculation->n17; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n19> 0) { ?>
-                                            <tr>
-                                                <td> Провод, м:</td>
-                                                <td><?php echo $calculation->n19; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n20> 0) { ?>
-                                            <tr>
-                                                <td>Разделитель, м:</td>
-                                                <td><?php echo $calculation->n20; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n21> 0) { ?>
-                                            <tr>
-                                                <td>Пожарная сигнализация, м:</td>
-                                                <td><?php echo $calculation->n21; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->dop_krepezh> 0) { ?>
-                                            <tr>
-                                                <td>Дополнительный крепеж:</td>
-                                                <td><?php echo $calculation->dop_krepezh; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n24> 0) { ?>
-                                            <tr>
-                                                <td>Сложность доступа к месту монтажа, м:</td>
-                                                <td><?php echo $calculation->n24; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n30> 0) { ?>
-                                            <tr>
-                                                <td>Парящий потолок, м:</td>
-                                                <td><?php echo $calculation->n30; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n32> 0) { ?>
-                                            <tr>
-                                                <td>Слив воды, кол-во комнат:</td>
-                                                <td><?php echo $calculation->n32; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                    </table>
-                                    <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
-                                    <?php if (!empty($extra_mounting) ) { ?>
-                                        <h4 style="margin: 10px 0;">Дополнительные работы</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach($extra_mounting as $dop) {
-                                                    echo "<tr><td><b>Название:</b></td><td>" . $dop->title .  "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                            </div>
-                        </div>
-                    <div>
-                </div>
-            <?php } ?>
+                        <div>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
+        <!-- не исправляла -->
+        <div id="modal-window-container-tar">
+            <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+            <div id="modal-window-choose-tar">
+                <p id="date-modal"></p>
+                <?php if ($whatCalendar == 0) { ?>
+                    <p><strong>Выберите время замера:</strong></p>
+                    <p><table id="projects_gaugers"></table></p>
+                <?php } else { ?>
+                    <p><strong>Выберите монтажника:</strong></p>
+                    <p><select name="mounters" id="mounters"></select></p>
+                    <p style="margin-bottom: 0;"><strong>Монтажники:</strong></p>
+                    <div id="mounters_names"></div>
+                    <div id="projects_brigade_container"></div>
+                    <p style="margin-top: 1em;"><strong>Выберите время начала монтажа:</strong></p>
+                    <p><select name="hours" id='hours'></select></p>
+                    <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+                <?php } ?>
+            </div>
         </div>
     <?php } ?>
-    </form>
-    <div class="container containerMobile">
-        <div class="row" style="padding-top: 1em;">
-            <div class="col-12 item_fields project-edit front-end-edit">
-                <form id="form-project" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=project.approve'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                    <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
-                    <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>"/>
-                    <input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>"/>
-                    <input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>"/>
-                    <input type="hidden" name="jform[checked_out]" value="<?php echo $this->item->checked_out; ?>"/>
-                    <input type="hidden" name="jform[checked_out_time]" value="<?php echo $this->item->checked_out_time; ?>"/>
-                    <?php if ($this->item->project_status == 3) { ?>
-                        <input type="hidden" name="jform[project_status]" value="4"/>
-                    <?php } ?>
-                    <?php if (empty($this->item->created_by)): ?>
-                        <input type="hidden" name="jform[created_by]" value="<?php echo JFactory::getUser()->id; ?>"/>
-                    <?php else: ?>
-                        <input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>"/>
-                    <?php endif; ?>
-                    <?php if (empty($this->item->modified_by)): ?>
-                        <input type="hidden" name="jform[modified_by]" value="<?php echo JFactory::getUser()->id; ?>"/>
-                    <?php else: ?>
-                        <input type="hidden" name="jform[modified_by]" value="<?php echo $this->item->modified_by; ?>"/>
-                    <?php endif; ?>
-                    <?php $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date)); ?>
-                    <input name = "jform[project_new_calc_date]" id = "jform_project_new_calc_date" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date; } ?>" type="hidden">
-                    <input name = "jform[project_gauger]" id = "jform_project_gauger" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } ?>" type="hidden">
-                    <input id="jform_project_gauger_old" type="hidden" name="jform_project_gauger_old" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else { echo "0"; } ?>"/>
-                    <input id="jform_project_calculation_date_old" type="hidden" name="jform_project_calculation_date_old" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;} ?>"/>
-                    <input id="jform_project_mounting_date" type="hidden" name="jform[project_mounting_date]" value="<?php if (isset($this->item->project_mounting_date)) { echo $this->item->project_mounting_date; } ?>"/>
-                    <input id="jform_project_mounter" type="hidden" name="jform[project_mounting]" value="<?php if (isset($this->item->project_mounter)) { echo $this->item->project_mounter; } ?>"/>
-                    <input id="jform_project_mounter_old" type="hidden" name="jform_project_mounting_old" value="<?php if (isset($this->item->project_mounter)) { echo $this->item->project_mounter; } ?>"/>
-                    <input id="jform_project_mounting_date_old" type="hidden" name="jform_project_mounting_date_old" value="<?php if (isset($this->item->project_mounting_date)) { echo $this->item->project_mounting_date; } ?>"/>
-                    <input type="hidden" name="option" value="com_gm_ceiling"/>
-                    <input type="hidden" name="task" value="project.approve"/>
-                    <?php echo JHtml::_('form.token'); ?>
-                    <table class="table">
-                        <tr>
-                            <th>Номер договора</th>
-                            <td><?php echo $this->item->id; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Статус проекта</th>
-                            <td>
-                                <?php 
-                                    if ($this->item->project_status == 1) {
-                                        $status = "Ждет замера";
-                                    } else if ($this->item->project_status == 5) {
-                                        $status = "В производстве";
-                                    } else if ($this->item->project_status == 6) {
-                                        $status = "На раскрое";
-                                    } else if ($this->item->project_status == 7) {
-                                        $status = "Укомплектован";
-                                    } else if ($this->item->project_status == 8) {
-                                        $status = "Выдан";
-                                    } else if ($this->item->project_status == 9) {
-                                        $status = "Деактевирован";
-                                    } else if ($this->item->project_status == 10) {
-                                        $status = "Ожидает монтаж";
-                                    } else if ($this->item->project_status == 11) {
-                                        $status = "Монтаж выполнен";
-                                    } else if ($this->item->project_status == 12) {
-                                        $status = "Закрыт";
-                                    } else if ($this->item->project_status == 13) {
-                                        $status = "Ожидает оплаты";
-                                    } else if ($this->item->project_status == 14) {
-                                        $status = "Оплачен";
-                                    } else if ($this->item->project_status == 15) {
-                                        $status = "Отказ от сотруднечества";
-                                    } else if ($this->item->project_status == 16) {
-                                        $status = "Монтаж";
-                                    } else if ($this->item->project_status == 17) {
-                                        $status = "Монтаж недовыполнен";
-                                    } else if ($this->item->project_status == 19) {
-                                        $status = "Собран";
-                                    } else if ($this->item->project_status == 22) {
-                                        $status = "Отказ от производства";
-                                    } else if ($this->item->project_status == 4) {
-                                        $status = "Не назначен на монтаж";
-                                    }
-                                    echo $status; 
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <?php if ($this->item->project_status == 1) { ?>
-                                <th>Дата замера</th>
-                                <td>
-                                    <?php if ($this->item->project_calculation_date == "0000-00-00 00:00:00") { ?>
-                                        -
-                                    <?php } else { ?>
-                                        <?php $jdate = new JDate(JFactory::getDate($this->item->project_calculation_date)); ?>
-                                        <?php echo $jdate->format('d.m.Y H:i'); ?>
-                                    <?php } ?>
-                                </td>
-                            <?php } else if ($this->item->project_status == 11 || $this->item->project_status == 12 || $this->item->project_status != 17) { ?>
-                                <th>Дата монтажа</th>
-                                <td>
-                            <?php
-                                if ($this->item->project_mounting_date == "0000-00-00 00:00:00")
-                                {
-                                    echo '-';
-                                }
-                                else
-                                {
-                                    $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date));
-                                    echo $jdate->format('d.m.Y H:i');
-                                }
-                            ?>
-                                </td>
-                            <?php } else { ?>
-                                <th>Удобная дата монтажа для клиента</th>
-                                <td>
-                            <?php
-                                if ($this->item->project_mounting_date == "0000-00-00 00:00:00")
-                                {
-                                    echo '-';
-                                }
-                                else
-                                {
-                                    $jdate = new JDate(JFactory::getDate($this->item->project_mounting_date));
-                                    echo $jdate->format('d.m.Y H:i');
-                                }
-                            ?>
-                                </td>
-                            <?php } ?>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                            <td><?php echo $this->item->client_id; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                            <?php 
-                                $mod = Gm_ceilingHelpersGm_ceiling::getModel('projectform');
-                                $contact = $mod->getData($this->item->id);
-                            ?>
-                            <td><?php echo $contact->client_contacts; ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                            <td><?php echo $this->item->project_info; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Примечание менеджера</th>
-                            <td><?php echo $this->item->dealer_manager_note; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Примечание замерщика</th>
-                            <td><?php echo $this->item->dealer_calculator_note; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Примечание начальника МС</th>
-                            <td><textarea name="jform[dealer_chief_note]" id="jform_dealer_chief_note" placeholder="Примечание начальника МС" aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea></td>
-                        </tr>
-                        <tr>
-                            <th>Замерщик</th>
-                            <?php 
-                                $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                                $gauger = $gauger_model->getGauger($this->item->id); 
-                            ?>
-                            <td><?php echo $gauger->name; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Монтажная бригада</th>
-                            <?php 
-                                $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-                                $mount = $mount_model->getMount($this->item->id); 
-                            ?>
-                            <td><?php echo $mount->name; ?></td>
-                        </tr>
-                    </table>
-                    <?php if ($this->item->project_status == 1) { ?>
-                        <h4 style="text-align:center;">Изменить замерщика, время и дату замера</h4>
-                        <div class="calendar_wrapper" style="background: #ffffff">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                                    </td>
-                                    <td style="width: 100%">
-                                        <div id="calendar1" style="padding: 1em">
-                                            <?php echo $calendar1; ?>
-                                        </div>
-                                        <div id="calendar2" style="padding: 1em">
-                                            <?php echo $calendar2; ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    <?php } else if ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) { ?>
-                        <h4 style="text-align:center;">Назначить/изменить монтажную бригаду, время и дату</h4>
-                        <div class="calendar_wrapper" style="background: #ffffff">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
-                                    </td>
-                                    <td style="width: 100%">
-                                        <div id="calendar1" style="padding: 1em">
-                                            <?php echo $calendar1; ?>
-                                        </div>
-                                        <div id="calendar2" style="padding: 1em">
-                                            <?php echo $calendar2; ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    <?php } ?>
-                    <?php if ($userId == $user->dealer_id) { ?>
-                        <input name="type" value="chief" type="hidden">
-                    <?php } else { ?>
-                        <input name="type" value="gmchief" type="hidden">
-                    <?php } ?>
-                    <div class="control-group">
-                        <div class="controls">
-                        <?php if($this->item->project_status == 4) { ?>
-                            <button id="btn_submit" type="button" class="validate btn btn-primary">Сохранить и запустить в производство</button>
-                        <?php } else if($this->item->project_status == 5) { ?>
-                            <button id="btn_submit" type="button" class="validate btn btn-primary">Сохранить</button>
-                        <?php } ?>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <?php if($user->dealer_type == 0) { ?>
-                <div class="col-xl-6">
-                    <div class="comment">
-                        <label style="font-weight: bold;"> История клиента: </label>
-                        <textarea id="comments" class="input-comment" rows=11 readonly style="resize: none; outline: none;"></textarea>
-                        <table>
-                            <tr>
-                                <td><label style="font-weight: bold;"> Добавить комментарий: </label></td>
-                            </tr>
-                            <tr>
-                                <td width = 100%><textarea  style="resize: none;" class = "inputactive" id="new_comment" placeholder="Введите новое примечание"></textarea></td>
-                                <td><button class="btn btn-primary" type="button" id="add_comment"><i class="fa fa-paper-plane" aria-hidden="true"></i>
-                                </button></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            <?php } ?>
-        </div>
-    </div>
-    <div id="modal-window-container-tar">
-        <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="modal-window-choose-tar">
-            <p id="date-modal"></p>
-            <?php if ($whatCalendar == 0) { ?>
-                <p><strong>Выберите время замера:</strong></p>
-                <p><table id="projects_gaugers"></table></p>
-            <?php } else { ?>
-                <p><strong>Выберите монтажника:</strong></p>
-                <p><select name="mounters" id="mounters"></select></p>
-                <p style="margin-bottom: 0;"><strong>Монтажники:</strong></p>
-                <div id="mounters_names"></div>
-                <div id="projects_brigade_container"></div>
-                <p style="margin-top: 1em;"><strong>Выберите время начала монтажа:</strong></p>
-                <p><select name="hours" id='hours'></select></p>
-                <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
-            <?php } ?>
-        </div>
-    </div>
-<?php } ?>
-
+</form>
 <script>
 
     var preloader = '<?=parent::getPreloaderNotJS();?>';
