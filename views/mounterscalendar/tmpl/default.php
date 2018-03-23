@@ -305,7 +305,7 @@
                                 }
                             }
                             if (element.details != null && element.details != undefined && element.details != "null" && element.details != "") {
-                                comment_calc += element.id;
+                                comment_calc.push(element.id);
                             }
                             // статусы
                             status_proj = element.project_status;
