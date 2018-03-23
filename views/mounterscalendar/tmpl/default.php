@@ -351,6 +351,7 @@
                             jQuery("#table-mounting").append(TrOrders2);
                         }                  
                     });
+                    console.log(comment_calc);
                     comment_calc.forEach(function(element) {
                         jQuery(`#comment_calc${element.id}`).append('<br>Есть примечание к потолку');
                     });
