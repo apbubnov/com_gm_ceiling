@@ -667,12 +667,12 @@
                 <!-- конец -->
             </div>
             <?php foreach ($calculations as $k => $calculation) { ?>
-                <div class="other_tabs">
-                    <?php 
-                        $mounters = json_decode($calculation->mounting_sum); 
-                        $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg";
-                    ?>
-                    <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
+                <?php 
+                    $mounters = json_decode($calculation->mounting_sum); 
+                    $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg";
+                ?>
+                <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
+                    <div class="other_tabs">
                         <?php if (!empty($filename)):?>
                             <div class="sketch_image_block">
                                 <h4> Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
@@ -938,8 +938,8 @@
                                     <?php } ?>
                             </div>
                         </div>
-                    </div>
-                <div>
+                    <div>
+                </div>
             <?php } ?>
         </div>
     <?php } ?>
