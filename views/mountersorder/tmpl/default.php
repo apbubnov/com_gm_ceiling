@@ -361,7 +361,7 @@ var_dump($calculation_ids);
         <?php foreach ($calculation_ids as $value) { ?>
             <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
                 <?php echo $value->details; ?>
-                <?php if ($value->details != 0) { ?>
+                <?php if (!empty($value->details)) { ?>
                     <div>
                         Примечание к потолку: <?php echo $value->details; ?>
                     </div>
