@@ -21,6 +21,16 @@ Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
+/*_____________блок для всех моделей/models block________________*/ 
+$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+$reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
+$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+$clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
+$color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+
+/*________________________________________________________________*/
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
 $client_sum_transport = $transport['client_sum'];
 $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
@@ -33,13 +43,12 @@ $project_total = 0;
 $project_total_discount = 0;
 $total_square = 0;
 $total_perimeter = 0;
-$model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations = $model->getProjectItems($this->item->id);
+$calculation_total_discount = 0;
+$calculations = $calculationsModel->getProjectItems($this->item->id);
 foreach ($calculations as $calculation) {
     $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
     $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
     $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-
     $calculation->dealer_self_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
     $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
     $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
@@ -47,45 +56,36 @@ foreach ($calculations as $calculation) {
     $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
     $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
     $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-    //$calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $this->item->project_discount) / 100);
     $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
+    $total_square +=  $calculation->n4;
+    $total_perimeter += $calculation->n5;
     $project_total += $calculation->calculation_total;
     $project_total_discount += $calculation->calculation_total_discount;
     $self_calc_data[$calculation->id] = array(
         "canv_data" => $calculation->dealer_self_canvases_sum,
         "comp_data" => $calculation->dealer_self_components_sum,
         "mount_data" => $calculation->dealer_self_gm_mounting_sum,
+        "square" => $calculation->n4,
+        "perimeter" => $calculation->n5,
+        "sum" => $calculation->calculation_total,
+        "sum_discount" => $calculation->calculation_total_discount
     );
-    if ($user->dealer_type != 2) {
-        $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-        $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
-        $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
-        $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
-        $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
-        $calculation_total_11 += $calculation_total_1;
-        $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
-    }
-    $project_total_11 += $project_total_1;
-
     $calculation_total = $calculation->calculation_total;
+    $calculation_total_discount =  $calculation->calculation_total_discount;
 }
-$self_calc_data = json_encode($self_calc_data);
-$project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum;
-$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+$self_calc_data = json_encode($self_calc_data);//массив с себестоимотью по каждой калькуляции
+$project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
+
 $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
 $min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
 $min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
 
-$project_total_discount_transport = $project_total_discount + $sum_transport;
+$project_total_discount_transport = $project_total_discount + $client_sum_transportt;
 
 $del_flag = 0;
-$project_total = $project_total  + $sum_transport;
-$project_total_discount = $project_total_discount  + $sum_transport;
-$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations1 = $calculationsModel->getProjectItems($this->item->id);
-$components_data = array();
-$project_sum = 0;
-$counter = 0;
+$project_total = $project_total + $client_sum_transport;
+$project_total_discount = $project_total_discount  + $client_sum_transport;
+
 //address
 $street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
 preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
@@ -124,9 +124,9 @@ $calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $yea
 
 // все бригады
 if ($user->dealer_type == 1 && $user->dealer_mounters == 1) {
-    $Allbrigades = $model->FindAllbrigades(1);
+    $Allbrigades = $calculationsModel->FindAllbrigades(1);
 } else {
-    $Allbrigades = $model->FindAllbrigades($user->dealer_id);
+    $Allbrigades = $calculationsModel->FindAllbrigades($user->dealer_id);
 }
 $AllMounters = [];
 if (count($Allbrigades) == 0) {
@@ -145,13 +145,12 @@ if (count($Allbrigades) == 0) {
             $where .= ", '".$value."'";
         }
     }
-    $AllMounters = $model->FindAllMounters($where);
+    $AllMounters = $calculationsModel->FindAllMounters($where);
 }
 //----------------------------------------------------------------------------------
 
 /* замерщики */
-$model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
-$AllGauger = $model->FindAllGauger($user->dealer_id);
+$AllGauger = $reserve_model->FindAllGauger($user->dealer_id);
 if (count($AllGauger) == 0) {
     array_push($AllGauger, ["id" => $userId, "name" => $user->name]);
 }
@@ -243,10 +242,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 <?= parent::getButtonBack(); ?>
 <?php if ($this->item) : ?>
     <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=calculator&subtype=calendar" method="post" enctype="multipart/form-data">
-        <?php
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-            $calculations = $model->getProjectItems($this->item->id);
-        ?>
         <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
@@ -302,7 +297,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                     </tr>
                                     <?php
                                         if ($user->dealer_type == 0) {
-                                            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+                                           
                                             $birthday = $client_model->getClientBirthday($this->item->id_client);
                                     ?>
                                         <tr>
@@ -321,7 +316,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         </th>
                                         <?php
                                             if ($this->item->id_client!=1) { 
-                                                $phone = $model->getClientPhones($this->item->id_client);
+                                                $phone = $calculationsModel->getClientPhones($this->item->id_client);
                                             } else  {
                                                 $phone = [];
                                             }
@@ -340,7 +335,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                             <th>Почта</th>
                                             <td>
                                                 <?php
-                                                    $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+                                                    
                                                     $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
                                                     foreach ($contact_email AS $contact) {
                                                         echo "<a href='mailto:$contact->contact'>$contact->contact</a>";
@@ -574,80 +569,36 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                     </th>
                                 </tr>
                                 <?php 
-                                    $project_total = 0;
-                                    $project_total_discount = 0;
-                                    $dealer_gm_mounting_sum_1 = 0;
-                                    $calculation_total_1 = 0;
-                                    $project_total_1 = 0;
-                                    $dealer_gm_mounting_sum_11 = 0;
-                                    $calculation_total_11 = 0;
-                                    $project_total_11 = 0;
-                                    $kol = 0;
-                                    $tmp = 0;
-                                    $sum_transport_discount_total = 0;
-                                    $sum_transport_total = 0;
-                                    $dealer_comp_all =0;
-                                    $JS_Calcs_Sum = array();
-
                                     foreach ($calculations as $calculation) {
-                                        $dealer_canvases_sum = $calculation->dealer_canvases_sum;
-                                        $dealer_components_sum = $calculation->dealer_components_sum;
-                                        $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-                                        //$calculation_total_discount = $calculation_total * ((100 - $this->item->project_discount) / 100);
-                                        if ($user->dealer_type != 2) {
-                                            $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-                                            $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
-                                            $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
-                                            $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
-                                            $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
-                                            $calculation_total_11 += $calculation_total_1;
-                                            $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
-                                            $project_total_11 += $project_total_1;
-                                            $dealer_comp_all += $dealer_components_sum_1;
-                                        }
-                                        $calculation->calculation_title;
-                                        $total_square += $calculation->n4;
-                                        $total_perimeter += $calculation->n5;
-                                        $canvas = $dealer_canvases_sum;
-
-                                        $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
-                                        $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
-                                        $project_total += $calculation_total;
-                                        $project_total_discount += $calculation_total_discount;
-                                        $JS_Calcs_Sum[] = round($calculation_total, 0);
                                 ?>
-                                <tr class="section_ceilings">
-                                    <td class="include_calculation" colspan="3">
-                                        <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
-                                        <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
-                                        <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
-                                        <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
-                                        <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>
-                                        <input name='calculation_total1[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_1; ?>' type='hidden'>
-                                        <input name='calculation_total2[<?php echo $calculation->id; ?>]' value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
-                                        <input name='calculation_total3[<?php echo $calculation->id; ?>]' value='<?php echo $project_total_1; ?>' type='hidden'>
-                                        <input name='canvas[<?php echo $calculation->id; ?>]' value='<?php echo $canvas; ?>' type='hidden'>        
-                                        <span><?php echo $calculation->calculation_title; ?></span>
-                                    </td>
-                                </tr>
-                                <tr class="section_ceilings" id="">
-                                    <td>S/P :</td>
-                                    <td colspan="2">
-                                        <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
-                                    </td>
-                                </tr>
-                                <tr class="section_ceilings">
-                                    <?php if ($calculation->discount != 0) { ?>
-                                        <td>Цена / -<?php echo $calculation->discount ?>% :</td>
-                                        <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> р. /</td>
-                                        <td id="calculation_total_discount"> <?php echo round($calculation_total_discount , 0); ?>
-                                            р.
+                                    <tr class="section_ceilings">
+                                        <td class="include_calculation" colspan="3">
+                                            <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
+                                            <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
+                                            <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
+                                            <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
+                                            <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>      
+                                            <span><?php echo $calculation->calculation_title; ?></span>
                                         </td>
-                                    <?php } else { ?>
-                                        <td>Итого</td>
-                                        <td colspan="2" id="calculation_total"> <?php echo round($calculation_total, 0); ?> р.</td>
-                                    <?php } ?>
-                                </tr>
+                                    </tr>
+                                    <tr class="section_ceilings">
+                                        <td>S/P :</td>
+                                        <td colspan="2">
+                                            <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
+                                        </td>
+                                    </tr>
+                                    <tr class="section_ceilings">
+                                        <?php if ($calculation->discount != 0) { ?>
+                                            <td>Цена / -<?php echo $calculation->discount ?>% :</td>
+                                            <td id="calculation_total"> <?php echo round($calculation->calculation_total, 0); ?> р. /</td>
+                                            <td id="calculation_total_discount"> <?php echo round($calculation->calculation_total_discount , 0); ?>
+                                                р.
+                                            </td>
+                                        <?php } else { ?>
+                                            <td>Итого</td>
+                                            <td colspan="2" id="calculation_total"> <?php echo round($calculation->calculation_total, 0); ?> р.</td>
+                                        <?php } ?>
+                                    </tr>
                                 <?php
                                         if ($calculation->discount > 0) {
                                             $kol++;
@@ -657,10 +608,10 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 <tr>
                                     <th>Общая S/общий P :</th>
                                     <th id="total_square">
-                                        <?php echo $total_square; ?>м<sup>2</sup> /
+                                        <span class = "sum"><?php echo $total_square;?></span> м<sup>2</sup> /
                                     </th>
                                     <th id="total_perimeter">
-                                        <?php echo $total_perimeter; ?> м
+                                        <span class = "sum"><?php echo $total_perimeter; ?></span> м
                                     </th>
                                 </tr>
                                 <tr>
@@ -725,17 +676,11 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                     </td>
                                 </tr>
                                 <tr>
-                                    <?php 
-                                        //-------------------------Себестоимость транспорта-------------------------------------
-                                        //$project_total_11 = $project_total_11 + $sum_transport_1;
-                                        $project_total = $project_total + $sum_transport;
-                                        $project_total_discount = $project_total_discount + $sum_transport;
-                                    ?>
                                     <th>Транспорт</th>
                                     <td colspan="2" id="transport_sum">
-                                        <?=$sum_transport;?> р.
+                                        <?=$client_sum_transport;?> р.
                                     </td>
-                                    <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
+                                    <input id="transport_suma" value='<?php echo $client_sum_transport; ?>' type='hidden'>
                                 </tr>
                                 <tr>
                                     <?php if ($kol > 0) { ?>
@@ -755,7 +700,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                     $project_total_discount =  $min_project_sum;
                                                 }
                                             ?>
-                                            <span class="sum"><?= round($project_total_discount, 0);?> р.</span>
+                                            <span class="sum"><?= round($project_total_discount, 0);?></span> р.
                                             <?php if($old_price != $project_total_discount): ?>
                                                 <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                                             <?php endif; ?>
@@ -782,11 +727,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                     <?php } ?>
                                 </tr>
                                 <?php if ($user->dealer_type != 2) { ?>
-                                    <tr>
-                                        <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
-                                        <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
-                                        <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
-                                    </tr>
                                     <tr>
                                         <td id="calcs_self_canvases_total"><?php echo round($self_canvases_sum, 0) ?></td>
                                         <td id="calcs_self_components_total"><?php echo round($self_components_sum, 0) ?></td>
@@ -985,7 +925,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         ?>
                                 <div class="tab-pane <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                                     <div class="other_tabs">
+                                    <?php if($this->item->project_verdict == 0){?>
                                         <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить расчет</a>
+                                    <?php } ?>
                                         <?php if (!empty($filename)):?>
                                             <div class="sketch_image_block" style="margin-top: 15px;">
                                                 <h4>Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
@@ -1013,7 +955,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                         </tr>
                                                         <?php
                                                             if ($calculation->color > 0) {
-                                                                $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+                                                                
                                                                 $color = $color_model->getData($calculation->color);
                                                         ?>
                                                             <tr>
@@ -1045,7 +987,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                                     <td></td>
                                                                 <?php
                                                                     } else  {
-                                                                    $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
+                                                                   
                                                                     $color_1 = $color_model_1->getColorId($calculation->n6);
                                                                 ?>
                                                                         <td>Цветная:</td>
@@ -1250,7 +1192,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                         </table>
                                                     <?php } ?>
                                             </div>
-                                            <button class="btn btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
+                                            <?php if($this->item->project_verdict == 0){?>
+                                                <button class="btn btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
+                                            <?php } ?>
                                             <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
                                         </div>
                                     </div>
@@ -2193,7 +2137,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             jQuery("#jform_project_new_calc_date").on("keyup", function () {
                 update_times("#jform_project_new_calc_date", "#jform_new_project_calculation_daypart");
             });
-            jQuery("input[name^='include_calculation']").click(function () {
+           /*  jQuery("input[name^='include_calculation']").click(function () {
                 var _this = jQuery(this);
                 var id = _this.val();
                 var estimate = jQuery("#section_estimate_" + id);
@@ -2209,30 +2153,18 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     estimate.attr("vis", "hide").hide();
                     mount.attr("vis", "hide").hide();
                 }
-                square_total();
-                calculate_total();
-                calculate_total1();
+                //square_total();
+                //calculate_total();
+                //calculate_total1();
                 trans();
             });
-
+ */
             jQuery("input[name^='smeta']").click(function () {
                 if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
                     jQuery("input[name='smeta']").val(1);
                 else jQuery("input[name='smeta']").val(0);
             });
-            jQuery("input[name^='smeta']").change(function () {
-                comp_sum = <?php echo $dealer_comp_all;?>;
-                console.log(comp_sum);
-                var sum = jQuery("#calculation_total1")[0].innerText;
-                if(jQuery("input[name^='smeta']").attr("checked") == 'checked'){
-                    jQuery("#calculation_total1")[0].innerText = +sum-comp_sum;
-                    
-                }
-                else{
-                    jQuery("#calculation_total1")[0].innerText = +sum+comp_sum;
-                
-                } 
-            });
+
             
             jQuery("#client_order").click(function () {
                 jQuery("input[name='project_verdict']").val(1);
@@ -2246,19 +2178,22 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 if(jQuery("input[name='project_mounter']").val() === "")
                 {
                     jQuery(this).attr("type", "button");
-                        noty({
-                            theme: 'relax',
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Выберите монтажную бригаду!"
-                        });
+                    noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Выберите монтажную бригаду!"
+                    });
 
                 }
-                else
+                else{
+                    jQuery("input[name='project_status']").val(5);
+                    jQuery("input[name='project_verdict']").val(1);
                     jQuery(this).attr("type", "submit");
-                jQuery("input[name='project_status']").val(5);
-                jQuery("input[name='project_verdict']").val(1);
+                }
+                    
+                
             });
             $tmp_accept = 0; $tmp_refuse = 0;
 
@@ -2389,9 +2324,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 
             jQuery("#update_discount").click(function () {
                 jQuery("input[name='isDiscountChange']").val(1);
-                console.log(<?php echo $skidka; ?>);
-                console.log(jQuery("#jform_new_discount").val());
-                //if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
             });
 
 
@@ -2420,6 +2352,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     trans();
                 }
             });
+
+            
             jQuery("[name = click_transport]").click(function () {
                 trans();
             });
@@ -2484,22 +2418,37 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             let canv_data = (self_data[jQuery(this).val()].canv_data).toFixed(0);
             let comp_data = (self_data[jQuery(this).val()].comp_data).toFixed(0);
             let mount_data = (self_data[jQuery(this).val()].mount_data).toFixed(0);
-            let old_canv = parseInt(jQuery("#calcs_self_canvases_total").text());
-            let old_comp = parseInt(jQuery("#calcs_self_components_total").text());
-            let old_mount = parseInt(jQuery("#calcs_self_mount_total").text());
-            let old_all = parseInt(jQuery("#calcs_total").text());
-            console.log(old_canv,old_comp,old_mount);
+            let calc_sum = (self_data[jQuery(this).val()].sum).toFixed(0);
+            let calc_sum_discount = (self_data[jQuery(this).val()].sum_discount).toFixed(0);
+            let n4 = self_data[jQuery(this).val()].square;
+            let n5 = self_data[jQuery(this).val()].perimeter;
+            let old_canv = jQuery("#calcs_self_canvases_total").text();
+            let old_comp = jQuery("#calcs_self_components_total").text();
+            let old_mount = jQuery("#calcs_self_mount_total").text();
+            let old_all = jQuery("#calcs_total").text();
+            let old_total = jQuery("#project_total span.sum").text();
+            let old_total_discount = jQuery("#project_total_discount span.sum").text();
+            let old_n4 = jQuery("#total_square span.sum").text();
+            let old_n5 = jQuery("#total_perimeter span.sum").text();
             if(jQuery(this).prop("checked") == true){
                jQuery("#calcs_self_canvases_total").text(parseInt(old_canv) + parseInt(canv_data));
                jQuery("#calcs_self_components_total").text(parseInt(old_comp) + parseInt(comp_data));
                jQuery("#calcs_self_mount_total").text(parseInt(old_mount) + parseInt(mount_data));
                jQuery("#calcs_total").text(parseInt(old_all) + parseInt(canv_data) +  parseInt(comp_data) + parseInt(mount_data));
+               jQuery("#project_total span.sum").text(parseInt(old_total)+ parseInt(calc_sum));
+               jQuery("#project_total_discount span.sum").text(parseInt(old_total_discount)+ parseInt(calc_sum_discount));
+               jQuery("#total_square span.sum").text(parseFloat(old_n4) + parseFloat(n4));
+               jQuery("#total_perimeter span.sum").text(parseFloat(old_n5) + parseFloat(n5));
             }
             else{
                 jQuery("#calcs_self_canvases_total").text(old_canv-canv_data);
                 jQuery("#calcs_self_components_total").text(old_comp-comp_data);
                 jQuery("#calcs_self_mount_total").text(old_mount-mount_data);
                 jQuery("#calcs_total").text(old_all - canv_data - comp_data - mount_data);
+                jQuery("#project_total span.sum").text(old_total - calc_sum);
+                jQuery("#project_total_discount span.sum").text(old_total_discount - calc_sum_discount);
+                jQuery("#total_square span.sum").text(old_n4 - n4);
+                jQuery("#total_perimeter span.sum").text(old_n5 - n5);
             }
         });
         jQuery("#send_all_to_email1").click(function () {
@@ -2655,6 +2604,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 
         jQuery("#jform_project_new_calc_date").attr("onchange", "update_times(\"#jform_project_new_calc_date\",\"#jform_new_project_calculation_daypart\")");
 
+       
         function update_times(fieldName, fieldName2) {
             var date = jQuery(fieldName).val();
             if (isDate(date)) {
@@ -2702,6 +2652,38 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             return true;
         }
 
+
+        function update_transport(id,transport,distance,distance_col){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=project.update_transport",
+                data:{
+                    id : id,
+                    transport : transport,
+                    distance : distance,
+                    distance_col : distance_col
+                },
+                success: function(data){
+                    
+                },
+                dataType: "json",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
+                    });
+                }
+            }); 
+        }
+
+         function calculate_transport(transport){
+                
+            }
         function trans()
         {
             var id = <?php echo $this->item->id; ?>;
@@ -2800,7 +2782,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             return Math.round(parseFloat(""+x) * Math.pow(10,y)) / Math.pow(10,y);
         }
 
-        function calculate_total() {
+        /* function calculate_total() {
             var project_total = 0,
                 project_total_discount = 0,
                 pr_total2 = 0,
@@ -2852,9 +2834,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 jQuery("#project_sum").val(project_total_discount);
             }
             
-        }
+        } */
 
-
+/* 
         function square_total() {
             var square = 0,
                 perimeter = 0;
@@ -2870,8 +2852,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             jQuery("#total_square").text(total_sq.toFixed(2));
             jQuery("#total_perimeter").text(total_p.toFixed(2));
         }
-
-        function calculate_total1() {
+ */
+        /*function calculate_total1() {
             var project_total1 = 0,
                 project_total2 = 0,
                 project_total3 = 0,
@@ -2892,7 +2874,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             jQuery("#calculation_total1").text(pr_total1.toFixed(0));
             jQuery("#calculation_total2").text(pr_total2.toFixed(0));
             jQuery("#calculation_total3").text(pr_total3.toFixed(0));
-        }
+        } */
 
         var mountArray = {};
 

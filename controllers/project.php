@@ -1347,29 +1347,25 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $time = $jinput->get('time','','STRING');
             $ready_date_time = $ready_date.' '.$time;
             $quickly = $jinput->get('quick',0,'INT');
-			$model = $this->getModel('Project', 'Gm_ceilingModel');
+			$model = Gm_ceilingHelpersGm_ceiling::getModel('Project');
 			$data = $model->approvemanager($id,$ready_date_time,$quickly);
-			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 			$res = $model->getNewData($id);
-			$client = $client_model->getClientById($res->client_id);
-			$dealer_id = $client->deaelr_id;
+		
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $calculations = $calc_model->new_getProjectItems($id);
-            $material_sum = 0;
-
+			$material_sum = 0;
+			$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+			$client  = $client_model->getClientById($res->client_id);
+			$dealer_id = $client->dealer_id;
+			
             foreach ($calculations as $calculation) {
                 $material_sum += $calculation->components_sum + $calculation->canvases_sum;
             }
             if(empty($material_sum)) $material_sum = 0;
             else $material_sum = -($material_sum);
             $recoil_map_model =Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
-<<<<<<< HEAD
             if($dealer_id != 1 && $dealer_id != 2)
                 $recoil_map_model->save($dealer_id, $id, $material_sum);
-=======
-            if($res->dealer_id != 1 && $res->dealer_id != 2)
-                $recoil_map_model->save($res->dealer_id, $id, $material_sum);
->>>>>>> d499e52a6967dd112eb2dd44a6a9f1d3eba6033c
 			if ($data === false)
 			{
 				$this->setMessage(JText::sprintf('Save failed: %s', $model->getError()), 'warning');
