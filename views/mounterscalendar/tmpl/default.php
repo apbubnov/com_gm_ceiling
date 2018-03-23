@@ -275,6 +275,7 @@
                 },
                 success: function(msg) {
                     comment_calc = [];
+                    console.log(msg);
                     msg.forEach(function(element) {
                         if (element.project_mounting_date.length < 6) {
                             project = element.id;
