@@ -360,6 +360,7 @@ var_dump($calculation_ids);
         </div>
         <?php foreach ($calculation_ids as $value) { ?>
             <div id="ceiling<?php echo $value->id; ?>" class="content-tab tab-pane" role="tabpanel">
+                <?php echo $value->details; ?>
                 <?php if ($value->details != null && $value->details != 0) { ?>
                     <div>
                         Примечание к потолку: <?php echo $value->details; ?>
