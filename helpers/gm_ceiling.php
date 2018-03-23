@@ -1644,7 +1644,7 @@ class Gm_ceilingHelpersGm_ceiling
                 //Обработка 1 угла
                 if ($data['n9']) {
                     $guild_data[] = array(
-                        "title" => "Обработка 1 угла",                                                                //Название
+                        "title" => "Обработка 1 угла (ПВХ)",                                                                //Название
                         "quantity" => $data['n9'] - 4,                                                                //Кол-во
                         "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                         "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
