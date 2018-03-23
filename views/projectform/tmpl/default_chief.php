@@ -392,7 +392,7 @@
                             <th id="project_total">
                                 <span class="sum"><?php echo round($project_total, 0); ?></span> р. /
                             </th>
-                            <th id="project_total_discount">
+                            <th colspan="2" id="project_total_discount">
                                 <span class="sum">
                                     <?php 
                                         //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
@@ -410,31 +410,33 @@
                                 </span>
                                 <span class="dop" style="font-size: 9px;" ></span>
                             </th>
-                        <?php }
-                        else { ?>
-                        <th>Итого</th>
-                        <th id="project_total" colspan="2">
-                            <span class="sum">
-                                <?php
-                                if ($this->item->new_project_sum == 0) {
-                                    if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
-                                    echo round($project_total, 2);
-                                } else {
-                                    echo round($this->item->new_project_sum, 2);
-                                }
-                                } ?>
-                            </span>
-                                <span class="dop" style="font-size: 9px;">
-                            <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
-                                * минимальная сумма заказа 3500р.<?php }?>
+                        <?php } else { ?>
+                            <th>Итого</th>
+                            <th id="project_total" colspan="3">
+                                <span class="sum">
+                                    <?php
+                                        if ($this->item->new_project_sum == 0) {
+                                            if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
+                                            echo round($project_total, 2);
+                                        } else {
+                                            echo round($this->item->new_project_sum, 2);
+                                        }
+                                    ?>
                                 </span>
-                        </th>
+                                <span class="dop" style="font-size: 9px;">
+                                    <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
+                                        * минимальная сумма заказа 3500р.
+                                    <?php }?>
+                                </span>
+                            </th>
+                        <?php } ?>
                     </tr>
                     <?php if ($user->dealer_type != 2) { ?>
                         <tr>
                             <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
                             <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
                             <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
+                            <td><!-- ДЛЯ САНИ --></td>
                         </tr>
                     <?php } ?>
                     <tr>
