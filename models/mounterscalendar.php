@@ -255,6 +255,8 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 					}
 					if (!empty($val->details)) {
 						$value->details = 1;
+					} else {
+						$value->details = 0;
 					}
 				}
 				$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($value->id);
