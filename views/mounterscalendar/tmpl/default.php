@@ -279,29 +279,33 @@
                             project = element.id;
                             adress = element.project_info;
                             perimeter = element.n5;
+                            comment_calc = 0;
                             // комменты
                             if (<?php echo $dealerId; ?> == 1) {
-                                if(element.gm_chief_note == null || element.gm_chief_note == undefined || element.gm_chief_note == "null") {
+                                if(element.gm_chief_note == null || element.gm_chief_note == undefined || element.gm_chief_note == "null" || element.gm_chief_note == "") {
                                     note = "";
                                 } else {
                                     note = "Примечание НМС: "+element.gm_chief_note;
                                 }
-                                if(element.gm_calculator_note == null || element.gm_calculator_note == undefined || element.gm_calculator_note == "null") {
+                                if(element.gm_calculator_note == null || element.gm_calculator_note == undefined || element.gm_calculator_note == "null" || element.gm_calculator_note == "") {
                                     note2 = "";
                                 } else {
                                     note2 = "Примечание замерщика: "+element.gm_calculator_note;
                                 }
                             } else {
-                                if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null") {
+                                if(element.dealer_chief_note == null || element.dealer_chief_note == undefined || element.dealer_chief_note == "null" || element.dealer_chief_note == "") {
                                     note = "";
                                 } else {
                                     note = "Примечание НМС: "+element.dealer_chief_note;
                                 }
-                                if(element.dealer_calculator_note == null || element.dealer_calculator_note == undefined || element.dealer_calculator_note == "null") {
+                                if(element.dealer_calculator_note == null || element.dealer_calculator_note == undefined || element.dealer_calculator_note == "null" || element.dealer_calculator_note == "") {
                                     note2 = "";
                                 } else {
                                     note2 = "Примечание замерщика: "+element.dealer_calculator_note;
                                 }
+                            }
+                            if (element.details != null && element.details != undefined && element.details != "null" && element.details != "") {
+                                comment_calc++;
                             }
                             // статусы
                             status_proj = element.project_status;
@@ -340,7 +344,7 @@
                                 salary = 1500;
                             }
                             // рисовка таблицы
-                            TrOrders2 = '<tr class="clickabel" onclick="ReplaceToOrder('+element.id+', tm, '+element.read_by_mounter+');"><td>'+element.project_mounting_date+'</td><td>'+adress+'</td><td>'+perimeter+'</td><td>'+salary+'</td><td>'+note+'<br>'+note2+'</td><td>'+status+'</td></tr>';
+                            TrOrders2 = `<tr class="clickabel" onclick="ReplaceToOrder(${element.id}, tm, ${element.read_by_mounter});"><td>${element.project_mounting_date}</td><td>${adress}</td><td>${perimeter}</td><td>${salary}</td><td>${note}<br>${note2}${if (comment_calc != 0) {'<br>Есть примечание к потолку'}}</td><td>${status}</td></tr>`;
                             jQuery("#table-mounting").append(TrOrders2);
                         } else {
                             TrOrders2 = '<tr><td>'+element.project_mounting_date+'</td><td colspan=5>'+element.project_info+'</td></tr>';
