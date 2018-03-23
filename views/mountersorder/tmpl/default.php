@@ -61,9 +61,7 @@ if (!empty($calculation_ids)) {
                         <?php $PVH = []; $cloth = []; $rest = []; ?>
                         <?php foreach ($calculation_ids as $value) { ?>
                             <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
-                            
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
-                            м
                                 <!-- только пвх и общее-->
                                 <?php if ($value->n1 == 28) { ?>
                                     <?php
