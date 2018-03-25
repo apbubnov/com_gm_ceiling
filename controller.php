@@ -2686,7 +2686,7 @@ class Gm_ceilingController extends JControllerLegacy
 
             $filename = md5('cut_sketch' . $calc_id);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", base64_decode($data));
-            $filename = md5('calc_sketch' . $calc_id);
+            $filename = md5('calculation_sketch' . $calc_id);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".svg", base64_decode($data_og));
             if (!empty($cuts))
             {
