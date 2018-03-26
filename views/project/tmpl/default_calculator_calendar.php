@@ -207,6 +207,12 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
     #button-prev, #button-next {
         padding: 0;
     }
+    #calcs_total_border {
+        display: inline-block;
+        width: auto;
+        padding: 3px 7px;
+        border: 2px solid #414099;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
@@ -246,21 +252,19 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
                     <?php if ($this->type === "calculator" && $this->subtype === "calendar") { ?>
-                        <?php if ($this->item->project_verdict == 0) { ?>
-                            <?php if ($user->dealer_type != 2) { ?>
-                                <div class="center-left">
-                                    <a class="btn btn-primary" id="change_data">
-                                        <?php
-                                            if ($_GET['precalculation'] == 1){
-                                                echo "Заполнить данные о клиенте";
-                                            }
-                                            else {
-                                                echo "Изменить данные";
-                                            }  
-                                        ?>
-                                    </a>
-                                </div>
-                            <?php } ?>
+                        <?php if ($user->dealer_type != 2) { ?>
+                            <div class="center-left">
+                                <a class="btn btn-primary" id="change_data">
+                                    <?php
+                                        if ($_GET['precalculation'] == 1){
+                                            echo "Заполнить данные о клиенте";
+                                        }
+                                        else {
+                                            echo "Изменить данные";
+                                        }  
+                                    ?>
+                                </a>
+                            </div>
                         <?php } ?>
                         <div class="project_activation" style="display: none;">
                             <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
@@ -566,7 +570,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         <div class="tab-pane <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" id="summary" role="tabpanel">
                             <table id="table1" class="table-striped one-touch-view">
                                 <tr>
-                                    <th colspan="3" class="section_header" id="sh_ceilings">
+                                    <th colspan="4" class="section_header" id="sh_ceilings">
                                         Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i>
                                     </th>
                                 </tr>
@@ -574,7 +578,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                     foreach ($calculations as $calculation) {
                                 ?>
                                     <tr class="section_ceilings">
-                                        <td class="include_calculation" colspan="3">
+                                        <td class="include_calculation" colspan="4">
                                             <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
                                             <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
                                             <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
@@ -585,7 +589,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                     </tr>
                                     <tr class="section_ceilings">
                                         <td>S/P :</td>
-                                        <td colspan="2">
+                                        <td colspan="3">
                                             <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
                                         </td>
                                     </tr>
@@ -593,12 +597,12 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         <?php if ($calculation->discount != 0) { ?>
                                             <td>Цена / -<?php echo $calculation->discount ?>% :</td>
                                             <td id="calculation_total"> <?php echo round($calculation->calculation_total, 0); ?> р. /</td>
-                                            <td id="calculation_total_discount"> <?php echo round($calculation->calculation_total_discount , 0); ?>
+                                            <td colspan="2" id="calculation_total_discount"> <?php echo round($calculation->calculation_total_discount , 0); ?>
                                                 р.
                                             </td>
                                         <?php } else { ?>
                                             <td>Итого</td>
-                                            <td colspan="2" id="calculation_total"> <?php echo round($calculation->calculation_total, 0); ?> р.</td>
+                                            <td colspan="3" id="calculation_total"> <?php echo round($calculation->calculation_total, 0); ?> р.</td>
                                         <?php } ?>
                                     </tr>
                                 <?php
@@ -612,15 +616,15 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                     <th id="total_square">
                                         <span class = "sum"><?php echo $total_square;?></span> м<sup>2</sup> /
                                     </th>
-                                    <th id="total_perimeter">
+                                    <th colspan="2" id="total_perimeter">
                                         <span class = "sum"><?php echo $total_perimeter; ?></span> м
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th colspan="3">Транспортные расходы</th>
+                                    <th colspan="4">Транспортные расходы</th>
                                 </tr>
                                 <tr>
-                                    <td colspan="3">
+                                    <td colspan="4">
                                         <p>
                                             <input name="transport" class="radio" id ="transport" value="1" type="radio" <?php if($this->item->transport == 1 ) echo "checked"?>>
                                             <label for = "transport">Транспорт по городу</label>
@@ -679,7 +683,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 </tr>
                                 <tr>
                                     <th>Транспорт</th>
-                                    <td colspan="2" id="transport_sum">
+                                    <td colspan="3" id="transport_sum">
                                         <span class = "sum" data-selfval = <?php echo $self_sum_transport ?>><?=$client_sum_transport;?></span> р.
                                     </td>
                                     <!-- <input id="transport_suma" value='<?php //echo $client_sum_transport; ?>' type='hidden'> -->
@@ -690,7 +694,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         <th id="project_total"><span class="sum">
                                             <?php echo round($project_total, 0); ?></span> р. /
                                         </th>
-                                        <th id="project_total_discount">
+                                        <th colspan="2" id="project_total_discount">
                                             <?php
                                                 //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
                                                 $old_price = $project_total_discount;
@@ -709,7 +713,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         </th>
                                     <?php } else { ?>
                                         <th>Итого</th>
-                                        <th id="project_total" colspan="2">
+                                        <th id="project_total" colspan="3">
                                             <?php
                                                 //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
                                                 $old_price = $project_total;
@@ -730,19 +734,19 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 </tr>
                                 <?php if ($user->dealer_type != 2) { ?>
                                     <tr>
-                                        <td id="calcs_self_canvases_total"><?php echo round($self_canvases_sum, 0) ?></td>
-                                        <td id="calcs_self_components_total" data-oldval = <?php echo round($self_components_sum, 0) ?> ><?php echo round($self_components_sum, 0) ?></td>
-                                        <td id="calcs_self_mount_total"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
-                                        <td id="calcs_total"><?php echo round($project_self_total  , 0); ?></td>
+                                        <td id="calcs_self_canvases_total"><span>П </span><?php echo round($self_canvases_sum, 0) ?></td>
+                                        <td id="calcs_self_components_total" data-oldval = <?php echo round($self_components_sum, 0) ?> ><span>К </span><?php echo round($self_components_sum, 0) ?></td>
+                                        <td id="calcs_self_mount_total"><span>М </span><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
+                                        <td id="calcs_total"><div id="calcs_total_border"><?php echo round($project_self_total  , 0); ?></div></td>
                                     </tr>
                                 <?php } ?>
                                 <tr>
-                                    <th colspan="3" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                                    <th colspan="4" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                                 </tr>
                                 <?php foreach ($calculations as $calculation) { ?>
                                     <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
                                         <td><?php echo $calculation->calculation_title; ?></td>
-                                        <td colspan="2">
+                                        <td colspan="3">
                                             <?php
                                                 $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
                                                 $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
@@ -760,7 +764,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 ?>
                                 <?php if (count($calculations) > 0) { ?>
                                     <tr class="section_estimate" style="display:none;">
-                                        <td colspan="3"><b>Отправить все сметы <b></td>
+                                        <td colspan="4"><b>Отправить все сметы <b></td>
                                     </tr>
                                     <tr class="section_estimate" style="display:none;">
                                         <td>
@@ -788,19 +792,19 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                 </script>
                                             </div>
                                         </td>
-                                        <td colspan="2">
+                                        <td colspan="3">
                                             <button class="btn btn-primary" id="send_all_to_email1" type="button">Отправить</button>
                                         </td>
                                     </tr>
                                 <?php } ?>
                                 <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                                     <tr>
-                                        <th id="sh_mount" colspan="3"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                                        <th id="sh_mount" colspan="4"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
                                     </tr>
                                     <?php foreach ($calculations as $calculation) { ?>
                                         <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
                                             <td><?php echo $calculation->calculation_title; ?></td>
-                                            <td colspan="2">
+                                            <td colspan="3">
                                                 <?php 
                                                     $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";
                                                     $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
@@ -818,7 +822,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                     ?>
                                     <?php if (count($calculations) > 0) { ?>
                                         <tr class="section_mount" style="display:none;">
-                                            <td colspan="3"><b>Отправить все наряды на монтаж<b></td>
+                                            <td colspan="4"><b>Отправить все наряды на монтаж<b></td>
                                         </tr>
                                         <tr class="section_mount" style="display:none;">
                                             <td>
@@ -841,7 +845,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                     </script>
                                                 </div>
                                             </td>
-                                            <td colspan="2">
+                                            <td colspan="3">
                                                 <button class="btn btn-primary" id="send_all_to_email2" type="button">Отправить</button>
                                             </td>
                                         </tr>
@@ -850,7 +854,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 <!--------------- Общая смета для клиента -------------->
                                 <tr>
                                     <td><b>Отправить общую смету <b></td>
-                                    <td colspan="2">
+                                    <td colspan="3">
                                         <?php
                                             $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf";
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
@@ -891,7 +895,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                 </script>
                                             </div>
                                         </td>
-                                        <td colspan="2">
+                                        <td colspan="3">
                                             <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
                                         </td>
                                     </tr>
@@ -900,7 +904,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                                     <tr>
                                         <td><b>Общий наряд на монтаж <b></td>
-                                        <td colspan="2">
+                                        <td colspan="3">
                                             <?php
                                                 $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; 
                                                 if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
@@ -927,7 +931,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         ?>
                                 <div class="tab-pane <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                                     <div class="other_tabs">
-                                    <?php if($this->item->project_verdict == 0){?>
+                                    <?php if($this->item->project_status < 5 || $this->item->project_status == 22) {?>
                                         <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить расчет</a>
                                     <?php } ?>
                                         <?php if (!empty($filename)):?>
@@ -1194,7 +1198,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                         </table>
                                                     <?php } ?>
                                             </div>
-                                            <?php if($this->item->project_verdict == 0){?>
+                                            <?php if($this->item->project_status < 5 || $this->item->project_status == 22){?>
                                                 <button class="btn btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
                                             <?php } ?>
                                             <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
@@ -1237,7 +1241,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         <table id="container_calendars">
                             <tr>
                                 <td colspan="3">
-                                    <h4 class="center" id="title" style="display: none; margin-bottom: 25px;">Назначить монтажную бригаду</h4>
+                                    <h4 class="center" id="title" style="display: none; margin-bottom: 25px;">Назначить дату монтажа (дату готовности потолка)</h4>
                                 </td>
                             </tr>
                             <tr>
@@ -1298,7 +1302,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 <p style="margin-bottom: 0;"><strong>Монтажники:</strong></p>
                 <div id="mounters_names"></div>
                 <div id="projects_brigade_container"></div>
-                <p style="margin-top: 1em;"><strong>Выберите время начала монтажа:</strong></p>
+                <p style="margin-top: 1em;"><strong>Выберите время начала монтажа (время готовности потолка):</strong></p>
                 <p>
                     <select name="hours" id='hours'></select>
                 </p>
