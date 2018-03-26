@@ -438,6 +438,7 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="padding-right: 0px;">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
+							<?php echo $this->item->n28; ?>
 								<div style="display: inline-block; width: 100%;">
 									<input name="jform[n28]" id="jform_n28_3" class="radio" value="3" type="radio" <?php if ($this->item->n28 == 3) {echo "checked='checked'";} elseif ($user->dealer_id != 1 && $this->item->n28 !== 0 && $this->item->n28 !== 1 && $this->item->n28 !== 2) {echo "checked='checked'";} ?>>
 									<label for="jform_n28_3"> Без багета</label>
@@ -2390,8 +2391,6 @@
 
 		// кнопки открытия скрытых полей
 			who = <?php if ($user->dealer_id == 1) {echo 1;} else {echo 0;} ?>;
-			console.log(jQuery("input[name='jform[n28]']:radio:checked").val());
-			//precalculation = <?php// if ($_GET['precalculation']) { echo $_GET['precalculation']; } else { echo 0; } ?>;
 			if (who != 1) {
 				jQuery("#precalculation_container_hide").hide();
 				jQuery(".smeta_hide").hide();
