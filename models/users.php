@@ -429,4 +429,24 @@ class Gm_ceilingModelUsers extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
+	function add_request($id,$dealer_id){
+		try
+		{
+			$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->insert("`#__gm_ceiling_manufacturer_map_request`");
+			$query->columns("`manufacturer_id`,`dealer_id`");
+			$query->values("$id,$dealer_id");
+			$db->setQuery($query);
+			$db->execute();
+			return true;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }
