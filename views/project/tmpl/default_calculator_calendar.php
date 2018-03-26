@@ -925,7 +925,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         ?>
                                 <div class="tab-pane <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                                     <div class="other_tabs">
-                                    <?php if($this->item->project_status >= 5 && $this->item->project_status != 22) {?>
+                                    <?php if($this->item->project_status < 5 && $this->item->project_status == 22) {?>
                                         <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить расчет</a>
                                     <?php } ?>
                                         <?php if (!empty($filename)):?>
@@ -1192,7 +1192,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                         </table>
                                                     <?php } ?>
                                             </div>
-                                            <?php if($this->item->project_status >= 5 && $this->item->project_status != 22){?>
+                                            <?php if($this->item->project_status < 5 && $this->item->project_status == 22){?>
                                                 <button class="btn btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
                                             <?php } ?>
                                             <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
