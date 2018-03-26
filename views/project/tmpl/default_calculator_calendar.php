@@ -2432,6 +2432,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             jQuery("#calcs_self_components_total").data('oldval',jQuery("#calcs_self_components_total").text());
             check_min_sum(jQuery("#calcs_self_canvases_total").text());
         });
+        /*cewe*/
         function check_min_sum(canv_sum){
             let min_sum = 0;
             if(canv_sum == 0) {
