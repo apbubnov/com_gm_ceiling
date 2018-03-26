@@ -101,12 +101,10 @@
     <input name = "n5" id = "n5" value ="" type ="hidden">
     <input name = "n9" id = "n9" value ="" type ="hidden">
 	<input name = "triangulator_pro" id = "triangulator_pro" value = <?php echo $triangulator_pro?> type = "hidden">
+	<input type="hidden" name="walls" id="input_walls">
+	<input type="hidden" name="calc_id" id="calc_id">
+	<input type="hidden" name="proj_id" id="proj_id">
 </form>
-<form action="/sketch/cut_redactor_2/index.php" id="data_form" method="POST" style="display : none;">
-        <input type="hidden" name="walls" id="input_walls">
-        <input type="hidden" name="calc_id" id="calc_id">
-        <input type="hidden" name="proj_id" id="proj_id">
-    </form>
 <?php
 	if($type === "calculator" || $type === "gmcalculator" || $type === "gmmanager" || $type === "manager" )
 	{
@@ -3705,10 +3703,27 @@
                     from_db:0  
                 },
                 success: function (data) {
-					jQuery("#form_url").attr('action','sketch/cut_redactor_2/index.php')
-                    jQuery("#input_walls").val(data);
+					jQuery("#form_url").attr('action','sketch/cut_redactor_2/index.php');
+					if(<?php echo $calc_id ?> == 0){
+						jQuery("#input_walls").val(<?php echo json_encode($this->item->original_sketch);?>);
+					}
+					else{
+						jQuery("#input_walls").val(data);
+					}
+                    
                     jQuery("#calc_id").val(jQuery("#jform_id").val());
                     jQuery("#proj_id").val(<?php echo $project_id; ?>);
+					document.getElementById('url').value = window.location.href.replace(/\#.*/, '');
+					document.getElementById('texture').value=document.getElementById('jform_n2').value;
+					document.getElementById('color').value=document.getElementById('jform_color').value;
+					document.getElementById('manufacturer').value=document.getElementById('jform_proizv').value;
+					document.getElementById('auto').value=document.getElementById('flag_auto').value;
+					document.getElementById('n4').value=document.getElementById('jform_n4').value;
+					document.getElementById('n5').value=document.getElementById('jform_n5').value;
+					document.getElementById('n9').value=document.getElementById('jform_n9').value;
+					<?php if(!$new || $type === "gmcalculator" || $type === "calculator"||$type === "gmmanager"  ) { ?>
+						document.getElementById('calc_title').value=document.getElementById('jform_calculation_title').value;
+					<?php } ?>
                     jQuery("#form_url").submit();
 
                 },
