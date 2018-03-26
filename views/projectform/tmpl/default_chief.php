@@ -82,7 +82,7 @@
         $month2++;
         $year2 = $year1;
     }
-    if ($user->dealer_id == 1) {
+    if ($user->dealer_id != 1) {
         $dealer_for_calendar = $userId;
     } else {
         $dealer_for_calendar = $user->dealer_id;
