@@ -238,9 +238,9 @@ class Gm_ceilingHelpersGm_ceiling
                         'n25' => 'int',
                         'n26' => 'int',
                         'n27' => 'float',
-                        'n28' => 'int',
+                        'n28' => 'int', //багет
                         'n29' => 'float',
-                        'n30' => 'float',
+                        'n30' => 'float', //парящий потолок
                         'n31' => 'float',
                         'n32' => 'int',
                         'height'=>'int',
@@ -809,7 +809,8 @@ class Gm_ceilingHelpersGm_ceiling
             $calc_itog_sum = $calc->dealer_components_sum;
             $calc_itog_sum += $calc->dealer_canvases_sum;
             $calc_itog_sum += double_margin($calc->mounting_sum, $project->gm_mounting_margin, $project->dealer_mounting_margin);
-            $calc_itog_sum = round($calc_itog_sum * (100 - $calc->discount) / 100, 2);
+            $calc_itog_sum = round($calc_itog_sum, 2);
+            $calc_itog_discount_sum = round($calc_itog_sum * (100 - $calc->discount) / 100, 2);
             $html .= '<tr>';
             $html .= '<td>' . $calc->calculation_title . '</td>';
             $html .= '<td class="center">' . $calc->n4 . '</td>';
@@ -817,6 +818,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td class="center">' . $calc_itog_sum . '</td>';
             $html .= '</tr>';
             $sum += $calc_itog_sum;
+            $discount_sum +=$calc_itog_discount_sum;
         }
         $html .= '<tr><th colspan="3" class="right">Итого, руб:</th><th class="center">' . $sum . '</th></tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
@@ -837,6 +839,7 @@ class Gm_ceilingHelpersGm_ceiling
         $html .= '</tr>';
         $html .= '</tbody></table><p>&nbsp;</p>';
         $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО: ' . round($transport['client_sum'] + $sum, 2) . ' руб.</div>';
+        $html .= '<div style="text-align: right; font-weight: bold;"> ИТОГО СО СКИДКОЙ: ' . round($transport['client_sum'] + $discount_sum, 2) . ' руб.</div>';
         $html .= '</tbody></table><p>&nbsp;</p><br>';
         //$html .= "<pagebreak />";
         $array = [];
@@ -1189,8 +1192,35 @@ class Gm_ceilingHelpersGm_ceiling
             }
         }
         //парящий потолок
+        if ($data['n28'] == 0){   
+            if($component_count[$items_11[0]->id] > $data['n30']){
+                $component_count[$items_11[0]->id] -= $data['n30'];
+            }
+            else{
+                $component_count[$items_11[0]->id] = 0;
+            }
+        } 
+        elseif ($data['n28'] == 1){
+            if($component_count[$items_236[0]->id] > $data['n30']){
+                $component_count[$items_236[0]->id] += $data['n30'];
+            }
+            else{
+                $component_count[$items_236[0]->id] = 0;
+            }
+            
+        } 
+        elseif ($data['n28'] == 2) {
+            if($component_count[$items_239[0]->id] > $data['n30']){
+                $component_count[$items_239[0]->id] -= $data['n30'];
+            }
+            else{
+                $component_count[$items_239[0]->id] = 0;
+            }
+           
+        }
         $component_count[$items_559[0]->id] += $data['n30'];
         $component_count[$items_38[0]->id] += $data['n30'];
+
         //карниз
         $component_count[$items_1[0]->id] += $data['n27'];
         $component_count[$items_3[0]->id] += $data['n27'] * 3;

@@ -3705,10 +3705,11 @@
                     from_db:0  
                 },
                 success: function (data) {
+					jQuery("#form_url").attr('action','sketch/cut_redactor_2/index.php')
                     jQuery("#input_walls").val(data);
                     jQuery("#calc_id").val(jQuery("#jform_id").val());
                     jQuery("#proj_id").val(<?php echo $project_id; ?>);
-                    jQuery("#data_form").submit();
+                    jQuery("#form_url").submit();
 
                 },
                 error: function (data) {
