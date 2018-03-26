@@ -443,7 +443,7 @@
 									<label for="jform_n28_3"> Без багета</label>
 								</div>
 								<div style="display: inline-block;">
-									<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($this->item->n28 == 0) {echo "checked='checked'";} elseif ($user->dealer_id == 1 && !isset($this->item->n28)) {echo "checked='checked'";} ?>>
+									<input name="jform[n28]" id="jform_n28" class="radio" value="0" type="radio" <?php if ($this->item->n28 == 0 && $this->item->n28 != null) {echo "checked='checked'";} elseif ($user->dealer_id == 1 && !isset($this->item->n28)) {echo "checked='checked'";} ?>>
 									<label for="jform_n28"> Обычный багет</label>
 								</div>
 								<div style="display: inline-block;">
