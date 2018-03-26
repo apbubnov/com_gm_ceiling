@@ -246,21 +246,19 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         <div class="row">
             <div class="col-xs-12 col-md-6 no_padding">
                     <?php if ($this->type === "calculator" && $this->subtype === "calendar") { ?>
-                        <?php if ($this->item->project_verdict == 0) { ?>
-                            <?php if ($user->dealer_type != 2) { ?>
-                                <div class="center-left">
-                                    <a class="btn btn-primary" id="change_data">
-                                        <?php
-                                            if ($_GET['precalculation'] == 1){
-                                                echo "Заполнить данные о клиенте";
-                                            }
-                                            else {
-                                                echo "Изменить данные";
-                                            }  
-                                        ?>
-                                    </a>
-                                </div>
-                            <?php } ?>
+                        <?php if ($user->dealer_type != 2) { ?>
+                            <div class="center-left">
+                                <a class="btn btn-primary" id="change_data">
+                                    <?php
+                                        if ($_GET['precalculation'] == 1){
+                                            echo "Заполнить данные о клиенте";
+                                        }
+                                        else {
+                                            echo "Изменить данные";
+                                        }  
+                                    ?>
+                                </a>
+                            </div>
                         <?php } ?>
                         <div class="project_activation" style="display: none;">
                             <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
