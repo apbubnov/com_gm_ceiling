@@ -21,7 +21,7 @@ $user_group = $user->groups;
     <table class="table table-striped one-touch-view" id="manufacturers">
         <tbody>
             <?php foreach($this->item as $item){?>
-                <tr data-connected = <?php echo $item->connect ?>>
+                <tr data-connected = <?php echo (isset($item->connect) ? $item->connect : 0) ?> data-id = <?php echo $item->id;?> >
                     <td>
                         <?php echo $item->name;?>
                     </td>
@@ -59,11 +59,72 @@ $user_group = $user->groups;
             if(jQuery(this).data('connected')==0 || jQuery(this).data('connected') == ''){
                 jQuery("#close").show();
                 jQuery("#mv_container").show();
-                jQuery("#modal_window_not_connected").show(); 
+                jQuery("#modal_window_not_connected").show();
+                jQuery("#send").attr("data-manufacturer",jQuery(this).data('id'));
             }
         });
     });
     jQuery("#send").click(function(){
-        alert("send");
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=big_smeta.add_request",
+            data:{
+                id: jQuery(this).data('manufacturer'),
+                dealer_id: <?php echo $userId;?>
+            },
+            async: true,
+            success: function(data){
+                send_email();
+            },
+            dataType: "json",
+            timeout: 30000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка, пожалуйста попробуйте позже"
+                });
+            }                   
+        });
     });
+    function send_email(){
+        var email ="<?php echo $user->email;?>";
+        var subj = "Заявка от дилера";
+        var text = "<?php echo $user->name?> хочет работать с Вами.";
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=dealer.sendEmail",
+            data: {
+                email: email,
+                subj: subj,
+                text: text,
+                ajax : 1
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Заявка отправлена!"
+                });
+
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
+    }
 </script>
