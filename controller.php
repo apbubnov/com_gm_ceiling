@@ -2657,6 +2657,7 @@ class Gm_ceilingController extends JControllerLegacy
         try {
             $jinput = JFactory::getApplication()->input;
             $data = $jinput->get('image', '0', 'string');
+            $data_og = $jinput->get('og_image', '0', 'string');
             $arr_points = $jinput->get('koordinats_poloten', '', 'array');
             $calc_id = $jinput->get('calc_id', '', 'INT');
             $width = $jinput->get('width', '', 'INT');
@@ -2679,15 +2680,14 @@ class Gm_ceilingController extends JControllerLegacy
                 $str .= "Полотно" . ($i + 1) . ": " . $points_polonta . "; ";
             }
             $str.='||'.$p_usadki;
-           /*  list($type, $data) = explode(';', $data);
-            list(, $data) = explode(',', $data);
-            $data = base64_decode($data); */
 
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $result = $calc_model->update_cut_data($calc_id, $str, $width);
 
             $filename = md5('cut_sketch' . $calc_id);
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", base64_decode($data));
+            $filename = md5('calculation_sketch' . $calc_id);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/calculation_images/' . $filename . ".svg", base64_decode($data_og));
             if (!empty($cuts))
             {
                 $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases', 'Gm_ceilingModel');

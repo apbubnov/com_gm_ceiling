@@ -281,8 +281,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                             <input name = "new_project_calculation_daypart" id = "new_project_calculation_daypart" type = "hidden">
                             <input name = "project_gauger" id = "project_gauger" type = "hidden">
                             <input name = "activate_by_email" id = "activate_by_email" type = "hidden" value = 0>
-                            <input name = "self_transport" id = "self_transport" type = "hidden" value = "<?php echo $self_sum_transport;?>">
-                            <input name = "self_components" id = "self_components" type = "hidden" value = "<?php echo $self_components_sum;?>">
+                            <!-- <input name = "self_transport" id = "self_transport" type = "hidden" value = "<?php //echo $self_sum_transport;?>">
+                            <input name = "self_components" id = "self_components" type = "hidden" value = "<?php //echo $self_components_sum;?>"> -->
                         </div>
                         <?php if ($user->dealer_type != 2) { ?>
                             <div>
@@ -680,9 +680,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 <tr>
                                     <th>Транспорт</th>
                                     <td colspan="2" id="transport_sum">
-                                        <span class = "sum"><?=$client_sum_transport;?></span> р.
+                                        <span class = "sum" data-selfval = <?php echo $self_sum_transport ?>><?=$client_sum_transport;?></span> р.
                                     </td>
-                                    <input id="transport_suma" value='<?php echo $client_sum_transport; ?>' type='hidden'>
+                                    <!-- <input id="transport_suma" value='<?php //echo $client_sum_transport; ?>' type='hidden'> -->
                                 </tr>
                                 <tr>
                                     <?php if ($kol > 0) { ?>
@@ -731,7 +731,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 <?php if ($user->dealer_type != 2) { ?>
                                     <tr>
                                         <td id="calcs_self_canvases_total"><?php echo round($self_canvases_sum, 0) ?></td>
-                                        <td id="calcs_self_components_total"><?php echo round($self_components_sum, 0) ?></td>
+                                        <td id="calcs_self_components_total" data-oldval = <?php echo round($self_components_sum, 0) ?> ><?php echo round($self_components_sum, 0) ?></td>
                                         <td id="calcs_self_mount_total"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
                                         <td id="calcs_total"><?php echo round($project_self_total  , 0); ?></td>
                                     </tr>
@@ -2141,7 +2141,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             });
 
             jQuery("input[name^='smeta']").change(function () {
-                let old_self_comp = jQuery("#self_components").val();
+                let old_self_comp = jQuery("#calcs_self_components_total").data('oldval');
                 let self_component = jQuery("#calcs_self_components_total").text();
                 let calcs_total = jQuery("#calcs_total").text();
                 if(jQuery(this).prop("checked") == true){
@@ -2400,27 +2400,73 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             let old_n5 = jQuery("#total_perimeter span.sum").text();
             if(jQuery(this).prop("checked") == true){
                jQuery("#calcs_self_canvases_total").text(parseInt(old_canv) + parseInt(canv_data));
-               jQuery("#calcs_self_components_total").text(parseInt(old_comp) + parseInt(comp_data));
+               if(jQuery("input[name='smeta']").val()!=1){
+                   jQuery("#calcs_self_components_total").text(parseInt(old_comp) + parseInt(comp_data));
+               }
                jQuery("#calcs_self_mount_total").text(parseInt(old_mount) + parseInt(mount_data));
                jQuery("#calcs_total").text(parseInt(old_all) + parseInt(canv_data) +  parseInt(comp_data) + parseInt(mount_data));
                jQuery("#project_total span.sum").text(parseInt(old_total)+ parseInt(calc_sum));
                jQuery("#project_total_discount span.sum").text(parseInt(old_total_discount)+ parseInt(calc_sum_discount));
                jQuery("#total_square span.sum").text(parseFloat(old_n4) + parseFloat(n4));
                jQuery("#total_perimeter span.sum").text(parseFloat(old_n5) + parseFloat(n5));
-               jQuery("#self_components").val( jQuery("#calcs_self_components_total").text());
+              
             }
             else{
                 jQuery("#calcs_self_canvases_total").text(old_canv-canv_data);
-                jQuery("#calcs_self_components_total").text(old_comp-comp_data);
+                if(jQuery("input[name='smeta']").val()!=1){
+                    jQuery("#calcs_self_components_total").text(old_comp-comp_data);
+                }
                 jQuery("#calcs_self_mount_total").text(old_mount-mount_data);
                 jQuery("#calcs_total").text(old_all - canv_data - comp_data - mount_data);
                 jQuery("#project_total span.sum").text(old_total - calc_sum);
                 jQuery("#project_total_discount span.sum").text(old_total_discount - calc_sum_discount);
                 jQuery("#total_square span.sum").text(old_n4 - n4);
                 jQuery("#total_perimeter span.sum").text(old_n5 - n5);
-                jQuery("#self_components").val(jQuery("#calcs_self_components_total").text());
+                let more_one = check_selected();
+                if(!more_one){
+                    jQuery("#project_total_discount span.sum").text(jQuery("#transport_sum span.sum").text());
+                }
+                
             }
+            
+            jQuery("#calcs_self_components_total").data('oldval',jQuery("#calcs_self_components_total").text());
+            check_min_sum(jQuery("#calcs_self_canvases_total").text());
         });
+        function check_min_sum(canv_sum){
+            let min_sum = 0;
+            if(canv_sum == 0) {
+                if(min_components_sum>0){
+                    min_sum = min_components_sum;
+                }
+            }
+            else{
+                if(min_project_sum>0){
+                    min_sum = min_project_sum;
+                }
+            }            
+            let project_total = jQuery("#project_total span.sum").text();
+            if(jQuery("#project_total_discount span.dop").length == 0){
+                jQuery("#project_total_discount").append('<span class = \"dop\" style = \"font-size: 9px\";></span>');
+            }
+            if(project_total < min_sum){
+                jQuery("#project_total_discount span.dop").html(` * минимальная сумма заказа ${min_sum} р.`);
+                jQuery("#project_total_discount span.sum").text(min_sum);
+
+            }
+            else{
+                jQuery("#project_total_discount span.dop").html(" ");
+            }
+            jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
+        }
+        function check_selected(){
+            let result = false;
+            jQuery("[name = 'include_calculation[]']").each(function(){
+                if(jQuery(this).prop("checked") == true ){
+                    result = true;
+                }
+            });
+            return result;
+        }
         jQuery("#send_all_to_email1").click(function () {
 
             var email = jQuery("#all-email1").val();
@@ -2650,7 +2696,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             let old_transport = jQuery("#transport_sum span.sum").text();
             let new_transport = sum.client_sum;
             let new_self_transport = sum.mounter_sum;
-            let old_self_transport = jQuery("#self_transport").val();
+            let old_self_transport = jQuery("#transport_sum span.sum").data('selfval');
             jQuery("#project_sum_transport").val(new_transport);
             jQuery("#transport_sum span.sum").text(new_transport);
             let old_self_mount = jQuery("#calcs_self_mount_total").text();
@@ -2661,9 +2707,10 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             jQuery("#project_total_discount span.sum").text(old_total_discount - old_transport + new_transport);
             jQuery("#calcs_self_mount_total").text(old_self_mount - old_self_transport + new_self_transport);
             jQuery("#calcs_total").text(old_self_total - old_self_transport + new_self_transport);
-            jQuery("#self_transport").val(new_self_transport);
-
+            jQuery("#transport_sum span.sum").data('selfval',new_self_transport);
+            jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
         }
+       
         function update_transport(id,transport,distance,distance_col){
             jQuery.ajax({
                 type: 'POST',

@@ -316,7 +316,7 @@
 				<div class="col-sm-4"></div>
 			</div>
 		</div>
-		<!-- <div class="container">
+		<div class="container">
 			<div class="row sm-margin-bottom">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4 ">
@@ -324,7 +324,7 @@
 				</div>
 				<div class="col-sm-4"></div>
 			</div>
-		</div> -->
+		</div>
 		<!-- S,P,углы -->
 		<div class="container">
 			<div id="data-wrapper">
