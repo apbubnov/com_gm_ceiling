@@ -3704,10 +3704,12 @@
                 },
                 success: function (data) {
 					jQuery("#form_url").attr('action','sketch/cut_redactor_2/index.php');
-					if(<?php echo $calc_id ?> == 0){
-						jQuery("#input_walls").val(<?php echo json_encode($this->item->original_sketch);?>);
+					if(<?php echo $calc_id ?> != 0){
+						jQuery("#input_walls").val("<?php echo $this->item->original_sketch?>");
+						jQuery("#walls").val("<?php echo $this->item->original_sketch?>");
 					}
 					else{
+						
 						jQuery("#input_walls").val(data);
 					}
                     
