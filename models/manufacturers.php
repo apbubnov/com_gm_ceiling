@@ -19,9 +19,14 @@ class Gm_ceilingModelManufacturers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-
+			$subquery = $db->getQuery(true);
+			$subquery
+				->select('count(*)')
+				->from("#__gm_ceiling_manufacturer_map_request as mp")
+				->where("mp.manufacturer_id = u.id");
             $query
-                ->select('u.id,u.name,i.text,i.connect,i.request_count')
+				->select('u.id,u.name,i.text,i.connect,i.request_count')
+				->select("($subquery) as request_count")
                 ->from('`#__users` AS `u`')
                 ->leftJoin('#__gm_ceiling_manufacturer_info as i on u.id = i.manufacturer_id')
                 ->where('u.dealer_type = 6');

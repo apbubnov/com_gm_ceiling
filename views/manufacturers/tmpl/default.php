@@ -13,6 +13,10 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 $user_group = $user->groups;
 
+$show_request_count = false;
+if($user->dealer_id == 1){
+    $show_request_count = true;
+}
 
 ?>
 
@@ -31,6 +35,11 @@ $user_group = $user->groups;
                     <td>
                         <!-- Здесь будет выводится счет по этому производителю -->
                     </td>
+                    <?php if($show_request_count){?>
+                    <td>
+                        <?php echo $item->request_count;?>
+                    </td>
+                    <?php }?>
                 </tr>
             <?php }?>
         </tbody>
