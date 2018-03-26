@@ -1237,7 +1237,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         <table id="container_calendars">
                             <tr>
                                 <td colspan="3">
-                                    <h4 class="center" id="title" style="display: none; margin-bottom: 25px;">Назначить монтажную бригаду</h4>
+                                    <h4 class="center" id="title" style="display: none; margin-bottom: 25px;">Назначить дату монтажа (дату готовности потолка)</h4>
                                 </td>
                             </tr>
                             <tr>
@@ -1298,7 +1298,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 <p style="margin-bottom: 0;"><strong>Монтажники:</strong></p>
                 <div id="mounters_names"></div>
                 <div id="projects_brigade_container"></div>
-                <p style="margin-top: 1em;"><strong>Выберите время начала монтажа:</strong></p>
+                <p style="margin-top: 1em;"><strong>Выберите время начала монтажа (время готовности потолка):</strong></p>
                 <p>
                     <select name="hours" id='hours'></select>
                 </p>
