@@ -207,6 +207,12 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
     #button-prev, #button-next {
         padding: 0;
     }
+    #calcs_total_border {
+        display: inline-block;
+        width: auto;
+        padding: 3px 7px;
+        border: 2px solid #414099;
+    }
     @media screen and (min-width: 768px) {
         .center-left {
             text-align: left;
@@ -728,10 +734,10 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 </tr>
                                 <?php if ($user->dealer_type != 2) { ?>
                                     <tr>
-                                        <td id="calcs_self_canvases_total"><?php echo round($self_canvases_sum, 0) ?></td>
-                                        <td id="calcs_self_components_total" data-oldval = <?php echo round($self_components_sum, 0) ?> ><?php echo round($self_components_sum, 0) ?></td>
-                                        <td id="calcs_self_mount_total"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
-                                        <td id="calcs_total"><?php echo round($project_self_total  , 0); ?></td>
+                                        <td id="calcs_self_canvases_total"><span>П </span><?php echo round($self_canvases_sum, 0) ?></td>
+                                        <td id="calcs_self_components_total" data-oldval = <?php echo round($self_components_sum, 0) ?> ><span>К </span><?php echo round($self_components_sum, 0) ?></td>
+                                        <td id="calcs_self_mount_total"><span>М </span><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></td>
+                                        <td id="calcs_total"><div id="calcs_total_border"><?php echo round($project_self_total  , 0); ?></div></td>
                                     </tr>
                                 <?php } ?>
                                 <tr>
