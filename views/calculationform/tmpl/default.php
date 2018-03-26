@@ -438,7 +438,6 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="padding-right: 0px;">
 							<div class="form-group" style="text-align: left; margin-left: calc(50% - 81px);">
-							<?php echo $this->item->n28; ?>
 								<div style="display: inline-block; width: 100%;">
 									<input name="jform[n28]" id="jform_n28_3" class="radio" value="3" type="radio" <?php if ($this->item->n28 == 3) {echo "checked='checked'";} elseif ($user->dealer_id != 1 && !isset($this->item->n28)) {echo "checked='checked'";} ?>>
 									<label for="jform_n28_3"> Без багета</label>
