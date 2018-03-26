@@ -90,7 +90,7 @@
     if ($this->item->project_status == 1) {
         $whatCalendar = 0;
         $FlagCalendar = [3, $dealer_for_calendar];
-    } elseif ($this->item->project_status != 11 || $this->item->project_status != 12 || $this->item->project_status == 17) {
+    } elseif ($this->item->project_status != 11 && $this->item->project_status != 12) {
         $whatCalendar = 1;
         if ($user->dealer_type == 1 && $user->dealer_mounters == 1) {
             $dealer_for_calendar = 1;
