@@ -2835,7 +2835,69 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+    public function sendCommercialQuickWay(){
+        try
+        {
+            $user = JFactory::getUser();
+            $jinput = JFactory::getApplication()->input;
+            $user_id = $jinput->get('user_id', null, 'INT');
+            $email = $jinput->get('email', null, 'STRING');
+            if (empty($email))
+            {
+                die(json_encode(false));
+            }
+            $code = md5($user_id.'commercial_offer');
+            $code_instruction = md5($user_id.'dealer_instruction');
+            $server_name = $_SERVER['SERVER_NAME'];
+            $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
+            $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code_instruction";
+            $site3 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerRequest&id=$user_id";
+            // письмо
+            $mailer = JFactory::getMailer();
+            $config = JFactory::getConfig();
+            $sender = array(
+                $config->get('mailfrom'),
+                $config->get('fromname')
+            );
+            $mailer->setSender($sender);
+            $mailer->addRecipient($email);
+            $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
+            $body .= '<body style="margin: 10px;">';
+            $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
+            $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
+            $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
+            $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
+            $body .= '<p>Тел.: +7(473)212-34-01</p>';
+            $body .= '<p>Почта: gm-partner@mail.ru</p>';
+            $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
+            $body .= '</div></td></tr></table>';
+            $body .= "<div style=\"width: 100%\"> Быстрый способ заказа натяжных потолков по 60 р/м<sup>2</sup><br> 
+                        <a href=\"$site2\"><img src=\"http://".$server_name."/images/video.jpg\"></a><br>
+                        При заказе через приложение мат MSD Classic до 3.20м по 60р/м<sup>2</sup>.<br>";
+            $body .= "<a href=\"$site3.&type=info\"><img src=\"http://".$server_name."/images/btn_moreinfo.jpg\"></a>
+            <a href=\"$site3.&type=access\"><img src=\"http://".$server_name."/images/btn_getaccess.jpg\"></a></div></body>";
+            $mailer->setSubject('Быстрый способ заказа натяжных потолков по 60 р/м2');
+            $mailer->isHtml(true);
+            $mailer->Encoding = 'base64';
+            $mailer->setBody($body);
+            $send = $mailer->Send();
+            
+            $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $result = $users_model->addDealerInstructionCode($user_id, $code_instruction, $user->id);
+            $result = $users_model->addCommercialOfferCode($user_id, $code, $user->id);
 
+            $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+            $client_id = JFactory::getUser($user_id)->associated_client;
+            $email_id = $dop_contacts_model->save($client_id, 1, $email);
+
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
     public function RepeatSendCommercialOffer(){
         try
         {

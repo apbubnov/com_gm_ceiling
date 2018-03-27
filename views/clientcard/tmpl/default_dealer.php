@@ -77,6 +77,11 @@ foreach ($dealer_history as $key => $item) {
     </tr>
     <tr>
         <td class = "td-left">
+            <button class="btn btn-primary" type="button" id="send_quick_way">Быстрый способ</button>
+        </td>
+    </tr>
+    <tr>
+        <td class = "td-left">
             <button class="btn btn-primary" type="button" id="but_login">Предоставить доступ</button>
         </td>
         <td class = "td-right">
@@ -280,7 +285,7 @@ foreach ($dealer_history as $key => $item) {
         <? } ?>
         <h6 style = "margin-top:10px">Введите почту</h6>
         <p><input type="text" id="email_comm" placeholder="Почта" required></p>
-        <p><button type="button" id="send_comm" class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
+        <p><button type="button" id="send_comm" data-quick = 0 class="btn btn-primary">Отправить</button>  <button type="button" id="cancel2" class="btn btn-primary">Отмена</button></p>
     </div>
     <div id="modal_window_login" class="modal_window">
         <? if (!empty($dop_contacts)) { ?>
@@ -807,9 +812,13 @@ foreach ($dealer_history as $key => $item) {
         jQuery('#new_phone').mask('+7(999) 999-9999');
 
         jQuery("#send_comm").click(function(){
+            let url = "index.php?option=com_gm_ceiling&task=sendCommercialOffer";
+            if(jQuery(this).data('quick') == 1){
+                url = "index.php?option=com_gm_ceiling&task=sendCommercialQuickWay"
+            }
             var user_id = <?php echo $client->dealer_id; ?>;
             jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=sendCommercialOffer",
+                url: url,
                 data: {
                     user_id: user_id,
                     email: jQuery("#email_comm").val(),
@@ -843,7 +852,12 @@ foreach ($dealer_history as $key => $item) {
                 }
             });
         });
-        
+        jQuery("#send_quick_way").click(function(){
+            jQuery("#send_comm").attr('data-quick',1);
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_comm").show("slow");
+            jQuery("#close").show();
+        });
         jQuery("#btn_made_mnfct").click(function(){
             var user_id = <?php echo $client->dealer_id; ?>;
             jQuery.ajax({

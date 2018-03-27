@@ -338,4 +338,27 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+    function dealerRequest(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', null, 'INT');
+            $type = $jinput->get('type', null, 'INT');
+            $user = JFactory::getUser($id);
+            $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            if($type = "info"){
+                $callback_model->save(date('Y-m-d H:i:s'),"Дилер $user->name хочет узнать подробнее о быстром способе",$user->associated_client,1);
+            }
+            if($type = "access"){
+                $callback_model->save(date('Y-m-d H:i:s'),"Дилер $user->name хочет получить доступ к приложению, для быстрого заказа",$user->associated_client,1);
+            }
+                $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=info&type=thanks', false));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }
