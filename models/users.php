@@ -209,7 +209,7 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
-	function acceptDealerInstructionCode($code)
+	function acceptDealerInstructionCode($code,$short = null)
 	{
 		try
 		{
@@ -238,8 +238,15 @@ class Gm_ceilingModelUsers extends JModelList
 				}
 				
 				$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-				$callback_model->save(date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'+2 hours')),'Просмотрена инструкция по использованию программы',
+				if(!empty($short)){
+					$callback_model->save(date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'+2 hours')),'Просмотрено видео Быстрый заказ',
 					$client_id,$manager_id);
+				}
+				else{
+					$callback_model->save(date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'+2 hours')),'Просмотрена инструкция по использованию программы',
+					$client_id,$manager_id);
+				}
+				
 
 				$query = $db->getQuery(true);
 				$query->update('`#__users_dealer_instruction`');

@@ -292,8 +292,16 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             $code = $jinput->get('code', null, 'STRING');
             $short = $jinput->get('short', null, 'STRING');
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-            $result  = $users_model->acceptDealerInstructionCode($code);
-            ($short) ? $this->setRedirect('https://youtu.be/4NuudvjMLug') : $this->setRedirect('https://youtu.be/SliL0bmgTug');
+            $result  = $users_model->acceptDealerInstructionCode($code,$short);
+            if($short == 1){
+                $this->setRedirect('https://youtu.be/4NuudvjMLug');
+            }
+            if($short == 0){
+                $this->setRedirect('https://youtu.be/SliL0bmgTug');
+            }
+            if($short == 2){
+                $this->setRedirect('https://youtu.be/pRLvFBiZuDg');
+            }
             
         }
         catch(Exception $e)
@@ -342,13 +350,14 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
         try{
             $jinput = JFactory::getApplication()->input;
             $id = $jinput->get('id', null, 'INT');
-            $type = $jinput->get('type', null, 'INT');
+            $type = $jinput->get('type', null, 'STRING');
             $user = JFactory::getUser($id);
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-            if($type = "info"){
-                $callback_model->save(date('Y-m-d H:i:s'),"Дилер $user->name хочет узнать подробнее о быстром способе",$user->associated_client,1);
+           
+            if($type == "info"){
+                $callback_model->save(date('Y-m-d H:i:s'),"Дилер $user->name хочет узнать подробнее о быстром заказе",$user->associated_client,1);
             }
-            if($type = "access"){
+            if($type == "access"){
                 $callback_model->save(date('Y-m-d H:i:s'),"Дилер $user->name хочет получить доступ к приложению, для быстрого заказа",$user->associated_client,1);
             }
                 $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=info&type=thanks', false));

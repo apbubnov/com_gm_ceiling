@@ -77,7 +77,7 @@ foreach ($dealer_history as $key => $item) {
     </tr>
     <tr>
         <td class = "td-left">
-            <button class="btn btn-primary" type="button" id="send_quick_way">Быстрый способ</button>
+            <button class="btn btn-primary" type="button" id="send_quick_way"> КП Быстрый заказ</button>
         </td>
     </tr>
     <tr>

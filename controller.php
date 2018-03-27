@@ -2850,7 +2850,7 @@ class Gm_ceilingController extends JControllerLegacy
             $code_instruction = md5($user_id.'dealer_instruction');
             $server_name = $_SERVER['SERVER_NAME'];
             $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
-            $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code_instruction";
+            $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=2&code=$code_instruction";
             $site3 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerRequest&id=$user_id";
             // письмо
             $mailer = JFactory::getMailer();
@@ -2874,8 +2874,8 @@ class Gm_ceilingController extends JControllerLegacy
             $body .= "<div style=\"width: 100%\"> Быстрый способ заказа натяжных потолков по 60 р/м<sup>2</sup><br> 
                         <a href=\"$site2\"><img src=\"http://".$server_name."/images/video.jpg\"></a><br>
                         При заказе через приложение мат MSD Classic до 3.20м по 60р/м<sup>2</sup>.<br>";
-            $body .= "<a href=\"$site3.&type=info\"><img src=\"http://".$server_name."/images/btn_moreinfo.jpg\"></a>
-            <a href=\"$site3.&type=access\"><img src=\"http://".$server_name."/images/btn_getaccess.jpg\"></a></div></body>";
+            $body .= "<a href=\"$site3&type=info\"><img src=\"http://".$server_name."/images/btn_moreinfo.jpg\"></a>
+            <a href=\"$site3&type=access\"><img src=\"http://".$server_name."/images/btn_getaccess.jpg\"></a></div></body>";
             $mailer->setSubject('Быстрый способ заказа натяжных потолков по 60 р/м2');
             $mailer->isHtml(true);
             $mailer->Encoding = 'base64';
@@ -2889,6 +2889,7 @@ class Gm_ceilingController extends JControllerLegacy
             $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
             $client_id = JFactory::getUser($user_id)->associated_client;
             $email_id = $dop_contacts_model->save($client_id, 1, $email);
+            die(json_encode(true));
 
         }
         catch (Exception $e) {
