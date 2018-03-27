@@ -266,12 +266,29 @@ class Gm_ceilingModelDealer_info extends JModelList
 	function update_city($id,$city){
 		try{
 			$db = JFactory::getDbo();
-	        $query = $db->getQuery(true);
-            $query->update('`#__gm_ceiling_dealer_info`')
-				->set('`city` = ' . $db->quote($city))
+			$query = $db->getQuery(true);
+			$query
+				->select("*")
+				->from('`#__gm_ceiling_dealer_info`')
 				->where('dealer_id = ' . $id);
-            $db->setQuery($query);
-			$db->execute();
+			$db->setQuery($query);
+			$result = $db->loadObjectList();
+			if(count($result) == 0){
+				$query->insert('`#__gm_ceiling_dealer_info`')
+					->columns('`dealer_id`,`city`')
+					->values("$id,'$city'");
+				$db->setQuery($query);
+				$db->execute();
+			}
+			if(count($result) == 1){
+				$query->update('`#__gm_ceiling_dealer_info`')
+					->set('`city` = ' . $db->quote($city))
+					->where('dealer_id = ' . $id);
+				$db->setQuery($query);
+				$db->execute();
+			}
+			
+            
 		}
 		catch(Exception $e)
         {
