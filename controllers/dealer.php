@@ -241,4 +241,23 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
 	}
+	function change_city(){
+		try
+        {
+			$app = JFactory::getApplication();
+            $jinput = $app->input;
+			$dealer_id = $jinput->get('dealer_id', null, 'STRING');
+			$city =  $jinput->get('city', null, 'STRING');
+			$dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+			$dealer_info_model->update_city($dealer_id,$city);
+			die(json_encode(true));
+		}
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }

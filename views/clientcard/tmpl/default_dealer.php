@@ -99,6 +99,9 @@ foreach ($dealer_history as $key => $item) {
         <td class = "td-left">
             <button class="btn btn-primary" type="button" id="btn_made_mnfct">Это производитель</button>
         </td>
+        <td class = "td-right">
+            <button class="btn btn-primary" type="button" id="btn_city">Изменить город</button>
+        </td>
     </tr>
 </table>
 <div style="width: 98%;">
@@ -377,6 +380,12 @@ foreach ($dealer_history as $key => $item) {
         <p><textarea class="textarea-gm" rows="10" id="email_text" placeholder="Введите текст письма"></textarea></p>
         <p><button type = "button" id = "send_email" class = "btn btn-primary">Отправить</button></p>
     </div>
+    <div class = "modal_window" id="modal_window_city">
+        <p>Изменить город</p>
+        <h6 style = "margin-top:10px">Введите город</h6>
+        <p><input type="text" id="city" class="input-gm" placeholder="Город" required></p>
+        <p><button type = "button" id = "change_city" class = "btn btn-primary">Сохранить</button></p>
+    </div>
 </div>
 
 <script>
@@ -391,11 +400,12 @@ foreach ($dealer_history as $key => $item) {
         var div7 = jQuery("#modal_window_sum");
         var div8 = jQuery("#call");
         var div9 = jQuery("#modal_window_send_email");
+        var div10 = jQuery("#modal_window_city");
         if (!div.is(e.target) && !div2.is(e.target) && !div3.is(e.target) && !div4.is(e.target) 
-            && !div5.is(e.target)&& !div6.is(e.target) && !div7.is(e.target) && !div8.is(e.target) && !div9.is(e.target)
+            && !div5.is(e.target)&& !div6.is(e.target) && !div7.is(e.target) && !div8.is(e.target) && !div9.is(e.target) && !div10.is(e.target)
             && div.has(e.target).length === 0 && div2.has(e.target).length === 0 && div3.has(e.target).length === 0 && div4.has(e.target).length === 0 
             && div5.has(e.target).length === 0 &&  div6.has(e.target).length === 0&&  div7.has(e.target).length === 0 && div8.has(e.target).length === 0
-            && div9.has(e.target).length === 0) {
+            && div9.has(e.target).length === 0 && div10.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_fio").hide();
@@ -407,7 +417,7 @@ foreach ($dealer_history as $key => $item) {
             jQuery("#modal_window_sum").hide();
             jQuery("#call").hide();
             jQuery("#modal_window_send_email").hide();
-            
+            jQuery("#modal_window_city").hide();
         }
     });
     function ChangeSelectPrice() {
@@ -457,6 +467,44 @@ foreach ($dealer_history as $key => $item) {
             }
         });
 
+    });
+    jQuery("#btn_city").click(function(){
+        jQuery("#close").show();
+        jQuery("#mv_container").show();
+        jQuery("#modal_window_city").show("slow");
+    });
+    jQuery("#change_city").click(function(){
+        var dealer_id = <?php echo $this->item->dealer_id;?>;
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=dealer.change_city",
+            data: {
+                dealer_id : dealer_id,
+                city: jQuery("#city").val()
+            },
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Город изменен"
+                });
+
+            },
+            error: function (data) {
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка сервера"
+                });
+            }
+        });
     });
     jQuery("#new_send_email").click(function(){
         jQuery("#close").show();
