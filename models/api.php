@@ -51,7 +51,7 @@ class Gm_ceilingModelApi extends JModelList
                 {
                     foreach ($value as $column => $column_value)
                     {
-                        if($column!="image"&&$column!="cut_image"){
+                        if($column != "image" && $column != "cut_image"){
                             $columns .= '`'.$column.'`,';
                             $columns_values .= '\''.$column_value.'\',';
                         }
@@ -121,7 +121,37 @@ class Gm_ceilingModelApi extends JModelList
             throw new Exception('Ошибка!', 500);
         }
     }
-
+    public function register_from_android($data){
+        try{
+            $data = $data;
+            $android_id = $data->android_id;
+            $name = $data->name;
+			$phone = $data->phone;
+            $city  = $data->city;
+            $email = $data->email;
+			//Создание клиента
+			$clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
+			$client_data['client_name'] = $name;
+			$client_data['client_contacts'] = $phone;
+			$client_id = $clientform_model->save($client_data);
+			//создание user'а
+            $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, $email, $client_id);
+            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
+            $client_model->updateClient($client_id,null,$dealer_id);
+            $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
+            $dealer_info_model->update_city($dealer_id,$city);
+            return (object)array("old_id" => $android_id, "new_id" => $dealer_id);
+		    
+        }
+        catch(Exception $e)
+        {
+            return $e->getMessage();
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
     public function update_android_ids_from_android($table, $data)
     {
         try

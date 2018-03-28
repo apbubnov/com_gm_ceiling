@@ -1699,36 +1699,48 @@ class Gm_ceilingHelpersGm_ceiling
             if ($data['n1'] == 28) {
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 0) {
+                    if($data['height'] == 1){
+                        $name = "Периметр(ПВХ)(высота >3м)";
+                        $mp1 = $results->mp1 + 10;
+                        $mp31 = $results->mp31 + 10;
+                        $mp32 = $results->mp32 + 10;
+                    }
+                    else{
+                        $name = "Периметр(ПВХ)";
+                        $mp1 = $results->mp1;
+                        $mp31 = $results->mp31;
+                        $mp32 = $results->mp32;
+                    }
                     $mounting_data[] = array(
-                        "title" => "Периметр (ПВХ)",                                                                    //Название
+                        "title" => $name,                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
-                        "gm_salary" => ($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => ($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => $mp1,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n5'] * $mp1,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $mp1,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n5'] * $mp1                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 1) {
                     $mounting_data[] = array(
-                        "title" => "Периметр (ПВХ)",                                                                    //Название
+                        "title" => $name,                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
-                        "gm_salary" => ($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => ($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31)                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => $mp31,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n5'] * $mp31,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $mp31,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n5'] * $mp31                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
 
                 }
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 2) {
                     $mounting_data[] = array(
-                        "title" => "Периметр (ПВХ)",                                                                    //Название
+                        "title" => $name,                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
-                        "gm_salary" => ($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => ($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32)                                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => $mp32,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n5'] * $mp32,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $mp32,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n5'] * $mp32                                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
 
                 }
@@ -2244,13 +2256,21 @@ class Gm_ceilingHelpersGm_ceiling
             if ($data['n1'] == 29) {
                 //периметр
                 if ($data['n5'] > 0) {
+                    if($data['height'] == 1){
+                        $name = "Периметр (Ткань)(высота >3м)";
+                        $mp33 = $results->mp33 + 10;
+                    }
+                    else{
+                        $name = "Периметр (Ткань)";
+                        $mp33 = $results->mp33;
+                    }
                     $mounting_data[] = array(
                         "title" => "Периметр (Ткань)",                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
-                        "gm_salary" => ($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => ($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => $mp33,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n5'] * $mp33,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n5'] * $pm33                                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
                 if ($data['n11'] > 0) {
