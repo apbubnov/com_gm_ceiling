@@ -2918,7 +2918,7 @@ class Gm_ceilingController extends JControllerLegacy
 
 
     //вызов из урл
-    public function RepeatSendCommercialOfferQuickWay(){
+    public function RepeatSendCommercialQuickWay(){
         try
         {
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
@@ -2934,7 +2934,7 @@ class Gm_ceilingController extends JControllerLegacy
                     $emails = $dop_contacts_model->getEmailByClientID($client_id);
                     foreach ($emails as $j => $email)
                     {
-                        $this->sendCommercialOfferQuickWay($item->user_id, $email->contact);
+                        $this->sendCommercialQuickWay($item->user_id, $email->contact);
                         $count++;
                     }
                 }
