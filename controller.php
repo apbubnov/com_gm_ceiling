@@ -2839,7 +2839,7 @@ class Gm_ceilingController extends JControllerLegacy
         try
         {
             $user = JFactory::getUser();
-            if (is_null($user_id) || is_null($email) || is_null($dealer_type))
+            if (is_null($user_id) || is_null($email))
             {
                 $jinput = JFactory::getApplication()->input;
                 $user_id = $jinput->get('user_id', null, 'INT');
