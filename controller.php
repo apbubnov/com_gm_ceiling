@@ -2939,8 +2939,9 @@ class Gm_ceilingController extends JControllerLegacy
                     }
                 }
             }
-
-            die(json_encode($count));
+            echo $count;
+            exit();
+            //die(json_encode($count));
         }
         catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
