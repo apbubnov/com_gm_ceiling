@@ -2932,10 +2932,10 @@ class Gm_ceilingController extends JControllerLegacy
                 if (!empty($client_id))
                 {
                     $emails = $dop_contacts_model->getEmailByClientID($client_id);
-                    print_r($emails);
                     foreach ($emails as $j => $email)
                     {
                         $this->sendCommercialQuickWay($item->id, $email->contact);
+                        echo "$item->name $email->contact<br>";
                         $count++;
                     }
                 }
