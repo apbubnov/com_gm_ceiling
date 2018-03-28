@@ -2924,12 +2924,12 @@ class Gm_ceilingController extends JControllerLegacy
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $items = $users_model->findDealersByCity('Воронеж');
             $count = 0;
-            print_r($items);
-            exit();
+            //print_r($items);
+            //exit();
             $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
             foreach ($items as $i => $item)
             {
-                $client_id = JFactory::getUser($item->id)->associated_client;
+                $client_id = $item->associated_client;
                 $emails = $dop_contacts_model->getEmailByClientID($client_id);
                 foreach ($emails as $j => $email)
                 {
