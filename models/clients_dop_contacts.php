@@ -68,9 +68,9 @@ class Gm_ceilingModelClients_dop_contacts extends JModelList
 	        $db    = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query
-	            ->select('contact')
-	            ->from('#__gm_ceiling_clients_dop_contacts')
-	            ->where("client_id = $id AND type_id = 1");
+	            ->select('`contact`')
+	            ->from('`#__gm_ceiling_clients_dop_contacts`')
+	            ->where("`client_id` = $id AND `type_id` = 1");
 	        $db->setQuery($query);
 	        $items = $db->loadObjectList();
 	        return $items;
