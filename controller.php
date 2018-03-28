@@ -2918,7 +2918,8 @@ class Gm_ceilingController extends JControllerLegacy
 
 
     //вызов из урл
-    public function RepeatSendCommercialQuickWay(){
+    //закоменчено 28.03.2018
+    /*public function RepeatSendCommercialQuickWay(){
         try
         {
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
@@ -2950,7 +2951,7 @@ class Gm_ceilingController extends JControllerLegacy
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }
+    }*/
 
 
     public function RepeatSendCommercialOffer(){
