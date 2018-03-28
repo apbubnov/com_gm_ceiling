@@ -295,7 +295,7 @@ class Gm_ceilingModelUsers extends JModelList
 		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->select('*');
+			$query->select('`u`.*');
 			$query->from('`#__users` AS `u`');
 			$query->innerJoin('`#__gm_ceiling_dealer_info` AS `i` ON `u`.`id` = `i`.`dealer_id`');
 			$query->where("`i`.`city` = '$city'");
