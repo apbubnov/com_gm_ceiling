@@ -2835,13 +2835,22 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
-    public function sendCommercialQuickWay(){
+    public function sendCommercialQuickWay($user_id = null, $email = null){
         try
         {
             $user = JFactory::getUser();
-            $jinput = JFactory::getApplication()->input;
-            $user_id = $jinput->get('user_id', null, 'INT');
-            $email = $jinput->get('email', null, 'STRING');
+            if (is_null($user_id) || is_null($email))
+            {
+                $jinput = JFactory::getApplication()->input;
+                $user_id = $jinput->get('user_id', null, 'INT');
+                $email = $jinput->get('email', null, 'STRING');
+                $die_bool = true;
+            }
+            else
+            {
+                $die_bool = false;
+            }
+            
             if (empty($email))
             {
                 die(json_encode(false));
@@ -2889,8 +2898,15 @@ class Gm_ceilingController extends JControllerLegacy
             $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
             $client_id = JFactory::getUser($user_id)->associated_client;
             $email_id = $dop_contacts_model->save($client_id, 1, $email);
-            die(json_encode(true));
 
+            if ($die_bool)
+            {
+                die(json_encode($result));
+            }
+            else
+            {
+                return true;
+            }
         }
         catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
@@ -2899,6 +2915,45 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+
+
+    //вызов из урл
+    //закоменчено 28.03.2018
+    /*public function RepeatSendCommercialQuickWay(){
+        try
+        {
+            $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $items = $users_model->findDealersByCity('Воронеж');
+            $count = 0;
+
+            $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+            foreach ($items as $i => $item)
+            {
+                $client_id = $item->associated_client;
+                if (!empty($client_id))
+                {
+                    $emails = $dop_contacts_model->getEmailByClientID($client_id);
+                    foreach ($emails as $j => $email)
+                    {
+                        $this->sendCommercialQuickWay($item->id, $email->contact);
+                        echo "$item->name $email->contact<br>";
+                        $count++;
+                    }
+                }
+            }
+            echo $count;
+            exit();
+            //die(json_encode($count));
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }*/
+
+
     public function RepeatSendCommercialOffer(){
         try
         {
@@ -2937,6 +2992,7 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+
 
      public function sendLogin(){
         try

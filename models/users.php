@@ -289,6 +289,30 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
+	function findDealersByCity($city)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('`u`.*');
+			$query->from('`#__users` AS `u`');
+			$query->innerJoin('`#__gm_ceiling_dealer_info` AS `i` ON `u`.`id` = `i`.`dealer_id`');
+			$query->where("`i`.`city` = '$city'");
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+			
+			return $items;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 	function updateUserNameByAssociatedClient($associated_client, $name)
 	{
 		try
