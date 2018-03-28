@@ -2928,7 +2928,7 @@ class Gm_ceilingController extends JControllerLegacy
             $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
             foreach ($items as $i => $item)
             {
-                $client_id = JFactory::getUser($item->user_id)->associated_client;
+                $client_id = JFactory::getUser($item->dealer_id)->associated_client;
                 $emails = $dop_contacts_model->getEmailByClientID($client_id);
                 foreach ($emails as $j => $email)
                 {

@@ -63,21 +63,30 @@ class Gm_ceilingModelClients_dop_contacts extends JModelList
     }
 
     public function getEmailByClientID($id){
-        $db    = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query
-            ->select('contact')
-            ->from('#__gm_ceiling_clients_dop_contacts')
-            ->where("client_id = $id AND type_id = 1");
-        $db->setQuery($query);
-        $items = $db->loadObjectList();
-        return $items;
+    	try
+		{
+	        $db    = JFactory::getDbo();
+	        $query = $db->getQuery(true);
+	        $query
+	            ->select('contact')
+	            ->from('#__gm_ceiling_clients_dop_contacts')
+	            ->where("client_id = $id AND type_id = 1");
+	        $db->setQuery($query);
+	        $items = $db->loadObjectList();
+	        return $items;
+	    }
+	    catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
 
 	public function update_client_id($emails,$client_id){
 		try
 		{
-			
 			$db = JFactory::getDbo();
 			foreach($emails as $id){
 				$query = $db->getQuery(true);
