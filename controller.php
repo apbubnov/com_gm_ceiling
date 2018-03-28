@@ -2924,7 +2924,8 @@ class Gm_ceilingController extends JControllerLegacy
             $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
             $items = $users_model->findDealersByCity('Воронеж');
             $count = 0;
-
+            print_r($items);
+            exit();
             $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
             foreach ($items as $i => $item)
             {
