@@ -13,7 +13,6 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-$dealers = $users_model->getDealers();
 $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 ?>
@@ -95,10 +94,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
     jQuery(document).ready(function()
     {
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
-
-        var sum = JSON.parse('<?php echo json_encode($sum); ?>');
-        var dealers = JSON.parse('<?php echo json_encode($dealers); ?>');
-        console.log(sum, dealers);
 
         jQuery("#new_dealer").click(function(){
             jQuery("#close").show();
@@ -273,6 +268,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                             color = '';
                         }
                         html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
+                        html += '<td><input type="checkbox" data-id="' + data[i].id + '"></td>';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].city + '</td>';
