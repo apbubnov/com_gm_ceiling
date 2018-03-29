@@ -157,8 +157,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             while (target.tagName != 'BODY')
             {
                 var div = jQuery("#modal_window_create");
-                var div2 = jQuery("#modal_window_send"); // тут указываем ID элемента
-                if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
+                var div2 = jQuery("#modal_window_kp");
+                var div3 = jQuery("#modal_window_kp_editor");
+                if (div.is(target) || div2.is(target) ||  div3.is(target) ||
+                    div.has(target).length != 0 || div2.has(target).length != 0 || div3.has(target).length != 0)
                 {
                     //console.log(target);
                     if (target.id != undefined)
