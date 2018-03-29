@@ -266,6 +266,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         {
                             cleditor.select();
                             var text = btoa(cleditor[0].selectedHTML());
+                            console.log(text);
                             jQuery.ajax({
                                 type: 'POST',
                                 url: "index.php?option=com_gm_ceiling&task=saveCommercialOffer",
