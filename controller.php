@@ -2740,6 +2740,31 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public function saveCommercialOffer(){
+        try
+        {
+            $user = JFactory::getUser();
+
+            $jinput = JFactory::getApplication()->input;
+            $text = $jinput->get('text', null, 'STRING');
+            $subj = $jinput->get('subj', null, 'STRING');
+            $name = $jinput->get('name', null, 'STRING');
+            $manufac_id = $user->dealer_id;
+
+            $comm_model = Gm_ceilingHelpersGm_ceiling::getModel('commercial_offer');
+            $result = $comm_model->addCommOffer($subj, $text, $name, $manufac_id);
+
+            die($result);
+        }
+        catch (Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+
     public function sendCommercialOffer($user_id = null, $email = null, $dealer_type = null){
         try
         {

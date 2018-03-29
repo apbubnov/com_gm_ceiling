@@ -82,11 +82,13 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
         <div class="modal_window" id="modal_window_kp_editor">
+            <p>Название КП</p>
+            <p><input type ="text" class="input-gm" id="kp_name"></p>
             <p>Тема</p>
             <p><input type ="text" class="input-gm" id="email_subj"></p>
             <p>Текст письма:</p>
             <p><textarea rows = "10" class ="textarea-gm" id="email_text"></textarea></p>
-            <p><button type="button" id="send" class="btn btn-primary">Разослать</button></p>
+            <p><button type="button" id="save_kp" class="btn btn-primary">Сохранить</button></p>
         </div>
         <div class="modal_window" id="modal_window_kp">
             <p><select class="input-gm" id="select_kp"></select></p>
@@ -207,7 +209,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 }                   
                             });
                         }
-                        if (target.id == 'send')
+                        /*if (target.id == 'send')
                         {
                              jQuery.ajax({
                                 type: 'POST',
@@ -243,18 +245,60 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 }
                             }); 
                             return;
-                        }
+                        }*/
                         if (target.id == 'add_kp')
                         {
                             jQuery("#modal_window_kp_editor").css('width', '80%');
                             jQuery("#modal_window_kp_editor").css('margin-left', '10%');
                             jQuery("#close").show();
                             jQuery("#mv_container").show();
+                            jQuery("#modal_window_kp").hide();
                             jQuery("#modal_window_kp_editor").show("slow");
                             return;
                         }
+
                         if (target.id == 'select_kp')
                         {
+                            return;
+                        }
+
+                        if (target.id == 'save_kp')
+                        {
+                            cleditor.select();
+                            var text = cleditor.selectedHTML();
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: "index.php?option=com_gm_ceiling&task=saveCommercialOffer",
+                                data: {
+                                   text: text,
+                                   subj: jQuery("#email_subj").val(),
+                                   name: jQuery("#kp_name").val()
+                                },
+                                success: function(data){
+                                    console.log(data);
+                                    var n = noty({
+                                        timeout: 5000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "success",
+                                        text: "КП Сохраненно"
+                                    });
+                                },
+                                dataType: "text",
+                                async: false,
+                                timeout: 10000,
+                                error: function(data){
+                                    var n = noty({
+                                        timeout: 2000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "error",
+                                        text: "Ошибка. Сервер не отвечает"
+                                    });
+                                }
+                            }); 
                             return;
                         }
                     }
