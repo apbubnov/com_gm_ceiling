@@ -81,12 +81,19 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id = "dealer_city" placeholder = "Город"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <div class="modal_window" id="modal_window_send">
+        <div class="modal_window" id="modal_window_kp_editor">
+            <p>Название КП</p>
+            <p><input type ="text" class="input-gm" id="kp_name"></p>
             <p>Тема</p>
             <p><input type ="text" class="input-gm" id="email_subj"></p>
             <p>Текст письма:</p>
             <p><textarea rows = "10" class ="textarea-gm" id="email_text"></textarea></p>
-            <p><button type="button" id="send" class="btn btn-primary">Разослать</button></p>
+            <p><button type="button" id="save_kp" class="btn btn-primary">Сохранить</button></p>
+        </div>
+        <div class="modal_window" id="modal_window_kp">
+            <p><select class="input-gm" id="select_kp"></select></p>
+            <p><button type="button" id="add_kp" class="btn btn-primary">+</button>
+            <button type="button" id="send_kp" class="btn btn-primary">Отправить</button></p>
         </div>
     </div>
 
@@ -139,11 +146,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 }                   
             });*/
 
-            jQuery("#modal_window_send").css('width', '80%');
-            jQuery("#modal_window_send").css('margin-left', '10%');
+            
             jQuery("#close").show();
             jQuery("#mv_container").show();
-            jQuery("#modal_window_send").show("slow");
+            jQuery("#modal_window_kp").show("slow");
         });
 
         jQuery(document).click(function(e){
@@ -153,8 +159,10 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             while (target.tagName != 'BODY')
             {
                 var div = jQuery("#modal_window_create");
-                var div2 = jQuery("#modal_window_send"); // тут указываем ID элемента
-                if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
+                var div2 = jQuery("#modal_window_kp");
+                var div3 = jQuery("#modal_window_kp_editor");
+                if (div.is(target) || div2.is(target) ||  div3.is(target) ||
+                    div.has(target).length != 0 || div2.has(target).length != 0 || div3.has(target).length != 0)
                 {
                     //console.log(target);
                     if (target.id != undefined)
@@ -201,7 +209,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 }                   
                             });
                         }
-                        if (target.id == 'send')
+                        /*if (target.id == 'send')
                         {
                              jQuery.ajax({
                                 type: 'POST',
@@ -221,6 +229,63 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                         text: "Письма отправлены"
                                     });
                                     //setInterval(function() { location.reload();}, 1500);
+                                },
+                                dataType: "text",
+                                async: false,
+                                timeout: 10000,
+                                error: function(data){
+                                    var n = noty({
+                                        timeout: 2000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "error",
+                                        text: "Ошибка. Сервер не отвечает"
+                                    });
+                                }
+                            }); 
+                            return;
+                        }*/
+                        if (target.id == 'add_kp')
+                        {
+                            jQuery("#modal_window_kp_editor").css('width', '80%');
+                            jQuery("#modal_window_kp_editor").css('margin-left', '10%');
+                            jQuery("#close").show();
+                            jQuery("#mv_container").show();
+                            jQuery("#modal_window_kp").hide();
+                            jQuery("#modal_window_kp_editor").show("slow");
+                            return;
+                        }
+
+                        if (target.id == 'select_kp')
+                        {
+                            return;
+                        }
+
+                        if (target.id == 'save_kp')
+                        {
+                            cleditor.select();
+                            var text = cleditor[0].selectedHTML();
+                            
+                            console.log(text);
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: "index.php?option=com_gm_ceiling&task=saveCommercialOffer",
+                                data: {
+                                   text: text,
+                                   subj: jQuery("#email_subj").val(),
+                                   name: jQuery("#kp_name").val()
+                                },
+                                success: function(data){
+                                    console.log(data);
+                                    var n = noty({
+                                        timeout: 5000,
+                                        theme: 'relax',
+                                        layout: 'center',
+                                        maxVisible: 5,
+                                        type: "success",
+                                        text: "КП Сохраненно"
+                                    });
                                 },
                                 dataType: "text",
                                 async: false,
@@ -265,7 +330,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         jQuery("#close").hide();
                         jQuery("#mv_container").hide();
                         jQuery("#modal_window_create").hide();
-                        jQuery("#modal_window_send").hide();
+                        jQuery("#modal_window_kp").hide();
+                        jQuery("#modal_window_kp_editor").hide();
                         return;
                     }
                 }
