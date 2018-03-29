@@ -18,9 +18,11 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 $today = date('Y-m-d');
 $det_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('AnaliticDetailed');
+$deal_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('Analitic_dealers');
 $d_items = $det_analitic_model->getData();
 $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 echo parent::getButtonBack();
+
 ?>
 <h2> Общая аналитика</h2>
 <form action="" method="post" name="adminForm" id="analiticForm">

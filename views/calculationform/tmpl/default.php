@@ -101,7 +101,6 @@
     <input name = "n5" id = "n5" value ="" type ="hidden">
     <input name = "n9" id = "n9" value ="" type ="hidden">
 	<input name = "triangulator_pro" id = "triangulator_pro" value = <?php echo $triangulator_pro?> type = "hidden">
-	<input type="hidden" name="walls" id="input_walls">
 	<input type="hidden" name="calc_id" id="calc_id">
 	<input type="hidden" name="proj_id" id="proj_id">
 </form>
@@ -3705,12 +3704,11 @@
                 success: function (data) {
 					jQuery("#form_url").attr('action','sketch/cut_redactor_2/index.php');
 					if(<?php echo $calc_id ?> != 0){
-						jQuery("#input_walls").val("<?php echo $this->item->original_sketch?>");
 						jQuery("#walls").val("<?php echo $this->item->original_sketch?>");
 					}
 					else{
 						
-						jQuery("#input_walls").val(data);
+						jQuery("#walls").val(data);
 					}
                     
                     jQuery("#calc_id").val(jQuery("#jform_id").val());
@@ -3751,6 +3749,7 @@
 							from_db:0 
 						},
 						success: function (data) {
+							console.log(data);
 							jQuery("#walls").val(data);
 							submit_form_sketch();
 
@@ -3771,6 +3770,7 @@
                                 from_db:1 
                             },
                             success: function (data) {
+								console.log(data);
                                 jQuery("#walls").val(data);
                                 submit_form_sketch();
                             },
