@@ -265,7 +265,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         if (target.id == 'save_kp')
                         {
                             cleditor.select();
-                            var text = cleditor.selectedHTML();
+                            var text = cleditor[0].selectedHTML();
                             jQuery.ajax({
                                 type: 'POST',
                                 url: "index.php?option=com_gm_ceiling&task=saveCommercialOffer",
