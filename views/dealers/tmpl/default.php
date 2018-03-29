@@ -203,6 +203,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     return;
                 }
 
+                if (target.tagName == 'INPUT')
+                {
+                    return;
+                }
+                
                 if (target.tagName == 'TR')
                 {
                     if(jQuery(target).data('href') != undefined){
