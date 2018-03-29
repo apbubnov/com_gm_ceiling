@@ -17,6 +17,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 ?>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
+<link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
