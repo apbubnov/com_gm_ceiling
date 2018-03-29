@@ -61,7 +61,67 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+    public function register_from_android(){
+        try
+        {
+            if(!empty($_POST['r_data'])){
+                $register_data = json_decode($_POST['r_data']);
+                if(!empty($register_data)){
+                    $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+                    $result = $model->register_from_android($register_data);
+                    $dealer_id = $result->new_id;
+                    if(!empty($dealer_id)){
+                        $dealer = JFactory::getUser($dealer_id);
+                        $email = $dealer->email;
+                        $server_name = $_SERVER['SERVER_NAME'];
+                        $site = "http://$server_name/index.php?option=com_users&view=login";
+                        $code = md5($dealer_id.'dealer_instruction');
+                        $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=0&code=$code";
+                        // письмо
+                        $mailer = JFactory::getMailer();
+                        $config = JFactory::getConfig();
+                        $sender = array(
+                            $config->get('mailfrom'),
+                            $config->get('fromname')
+                        );
+                        $mailer->setSender($sender);
+                        $mailer->addRecipient($email);
+                        $body = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><link rel="stylesheet" type="text/css" href="CSS/style_index.css"/></head>';
+                        $body .= '<body style="margin: 10px;">';
+                        $body .= '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">';
+                        $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
+                        $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
+                        $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
 
+                        $body .= '<p>Тел.: +7(473)212-34-01</p>';
+
+                        $body .= '<p>Почта: gm-partner@mail.ru</p>';
+                        $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
+                        $body .= '</div></td></tr></table>';
+                        $body .= "<div style=\"width: 100%\">Инструкция по использованию: <a href=\"$site2\">Посмотреть видео</a><br>Ссылка для входа в кабинет: <a href=\"$site\">Войти</a><br>
+                                Логин: $dealer->username<br>Пароль: $dealer->username<br></div></body>";
+                        $mailer->setSubject('Доступ в кабинет');
+                        $mailer->isHtml(true);
+                        $mailer->Encoding = 'base64';
+                        $mailer->setBody($body);
+                        $send = $mailer->Send();
+                        $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                        $users_model->addDealerInstructionCode($dealer_id, $code, 1);    
+                        $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+                        $callback_model->save(date('Y-m-d H:i:s'),"Регистрация в android-приложении",$dealer->associated_client,1);
+                    }
+                    die(json_encode($result));
+                }
+            }
+            else{
+                die(json_encode(null));
+            }
+        }
+        catch(Exception $e)
+        {
+            die($e);
+        }
+    }
         public
         function addDataFromAndroid()
         {
