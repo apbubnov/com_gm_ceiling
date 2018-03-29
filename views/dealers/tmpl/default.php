@@ -101,7 +101,16 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#modal_window_create").show("slow");
         });
         
-        jQuery("#send_to_all").click(function(){
+        jQuery("#send_to_all").click(function()
+        {
+
+            jQuery.each(jQuery('[name="checkbox_dealer[]"]:checked'), function(key, value) {   
+                jQuery('#filter_manager')
+                 .append(jQuery("<option></option>")
+                            .attr("value",key)
+                            .text(value)); 
+            });
+
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_send").show("slow");
@@ -276,7 +285,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                             color = '';
                         }
                         html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
-                        html += '<td class="td_checkbox"><input type="checkbox" data-id="' + data[i].id + '"></td>';
+                        html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data[i].id + '"></td>';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].city + '</td>';
