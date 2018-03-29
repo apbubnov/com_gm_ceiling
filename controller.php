@@ -1964,7 +1964,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $id = $jinput->get('id', '', 'INT');
                 $model->SetEmail($client_id, $email);
                 //print_r($id); exit;
-                $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($id . "-9") . ".pdf", "Общая подробная смета". ".pdf");
+                $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($id . "mount_common") . ".pdf", "Общая подробная смета". ".pdf");
                 $mailer->addAttachment($dop_file2['tmp_name'], $dop_file2['name']);
             }
             elseif ($type == 1) {
@@ -3310,6 +3310,26 @@ class Gm_ceilingController extends JControllerLegacy
             die((object) ["status" => "error", "message" => $e->getMessage()]);
         }
     }
+
+    function regenerate_common_estimate(){
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $project_id = $jinput->get('proj_id','','STRING');
+            $ids = $jinput->get('calc_ids', array(), 'Array');
+            Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($project_id,$ids);
+            Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id,$ids);
+            die(json_encode(true));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
+        
 }
 
 ?>
