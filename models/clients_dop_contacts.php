@@ -106,7 +106,8 @@ class Gm_ceilingModelClients_dop_contacts extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
-	 public function SetEmail($client_id,$contact){
+	
+	public function SetEmail($client_id,$contact){
 		//print_r($contact); exit;
         $db    = JFactory::getDbo();
         $query = $db->getQuery(true);

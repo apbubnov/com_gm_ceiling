@@ -13,11 +13,11 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-$dealers = $users_model->getDealers();
 $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 ?>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
+<link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
@@ -43,6 +43,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <thead>
         <tr>
             <th>
+                
+            </th>
+            <th>
                Имя
             </th>
             <th>
@@ -60,12 +63,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             <th>
 
             </th>
-           <!--  <th>
-                Взнос
-            </th>
-            <th>
-                Изменить
-            </th> -->
         </tr>
         </thead>
         <tbody id="tbody_dealers">
@@ -93,15 +90,17 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         </div>
     </div>
 
+<script src="/templates/gantry/cleditor1_4_5/jquery.cleditor.js"></script>
+
 <script>
 
     jQuery(document).ready(function()
     {
+        var dealer_ids = [];
+
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
 
-        var sum = JSON.parse('<?php echo json_encode($sum); ?>');
-        var dealers = JSON.parse('<?php echo json_encode($dealers); ?>');
-        console.log(sum, dealers);
+        var cleditor = jQuery("#email_text").cleditor();
 
         jQuery("#new_dealer").click(function(){
             jQuery("#close").show();
@@ -109,22 +108,47 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#modal_window_create").show("slow");
         });
         
-        jQuery("#send_to_all").click(function(){
+        jQuery("#send_to_all").click(function()
+        {
+            jQuery.each(jQuery('[name="checkbox_dealer[]"]:checked'), function() {
+                dealer_ids.push(jQuery(this).data('id'));
+            });
+            console.log(dealer_ids);
+
+            /*jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=clients.getEmailsByIds",
+                data: {
+                    ids: dealer_ids
+                },
+                success: function(data){
+                    console.log(data);
+                },
+                dataType: "json",
+                async: false,
+                timeout: 20000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });*/
+
+            jQuery("#modal_window_send").css('width', '80%');
+            jQuery("#modal_window_send").css('margin-left', '10%');
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_send").show("slow");
         });
 
-        function ChangeSelectPrice() {
-            location.href = this.value;
-            jQuery(".SelectPrice option:first-child").prop("selected", true);
-        }
-
-        jQuery(".SelectPrice").change(ChangeSelectPrice);
-
         jQuery(document).click(function(e){
             var target = e.target;
-            console.log(e.target.tagName);
+            //console.log(e.target.tagName);
             // цикл двигается вверх от target к родителям до table
             while (target.tagName != 'BODY')
             {
@@ -132,7 +156,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 var div2 = jQuery("#modal_window_send"); // тут указываем ID элемента
                 if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
                 {
-                    console.log(target);
+                    //console.log(target);
                     if (target.id != undefined)
                     {
                         if (target.id == 'save_dealer')
@@ -187,7 +211,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                    subj : jQuery("#email_subj").val()
                                 },
                                 success: function(data){
-                                    console.log(data);
+                                    //console.log(data);
                                     var n = noty({
                                         timeout: 5000,
                                         theme: 'relax',
@@ -218,34 +242,20 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     return;
                 }
 
+                if (target.className != undefined)
+                {
+                    if (target.className == 'td_checkbox')
+                    {
+                        return;
+                    }
+                }
+
                 if (target.tagName == 'TR')
                 {
                     if(jQuery(target).data('href') != undefined){
                         document.location.href = jQuery(target).data('href');
                     }
                     return;
-                }
-
-                if (target.className != undefined)
-                {
-                    if (target.className.indexOf('btn-done') + 1)
-                    {
-                        var user_id = jQuery(target).attr("user_id");
-                        
-                        document.getElementById('dealer_name').innerHTML = 'Взнос задолжности. Дилер: ' + dealers[user_id].name;
-                        document.getElementById('dealer_invoice').innerHTML = 'На счете: ' + sum[user_id] + ' руб.';
-                        document.getElementById('pay_sum').value = (sum[user_id]<0)?Math.abs(sum[user_id]):0;
-                        document.getElementById('hidden_user_id').value = user_id;
-
-                        jQuery("#close").show();
-                        jQuery("#mv_container").show();
-                        jQuery("#modal_window_sum").show("slow");
-                        return;
-                    }
-                    if (target.className.indexOf('SelectPrice') + 1)
-                    {
-                        return;
-                    }
                 }
 
                 if (target.id != undefined)
@@ -255,7 +265,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         jQuery("#close").hide();
                         jQuery("#mv_container").hide();
                         jQuery("#modal_window_create").hide();
-                        jQuery("#modal_window_sum").hide();
+                        jQuery("#modal_window_send").hide();
                         return;
                     }
                 }
@@ -305,6 +315,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                             color = '';
                         }
                         html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
+                        html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data[i].id + '"></td>';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].city + '</td>';
