@@ -89,11 +89,16 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         </div>
     </div>
 
+<script src="jquery.cleditor.js"></script>
 <script>
 
     jQuery(document).ready(function()
     {
+        var dealer_ids = [];
+
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
+
+        var cleditor = $("#input").cleditor();
 
         jQuery("#new_dealer").click(function(){
             jQuery("#close").show();
@@ -103,13 +108,12 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         
         jQuery("#send_to_all").click(function()
         {
-            var dealer_ids = [];
             jQuery.each(jQuery('[name="checkbox_dealer[]"]:checked'), function() {
                 dealer_ids.push(jQuery(this).data('id'));
             });
             console.log(dealer_ids);
 
-            jQuery.ajax({
+            /*jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=clients.getEmailsByIds",
                 data: {
@@ -131,7 +135,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         text: "Ошибка. Сервер не отвечает"
                     });
                 }                   
-            });
+            });*/
 
             jQuery("#close").show();
             jQuery("#mv_container").show();
