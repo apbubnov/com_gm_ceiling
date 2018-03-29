@@ -203,11 +203,14 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     return;
                 }
 
-                if (target.tagName == 'INPUT')
+                if (target.className != undefined)
                 {
-                    return;
+                    if (target.className == 'td_checkbox')
+                    {
+                        return;
+                    }
                 }
-                
+
                 if (target.tagName == 'TR')
                 {
                     if(jQuery(target).data('href') != undefined){
@@ -273,7 +276,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                             color = '';
                         }
                         html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
-                        html += '<td><input type="checkbox" data-id="' + data[i].id + '"></td>';
+                        html += '<td class="td_checkbox"><input type="checkbox" data-id="' + data[i].id + '"></td>';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].city + '</td>';
