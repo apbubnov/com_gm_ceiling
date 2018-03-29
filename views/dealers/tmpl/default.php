@@ -103,14 +103,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         
         jQuery("#send_to_all").click(function()
         {
-
-            jQuery.each(jQuery('[name="checkbox_dealer[]"]:checked'), function(key, value) {   
-                jQuery('#filter_manager')
-                 .append(jQuery("<option></option>")
-                            .attr("value",key)
-                            .text(value)); 
+            var dealer_ids = [];
+            jQuery.each(jQuery('[name="checkbox_dealer[]"]:checked'), function() {
+                dealer_ids.push(jQuery(this).data('id'));
             });
-
+            console.log(dealer_ids);
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_send").show("slow");
