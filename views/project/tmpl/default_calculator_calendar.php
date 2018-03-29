@@ -859,13 +859,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                             $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf";
                                             if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
                                         ?>
-                                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                        <?php } else { ?>
+                                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank" id = "show">Посмотреть</a>
+                                        <?php } ?>
                                             <span data-href="<?=$path;?>">-
-                                        <?php }
-                                            $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
-                                            $json2 = json_encode($pdf_names);
-                                        ?>
                                     </td>
                                 </tr>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
@@ -2436,7 +2432,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             jQuery("#calcs_self_components_total span.sum").data('oldval',jQuery("#calcs_self_components_total span.sum").text());
             check_min_sum(jQuery("#calcs_self_canvases_total span.sum").text());
         });
-        /*cewe*/
+      
         function check_min_sum(canv_sum){
             let min_sum = 0;
             if(canv_sum == 0) {
@@ -2577,7 +2573,44 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             });
 
         });
+        jQuery("#show").click(function(){
+            //перегенерить смету по выбранным
+            regenerate_common_estimate();
+        });
+        function get_selected_calcs(){
+            let ids = [];
+            jQuery.each(jQuery("[name = 'include_calculation[]']:checked"),function(){
+                ids.push(jQuery(this).val());
+            });
+            return ids;
+        }
+        function regenerate_common_estimate(){
+            let project_id = <?php echo $this->item->id;?>;
+            let calc_ids = get_selected_calcs();
+             jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=regenerate_common_estimate",
+                data:{
+                    proj_id: project_id,
+                    calc_ids: calc_ids
+                },
+                type: "POST",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                },
+                error: function (data) {
+                    var n = noty({
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при генерации общей сметы по выбранным потолкам"
+                    });
+                }
+            }); 
+        }
         jQuery("#send_all_to_email3").click(function () {
+            regenerate_common_estimate();
             var email = jQuery("#all-email3").val();
             var id  = jQuery("#project_id").val();
             var client_id = jQuery("#client_id").val();
@@ -2600,6 +2633,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 processData: false,
                 contentType: false,
                 cache: false,
+                async:false,
                 success: function (data) {
                     var n = noty({
                         theme: 'relax',
