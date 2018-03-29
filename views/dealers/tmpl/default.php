@@ -88,6 +88,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             <p><textarea rows = "10" class ="textarea-gm" id="email_text"></textarea></p>
             <p><button type="button" id="send" class="btn btn-primary">Разослать</button></p>
         </div>
+        <div class="modal_window" id="modal_window_kp">
+            <p><select class="input-gm" id="select_kp"></select></p>
+            <p><button type="button" id="add_kp" class="btn btn-primary">+</button>
+            <button type="button" id="send_kp" class="btn btn-primary">Отправить</button></p>
+        </div>
     </div>
 
 <script src="/templates/gantry/cleditor1_4_5/jquery.cleditor.js"></script>
@@ -139,11 +144,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 }                   
             });*/
 
-            jQuery("#modal_window_send").css('width', '80%');
-            jQuery("#modal_window_send").css('margin-left', '10%');
+            //jQuery("#modal_window_send").css('width', '80%');
+            //jQuery("#modal_window_send").css('margin-left', '10%');
             jQuery("#close").show();
             jQuery("#mv_container").show();
-            jQuery("#modal_window_send").show("slow");
+            jQuery("#modal_window_kp").show("slow");
         });
 
         jQuery(document).click(function(e){
