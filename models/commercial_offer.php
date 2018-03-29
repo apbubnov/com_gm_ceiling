@@ -25,13 +25,13 @@ class Gm_ceilingModelCommercial_offer extends JModelList
 		try
 		{
 			$db = JFactory::getDbo();
-			$subj = $db->escape($subj, true);
-			$text = $db->escape($text, true);
-			$name = $db->escape($name, true);
+			//$subj = $db->escape($subj, true);
+			//$text = $db->escape($text, true);
+			//$name = $db->escape($name, true);
 
 			$query = $db->getQuery(true);
 			$query->insert('`#__gm_ceiling_commercial_offers`');
-			$query->colums('`subject`, `text`, `name`, `manufacturer_id`');
+			$query->columns('`subject`, `text`, `name`, `manufacturer_id`');
 			$query->values("'$subj', '$text', '$name', $manufac_id");
 			$db->setQuery($query);
 			throw new Exception($query);
