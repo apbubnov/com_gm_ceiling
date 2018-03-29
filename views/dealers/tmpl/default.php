@@ -89,7 +89,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         </div>
     </div>
 
-<script src="/templates/gantry/cleditor1_4_5/jquery.min.js"></script>
 <script src="/templates/gantry/cleditor1_4_5/jquery.cleditor.js"></script>
 
 <script>
@@ -100,7 +99,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
 
-        var cleditor = $("#email_text").cleditor();
+        var cleditor = jQuery("#email_text").cleditor();
 
         jQuery("#new_dealer").click(function(){
             jQuery("#close").show();
