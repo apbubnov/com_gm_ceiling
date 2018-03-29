@@ -81,7 +81,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 <p><input type="text" id = "dealer_city" placeholder = "Город"></p>
                 <p><button type="submit" id="save_dealer" class="btn btn-primary">ОК</button></p>
         </div>
-        <div class="modal_window" id="modal_window_send">
+        <div class="modal_window" id="modal_window_kp_editor">
             <p>Тема</p>
             <p><input type ="text" class="input-gm" id="email_subj"></p>
             <p>Текст письма:</p>
@@ -144,8 +144,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 }                   
             });*/
 
-            //jQuery("#modal_window_send").css('width', '80%');
-            //jQuery("#modal_window_send").css('margin-left', '10%');
+            
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_kp").show("slow");
@@ -243,6 +242,14 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                             }); 
                             return;
                         }
+                        if (target.id == 'add_kp')
+                        {
+                            jQuery("#modal_window_kp_editor").css('width', '80%');
+                            jQuery("#modal_window_kp_editor").css('margin-left', '10%');
+                            jQuery("#close").show();
+                            jQuery("#mv_container").show();
+                            jQuery("#modal_window_kp_editor").show("slow");
+                        }
                     }
                     return;
                 }
@@ -270,7 +277,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         jQuery("#close").hide();
                         jQuery("#mv_container").hide();
                         jQuery("#modal_window_create").hide();
-                        jQuery("#modal_window_send").hide();
+                        jQuery("#modal_window_kp").hide();
+                        jQuery("#modal_window_kp_editor").hide();
                         return;
                     }
                 }
