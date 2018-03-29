@@ -249,6 +249,11 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                             jQuery("#close").show();
                             jQuery("#mv_container").show();
                             jQuery("#modal_window_kp_editor").show("slow");
+                            return;
+                        }
+                        if (target.id == 'select_kp')
+                        {
+                            return;
                         }
                     }
                     return;
