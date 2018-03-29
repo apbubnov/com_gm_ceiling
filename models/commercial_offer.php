@@ -34,6 +34,8 @@ class Gm_ceilingModelCommercial_offer extends JModelList
 			$query->colums('`subject`, `text`, `name`, `manufacturer_id`');
 			$query->values("'$subj', '$text', '$name', $manufac_id");
 			$db->setQuery($query);
+			throw new Exception($query);
+			
 			$db->execute();
 			$last_id = $db->insertId();
 
