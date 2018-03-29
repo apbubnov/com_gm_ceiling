@@ -975,6 +975,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							if(empty($data->project_mounting_date)){
 								
 								$data->project_status = 4;
+								$data->project_verdict = 0;
 								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
 								$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
 								$call_mount_time = $jinput->get('calltime_without_mounter','','STRING'); 
@@ -988,6 +989,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							}
 							else{
 								if($project_status == 4){
+									$data->project_verdict = 0;
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор, но не запущен");
 									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
 									if(!empty($data->read_by_manager)){
@@ -1014,8 +1016,10 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						{
 							$return = $model->activate($data, 3/*7*/);
 							$client_history_model->save($data->id_client,"Отказ от договора по проекту №".$project_id."Примечание замерщика : ".$gm_calculator_note);
-							$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
-							$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
+							if(!empty($data->read_by_manager)){
+								$callback_model->save(date("Y-m-d H:i",strtotime("+30 minutes")),"Отказ от договора",$data->id_client,$data->read_by_manager);
+								$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: отказ от договора. Примечание замерщика :".$gm_calculator_note);
+							}
 						}
 					}
 					else{
