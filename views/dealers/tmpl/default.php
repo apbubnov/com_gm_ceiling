@@ -139,6 +139,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 }                   
             });*/
 
+            jQuery("#modal_window_send").css('width', '90%');
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_send").show("slow");
