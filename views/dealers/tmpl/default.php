@@ -108,6 +108,31 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 dealer_ids.push(jQuery(this).data('id'));
             });
             console.log(dealer_ids);
+
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=clients.getEmailsByIds",
+                data: {
+                    ids: dealer_ids
+                },
+                success: function(data){
+                    console.log(data);
+                },
+                dataType: "json",
+                async: false,
+                timeout: 20000,
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка. Сервер не отвечает"
+                    });
+                }                   
+            });
+
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_send").show("slow");
