@@ -89,8 +89,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         </div>
     </div>
 
-<script src="/templates/gantry/jquery.min.js"></script>
-<script src="/templates/gantry/jquery.cleditor.js"></script>
+<script src="/templates/gantry/cleditor1_4_5/jquery.min.js"></script>
+<script src="/templates/gantry/cleditor1_4_5/jquery.cleditor.js"></script>
 
 <script>
 
