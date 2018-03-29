@@ -43,6 +43,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
         <thead>
         <tr>
             <th>
+                
+            </th>
+            <th>
                Имя
             </th>
             <th>
@@ -60,12 +63,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             <th>
 
             </th>
-           <!--  <th>
-                Взнос
-            </th>
-            <th>
-                Изменить
-            </th> -->
         </tr>
         </thead>
         <tbody id="tbody_dealers">
@@ -115,16 +112,9 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
             jQuery("#modal_window_send").show("slow");
         });
 
-        function ChangeSelectPrice() {
-            location.href = this.value;
-            jQuery(".SelectPrice option:first-child").prop("selected", true);
-        }
-
-        jQuery(".SelectPrice").change(ChangeSelectPrice);
-
         jQuery(document).click(function(e){
             var target = e.target;
-            console.log(e.target.tagName);
+            //console.log(e.target.tagName);
             // цикл двигается вверх от target к родителям до table
             while (target.tagName != 'BODY')
             {
@@ -132,7 +122,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 var div2 = jQuery("#modal_window_send"); // тут указываем ID элемента
                 if (div.is(target) || div2.is(target) || div.has(target).length != 0 || div2.has(target).length != 0)
                 {
-                    console.log(target);
+                    //console.log(target);
                     if (target.id != undefined)
                     {
                         if (target.id == 'save_dealer')
@@ -187,7 +177,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                    subj : jQuery("#email_subj").val()
                                 },
                                 success: function(data){
-                                    console.log(data);
+                                    //console.log(data);
                                     var n = noty({
                                         timeout: 5000,
                                         theme: 'relax',
@@ -226,28 +216,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                     return;
                 }
 
-                if (target.className != undefined)
-                {
-                    if (target.className.indexOf('btn-done') + 1)
-                    {
-                        var user_id = jQuery(target).attr("user_id");
-                        
-                        document.getElementById('dealer_name').innerHTML = 'Взнос задолжности. Дилер: ' + dealers[user_id].name;
-                        document.getElementById('dealer_invoice').innerHTML = 'На счете: ' + sum[user_id] + ' руб.';
-                        document.getElementById('pay_sum').value = (sum[user_id]<0)?Math.abs(sum[user_id]):0;
-                        document.getElementById('hidden_user_id').value = user_id;
-
-                        jQuery("#close").show();
-                        jQuery("#mv_container").show();
-                        jQuery("#modal_window_sum").show("slow");
-                        return;
-                    }
-                    if (target.className.indexOf('SelectPrice') + 1)
-                    {
-                        return;
-                    }
-                }
-
                 if (target.id != undefined)
                 {
                     if (target.id == 'close' || target.id == 'mv_container')
@@ -255,7 +223,7 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                         jQuery("#close").hide();
                         jQuery("#mv_container").hide();
                         jQuery("#modal_window_create").hide();
-                        jQuery("#modal_window_sum").hide();
+                        jQuery("#modal_window_send").hide();
                         return;
                     }
                 }
