@@ -15,6 +15,9 @@ $userId     = $user->get('id');
 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
 $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
+$comm_model = Gm_ceilingHelpersGm_ceiling::getModel('commercial_offer');
+$comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
+
 ?>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
 <link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
@@ -103,50 +106,33 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
     jQuery(document).ready(function()
     {
-        var dealer_ids = [];
 
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
 
-        cleditor = jQuery("#email_text").cleditor();
+        var comm_offers = JSON.parse('<?= json_encode($comm_offers); ?>');
+
+        var text_cleditor = jQuery("#email_text").cleditor();
 
         jQuery("#new_dealer").click(function(){
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_create").show("slow");
         });
+
+        show_kp_in_select();
+
+        function show_kp_in_select()
+        {
+            jQuery.each(comm_offers, function() {
+                jQuery('#select_kp')
+                 .append(jQuery("<option></option>")
+                            .attr("value", this.id)
+                            .text(this.name)); 
+            });
+        }
         
         jQuery("#send_to_all").click(function()
         {
-            jQuery.each(jQuery('[name="checkbox_dealer[]"]:checked'), function() {
-                dealer_ids.push(jQuery(this).data('id'));
-            });
-            console.log(dealer_ids);
-
-            /*jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=clients.getEmailsByIds",
-                data: {
-                    ids: dealer_ids
-                },
-                success: function(data){
-                    console.log(data);
-                },
-                dataType: "json",
-                async: false,
-                timeout: 20000,
-                error: function(data){
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка. Сервер не отвечает"
-                    });
-                }                   
-            });*/
-
-            
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_kp").show("slow");
@@ -209,26 +195,32 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 }                   
                             });
                         }
-                        /*if (target.id == 'send')
+
+                        if (target.id == 'send_kp')
                         {
-                             jQuery.ajax({
+                            var dealer_ids = [];
+                            jQuery.each(jQuery('[name="checkbox_dealer[]"]:checked'), function() {
+                                dealer_ids.push(jQuery(this).data('id'));
+                            });
+                            console.log(dealer_ids);
+
+                            jQuery.ajax({
                                 type: 'POST',
                                 url: "index.php?option=com_gm_ceiling&task=dealer.send_out_to_dealers",
                                 data: {
-                                   text : jQuery("#email_text").val(),
-                                   subj : jQuery("#email_subj").val()
+                                   dealer_ids: dealer_ids,
+                                   comm_id: jQuery("#select_kp").val()
                                 },
                                 success: function(data){
-                                    //console.log(data);
+                                    console.log(data);
                                     var n = noty({
-                                        timeout: 5000,
+                                        timeout: 2000,
                                         theme: 'relax',
                                         layout: 'center',
                                         maxVisible: 5,
                                         type: "success",
                                         text: "Письма отправлены"
                                     });
-                                    //setInterval(function() { location.reload();}, 1500);
                                 },
                                 dataType: "text",
                                 async: false,
@@ -245,7 +237,8 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                                 }
                             }); 
                             return;
-                        }*/
+                        }
+
                         if (target.id == 'add_kp')
                         {
                             jQuery("#modal_window_kp_editor").css('width', '80%');
@@ -264,43 +257,61 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
                         if (target.id == 'save_kp')
                         {
-                            cleditor.select();
-                            var text = cleditor[0].selectedHTML();
+                            var text = btoa(text_cleditor[0].$frame[0].contentWindow.document.body.innerHTML);
+                            var reg = /^\s+$/gi;
+                            var subj = jQuery("#email_subj").val();
+                            var name = jQuery("#kp_name").val();
+                            if (reg.test(text) || reg.test(subj) || reg.test(name) ||
+                                text === "" || subj === "" || name === "")
+                            {
+                                alert("Заполните все поля!");
+                            }
+                            else
+                            {
+                                jQuery.ajax({
+                                    type: 'POST',
+                                    url: "index.php?option=com_gm_ceiling&task=saveCommercialOffer",
+                                    data: {
+                                       text: text,
+                                       subj: subj,
+                                       name: name
+                                    },
+                                    success: function(data){
+                                        console.log(data);
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "success",
+                                            text: "КП Сохраненно"
+                                        });
+                                        jQuery('#select_kp')
+                                            .append(jQuery("<option></option>")
+                                                        .attr("value", data)
+                                                        .text(name));
+                                        jQuery("#modal_window_kp_editor").hide();
+                                        jQuery("#modal_window_kp").show();
+                                        jQuery("#email_subj").val("");
+                                        jQuery("#kp_name").val("");
+                                        text_cleditor[0].clear();
 
-                            console.log(text);
-                            jQuery.ajax({
-                                type: 'POST',
-                                url: "index.php?option=com_gm_ceiling&task=saveCommercialOffer",
-                                data: {
-                                   text: text,
-                                   subj: jQuery("#email_subj").val(),
-                                   name: jQuery("#kp_name").val()
-                                },
-                                success: function(data){
-                                    console.log(data);
-                                    var n = noty({
-                                        timeout: 5000,
-                                        theme: 'relax',
-                                        layout: 'center',
-                                        maxVisible: 5,
-                                        type: "success",
-                                        text: "КП Сохраненно"
-                                    });
-                                },
-                                dataType: "text",
-                                async: false,
-                                timeout: 10000,
-                                error: function(data){
-                                    var n = noty({
-                                        timeout: 2000,
-                                        theme: 'relax',
-                                        layout: 'center',
-                                        maxVisible: 5,
-                                        type: "error",
-                                        text: "Ошибка. Сервер не отвечает"
-                                    });
-                                }
-                            }); 
+                                    },
+                                    dataType: "text",
+                                    async: false,
+                                    timeout: 10000,
+                                    error: function(data){
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "error",
+                                            text: "Ошибка. Сервер не отвечает"
+                                        });
+                                    }
+                                });
+                            }
                             return;
                         }
                     }
