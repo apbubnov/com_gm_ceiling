@@ -44,7 +44,7 @@ $project_total_discount = 0;
 $total_square = 0;
 $total_perimeter = 0;
 $calculation_total_discount = 0;
-$calculations = $calculationsModel->getProjectItems($this->item->id);
+$calculations = $calculationsModel->new_getProjectItems($this->item->id);
 foreach ($calculations as $calculation) {
     $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
     $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);

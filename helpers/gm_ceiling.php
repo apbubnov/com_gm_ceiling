@@ -238,9 +238,9 @@ class Gm_ceilingHelpersGm_ceiling
                         'n25' => 'int',
                         'n26' => 'int',
                         'n27' => 'float',
-                        'n28' => 'int', //багет
+                        'n28' => 'int',
                         'n29' => 'float',
-                        'n30' => 'float', //парящий потолок
+                        'n30' => 'float',
                         'n31' => 'float',
                         'n32' => 'int',
                         'height'=>'int',
@@ -766,7 +766,7 @@ class Gm_ceilingHelpersGm_ceiling
 
            return $html; 
     }
-    public static function create_client_common_estimate($project_id,$calc_ids = null){
+    public static function create_client_common_estimate($project_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
@@ -775,15 +775,7 @@ class Gm_ceilingHelpersGm_ceiling
             $names = $calculations_model->FindAllMounters($project->project_mounter);
             $brigade = JFactory::getUser($project->project_mounter);
         }
-        $calculations = $calculations_model->getProjectItems($project_id);
-        if(!empty($calc_ids)){
-            foreach($calculations as $key => $calculation){
-                if(!in_array($calculation->id,$calc_ids)){
-                    unset($calculations[$key]);
-                }
-            }
-        }
-        
+        $calculations = $calculations_model->new_getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
         $client_contacts_model = self::getModel('client_phones');
         $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
@@ -1200,35 +1192,8 @@ class Gm_ceilingHelpersGm_ceiling
             }
         }
         //парящий потолок
-        if ($data['n28'] == 0){   
-            if($component_count[$items_11[0]->id] > $data['n30']){
-                $component_count[$items_11[0]->id] -= $data['n30'];
-            }
-            else{
-                $component_count[$items_11[0]->id] = 0;
-            }
-        } 
-        elseif ($data['n28'] == 1){
-            if($component_count[$items_236[0]->id] > $data['n30']){
-                $component_count[$items_236[0]->id] += $data['n30'];
-            }
-            else{
-                $component_count[$items_236[0]->id] = 0;
-            }
-            
-        } 
-        elseif ($data['n28'] == 2) {
-            if($component_count[$items_239[0]->id] > $data['n30']){
-                $component_count[$items_239[0]->id] -= $data['n30'];
-            }
-            else{
-                $component_count[$items_239[0]->id] = 0;
-            }
-           
-        }
         $component_count[$items_559[0]->id] += $data['n30'];
         $component_count[$items_38[0]->id] += $data['n30'];
-
         //карниз
         $component_count[$items_1[0]->id] += $data['n27'];
         $component_count[$items_3[0]->id] += $data['n27'] * 3;
@@ -1402,6 +1367,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $dealer_info = JFactory::getUser($data['dealer_id']);
 
+       
         $dealer_info_canvases = $dealer_info->getCanvasesPrice();
 
         //Получаем прайс-лист полотен
@@ -1707,48 +1673,36 @@ class Gm_ceilingHelpersGm_ceiling
             if ($data['n1'] == 28) {
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 0) {
-                    if($data['height'] == 1){
-                        $name = "Периметр(ПВХ)(высота >3м)";
-                        $mp1 = $results->mp1 + 10;
-                        $mp31 = $results->mp31 + 10;
-                        $mp32 = $results->mp32 + 10;
-                    }
-                    else{
-                        $name = "Периметр(ПВХ)";
-                        $mp1 = $results->mp1;
-                        $mp31 = $results->mp31;
-                        $mp32 = $results->mp32;
-                    }
                     $mounting_data[] = array(
-                        "title" => $name,                                                                    //Название
+                        "title" => "Периметр (ПВХ)",                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
-                        "gm_salary" => $mp1,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['n5'] * $mp1,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $mp1,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n5'] * $mp1                                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => ($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => ($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp1 + 10) : $results->mp1)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 1) {
                     $mounting_data[] = array(
-                        "title" => $name,                                                                    //Название
+                        "title" => "Периметр (ПВХ)",                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
-                        "gm_salary" => $mp31,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['n5'] * $mp31,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $mp31,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n5'] * $mp31                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => ($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => ($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp31 + 10) : $results->mp31)                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
 
                 }
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 2) {
                     $mounting_data[] = array(
-                        "title" => $name,                                                                    //Название
+                        "title" => "Периметр (ПВХ)",                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
-                        "gm_salary" => $mp32,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['n5'] * $mp32,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $mp32,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n5'] * $mp32                                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => ($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => ($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp32 + 10) : $results->mp32)                                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
 
                 }
@@ -2264,21 +2218,13 @@ class Gm_ceilingHelpersGm_ceiling
             if ($data['n1'] == 29) {
                 //периметр
                 if ($data['n5'] > 0) {
-                    if($data['height'] == 1){
-                        $name = "Периметр (Ткань)(высота >3м)";
-                        $mp33 = $results->mp33 + 10;
-                    }
-                    else{
-                        $name = "Периметр (Ткань)";
-                        $mp33 = $results->mp33;
-                    }
                     $mounting_data[] = array(
                         "title" => "Периметр (Ткань)",                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
-                        "gm_salary" => $mp33,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $data['n5'] * $mp33,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n5'] * $pm33                                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "gm_salary" => ($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33),                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => ($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n5'] * (($data['height'] == 1) ? ($results->mp33 + 10) : $results->mp33)                                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
                 if ($data['n11'] > 0) {
@@ -2880,20 +2826,13 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
     /* функция генерации общего наряда на монтаж */
-    public static function create_common_estimate_mounters($project_id,$calc_ids = null){
+    public static function create_common_estimate_mounters($project_id){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
         $calculations_model = self::getModel('calculations');
         $names = $calculations_model->FindAllMounters($project->project_mounter);
-        $calculations = $calculations_model->getProjectItems($project_id);
-        if(!empty($calc_ids)){
-            foreach($calculations as $key => $calculation){
-                if(!in_array($calculation->id,$calc_ids)){
-                    unset($calculations[$key]);
-                }
-            }
-        }
+        $calculations = $calculations_model->new_getProjectItems($project_id);
         $transport = self::calculate_transport($project_id);
         $brigade = JFactory::getUser($project->project_mounter);
         $client_contacts_model = self::getModel('client_phones');
@@ -3175,7 +3114,7 @@ class Gm_ceilingHelpersGm_ceiling
         $client = $client_model->getClientById($project->id_client);
         $components_data = array();
         $calculations_model = self::getModel('calculations');
-        $calculations = $calculations_model->getProjectItems($project_id);
+        $calculations = $calculations_model->new_getProjectItems($project_id);
         $dealer_info = JFactory::getUser($client->dealer_id);
         $dealer_info_components = $dealer_info->getComponentsPrice();
         foreach($calculations as $calc){

@@ -20,21 +20,27 @@
  */
 class Gm_ceilingModelAnalitic_dealers extends JModelList
 {
-    function getData(){
-        try{
-           
-        }
-        catch(Exception $e)
-        {
+    public function getData($date1, $date2)
+    {
+        try {
+            $result = (object)array(
+                "common" => $this->getCommonDealersCount(),
+                "ordering_dealers" => $this->getOrderingDealers($date1, $date2),
+                "new_order_dealers" =>  $this->getNewOrderingDealers($date1, $date2), 
+                "fallen" => $this->getFallenOffDealers($date1, $date2)
+            );
+            return $result;
+        } catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
-        }            
+        }
     }
-    function getCommonDealersCount(){
+    public function getCommonDealersCount()
+    {
         //общее количество дилеров
-        try{
+        try {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
@@ -44,26 +50,23 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
             $db->setQuery($query);
             $count = $db->loadResult();
             return $count;
-            
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
-        }        
-        
+        }
     }
-    function getOrderingDealers($date1,$date2){
+    public function getOrderingDealers($date1, $date2)
+    {
         //заказывающие диллеры
         /* SELECT COUNT(u.id)
             FROM `rgzbn_users` AS u
-            WHERE u.id IN (SELECT dealer_id FROM `rgzbn_gm_ceiling_clients` AS c  WHERE u.id = c.dealer_id AND c.id IN 
-            ( SELECT p.client_id FROM `rgzbn_gm_ceiling_projects` AS p INNER JOIN `rgzbn_gm_ceiling_projects_history` AS h ON p.id = h.project_id 
-            AND h.new_status IN(4,5,10,12) AND h.date_of_change BETWEEN '2018-02-25' AND '2018-03-27')) 
+            WHERE u.id IN (SELECT dealer_id FROM `rgzbn_gm_ceiling_clients` AS c  WHERE u.id = c.dealer_id AND c.id IN
+            ( SELECT p.client_id FROM `rgzbn_gm_ceiling_projects` AS p INNER JOIN `rgzbn_gm_ceiling_projects_history` AS h ON p.id = h.project_id
+            AND h.new_status IN(4,5,10,12) AND h.date_of_change BETWEEN '2018-02-25' AND '2018-03-27'))
             AND u.dealer_id <> 1 AND u.dealer_type IN(0,1) */
-        try{
+        try {
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $sub_query1 = $db->getQuery(true);
@@ -73,7 +76,7 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
                 ->from("#__gm_ceiling_projects as p")
                 ->innerJoin("#__gm_ceiling_projects_history as h on p.id = h.project_id and h.new_status IN(4,5,10,12) AND h.date_of_change BETWEEN '$date1' and '$date2'");
             $sub_query1
-                ->select('dealer_id')
+                ->select('c.dealer_id')
                 ->from('#__gm_ceiling_clients as c')
                 ->where("u.id = c.dealer_id AND c.id IN ($sub_query2)");
             $query
@@ -81,20 +84,20 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
                 ->from('#__users as u')
                 ->where("u.id IN ($sub_query1)");
             $db->setQuery($query);
-            $count = $db->loadObjectList();
-            return $count;
-        }
-        catch(Exception $e)
-        {
+           
+            $items = $db->loadObjectList();
+            return $items;
+        } catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
-        }        
+        }
     }
-    function getNewOrderingDealers($date1,$date2){
+    public function getNewOrderingDealers($date1, $date2)
+    {
         //дилеры которые не заказывали до выбранного промежутка и заказали в выбранном
-        try{
+        try {
             $date1 = new DateTime($date1);
             $date2 = new DateTime($date2);
             $day_diff = $date2->diff($date1)->format("%d");
@@ -102,32 +105,40 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
             $prev_date1->modify('- '.++$day_diff.' days');
             $prev_date2 = clone $prev_date1;
             $prev_date2->modify('+ '.--$day_diff.' days');
-            $dealers = $this->getOrderingDealers($date1,$date2);//те кто заказал в этом периоде
-            $prev_dealers = $this->getOrderingDealers($prev_date1,$prev_date2); // те кто заказал в предыдущем
-            $need_dealers = array_diff($dealers,$prev_dealers);
-            return count($need_dealers);
-        }
-        catch(Exception $e)
-        {
+            $dealers = $this->getOrderingDealers($date1->format('Y-m-d'), $date2->format('Y-m-d'));//те кто заказал в этом периоде
+            $prev_dealers = $this->getOrderingDealers($prev_date1->format('Y-m-d'), $prev_date2->format('Y-m-d')); // те кто заказал в предыдущем
+            $need_dealers = array_udiff($dealers, $prev_dealers,'compare_objects');
+            return $need_dealers;
+        } catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
-        }        
+        }
     }
-    function getFallenOffDealers(){
+    function compare_objects($obj_a, $obj_b) {
+        return $obj_a->id != $obj_b->id;
+      }
+    public function getFallenOffDealers($date1, $date2)
+    {
         //дилеры которые заказывали до выбранного промежутка и не заказывали в выбранный
-        try{
-
-        }
-        catch(Exception $e)
-        {
+        try {
+            $date1 = new DateTime($date1);
+            $date2 = new DateTime($date2);
+            $day_diff = $date2->diff($date1)->format("%d");
+            $prev_date1 = clone $date1;
+            $prev_date1->modify('- '.++$day_diff.' days');
+            $prev_date2 = clone $prev_date1;
+            $prev_date2->modify('+ '.--$day_diff.' days');
+            $dealers = $this->getOrderingDealers($date1->format('Y-m-d'), $date2->format('Y-m-d'));//те кто заказал в этом периоде
+            $prev_dealers = $this->getOrderingDealers($prev_date1->format('Y-m-d'), $prev_date2->format('Y-m-d')); // те кто заказал в предыдущем
+            $need_dealers = array_udiff($prev_dealers, $dealers,'compare_objects');
+            return $need_dealers;
+        } catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
-        }        
-
+        }
     }
-
 }
