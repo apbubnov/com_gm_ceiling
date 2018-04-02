@@ -193,6 +193,8 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             $mailer->setSender($sender);
             $mailer->addRecipient($email);
             $mailer->setSubject($subject);
+            $mailer->isHtml(true);
+            $mailer->Encoding = 'base64';
             $mailer->setBody($text);
             //$mailer->addAttachment($sheets_dir.$filename);
 			$send = $mailer->Send();
@@ -213,23 +215,19 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
         {
             $app = JFactory::getApplication();
             $jinput = $app->input;
-			$text = $jinput->get('text', null, 'STRING');
-			$subject = $jinput->get('subj', null, 'STRING');
-			$user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-			$dop_contact_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-			$dealers = $user_model->getDealers();
-			$emails = [];
-			foreach($dealers as $dealer){
-				$tmp = $dop_contact_model->getEmailByClientID($dealer->associated_client);
-				foreach ($tmp as $value) {
-					if(!empty($value->contact)){
-						$emails[]=$value->contact;
-					}
-				}
-			}
+			$dealer_ids = $jinput->get('dealer_ids', null, 'ARRAY');
+			$comm_id = $jinput->get('comm_id', null, 'INT');
+
+			$emails = $this->getEmailsByIds($dealer_ids);
+
+			$comm_model = Gm_ceilingHelpersGm_ceiling::getModel('commercial_offer');
+			$comm_offers = $comm_model->getData("`id` = $comm_id");
+
+			$subject = $comm_offers[0]->subject;
+			$text = base64_decode($comm_offers[0]->text);
 
 			foreach($emails as $email){
-				$res = $this->sendEmail($email,$subject,$text);
+				$res = $this->sendEmail($email->contact,$subject,$text);
 			}
             die(json_encode($emails));
         }
@@ -241,6 +239,34 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	public function getEmailsByIds($ids)
+	{
+		try
+		{
+            $jinput = JFactory::getApplication()->input;
+            $model_dop_contacts = $this->getModel('clients_dop_contacts', 'Gm_ceilingModel');
+            $emails = [];
+            foreach ($ids as $key => $value)
+            {
+            	$result = $model_dop_contacts->getEmailByClientID($value);
+            	foreach ($result as $key2 => $item)
+	            {
+	            	array_push($emails, $item);
+	            }
+            }
+            
+			return($emails);
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 	function change_city(){
 		try
         {

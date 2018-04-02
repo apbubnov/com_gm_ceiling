@@ -20,6 +20,30 @@
  */
 class Gm_ceilingModelCommercial_offer extends JModelList
 {
+	function getData($filter = null)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('*');
+			$query->from('`#__gm_ceiling_commercial_offers`');
+			$query->where("$filter");
+			$db->setQuery($query);
+			
+			$result = $db->loadObjectList();
+
+			return $result;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 	function addCommOffer($subj, $text, $name, $manufac_id)
 	{
 		try
