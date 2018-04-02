@@ -46,7 +46,7 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
         <thead>
         <tr>
             <th>
-                
+                <input type="checkbox" name="checkbox_all_dealers" id="checkbox_all_dealers">
             </th>
             <th>
                Имя
@@ -203,44 +203,55 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                                 dealer_ids.push(jQuery(this).data('id'));
                             });
                             console.log(dealer_ids);
-
-                            jQuery.ajax({
-                                type: 'POST',
-                                url: "index.php?option=com_gm_ceiling&task=dealer.send_out_to_dealers",
-                                data: {
-                                   dealer_ids: dealer_ids,
-                                   comm_id: jQuery("#select_kp").val()
-                                },
-                                success: function(data){
-                                    console.log(data);
-                                    var n = noty({
-                                        timeout: 2000,
-                                        theme: 'relax',
-                                        layout: 'center',
-                                        maxVisible: 5,
-                                        type: "success",
-                                        text: "Письма отправлены"
-                                    });
-                                },
-                                dataType: "text",
-                                async: false,
-                                timeout: 10000,
-                                error: function(data){
-                                    var n = noty({
-                                        timeout: 2000,
-                                        theme: 'relax',
-                                        layout: 'center',
-                                        maxVisible: 5,
-                                        type: "error",
-                                        text: "Ошибка. Сервер не отвечает"
-                                    });
-                                }
-                            }); 
+                            if (dealer_ids.length > 0)
+                            {
+                                jQuery.ajax({
+                                    type: 'POST',
+                                    url: "index.php?option=com_gm_ceiling&task=dealer.send_out_to_dealers",
+                                    data: {
+                                       dealer_ids: dealer_ids,
+                                       comm_id: jQuery("#select_kp").val()
+                                    },
+                                    success: function(data){
+                                        console.log(data);
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "success",
+                                            text: "Письма отправлены"
+                                        });
+                                    },
+                                    dataType: "text",
+                                    async: false,
+                                    timeout: 10000,
+                                    error: function(data){
+                                        var n = noty({
+                                            timeout: 2000,
+                                            theme: 'relax',
+                                            layout: 'center',
+                                            maxVisible: 5,
+                                            type: "error",
+                                            text: "Ошибка. Сервер не отвечает"
+                                        });
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                alert("Не отмеченны диллеры!");
+                            }
                             return;
                         }
 
                         if (target.id == 'add_kp')
                         {
+                            text_cleditor[0].$frame[0].contentWindow.document.body.innerHTML = '<table cols=2  cellpadding="20px"style="width: 100%; border: 0px solid; color: #414099; font-family: Cuprum, Calibri; font-size: 16px;">' + 
+                            '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">' + 
+                            '<img src="http://calc.gm-vrn.ru/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">' + 
+                            '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">' + 
+                            '<p style="margin: 10px;">Тел.: +7(473)212-34-01</p><p style="margin: 10px;">Почта: gm-partner@mail.ru</p><p style="margin: 10px;">Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p></div></td></tr></table>';
                             jQuery("#modal_window_kp_editor").css('width', '80%');
                             jQuery("#modal_window_kp_editor").css('margin-left', '10%');
                             jQuery("#close").show();
@@ -257,7 +268,8 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
 
                         if (target.id == 'save_kp')
                         {
-                            var text = btoa(text_cleditor[0].$frame[0].contentWindow.document.body.innerHTML);
+                            console.log(text_cleditor[0].$frame[0].contentWindow.document.body.innerHTML);
+                            var text = btoa(escape(text_cleditor[0].$frame[0].contentWindow.document.body.innerHTML));
                             var reg = /^\s+$/gi;
                             var subj = jQuery("#email_subj").val();
                             var name = jQuery("#kp_name").val();
@@ -343,6 +355,23 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                         jQuery("#modal_window_create").hide();
                         jQuery("#modal_window_kp").hide();
                         jQuery("#modal_window_kp_editor").hide();
+                        return;
+                    }
+
+                    if (target.id == 'checkbox_all_dealers')
+                    {
+                        if (target.checked)
+                        {
+                            jQuery.each(jQuery('[name="checkbox_dealer[]"]'), function() {
+                                this.checked = true;
+                            });
+                        }
+                        else
+                        {
+                            jQuery.each(jQuery('[name="checkbox_dealer[]"]'), function() {
+                                this.checked = false;
+                            });
+                        }
                         return;
                     }
                 }

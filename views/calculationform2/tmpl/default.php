@@ -6,11 +6,10 @@
     $lang = JFactory::getLanguage();
     $lang->load('com_gm_ceiling', JPATH_SITE);
     $doc = JFactory::getDocument();
-    $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js'); 
+    $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
 
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
     $canvases_data = json_encode($canvases_model->getFilteredItemsCanvas("count>0"));
-   
 ?>
 <div class="container">
     <div class="col-sm-4"></div>
@@ -46,8 +45,7 @@
                     </td>
                 </tr>
             </table>
-            <select id="jform_n2" name="jform[n2]" class="form-control inputbox ">
-                <option >- Выберите фактуру -</option>
+            <select id="jform_n2" name="jform[n2]" class="form-control inputbox">
             </select>
         </div>
     </div>
@@ -89,7 +87,7 @@
                         </td>
                     </tr>
                 </table>
-                <select id="jform_proizv" name="jform[proizv]" class="form-control inputbox " disabled="">
+                <select id="jform_proizv" name="jform[proizv]" class="form-control inputbox">
                 </select>
             </div>
         </div>
@@ -124,32 +122,97 @@
     </div>
 </div>
 <script>
-    jQuery('document').ready(function(){
-        canvases_data = JSON.parse('<?php echo $canvases_data;?>');
+    jQuery('document').ready(function()
+    {
+        let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
         let textures = [];
-        jQuery.each(canvases_data,function(key,value){
+        let canvases_data_of_selected_texture = [];
+        console.log(canvases_data);
+
+        jQuery.each(canvases_data, function(key,value){
             let texture = {id:value.texture_id, name: value.texture_title};
             if(!obj_in_array(textures,texture)){
                 textures.push(texture);
+                jQuery("#jform_n2")
+                    .append(jQuery("<option></option>")
+                                .attr("value", texture.id)
+                                .text(texture.name));
             }
         });
-    });
-    function obj_in_array(array,obj){
-        let result = false;
-        for(let i = array.length; i--;){
-           /*  for(let j = 0;j<Object.keys(array[i]).length;j++){
-                if(array[Object.keys(array[i])[j]] !== obj[Object.keys(array[i])[j]]){
-                    result = false;
+
+        select_manufacturers();
+
+        document.getElementById('jform_n2').onchange = select_manufacturers;
+        document.getElementById('jform_proizv').onchange = select_widths;
+
+        function select_manufacturers()
+        {
+            let manufacturers = [];
+            canvases_data_of_selected_texture = [];
+            jQuery("#jform_proizv").empty();
+
+            jQuery.each(canvases_data, function(key,value){
+                let select_texture = document.getElementById('jform_n2').value;
+
+                if (value.texture_id === select_texture)
+                {
+                    canvases_data_of_selected_texture.push(value);
+                    let proizv = value.name + " " + value.country;
+
+                    if(!in_array(manufacturers, proizv)){
+                        manufacturers.push(proizv);
+                        jQuery("#jform_proizv")
+                            .append(jQuery("<option></option>")
+                                        .attr("value", value.name)
+                                        .text(proizv));
+                    }
+                }
+            });
+            console.log(canvases_data_of_selected_texture);
+            select_widths();
+        }
+
+        function select_widths()
+        {
+            let arr_widths = [];
+            jQuery.each(canvases_data_of_selected_texture, function(key,value){
+                let select_proizv = document.getElementById('jform_proizv').value;
+
+                if (value.name === select_proizv)
+                {
+                    let width = Math.round(value.width * 100);
+
+                    if(!in_array(arr_widths, width)){
+                        arr_widths.push(width);
+                    }
+                }
+            });
+
+            console.log(arr_widths);
+        }
+
+
+        function obj_in_array(array,obj){
+            let result = false;
+            for(let i = array.length; i--;){
+                let value1 = JSON.stringify(array[i]),value2 = JSON.stringify(obj);
+                if(value1 === value2){
+                    result = true;
                     break;
                 }
-            } */
-            let value1 = JSON.stringify(array[i]),value2 = JSON.stringify(obj);
-            if(value1 === value2){
-                result = true;
-                break;
             }
+            return result;
         }
-        return result;
-    }
-    
+
+        function in_array(array,value){
+            let result = false;
+            for(let i = array.length; i--;){
+                if(array[i] === value){
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+    });
 </script>

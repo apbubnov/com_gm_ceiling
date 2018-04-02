@@ -224,7 +224,8 @@ class Gm_ceilingControllerDealer extends Gm_ceilingController
 			$comm_offers = $comm_model->getData("`id` = $comm_id");
 
 			$subject = $comm_offers[0]->subject;
-			$text = base64_decode($comm_offers[0]->text);
+			$text = urldecode(base64_decode($comm_offers[0]->text));
+			$text = html_entity_decode(preg_replace("/\%u+([0-9A-F]{4})/", "&#x\\1;", $text), ENT_NOQUOTES, 'UTF-8');
 
 			foreach($emails as $email){
 				$res = $this->sendEmail($email->contact,$subject,$text);
