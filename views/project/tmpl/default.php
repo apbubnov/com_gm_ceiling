@@ -61,7 +61,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 	<div class="row-fluid">
 		<div class="span6 item_fields">
 			<h4>Информация по проекту</h4>
-			<?php echo $this->item; ?>
+			<?php echo $this->item->id; ?>
 			<table class="table">
 				<tr>
 					<th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_STATUS'); ?></th>
@@ -435,6 +435,36 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 	
 <script>
 	jQuery(document).ready(function(){
+
+		create_calculation();
+
+		function create_calculation()
+		{
+			jQuery.ajax({
+                type: 'POST',
+                url: "/index.php?option=com_gm_ceiling&task=calculation.create_calculation",
+                data: {
+                    proj_id: <?php echo $this->item->id; ?>
+                },
+                success: function(data){
+					console.log(data);
+					location.href = `/index.php?option=com_gm_ceiling&view=calculationform2&calc_id=${data}`;
+                },
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера."
+                    });
+                }
+            });
+		}
+
+
+
 		jQuery("input[name^='include_calculation']").click(function(){
 			if( jQuery( this ).prop("checked") ) {
 				jQuery( this ).closest("tr").removeClass("not-checked");
