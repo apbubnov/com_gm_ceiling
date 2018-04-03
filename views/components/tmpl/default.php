@@ -198,10 +198,8 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
                     <?elseif ($managerGM):?>
                         <td><?=$option->count;?></td>
                         <?
-                        $type = $dealer->ComponentsPrice[$key_o]->type;
-                        $value = $dealer->ComponentsPrice[$key_o]->value;
                         $Price = margin($option->price, $dealer->gm_components_margin);
-                        $DealerPrice = dealer_margin($Price, 0, $value, $type);
+                        $DealerPrice = dealer_margin($Price, 0, $dealer->ComponentsPrice[$key_o]);
                         $UpdatePrice = $DealerPrice - $Price;
                         ?>
                         <td id="GMPrice"><?= $Price; ?></td>
@@ -221,12 +219,10 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
                         </td>
                     <? else: ?>
                         <?
-                        $type = $userDealer->ComponentsPrice[$key_o]->type;
-                        $value = $userDealer->ComponentsPrice[$key_o]->value;
                         $TempPrice = margin($option->price, $userDealer->gm_components_margin);
                         ?>
-                        <td><?= dealer_margin($TempPrice, 0, $value, $type);?></td>
-                        <td><?= dealer_margin($TempPrice, $userDealer->dealer_components_margin, $value, $type);?></td>
+                        <td><?= dealer_margin($TempPrice, 0, $userDealer->ComponentsPrice[$key_o]);?></td>
+                        <td><?= dealer_margin($TempPrice, $userDealer->dealer_components_margin, $userDealer->ComponentsPrice[$key_o]);?></td>
                         <td>
                             <form class="FormSimple Pay MarginLeft" data-id="<?=$key_o;?>" action="javascript:Pay(<?=$key_o;?>);">
                                 <label for="CountPay" title="Введите количество"><i class="fa fa-cubes"></i></label>
@@ -234,7 +230,7 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
                                        title="Введите количество" size="5" min="1"
                                        data-JsonSend='{
                                        "id": "<?=$key_o;?>",
-                                       "price": "<?=dealer_margin($TempPrice, 0, $value, $type);?>"
+                                       "price": "<?=dealer_margin($TempPrice, 0, $userDealer->ComponentsPrice[$key_o]);?>"
                                        }' required>
                                 <button type="submit" class="buttonOK">
                                     <i class="fa fa-paper-plane" aria-hidden="true"></i>
