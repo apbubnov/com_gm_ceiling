@@ -788,15 +788,6 @@ class Gm_ceilingModelCalculation extends JModelItem
     {
         try
         {
-            /*$db    = JFactory::getDbo();
-            $query = $db->getQuery(true);
-            $query
-                ->insert("$type")
-                ->columns('`#__gm_ceiling_calculations`')
-                ->values('id = ' . $id);
-            $db->setQuery($query);
-
-            return $db->loadObject();*/
             $data['project_id'] = $proj_id;
             $table = $this->getTable();
 			if ($table->save($data) === true)
@@ -829,7 +820,7 @@ class Gm_ceilingModelCalculation extends JModelItem
 			
 			if ($table->save($data) === true)
 			{
-				return $table->id;
+				return true;
 			}
 			else
 			{
