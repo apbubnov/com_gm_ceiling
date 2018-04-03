@@ -4701,19 +4701,19 @@ class Gm_ceilingHelpersGm_ceiling
         $data->type = 0;
 
         $data->switchValue = 0.0;
-        if ($data->dealerPrice->type == 2)
+        if ($data->dealerPrice->type == 3)
             $data->switchValue += $PriceDB * ($data->dealerPrice->value / 100);
-        else if ($data->dealerPrice->type == 4)
+        else if ($data->dealerPrice->type == 5)
             $data->switchValue += $data->dealerPrice->price * ($data->dealerPrice->value / 100);
-        else if ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5)
+        else if ($data->dealerPrice->type == 2 || $data->dealerPrice->type == 4)
             $data->switchValue += $data->dealerPrice->value;
 
         $data->percentValue = 0.0;
-        if ($data->dealerPrice->type == 3)
+        if ($data->dealerPrice->type == 2)
             $data->percentValue += ($PriceDB + $data->dealerPrice->value) * 100 / $PriceDB - 100;
-        else if ($data->dealerPrice->type == 5)
+        else if ($data->dealerPrice->type == 4)
             $data->percentValue += ($data->dealerPrice->price + $data->dealerPrice->value) * 100 / $data->dealerPrice->price - 100;
-        else if ($data->dealerPrice->type == 2 || $data->dealerPrice->type == 4)
+        else if ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5)
             $data->percentValue += $data->dealerPrice->value;
 
         if ($data->point && !($data->star || $data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
