@@ -275,7 +275,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             }
             else
             {
-                if($dealer_city = "Москва"){
+                if($dealer_city == "Москва"){
                     $this->setRedirect(JRoute::_('/files/KP_Moscow.pdf', false));
                 }
                 else{
