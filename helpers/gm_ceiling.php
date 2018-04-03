@@ -4674,27 +4674,27 @@ class Gm_ceilingHelpersGm_ceiling
         $data = (object) [];
 
         $data->dealerPrice = $dealerPrice;
-        $data->price = $price;
 
         $price = (string) $price;
+        $data->price = $price;
 
         $temp = str_replace("*", "", $price);
-        $data->star = ($temp != $price);
+        $data->star = (strlen($temp) != strlen($price));
 
         $price = $temp;
         $temp = str_replace("#", "", $price);
-        $data->sharp = ($temp != $price);
+        $data->sharp = (strlen($temp) != strlen($price));
 
         $price = $temp;
         $temp = str_replace("%", "", $price);
-        $data->percent = ($temp != $price);
+        $data->percent = (strlen($temp) != strlen($price));
 
         $price = $temp;
         $temp = str_replace(["+", "-"], "", $price);
-        $data->switch = ($temp != $price);
+        $data->switch = (strlen($temp) != strlen($price));
 
         $data->point = str_replace(".", "", $price);
-        $data->point = ($data->point != $price);
+        $data->point = (strlen($data->point) != strlen($price));
 
         $data->value = floatval($price);
         $data->valueEmpty = ($temp == "");
