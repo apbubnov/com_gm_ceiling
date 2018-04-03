@@ -4797,6 +4797,9 @@ class Gm_ceilingHelpersGm_ceiling
             $data->dealerPrice->value = $data->value;
         }
 
+        $data->updatePrice = ((string) $data->dealerPrice->value) .
+            ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5)?"%":"";
+
         return $data;
     }
 }

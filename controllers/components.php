@@ -124,8 +124,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $newPrice = $oldPrice;
                 foreach ($oldPrice as $k => $v)
                 {
-                    $price = "*" . $price;
-                    $data = $this->parse_price($price, (object) [], $v->price);
+                    $data = $this->parse_price("*" . $price, (object) [], $v->price);
                     $objectPrice = $data->dealerPrice;
 
                     $newPrice[$k]->price = $this->dealer_margin($v->price, 0, $objectPrice);
@@ -143,14 +142,14 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->ComponentsPrice[$v->id];
-                    $NewDealerPrice = $this->parse_price($price, $OldDealerPrice);
-                    $OldDealerPrice = (empty($OldDealerPrice))?$v->price:self::dealer_margin($v->price, 0, $OldDealerPrice->value, $OldDealerPrice->type);
-                    if ($type == 0) $OldDealerPrice = $v->price;
-                    $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
-                    $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_components_margin, $number, $type);
+                    $NewDealerData = $this->parse_price($price, $OldDealerPrice);
+                    $NewDealerPrice = $NewDealerData->dealerPrice;
+
+                    $DealerPrice = self::dealer_margin($OldDealerPrice, 0, $NewDealerPrice);
+                    $ClientPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_components_margin, $NewDealerPrice);
                     $PPrice = $model->MinPriceOption($v->id);
-                    $ComponentsPrice = self::margin($v->price, $userDealer->gm_components_margin);
-                    $UpdateDelaerPrice = $DealerPrice - $ComponentsPrice;
+
+                    $UpdateDelaerPrice = $NewDealerData->updatePrice;
 
                     if (floatval($NewDealerPrice) < floatval($PPrice) && false) $flag++;
                     else {
@@ -158,13 +157,13 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
 
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #GMPrice",
-                            "value" => $ComponentsPrice];
+                            "value" => $DealerPrice];
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #UpdateDealerPrice",
-                            "value" => (($UpdateDelaerPrice >= 0)?"+":"").$UpdateDelaerPrice];
+                            "value" => $UpdateDelaerPrice];
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #DealerPrice",
-                            "value" => $DealerPrice];
+                            "value" => $ClientPrice];
                     }
                 }
                 if ($flag == 1) {
