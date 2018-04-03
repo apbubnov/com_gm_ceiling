@@ -4659,7 +4659,7 @@ class Gm_ceilingHelpersGm_ceiling
 
     public static function parse_price($price, $dealerPrice, $PriceDB = null)
     {
-        if ($price || gettype($dealerPrice) != "object")
+        if ($price == null || gettype($dealerPrice) != "object")
             return null;
 
         if ($PriceDB == null)
