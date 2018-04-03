@@ -52,34 +52,37 @@ if ($managerGM) {
     }
 }
 
-function margin($value, $margin)
-{
-    return ($value * 100 / (100 - $margin));
-}
-
-function double_margin($value, $margin1, $margin2)
-{
-    return margin(margin($value, $margin1), $margin2);
-}
-
-function dealer_margin($price, $margin, $value, $type)
-{
+function margin($value, $margin){return ($value * 100 / (100 - $margin));}
+function double_margin($value, $margin1, $margin2){return margin(margin($value, $margin1), $margin2);}
+function dealer_margin($price, $margin, $objectDealerPrice) {
     $result = 0;
-    switch ($type) {
-        case 0:
-            $result = $price;
-            break;
-        case 1:
-            $result = $value;
-            break;
-        case 2:
-            $result = $price + $value;
-            break;
-        case 3:
-            $result = $price + $price * floatval($value) / 100;
-            break;
+
+    $objectDealerPrice->value = floatval($objectDealerPrice->value);
+    $objectDealerPrice->price = floatval($objectDealerPrice->price);
+
+    switch ($objectDealerPrice->type)
+    {
+        case 0: $result = $price; break;
+        case 1: $result = $objectDealerPrice->price; break;
+        case 2: $result = $price + $objectDealerPrice->value; break;
+        case 3: $result = $price + $price * $objectDealerPrice->value / 100; break;
+        case 4: $result = $objectDealerPrice->price + $objectDealerPrice->value; break;
+        case 5: $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100; break;
     }
     return margin($result, $margin);
+}
+
+function update_price($objectDealerPrice, $Price)
+{
+    $percent = ($objectDealerPrice->type == 3 || $objectDealerPrice->type == 5);
+    $value = abs($objectDealerPrice->value);
+    $valueSTR = (($objectDealerPrice->value == abs($objectDealerPrice->value))?" + ":" - ") . $value;
+
+    $updatePrice = "";
+    if ($objectDealerPrice->price != $Price) $updatePrice .= $objectDealerPrice->price;
+    if ($value != 0) $updatePrice .= $valueSTR . (($percent)?"%":"");
+
+    return $updatePrice;
 }
 
 ?>
@@ -289,14 +292,12 @@ function dealer_margin($price, $margin, $value, $type)
                                 </td>
                             <? elseif ($managerGM): ?>
                                 <?
-                                $type = $dealer->CanvasesPrice[$key_c]->type;
-                                $value = $dealer->CanvasesPrice[$key_c]->value;
                                 $Price = margin($canvas->price, $dealer->gm_canvases_margin);
-                                $DealerPrice = dealer_margin($Price, 0, $value, $type);
+                                $DealerPrice = dealer_margin($Price, 0, $dealer->CanvasesPrice[$key_c]);
                                 $UpdatePrice = $DealerPrice - $Price;
                                 ?>
                                 <td id="GMPrice"><?= $Price; ?></td>
-                                <td id="UpdateDealerPrice"><?= (($UpdatePrice >= 0) ? "+" : "") . $UpdatePrice; ?></td>
+                                <td id="UpdateDealerPrice"><?= update_price($dealer->CanvasesPrice[$key_c], $Price); ?></td>
                                 <td id="DealerPrice"><?= $DealerPrice; ?></td>
                                 <td>
                                     <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
@@ -314,12 +315,10 @@ function dealer_margin($price, $margin, $value, $type)
                                 </td>
                             <? else: ?>
                                 <?
-                                $type = $userDealer->CanvasesPrice[$key_c]->type;
-                                $value = $userDealer->CanvasesPrice[$key_c]->value;
                                 $TempPrice = margin($canvas->price, $userDealer->gm_canvases_margin);
                                 ?>
-                                <td><?= dealer_margin($TempPrice, 0, $value, $type)?></td>
-                                <td><?= dealer_margin($TempPrice, $userDealer->dealer_canvases_margin, $value, $type)?></td>
+                                <td><?= dealer_margin($TempPrice, 0, $userDealer->CanvasesPrice[$key_c])?></td>
+                                <td><?= dealer_margin($TempPrice, $userDealer->dealer_canvases_margin, $userDealer->CanvasesPrice[$key_c])?></td>
                             <? endif; ?>
                         </tr>
                         <? if ($stock) foreach ($canvas->rollers as $key_r => $roller): ?>

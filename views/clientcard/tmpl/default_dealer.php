@@ -20,6 +20,8 @@ JHtml::_('formbehavior.chosen', 'select');
     $phonefrom = $jinput->get('phonefrom', '', 'STRING');
     $call_id = $jinput->get('call_id', 0, 'INT');
     $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+    $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+    $dealer_city =  $dealer_info_model->getDataById($this->item->dealer_id)->city;
     $client = $client_model->getClientById($this->item->id);
     $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
     $clients_items = $clients_model->getDealersClientsListQuery($client->dealer_id, $this->item->id);
@@ -65,6 +67,7 @@ foreach ($dealer_history as $key => $item) {
         <button id = "broke" type = "button" class = "btn btn-primary">Звонок сорвался, перенести время</button>
     <?php } ?>
     <br><label>Менеджер: <?php echo $manager_name;?></label>
+    <br><label>Город: <?php echo $dealer_city;?></label>
 </div>
 <table class = "actions">
     <tr>

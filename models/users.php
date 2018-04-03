@@ -137,7 +137,7 @@ class Gm_ceilingModelUsers extends JModelList
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->delete('`#__users_dealer_instruction`');
-			$query->where("`user_id` = $user_id");
+			$query->where("`user_id` = $user_id and `code` = '$code'");
 			$db->setQuery($query);
 			$db->execute();
 
@@ -238,11 +238,11 @@ class Gm_ceilingModelUsers extends JModelList
 				}
 				
 				$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-				if(!empty($short)){
+				if($short == 2){
 					$callback_model->save(date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'+2 hours')),'Просмотрено видео Быстрый заказ',
 					$client_id,$manager_id);
 				}
-				else{
+				if($short != 2){
 					$callback_model->save(date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s').'+2 hours')),'Просмотрена инструкция по использованию программы',
 					$client_id,$manager_id);
 				}
@@ -251,7 +251,7 @@ class Gm_ceilingModelUsers extends JModelList
 				$query = $db->getQuery(true);
 				$query->update('`#__users_dealer_instruction`');
 				$query->set('`status` = 1');
-				$query->where("`user_id` = $item->user_id");
+				$query->where("`user_id` = $item->user_id and `code` = '$code'");
 				$db->setQuery($query);
 				$db->execute();
 			}

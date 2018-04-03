@@ -267,6 +267,47 @@ class Gm_ceilingModelCalculation extends JModelItem
         }
 	}
 
+	public function new_getData($id){
+		try{
+			if(!empty($id)){
+				$db = JFactory::getDbo();
+				$query = $db->getQuery(true);
+				$query
+					->select('*')
+					->from('`#__gm_ceiling_calculations` as c')
+					->where("c.id = $id");
+				$db->setQuery($query);
+				$item = $db->loadObject();
+				$item->n13 = $this->n13_load($item->id);
+				$item->n14 = $this->n14_load($item->id);
+	            $item->n15 = $this->n15_load($item->id);
+	            $item->n22 = $this->n22_load($item->id);
+	            $item->n23 = $this->n23_load($item->id);
+	            $item->n26 = $this->n26_load($item->id);
+				$item->n29 = $this->n29_load($item->id);
+				$query
+					->select('client.dealer_id')
+					->from('`#__gm_ceiling_clients` as client')
+					->join('LEFT','`#__gm_ceiling_projects` AS proj ON proj.client_id = client.id')
+					->join('LEFT','`#__gm_ceiling_calculations` AS calc ON calc.project_id = proj.id')
+					->where('calc.id  = ' . $item->id);
+				$db->setQuery($query);
+				$item->dealer_id = $db->loadObject()->dealer_id;
+				return $item;
+			}
+			else{
+				throw new Exception("Пустой id калькуляции");
+			}
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 	public function n13_load($id)
     {
     	try
