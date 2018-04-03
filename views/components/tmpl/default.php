@@ -50,9 +50,25 @@ if ($managerGM) {
     }
 }
 
-/*function margin($value, $margin) { return Gm_ceilingHelpersGm_ceiling::margin($value, $margin); }
-function double_margin($value, $margin1, $margin2) { return Gm_ceilingHelpersGm_ceiling::double_margin($value, $margin1, $margin2); }
-function dealer_margin($price, $margin, $objectDealerPrice) { return Gm_ceilingHelpersGm_ceiling::dealer_margin($price, $margin, $objectDealerPrice); }*/
+function margin($value, $margin){return ($value * 100 / (100 - $margin));}
+function double_margin($value, $margin1, $margin2){return margin(margin($value, $margin1), $margin2);}
+function dealer_margin($price, $margin, $objectDealerPrice) {
+    $result = 0;
+
+    $objectDealerPrice->value = floatval($objectDealerPrice->value);
+    $objectDealerPrice->price = floatval($objectDealerPrice->price);
+
+    switch ($objectDealerPrice->type)
+    {
+        case 0: $result = $price; break;
+        case 1: $result = $objectDealerPrice->price; break;
+        case 2: $result = $price + $objectDealerPrice->value; break;
+        case 3: $result = $price + $price * $objectDealerPrice->value / 100; break;
+        case 4: $result = $objectDealerPrice->price + $objectDealerPrice->value; break;
+        case 5: $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100; break;
+    }
+    return margin($result, $margin);
+}
 ?>
 <link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css">
 <div class="Page">

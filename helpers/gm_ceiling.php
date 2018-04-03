@@ -22,17 +22,13 @@ include($_SERVER['DOCUMENT_ROOT'] . "/mpdf_test/mpdf.php");
 /* функция для применения маржи */
 function margin($value, $margin)
 {
-
-    $return = ($value * 100 / (100 - $margin));
-    return $return;
+    return ($value * 100 / (100 - $margin));
 }
 
 /* функция для применения сразу двойной маржи */
 function double_margin($value, $margin1, $margin2)
 {
-
-    $return = ($value * 100 / (100 - $margin1)) * 100 / (100 - $margin2);
-    return $return;
+    return margin(margin($value, $margin1), $margin2);
 }
 
 /**
