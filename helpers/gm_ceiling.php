@@ -35,21 +35,38 @@ function double_margin($value, $margin1, $margin2)
     return $return;
 }
 
-/* моржа для дилера */
-function dealer_margin($price, $margin, $value, $type) {
+/**
+ * @license https://github.com/apbubnov/com_gm_ceiling/wiki/DealerPrice
+ * @author CEH4TOP
+ * @param $price
+ * @param $margin
+ * @param $objectDealerPrice
+ * @return float|int
+ */
+function dealer_margin($price, $margin, $objectDealerPrice) {
     $result = 0;
-    switch ($type)
+
+    $objectDealerPrice->value = floatval($objectDealerPrice->value);
+    $objectDealerPrice->price = floatval($objectDealerPrice->price);
+
+    switch ($objectDealerPrice->type)
     {
         case 0: $result = $price; break;
-        case 1: $result = $value; break;
-        case 2: $result = $price + $value; break;
-        case 3: $result = $price + $price * floatval($value) / 100; break;
+        case 1: $result = $objectDealerPrice->price; break;
+        case 2: $result = $price + $objectDealerPrice->value; break;
+        case 3: $result = $price + $price * $objectDealerPrice->value / 100; break;
+        case 4: $result = $objectDealerPrice->price + $objectDealerPrice->value; break;
+        case 5: $result = $objectDealerPrice->price + $objectDealerPrice->price * $objectDealerPrice->value / 100; break;
     }
     return margin($result, $margin);
 }
 
 class Gm_ceilingHelpersGm_ceiling
 {
+    public static function margin($value, $margin) { return margin($value, $margin); }
+    public static function double_margin($value, $margin1, $margin2) { return double_margin($value, $margin1, $margin2); }
+    public static function dealer_margin($price, $margin, $objectDealerPrice) { return dealer_margin($price, $margin, $objectDealerPrice); }
+
     /**
      * Get an instance of the named modelt
      *
@@ -1278,10 +1295,10 @@ class Gm_ceilingHelpersGm_ceiling
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
-            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
             $components_data[] = $component_item;
@@ -1306,11 +1323,11 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
 
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
 
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
-            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
 
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
@@ -1417,11 +1434,11 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
 
             //себестоимость дилера, с учетом его прайса
-            $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
+            $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases[$canvas_id]);
             //Кол-во * себестоимость дилера
             $canvases_data['self_dealer_total'] = round($data['n4'] * $canvases_data['self_dealer_price'], 2);
             //дилерская цена для клиента
-            $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
+            $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]);
             //Кол-во * дилерскую цену (для клиента)
             $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
         }
@@ -1464,10 +1481,10 @@ class Gm_ceilingHelpersGm_ceiling
             $offcut_square_data['gm_total'] = round($data['offcut_square'] * $offcut_square_data['gm_price'], 2);
             //Стоимость с маржой ГМ и дилера (для клиента)
 
-            $offcut_square_data['self_dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type) * 0.4, 2);
+            $offcut_square_data['self_dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, 0, $dealer_info_canvases[$canvas_id]) * 0.4, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['self_dealer_total'] = round($data['offcut_square'] * $offcut_square_data['self_dealer_price'], 2);
-            $offcut_square_data['dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type) * 0.4, 2);
+            $offcut_square_data['dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]) * 0.4, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
         }
@@ -4636,5 +4653,159 @@ class Gm_ceilingHelpersGm_ceiling
         $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATA->Month[intval($DATE->MonthNumber) - 1], $DATA->Month2[intval($DATE->MonthNumber) - 1], $DATE->TopName, $DaysOfTheWeek, $Days);
 
         return $Calendar;
+    }
+
+
+
+    public static function parse_price($price, $dealerPrice, $PriceDB = null)
+    {
+        if ($price == null || gettype($dealerPrice) != "object")
+            return null;
+
+        if ($PriceDB == null)
+        {
+            $Table = ($dealerPrice->component_id != null)?"Components":"Canvases";
+            $IdPrice = ($dealerPrice->component_id != null)?$dealerPrice->component_id:$dealerPrice->canvas_id;
+
+            $model = self::getModel($Table);
+            $PriceDB = $model->getPrice($IdPrice)->price;
+        }
+
+        $data = (object) [];
+
+        $data->dealerPrice = $dealerPrice;
+
+        $price = (string) $price;
+        $data->price = $price;
+
+        $temp = str_replace("*", "", $price);
+        $data->star = (strlen($temp) != strlen($price));
+
+        $price = $temp;
+        $temp = str_replace("#", "", $price);
+        $data->sharp = (strlen($temp) != strlen($price));
+
+        $price = $temp;
+        $temp = str_replace("%", "", $price);
+        $data->percent = (strlen($temp) != strlen($price));
+
+        $price = $temp;
+        $temp = str_replace(["+", "-"], "", $price);
+        $data->switch = (strlen($temp) != strlen($price));
+
+        $data->point = str_replace(".", "", $price);
+        $data->point = (strlen($data->point) != strlen($price));
+
+        $data->value = floatval($price);
+        $data->valueEmpty = ($temp == "");
+        $data->type = 0;
+
+        $data->switchValue = 0.0;
+        if ($data->dealerPrice->type == 3)
+            $data->switchValue += $PriceDB * ($data->dealerPrice->value / 100);
+        else if ($data->dealerPrice->type == 5)
+            $data->switchValue += $data->dealerPrice->price * ($data->dealerPrice->value / 100);
+        else if ($data->dealerPrice->type == 2 || $data->dealerPrice->type == 4)
+            $data->switchValue += $data->dealerPrice->value;
+
+        $data->percentValue = 0.0;
+        if ($data->dealerPrice->type == 2)
+            $data->percentValue += ($PriceDB + $data->dealerPrice->value) * 100 / $PriceDB - 100;
+        else if ($data->dealerPrice->type == 4)
+            $data->percentValue += ($data->dealerPrice->price + $data->dealerPrice->value) * 100 / $data->dealerPrice->price - 100;
+        else if ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5)
+            $data->percentValue += $data->dealerPrice->value;
+
+        if ($data->point && !($data->star || $data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
+        {
+            $data->dealerPrice->type = 0;
+            $data->dealerPrice->price = 0;
+            $data->dealerPrice->value = 0;
+        }
+        else if ($data->star && $data->point && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
+        {
+            $data->dealerPrice->type = 1;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = 0;
+        }
+        else if ($data->star && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
+        {
+            $data->dealerPrice->price = $PriceDB;
+        }
+        else if ($data->sharp && $data->point && !($data->star || $data->switch || $data->percent || !$data->valueEmpty))
+        {
+            $data->dealerPrice->type = 1;
+            $data->dealerPrice->value = 0;
+        }
+        else if ($data->sharp && !$data->valueEmpty && !($data->star || $data->switch || $data->percent))
+        {
+            $data->dealerPrice->price = $data->value;
+        }
+        else if ($data->star && !$data->valueEmpty && !($data->sharp || $data->switch || $data->percent))
+        {
+            $data->dealerPrice->type = 1;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = 0;
+        }
+        else if (!$data->valueEmpty && !($data->sharp || $data->star || $data->switch || $data->percent))
+        {
+            $data->dealerPrice->type = 1;
+            $data->dealerPrice->price = $data->value;
+            $data->dealerPrice->value = 0;
+        }
+        else if (!$data->valueEmpty && $data->switch && !($data->sharp || $data->star || $data->percent))
+        {
+            $data->dealerPrice->type = 4;
+            $data->dealerPrice->value = $data->value + $data->switchValue;
+        }
+        else if ($data->star && !$data->valueEmpty && $data->switch && !($data->sharp || $data->percent))
+        {
+            $data->dealerPrice->type = 4;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = $data->value + $data->switchValue;
+        }
+        else if (!$data->valueEmpty && $data->switch && $data->percent && !($data->sharp || $data->star))
+        {
+            $data->dealerPrice->type = 5;
+            $data->dealerPrice->value = $data->value + $data->percentValue;
+        }
+        else if ($data->star && !$data->valueEmpty && $data->switch && $data->percent && !$data->sharp)
+        {
+            $data->dealerPrice->type = 5;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = $data->value + $data->percentValue;
+        }
+        else if ($data->sharp && !$data->valueEmpty && $data->switch && !($data->star || $data->percent))
+        {
+            $data->dealerPrice->type = 4;
+            $data->dealerPrice->value = $data->value;
+        }
+        else if ($data->sharp && $data->star && !$data->valueEmpty && $data->switch && !$data->percent)
+        {
+            $data->dealerPrice->type = 4;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = $data->value;
+        }
+        else if ($data->sharp && !$data->valueEmpty && $data->switch && $data->percent && !$data->star)
+        {
+            $data->dealerPrice->type = 5;
+            $data->dealerPrice->value = $data->value;
+        }
+        else if ($data->sharp && $data->star && !$data->valueEmpty && $data->switch && $data->percent)
+        {
+            $data->dealerPrice->type = 5;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = $data->value;
+        }
+
+        $data->updatePrice = ($data->switch)?$data->value:"";
+        $data->updatePrice += ($data->switch && $data->percent)?$data->percentValue:0;
+        $data->updatePrice += ($data->switch && !$data->percent)?$data->switchValue:0;
+        $data->updatePrice = (($data->dealerPrice->value == abs($data->dealerPrice->value))?"+":"") . $data->updatePrice;
+        $data->updatePrice .= ($data->switch && $data->percent)?"%":"";
+
+        $data->updatePrice = $data->dealerPrice->price . " " . $data->updatePrice;
+
+        return $data;
     }
 }

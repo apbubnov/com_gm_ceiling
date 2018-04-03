@@ -17,6 +17,22 @@ defined('_JEXEC') or die;
  */
 class Gm_ceilingControllerCalculation extends JControllerLegacy
 {
+    public function getImagePNG()
+    {
+        $app = JFactory::getApplication();
+        $id = $app->input->getInt('id', 0);
+        $svg = file_get_contents("http://" . $_SERVER["SERVER_NAME"] . "/calculation_images/man.svg");
+        $image = new Imagick();
+        $image->setResolution(800, 800);
+        $image->readImageBlob($svg);
+        $image->setImageFormat("png32");
+        $image->scaleImage(400, 400);
+        $image = $image->flattenImages();
+        header("Content-type: image/png");
+        echo($image);
+        exit();
+    }
+
 	/**
 	 * Method to check out an item for editing and redirect to the edit form.
 	 *
@@ -192,6 +208,26 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 			{
 				throw new Exception(500);
 			}
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+	public function create_calculation()
+	{
+		try
+		{
+			$jinput = JFactory::getApplication()->input;
+            $proj_id = $jinput->get('proj_id', null, 'INT');
+
+            $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $result  = $calc_model->create_calculation($proj_id);
+            die($result);
 		}
 		catch(Exception $e)
         {
