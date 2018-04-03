@@ -69,6 +69,20 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
     }
     return margin($result, $margin);
 }
+
+function update_price($objectDealerPrice, $Price)
+{
+    $percent = ($objectDealerPrice->type == 3 || $objectDealerPrice->type == 5);
+    $value = abs($objectDealerPrice->value);
+    $valueSTR = (($objectDealerPrice->value == abs($objectDealerPrice->value))?" + ":" - ") . $value;
+
+    $updatePrice = "";
+    if ($objectDealerPrice->price != $Price) $updatePrice .= $objectDealerPrice->price;
+    if ($value != 0) $updatePrice .= $valueSTR . (($percent)?"%":"");
+
+    return $updatePrice;
+}
+
 ?>
 <link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css">
 <div class="Page">
@@ -203,7 +217,7 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
                         $UpdatePrice = $DealerPrice - $Price;
                         ?>
                         <td id="GMPrice"><?= $Price; ?></td>
-                        <td id="UpdateDealerPrice"><?= (($UpdatePrice >= 0)?"+":"").$UpdatePrice; ?></td>
+                        <td id="UpdateDealerPrice"><?= update_price($dealer->ComponentsPrice[$key_o], $Price); ?></td>
                         <td id="DealerPrice"><?= $DealerPrice; ?></td>
                         <td>
                             <form class="FormSimple UpdatePrice MarginLeft" data-id="<?=$key_o;?>">
