@@ -63,6 +63,10 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
 
 class Gm_ceilingHelpersGm_ceiling
 {
+    public static function margin($value, $margin) { return margin($value, $margin); }
+    public static function double_margin($value, $margin1, $margin2) { return double_margin($value, $margin1, $margin2); }
+    public static function dealer_margin($price, $margin, $objectDealerPrice) { return dealer_margin($price, $margin, $objectDealerPrice); }
+
     /**
      * Get an instance of the named modelt
      *
@@ -4649,5 +4653,150 @@ class Gm_ceilingHelpersGm_ceiling
         $Calendar = sprintf($Calendar, $DATE->MonthNumber, $DATE->MonthNumber, $DATE->Year, $DATA->Month[intval($DATE->MonthNumber) - 1], $DATA->Month2[intval($DATE->MonthNumber) - 1], $DATE->TopName, $DaysOfTheWeek, $Days);
 
         return $Calendar;
+    }
+
+
+
+    function parse_price($price, $dealerPrice, $PriceDB = null)
+    {
+        if ($price || gettype($dealerPrice) != "object")
+            return null;
+
+        if ($PriceDB == null)
+        {
+            $Table = ($dealerPrice->component_id != null)?"Components":"Canvases";
+            $IdPrice = ($dealerPrice->component_id != null)?$dealerPrice->component_id:$dealerPrice->canvas_id;
+
+            $model = self::getModel($Table);
+            $PriceDB = $model->getPrice($IdPrice)->price;
+        }
+
+        $data = (object) [];
+
+        $data->dealerPrice = $dealerPrice;
+
+        $price = (string) $price;
+
+        $temp = str_replace("*", "", $price);
+        $data->star = ($temp != $price);
+
+        $price = $temp;
+        $temp = str_replace("#", "", $price);
+        $data->sharp = ($temp != $price);
+
+        $price = $temp;
+        $temp = str_replace("%", "", $price);
+        $data->percent = ($temp != $price);
+
+        $price = $temp;
+        $temp = str_replace(["+", "-"], "", $price);
+        $data->switch = ($temp != $price);
+
+        $data->point = str_replace(".", "", $price);
+        $data->point = ($data->point != $price);
+
+        $data->value = floatval($price);
+        $data->valueEmpty = ($temp == "");
+        $data->type = 0;
+
+        $data->switchValue = 0.0;
+        if ($data->dealerPrice->type == 2)
+            $data->switchValue += $PriceDB * ($data->dealerPrice->value / 100);
+        else if ($data->dealerPrice->type == 4)
+            $data->switchValue += $data->dealerPrice->price * ($data->dealerPrice->value / 100);
+        else if ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5)
+            $data->switchValue += $data->dealerPrice->value;
+
+        $data->percentValue = 0.0;
+        if ($data->dealerPrice->type == 3)
+            $data->percentValue += ($PriceDB + $data->dealerPrice->value) * 100 / $PriceDB - 100;
+        else if ($data->dealerPrice->type == 5)
+            $data->percentValue += ($data->dealerPrice->price + $data->dealerPrice->value) * 100 / $data->dealerPrice->price - 100;
+        else if ($data->dealerPrice->type == 2 || $data->dealerPrice->type == 4)
+            $data->percentValue += $data->dealerPrice->value;
+
+        if ($data->point && !($data->star || $data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
+        {
+            $data->dealerPrice->type = 0;
+            $data->dealerPrice->price = 0;
+            $data->dealerPrice->value = 0;
+        }
+        else if ($data->star && $data->point && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
+        {
+            $data->dealerPrice->type = 1;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = 0;
+        }
+        else if ($data->star && !($data->sharp || $data->switch || $data->percent || !$data->valueEmpty))
+        {
+            $data->dealerPrice->price = $PriceDB;
+        }
+        else if ($data->sharp && $data->point && !($data->star || $data->switch || $data->percent || !$data->valueEmpty))
+        {
+            $data->dealerPrice->type = 1;
+            $data->dealerPrice->value = 0;
+        }
+        else if ($data->sharp && !$data->valueEmpty && !($data->star || $data->switch || $data->percent))
+        {
+            $data->dealerPrice->price = $data->value;
+        }
+        else if ($data->star && !$data->valueEmpty && !($data->sharp || $data->switch || $data->percent))
+        {
+            $data->dealerPrice->type = 1;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = 0;
+        }
+        else if (!$data->valueEmpty && !($data->sharp || $data->star || $data->switch || $data->percent))
+        {
+            $data->dealerPrice->type = 1;
+            $data->dealerPrice->price = $data->value;
+            $data->dealerPrice->value = 0;
+        }
+        else if (!$data->valueEmpty && $data->switch && !($data->sharp || $data->star || $data->percent))
+        {
+            $data->dealerPrice->type = 4;
+            $data->dealerPrice->value = $data->value + $data->switchValue;
+        }
+        else if ($data->star && !$data->valueEmpty && $data->switch && !($data->sharp || $data->percent))
+        {
+            $data->dealerPrice->type = 4;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = $data->value + $data->switchValue;
+        }
+        else if (!$data->valueEmpty && $data->switch && $data->percent && !($data->sharp || $data->star))
+        {
+            $data->dealerPrice->type = 5;
+            $data->dealerPrice->value = $data->value + $data->percentValue;
+        }
+        else if ($data->star && !$data->valueEmpty && $data->switch && $data->percent && !$data->sharp)
+        {
+            $data->dealerPrice->type = 5;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = $data->value + $data->percentValue;
+        }
+        else if ($data->sharp && !$data->valueEmpty && $data->switch && !($data->star || $data->percent))
+        {
+            $data->dealerPrice->type = 4;
+            $data->dealerPrice->value = $data->value;
+        }
+        else if ($data->sharp && $data->star && !$data->valueEmpty && $data->switch && !$data->percent)
+        {
+            $data->dealerPrice->type = 4;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = $data->value;
+        }
+        else if ($data->sharp && !$data->valueEmpty && $data->switch && $data->percent && !$data->star)
+        {
+            $data->dealerPrice->type = 5;
+            $data->dealerPrice->value = $data->value;
+        }
+        else if ($data->sharp && $data->star && !$data->valueEmpty && $data->switch && $data->percent)
+        {
+            $data->dealerPrice->type = 5;
+            $data->dealerPrice->price = $PriceDB;
+            $data->dealerPrice->value = $data->value;
+        }
+
+        return $data;
     }
 }

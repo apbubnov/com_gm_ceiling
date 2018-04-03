@@ -114,14 +114,6 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
             $id = $app->input->get('id', null, 'int');
             $price = $app->input->get('Price', null, 'string');
 
-            $price = str_replace(",", ".", $price);
-            $p = str_replace("%", "", $price);
-            $e = str_replace(["+", "-"], "", $p);
-            $type = (strlen($e) != strlen($p))?((strlen($p) != strlen($price))?3:2):1;
-            $number = floatval($p);
-
-            if ($price == "*") $type = 0;
-
             $answer = (object) [];
             $answer->status = "success";
             $answer->message = "Обновление произошло успешно!";
@@ -132,7 +124,11 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $newPrice = $oldPrice;
                 foreach ($oldPrice as $k => $v)
                 {
-                    $newPrice[$k]->price = $this->dealer_margin($v->price, 0, $number, $type);
+                    $price = "*" . $price;
+                    $data = $this->parse_price($price, (object) [], $v->price);
+                    $objectPrice = $data->dealerPrice;
+
+                    $newPrice[$k]->price = $this->dealer_margin($v->price, 0, $objectPrice);
                     $answer->elements[] = (object) [
                         "name" => ".Level2[data-option='$v->id'] #GMPrice",
                         "value" => self::margin($newPrice[$k]->price, $userDealer->gm_components_margin)];
@@ -147,6 +143,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->ComponentsPrice[$v->id];
+                    $NewDealerPrice = $this->parse_price($price, $OldDealerPrice);
                     $OldDealerPrice = (empty($OldDealerPrice))?$v->price:self::dealer_margin($v->price, 0, $OldDealerPrice->value, $OldDealerPrice->type);
                     if ($type == 0) $OldDealerPrice = $v->price;
                     $NewDealerPrice = self::dealer_margin($OldDealerPrice, 0, $number, $type);
@@ -192,17 +189,8 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
         }
     }
 
-    private function margin($value, $margin) { return ($value * 100 / (100 - $margin)); }
-    private function double_margin($value, $margin1, $margin2) { return self::margin(self::margin($value, $margin1), $margin2); }
-    private function dealer_margin($price, $margin, $value, $type) {
-        $result = 0;
-        switch ($type)
-        {
-            case 0: $result = $price; break;
-            case 1: $result = $value; break;
-            case 2: $result = $price + $value; break;
-            case 3: $result = $price + $price * floatval($value) / 100; break;
-        }
-        return self::margin($result, $margin);
-    }
+    private function margin($value, $margin) { return Gm_ceilingHelpersGm_ceiling::margin($value, $margin); }
+    private function double_margin($value, $margin1, $margin2) { return Gm_ceilingHelpersGm_ceiling::double_margin($value, $margin1, $margin2); }
+    private function dealer_margin($price, $margin, $objectDealerPrice) { return Gm_ceilingHelpersGm_ceiling::dealer_margin($price, $margin, $objectDealerPrice); }
+    private function parse_price($price, $dealerPrice, $PriceDB = null) { return Gm_ceilingHelpersGm_ceiling::parse_price($price, $dealerPrice, $PriceDB); }
 }

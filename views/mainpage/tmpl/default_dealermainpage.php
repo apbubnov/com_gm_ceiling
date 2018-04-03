@@ -13,6 +13,12 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 
+$object = (object) [];
+if ($object->type = 1)
+    echo "1 - " . ($object->value + 100);
+else
+    echo "0 - " . ($object->value + 100);
+
 $user = JFactory::getUser();
 $userId = $user->get('id');
 $dealerInfo = $user->getDealerInfo();
