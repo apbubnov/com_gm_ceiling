@@ -22,17 +22,13 @@ include($_SERVER['DOCUMENT_ROOT'] . "/mpdf_test/mpdf.php");
 /* функция для применения маржи */
 function margin($value, $margin)
 {
-
-    $return = ($value * 100 / (100 - $margin));
-    return $return;
+    return ($value * 100 / (100 - $margin));
 }
 
 /* функция для применения сразу двойной маржи */
 function double_margin($value, $margin1, $margin2)
 {
-
-    $return = ($value * 100 / (100 - $margin1)) * 100 / (100 - $margin2);
-    return $return;
+    return margin(margin($value, $margin1), $margin2);
 }
 
 /**
@@ -4798,13 +4794,9 @@ class Gm_ceilingHelpersGm_ceiling
             $data->dealerPrice->value = $data->value;
         }
 
-        $data->updatePrice = ($data->switch)?$data->value:"";
-        $data->updatePrice += ($data->switch && $data->percent)?$data->percentValue:0;
-        $data->updatePrice += ($data->switch && !$data->percent)?$data->switchValue:0;
-        $data->updatePrice = (($data->dealerPrice->value == abs($data->dealerPrice->value))?"+":"") . $data->updatePrice;
-        $data->updatePrice .= ($data->switch && $data->percent)?"%":"";
-
-        $data->updatePrice = $data->dealerPrice->price . " " . $data->updatePrice;
+        $percent = ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5);
+        $value = (($data->dealerPrice->value == abs($data->dealerPrice->value))?" + ":" - ") . abs($data->dealerPrice->value);
+        $data->updatePrice = $data->dealerPrice->price . $value . (($percent)?"%":"");
 
         return $data;
     }

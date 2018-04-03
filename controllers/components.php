@@ -142,7 +142,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->ComponentsPrice[$v->id];
-                    $NewDealerData = $this->parse_price($price, $OldDealerPrice);
+                    $NewDealerData = $this->parse_price($price, $OldDealerPrice, $v->price);
                     $NewDealerPrice = $NewDealerData->dealerPrice;
 
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_components_margin, $NewDealerPrice);
