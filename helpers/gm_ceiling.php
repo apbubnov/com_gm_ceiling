@@ -4657,7 +4657,7 @@ class Gm_ceilingHelpersGm_ceiling
 
 
 
-    function parse_price($price, $dealerPrice, $PriceDB = null)
+    public static function parse_price($price, $dealerPrice, $PriceDB = null)
     {
         if ($price || gettype($dealerPrice) != "object")
             return null;
@@ -4800,6 +4800,7 @@ class Gm_ceilingHelpersGm_ceiling
         $data->updatePrice = ((string) $data->dealerPrice->value) .
             ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5)?"%":"";
 
+        print_r($data);
         return $data;
     }
 }
