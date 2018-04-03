@@ -50,9 +50,9 @@ if ($managerGM) {
     }
 }
 
-function margin($value, $margin) { return Gm_ceilingHelpersGm_ceiling::margin($value, $margin); }
+/*function margin($value, $margin) { return Gm_ceilingHelpersGm_ceiling::margin($value, $margin); }
 function double_margin($value, $margin1, $margin2) { return Gm_ceilingHelpersGm_ceiling::double_margin($value, $margin1, $margin2); }
-function dealer_margin($price, $margin, $objectDealerPrice) { return Gm_ceilingHelpersGm_ceiling::dealer_margin($price, $margin, $objectDealerPrice); }
+function dealer_margin($price, $margin, $objectDealerPrice) { return Gm_ceilingHelpersGm_ceiling::dealer_margin($price, $margin, $objectDealerPrice); }*/
 ?>
 <link rel="stylesheet" type="text/css" href="/components/com_gm_ceiling/views/components/css/style.css">
 <div class="Page">

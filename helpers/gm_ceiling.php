@@ -20,7 +20,7 @@ defined('_JEXEC') or die;
 include($_SERVER['DOCUMENT_ROOT'] . "/mpdf_test/mpdf.php");
 
 /* функция для применения маржи */
-function margin($value, $margin)
+public function margin($value, $margin)
 {
 
     $return = ($value * 100 / (100 - $margin));
@@ -28,7 +28,7 @@ function margin($value, $margin)
 }
 
 /* функция для применения сразу двойной маржи */
-function double_margin($value, $margin1, $margin2)
+public function double_margin($value, $margin1, $margin2)
 {
 
     $return = ($value * 100 / (100 - $margin1)) * 100 / (100 - $margin2);
@@ -43,7 +43,7 @@ function double_margin($value, $margin1, $margin2)
  * @param $objectDealerPrice
  * @return float|int
  */
-function dealer_margin($price, $margin, $objectDealerPrice) {
+public function dealer_margin($price, $margin, $objectDealerPrice) {
     $result = 0;
 
     $objectDealerPrice->value = floatval($objectDealerPrice->value);
