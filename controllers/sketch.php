@@ -103,8 +103,14 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             	$filter .= "`color_id` = $color";
             }
             
-            $result  = $canv_model->getFilteredItemCanvas($filter);
+            $result  = $canv_model->getFilteredItemsCanvas($filter);
             $n3 = $result->id;
+
+            $calc_data['id'] = $calc_id;
+            $calc_data['n3'] = $n3;
+            $calc_data['n4'] = $n4;
+            $calc_data['n5'] = $n5;
+            $calc_data['n9'] = $n9;
 
             $result  = $calculation_model->update_calculation($calc_data);
 
