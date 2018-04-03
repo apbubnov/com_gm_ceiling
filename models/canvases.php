@@ -505,7 +505,7 @@ class Gm_ceilingModelCanvases extends JModelList
         $query->from('`#__gm_ceiling_canvases` AS `a`');
         $query->select('`textures`.`texture_title` AS `texture_title`');
         $query->join('LEFT', '`#__gm_ceiling_textures` AS `textures` ON `textures`.`id` = `a`.`texture_id`');
-        $query->select('`color`.`title` AS `color_title`');
+        $query->select('`color`.`title` AS `color_title`, `color`.`file` AS `color_file`');
         $query->join('LEFT', '`#__gm_ceiling_colors` AS `color` ON `color`.`id` = `a`.`color_id`');
         if ($filter) {
             $query->where($filter);
