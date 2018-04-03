@@ -808,16 +808,12 @@ class Gm_ceilingModelCalculation extends JModelItem
         }
     }
 
-    public function update_calculation($new_data)
+    public function update_calculation($data)
     {
         try
         {
 			$table = $this->getTable();
-			$data = $table->load($data['id']);
-			foreach ($new_data as $key => $value) {
-				$data[$key] = $value;
-			}
-			
+			//по хорошему нужно смотреть больше про JTable методы bind и на моделях возможно переписывать многое
 			if ($table->save($data) === true)
 			{
 				return true;
