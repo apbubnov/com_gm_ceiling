@@ -35,7 +35,7 @@ body {
     margin: 0 0 0 5px;
 }
 
-.FormSimple {
+form.FormSimple {
     width: auto;
     overflow: hidden !important;
     border-radius: 5px;
