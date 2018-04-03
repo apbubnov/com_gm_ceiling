@@ -4794,14 +4794,21 @@ class Gm_ceilingHelpersGm_ceiling
             $data->dealerPrice->value = $data->value;
         }
 
-        $percent = ($data->dealerPrice->type == 3 || $data->dealerPrice->type == 5);
-        $value = abs($data->dealerPrice->value);
-        $valueSTR = (($data->dealerPrice->value == abs($data->dealerPrice->value))?" + ":" - ") . $value;
-
-        $data->updatePrice = "";
-        if ($data->dealerPrice->price != $PriceDB) $data->updatePrice .= $data->dealerPrice->price;
-        if ($value != 0) $data->updatePrice .= $valueSTR . (($percent)?"%":"");
+        $data->updatePrice = self::update_price($data->dealerPrice, $PriceDB);
 
         return $data;
+    }
+
+    public static function update_price($objectDealerPrice, $Price)
+    {
+        $percent = ($objectDealerPrice->type == 3 || $objectDealerPrice->type == 5);
+        $value = abs($objectDealerPrice->value);
+        $valueSTR = (($objectDealerPrice->value == abs($objectDealerPrice->value))?" + ":" - ") . $value;
+
+        $updatePrice = "";
+        if ($objectDealerPrice->price != $Price) $updatePrice .= $objectDealerPrice->price;
+        if ($value != 0) $updatePrice .= $valueSTR . (($percent)?"%":"");
+
+        return $updatePrice;
     }
 }

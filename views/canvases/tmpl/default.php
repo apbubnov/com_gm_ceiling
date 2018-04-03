@@ -52,35 +52,10 @@ if ($managerGM) {
     }
 }
 
-function margin($value, $margin)
-{
-    return ($value * 100 / (100 - $margin));
-}
-
-function double_margin($value, $margin1, $margin2)
-{
-    return margin(margin($value, $margin1), $margin2);
-}
-
-function dealer_margin($price, $margin, $value, $type)
-{
-    $result = 0;
-    switch ($type) {
-        case 0:
-            $result = $price;
-            break;
-        case 1:
-            $result = $value;
-            break;
-        case 2:
-            $result = $price + $value;
-            break;
-        case 3:
-            $result = $price + $price * floatval($value) / 100;
-            break;
-    }
-    return margin($result, $margin);
-}
+function margin($value, $margin){return Gm_ceilingHelpersGm_ceiling::margin($value, $margin);}
+function double_margin($value, $margin1, $margin2){return Gm_ceilingHelpersGm_ceiling::double_margin($value, $margin1, $margin2);}
+function dealer_margin($price, $margin, $objectDealerPrice){return Gm_ceilingHelpersGm_ceiling::dealer_margin($price, $margin, $objectDealerPrice);}
+function update_price($objectDealerPrice, $PriceDB){return Gm_ceilingHelpersGm_ceiling::update_price($objectDealerPrice, $PriceDB);}
 
 ?>
 <link rel="stylesheet" type="text/css"

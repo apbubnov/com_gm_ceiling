@@ -225,7 +225,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                     $NewDealerPrice = $NewDealerData->dealerPrice;
 
                     $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_canvases_margin, $NewDealerPrice);
-                    $PPrice = $model->MinPriceOption($v->id);
+                    $PPrice = $model->MinPriceCanvas($v->id);
 
                     $UpdateDealerPrice = $NewDealerData->updatePrice;
 
