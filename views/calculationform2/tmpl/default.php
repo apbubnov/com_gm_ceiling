@@ -140,21 +140,41 @@
             }
         });
 
-        select_manufacturers();
+        select_colors();
 
-        document.getElementById('jform_n2').onchange = select_manufacturers;
+        document.getElementById('jform_n2').onchange = select_colors;
+        jQuery('.click_color').change(select_manufacturers);
         document.getElementById('jform_proizv').onchange = select_widths;
-
+        function select_colors(){
+            let colors = [];
+            
+            jQuery.each(canvases_data, function(key,value){
+                let select_texture = document.getElementById('jform_n2').value;
+                if (value.texture_id === select_texture)
+                {
+                    let color = value.color_id;
+                    if(!in_array(colors, color)){
+                        colors.push(color);
+                    }
+                }
+            });
+            if(colors.length>0){
+                //отрисовать кнопку с выбором цвета + окно
+            }
+           
+            
+            select_manufacturers();
+        }
         function select_manufacturers()
         {
             let manufacturers = [];
             canvases_data_of_selected_texture = [];
+            let select_texture = document.getElementById('jform_n2').value;
+            let select_color = (document.getElementById('jform_color').value) ? document.getElementById('jform_color').value : null;
             jQuery("#jform_proizv").empty();
 
             jQuery.each(canvases_data, function(key,value){
-                let select_texture = document.getElementById('jform_n2').value;
-
-                if (value.texture_id === select_texture)
+                if (value.texture_id === select_texture && value.color_id === select_color)
                 {
                     canvases_data_of_selected_texture.push(value);
                     let proizv = value.name + " " + value.country;
@@ -175,9 +195,9 @@
         function select_widths()
         {
             let arr_widths = [];
-            jQuery.each(canvases_data_of_selected_texture, function(key,value){
-                let select_proizv = document.getElementById('jform_proizv').value;
+            let select_proizv = document.getElementById('jform_proizv').value;
 
+            jQuery.each(canvases_data_of_selected_texture, function(key,value){
                 if (value.name === select_proizv)
                 {
                     let width = Math.round(value.width * 100);
