@@ -742,4 +742,37 @@ class Gm_ceilingModelCalculation extends JModelItem
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    public function create_calculation($proj_id)
+    {
+        try
+        {
+            /*$db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert("$type")
+                ->columns('`#__gm_ceiling_calculations`')
+                ->values('id = ' . $id);
+            $db->setQuery($query);
+
+            return $db->loadObject();*/
+            $data['project_id'] = $proj_id;
+            $table = $this->getTable();
+			if ($table->save($data) === true)
+			{
+				return $table->id;
+			}
+			else
+			{
+				return false;
+			}
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }
