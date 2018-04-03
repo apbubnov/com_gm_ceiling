@@ -4798,7 +4798,11 @@ class Gm_ceilingHelpersGm_ceiling
             $data->dealerPrice->value = $data->value;
         }
 
-        $data->updatePrice = ((string) $data->value) . (($data->percent)?"%":"");
+        $data->updatePrice = ($data->switch)?$data->value:"";
+        $data->updatePrice += ($data->switch && $data->percent)?$data->percentValue:0;
+        $data->updatePrice += ($data->switch && !$data->percent)?$data->switchValue:0;
+        $data->updatePrice = (($data->value == abs($data->value))?"+":"") . $data->updatePrice;
+        $data->updatePrice .= ($data->switch && $data->percent)?"%":"";
 
         return $data;
     }

@@ -145,8 +145,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                     $NewDealerData = $this->parse_price($price, $OldDealerPrice);
                     $NewDealerPrice = $NewDealerData->dealerPrice;
 
-                    $DealerPrice = self::dealer_margin($OldDealerPrice, 0, $NewDealerPrice);
-                    $ClientPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_components_margin, $NewDealerPrice);
+                    $DealerPrice = self::dealer_margin($OldDealerPrice, $userDealer->gm_components_margin, $NewDealerPrice);
                     $PPrice = $model->MinPriceOption($v->id);
 
                     $UpdateDelaerPrice = $NewDealerData->updatePrice;
@@ -157,13 +156,13 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
 
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #GMPrice",
-                            "value" => $DealerPrice];
+                            "value" => $NewDealerPrice->price];
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #UpdateDealerPrice",
                             "value" => $UpdateDelaerPrice];
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #DealerPrice",
-                            "value" => $ClientPrice];
+                            "value" => $DealerPrice];
                         $answer->data = $NewDealerData;
                     }
                 }
