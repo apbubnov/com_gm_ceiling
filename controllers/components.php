@@ -164,6 +164,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #DealerPrice",
                             "value" => $ClientPrice];
+                        $answer->data = $NewDealerData;
                     }
                 }
                 if ($flag == 1) {

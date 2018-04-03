@@ -4674,6 +4674,7 @@ class Gm_ceilingHelpersGm_ceiling
         $data = (object) [];
 
         $data->dealerPrice = $dealerPrice;
+        $data->price = $price;
 
         $price = (string) $price;
 
