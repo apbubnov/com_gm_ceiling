@@ -817,11 +817,16 @@ class Gm_ceilingModelCalculation extends JModelItem
         }
     }
 
-    public function update_calculation($data)
+    public function update_calculation($new_data)
     {
         try
         {
-            $table = $this->getTable();
+			$table = $this->getTable();
+			$data = $table->load($data['id']);
+			foreach ($new_data as $key => $value) {
+				$data[$key] = $value;
+			}
+			
 			if ($table->save($data) === true)
 			{
 				return $table->id;

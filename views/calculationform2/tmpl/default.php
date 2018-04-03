@@ -19,7 +19,10 @@
     $calculation_id = $jinput->get('calc_id',0,'INT');
     if($calculation_id){
         $calculation =  $calculation_model->new_getData($calculation_id);
-        $canvas = json_encode($canvases_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3"));
+        if (!empty($calculation->n3)) {
+            $canvas = json_encode($canvases_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3")[0]);
+        }
+        else $canvas = json_encode(null);
         $calc_img_filename = md5("calculation_sketch" . $calculation_id) . ".svg";
         if(file_exists($_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . $calc_img_filename)){
             $calc_img = '/calculation_images/' . $calc_img_filename.'?t='.time();
@@ -209,17 +212,22 @@
         let textures = [];
         let canvases_data_of_selected_texture = [];
         let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
-        console.log(calculation);
-        console.log(canvases_data);
+        let canvas = JSON.parse('<?php echo $canvas;?>');
+        console.log(canvas);
         fill_calc_data();
+
         jQuery.each(canvases_data, function(key,value){
             let texture = {id:value.texture_id, name: value.texture_title};
             if(!obj_in_array(textures,texture)){
                 textures.push(texture);
-                jQuery("#jform_n2")
-                    .append(jQuery("<option></option>")
+                let option = jQuery("<option></option>")
                                 .attr("value", +texture.id)
-                                .text(texture.name));
+                                .text(texture.name);
+                   
+                    if(canvas!== null && option.attr("value") === canvas.texture_id){
+                        option.attr('selected','selected');
+                    }
+                jQuery("#jform_n2").append(option);
             }
         });
 
@@ -232,6 +240,7 @@
         function select_colors(){
             let colors = [];
             canvases_data_of_selected_texture = [];
+
             jQuery.each(canvases_data, function(key,value){
                 let select_texture = document.getElementById('jform_n2').value;
                 if (value.texture_id === select_texture)
@@ -243,10 +252,14 @@
                     }
                 }
             });
-            console.log(canvases_data_of_selected_texture);
             if(colors.length>0){
                 jQuery("#jform_color_switch-lbl").show();
                 jQuery("#color_switch").show();
+                if(canvas!== null && canvas.color_id){
+                    jQuery("#color_img").prop( "src", canvas.color_file);
+                    jQuery("#color_img").show();
+                    jQuery("#jform_color").val(canvas.color_id);
+                }
             }
             else{
                 jQuery("#color_img").prop( "src", "");
@@ -260,7 +273,6 @@
 
         jQuery( "#color_switch" ).click(function(){
             var items = "<div class='center'>";
-            console.log(canvases_data_of_selected_texture);
             jQuery.each(canvases_data_of_selected_texture, function( key, val ) {
                 items += `<button class='click_color' type='button' data-color_id='${+val.color_id}' data-color_img='${val.color_file}'><img src='${val.color_file}'/><div class='color_title1'>${val.color_title}</div><div class='color_title2'>${val.color_title}</div></button>`;
     
@@ -317,17 +329,19 @@
             let select_color = (document.getElementById('jform_color').value) ? document.getElementById('jform_color').value : null;
 
             jQuery("#jform_proizv").empty();
-            console.log(select_color);
             jQuery.each(canvases_data_of_selected_texture, function(key,value){
                 if (value.texture_id === select_texture && value.color_id === select_color)
                 {
                     let proizv = value.name + " " + value.country;
                     if(!in_array(manufacturers, proizv)){
                         manufacturers.push(proizv);
-                        jQuery("#jform_proizv")
-                            .append(jQuery("<option></option>")
+                        let option = jQuery("<option></option>")
                                         .attr("value", value.name)
-                                        .text(proizv));
+                                        .text(proizv);
+                        if(canvas!== null && option.attr("value") === canvas.texture_title){
+                            option.attr('selected','selected');
+                        }
+                        jQuery("#jform_proizv").append(option);
                     }
                 }
             });
@@ -360,7 +374,7 @@
                 return 0;
             });
             jQuery("#width").val(JSON.stringify(width_polotna));
-            console.log(JSON.stringify(width_polotna));
+            //console.log(JSON.stringify(width_polotna));
         }
 
         function submit_form_sketch()

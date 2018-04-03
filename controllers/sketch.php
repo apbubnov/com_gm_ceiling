@@ -62,7 +62,6 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             }
             $original_sketch .= '||' . $code . '||' . $alphavite;
 
-            
             for ($i = 0; $i < count($arr_points); $i++)
             {
                 $points_polonta = '';
@@ -103,11 +102,17 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             	$filter .= "`color_id` = $color";
             }
             
-            $result  = $canv_model->getFilteredItemCanvas($filter);
+            $result  = $canv_model->getFilteredItemsCanvas($filter);
             $n3 = $result->id;
-
-            $result  = $calculation_model->update_calculation($calc_data);
-
+            $data['n3'] = $n3;
+            $data['n4'] = $n4;
+            $data['n4'] = $n5;
+            $data['n4'] = $n9;
+            $data['calc_data'] = $calc_data;
+            $data['cut_data'] = $cut_data;
+            $data['original_sketch'] = $original_sketch;
+            $result  = $calculation_model->update_calculation($data);
+            
             die(print_r($_POST));
         }
         catch(Exception $e)
