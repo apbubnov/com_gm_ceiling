@@ -297,7 +297,7 @@ function update_price($objectDealerPrice, $Price)
                                 $UpdatePrice = $DealerPrice - $Price;
                                 ?>
                                 <td id="GMPrice"><?= $Price; ?></td>
-                                <td id="UpdateDealerPrice"><?= (($UpdatePrice >= 0) ? "+" : "") . $UpdatePrice; ?></td>
+                                <td id="UpdateDealerPrice"><?= update_price($dealer->CanvasesPrice[$key_c], $Price); ?></td>
                                 <td id="DealerPrice"><?= $DealerPrice; ?></td>
                                 <td>
                                     <form class="FormSimple UpdatePrice MarginLeft" data-id="<?= $key_c; ?>">
