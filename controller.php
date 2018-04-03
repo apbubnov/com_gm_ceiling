@@ -2791,9 +2791,11 @@ class Gm_ceilingController extends JControllerLegacy
                 }
                 $code = md5($user_id.'commercial_offer');
                 $code_instruction = md5($user_id.'dealer_instruction');
+                $code_quick = md5($user_id.'quick');
                 $server_name = $_SERVER['SERVER_NAME'];
                 $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code_instruction";
+                $site3 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=2&code=$code_quick";
                 // письмо
     			$mailer = JFactory::getMailer();
     			$config = JFactory::getConfig();
@@ -2820,10 +2822,21 @@ class Gm_ceilingController extends JControllerLegacy
                 $body .= '<p>Почта: gm-partner@mail.ru</p>';
                 $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
                 $body .= '</div></td></tr></table>';
-                $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку на <a href=\"$site\">коммерческое предложение</a>, где Вы можете получить более подробную информацию.";
-                if($dealer_type==1){
-                    $body .= "А также ссылку на <a href=\"$site2\">краткий обзор программы</a>.";
-                }
+                $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку:
+                <ul>
+                    <li> на <a href=\"$site\">коммерческое предложение</a></li>
+                    <br>";
+                    if ($dealer_type==1) {
+                        $body .= "<li>краткий обзор программы</li>
+                        <br>
+                        <a href=\"$site2\"><img src=\"http://".$server_name."/images/short_instruction2.png\"></a>
+                        <br>
+                        <br>
+                        <li>инструкцию по быстрому заказу</li>
+                        <br>
+                        <a href=\"$site3\"><img src=\"http://".$server_name."/images/video.jpg\"></a>";
+                    }
+                $body .=" </ul>";
                 $body .= "По всем вопросам писать на почту gm-partner@mail.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
                 $mailer->setSubject('Коммерческое предложение');
                 $mailer->isHtml(true);
@@ -2833,6 +2846,7 @@ class Gm_ceilingController extends JControllerLegacy
                 
                 $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
                 $result = $users_model->addDealerInstructionCode($user_id, $code_instruction, $user->id);
+                $result = $users_model->addDealerInstructionCode($user_id, $code_quick, $user->id);
                 $result = $users_model->addCommercialOfferCode($user_id, $code, $user->id);
 
                 $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
