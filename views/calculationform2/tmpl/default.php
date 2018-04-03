@@ -18,17 +18,18 @@
     $canvases_data = json_encode($canvases_model->getFilteredItemsCanvas("count>0"));
     $calculation_id = $jinput->get('calc_id',0,'INT');
     if($calculation_id){
-        $calculation =  json_encode($calculation_model->new_getData($calculation_id));
+        $calculation =  $calculation_model->new_getData($calculation_id);
+        $canvas = json_encode($canvases_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3"));
         $calc_img_filename = md5("calculation_sketch" . $calculation_id) . ".svg";
         if(file_exists($_SERVER['DOCUMENT_ROOT'].'/calculation_images/' . $calc_img_filename)){
-            $calc_img = '/calculation_images/' . $calc_img_filename;
+            $calc_img = '/calculation_images/' . $calc_img_filename.'?t='.time();
         }
         else {
             $calc_img = "";
         }
         $project_id = $calculation->project_id;
         if(empty($project_id)){
-            //throw new Exception("Пустой id проекта");
+            throw new Exception("Пустой id проекта");
         }
     }
     else{
@@ -54,7 +55,6 @@
     <input name = "n5" id = "n5" value ="" type ="hidden">
     <input name = "n9" id = "n9" value ="" type ="hidden">
 	<input name = "triangulator_pro" id = "triangulator_pro" value = "<?php echo $triangulator_pro?>" type = "hidden">
-	<input type="hidden" name="calc_id" id="calc_id" value = "">
 	<input type="hidden" name="proj_id" id="proj_id" value = "">
 </form>
 <form>
@@ -208,7 +208,7 @@
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
         let textures = [];
         let canvases_data_of_selected_texture = [];
-        let calculation = JSON.parse('<?php echo $calculation;?>');
+        let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
         console.log(calculation);
         console.log(canvases_data);
         fill_calc_data();
