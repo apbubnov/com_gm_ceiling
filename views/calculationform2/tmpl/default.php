@@ -433,22 +433,96 @@
 		});
         //добавить комплектующие && монтаж
         jQuery("#btn_add_components").click(function(){
-            let id = "warning";
-            let html = create_container(id);
-            jQuery("#add_mount_and_components").after(html);
-            /* jQuery("#"+id).append(`<p>
-									ВНИМАНИЕ! <br>
-									Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой. <br>
-									Изменить прайс монтажа <a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary"><i class="fa fa-edit"></i></a>
-                                </p>`); */
+            //кнопка багета
+            let n28 = "block_n_28";
+            let cnt_n28 = create_container(n28,"btn_cont_n28");
+            jQuery("#add_mount_and_components").after(cnt_n28);
+            let block_28 =  create_block_btn('table_calcform',"margin-bottom: 15px;",'btn_baguette',(calculation.n_28) ? "Изменить багет" : "Добавить багет");
+            jQuery("#btn_cont_n28").append(block_28);
+            //кнопка вствка
+            let insert = "block_insert";
+            let cnt_insert = create_container(insert,"btn_cont_insert");
+            jQuery(`#${n28}`).after(cnt_insert);
+            let block_dec_insert = create_block_btn("table_calcform","margin-bottom: 30px;","btn_insert","Декоративная вставка");
+            jQuery("#btn_cont_insert").append(block_dec_insert);
+            //заголовок "Освещение"
+            let caption_lighting = "caption_lighting";
+            let cnt_light_cptn = create_container(caption_lighting,"head_lighting");
+            jQuery(`#${insert}`).after(cnt_light_cptn);
+            jQuery("#head_lighting").append('<h3> Освещение </h3>');
+            //кнопка люстры
+            let n12 = "block_n12";
+            let cnt_n12 = create_container(n12,"btn_cont_n12");
+            jQuery(`#${caption_lighting}`).after(cnt_n12);
+            let block_n12 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_chandelier","Добавить люстры");
+            jQuery("#btn_cont_n12").append(block_n12);
+            //светильники
+            let n13 = "block_n13";
+            let cnt_n13 = create_container(n13,"btn_cont_n13");
+            jQuery(`#${n12}`).after(cnt_n13);
+            let block_n13 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_fixtures","Добавить светильники");
+            jQuery("#btn_cont_n13").append(block_n13);
+            //кнопка провод
+            let wire = "block_wire";
+            let cnt_wire = create_container(wire,"btn_cont_wire");
+            jQuery(`#${n13}`).after(cnt_wire);
+            let block_wire = create_block_btn("table_calcform","margin-bottom: 30px;","btn_wire","Провод");
+            jQuery("#btn_cont_wire").append(block_wire);
+            //заголовок "прочий монтаж"
+            let caption_other_mount = "caption_other_mount";
+            let cnt_mount_cptn = create_container(caption_other_mount,"head_other_mount");
+            jQuery(`#${wire}`).after(cnt_mount_cptn);
+            jQuery("#head_other_mount").append('<h4> Прочий монтаж </h4>');
+            //трубы
+            let n14 = "block_n14";
+            let cnt_n14 = create_container(n14,"btn_cont_n14");
+            jQuery(`#${caption_other_mount}`).after(cnt_n14);
+            let block_n14 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_pipes","Добавить трубы входящие в потолок");
+            jQuery("#btn_cont_n14").append(block_n14);
+            //шторный карниз
+            let n16 = "block_n16";
+            let cnt_n16 = create_container(n16,"btn_cont_n16");
+            jQuery(`#${n14}`).after(cnt_n16);
+            let block_n16 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_cornice","Добавить шторный карниз");
+            jQuery("#btn_cont_n16").append(block_n16);
+            //закладная брусом
+            let n17 = "block_n17";
+            let cnt_n17 = create_container(n17,"btn_cont_n17");
+            jQuery(`#${n16}`).after(cnt_n17);
+            let block_n17 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_bar","Закладная брусом");
+            jQuery("#btn_cont_n17").append(block_n17);
+            //раздедитель
+            let n20 = "block_n20";
+            let cnt_n20 = create_container(n20,"btn_cont_n20");
+            jQuery(`#${n17}`).after(cnt_n20);
+            let block_n20 = create_block_btn("table_calcform","margin-bottom: 45px;","btn_delimeter","Разделитель");
+            jQuery("#btn_cont_n20").append(block_n20);
+            //метраж стен с плиткой
+            let n7 = "block_n7";
+            let cnt_n7 = create_container(n7,"btn_cont_n7");
+            jQuery(`#${n20}`).after(cnt_n7);
+            let block_n7 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_tile","Метраж стен с плиткой");
+            jQuery("#btn_cont_n7").append(block_n7);
+            //керамогранит
+            let n8 = "block_n8";
+            let cnt_n8 = create_container(n8,"btn_cont_n8");
+            jQuery(`#${n7}`).after(cnt_n8);
+            let block_n8 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_stoneware","Метраж стен с керамогранитом");
+            jQuery("#btn_cont_n8").append(block_n8);
+            //Усилиние стен
+            let n18 = "block_n18";
+            let cnt_n18 = create_container(n18,"btn_cont_n18");
+            jQuery(`#${n8}`).after(cnt_n18);
+            let block_n18 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_gain","Усиление стен");
+            jQuery("#btn_cont_n18").append(block_n18);
             
-            let html1 = create_container("n_28");
-            jQuery("#add_mount_and_components").after(html1);
-            jQuery("#n_28").append(`<table class="table_calcform" style="margin-bottom: 15px;">
+        });
+        function create_block_btn(class_name,style,btn_id,btn_text){
+            return `<table class="${class_name}" style="${style}">
 								<tr>
 									<td class="td_calcform1">
-										<button type="button" id="btn_baguette" class="btn add_fields">
-											Багет
+										<button type="button" id="${btn_id}" class="btn add_fields">
+                                        <label class="no_margin">${btn_text}</label>
 										</button>
 									</td>
 									<td class="td_calcform2">
@@ -466,9 +540,8 @@
 										</div>
 									</td>
 								</tr>
-							</table>`);
-            
-        });
+							</table>`;
+        }
         function submit_form_sketch()
 	    {
             var regexp_d = /^\d+$/;
@@ -504,8 +577,8 @@
                 canvas.filled = true;
             } 
         }
-        function create_container(col_id){
-            return `<div class = "container">
+        function create_container(cnt_id,col_id){
+            return `<div class = "container" id = "${cnt_id}">
                                 <div class = "row">
                                     <div class = "col-sm-4"></div>
                                         <div class = "col-sm-4" id = "${col_id}"></div>
@@ -513,9 +586,6 @@
                                 </div>
                             </div>`;
             
-        }
-        function create_item(button_id,button_text){
-
         }
         function fill_selected_color(src,color_id){
             jQuery("#color_img").prop( "src", src);
