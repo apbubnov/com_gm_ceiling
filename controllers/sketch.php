@@ -111,6 +111,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $data['calc_data'] = $calc_data;
             $data['cut_data'] = $cut_data;
             $data['original_sketch'] = $original_sketch;
+            $data['offcut_square'] = $offcut_square;
             $result  = $calculation_model->update_calculation($data);
             
             die($result);
