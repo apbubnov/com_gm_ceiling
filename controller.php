@@ -2994,7 +2994,7 @@ class Gm_ceilingController extends JControllerLegacy
 
 
     public function RepeatSendCommercialOffer(){
-        try
+        /*try
         {
             $user = JFactory::getUser();
             $groups = $user->get('groups');
@@ -3029,7 +3029,7 @@ class Gm_ceilingController extends JControllerLegacy
             $files = "components/com_gm_ceiling/";
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
-        }
+        }*/
     }
 
 
