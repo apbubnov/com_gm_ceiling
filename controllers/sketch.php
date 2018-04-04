@@ -29,7 +29,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $n9 = $jinput->get('jform_n9', '0', 'string');
             $texture = $jinput->get('texture', 0, 'int');
             $color = $jinput->get('color', 0, 'int');
-            $manufacturer = $jinput->get('manufacturer', '', 'STRING');
+            $manufacturer = $jinput->get('manufacturer', 0, 'int');
             $width = $jinput->get('width', 0, 'INT');
             $auto = $jinput->get('auto', 0, 'int');
             $user_id = $jinput->get('user_id', 0, 'int');
@@ -96,7 +96,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             	$width .= '.0';
             }
 
-            $filter = "`texture_id` = $texture AND `name` = '$manufacturer' AND `width` = '$width' AND `count` > 0";
+            $filter = "`texture_id` = $texture AND `manufacturer_id` = $manufacturer AND `width` = '$width' AND `count` > 0";
             if (!empty($color))
             {
             	$filter .= " AND `color_id` = $color";
@@ -111,6 +111,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $data['calc_data'] = $calc_data;
             $data['cut_data'] = $cut_data;
             $data['original_sketch'] = $original_sketch;
+            $data['offcut_square'] = $offcut_square;
             $result  = $calculation_model->update_calculation($data);
             
             die($result);
