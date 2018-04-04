@@ -324,7 +324,7 @@ class Gm_ceilingModelCanvases extends JModelList
         }
 
         $query
-            ->from('`#__gm_ceiling_canvases` AS canvases')
+            ->from('`#__canvases` AS canvases')
             ->join('LEFT','`#__gm_ceiling_canvases_all` AS rollers ON canvases.id = rollers.id_canvas ')
             ->join('LEFT','`#__gm_ceiling_textures` AS textures ON textures.id = canvases.texture_id ')
             ->join('LEFT','`#__gm_ceiling_colors` AS colors ON colors.id = canvases.color_id ');
@@ -469,7 +469,7 @@ class Gm_ceilingModelCanvases extends JModelList
         $query = $db->getQuery(true);
         $query->select('distinct a.name');
         $query->select('a.country, a.id');
-        $query->from('#__gm_ceiling_canvases AS a');
+        $query->from('#__canvases AS a');
         if ($filter) {
             $query->where($filter);
         }
@@ -486,7 +486,7 @@ class Gm_ceilingModelCanvases extends JModelList
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('a.id');
-        $query->from('#__gm_ceiling_canvases AS a');
+        $query->from('#__canvases AS a');
         if ($filter) {
             $query->where($filter);
         }
@@ -502,7 +502,7 @@ class Gm_ceilingModelCanvases extends JModelList
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('`a`.*');
-        $query->from('`#__gm_ceiling_canvases` AS `a`');
+        $query->from('`#__canvases` AS `a`');
         $query->select('`textures`.`texture_title` AS `texture_title`');
         $query->join('LEFT', '`#__gm_ceiling_textures` AS `textures` ON `textures`.`id` = `a`.`texture_id`');
         $query->select('`color`.`title` AS `color_title`, `color`.`file` AS `color_file`');
@@ -529,7 +529,7 @@ class Gm_ceilingModelCanvases extends JModelList
         $query->select('distinct a.width');
         $query->select('a.price');
 
-        $query->from('#__gm_ceiling_canvases AS a');
+        $query->from('#__canvases AS a');
         if ($filter) {
             $query->where($filter);
         }
@@ -626,7 +626,7 @@ class Gm_ceilingModelCanvases extends JModelList
                 {
                     $db = $this->getDbo();
                     $query = $db->getQuery(true);
-                    $query->from("`#__gm_ceiling_canvases` AS C")
+                    $query->from("`#__canvases` AS C")
                         ->join("LEFT", "`#__gm_ceiling_textures` AS T ON C.texture_id = T.id")
                         ->join("LEFT", "`#__gm_ceiling_colors` AS L ON C.color_id = L.id")
                         ->where(($v->Texture == "Нет")?"C.texture_id IS NULL":"T.texture_title = '$v->Texture'")
@@ -665,7 +665,7 @@ class Gm_ceilingModelCanvases extends JModelList
             //$querySTR = "";
             foreach ($data as $v) {
                 $query = $db->getQuery(true);
-                $query->update("`#__gm_ceiling_canvases`")
+                $query->update("`#__canvases`")
                     ->set("price = '$v->price'")
                     ->where("id = '$v->id'");
                 $db->setQuery($query);
@@ -687,7 +687,7 @@ class Gm_ceilingModelCanvases extends JModelList
         {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->from("`#__gm_ceiling_canvases` as canvas")
+            $query->from("`#__canvases` as canvas")
                 ->join('LEFT', '`#__gm_ceiling_textures` AS texture ON texture.id = canvas.texture_id')
                 ->join('LEFT', '`#__gm_ceiling_colors` AS color ON color.id = canvas.color_id')
                 ->select("canvas.id as id, canvas.price as price");

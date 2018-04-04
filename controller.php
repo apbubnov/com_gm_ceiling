@@ -317,6 +317,10 @@ class Gm_ceilingController extends JControllerLegacy
             }
 
             foreach ($result as $key => $dealer) {
+                $user_dealer = JFactory::getUser($dealer->dealer_id);
+                $result[$key]->min_canvas_price = $user_dealer->getFunctionCanvasesPrice("MIN");
+                $result[$key]->min_component_price = $user_dealer->getFunctionComponentsPrice("MIN");
+
                 /*Dealer history*/
                 /*$recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 $dealer_history = $recoil_map_project_model->getData($client->dealer_id);

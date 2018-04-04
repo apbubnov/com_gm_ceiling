@@ -422,7 +422,7 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                         }
                         html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
                         html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data[i].id + '"></td>';
-                        html += '<td>' + data[i].client_name + '</td>';
+                        html += '<td>' + data[i].client_name + '<br>' + data[i].min_canvas_price + '/' + data[i].min_component_price +  '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].city + '</td>';
                         html += '<td>' + data[i].created + '</td>';

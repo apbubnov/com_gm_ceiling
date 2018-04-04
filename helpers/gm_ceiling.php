@@ -4737,13 +4737,7 @@ class Gm_ceilingHelpersGm_ceiling
         {
             $data->dealerPrice->price = $data->value;
         }
-        else if ($data->star && !$data->valueEmpty && !($data->sharp || $data->switch || $data->percent))
-        {
-            $data->dealerPrice->type = 1;
-            $data->dealerPrice->price = $PriceDB;
-            $data->dealerPrice->value = 0;
-        }
-        else if (!$data->valueEmpty && !($data->sharp || $data->star || $data->switch || $data->percent))
+        else if (!$data->valueEmpty && !($data->sharp || $data->switch || $data->percent))
         {
             $data->dealerPrice->type = 1;
             $data->dealerPrice->price = $data->value;
