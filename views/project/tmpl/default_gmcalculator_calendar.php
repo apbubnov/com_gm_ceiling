@@ -12,6 +12,8 @@
     $user = JFactory::getUser();
     $userId = $user->get('id');
 
+    $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+
     $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 
     if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
@@ -28,7 +30,7 @@
     $total_square = 0;
     $total_perimeter = 0;
     $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations = $model->getProjectItems($this->item->id);
+    $calculations = $model->new_getProjectItems($this->item->id);
 
     foreach ($calculations as $calculation) {
 
@@ -134,7 +136,7 @@
 <?php if ($this->item) : ?>
 <?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
 <?php
-    $calculations = $model->getProjectItems($this->item->id);
+    $calculations = $model->new_getProjectItems($this->item->id);
     $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
     $phones = $client_model->getItemsByClientId($this->item->id_client);
 ?>
@@ -820,24 +822,32 @@
                 <?php endif; ?>
                 <div class="row-fluid">
                     <div class="span6"> 
-                        <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                        <?php 
+                            if (!empty($calculation->n3)){
+                            $canvas = $canvas_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3");
+                        ?>
                         <h4>Материал</h4>
-                        <div>
-                            Тип потолка: <?php echo $calculation->n1; ?>
-                        </div>
-                        <div>
-                            Тип фактуры: <?php echo $calculation->n2; ?>
-                        </div>
-                        <div>
-                            Производитель, ширина: <?php echo $calculation->n3; ?>
-                        </div>
-                        <?php if ($calculation->color > 0) { ?>
-                            <?php $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); ?>
-                            <?php $color = $color_model->getData($calculation->color); ?>
-                            <div>
-                                Цвет: <?php echo $color->colors_title; ?> <img src="/<?php echo $color->file; ?>" alt=""/>
-                            </div>
-                        <?php } ?>
+                        <table class="table_info2">
+                            <tr>
+                                <td>Тип фактуры:</td>
+                                <td><?php echo $canvas[0]->texture_title; ?></td>
+                            </tr>
+                            <tr>
+                                <td>Производитель, ширина:</td>
+                                <td><?php echo $canvas[0]->name.' '.$canvas[0]->width; ?></td>
+                            </tr>
+                            <?php
+                                if (!empty($canvas[0]->color_id)) {
+                            ?>
+                                <tr>
+                                    <td>Цвет:</td>
+                                    <td>
+                                        <?php echo $canvas[0]->color_title; ?>
+                                        <img src="/<?php echo $canvas[0]->color_file; ?>" alt=""/>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </table>
                         <h4>Размеры помещения</h4>
                         <div>
                             Площадь, м<sup>2</sup>: <?php echo $calculation->n4; ?>
@@ -858,7 +868,7 @@
                                     Цветная : <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>" alt=""/>
                                 </div>
                             <?php }?>
-                        <?php } endif; ?>
+                        <?php } } ?>
                         <?php if ($calculation->n16) { ?>
                             <div>
                                 Скрытый карниз: <?php echo $calculation->n16; ?>

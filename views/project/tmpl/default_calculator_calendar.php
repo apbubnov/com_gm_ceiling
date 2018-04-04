@@ -28,7 +28,7 @@ $reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
 $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
-$color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 
 /*________________________________________________________________*/
 $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
@@ -940,35 +940,33 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                         <?php endif; ?>
                                         <div class="row">
                                             <div class="col-xs-12 wtf_padding">
-                                                <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                                                <?php 
+                                                    if (!empty($calculation->n3)){
+                                                    $canvas = $canvas_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3");
+                                                ?>
                                                     <h4>Материал</h4>
                                                     <table class="table_info2">
                                                         <tr>
-                                                            <td>Тип потолка:</td>
-                                                            <td><?php echo $calculation->n1; ?></td>
-                                                        </tr>
-                                                        <tr>
                                                             <td>Тип фактуры:</td>
-                                                            <td><?php echo $calculation->n2; ?></td>
+                                                            <td><?php echo $canvas[0]->texture_title; ?></td>
                                                         </tr>
                                                         <tr>
                                                             <td>Производитель, ширина:</td>
-                                                            <td><?php echo $calculation->n3; ?></td>
+                                                            <td><?php echo $canvas[0]->name.' '.$canvas[0]->width; ?></td>
                                                         </tr>
                                                         <?php
-                                                            if ($calculation->color > 0) {
-                                                                
-                                                                $color = $color_model->getData($calculation->color);
+                                                            if (!empty($canvas[0]->color_id)) {
                                                         ?>
                                                             <tr>
                                                                 <td>Цвет:</td>
                                                                 <td>
-                                                                    <?php echo $color->colors_title; ?>
-                                                                    <img src="/<?php echo $color->file; ?>" alt=""/>
+                                                                    <?php echo $canvas[0]->color_title; ?>
+                                                                    <img src="/<?php echo $canvas[0]->color_file; ?>" alt=""/>
                                                                 </td>
                                                             </tr>
                                                         <?php } ?>
                                                     </table>
+                                                    <?php } ?>
                                                     <h4 style="margin: 10px 0;">Размеры помещения</h4>
                                                     <table class="table_info2">
                                                         <tr>
@@ -999,7 +997,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                                                 <?php } ?>
                                                             </tr>
                                                         </table>
-                                                    <?php } endif; ?>
+                                                    <?php } ?>
                                                     <?php if ($calculation->n16) { ?>
                                                         <table class="table_info2">
                                                             <tr>

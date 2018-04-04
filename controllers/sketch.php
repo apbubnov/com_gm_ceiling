@@ -113,6 +113,8 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $data['original_sketch'] = $original_sketch;
             $data['offcut_square'] = $offcut_square;
             $result  = $calculation_model->update_calculation($data);
+
+            $canv_model->saveCuts($calc_id, $cuts);
             
             die($result);
         }

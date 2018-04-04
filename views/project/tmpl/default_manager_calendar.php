@@ -17,6 +17,8 @@ $dop_num = $dop_num_model->getData($userId)->dop_number;
 $_SESSION['user_group'] = $user_group;
 $_SESSION['dop_num'] = $dop_num;
 
+$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
@@ -32,7 +34,7 @@ $project_total_discount = 0;
 $total_square = 0;
 $total_perimeter = 0;
 $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations = $model->getProjectItems($this->item->id);
+$calculations = $model->new_getProjectItems($this->item->id);
 //$need_mount = 1;
 
 $sum_transport = 0;  $sum_transport_discount = 0;
@@ -57,7 +59,7 @@ $project_total_discount_transport = $project_total_discount + $sum_transport;
 $project_total = $project_total  + $sum_transport;
 $project_total_discount = $project_total_discount  + $sum_transport;
 $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations1 = $calculationsModel->getProjectItems($this->item->id);
+$calculations1 = $calculationsModel->new_getProjectItems($this->item->id);
 $components_data = array();
 $project_sum = 0;
 $counter = 0;
