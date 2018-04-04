@@ -25,8 +25,6 @@ $user->groups = $user->get('groups');
 $user->getDealerInfo();
 $user->getCanvasesPrice();
 
-
-
 if (!(in_array(14, $user->groups) || in_array(15, $user->groups))) {
     $userDealer = JFactory::getUser($user->dealer_id);
     $userDealer->groups = $userDealer->get('groups');

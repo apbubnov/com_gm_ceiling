@@ -96,7 +96,7 @@ class Gm_ceilingModelCanvases extends JModelList
         $db = $this->getDbo();
         $query = $db->getQuery(true);
 
-        $query->from('`#__gm_ceiling_canvases` AS canvas')
+        $query->from('`#__canvases` AS canvas')
             ->join('LEFT', '`#__gm_ceiling_canvases_all` AS roller ON roller.id_canvas = canvas.id')
             ->join('LEFT', '`#__gm_ceiling_textures` AS texture ON texture.id = canvas.texture_id')
             ->join('LEFT', '`#__gm_ceiling_colors` AS color ON color.id = canvas.color_id');
