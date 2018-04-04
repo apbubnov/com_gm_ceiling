@@ -99,13 +99,12 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $filter = "`texture_id` = $texture AND `name` = '$manufacturer' AND `width` = '$width' AND `count` > 0";
             if (!empty($color))
             {
-            	$filter .= "`color_id` = $color";
+            	$filter .= " AND `color_id` = $color";
             }
-            
             $result  = $canv_model->getFilteredItemsCanvas($filter);
-            $n3 = $result->id;
+            $n3 = $result[0]->id;
             $data['id'] = $calc_id;
-            //$data['n3'] = $n3; приходит пустым
+            $data['n3'] = $n3;
             $data['n4'] = $n4;
             $data['n5'] = $n5;
             $data['n9'] = $n9;
@@ -114,7 +113,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $data['original_sketch'] = $original_sketch;
             $result  = $calculation_model->update_calculation($data);
             
-            die(print_r($_POST));
+            die($result);
         }
         catch(Exception $e)
         {

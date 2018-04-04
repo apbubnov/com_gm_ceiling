@@ -151,7 +151,7 @@
             <div class="col-sm-4 ">
                 <button id="sketch_switch" class="btn btn-primary btn-big" type="button">Начертить потолок</button>
                 <div id="sketch_image_block" style="padding: 25px; display:none;">
-                        <img id="sketch_image">
+                        <img id="sketch_image" style="width: 100%;">
                 </div>
             </div>
             <div class="col-sm-4"></div>
