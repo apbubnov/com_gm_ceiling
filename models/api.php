@@ -541,6 +541,12 @@ class Gm_ceilingModelApi extends JModelList
         {
             $db = $this->getDbo();
             $change_time = $db->escape($data->change_time, false);
+            $query = $db->getQuery(true);
+            $query->select("*");
+            $query->from("`rgzbn_gm_ceiling_canvases_manufacturers`");
+            $query->where("change_time >= '$change_time'");
+            $db->setQuery($query);
+            $list_manufacturers = $db->loadObjectList();
             //текстуры
             $query = $db->getQuery(true);
             $query->select("*");
@@ -612,6 +618,7 @@ class Gm_ceilingModelApi extends JModelList
             $result['rgzbn_gm_ceiling_type'] = $list_type;
             $result['rgzbn_gm_ceiling_type_option'] = $list_type_option;
             $result['rgzbn_gm_ceiling_status'] = $list_status;
+            $result['rgzbn_gm_ceiling_canvases_manufacturers'] = $list_manufacturers;
            // $result['rgzbn_gm_ceiling_mounters'] = $list_mounters;
            // $result['rgzbn_gm_ceiling_mounters_map'] = $list_mounters_map; 
             return $result;

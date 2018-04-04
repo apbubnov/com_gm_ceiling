@@ -163,6 +163,15 @@
             <div class="col-sm-4"></div>
         </div>
     </div>
+    <div class="container">
+			<div class="row sm-margin-bottom">
+				<div class="col-sm-4"></div>
+				<div class="col-sm-4 ">
+					<button id="redactor" class="btn btn-primary" type="button">Редактор</button>
+				</div>
+				<div class="col-sm-4"></div>
+			</div>
+	</div>
     <!-- S,P,углы -->
     <div class="container">
         <div id="data-wrapper" style = "display:none;">
@@ -210,6 +219,16 @@
             </div>
         </div>
     </div>
+    <div id="add_mount_and_components" class="container">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <button type="button" id="btn_add_components" class="btn btn-primary" style="width: 100%; margin-bottom: 25px;">Добавить монтаж и комплектующие</button>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+    <!-- Рассчитать -->
     <div class="container">
         <div class="row sm-margin-bottom" style="margin-top: 25px">
             <div class="col-sm-4"></div>
@@ -284,72 +303,12 @@
                 jQuery("#jform_color_switch-lbl").hide();
                 jQuery("#color_switch").hide();
             }
-            if(!canvas.filled && canvas.color_id){
+            if(canvas && !canvas.filled && canvas.color_id){
                 fill_selected_color(canvas.color_file,canvas.color_id);
             }
             select_manufacturers();
         }
 
-        //выбор цвета
-        jQuery( "#color_switch" ).click(function(){
-            var items = "<div class='center'>";
-            jQuery.each(canvases_data_of_selected_texture, function( key, val ) {
-                items += `<button class='click_color' type='button' data-color_id='${+val.color_id}' data-color_img='${val.color_file}'><img src='${val.color_file}'/><div class='color_title1'>${val.color_title}</div><div class='color_title2'>${val.color_title}</div></button>`;
-    
-            });
-            items += "</div>";
-            modal({
-                type: 'info',
-                title: 'Выберите цвет',
-                text: items,
-                size: 'large',
-                onShow: function() {
-                    jQuery(".click_color").click(function(){
-                        fill_selected_color(jQuery(this).data("color_img"),jQuery( this ).data("color_id"));
-                        select_manufacturers();
-                    });
-                },
-                callback: function(result) {
-                    
-                },
-                autoclose: false,
-                center: true,
-                closeClick: true,
-                closable: true,
-                theme: 'xenon',
-                animate: true,
-                background: 'rgba(0,0,0,0.35)',
-                zIndex: 1050,
-                buttonText: {
-                    ok: 'Позвоните мне',
-                    cancel: 'Закрыть'
-                },
-                template: '<div class="modal-box"><div class="modal-inner"><div class="modal-title"><a class="modal-close-btn" id = "modal_close_color"></a></div><div class="modal-text"></div><div class="modal-buttons"></div></div></div>',
-                _classes: {
-                    box: '.modal-box',
-                    boxInner: ".modal-inner",
-                    title: '.modal-title',
-                    content: '.modal-text',
-                    buttons: '.modal-buttons',
-                    closebtn: '.click_color'
-                }
-            });
-            document.getElementById('modal_close_color').onclick = function(){
-                jQuery("#modal-window").hide();
-            };						
-        });
-
-        jQuery("#sketch_switch").click(function(){
-            submit_form_sketch();
-        });
-        
-        jQuery("#calculate_button").click(function(){
-            console.log("click");
-            let recalc = jQuery("#auto").val();
-            if(recalc){
-                submit_form_sketch();
-            }
-        });
         function select_manufacturers()
         {
             let manufacturers = [];
@@ -406,7 +365,110 @@
                 jQuery("#auto").val(1);
             }
         }
+        //выбор цвета
+        jQuery( "#color_switch" ).click(function(){
+            var items = "<div class='center'>";
+            jQuery.each(canvases_data_of_selected_texture, function( key, val ) {
+                items += `<button class='click_color' type='button' data-color_id='${+val.color_id}' data-color_img='${val.color_file}'><img src='${val.color_file}'/><div class='color_title1'>${val.color_title}</div><div class='color_title2'>${val.color_title}</div></button>`;
+    
+            });
+            items += "</div>";
+            modal({
+                type: 'info',
+                title: 'Выберите цвет',
+                text: items,
+                size: 'large',
+                onShow: function() {
+                    jQuery(".click_color").click(function(){
+                        fill_selected_color(jQuery(this).data("color_img"),jQuery( this ).data("color_id"));
+                        select_manufacturers();
+                    });
+                },
+                callback: function(result) {
+                    
+                },
+                autoclose: false,
+                center: true,
+                closeClick: true,
+                closable: true,
+                theme: 'xenon',
+                animate: true,
+                background: 'rgba(0,0,0,0.35)',
+                zIndex: 1050,
+                buttonText: {
+                    ok: 'Позвоните мне',
+                    cancel: 'Закрыть'
+                },
+                template: '<div class="modal-box"><div class="modal-inner"><div class="modal-title"><a class="modal-close-btn" id = "modal_close_color"></a></div><div class="modal-text"></div><div class="modal-buttons"></div></div></div>',
+                _classes: {
+                    box: '.modal-box',
+                    boxInner: ".modal-inner",
+                    title: '.modal-title',
+                    content: '.modal-text',
+                    buttons: '.modal-buttons',
+                    closebtn: '.click_color'
+                }
+            });
+            document.getElementById('modal_close_color').onclick = function(){
+                jQuery("#modal-window").hide();
+            };						
+        });
+        //начертить
+        jQuery("#sketch_switch").click(function(){
+            submit_form_sketch();
+        });
+        //рассчитать
+        jQuery("#calculate_button").click(function(){
+            let recalc = jQuery("#auto").val();
+            if(recalc){
+                submit_form_sketch();
+            }
+        });
 
+        jQuery("#redactor").click(function(){
+            jQuery("#calc_id").val(calculation.id);
+            jQuery("#proj_id").val(calculation.project_id);
+            jQuery("#form_url").attr('action','sketch/cut_redactor_2/index.php');
+            submit_form_sketch();
+		});
+        //добавить комплектующие && монтаж
+        jQuery("#btn_add_components").click(function(){
+            let id = "warning";
+            let html = create_container(id);
+            jQuery("#add_mount_and_components").after(html);
+            /* jQuery("#"+id).append(`<p>
+									ВНИМАНИЕ! <br>
+									Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой. <br>
+									Изменить прайс монтажа <a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary"><i class="fa fa-edit"></i></a>
+                                </p>`); */
+            
+            let html1 = create_container("n_28");
+            jQuery("#add_mount_and_components").after(html1);
+            jQuery("#n_28").append(`<table class="table_calcform" style="margin-bottom: 15px;">
+								<tr>
+									<td class="td_calcform1">
+										<button type="button" id="btn_baguette" class="btn add_fields">
+											Багет
+										</button>
+									</td>
+									<td class="td_calcform2">
+										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+											<div class="help_question">?</div>
+											<span class="airhelp">
+												В расчет входит багет (2,5 м) </br>
+												А также на 1 м багета:
+												<ul style="text-align: left;">
+													<li>10 саморезов (ГДК 3,5*51)</li>
+													<li>10 дюбелей (красн. 6*51)</li>
+												</ul>
+												+ монтажная работа по обагечиванию
+											</span>
+										</div>
+									</td>
+								</tr>
+							</table>`);
+            
+        });
         function submit_form_sketch()
 	    {
             var regexp_d = /^\d+$/;
@@ -428,9 +490,6 @@
             document.getElementById('form_url').submit();
             
         }
-
-       
-
         function initial_fill(){
             let n2_options = jQuery("#jform_n2 option");
             let proizv_options = jQuery("#jform_proizv option");
@@ -442,10 +501,22 @@
                     jQuery("#color_switch").show();
                 }
                 add_select_attr_to_option(proizv_options,canvas.manufacturer_id);
-            }
-            canvas.filled = true;
+                canvas.filled = true;
+            } 
         }
+        function create_container(col_id){
+            return `<div class = "container">
+                                <div class = "row">
+                                    <div class = "col-sm-4"></div>
+                                        <div class = "col-sm-4" id = "${col_id}"></div>
+                                    <div class = "col-sm-4"></div>
+                                </div>
+                            </div>`;
+            
+        }
+        function create_item(button_id,button_text){
 
+        }
         function fill_selected_color(src,color_id){
             jQuery("#color_img").prop( "src", src);
             jQuery("#color_img").show();
