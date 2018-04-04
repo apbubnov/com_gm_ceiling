@@ -11,6 +11,12 @@
 
     $user = JFactory::getUser();
     $user_groups = $user->groups;
+    if(in_array('16',$user_group)){
+		$triangulator_pro = 1;
+	}
+	else{
+		$triangulator_pro = 0;
+	}
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
     $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
@@ -34,6 +40,7 @@
         if(empty($project_id)){
             throw new Exception("Пустой id проекта");
         }
+        $recalc = $jinput->get('recalc',0,'INT');
     }
     else{
         /* сгенерировать ошибку или создать калькуляцию? */
@@ -45,7 +52,6 @@
 ?>
 <!-- форма для чертилки-->
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
-	<input name="url" id="url" value="" type="hidden">
 	<input name="user_id" id="user_id" value="<?php echo $user->id ;?>" type="hidden">
 	<input name = "width" id = "width" value = "" type = "hidden">
 	<input name = "texture" id = "texture" value = "" type = "hidden">
@@ -58,7 +64,7 @@
     <input name = "n5" id = "n5" value ="" type ="hidden">
     <input name = "n9" id = "n9" value ="" type ="hidden">
 	<input name = "triangulator_pro" id = "triangulator_pro" value = "<?php echo $triangulator_pro?>" type = "hidden">
-	<input type="hidden" name="proj_id" id="proj_id" value = "">
+	<input name="proj_id" id="proj_id" value = "" type="hidden">
 </form>
 <form>
     <div class="container">
@@ -204,6 +210,20 @@
             </div>
         </div>
     </div>
+    <div class="container">
+        <div class="row sm-margin-bottom" style="margin-top: 25px">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <button id="calculate_button" class="btn btn-success btn-big" type="button">
+                    <span class="loading" style="display: none;">
+                        Считаю...<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                    </span>
+                    <span class="static">Рассчитать</span>
+                </button>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
 </form>
 <script>
     jQuery('document').ready(function()
@@ -213,7 +233,8 @@
         let canvases_data_of_selected_texture = [];
         let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
         let canvas = JSON.parse('<?php echo $canvas;?>');
-        console.log(canvas);
+        let need_click = <?php echo $recalc;?>; 
+
         fill_calc_data();
 
         jQuery.each(canvases_data, function(key,value){
@@ -223,20 +244,17 @@
                 let option = jQuery("<option></option>")
                                 .attr("value", +texture.id)
                                 .text(texture.name);
-                   
-                    if(canvas!== null && option.attr("value") === canvas.texture_id){
-                        option.attr('selected','selected');
-                    }
                 jQuery("#jform_n2").append(option);
             }
         });
-
+        
         select_colors();
+        initial_fill();
 
         document.getElementById('jform_n2').onchange = select_colors;
         jQuery('.click_color').change(select_manufacturers);
         document.getElementById('jform_proizv').onchange = select_widths;
-
+        
         function select_colors(){
             let colors = [];
             canvases_data_of_selected_texture = [];
@@ -252,25 +270,27 @@
                     }
                 }
             });
+            if(canvas && canvas.filled){
+                jQuery("#auto").val(1);
+            }
+            jQuery("#color_img").prop( "src", "");
+            jQuery("#color_img").hide();
+            jQuery("#jform_color").val("");
             if(colors.length>0){
                 jQuery("#jform_color_switch-lbl").show();
                 jQuery("#color_switch").show();
-                if(canvas!== null && canvas.color_id){
-                    jQuery("#color_img").prop( "src", canvas.color_file);
-                    jQuery("#color_img").show();
-                    jQuery("#jform_color").val(canvas.color_id);
-                }
             }
             else{
-                jQuery("#color_img").prop( "src", "");
-                jQuery("#color_img").hide();
-                jQuery("#jform_color").val("");
                 jQuery("#jform_color_switch-lbl").hide();
                 jQuery("#color_switch").hide();
+            }
+            if(!canvas.filled && canvas.color_id){
+                fill_selected_color(canvas.color_file,canvas.color_id);
             }
             select_manufacturers();
         }
 
+        //выбор цвета
         jQuery( "#color_switch" ).click(function(){
             var items = "<div class='center'>";
             jQuery.each(canvases_data_of_selected_texture, function( key, val ) {
@@ -285,9 +305,7 @@
                 size: 'large',
                 onShow: function() {
                     jQuery(".click_color").click(function(){
-                        jQuery("#jform_color").val( jQuery( this ).data("color_id") );
-                        jQuery("#color_img").prop( "src", jQuery( this ).data("color_img") );
-                        jQuery("#color_img").show();
+                        fill_selected_color(jQuery(this).data("color_img"),jQuery( this ).data("color_id"));
                         select_manufacturers();
                     });
                 },
@@ -321,13 +339,23 @@
             };						
         });
 
+        jQuery("#sketch_switch").click(function(){
+            submit_form_sketch();
+        });
         
+        jQuery("#calculate_button").click(function(){
+            console.log("click");
+            let recalc = jQuery("#auto").val();
+            if(recalc){
+                submit_form_sketch();
+            }
+        });
         function select_manufacturers()
         {
             let manufacturers = [];
             let select_texture = document.getElementById('jform_n2').value;
             let select_color = (document.getElementById('jform_color').value) ? document.getElementById('jform_color').value : null;
-
+            console.log("select_color",select_color);
             jQuery("#jform_proizv").empty();
             jQuery.each(canvases_data_of_selected_texture, function(key,value){
                 if (value.texture_id === select_texture && value.color_id === select_color)
@@ -336,15 +364,15 @@
                     if(!in_array(manufacturers, proizv)){
                         manufacturers.push(proizv);
                         let option = jQuery("<option></option>")
-                                        .attr("value", value.name)
+                                        .attr("value", value.manufacturer_id)
                                         .text(proizv);
-                        if(canvas!== null && option.attr("value") === canvas.texture_title){
-                            option.attr('selected','selected');
-                        }
                         jQuery("#jform_proizv").append(option);
                     }
                 }
             });
+            if(canvas && canvas.filled){
+                jQuery("#auto").val(1);
+            }
             select_widths();
         }
 
@@ -354,7 +382,7 @@
             let select_proizv = document.getElementById('jform_proizv').value;
             let width_polotna = [];
             jQuery.each(canvases_data_of_selected_texture, function(key,value){
-                if (value.name === select_proizv)
+                if (value.manufacturer_id === select_proizv)
                 {
                     let width = Math.round(value.width * 100);
     
@@ -374,7 +402,9 @@
                 return 0;
             });
             jQuery("#width").val(JSON.stringify(width_polotna));
-            //console.log(JSON.stringify(width_polotna));
+            if(canvas && canvas.filled){
+                jQuery("#auto").val(1);
+            }
         }
 
         function submit_form_sketch()
@@ -386,20 +416,50 @@
                 alert("Неверный формат входных данных!");
                 return;
             }
-            document.getElementById('url').value = window.location.href.replace(/\#.*/, '');
             document.getElementById('texture').value = document.getElementById('jform_n2').value;
             document.getElementById('color').value = document.getElementById('jform_color').value;
             document.getElementById('manufacturer').value=document.getElementById('jform_proizv').value;
-            document.getElementById('auto').value = 0;
             document.getElementById('n4').value = document.getElementById('jform_n4').value;
             document.getElementById('n5').value = document.getElementById('jform_n5').value;
             document.getElementById('n9').value = document.getElementById('jform_n9').value;
+            if(calculation && calculation.original_sketch){
+                document.getElementById('walls').value = calculation.original_sketch;
+            }
             document.getElementById('form_url').submit();
             
         }
-        jQuery("#sketch_switch").click(function(){
-            submit_form_sketch();
-        });
+
+       
+
+        function initial_fill(){
+            let n2_options = jQuery("#jform_n2 option");
+            let proizv_options = jQuery("#jform_proizv option");
+            if(canvas){
+                add_select_attr_to_option(n2_options,canvas.texture_id);
+                select_colors();
+                if(canvas.color_id){
+                    jQuery("#jform_color_switch-lbl").show();
+                    jQuery("#color_switch").show();
+                }
+                add_select_attr_to_option(proizv_options,canvas.manufacturer_id);
+            }
+            canvas.filled = true;
+        }
+
+        function fill_selected_color(src,color_id){
+            jQuery("#color_img").prop( "src", src);
+            jQuery("#color_img").show();
+            jQuery("#jform_color").val(color_id);
+        }
+
+        function add_select_attr_to_option(options,value){
+            options.each(function(){
+                if(jQuery(this).attr('value') === value){
+                    jQuery(this).attr('selected','selected');
+                }
+            });
+        }
+
         function fill_calc_data(){
             if(calculation.n4 && calculation.n5 && calculation.n9){
                 jQuery("#jform_n4").val(calculation.n4);
@@ -437,5 +497,14 @@
             }
             return result;
         }
+        function click_after_recalc(){
+            if(need_click){
+                jQuery("#calculate_button").click();
+                jQuery('html, body').animate({
+                    scrollTop: jQuery("#calculate_button").offset().top
+                }, 2000);
+            }
+        }
+        setTimeout(click_after_recalc,500);
     });
 </script>
