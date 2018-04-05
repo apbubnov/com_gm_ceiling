@@ -57,6 +57,7 @@ function delete_string_characters($string)
     $string = str_replace(array("\r","\n"),"",$string);
     $string = preg_replace("|[\s]+|s", " ", $string);
     $string = trim($string);
+    return $string;
 }
 
 class Gm_ceilingHelpersGm_ceiling

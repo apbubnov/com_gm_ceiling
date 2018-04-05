@@ -354,6 +354,8 @@ class Gm_ceilingController extends JControllerLegacy
                 else
                     krsort($result);
 
+                print_r($result);
+
                 $result_temp = $result;
                 $result = [];
 
