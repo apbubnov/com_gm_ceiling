@@ -229,7 +229,6 @@
         var nov_reg3 = "Y(.*)Y";
         ChooseYear = id.match(nov_reg3)[1];
     }
-
     // функция вывода работ (таблицы) дня при нажатии на день
     function ListOfWork(kind, day, month, year) {
         td = day;
