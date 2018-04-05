@@ -22,8 +22,8 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 		try
 		{
 			$id = $_POST["id_calculation"];
-
-			$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
+			
+ 			$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
 			$model_request = $model->ChangeStatusOfRead($id);
 
 			// письмо
@@ -62,7 +62,7 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 
 			//echo json_encode($model_request);
 
-			exit;
+			die;
 		}
 		catch(Exception $e)
         {

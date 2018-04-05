@@ -23,9 +23,7 @@ class Gm_ceilingModelMounterscalendar extends JModelItem {
 
 	function ChangeStatusOfRead($id) {
 		try
-		{
-			throw new Exception($id);
-			
+		{			
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query2 = $db->getQuery(true);

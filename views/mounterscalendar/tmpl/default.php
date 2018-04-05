@@ -359,22 +359,16 @@
     function ReplaceToOrder(project, month, ReadOrNot) {
         month--;
         if (ReadOrNot == 0) {
-            alert(project);
             jQuery.ajax( {
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
                 dataType: 'json',
-                //dataType: 'html',
                 data: {
                     id_calculation : project
                 },
                 success: function(msg) {
-                    //if (msg.read_by_mounter == 1) {
-                        alert("просмотрен");
-                    //}
                 },
-                error: function (msg) {
-                    alert(JSON.parse(msg));
+                error: function(msg) {
                 }
             });
         }
