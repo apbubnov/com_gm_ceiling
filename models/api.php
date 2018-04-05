@@ -125,10 +125,10 @@ class Gm_ceilingModelApi extends JModelList
         try{
             $data = $data;
             $android_id = $data->android_id;
-            $name = $data->name;
-			$phone = $data->phone;
-            $city  = $data->city;
-            $email = $data->email;
+            $name = trim(preg_replace('/[^А-ЯЁа-яёA-Za-z0-9\-\@\.\s]/', '', $data->name));
+			$phone = trim(preg_replace('/[^А-ЯЁа-яёA-Za-z0-9\-\@\.\s]/', '', $data->phone));
+            $city  = trim(preg_replace('/[^А-ЯЁа-яёA-Za-z0-9\-\@\.\s]/', '', $data->city));
+            $email = trim(preg_replace('/[^А-ЯЁа-яёA-Za-z0-9\-\@\.\s]/', '', $data->email));
 			//Создание клиента
 			$clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
 			$client_data['client_name'] = $name;
