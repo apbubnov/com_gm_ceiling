@@ -365,7 +365,7 @@
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
                 dataType: 'json',
                 data: {
-                    id_calculation : project,
+                    id_calculation : project
                 },
                 success: function(msg) {
                 }
