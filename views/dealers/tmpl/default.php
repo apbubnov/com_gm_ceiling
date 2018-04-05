@@ -117,7 +117,7 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
         $.each(HelpMessage, function (i, v) {
             v = $(v);
             var t = HelpMessageSpan.clone().addClass("HelpMessageSpan").text(v.attr("title"));
-            v.prepend(t);
+            v.append(t);
         });
 
 
