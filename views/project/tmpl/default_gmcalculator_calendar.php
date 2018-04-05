@@ -183,7 +183,7 @@
                                     <table class="table" >
                                         <tr>
                                             <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
-                                            <td><?php echo $this->item->client_id; ?></td>
+                                            <td><a href="http://test1.gm-vrn.ru/index.php?option=com_gm_ceiling&view=clientcard&id=<?=$this->item->id_client;?>"><?php echo $this->item->client_id; ?></a></td>
                                             <td>
                                                 <div class="FIO" style="display: none;">
                                                     <input class = "inputactive" name="new_client_name" id="jform_client_name" value="<?php echo $this->item->client_id; ?>" placeholder="Новое ФИО клиента" type="text">
@@ -205,7 +205,7 @@
                                         </tr>
                                         <tr>
                                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                                            <td><?php foreach ($phones AS $contact) { echo $contact->phone; echo "<br>"; }?></td>
+                                            <td><?foreach ($phones as $contact):?><a href="tel:+<?=$contact->phone;?>"><?=$contact->phone;?></a><?endforeach;?></td>
                                         </tr>
                                         <tr>
                                             <th>Почта</th>
@@ -213,8 +213,9 @@
                                                 <?php
                                                     $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
                                                     $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
-                                                    foreach ($contact_email AS $contact) { echo $contact->contact; echo "<br>"; }
-                                                ?>
+                                                    foreach ($contact_email AS $contact):?>
+                                                        <a href="mailto:<?=$contact->contact;?>"><?=$contact->contact;?></a>
+                                                <?endforeach;?>
                                             </td>
                                         </tr>
                                         <?php   
@@ -234,7 +235,7 @@
                                         ?>
                                         <tr>
                                             <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                                            <td><?php echo $this->item->project_info; ?></td>
+                                            <td><a target="_blank" href="https://yandex.ru/maps/?mode=search&text=<?=$this->item->project_info;?>"><?=$this->item->project_info;?></a></td>
                                             <td>
                                                 <div class="Address" style="display: none; position:relative;">
                                                     <label id="jform_address_lbl" for="jform_address">
