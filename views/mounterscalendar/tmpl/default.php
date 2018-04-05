@@ -357,7 +357,6 @@
     }
 
     function ReplaceToOrder(project, month, ReadOrNot) {
-        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
         month--;
         if (ReadOrNot == 0) {
             alert(project);
@@ -372,9 +371,13 @@
                     if (msg.read_by_mounter == 1) {
                         alert("просмотрен");
                     }
+                },
+                error: function (msg) {
+                    alert(msg);
                 }
             });
         }
+        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
     }
 
     jQuery(document).ready(function () {
