@@ -121,6 +121,7 @@ class Gm_ceilingModelApi extends JModelList
             throw new Exception('Ошибка!', 500);
         }
     }
+
     public function register_from_android($data){
         try{
             $data = $data;
