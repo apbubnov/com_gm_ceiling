@@ -364,16 +364,17 @@
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
                 //dataType: 'json',
+                dataType: 'html',
                 data: {
                     id_calculation : project
                 },
                 success: function(msg) {
-                    if (msg.read_by_mounter == 1) {
+                    //if (msg.read_by_mounter == 1) {
                         alert("просмотрен");
-                    }
+                    //}
                 },
                 error: function (msg) {
-                    alert(msg);
+                    alert(JSON.parse(msg));
                 }
             });
         }
