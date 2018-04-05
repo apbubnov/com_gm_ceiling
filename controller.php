@@ -334,6 +334,7 @@ class Gm_ceilingController extends JControllerLegacy
             if ($dealer_price_sort != "") {
                 $result_temp = $result;
                 $result = [];
+                $nil = "000000000000000000000000000000000000000000000000000";
 
                 foreach ($result_temp as $key => $dealer) {
                     $keyCanv = $dealer->min_canvas_price;
@@ -346,6 +347,10 @@ class Gm_ceilingController extends JControllerLegacy
                     $key .= substr($keyComp, $i, strlen($keyComp));
                     $key .= $dealer->dealer_id;
 
+                    $len = strlen($key);
+                    $nillen = strlen($nil);
+                    $key .= substr($nil, 0, $nillen - $len);
+
                     $result[$key] = $dealer;
                 }
 
@@ -353,8 +358,6 @@ class Gm_ceilingController extends JControllerLegacy
                     ksort($result);
                 else
                     krsort($result);
-
-                print_r($result);
 
                 $result_temp = $result;
                 $result = [];

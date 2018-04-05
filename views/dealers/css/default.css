@@ -49,6 +49,7 @@
 
 th {
     white-space: nowrap;
+    cursor: pointer;
 }
 
 @media (max-width: 767px) {
