@@ -299,6 +299,7 @@ class Gm_ceilingController extends JControllerLegacy
             $manager_id = $jinput->get('manager_id', null, 'INT');
             $city = $jinput->get('city', null, 'STRING');
             $dealer_price_sort = $jinput->get('dealer_price_sort', null, 'STRING');
+
             $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
             if ($flag == 'clients')
             {
@@ -330,28 +331,41 @@ class Gm_ceilingController extends JControllerLegacy
                     $dealer_history_sum += $item->sum;*/
             }
 
-            /*if ($dealer_price_sort != "") {
+            if ($dealer_price_sort != "") {
                 $result_temp = $result;
                 $result = [];
+                $nil = "000000000000000000000000000000000000000000000000000";
 
                 foreach ($result_temp as $key => $dealer) {
                     $keyCanv = $dealer->min_canvas_price;
                     $keyComp = $dealer->min_canvas_price;
                     $key = "";
                     $i = 0;
-                    for($i < strlen($keyCanv) && $i < strlen($keyComp); $i++)
+                    for(;$i < strlen($keyCanv) && $i < strlen($keyComp); $i++)
                         $key .= $keyCanv[$i] . $keyComp[$i];
                     $key .= substr($keyCanv, $i, strlen($keyCanv));
                     $key .= substr($keyComp, $i, strlen($keyComp));
+                    $key .= $dealer->dealer_id;
+
+                    $len = strlen($key);
+                    $nillen = strlen($nil);
+                    $key .= substr($nil, 0, $nillen - $len);
 
                     $result[$key] = $dealer;
                 }
 
-                if ($dealer_price_sort != "asc")
+                if ($dealer_price_sort == "asc")
                     ksort($result);
                 else
                     krsort($result);
-            }*/
+
+                $result_temp = $result;
+                $result = [];
+
+                foreach ($result_temp as $value)
+                    $result[] = $value;
+
+            }
 
             die(json_encode($result));
         }

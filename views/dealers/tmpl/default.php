@@ -126,7 +126,8 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
         $("#dealer_price").click(function () {
             var _this = $(this),
                 sort = _this.data("sort");
-            sort = (sort === "desc")?"desc":"asc";
+            sort = (sort === "desc")?"asc":"desc";
+            _this.data("sort", sort);
             showDealers();
         });
 
@@ -481,7 +482,7 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                 flag: 'dealers',
                 manager_id: document.getElementById('filter_manager').value,
                 city: document.getElementById('filter_city').value,
-                dealer_price_sort: $("#DealerPrice").data("sort")
+                dealer_price_sort: $("#dealer_price").data("sort")
             },
             success: function(data){
                 console.log(data);
