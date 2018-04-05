@@ -30,8 +30,8 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
     </div>
     <div style="display:inline-block; width: 48%; text-align: left;">
         <button type="button" id="send_to_all" class="btn btn-primary">Отправить на email</button>
-        <button type="button" class="btn btn-primary" title="Обновить цену"><i class="fa fa-refresh"></i></button>
-        <button type="button" class="btn btn-primary" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
+        <button type="button" class="btn btn-primary HelpMessage" onclick="send_refresh_price()" title="Обновить цену"><i class="fa fa-refresh"></i></button>
+        <button type="button" class="btn btn-primary HelpMessage" onclick="send_clear_price()" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
     </div>
     <div style="display:inline-block; width: 48%; text-align: left;">
         <input type="text" id="name_find_dealer">
@@ -105,9 +105,19 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
 <script src="/templates/gantry/cleditor1_4_5/jquery.cleditor.js"></script>
 
 <script>
-
+    var $ = jQuery;
     jQuery(document).ready(function()
     {
+        var HelpMessageSpan = $("<span></span>"),
+            HelpMessage = $(".HelpMessage");
+
+        $.each(HelpMessage, function (i, v) {
+            v = $(v);
+            var t = HelpMessageSpan.clone().addClass("HelpMessageSpan").text(v.attr("title"));
+            v.prepend(t);
+        });
+
+
 
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
 

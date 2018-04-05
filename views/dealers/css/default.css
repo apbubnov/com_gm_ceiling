@@ -11,3 +11,38 @@
     text-align: center;
     padding-left: 10px;
 }
+
+.HelpMessage {
+    position: relative;
+}
+
+.HelpMessage .HelpMessageSpan {
+    position: absolute;
+    left: -125%;
+    bottom: calc(100% + 5px);
+    width: 350%;
+    height: auto;
+    font-size: 12px;
+    color: rgb(255,255,255);
+    background-color: rgb(64,65,154);
+    border-radius: 3px;
+    padding: 3px 6px;
+    white-space: normal;
+    display: none;
+}
+
+.HelpMessage:hover .HelpMessageSpan {
+    display: inline-block;
+}
+
+.HelpMessage .HelpMessageSpan:before {
+    content: "▼";
+    width: 10px;
+    height: 10px;
+    font-size: 7px;
+    margin-top: -2px;
+    color: rgb(64,65,154);
+    position: absolute;
+    left: calc(50% - 5px);
+    top: 100%;
+}
