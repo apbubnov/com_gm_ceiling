@@ -360,6 +360,7 @@
         location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
         month--;
         if (ReadOrNot == 0) {
+            alert(project);
             jQuery.ajax( {
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
