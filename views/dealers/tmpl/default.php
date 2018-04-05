@@ -30,6 +30,8 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
     </div>
     <div style="display:inline-block; width: 48%; text-align: left;">
         <button type="button" id="send_to_all" class="btn btn-primary">Отправить на email</button>
+        <button type="button" class="btn btn-primary" title="Обновить цену"><i class="fa fa-refresh"></i></button>
+        <button type="button" class="btn btn-primary" title="Очистить корректировки"><i class="fa fa-eraser"></i></button>
     </div>
     <div style="display:inline-block; width: 48%; text-align: left;">
         <input type="text" id="name_find_dealer">
