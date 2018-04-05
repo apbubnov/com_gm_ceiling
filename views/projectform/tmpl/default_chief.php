@@ -25,8 +25,10 @@
     $user = JFactory::getUser();
     $userId = $user->get('id');
 
+    $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+
     $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations = $model->getProjectItems($this->item->id);
+    $calculations = $model->new_getProjectItems($this->item->id);
 
     foreach ($calculations as $calculation) {
         $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
@@ -82,7 +84,7 @@
         $month2++;
         $year2 = $year1;
     }
-    if ($user->dealer_id != 1) {
+    if ($user->dealer_id == 1) {
         $dealer_for_calendar = $userId;
     } else {
         $dealer_for_calendar = $user->dealer_id;
@@ -126,6 +128,9 @@
 
     // все замерщики
     $AllGauger = $model->FindAllGauger($dealer_for_calendar, 21);
+    if (count($AllGauger) == 0) {
+        $AllGauger = ["id" => $userId, "name" => $user->name];
+    }
     //----------------------------------------------------------------------------------
 
     $mount_sum = 0;
@@ -866,32 +871,29 @@
                                 </div>
                             <?php endif; ?>
                             <div class="row">
-                                <div class="col-xs-12">
-                                    <?php if($calculation->n1 && $calculation->n2 && $calculation->n3):?>
+                                <div class="col-xs-12 no_yes_padding">
+                                    <?php 
+                                        if (!empty($calculation->n3)){
+                                        $canvas = $canvas_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3");
+                                    ?>
                                         <h4>Материал</h4>
                                         <table class="table_info2">
                                             <tr>
-                                                <td>Тип потолка:</td>
-                                                <td><?php echo $calculation->n1; ?></td>
-                                            </tr>
-                                            <tr>
                                                 <td>Тип фактуры:</td>
-                                                <td><?php echo $calculation->n2; ?></td>
+                                                <td><?php echo $canvas[0]->texture_title; ?></td>
                                             </tr>
                                             <tr>
                                                 <td>Производитель, ширина:</td>
-                                                <td><?php echo $calculation->n3; ?></td>
+                                                <td><?php echo $canvas[0]->name.' '.$canvas[0]->width; ?></td>
                                             </tr>
-                                            <?php 
-                                                if ($calculation->color > 0) { 
-                                                    $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color'); 
-                                                    $color = $color_model->getData($calculation->color);
+                                            <?php
+                                                if (!empty($canvas[0]->color_id)) {
                                             ?>
                                                 <tr>
                                                     <td>Цвет:</td>
                                                     <td>
-                                                        <?php echo $color->colors_title; ?>
-                                                        <img src="/<?php echo $color->file; ?>" alt=""/>
+                                                        <?php echo $canvas[0]->color_title; ?>
+                                                        <img src="/<?php echo $canvas[0]->color_file; ?>" alt=""/>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -927,7 +929,7 @@
                                                 </tr>
                                             </table>
                                         <?php }
-                                    endif; ?>
+                                    } ?>
                                     <?php if ($calculation->n16) { ?>
                                         <table class="table_info2">
                                             <tr>
@@ -1281,7 +1283,6 @@
                 jQuery("#calendar1").append(msg);
                 Today(day, NowMonth, NowYear);
                 var datesession = jQuery("#jform_project_mounting_date").val();  
-                console.log(datesession);
                 if (datesession != undefined) {
                     if (whatCalendar == 0) {
                         jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
@@ -1319,7 +1320,6 @@
                 jQuery("#calendar2").append(msg);
                 Today(day, NowMonth, NowYear);
                 var datesession = jQuery("#jform_project_mounting_date").val();  
-                console.log(datesession);
                 if (datesession != undefined) {
                     if (whatCalendar == 0) {
                         jQuery("#current-monthD"+datesession.substr(8, 2)+"DM"+datesession.substr(5, 2)+"MY"+datesession.substr(0, 4)+"YI"+<?php echo $userId; ?>+"IC0C").addClass("change");
@@ -1447,7 +1447,7 @@
 
     jQuery(document).ready(function () {
 
-        trans();
+        //trans();
 
         window.time_gauger = undefined;
         window.gauger = undefined;
