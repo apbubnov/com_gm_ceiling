@@ -434,8 +434,8 @@
 		});        
        
         jQuery("#btn_add_components").click(function(){
-            include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
             include('/components/com_gm_ceiling/views/calculationform2/JS/airhelps.js');
+            include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
         });
         function include(url) { 
             var script = document.createElement('script'); 
