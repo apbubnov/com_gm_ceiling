@@ -253,7 +253,7 @@
         let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
         let canvas = JSON.parse('<?php echo $canvas;?>');
         let need_click = <?php echo $recalc;?>; 
-
+        console.log(canvases_data);
         fill_calc_data();
 
         jQuery.each(canvases_data, function(key,value){
@@ -434,103 +434,54 @@
         function generate_block(object){
             let cnt = create_container(object.block_id,object.btn_cont_id);
             jQuery(`#${object.prev_id}`).after(cnt);
-            let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text);
-            jQuery(`#${object.btn_cont_id}`).append(block);
+            if(object.btn_id){
+                let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,`help_${object.block_id}`);
+                jQuery(`#${object.btn_cont_id}`).append(block);
+            }
+            else{
+                jQuery(`#${object.btn_cont_id}`).append(object.btn_text);
+            }
         }
         //добавить комплектующие && монтаж
         jQuery("#btn_add_components").click(function(){
-            let first_arr_blocks = [
-                {block_id:"block_n_28",btn_cont_id:"btn_cont_n28",prev_id:"add_mount_and_components",btn_id:"btn_baguette",btn_text:(calculation.n_28) ? "Изменить багет" : "Добавить багет"},
-                {block_id:"block_n_6",btn_cont_id:"btn_cont_n6",prev_id:"block_n_28",btn_id:"btn_insert",btn_text:"Декоративная вставка"}
+            let arr_blocks = [
+                {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"add_mount_and_components",btn_id:"btn_baguette",btn_text:(calculation.n_28) ? "Изменить багет" : "Добавить багет"},
+                {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_insert",btn_text:"Декоративная вставка"},
+                {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_n6",btn_id:"",btn_text:"<h3>Освещение</h3>"},
+                {block_id:"block_n12",btn_cont_id:"btn_cont_n1",prev_id:"block_light_cptn",btn_id:"btn_chandelier",btn_text:"Добавить люстры"},
+                {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_fixtures",btn_text:"Добавить светильники"},
+                {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_n13",btn_id:"btn_wire",btn_text:"Провод"},
+                {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_n19",btn_id:"",btn_text:"<h4>Прочий монтаж</h4>"},
+                {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_oter_mount_cptn",btn_id:"btn_pipes",btn_text:"Добавить трубы входящие в потолок"},
+                {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_cornice",btn_text:"Добавить шторный карниз"},
+                {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_n16",btn_id:"btn_bar",btn_text:"Закладная брусом"},
+                {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_n17",btn_id:"btn_delimeter",btn_text:"Разделитель"},
+                {block_id:"block_n7",btn_cont_id:"btn_cont_n7",prev_id:"block_n20",btn_id:"btn_bar",btn_text:"Метраж стен с плиткой"},
+                {block_id:"block_n8",btn_cont_id:"btn_cont_n8",prev_id:"block_n7",btn_id:"btn_stoneware",btn_text:"Метраж стен с керамогранитом"},
+                {block_id:"block_n18",btn_cont_id:"btn_cont_n18",prev_id:"block_n8",btn_id:"btn_stoneware",btn_text:"Усиление стен"},
+                {block_id:"block_dop_krepezh",btn_cont_id:"btn_dop_krepezh",prev_id:"block_n18",btn_id:"btn_fixture2",btn_text:"Дополнительный крепеж"},
+                {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_dop_krepezh",btn_id:"btn_firealarm",btn_text:"Пожарная сигнализация"},
+                {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_hoods",btn_text:"Вентиляция"},
+                {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_n22",btn_id:"btn_diffuser",btn_text:"Диффузор"},
+                {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_n23",btn_id:"btn_soaring",btn_text:"Парящий потолок"},
+                {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n30",btn_id:"btn_level",btn_text:"Переход уровня"},
+                {block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_notch2",btn_text:"Внутренний вырез (в цеху)"},
+                {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_n31",btn_id:"btn_notch1",btn_text:"Внутренний вырез (на месте)"},
+                {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_n11",btn_id:"btn_draining",btn_text:"Слив воды"},
+                {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n32",btn_id:"btn_height",btn_text:"Высота помещения"},
+                {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_height",btn_id:"btn_access",btn_text:"Сложность доступа"},
+                {block_id:"block_extra",btn_cont_id:"btn_cont_extra",prev_id:"block_n24",btn_id:"btn_accessories",btn_text:"Другие комплектующие"},
+                {block_id:"block_extra2",btn_cont_id:"btn_cont_extra2",prev_id:"block_extra",btn_id:"btn_accessories2",btn_text:"Другие комплектующие со склада"},
+                {block_id:"block_extra_mount",btn_cont_id:"btn_cont_extra_mount",prev_id:"block_extra2",btn_id:"btn_mount",btn_text:"Другие работы по монтажу"},
+                {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_extra_mount",btn_id:"btn_mount2",btn_text:"Отменить монтаж"},
+                {block_id:"block_discount",btn_cont_id:"btn_cont_discount",prev_id:"block_need_mount",btn_id:"",btn_text:"Скидка"}
             ];
-            first_arr_blocks.forEach(function(item){
+            arr_blocks.forEach(function(item){
                 generate_block(item);
             });
-           /*  //кнопка багета
-            let n28 = "block_n_28";
-            let cnt_n28 = create_container(n28,"btn_cont_n28");
-            jQuery("#add_mount_and_components").after(cnt_n28);
-            let block_28 =  create_block_btn('table_calcform',"margin-bottom: 15px;",'btn_baguette',(calculation.n_28) ? "Изменить багет" : "Добавить багет");
-            jQuery("#btn_cont_n28").append(block_28);
-            //кнопка вствка
-            let insert = "block_insert";
-            let cnt_insert = create_container(insert,"btn_cont_insert");
-            jQuery(`#${n28}`).after(cnt_insert);
-            let block_dec_insert = create_block_btn("table_calcform","margin-bottom: 30px;","btn_insert","Декоративная вставка");
-            jQuery("#btn_cont_insert").append(block_dec_insert);
-            //заголовок "Освещение"
-            let caption_lighting = "caption_lighting";
-            let cnt_light_cptn = create_container(caption_lighting,"head_lighting");
-            jQuery(`#${insert}`).after(cnt_light_cptn);
-            jQuery("#head_lighting").append('<h3> Освещение </h3>');
-            //кнопка люстры
-            let n12 = "block_n12";
-            let cnt_n12 = create_container(n12,"btn_cont_n12");
-            jQuery(`#${caption_lighting}`).after(cnt_n12);
-            let block_n12 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_chandelier","Добавить люстры");
-            jQuery("#btn_cont_n12").append(block_n12);
-            //светильники
-            let n13 = "block_n13";
-            let cnt_n13 = create_container(n13,"btn_cont_n13");
-            jQuery(`#${n12}`).after(cnt_n13);
-            let block_n13 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_fixtures","Добавить светильники");
-            jQuery("#btn_cont_n13").append(block_n13);
-            //кнопка провод
-            let wire = "block_wire";
-            let cnt_wire = create_container(wire,"btn_cont_wire");
-            jQuery(`#${n13}`).after(cnt_wire);
-            let block_wire = create_block_btn("table_calcform","margin-bottom: 30px;","btn_wire","Провод");
-            jQuery("#btn_cont_wire").append(block_wire);
-            //заголовок "прочий монтаж"
-            let caption_other_mount = "caption_other_mount";
-            let cnt_mount_cptn = create_container(caption_other_mount,"head_other_mount");
-            jQuery(`#${wire}`).after(cnt_mount_cptn);
-            jQuery("#head_other_mount").append('<h4> Прочий монтаж </h4>');
-            //трубы
-            let n14 = "block_n14";
-            let cnt_n14 = create_container(n14,"btn_cont_n14");
-            jQuery(`#${caption_other_mount}`).after(cnt_n14);
-            let block_n14 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_pipes","Добавить трубы входящие в потолок");
-            jQuery("#btn_cont_n14").append(block_n14);
-            //шторный карниз
-            let n16 = "block_n16";
-            let cnt_n16 = create_container(n16,"btn_cont_n16");
-            jQuery(`#${n14}`).after(cnt_n16);
-            let block_n16 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_cornice","Добавить шторный карниз");
-            jQuery("#btn_cont_n16").append(block_n16);
-            //закладная брусом
-            let n17 = "block_n17";
-            let cnt_n17 = create_container(n17,"btn_cont_n17");
-            jQuery(`#${n16}`).after(cnt_n17);
-            let block_n17 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_bar","Закладная брусом");
-            jQuery("#btn_cont_n17").append(block_n17);
-            //раздедитель
-            let n20 = "block_n20";
-            let cnt_n20 = create_container(n20,"btn_cont_n20");
-            jQuery(`#${n17}`).after(cnt_n20);
-            let block_n20 = create_block_btn("table_calcform","margin-bottom: 45px;","btn_delimeter","Разделитель");
-            jQuery("#btn_cont_n20").append(block_n20);
-            //метраж стен с плиткой
-            let n7 = "block_n7";
-            let cnt_n7 = create_container(n7,"btn_cont_n7");
-            jQuery(`#${n20}`).after(cnt_n7);
-            let block_n7 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_tile","Метраж стен с плиткой");
-            jQuery("#btn_cont_n7").append(block_n7);
-            //керамогранит
-            let n8 = "block_n8";
-            let cnt_n8 = create_container(n8,"btn_cont_n8");
-            jQuery(`#${n7}`).after(cnt_n8);
-            let block_n8 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_stoneware","Метраж стен с керамогранитом");
-            jQuery("#btn_cont_n8").append(block_n8);
-            //Усилиние стен
-            let n18 = "block_n18";
-            let cnt_n18 = create_container(n18,"btn_cont_n18");
-            jQuery(`#${n8}`).after(cnt_n18);
-            let block_n18 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_gain","Усиление стен");
-            jQuery("#btn_cont_n18").append(block_n18); */
 
         });
-        function create_block_btn(class_name,style,btn_id,btn_text){
+        function create_block_btn(class_name,style,btn_id,btn_text,help){
             return `<table class="${class_name}" style="${style}">
 								<tr>
 									<td class="td_calcform1">
@@ -541,15 +492,7 @@
 									<td class="td_calcform2">
 										<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
 											<div class="help_question">?</div>
-											<span class="airhelp">
-												В расчет входит багет (2,5 м) </br>
-												А также на 1 м багета:
-												<ul style="text-align: left;">
-													<li>10 саморезов (ГДК 3,5*51)</li>
-													<li>10 дюбелей (красн. 6*51)</li>
-												</ul>
-												+ монтажная работа по обагечиванию
-											</span>
+											    ${help}
 										</div>
 									</td>
 								</tr>
