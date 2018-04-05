@@ -11,7 +11,7 @@
 
     $user = JFactory::getUser();
     $user_groups = $user->groups;
-    if(in_array('16',$user_group)){
+    if(in_array('16',$user_groups)){
 		$triangulator_pro = 1;
 	}
 	else{
@@ -245,9 +245,37 @@
     </div>
 </form>
 <script>
+    ///////////////////////
+    Function.prototype.process= function(state){
+        var process= function(){
+            var args= arguments;
+            var self= arguments.callee;
+            setTimeout(function(){
+                self.handler.apply(self, args);
+            }, 0);
+        };
+        for(var i in state)
+        {
+            process[i]= state[i];
+        }
+        process.handler= this;
+        return process;
+    };
     let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
+    var event_help = function(){
+    let  help_buttons = document.getElementsByClassName('help');
+                for(let i= help_buttons.length;i--;){
+                    help_buttons[i].onmouseenter = function(){
+                        jQuery(this.lastElementChild).show();
+                    };
+                    help_buttons[i].onmouseleave = function(){
+                        jQuery(this.lastElementChild).hide();
+                    };
+                }
+    };
     jQuery('document').ready(function()
     {
+        jQuery("body").addClass("yellow_home");
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
         let textures = [];
         let canvases_data_of_selected_texture = [];
@@ -256,6 +284,8 @@
         let need_click = <?php echo $recalc;?>; 
         console.log(canvases_data);
         fill_calc_data();
+        var event_help_proccess = event_help.process();
+        event_help();
 
         jQuery.each(canvases_data, function(key,value){
             let texture = {id:value.texture_id, name: value.texture_title};
@@ -416,6 +446,8 @@
         });
         //начертить
         jQuery("#sketch_switch").click(function(){
+            jQuery("#walls").val("");
+            jQuery("#auto").val("");
             submit_form_sketch();
         });
         //рассчитать
@@ -434,14 +466,27 @@
 		});        
        
         jQuery("#btn_add_components").click(function(){
-            include('/components/com_gm_ceiling/views/calculationform2/JS/airhelps.js');
             include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
+            setTimeout(event_help_proccess, 500);
         });
+        
+        
         function include(url) { 
+            let scripts = document.getElementsByTagName('script');
+            let reg_exp = new RegExp(url);
+            for(let i = scripts.length;i--;){
+                if(reg_exp.test(scripts[i].src)){
+                    return;
+                }
+            }
             var script = document.createElement('script'); 
             script.src = url; 
             document.getElementsByTagName('head')[0].appendChild(script);
         }
+
+        
+        
+
         function submit_form_sketch()
 	    {
             var regexp_d = /^\d+$/;
