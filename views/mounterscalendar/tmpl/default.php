@@ -368,6 +368,9 @@
                     id_calculation : project
                 },
                 success: function(msg) {
+                    if (msg.read_by_mounter == 1) {
+                        alert("просмотрен");
+                    }
                 }
             });
         }
