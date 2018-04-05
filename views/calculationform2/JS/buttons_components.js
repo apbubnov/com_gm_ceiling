@@ -91,10 +91,29 @@ let arr_blocks = [
     {block_id:"block_discount",btn_cont_id:"btn_cont_discount",prev_id:"block_need_mount",btn_id:"",btn_text:"Скидка"}
 ];
 
+let n28 = {
+    name : 'jform[n28]',
+    values : [
+        {id:'jform_n28_2',value:2,text:"Алюминиевый багет"},
+        {id:'jform_n28_1',value:1,text:"Потолочный багет"},
+        {id:'jform_n28',value:0,text:"Обычный багет"},
+        {id:'jform_n28_3',value:3,text:"Без багета"}
+    ]
+};
+let n6 = {
+    name : 'jform[n6]',
+    values : [
+        {id:'jform_n6_2',value:0,text:"Вставка не нужна"},
+        {id:'jform_n6_1',value:"",text:"Цветная вставка"},
+        {id:'jform_n6',value:314,text:"Белая вставка"},
+      
+    ]
+};
+
 arr_blocks.forEach(function(item){
     generate_block(item);
 });
-
+jQuery("#block_discount").after(create_radios_group());
 
 function create_container(cnt_id,col_id){
     return `<div class = "container" id = "${cnt_id}">
@@ -105,6 +124,19 @@ function create_container(cnt_id,col_id){
                         </div>
                     </div>`;
     
+}
+function create_radios_group(object){
+    result = "";
+    for(let i=object.values.length;i--;){
+        result += create_single_radio(object.name,`${object.id}_${i}`,object.values[i].value,object.values[i].text);
+    }
+    return result;
+}
+function create_single_radio(name,id,value,text){
+    return `<div style="display: inline-block; width: 100%;">
+                <input name="${name}" id="${id}" class="radio" value="${value}" type="radio">
+                <label for="${id}">${text}</label>
+            </div>`;
 }
 function create_block_btn(class_name,style,btn_id,btn_text,help){
     return `<table class="${class_name}" style="${style}">
