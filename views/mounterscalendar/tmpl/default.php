@@ -372,7 +372,7 @@
         }
         setTimeout(function () {
             location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
-        }, 50); 
+        }, 100); 
     }
 
     jQuery(document).ready(function () {
