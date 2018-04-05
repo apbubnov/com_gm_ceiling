@@ -363,7 +363,7 @@
             jQuery.ajax( {
                 type: "POST",
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
-                dataType: 'json',
+                //dataType: 'json',
                 data: {
                     id_calculation : project
                 },
