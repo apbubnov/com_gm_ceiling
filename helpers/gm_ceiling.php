@@ -48,6 +48,14 @@ function dealer_margin($price, $margin, $value, $type) {
     return margin($result, $margin);
 }
 
+function delete_string_characters($string)
+{
+    $string = preg_replace('/[^А-ЯЁа-яёA-Za-z0-9\-\@\.\s]/', '', $string);
+    $string = str_replace(array("\r","\n"),"",$string);
+    $string = preg_replace("|[\s]+|s", " ", $string);
+    $string = trim($string);
+}
+
 class Gm_ceilingHelpersGm_ceiling
 {
     /**
