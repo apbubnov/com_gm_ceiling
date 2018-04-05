@@ -22,7 +22,6 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 		try
 		{
 			$id = $_POST["id_calculation"];
-			throw new Exception($id);
 
 			$model = $this->getModel('Mounterscalendar', 'Gm_ceilingModel');
 			$model_request = $model->ChangeStatusOfRead($id);
