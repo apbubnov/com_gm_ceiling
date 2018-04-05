@@ -127,7 +127,7 @@ class Gm_ceilingModelApi extends JModelList
             $data = $data;
             $android_id = $data->android_id;
             $name = delete_string_characters($data->name);
-			$phone = delete_string_characters($data->phone);
+			$phone = $data->phone;
             $city  = delete_string_characters($data->city);
             $email = delete_string_characters($data->email);
 			//Создание клиента
