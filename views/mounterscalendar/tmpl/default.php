@@ -229,7 +229,6 @@
         var nov_reg3 = "Y(.*)Y";
         ChooseYear = id.match(nov_reg3)[1];
     }
-
     // функция вывода работ (таблицы) дня при нажатии на день
     function ListOfWork(kind, day, month, year) {
         td = day;
@@ -358,7 +357,6 @@
     }
 
     function ReplaceToOrder(project, month, ReadOrNot) {
-        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
         month--;
         if (ReadOrNot == 0) {
             jQuery.ajax( {
@@ -366,12 +364,15 @@
                 url: "index.php?option=com_gm_ceiling&task=mounterscalendar.ChangeStatus",
                 dataType: 'json',
                 data: {
-                    id_calculation : project,
+                    id_calculation : project
                 },
                 success: function(msg) {
                 }
             });
         }
+        setTimeout(function () {
+            location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
+        }, 100); 
     }
 
     jQuery(document).ready(function () {

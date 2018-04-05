@@ -53,6 +53,9 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
             <th>
                Имя
             </th>
+            <th id="dealer_price" data-sort="">
+                Минимальная цена<br>полотно / компонент
+            </th>
             <th>
                Телефоны
             </th>
@@ -117,10 +120,15 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
         $.each(HelpMessage, function (i, v) {
             v = $(v);
             var t = HelpMessageSpan.clone().addClass("HelpMessageSpan").text(v.attr("title"));
-            v.prepend(t);
+            v.append(t);
         });
 
-
+        $("#dealer_price").click(function () {
+            var _this = $(this),
+                sort = _this.data("sort");
+            sort = (sort === "desc")?"desc":"asc";
+            showDealers();
+        });
 
         jQuery('#dealer_contacts').mask('+7(999) 999-9999');
 
@@ -472,7 +480,8 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                 fio: document.getElementById('name_find_dealer').value,
                 flag: 'dealers',
                 manager_id: document.getElementById('filter_manager').value,
-                city: document.getElementById('filter_city').value
+                city: document.getElementById('filter_city').value,
+                dealer_price_sort: $("#DealerPrice").data("sort")
             },
             success: function(data){
                 console.log(data);
@@ -499,7 +508,8 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                     }
                     html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
                     html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data[i].id + '" data-dealer_id="' + data[i].dealer_id + '"></td>';
-                    html += '<td>' + data[i].client_name + '<br>' + data[i].min_canvas_price + '/' + data[i].min_component_price +  '</td>';
+                    html += '<td>' + data[i].client_name + '</td>';
+                    html += '<td>' + data[i].min_canvas_price + ' руб. / ' + data[i].min_component_price + ' руб.</td>';
                     html += '<td>' + data[i].client_contacts + '</td>';
                     html += '<td>' + data[i].city + '</td>';
                     html += '<td>' + data[i].created + '</td>';

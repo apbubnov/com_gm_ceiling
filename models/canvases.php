@@ -502,7 +502,7 @@ class Gm_ceilingModelCanvases extends JModelList
         $db = JFactory::getDbo();
         $query = $db->getQuery(true);
         $query->select('`a`.*');
-        $query->from('`#__canvases` AS `a`');
+        $query->from('`#__gm_ceiling_canvases` AS `a`');
         $query->select('`textures`.`texture_title` AS `texture_title`');
         $query->join('LEFT', '`#__gm_ceiling_textures` AS `textures` ON `textures`.`id` = `a`.`texture_id`');
         $query->select('`color`.`title` AS `color_title`, `color`.`file` AS `color_file`');
