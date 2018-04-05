@@ -4689,11 +4689,11 @@ class Gm_ceilingHelpersGm_ceiling
         $temp = str_replace(["+", "-"], "", $price);
         $data->switch = (strlen($temp) != strlen($price));
 
-        $data->point = str_replace(".", "", $price);
-        $data->point = (strlen($data->point) != strlen($price));
+        $point = str_replace(".", "", $temp);
+        $data->point = (strlen($point) != strlen($temp));
 
         $data->value = floatval($price);
-        $data->valueEmpty = ($temp == "");
+        $data->valueEmpty = ($point == "");
         $data->type = 0;
 
         $data->switchValue = 0.0;

@@ -213,7 +213,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                     $answer->elements[] = (object) [
                         "name" => ".Level3[data-canvas='$v->id'] #DealerPrice",
                         "value" => self::double_margin($newPrice[$k]->price, $userDealer->gm_canvases_margin, $userDealer->dealer_canvases_margin)];
-                    $answer->data = $data;
+                    $answer->data[] = $data;
                 }
                 $model->setPrice($newPrice);
             }
@@ -243,6 +243,7 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                         $answer->elements[] = (object) [
                             "name" => ".Level3[data-canvas='$v->id'] #DealerPrice",
                             "value" => $DealerPrice];
+                        $answer->data[] = $NewDealerData;
                     } 
                 }
                 if ($flag == 1) {

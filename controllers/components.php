@@ -134,6 +134,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                     $answer->elements[] = (object) [
                         "name" => ".Level2[data-option='$v->id'] #DealerPrice",
                         "value" => self::double_margin($newPrice[$k]->price, $userDealer->gm_components_margin, $userDealer->dealer_components_margin)];
+                    $answer->data[] = $data;
                 }
                 $model->setPrice($newPrice);
             }
@@ -163,7 +164,7 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                         $answer->elements[] = (object) [
                             "name" => ".Level2[data-option='$v->id'] #DealerPrice",
                             "value" => $DealerPrice];
-                        $answer->data = $NewDealerData;
+                        $answer->data[] = $NewDealerData;
                     }
                 }
                 if ($flag == 1) {
