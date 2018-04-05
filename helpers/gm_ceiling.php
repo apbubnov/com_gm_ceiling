@@ -525,7 +525,7 @@ class Gm_ceilingHelpersGm_ceiling
             $ajax_return['dealer_components_sum'] = $dealer_components_sum;
             $ajax_return['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data["guild_data"]["total_dealer_guild"];
             $ajax_return['dealer_mounting_sum'] = $total_with_gm_dealer_margin + $total_with_gm_dealer_margin_guild;
-            $ajax_return['mounting_arr'] = $data;
+            $ajax_return['mounting_arr'] = $mounting_data;
             $data['canvases_sum'] = $canvases_data['self_dealer_total'] + $offcut_square_data['self_dealer_total'] + $data["guild_data"]["total_gm_guild"];
             $data['components_sum'] = $components_sum;
             $data['dealer_canvases_sum'] = $canvases_data['dealer_total'] + $offcut_square_data['dealer_total'] + $data['guild_data']['total_dealer_guild'];
@@ -1601,11 +1601,13 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $project_id = $calculation_data->project_id;
         }
+       
         $project_model = self::getModel('project');
         $client_id = $project_model->getData($project_id)->id_client;
         if(!empty($client_id)){
             $client_model = self::getModel('client');
-            $dealer_id = $client_model->getClientById($client_id)->dealer_id;
+            $dealer = JFactory::getUser($client_model->getClientById($client_id)->dealer_id);
+            $dealer_id = $dealer->dealer_id;
             if(empty($dealer_id)){
                 $dealer_id = 1;
             }

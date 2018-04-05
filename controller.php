@@ -298,6 +298,7 @@ class Gm_ceilingController extends JControllerLegacy
             $flag = $jinput->get('flag', 'clients', 'STRING');
             $manager_id = $jinput->get('manager_id', null, 'INT');
             $city = $jinput->get('city', null, 'STRING');
+            $dealer_price_sort = $jinput->get('dealer_price_sort', null, 'STRING');
             $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
             if ($flag == 'clients')
             {
@@ -328,6 +329,29 @@ class Gm_ceilingController extends JControllerLegacy
                 foreach ($dealer_history as $key => $item) {
                     $dealer_history_sum += $item->sum;*/
             }
+
+            /*if ($dealer_price_sort != "") {
+                $result_temp = $result;
+                $result = [];
+
+                foreach ($result_temp as $key => $dealer) {
+                    $keyCanv = $dealer->min_canvas_price;
+                    $keyComp = $dealer->min_canvas_price;
+                    $key = "";
+                    $i = 0;
+                    for($i < strlen($keyCanv) && $i < strlen($keyComp); $i++)
+                        $key .= $keyCanv[$i] . $keyComp[$i];
+                    $key .= substr($keyCanv, $i, strlen($keyCanv));
+                    $key .= substr($keyComp, $i, strlen($keyComp));
+
+                    $result[$key] = $dealer;
+                }
+
+                if ($dealer_price_sort != "asc")
+                    ksort($result);
+                else
+                    krsort($result);
+            }*/
 
             die(json_encode($result));
         }
