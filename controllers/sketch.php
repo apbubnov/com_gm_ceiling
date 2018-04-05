@@ -116,7 +116,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
 
             $canv_model->saveCuts($calc_id, $cuts);
             
-            die($result);
+            die(print_r($_POST));
         }
         catch(Exception $e)
         {
