@@ -432,22 +432,21 @@
             submit_form_sketch();
 		});
         function generate_block(object){
-            let cnt = create_container(object.block_id,btn_cont_id);
-            jQuery(object.prev_id).after(cnt);
+            let cnt = create_container(object.block_id,object.btn_cont_id);
+            jQuery(`#${object.prev_id}`).after(cnt);
             let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text);
-            jQuery(object.btn_cont_id).append(block);
+            jQuery(`#${object.btn_cont_id}`).append(block);
         }
         //добавить комплектующие && монтаж
         jQuery("#btn_add_components").click(function(){
             let first_arr_blocks = [
-                {block_id:"#block_n_28",btn_cont_id:"#btn_cont_n28",prev_id:"#add_mount_and_components",btn_id:"btn_baguette",btn_text:(calculation.n_28) ? "Изменить багет" : "Добавить багет"},
-                {block_id:"#block_n_6",btn_cont_id:"#btn_cont_n6",prev_id:"#block_n_28",btn_id:"btn_insert",btn_text:"Декоративная вставка"}
-
+                {block_id:"block_n_28",btn_cont_id:"btn_cont_n28",prev_id:"add_mount_and_components",btn_id:"btn_baguette",btn_text:(calculation.n_28) ? "Изменить багет" : "Добавить багет"},
+                {block_id:"block_n_6",btn_cont_id:"btn_cont_n6",prev_id:"block_n_28",btn_id:"btn_insert",btn_text:"Декоративная вставка"}
             ];
             first_arr_blocks.forEach(function(item){
-               generate_block(item);
+                generate_block(item);
             });
-            //кнопка багета
+           /*  //кнопка багета
             let n28 = "block_n_28";
             let cnt_n28 = create_container(n28,"btn_cont_n28");
             jQuery("#add_mount_and_components").after(cnt_n28);
@@ -528,7 +527,7 @@
             let cnt_n18 = create_container(n18,"btn_cont_n18");
             jQuery(`#${n8}`).after(cnt_n18);
             let block_n18 = create_block_btn("table_calcform","margin-bottom: 15px;","btn_gain","Усиление стен");
-            jQuery("#btn_cont_n18").append(block_n18);
+            jQuery("#btn_cont_n18").append(block_n18); */
 
         });
         function create_block_btn(class_name,style,btn_id,btn_text){

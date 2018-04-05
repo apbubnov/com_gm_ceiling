@@ -2798,7 +2798,8 @@ class Gm_ceilingHelpersGm_ceiling
             $distance = $project->distance;
             $distance_col = $project->distance_col;
             if(!empty($project->dealer_id)){
-                $dealer_id = $project->dealer_id;
+                $dealer = JFactory::getUser($project->dealer_id);
+                $dealer_id = $dealer->dealer_id;
             }
             else{
                 $dealer_id = 1;
@@ -2810,8 +2811,8 @@ class Gm_ceilingHelpersGm_ceiling
             //$margin = $dealer_info_model->getMargin('dealer_mounting_margin', $res->user_id);
             if($res) {
                 if($transport_type == 1) {
-                    $transport_sum = double_margin($res->transport * $distance_col, $project->gm_mounting_margin, $project->dealer_mounting_margin);
-                    $transport_sum_1 = margin($res->transport * $distance_col, $project->gm_mounting_margin);
+                    $transport_sum = round(double_margin($res->transport * $distance_col, $project->gm_mounting_margin, 30));
+                    $transport_sum_1 = round(margin($res->transport * $distance_col, 30));
                     $result = array(
                         'transport' => 'Транспорт по городу',
                         'distance' => '-',
@@ -2845,12 +2846,12 @@ class Gm_ceilingHelpersGm_ceiling
                 } 
             }
            if($transport_type == 1) { 
-                $discount = $project_model->getDiscount($project_id);
+               /*  $discount = $project_model->getDiscount($project_id);
 
                 $max = 0;
                 foreach ($discount as $d) if($d->discount > $max) $max = $d->discount;
 
-                $result['client_sum'] = $result['client_sum'] * ((100 - $max)/100);
+                $result['client_sum'] = $result['client_sum'] * ((100 - $max)/100); */
             }
             return $result;
         }
