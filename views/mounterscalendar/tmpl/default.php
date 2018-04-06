@@ -367,12 +367,16 @@
                     id_calculation : project
                 },
                 success: function(msg) {
+                    if (msg.read_by_mounter == 1) {
+                        location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
+                    }
+                },
+                error: function(msg) {
                 }
             });
-        }
-        setTimeout(function () {
+        } else {
             location.href="/index.php?option=com_gm_ceiling&view=mountersorder&project="+project;
-        }, 100); 
+        }
     }
 
     jQuery(document).ready(function () {
