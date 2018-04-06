@@ -3410,6 +3410,11 @@ class Gm_ceilingController extends JControllerLegacy
             die((object) ["status" => "error", "message" => $e->getMessage()]);
         }
     }
+
+    function get_measurement_from_app()
+    {
+        die($_POST);
+    }
         
 }
 
