@@ -1455,27 +1455,36 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
-    public function getComponentsToCalulationForm()
+    public function getComponentsToCalculationForm()
     {
-        $jinput = JFactory::getApplication()->input;
-        $component_code = $jinput->get('component_code', '', 'STRING');
-        $filter = '';
-        switch ($component_code)
+        try
         {
-            case '':
-                
-                break;
-            case '':
-                
-                break;
-            case '':
-                
-                break;
+            $jinput = JFactory::getApplication()->input;
+            $component_code = $jinput->get('component_code', '', 'STRING');
+            $filter = '';
+            switch ($component_code)
+            {
+                case 'n13':
+                    $filter = "`component`.`title` = 'Светильник' && `a`.`count` > 0";
+                    break;
+                case '':
+                    
+                    break;
+                case '':
+                    
+                    break;
+            }
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = $model->getFilteredItems($filter);
+            die(json_encode($items));
         }
-        $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-        $items = $model->getAllList_Price();
-        $items = $model->getFilteredItems($filter);
-        die(json_encode($items));
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
 
     /* функция для AJAX-сохранения картинки из чертилки */
