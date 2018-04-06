@@ -1455,6 +1455,29 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public function getComponentsToCalulationForm()
+    {
+        $jinput = JFactory::getApplication()->input;
+        $component_code = $jinput->get('component_code', '', 'STRING');
+        $filter = '';
+        switch ($component_code)
+        {
+            case '':
+                
+                break;
+            case '':
+                
+                break;
+            case '':
+                
+                break;
+        }
+        $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+        $items = $model->getAllList_Price();
+        $items = $model->getFilteredItems($filter);
+        die(json_encode($items));
+    }
+
     /* функция для AJAX-сохранения картинки из чертилки */
     public function save_calculation_img()
     {
