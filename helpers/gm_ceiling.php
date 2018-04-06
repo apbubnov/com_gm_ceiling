@@ -2812,7 +2812,7 @@ class Gm_ceilingHelpersGm_ceiling
             if($res) {
                 if($transport_type == 1) {
                     $transport_sum = round(double_margin($res->transport * $distance_col, $project->gm_mounting_margin, 30));
-                    $transport_sum_1 = round(margin($res->transport * $distance_col, 30));
+                    $transport_sum_1 = round(margin($res->transport * $distance_col, 0));
                     $result = array(
                         'transport' => 'Транспорт по городу',
                         'distance' => '-',

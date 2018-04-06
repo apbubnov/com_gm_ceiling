@@ -60,9 +60,7 @@ class Gm_ceilingControllerMounterscalendar extends JControllerLegacy {
 			$mailer->setBody($body);
 			$send = $mailer->Send();
 
-			//echo json_encode($model_request);
-
-			die;
+			die(json_encode($model_request));
 		}
 		catch(Exception $e)
         {
