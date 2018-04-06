@@ -3413,7 +3413,7 @@ class Gm_ceilingController extends JControllerLegacy
 
     function get_measurement_from_app()
     {
-        die($_POST);
+        die(json_encode($_POST));
     }
         
 }
