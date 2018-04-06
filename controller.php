@@ -1455,6 +1455,29 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    public function getComponentsToCalulationForm()
+    {
+        $jinput = JFactory::getApplication()->input;
+        $component_code = $jinput->get('component_code', '', 'STRING');
+        $filter = '';
+        switch ($component_code)
+        {
+            case '':
+                
+                break;
+            case '':
+                
+                break;
+            case '':
+                
+                break;
+        }
+        $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+        $items = $model->getAllList_Price();
+        $items = $model->getFilteredItems($filter);
+        die(json_encode($items));
+    }
+
     /* функция для AJAX-сохранения картинки из чертилки */
     public function save_calculation_img()
     {
@@ -3408,6 +3431,16 @@ class Gm_ceilingController extends JControllerLegacy
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
+
+    function get_measurement_from_app()
+    {
+        $f = fopen('php://input', 'r');
+        $data = stream_get_contents($f);
+
+        if ($data) {
+            die($data);
         }
     }
         
