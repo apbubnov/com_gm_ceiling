@@ -1467,8 +1467,8 @@ class Gm_ceilingController extends JControllerLegacy
                 case 'n13':
                     $filter = "`component`.`title` = 'Светильник' && `a`.`count` > 0";
                     break;
-                case '':
-                    
+                case 'n14':
+                    $filter = "`component`.`title` = 'Пластина обвод трубы' && `a`.`count` > 0";
                     break;
                 case '':
                     
