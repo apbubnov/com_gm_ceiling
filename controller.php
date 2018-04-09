@@ -1461,21 +1461,25 @@ class Gm_ceilingController extends JControllerLegacy
         {
             $jinput = JFactory::getApplication()->input;
             $component_code = $jinput->get('component_code', '', 'STRING');
-            $filter = '';
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = false;
+
+            $filter = '`a`.`count` > 0 AND';
             switch ($component_code)
             {
                 case 'n13':
-                    $filter = "`component`.`title` = 'Светильник' && `a`.`count` > 0";
+                    $filter = "(`component`.`title` = 'Светильник' OR `component`.`title` = 'Светильник')";
+                    $items = $model->getFilteredItems($filter);
                     break;
                 case 'n14':
-                    $filter = "`component`.`title` = 'Пластина обвод трубы' && `a`.`count` > 0";
+                    $filter = "`component`.`title` = 'Пластина обвод трубы'";
                     break;
                 case '':
                     
                     break;
             }
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-            $items = $model->getFilteredItems($filter);
+            
             die(json_encode($items));
         }
         catch(Exception $e)

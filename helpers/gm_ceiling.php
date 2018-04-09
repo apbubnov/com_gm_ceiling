@@ -120,8 +120,17 @@ class Gm_ceilingHelpersGm_ceiling
             $type = 1;
         }
 
-        $phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
-        if (mb_substr($phone, 0, 1) != '7' && strlen($phone) == 11) {
+        $phone = mb_ereg_replace('[^\d]', '', $phone);
+        if (mb_substr($phone, 0, 1) == '9' && strlen($phone) == 10)
+        {
+            $phone = '7'.$phone;
+        }
+        if (strlen($phone) != 11)
+        {
+            throw new Exception('Invalid phone number');
+        }
+        if (mb_substr($phone, 0, 1) != '7')
+        {
             $phone = substr_replace($phone, '7', 0, 1);
         }
         

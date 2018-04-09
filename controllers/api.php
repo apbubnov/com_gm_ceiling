@@ -39,7 +39,22 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         {
             $authorization = json_decode($_POST['authorizations']);
             $model = $this->getModel();
-            $user = JFactory::getUser($model->getUserId($authorization->username));
+
+            $username = mb_ereg_replace('[^\d]', '', $username);
+            if (mb_substr($username, 0, 1) == '9' && strlen($username) == 10)
+            {
+                $username = '7'.$username;
+            }
+            if (strlen($username) != 11)
+            {
+                throw new Exception('Invalid phone number');
+            }
+            if (mb_substr($username, 0, 1) != '7')
+            {
+                $username = substr_replace($username, '7', 0, 1);
+            }
+
+            $user = JFactory::getUser($model->getUserId($username));
             $Password = $authorization->password;
             $verifyPass = JUserHelper::verifyPassword($Password, $user->password, $user->id);
             if ($verifyPass)
