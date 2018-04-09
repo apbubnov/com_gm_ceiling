@@ -1461,21 +1461,83 @@ class Gm_ceilingController extends JControllerLegacy
         {
             $jinput = JFactory::getApplication()->input;
             $component_code = $jinput->get('component_code', '', 'STRING');
-            $filter = '';
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = (object)array();
+
+            $filter = '`count` > 0 AND';
             switch ($component_code)
             {
                 case 'n13':
-                    $filter = "`component`.`title` = 'Светильник' && `a`.`count` > 0";
+                    $filter = '(`component_id` = 12 OR `component_id` = 21 OR `component_id` = 19 OR `component_id` = 20)';
+                    $arr = $model->getFilteredItems($filter);
+                    foreach ($arr as $key => $value)
+                    {
+                        if ($value->component_id == 12) {
+                            $items->n13_square[] = $value;
+                        }
+                        if ($value->component_id == 21) {
+                            $items->n13_ring[] = $value;
+                        }
+                        if ($value->component_id == 19) {
+                            $items->light_color[] = $value;
+                        }
+                        if ($value->component_id == 20) {
+                            $items->light_lamp_color[] = $value;
+                        }
+                    }
+                    $items->n13_type[] = array(
+                                                'id' => 2,
+                                                'title' => 'Круглый',
+                                            );
+                    $items->n13_type[] = array(
+                                                'id' => 3,
+                                                'title' => 'Квадратный',
+                                            );
                     break;
                 case 'n14':
-                    $filter = "`component`.`title` = 'Пластина обвод трубы' && `a`.`count` > 0";
+                    $filter = "`component_id` = 24";
+                    $items->n14_type = $model->getFilteredItems($filter);
                     break;
-                case '':
-                    
+                case 'n16':
+                    $filter = "`component_id` = 51";
+                    $items->n15_size = $model->getFilteredItems($filter);
+                    $items->n15_type[] = array(
+                                                'id' => 10,
+                                                'title' => 'Трехрядный',
+                                            );
+                    break;
+                case 'n22':
+                    $filter = '(`component_id` = 12 OR `component_id` = 21)';
+                    $arr = $model->getFilteredItems($filter);
+                    foreach ($arr as $key => $value)
+                    {
+                        if ($value->component_id == 12) {
+                            $items->n22_square[] = $value;
+                        }
+                        if ($value->component_id == 21) {
+                            $items->n22_diam[] = $value;
+                        }
+                    }
+                    $items->n22_type[] = array(
+                                                'id' => 5,
+                                                'title' => 'Круглая вентиляция',
+                                            );
+                    $items->n22_type[] = array(
+                                                'id' => 6,
+                                                'title' => 'Квадратная вентиляция',
+                                            );
+                    $items->n22_type[] = array(
+                                                'id' => 7,
+                                                'title' => 'Круглая электровытяжка',
+                                            );
+                    $items->n22_type[] = array(
+                                                'id' => 8,
+                                                'title' => 'Квадратная электровытяжка',
+                                            );
                     break;
             }
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-            $items = $model->getFilteredItems($filter);
+            
             die(json_encode($items));
         }
         catch(Exception $e)

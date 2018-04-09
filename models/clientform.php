@@ -401,15 +401,20 @@ class Gm_ceilingModelClientForm extends JModelForm
 				$db = JFactory::getDbo();
 				$phone = $db->escape($data['client_contacts'], true);
 
-				$phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
-				if (strlen($phone) != 11)
-				{
-	            	throw new Exception('Invalid phone number');
-	            }
-	            if (mb_substr($phone, 0, 1) != '7')
-	            {
-	                $phone = substr_replace($phone, '7', 0, 1);
-	            }
+				$phone = mb_ereg_replace('[^\d]', '', $phone);
+		        if (mb_substr($phone, 0, 1) == '9' && strlen($phone) == 10)
+		        {
+		            $phone = '7'.$phone;
+		        }
+		        if (strlen($phone) != 11)
+		        {
+		            throw new Exception('Invalid phone number');
+		        }
+		        if (mb_substr($phone, 0, 1) != '7')
+		        {
+		            $phone = substr_replace($phone, '7', 0, 1);
+		        }
+	            
 				$project_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
 	            $result = $project_model->getItemsByPhoneNumber($phone, $user->dealer_id);
 

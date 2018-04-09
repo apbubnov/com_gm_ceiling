@@ -130,17 +130,21 @@ class Gm_ceilingModelComponents extends JModelList
         {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->select('a.*, SUM(a.count) as count');
-            $query->from('`#__gm_ceiling_components_option` AS a');
+            $query->select('`c`.`id` AS `component_id`,
+                            CONCAT(`c`.`title`, \' \', `co`.`title`) AS `full_name`,
+                            `c`.`title` AS `component_title`,
+                            `co`.`title` AS `title`,
+                            `c`.`unit` AS `component_unit`,
+                            SUM(`co`.`count`) AS `count`,
+                            `co`.`price` AS `price`,
+                            `co`.`count_sale` AS `count_sale`');
+            $query->from('`#__gm_ceiling_components_option` AS `co`');
 
-            $query->select('CONCAT( component.title , \' \', a.title ) AS full_name');
-            $query->select('component.id AS component_id');
-            $query->select('component.title AS component_title');
-            $query->select('component.unit AS component_unit');
-            $query->join('LEFT', '`#__gm_ceiling_components` AS component ON a.component_id = component.id');
-            $query->group('component.title, a.title');
+            $query->join('LEFT', '`#__gm_ceiling_components` AS `c` ON `co`.`component_id` = `c`.`id`');
+            $query->group('`c`.`title`, `co`.`title`');
             if ($filter) $query->where($filter);
-        
+            //throw new Exception($query, 1);
+            
             $db->setQuery($query);
             $return = $db->loadObjectList();
             return $return;
