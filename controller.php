@@ -1499,6 +1499,14 @@ class Gm_ceilingController extends JControllerLegacy
                     $filter = "`component_id` = 24";
                     $items->n14_type = $model->getFilteredItems($filter);
                     break;
+                case 'n16':
+                    $filter = "`component_id` = 51";
+                    $items->n15_size = $model->getFilteredItems($filter);
+                    $items->n15_type[] = array(
+                                                'id' => 10,
+                                                'title' => 'Трехрядный',
+                                            );
+                    break;
                 case 'n22':
                     $filter = '(`component_id` = 12 OR `component_id` = 21)';
                     $arr = $model->getFilteredItems($filter);
@@ -1508,7 +1516,7 @@ class Gm_ceilingController extends JControllerLegacy
                             $items->n22_square[] = $value;
                         }
                         if ($value->component_id == 21) {
-                            $items->n22_ring[] = $value;
+                            $items->n22_diam[] = $value;
                         }
                     }
                     $items->n22_type[] = array(
