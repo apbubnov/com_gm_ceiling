@@ -275,12 +275,14 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         ->order('com_opt.price');
                     $db->setQuery($query);
                     $com_opt = $db->loadObjectList();
-
+                    $ring = explode("*", $ring);
+                    $ring_size = $ring[1];
+                    if (empty($ring[1]) && !empty($ring[0])){
+                        $ring_size = $ring[0];
+                    }
                     foreach ($com_opt as $item) {
                         $rings = explode("-", $item->title);
-                        $ring = explode("*", $ring);
-                        if (empty($ring[1])) $ring[1] = $ring[0];
-                        if (floatval($ring[1]) <= floatval($rings[1])) {
+                        if (floatval($ring_size) <= floatval($rings[1])) {
                             $list[$key] = array('id' => $item->id, 'count' => $value->count);
                             break;
                         }

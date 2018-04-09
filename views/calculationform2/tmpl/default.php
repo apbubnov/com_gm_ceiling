@@ -282,7 +282,7 @@
         
         let canvas = JSON.parse('<?php echo $canvas;?>');
         let need_click = <?php echo $recalc;?>; 
-        console.log(canvases_data);
+        console.log(calculation);
         fill_calc_data();
         var event_help_proccess = event_help.process();
         event_help();
@@ -345,7 +345,6 @@
             let manufacturers = [];
             let select_texture = document.getElementById('jform_n2').value;
             let select_color = (document.getElementById('jform_color').value) ? document.getElementById('jform_color').value : null;
-            console.log("select_color",select_color);
             jQuery("#jform_proizv").empty();
             jQuery.each(canvases_data_of_selected_texture, function(key,value){
                 if (value.texture_id === select_texture && value.color_id === select_color)
@@ -458,6 +457,8 @@
             }
         });
 
+        
+
         jQuery("#redactor").click(function(){
             jQuery("#calc_id").val(calculation.id);
             jQuery("#proj_id").val(calculation.project_id);
@@ -469,7 +470,6 @@
             include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
             setTimeout(event_help_proccess, 500);
         });
-        
         
         function include(url) { 
             let scripts = document.getElementsByTagName('script');
@@ -484,8 +484,10 @@
             document.getElementsByTagName('head')[0].appendChild(script);
         }
 
-        
-        
+        //если есть комплектующие раскрыть
+        if(calculation.components_sum){
+                jQuery("#btn_add_components").trigger("click");
+            }
 
         function submit_form_sketch()
 	    {

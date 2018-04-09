@@ -60,35 +60,35 @@ const help_block_discount= '<span class="airhelp">Назовите чертеж,
 
 let discount_el = create_single_input(1,"new_discount","jform[discount]","","%","number","0","100");
 let arr_blocks = [
-    {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"add_mount_and_components",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить багет" : "Добавить багет"},
-    {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_n6",btn_text:"Декоративная вставка"},
+    {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"add_mount_and_components",btn_id:"btn_baguette",btn_text:(calculation.n_28) ? "Изменить багет" : "Добавить багет"},
+    {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_insert",btn_text:"Декоративная вставка"},
     {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_n6",btn_id:"",btn_text:"<h3>Освещение</h3>"},
-    {block_id:"block_n12",btn_cont_id:"btn_cont_n1",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Добавить люстры"},
-    {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_n13",btn_text:"Добавить светильники"},
-    {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_n13",btn_id:"btn_n19",btn_text:"Провод"},
+    {block_id:"block_n12",btn_cont_id:"btn_cont_n1",prev_id:"block_light_cptn",btn_id:"btn_chandelier",btn_text:"Добавить люстры"},
+    {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_fixtures",btn_text:"Добавить светильники"},
+    {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_n13",btn_id:"btn_wire",btn_text:"Провод"},
     {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_n19",btn_id:"",btn_text:"<h4>Прочий монтаж</h4>"},
-    {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_oter_mount_cptn",btn_id:"btn_n14",btn_text:"Добавить трубы входящие в потолок"},
-    {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_n16",btn_text:"Добавить шторный карниз"},
-    {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_n16",btn_id:"btn_n17",btn_text:"Закладная брусом"},
-    {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_n17",btn_id:"btn_n20",btn_text:"Разделитель"},
-    {block_id:"block_n7",btn_cont_id:"btn_cont_n7",prev_id:"block_n20",btn_id:"btn_n7",btn_text:"Метраж стен с плиткой"},
-    {block_id:"block_n8",btn_cont_id:"btn_cont_n8",prev_id:"block_n7",btn_id:"btn_n8",btn_text:"Метраж стен с керамогранитом"},
-    {block_id:"block_n18",btn_cont_id:"btn_cont_n18",prev_id:"block_n8",btn_id:"btn_n16",btn_text:"Усиление стен"},
-    {block_id:"block_dop_krepezh",btn_cont_id:"btn_dop_krepezh",prev_id:"block_n18",btn_id:"btn_dop_krepezh",btn_text:"Дополнительный крепеж"},
-    {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_dop_krepezh",btn_id:"btn_n21",btn_text:"Пожарная сигнализация"},
-    {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_n22",btn_text:"Вентиляция"},
-    {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_n22",btn_id:"btn_n23",btn_text:"Диффузор"},
-    {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_n23",btn_id:"btn_n30",btn_text:"Парящий потолок"},
-    {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n30",btn_id:"btn_n29",btn_text:"Переход уровня"},
-    {block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_n31",btn_text:"Внутренний вырез (в цеху)"},
-    {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_n31",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)"},
-    {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_n11",btn_id:"btn_n32",btn_text:"Слив воды"},
+    {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_oter_mount_cptn",btn_id:"btn_pipes",btn_text:"Добавить трубы входящие в потолок"},
+    {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_cornice",btn_text:"Добавить шторный карниз"},
+    {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_n16",btn_id:"btn_bar",btn_text:"Закладная брусом"},
+    {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_n17",btn_id:"btn_delimeter",btn_text:"Разделитель"},
+    {block_id:"block_n7",btn_cont_id:"btn_cont_n7",prev_id:"block_n20",btn_id:"btn_bar",btn_text:"Метраж стен с плиткой"},
+    {block_id:"block_n8",btn_cont_id:"btn_cont_n8",prev_id:"block_n7",btn_id:"btn_stoneware",btn_text:"Метраж стен с керамогранитом"},
+    {block_id:"block_n18",btn_cont_id:"btn_cont_n18",prev_id:"block_n8",btn_id:"btn_stoneware",btn_text:"Усиление стен"},
+    {block_id:"block_dop_krepezh",btn_cont_id:"btn_dop_krepezh",prev_id:"block_n18",btn_id:"btn_fixture2",btn_text:"Дополнительный крепеж"},
+    {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_dop_krepezh",btn_id:"btn_firealarm",btn_text:"Пожарная сигнализация"},
+    {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_hoods",btn_text:"Вентиляция"},
+    {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_n22",btn_id:"btn_diffuser",btn_text:"Диффузор"},
+    {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_n23",btn_id:"btn_soaring",btn_text:"Парящий потолок"},
+    {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n30",btn_id:"btn_level",btn_text:"Переход уровня"},
+    {block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_notch2",btn_text:"Внутренний вырез (в цеху)"},
+    {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_n31",btn_id:"btn_notch1",btn_text:"Внутренний вырез (на месте)"},
+    {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_n11",btn_id:"btn_draining",btn_text:"Слив воды"},
     {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n32",btn_id:"btn_height",btn_text:"Высота помещения"},
-    {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_height",btn_id:"btn_n24",btn_text:"Сложность доступа"},
-    {block_id:"block_extra",btn_cont_id:"btn_cont_extra",prev_id:"block_n24",btn_id:"btn_extra",btn_text:"Другие комплектующие"},
-    {block_id:"block_extra2",btn_cont_id:"btn_cont_extra2",prev_id:"block_extra",btn_id:"btn_extra2",btn_text:"Другие комплектующие со склада"},
-    {block_id:"block_extra_mount",btn_cont_id:"btn_cont_extra_mount",prev_id:"block_extra2",btn_id:"btn_extra_mount",btn_text:"Другие работы по монтажу"},
-    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_extra_mount",btn_id:"btn_need_mount2",btn_text:"Отменить монтаж"},
+    {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_height",btn_id:"btn_access",btn_text:"Сложность доступа"},
+    {block_id:"block_extra",btn_cont_id:"btn_cont_extra",prev_id:"block_n24",btn_id:"btn_accessories",btn_text:"Другие комплектующие"},
+    {block_id:"block_extra2",btn_cont_id:"btn_cont_extra2",prev_id:"block_extra",btn_id:"btn_accessories2",btn_text:"Другие комплектующие со склада"},
+    {block_id:"block_extra_mount",btn_cont_id:"btn_cont_extra_mount",prev_id:"block_extra2",btn_id:"btn_mount",btn_text:"Другие работы по монтажу"},
+    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_extra_mount",btn_id:"btn_mount2",btn_text:"Отменить монтаж"},
     {block_id:"block_discount",btn_cont_id:"btn_cont_discount",prev_id:"block_need_mount",btn_id:"",btn_text:`<h3>Новый процент скидки</h3>
      ${discount_el}`}
 ];
@@ -96,7 +96,7 @@ let arr_blocks = [
 arr_blocks.forEach(function(item){
     generate_block(item);
 });
-load_calculation();
+
 let n28_src = {
     name : 'jform[n28]',
     values : [
@@ -348,12 +348,15 @@ function create_add_button(id){
 }
 function create_block_with_divs(object){
     let btn_id = `add_${object.id}`;
-    result = `<div id = "${object.id}_block">
-                ${create_captions(object.columns)}
-                <div id = "${object.id}_block_html">
+    let div_id = `${object.id}_block_html`;
+    let div = ` <div id = "${div_id}">
                     ${create_body(object.columns)}
                 </div>
-                ${create_add_button(btn_id)}
+                ${create_add_button(btn_id)}`;
+    result = `<div id = "${object.id}_block">
+                ${create_captions(object.columns)}
+                ${(!document.getElementById(div_id))? div : ""}
+               
               </div>`;
     return result;
               
@@ -382,6 +385,7 @@ function create_body(columns){
 jQuery('.add_fields').click(function(){
     let cont_id = jQuery(this).data('cont_id');
     let var_name = cont_id.replace('block_','');
+    console.log(var_name);
     let col_id = `jform_${var_name}_inside`;
     let cont =  create_container("",col_id);
     let element = eval(var_name);
@@ -393,7 +397,6 @@ jQuery('.add_fields').click(function(){
         jQuery(`#${col_id}`).toggle();
     }
     toggle_color(jQuery(this));
-    console.log(var_name);
     jQuery.ajax({
         type: 'POST',
         url: 'index.php?option=com_gm_ceiling&task=getComponentsToCalculationForm',
@@ -401,45 +404,49 @@ jQuery('.add_fields').click(function(){
             component_code: var_name
         },
         success: function (data) {
-            console.log(data);
+           let select_names = Object.keys(data);
+           for(let i = select_names.length;i--;){
+               let items = data[select_names[i]];
+               console.log(items,"elements");
+               let options = create_options(items);
+               console.log(options,"options");
+               jQuery(`[name = '${select_names[i]}[]']`).append(options);
+           }
         },
         dataType: "json",
         timeout: 10000,
         error: function (data) {
-            console.log(data);
-           /*  noty({
+             noty({
                 theme: 'relax',
                 layout: 'center',
                 timeout: 1500,
                 type: "error",
                 text: "Сервер не отвечает!"
-            }); */
+            }); 
         }
     });
+    let btns_add = document.getElementsByClassName('add');
+    for(let i = btns_add.length;i--;){
+        btns_add[i].onclick = btn_add_event;
+    }
 
-    jQuery(".add").click(function(){
-        let id = this.id.replace("add_","");
-        let html = create_body(eval(`${id.replace("jform_","")}_src`).columns);
-        jQuery(`#${id}_block_html`).append(html);
-        jQuery(".clear_form_group").click(function(){
-            console.log("click");
-            jQuery(this).closest(".form-group").remove();
-        });
-    });
+});
+
+let btn_add_event = function(){
+    let id = this.id.replace("add_","");
+    let html = create_body(eval(`${id.replace("jform_","")}_src`).columns);
+    jQuery(`#${id}_block_html`).append(html);
+
     jQuery(".clear_form_group").click(function(){
-        console.log("click");
         jQuery(this).closest(".form-group").remove();
     });
-});
-function load_calculation(){
-    let id;
-    arr_blocks.forEach(function(item){
-        id = item.block_id.replace("block_","");
-        if(calculation[id]){
-            console.log(id,calculation[id]);
-        }
-        
-    })
+};
+function create_options(data){
+    let options = [];
+    for(let i = 0;i<data.length;i++){
+        options.push(new Option(data[i].title,data[i].id));
+    }
+    return options;
 }
 function toggle_color(element){
     if (element.css("background-color") == "rgb(65, 64, 153)") {
