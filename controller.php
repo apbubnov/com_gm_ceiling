@@ -1536,6 +1536,29 @@ class Gm_ceilingController extends JControllerLegacy
                                                 'title' => 'Квадратная электровытяжка',
                                             );
                     break;
+                case 'n23':
+                    $filter = "`component_id` = 22";
+                    $items->n23_size = $model->getFilteredItems($filter);
+                    break;
+                case 'n29':
+                    $items->n29_type[] = array(
+                                        'id' => 12,
+                                        'title' => 'По прямой',
+                                    );
+                    $items->n29_type[] = array(
+                                        'id' => 13,
+                                        'title' => 'По кривой',
+                                    );
+                    $items->n29_type[] = array(
+                                        'id' => 15,
+                                        'title' => 'По прямой (с нишей)',
+                                    );
+                    $items->n29_type[] = array(
+                                        'id' => 16,
+                                        'title' => 'По кривой (с нишей)',
+                                    );
+
+                    break;
             }
             
             die(json_encode($items));

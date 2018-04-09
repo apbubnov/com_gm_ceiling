@@ -96,7 +96,7 @@ let arr_blocks = [
 arr_blocks.forEach(function(item){
     generate_block(item);
 });
-
+let n_data = {};
 let n28_src = {
     name : 'jform[n28]',
     values : [
@@ -228,7 +228,7 @@ let n23_src = {
     name : 'jform[n23]',
     columns:[
         {div_class:'advanced_col1',text:'Кол-во',input_name:"n23_count[]",input_id:"n23_count",input_type:1},
-        {div_class:'advanced_col5',text:'Размер',input_name:"n22_size[]",input_id:"n23",input_type:2},
+        {div_class:'advanced_col5',text:'Размер',input_name:"n23_size[]",input_id:"n23",input_type:2},
         {div_class:'advanced_col4 center',text:'<label><i class="fa fa-trash" aria-hidden="true"></i></label>'}
     ]
 }
@@ -404,14 +404,13 @@ jQuery('.add_fields').click(function(){
             component_code: var_name
         },
         success: function (data) {
-           let select_names = Object.keys(data);
-           for(let i = select_names.length;i--;){
-               let items = data[select_names[i]];
-               console.log(items,"elements");
-               let options = create_options(items);
-               console.log(options,"options");
-               jQuery(`[name = '${select_names[i]}[]']`).append(options);
-           }
+            n_data[var_name] = data;
+            let select_names = Object.keys(data);
+            for(let i = select_names.length;i--;){
+                let items = data[select_names[i]];
+                let options = create_options(items);
+                jQuery(`[name = '${select_names[i]}[]']`).append(options);
+            }
         },
         dataType: "json",
         timeout: 10000,
@@ -431,12 +430,18 @@ jQuery('.add_fields').click(function(){
     }
 
 });
-
 let btn_add_event = function(){
     let id = this.id.replace("add_","");
     let html = create_body(eval(`${id.replace("jform_","")}_src`).columns);
     jQuery(`#${id}_block_html`).append(html);
 
+    let select_data = n_data[`${id.replace("jform_","")}`]
+    let select_names = Object.keys(select_data);
+    for(let i = select_names.length;i--;){
+        let items = select_data[select_names[i]];
+        let options = create_options(items);
+        jQuery(`[name = '${select_names[i]}[]']`).last().append(options);
+    }
     jQuery(".clear_form_group").click(function(){
         jQuery(this).closest(".form-group").remove();
     });
