@@ -355,4 +355,14 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             } 
         }
 
+    /*CEH4TOP IOS Клиентская версия*/
+    public function addNewClient() {
+        $f = fopen('php://input', 'r');
+        $data = stream_get_contents($f);
+
+        if ($data) {
+            die($data);
+        }
+    }
+
     }
