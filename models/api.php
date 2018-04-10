@@ -137,10 +137,16 @@ class Gm_ceilingModelApi extends JModelList
 			$client_id = $clientform_model->save($client_data);
 			//создание user'а
             $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, $email, $client_id);
+
             $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
-            $client_model->updateClient($client_id,null,$dealer_id);
+            $client_model->updateClient($client_id, null, $dealer_id);
+
+            $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('Clients_dop_contacts', 'Gm_ceilingModel');
+            $dop_contacts_model->save($client_id, 1, $email);
+
             $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
-            $dealer_info_model->update_city($dealer_id,$city);
+            $dealer_info_model->update_city($dealer_id, $city);
+
             return (object)array("old_id" => $android_id, "new_id" => $dealer_id);
 		    
         }
