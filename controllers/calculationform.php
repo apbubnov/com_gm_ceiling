@@ -582,4 +582,33 @@ class Gm_ceilingControllerCalculationForm extends JControllerForm
             throw new Exception('Ошибка!', 500);
         }
 	}
+
+	public function removeClientByProjectId($proj_id = null)
+	{
+		try
+		{
+			$app   = JFactory::getApplication();
+
+			if (empty($proj_id))
+			{
+				$jinput = $app->input;
+				$proj_id = $jinput->get('proj_id', 0, 'INT');
+			}
+
+			$model_project = $this->getModel('Project', 'Gm_ceilingModel');
+			$model_client = $this->getModel('Client', 'Gm_ceilingModel');
+
+			$project = $model_project->getData($proj_id);
+			$result = $model_client->delete($project->id_client);
+
+			die(json_encode($result.' '.$project->id_client));
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }

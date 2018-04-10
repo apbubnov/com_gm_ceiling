@@ -14,17 +14,10 @@
     $triangulator_pro = 0;
     if(in_array('16',$user_groups)){
         $triangulator_pro = 1;
-        $type = 'gmmanager';
 	}
-	elseif(in_array('13',$user_groups)){
-		$type = 'manager';
-    }
-    elseif(in_array('13',$user_groups)){
-		$type = 'manager';
-    }
-    elseif(in_array('21',$user_groups)){
-		$type = 'calcultor';
-    }
+
+    $type = $jinput->get('type', '', 'STRING');
+    $subtype = $jinput->get('subtype', '', 'STRING');
 
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
@@ -363,48 +356,25 @@
 							<tr>
 								<td style="text-align: center;">
 									<!-- сохранить -->
-									<?php if ($type === "gmcalculator") { ?>
-										<?php if ($project_id) { ?>
-											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a></button>
-										<?php } elseif ($project_id) { ?>
-											<a id="save_button"  class="btn btn-success"   href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a></button>
-										<?php } else { ?>
-											<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
-										<?php } ?>
-									<?php } elseif ($type === "calculator") { ?>
-										<?php if($project_id) { ?>
-											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?><?php if ($_GET['precalculation']) { echo("&precalculation=1"); } else { echo "&precalculation=0"; } ?>">Сохранить</a>
-										<?php } elseif ($project_id) { ?>
-											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?><?php if ($_GET['precalculation']) { echo("&precalculation=1"); } else { echo "&precalculation=0"; } ?>">Сохранить</a>
-										<?php } else { ?>
-											<a class="btn btn-success" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
-										<?php } ?>
-									<?php } ?>
-									<?php if ($type === "gmmanager") { ?>
-										<a id="save_button" class="btn btn-success" href="index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=calendar">Сохранить</a>
-									<?php } ?>
+                                    <?php
+                                        $type_url = '';
+                                        if (!empty($type))
+                                        {
+                                            $type_url = "&type=$type";
+                                        }
+
+                                        $subtype_url = '';
+                                        if (!empty($subtype))
+                                        {
+                                            $subtype_url = "&subtype=$subtype";
+                                        }
+                                        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype&id=$project_id";
+                                    ?>
+									<a id="save_button" class="btn btn-success" href="<?php echo $save_button_url; ?>">Сохранить</a>
 								</td>
 								<td style="text-align: center;">
 									<!-- отменить -->
-									<?php if($type === "gmcalculator") { ?>
-										<?php if ($project_id) { ?>
-											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
-										<?php } elseif ($project_id) { ?>
-											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
-										<?php } else { ?>
-											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
-										<?php } ?>
-									<?php } elseif ($type === "calculator") { ?>
-										<?php if ($project_id) { ?>
-											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
-										<?php } elseif ($project_id) { ?>
-											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
-										<?php } else { ?>
-											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
-										<?php } ?>
-									<?php } elseif($type === "manager") { ?>
-										<a class="btn btn-danger" href="/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage">Отменить</a>
-									<?php } ?>
+                                    <button type="button" id="cancel_button" class="btn btn-danger">Отменить</button>
 								</td>
 							</tr>
 						</table>
@@ -473,6 +443,33 @@
         document.getElementById('jform_n2').onchange = select_colors;
         jQuery('.click_color').change(select_manufacturers);
         document.getElementById('jform_proizv').onchange = select_widths;
+
+        document.getElementById('cancel_button').onclick = function()
+        {
+            jQuery.ajax({
+                type: 'POST',
+                url: '/index.php?option=com_gm_ceiling&task=calculationform.removeClientByProjectId',
+                dataType: "json",
+                timeout: 20000,
+                data: {
+                    proj_id: <?php echo $project_id; ?>
+                },
+                success: function(data){
+                    console.log(data);
+                    location.href = '/index.php?option=com_gm_ceiling&task=mainpage';
+                },
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        };
         
         function select_colors(){
             let colors = [];
@@ -654,20 +651,20 @@
 						},
 						dataType: "json",
 						timeout: 10000,
-						error: function(data){
-							var n = noty({
-								theme: 'relax',
-								timeout: 2000,
-								layout: 'center',
-								maxVisible: 5,
-								type: "error",
-								text: "Ошибка при попытке рассчитать. Сервер не отвечает"
-							});
-							calculate_button.removeClass("loading");
-							calculate_button.find("span.loading").hide();
-							calculate_button.find("span.static").show();
-						}
-					});
+					error: function(data){
+						var n = noty({
+							theme: 'relax',
+							timeout: 2000,
+							layout: 'center',
+							maxVisible: 5,
+							type: "error",
+							text: "Ошибка при попытке рассчитать. Сервер не отвечает"
+						});
+						calculate_button.removeClass("loading");
+						calculate_button.find("span.loading").hide();
+						calculate_button.find("span.static").show();
+					}
+				});
             }
         });
 

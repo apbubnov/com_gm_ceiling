@@ -468,9 +468,19 @@ class Gm_ceilingModelClient extends JModelItem
 	{
 		try
 		{
+			
 			$table = $this->getTable();
 
 			return $table->delete($id);
+			
+			/*$db    = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query
+				->delete('#__gm_ceiling_clients')
+				->where('id = ' . $id);
+			$db->setQuery($query);
+			$db->execute($query);
+			return true;*/
 		}
 		catch(Exception $e)
         {
@@ -480,6 +490,7 @@ class Gm_ceilingModelClient extends JModelItem
             throw new Exception('Ошибка!', 500);
         }
 	}
+
     public function add_client_timer_spec( $id_client, $rek)
     {
     	try
