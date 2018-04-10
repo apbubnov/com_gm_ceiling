@@ -11,12 +11,21 @@
 
     $user = JFactory::getUser();
     $user_groups = $user->groups;
+    $triangulator_pro = 0;
     if(in_array('16',$user_groups)){
-		$triangulator_pro = 1;
+        $triangulator_pro = 1;
+        $type = 'gmmanager';
 	}
-	else{
-		$triangulator_pro = 0;
-	}
+	elseif(in_array('13',$user_groups)){
+		$type = 'manager';
+    }
+    elseif(in_array('13',$user_groups)){
+		$type = 'manager';
+    }
+    elseif(in_array('21',$user_groups)){
+		$type = 'calcultor';
+    }
+
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
     $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
@@ -66,7 +75,7 @@
 	<input name = "triangulator_pro" id = "triangulator_pro" value = "<?php echo $triangulator_pro?>" type = "hidden">
 	<input name="proj_id" id="proj_id" value = "" type="hidden">
 </form>
-<form>
+<form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
     <div class="container">
         <div class="col-sm-4"></div>
         <div class="row sm-margin-bottom">
@@ -243,6 +252,166 @@
             <div class="col-sm-4"></div>
         </div>
     </div>
+    <div id="under_calculate" style="display: none;">
+			<div id="result_block">
+				<div class="container">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+                        <div class="col-sm-4 total_price center">
+                            <div class="price_value">
+                                <span id="final_price">0.00</span> руб.
+                            </div>
+                            <div class="price_title">
+                                Самая низкая цена в Воронеже!
+                            </div>
+                        </div>
+                        <div class="col-sm-4"></div>
+					</div>
+				</div>			
+				<div class="container smeta_hide">
+					<div class="row" style="margin-bottom: 5px;">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<h4 center> Получить смету на почту </h4>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+				<div class="container smeta_hide">
+					<div class="row">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<input value="" id="send_email" name="jform[send_email]" class="form-control" placeholder="Введите ваш Email" type="email">
+							</div>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+				<div class="container smeta_hide">
+					<div class="row sm-margin-bottom">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<button class="btn btn-transparent" type="button" id="send_to_email">Получить подробную смету</button>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+				<div class="container smeta_hide">
+					<div class="row">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<div id="send_email_success" style="display: none; font-size: 26px;">
+								Смета отправлена
+							</div>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+			</div>
+			<!-- название расчета -->
+				<div class="form-group under_calculate"> 
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-4"></div>
+							<div class="col-sm-4">
+								<table class="table_calcform">
+									<tr>
+										<td class="td_calcform1">
+											<label id="jform_calculation_title-lbl" for="jform_calculation_title" class="">Название расчета:</label>
+										</td>
+										<td class="td_calcform2">
+											<div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+												<div class="help_question">?</div>
+												<span class="airhelp">
+													Назовите чертеж, по названию комнаты, в которой производится замер, что бы легче было потом ориентироваться. Например: "Спальня".
+												</span>
+											</div>
+										</td>
+									</tr>
+								</table>
+								<input id="jform_calculation_title" name="jform[calculation_title]"  class="form-control" type="text">
+							</div>
+							<div class="col-sm-4"></div>
+						</div>
+					</div>
+				</div>
+			<?php if ($type === "gmcalculator" || $type === "calculator") { ?>
+				<div class="container">
+					<div class="row"  style="margin-bottom: 15px;">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4">
+							<table class="table_calcform">
+								<tr>
+									<td class="td_calcform3">
+										<button type="button" id="btn_comment" class="btn add_fields">Комментарий</button>
+									</td>
+								</tr>
+							</table>
+							<input type="text" id="comment" name="jform[details]"  class="form-control"  placeholder="комментарий" style="display: none; margin-top: 20px; margin-bottom: 5px;">
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+			<?php } ?>
+			<!-- кнопки -->
+			<div class="container">
+				<div class="row sm-margin-bottom">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4">
+						<table style="width:100%; text-align: center;">
+							<tr>
+								<td style="text-align: center;">
+									<!-- сохранить -->
+									<?php if ($type === "gmcalculator") { ?>
+										<?php if ($project_id) { ?>
+											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a></button>
+										<?php } elseif ($project_id) { ?>
+											<a id="save_button"  class="btn btn-success"   href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Сохранить</a></button>
+										<?php } else { ?>
+											<a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
+										<?php } ?>
+									<?php } elseif ($type === "calculator") { ?>
+										<?php if($project_id) { ?>
+											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?><?php if ($_GET['precalculation']) { echo("&precalculation=1"); } else { echo "&precalculation=0"; } ?>">Сохранить</a>
+										<?php } elseif ($project_id) { ?>
+											<a id="save_button"  class="btn btn-success"  href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?><?php if ($_GET['precalculation']) { echo("&precalculation=1"); } else { echo "&precalculation=0"; } ?>">Сохранить</a>
+										<?php } else { ?>
+											<a class="btn btn-success" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
+										<?php } ?>
+									<?php } ?>
+									<?php if ($type === "gmmanager") { ?>
+										<a id="save_button" class="btn btn-success" href="index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=calendar">Сохранить</a>
+									<?php } ?>
+								</td>
+								<td style="text-align: center;">
+									<!-- отменить -->
+									<?php if($type === "gmcalculator") { ?>
+										<?php if ($project_id) { ?>
+											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
+										<?php } elseif ($project_id) { ?>
+											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
+										<?php } else { ?>
+											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=projects&type=gmcalculator&subtype=calendar">Перейти к графику замеров</a>
+										<?php } ?>
+									<?php } elseif ($type === "calculator") { ?>
+										<?php if ($project_id) { ?>
+											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
+										<?php } elseif ($project_id) { ?>
+											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id=<?php echo $project_id; ?>">Отменить</a>
+										<?php } else { ?>
+											<a class="btn btn-danger" href="index.php?option=com_gm_ceiling&view=projects&type=calculator&subtype=calendar">Перейти к графику замеров</a>
+										<?php } ?>
+									<?php } elseif($type === "manager") { ?>
+										<a class="btn btn-danger" href="/index.php?option=com_gm_ceiling&view=mainpage&type=managermainpage">Отменить</a>
+									<?php } ?>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-sm-4"></div>
+				</div>
+			</div>
 </form>
 <script>
     ///////////////////////
@@ -454,6 +623,51 @@
             let recalc = jQuery("#auto").val();
             if(recalc){
                 submit_form_sketch();
+            }
+            data = jQuery( "#form-calculation").serialize();
+            jQuery("#under_calculate").show();
+            var calculate_button = jQuery( this );
+            if (!calculate_button.hasClass("loading")) {
+                calculate_button.addClass("loading");
+                calculate_button.find("span.static").hide();
+                calculate_button.find("span.loading").show();
+                jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=calculate&save=0&pdf=0&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val(),
+                    data: data,
+                    success: function(data){
+                        var html = "",
+                        total_sum = parseFloat(data.total_sum),
+                        project_discount = parseFloat(data.project_discount),
+                        dealer_final = parseFloat(total_sum) * ((100 - parseFloat(project_discount)) / 100);
+                        discount_price = parseFloat(total_sum) * (70 / 100);
+                        mount_price  = parseFloat(data.mounting_sum);
+                        discount_without  = parseFloat(total_sum - mount_price) * (70 / 100);
+                        jQuery("#result_block").show();
+                        jQuery("#total_price").text( total_sum.toFixed(0) );
+                        jQuery("#final_price").text( dealer_final.toFixed(0) );
+                        jQuery("#discount_price").text( discount_price.toFixed(0) );
+                        calculate_button.removeClass("loading");
+                        calculate_button.find("span.loading").hide();
+                        calculate_button.find("span.static").show();
+                        jQuery("#info").show();
+						},
+						dataType: "json",
+						timeout: 10000,
+						error: function(data){
+							var n = noty({
+								theme: 'relax',
+								timeout: 2000,
+								layout: 'center',
+								maxVisible: 5,
+								type: "error",
+								text: "Ошибка при попытке рассчитать. Сервер не отвечает"
+							});
+							calculate_button.removeClass("loading");
+							calculate_button.find("span.loading").hide();
+							calculate_button.find("span.static").show();
+						}
+					});
             }
         });
 
