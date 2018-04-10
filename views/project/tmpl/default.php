@@ -436,6 +436,20 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 <script>
 	jQuery(document).ready(function(){
 
+		var url_getparams = window
+		    .location
+		    .search
+		    .replace('?','')
+		    .split('&')
+		    .reduce(
+		        function(p,e){
+		            var a = e.split('=');
+		            p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+		            return p;
+		        },
+		        {}
+		    );
+
 		create_calculation();
 
 		function create_calculation()
@@ -448,7 +462,15 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                 },
                 success: function(data){
 					console.log(data);
-					location.href = `/index.php?option=com_gm_ceiling&view=calculationform2&calc_id=${data}`;
+					if (url_getparams['type'] != undefined)
+					{
+						var url_type = `&type=${url_getparams['type']}`;
+					}
+					if (url_getparams['subtype'] != undefined)
+					{
+						var url_subtype = `&subtype=${url_getparams['subtype']}`;
+					}
+					location.href = `/index.php?option=com_gm_ceiling&view=calculationform2${url_type}${url_subtype}&calc_id=${data}`;
                 },
                 error: function(data){
                     var n = noty({
@@ -462,8 +484,6 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
                 }
             });
 		}
-
-
 
 		jQuery("input[name^='include_calculation']").click(function(){
 			if( jQuery( this ).prop("checked") ) {
