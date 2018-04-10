@@ -355,4 +355,22 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             } 
         }
 
+    /*
+     * CEH4TOP IOS Клиентская версия
+     *
+     * Входящие данные в $Data
+     * Address, ApartmentNumber, Date, Name, Phone, Type = Client;
+     * Ответ: любой
+     * */
+
+    public function addNewClient() {
+        $f = fopen('php://input', 'r');
+        $jsonData = stream_get_contents($f);
+        $Data = json_decode($jsonData);
+
+        if ($jsonData) {
+            die($jsonData);
+        }
+    }
+
     }
