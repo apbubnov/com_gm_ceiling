@@ -1469,7 +1469,7 @@ class Gm_ceilingController extends JControllerLegacy
             switch ($component_code)
             {
                 case 'n13':
-                    $filter = '(`component_id` = 12 OR `component_id` = 21 OR `component_id` = 19 OR `component_id` = 20)';
+                    $filter = '(`component_id` = 12 OR `component_id` = 21)';
                     $arr = $model->getFilteredItems($filter);
                     foreach ($arr as $key => $value)
                     {
@@ -1478,12 +1478,6 @@ class Gm_ceilingController extends JControllerLegacy
                         }
                         if ($value->component_id == 21) {
                             $items->n13_ring[] = $value;
-                        }
-                        if ($value->component_id == 19) {
-                            $items->light_color[] = $value;
-                        }
-                        if ($value->component_id == 20) {
-                            $items->light_lamp_color[] = $value;
                         }
                     }
                     $items->n13_type[] = array(
@@ -1494,6 +1488,19 @@ class Gm_ceilingController extends JControllerLegacy
                                                 'id' => 3,
                                                 'title' => 'Квадратный',
                                             );
+                    break;
+                case 'ecola':
+                    $filter = '(`component_id` = 19 OR `component_id` = 20)';
+                    $arr = $model->getFilteredItems($filter);
+                    foreach ($arr as $key => $value)
+                    {
+                        if ($value->component_id == 19) {
+                            $items->light_color[] = $value;
+                        }
+                        if ($value->component_id == 20) {
+                            $items->light_lamp_color[] = $value;
+                        }
+                    }
                     break;
                 case 'n14':
                     $filter = "`component_id` = 24";
