@@ -22,11 +22,16 @@
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
     $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
+    $components_model = Gm_ceilingHelpersGm_ceiling::getModel("components");
     /*____________________end_______________________  */
+    $color_data = json_encode($components_model->getColor());
     $canvases_data = json_encode($canvases_model->getFilteredItemsCanvas("count>0"));
     $calculation_id = $jinput->get('calc_id',0,'INT');
     if($calculation_id){
         $calculation =  $calculation_model->new_getData($calculation_id);
+        $calculation->extra_components = addslashes($calculation->extra_components);
+        $calculation->extra_mounting = addslashes($calculation->extra_mounting);
+        $calculation->components_stock = addslashes($calculation->components_stock);
         if (!empty($calculation->n3)) {
             $canvas = json_encode($canvases_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3")[0]);
         }
@@ -69,6 +74,7 @@
 	<input name="proj_id" id="proj_id" value = "" type="hidden">
 </form>
 <form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+    <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $calculation_id;?>"/> 
     <div class="container">
         <div class="col-sm-4"></div>
         <div class="row sm-margin-bottom">
@@ -368,7 +374,7 @@
                                         {
                                             $subtype_url = "&subtype=$subtype";
                                         }
-                                        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype&id=$project_id";
+                                        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url&id=$project_id";
                                     ?>
 									<a id="save_button" class="btn btn-success" href="<?php echo $save_button_url; ?>">Сохранить</a>
 								</td>
@@ -401,6 +407,7 @@
         return process;
     };
     let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
+    let n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
     let  help_buttons = document.getElementsByClassName('help');
                 for(let i= help_buttons.length;i--;){
@@ -640,6 +647,7 @@
                         discount_price = parseFloat(total_sum) * (70 / 100);
                         mount_price  = parseFloat(data.mounting_sum);
                         discount_without  = parseFloat(total_sum - mount_price) * (70 / 100);
+                        console.log(data);
                         jQuery("#result_block").show();
                         jQuery("#total_price").text( total_sum.toFixed(0) );
                         jQuery("#final_price").text( dealer_final.toFixed(0) );
