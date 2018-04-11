@@ -1348,7 +1348,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
     </div>
 
     <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-    
+
     <script type="text/javascript">
         var $ = jQuery;
         var min_project_sum = <?php echo  $min_project_sum;?>;
@@ -1598,7 +1598,10 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         jQuery(document).ready(function () {
             var client_id = "<?php echo $this->item->id_client;?>";
 
-            create_calculation(<?php echo $this->item->id; ?>);
+            document.getElementById('add_calc').onclick = function()
+            {
+                create_calculation(<?php echo $this->item->id; ?>);
+            };
             
             window.time = undefined;
             window.gauger = undefined;
