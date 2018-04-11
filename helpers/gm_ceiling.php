@@ -276,14 +276,10 @@ class Gm_ceilingHelpersGm_ceiling
                         'calculation_title' => 'string',
                         'project_id' => 'int',
                         'send_email' => 'string', //адрес почты клиента
-                        'sketch_name' => 'string', //имя чертежа
-                        'cut_name' => 'string',//имя раскроя
                         'color' => 'string', //цвет
                         'details' => 'string', //цвет
                         'offcut_square' => 'float',
                         'discount' => 'int',
-                        'original_name' => 'string',
-                        'cuts' => 'string',
                         'rek' => 'int',
                         'proizv' => 'string'
                     )
@@ -595,36 +591,10 @@ class Gm_ceilingHelpersGm_ceiling
             //Сохранение калькуляции
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('CalculationForm', 'Gm_ceilingModel');
 
-            if ($save == 1) {
-                $tmp_filename = $data['sketch_name'];
-                $tmp_cut_filename = $data['cut_name'];
-                $tmp_original_filename = $data['original_name'];
-                $cuts = $data['cuts'];
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt")) {
-                    $data['calc_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".txt");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".txt")) {
-                    $data['cut_data'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".txt");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt")) {                    
-                    $data['original_sketch'] = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_original_filename . ".txt");
-                }
-
+            if ($save == 1)
+            {
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
                 $data['id'] = $ajax_return['id'];
-                $filename = md5("calculation_sketch" . $ajax_return['id']);
-                $cut_filename = md5("cut_sketch" . $ajax_return['id']);
-                
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg")) {
-                    rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/calculation_images/" . $filename . ".svg");
-                }
-                if (is_file($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg")) {
-                    rename($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $tmp_cut_filename . ".svg", $_SERVER['DOCUMENT_ROOT'] . "/cut_images/" . $cut_filename . ".svg");
-                }
-                if (!empty($cuts))
-                {
-                    $canvases_model->saveCuts($ajax_return['id'],$cuts);
-                }
             }
            
             //Пошла печать PDF
