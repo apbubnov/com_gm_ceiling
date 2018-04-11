@@ -2235,7 +2235,7 @@
         input.attr({"clear": "true", "add": "false"});
         Selects.empty();
         Selects.append(Select);
-        var Select = Selects.find(".Select");
+        var Select = document.getElementByClassName('Select');/* Selects.find(".Select"); */
 
         filter.select["Type"] = input.attr("NameDB");
         filter.select["ID"] = "options.id";

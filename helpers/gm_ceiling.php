@@ -4201,7 +4201,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
         }
-        return $result_array;
+        return json_encode($result_array);
     }
 
     // рисует календарь

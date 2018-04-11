@@ -79,8 +79,8 @@ let arr_blocks = [
     {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_n11",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0},
     {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n32",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0},
     {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_height",btn_id:"btn_n24",btn_text:"Сложность доступа",need_ajax : 0},
-    {block_id:"block_extra_components",btn_cont_id:"btn_cont_extra",prev_id:"block_n24",btn_id:"btn_extra_components",btn_text:"Другие комплектующие",need_ajax : 0},
-    {block_id:"block_components_stock",btn_cont_id:"btn_cont_extra2",prev_id:"block_extra_components",btn_id:"btn_components_stock",btn_text:"Другие комплектующие со склада",need_ajax : 1},
+    {block_id:"block_extra_components",btn_cont_id:"btn_cont_extra_components",prev_id:"block_n24",btn_id:"btn_extra_components",btn_text:"Другие комплектующие",need_ajax : 0},
+    {block_id:"block_components_stock",btn_cont_id:"btn_cont_components_stock",prev_id:"block_extra_components",btn_id:"btn_components_stock",btn_text:"Другие комплектующие со склада",need_ajax : 1},
     {block_id:"block_extra_mounting",btn_cont_id:"btn_cont_extra_mounting",prev_id:"block_components_stock",btn_id:"btn_extra_mounting",btn_text:"Другие работы по монтажу",need_ajax : 0},
     {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_extra_mounting",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0},
     {block_id:"block_discount",btn_cont_id:"btn_cont_discount",prev_id:"block_need_mount",btn_id:"",btn_text:`<h3>Новый процент скидки</h3>
@@ -98,14 +98,14 @@ let n28_src = {
         {id:'jform_n28_2',value:2,text:"Алюминиевый багет"},
         {id:'jform_n28_1',value:1,text:"Потолочный багет"},
         {id:'jform_n28',value:0,text:"Обычный багет"},
-        {id:'jform_n28_3',value:3,text:"Без багета"}
+        {id:'jform_n28_3',value:3,text:"Без багета",selected:true}
     ]
 };
 let n28 =  create_radios_group(n28_src);
 let n6_src = {
     name : 'jform[n6]',
     values : [
-        {id:'jform_n6_2',value:0,text:"Вставка не нужна"},
+        {id:'jform_n6_2',value:0,text:"Вставка не нужна",selected:true},
         {id:'jform_n6_1',value:"color",text:"Цветная вставка"},
         {id:'jform_n6',value:314,text:"Белая вставка"},
       
@@ -130,7 +130,7 @@ let height_src = {
     name : 'jform[height]',
     values : [
         {id:'max_height',value:1,text:"больше 3х метров"},
-        {id:'min_height',value:0,text:"меньше 3х метров"}
+        {id:'min_height',value:0,text:"меньше 3х метров",selected:true}
     ]
     
 }
@@ -139,7 +139,7 @@ let height = create_radios_group(height_src);
 let cornice_src = {
     name : 'jform[n16]',
     values : [
-        {id:'jform_n16',value:0,text:"Обычный карниз"},
+        {id:'jform_n16',value:0,text:"Обычный карниз",selected:true},
         {id:'jform_n16_1',value:1,text:"Скрытый карниз"}
     ]
 }
@@ -150,7 +150,7 @@ let need_mount_src = {
     name : 'need_mount',
     values : [
         {id:'with_mount',value:1,text:"Нужен"},
-        {id:'without',value:0,text:"Не нужен"}
+        {id:'without',value:0,text:"Не нужен",selected:true}
     ]
 }
 let need_mount =  create_radios_group(need_mount_src);
@@ -254,8 +254,8 @@ let components_stock_src = {
     id : 'components_stock',
     name : 'jform[components_stock]',
     columns:[
-        {div_class:'advanced_col_half',text:'Название',input_name:"extra2_components_title[]",input_id:"extra2_components_title",input_type:1},
-        {div_class:'advanced_col_half',text:'Количество',input_name:"extra2_components_value[]",input_id:"extra2_components_value",input_type:1}
+        {div_class:'advanced_col_half',text:'Название',input_name:"components_stock_title[]",input_id:"components_stock_title",input_type:3},
+        {div_class:'advanced_col_half',text:'Количество',input_name:"components_stock_value[]",input_id:"components_stock_value",input_type:1}
     ]
 }
 let components_stock =  create_block_with_divs(components_stock_src);
@@ -303,9 +303,10 @@ function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_aja
 }
 /* ______________ */
 /* radio buttons */
-function create_single_radio(name,id,value,text){
+function create_single_radio(name,id,value,text,selected){
+    let checked_attr = (selected) ? 'checked = "checked"': '';
     return `<div style="display: inline-block; width: 100%;">
-                <input name="${name}" id="${id}" class="radio" value="${value}" type="radio">
+                <input name="${name}" id="${id}" class="radio" value="${value}" ${checked_attr} type="radio">
                 <label for="${id}">${text}</label>
             </div>`;
 }
@@ -313,7 +314,7 @@ function create_single_radio(name,id,value,text){
 function create_radios_group(object){
     result = '<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">';
     for(let i=object.values.length;i--;){
-        result += create_single_radio(object.name,object.values[i].id,object.values[i].value,object.values[i].text);
+        result += create_single_radio(object.name,object.values[i].id,object.values[i].value,object.values[i].text,(object.selected) ? object.selected : null);
     }
     result += '</div>';
     return result;
@@ -334,7 +335,14 @@ function create_single_input(input_type,id,name,text,placeholder,type,min=null,m
     if(input_type == 2){
         return `<div class="form-group">
                 <select name="${name}" id="${id}"  class="form-control" placeholder="${placeholder}"></select>
-            </div>`;
+            </div>`; 
+    }
+    if(input_type == 3){
+        return `<div class="form-group Area Type">
+                    <input id="Type" name="components_stock_name[]" autocomplete="off" NameDB="CONCAT(components.title,' ',options.title)" onclick="GetList(this, ['Type'], ['Type']);" onkeyup="GetList(this, ['Type'], ['Type']);" onblur="ClearSelect(this)" class='form-control Input Type' type='text'>
+                    <input name="${name}" id="ID"  class="form-control" placeholder="${placeholder}" type="${type}" hidden min = "${(min) ? min : ""}" max = "${(max) ? max : ""}">
+                    <div class="Selects Type"></div>
+                </div>`;
     }
    
 }
@@ -453,13 +461,12 @@ function fill_calc_data(){
                 case 'n6':
                     values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
                     value = calculation[Object.keys(calculation)[i]];
-                    if(jQuery.inArray(value,values) == -1){
+                    if(value != 0 && value != 314){
                         jQuery("#jform_n6_inside").append(create_n6_button());
                         jQuery("#jform_n6_1").attr("checked",true);
                         jQuery("#n6_color_img").prop('src',get_color_file(value));
                         jQuery("#n6_color_img").show();
                         jQuery("#n6_color_cnt").show();
-                        console.log(document.getElementById("#btn_select_n6_color"));
                         document.getElementById("btn_select_n6_color").onclick = show_color_switch;
                     }else{
                         check_radio(values,value);
@@ -547,7 +554,6 @@ function fill_calc_data(){
                     break;
                 case 'extra_components':
                     let extra_comp_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                    console.log(Object.keys(extra_comp_data).length);
                     for(let j = 1;j<Object.keys(extra_comp_data).length;j++){
                         jQuery(`#add_${Object.keys(calculation)[i]}`).click();
                     }
@@ -559,7 +565,6 @@ function fill_calc_data(){
                 break;
                 case 'extra_mounting':
                 let extra_mount_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                    console.log(`#add_jform_${Object.keys(calculation)[i]}`);
                     for(let j = 1;j<Object.keys(extra_mount_data).length;j++){
                         jQuery(`#add_${Object.keys(calculation)[i]}`).click();
                     }
@@ -568,6 +573,19 @@ function fill_calc_data(){
                         jQuery("[name = 'extra_mounting_value[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['value'];
                        
                     }
+                break;
+                case 'components_stock':
+                let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
+                    console.log(stock_data);
+                     for(let j = 1;j<Object.keys(stock_data).length;j++){
+                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
+                    }
+                     for(let j = 0;j<Object.keys(stock_data).length;j++){
+                        jQuery("[name = 'components_stock_name[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['title'];
+                        jQuery("[name = 'components_stock_title[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['id'];
+                        jQuery("[name = 'components_stock_value[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['value'];
+                       
+                    }  
                 break;
                 default:
                     jQuery(`#jform_${Object.keys(calculation)[i]}`).val(calculation[Object.keys(calculation)[i]]);
@@ -801,7 +819,100 @@ function generate_block(object){
         jQuery(`#${object.btn_cont_id}`).append(object.btn_text);
     }
 }
+var $ = jQuery;
+//для подгрузки компонентов со склада
+function GetList(e, select, like) {
+    var input = $(e),
+        Selects = input.siblings(".Selects"),
+        ID = input.attr("id"),
+        parent = input.closest(".Form"),
+        filter = {
+            select: {},
+            where: {like: {}},
+            group: [],
+            order: [],
+            page: null
+        },
+        Select = $('<div/>').addClass("Select"),
+        Item = $('<div/>').addClass("Item").attr("onclick", "SelectItem(this);");
 
+    input.attr({"clear": "true", "add": "false"});
+    Selects.empty();
+    Selects.append(Select);
+    var Select = Selects.find(".Select");
+
+    filter.select["Type"] = input.attr("NameDB");
+    filter.select["ID"] = "options.id";
+    filter.where.like["components.title"] = "'%" + input.val() + "%' || true";
+    filter.where.like["options.title"] = "'%" + input.val() + "%'";
+    filter.page = "/index.php?option=com_gm_ceiling&task=componentform.getComponents";
+
+
+    if (input.is(":focus")) {
+        jQuery.ajax({
+            type: 'POST',
+            url: filter.page,
+            data: {filter: filter},
+            success: function (data) {
+                data = JSON.parse(data);
+                $.each(data, function (i, v) {
+                    var I = Item.clone();
+                    $.each(v, function (id, s) {
+                        if (s === null) s = "Нет";
+                        I.attr(id, s);
+                        if (id == ID) I.html(s);
+                    });
+                    Select.append(I);
+                });
+            },
+            dataType: "text",
+            timeout: 10000,
+            error: function () {
+                noty({
+                    theme: 'relax',
+                    layout: 'center',
+                    timeout: 1500,
+                    type: "error",
+                    text: "Сервер не отвечает!"
+                });
+            }
+        });
+    }
+}
+
+function SelectItem(e) {
+    e = $(e);
+    var parent = e.closest(".Area"),
+        elements = parent.find(".Input");
+
+    if (typeof e.attr('error') !== 'undefined' && e.attr('error') !== false)
+    {
+        var error = JSON.parse(e.attr('error'));
+        $.each(error, function (i, v) {
+            noty({
+                theme: 'relax',
+                layout: 'center',
+                timeout: 1500,
+                type: "error",
+                text: v
+            });
+        });
+    }
+    else if (e.hasClass("Add")) e.closest(".Area").find(".Input").attr({"clear": "false", "add": "true"});
+    else {
+        elements.val(e.attr("Type"));
+        elements.attr({"clear": "false", "add": "false"});
+        parent.find("#ID").val(e.attr("ID"));
+    }
+}
+
+function ClearSelect(e) {
+    setTimeout(function () {
+        e = $(e);
+        if (e.attr("clear") != 'false') e.val("");
+        e.siblings(".Selects").empty();
+    }, 200);
+}
 
 open_blocks();
 fill_calc_data();

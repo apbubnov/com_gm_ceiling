@@ -31,7 +31,7 @@
         $calculation =  $calculation_model->new_getData($calculation_id);
         $calculation->extra_components = addslashes($calculation->extra_components);
         $calculation->extra_mounting = addslashes($calculation->extra_mounting);
-        $calculation->components_stock = addslashes($calculation->components_stock);
+        $calculation->components_stock = addslashes(Gm_ceilingHelpersGm_ceiling::decode_stock($calculation->components_stock));
         if (!empty($calculation->n3)) {
             $canvas = json_encode($canvases_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3")[0]);
         }
