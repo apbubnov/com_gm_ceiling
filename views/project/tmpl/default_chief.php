@@ -157,10 +157,9 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                             </li>
                         <?php } ?>
                         <li class="nav-item">
-                            <a class="nav-link"
-                               href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' . $this->item->id); ?>">
+                            <button class="nav-link" id="add_calc">
                                 <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                            </a>
+                            </button>
                         </li>
                     </ul>
 
@@ -322,7 +321,7 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                                 <h3><?php echo $calculation->calculation_title; ?></h3>
 
                                 <a class="btn btn-primary"
-                                   href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить
+                                   href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&calc_id=<?php echo $calculation->id; ?>">Изменить
                                     расчет</a>
                                 <div class="sketch_image_block">
                                     <h3 class="section_header">
@@ -528,6 +527,8 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
     </div>
     </div>
 
+    <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
+
     <script>
         jQuery(document).ready(function () {
             jQuery("input[name^='include_calculation']").click(function () {
@@ -547,6 +548,10 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                 jQuery("#calendar_wrapper").show();
             });
 
+            document.getElementById('add_calc').onclick = function()
+            {
+                create_calculation(<?php echo $this->item->id; ?>);
+            };
 
             function calculate_total() {
                 var components_total = 0;
