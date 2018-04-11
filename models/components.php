@@ -130,7 +130,8 @@ class Gm_ceilingModelComponents extends JModelList
         {
             $db = $this->getDbo();
             $query = $db->getQuery(true);
-            $query->select('`c`.`id` AS `component_id`,
+            $query->select('`co`.`id` AS `id`,
+                            `c`.`id` AS `component_id`,
                             CONCAT(`c`.`title`, \' \', `co`.`title`) AS `full_name`,
                             `c`.`title` AS `component_title`,
                             `co`.`title` AS `title`,

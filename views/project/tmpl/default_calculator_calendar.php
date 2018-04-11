@@ -557,9 +557,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         </li>
                     <?php } ?>
                     <li class="nav-item"> 
-                        <a class="nav-link" style="color:white;" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' . $this->item->id); ?>">
+                        <button class="nav-link" id="add_calc" style="color:white;">
                             Добавить потолок <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                        </a>
+                        </button>
                     </li>
                 </ul>
                 <?php if($user->dealer_type == 1 && count($calculations) <= 0) { ?>
@@ -928,7 +928,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                 <div class="tab-pane <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                                     <div class="other_tabs">
                                     <?php if($this->item->project_status < 5 || $this->item->project_status == 22) {?>
-                                        <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?php echo $calculation->id; ?>">Изменить расчет</a>
+                                        <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&calc_id=<?php echo $calculation->id; ?>">Изменить расчет</a>
                                     <?php } ?>
                                         <?php if (!empty($filename)):?>
                                             <div class="sketch_image_block" style="margin-top: 15px;">
@@ -1347,6 +1347,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         </div>
     </div>
 
+    <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
+    
     <script type="text/javascript">
         var $ = jQuery;
         var min_project_sum = <?php echo  $min_project_sum;?>;
@@ -1595,6 +1597,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 
         jQuery(document).ready(function () {
             var client_id = "<?php echo $this->item->id_client;?>";
+
+            create_calculation(<?php echo $this->item->id; ?>);
             
             window.time = undefined;
             window.gauger = undefined;
