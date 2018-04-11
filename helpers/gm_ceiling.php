@@ -1413,52 +1413,50 @@ class Gm_ceilingHelpersGm_ceiling
 
 
         $canvases_data = array();
-        if ($data['n1'] && $data['n2'] && $data['n3']) {
 
-            $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
+        $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
 
-            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-            $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
+        $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
 
-            $canvasesData = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id");
+        $canvasesData = $canvases_model->getFilteredItemsCanvas("`a`.`id` = $canvas_id");
 
-            if (is_null($canvasesData[0]->color_id))
-            {
-                $color_title = '303';
-            }
-            else
-            {
-                $color = $color_model->getData($canvasesData[0]->color_id);
-                $color_title = $color->colors_title;
-            }
-
-            $facture = $canvasesData[0]->texture_title;
-            $width = floatval($canvasesData[0]->width) * 100;
-            $name = $canvasesData[0]->name;
-
-            $canvases_data['title'] = $facture.'-'.$color_title.'-'.$width.' '.$name;
-
-            $canvases_data['quantity'] = $data['n4'];
-
-            $total_gm_guild = $data['guild_data']['total_gm_guild'];
-
-            $canvases_data['self_price'] = round($canvases[$canvas_id]->price, 2);                                    //Себестоимость по основному прайсу
-            $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);
-
-            //Стоимость с маржой ГМ (для дилера)
-            $canvases_data['gm_price'] = margin($canvases_data['self_price'], $gm_canvases_margin);
-            //Кол-во * Стоимость с маржой ГМ (для дилера)
-            $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
-
-            //себестоимость дилера, с учетом его прайса
-            $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
-            //Кол-во * себестоимость дилера
-            $canvases_data['self_dealer_total'] = round($data['n4'] * $canvases_data['self_dealer_price'], 2);
-            //дилерская цена для клиента
-            $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
-            //Кол-во * дилерскую цену (для клиента)
-            $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
+        if (is_null($canvasesData[0]->color_id))
+        {
+            $color_title = '303';
         }
+        else
+        {
+            $color = $color_model->getData($canvasesData[0]->color_id);
+            $color_title = $color->colors_title;
+        }
+
+        $facture = $canvasesData[0]->texture_title;
+        $width = floatval($canvasesData[0]->width) * 100;
+        $name = $canvasesData[0]->name;
+
+        $canvases_data['title'] = $facture.'-'.$color_title.'-'.$width.' '.$name;
+
+        $canvases_data['quantity'] = $data['n4'];
+
+        $total_gm_guild = $data['guild_data']['total_gm_guild'];
+
+        $canvases_data['self_price'] = round($canvases[$canvas_id]->price, 2);                                    //Себестоимость по основному прайсу
+        $canvases_data['self_total'] = round($data['n4'] * $canvases_data['self_price'], 2);
+
+        //Стоимость с маржой ГМ (для дилера)
+        $canvases_data['gm_price'] = margin($canvases_data['self_price'], $gm_canvases_margin);
+        //Кол-во * Стоимость с маржой ГМ (для дилера)
+        $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
+
+        //себестоимость дилера, с учетом его прайса
+        $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
+        //Кол-во * себестоимость дилера
+        $canvases_data['self_dealer_total'] = round($data['n4'] * $canvases_data['self_dealer_price'], 2);
+        //дилерская цена для клиента
+        $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
+        //Кол-во * дилерскую цену (для клиента)
+        $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
+
         return $canvases_data;
     }
     public static function calculate_offcut($calc_id=null,$data = null){
