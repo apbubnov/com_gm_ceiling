@@ -924,91 +924,91 @@ class Gm_ceilingHelpersGm_ceiling
         $component_count = array();
         foreach ($components as $key => $value) $component_count[$key] = 0;
         //периметр ТОЛЬКО ДЛЯ ПВХ
-        $filter = "a.title  LIKE('%3,5 * 51%') AND component.title LIKE('%Саморез%') ";
+        $filter = "`co`.`title` LIKE('%3,5 * 51%') AND `c`.`title` LIKE('%Саморез%') ";
         $items_9 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%6 * 51%') AND component.title LIKE('%Дюбель%') ";
+        $filter = "`co`.`title` LIKE('%6 * 51%') AND `c`.`title` LIKE('%Дюбель%') ";
         $items_5 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%ПВХ (2,5 м)%') AND component.title LIKE('%Багет%') ";
+        $filter = "`co`.`title` LIKE('%ПВХ (2,5 м)%') AND `c`.`title` LIKE('%Багет%') ";
         $items_11 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%потолочный аллюм%') AND component.title LIKE('%Багет%') ";
+        $filter = "`co`.`title` LIKE('%потолочный аллюм%') AND `c`.`title` LIKE('%Багет%') ";
         $items_236 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%стеновой аллюм%') AND component.title LIKE('%Багет%') ";
+        $filter = "`co`.`title` LIKE('%стеновой аллюм%') AND `c`.`title` LIKE('%Багет%') ";
         $items_239 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%для парящих пот аллюм%') AND component.title LIKE('%Багет%') ";
+        $filter = "`co`.`title` LIKE('%для парящих пот аллюм%') AND `c`.`title` LIKE('%Багет%') ";
         $items_559 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%303 белая%') AND component.title LIKE('%Вставка%') ";
+        $filter = "`co`.`title`  LIKE('%303 белая%') AND `c`.`title` LIKE('%Вставка%') ";
         $items_vstavka_bel = $components_model->getFilteredItems($filter);
 
         if ($data['color'] > 0) {
             $color_model1 = Gm_ceilingHelpersGm_ceiling::getModel('colors');
             $color1 = $color_model1->getColorTitle($data['color']);
             $name1 = $color1->title;
-            $filter = "a.title  LIKE('%" . $name1 . "%') AND component.title LIKE('%Вставка%') ";
+            $filter = "`co`.`title`  LIKE('%" . $name1 . "%') AND `c`.`title` LIKE('%Вставка%') ";
             $items_vstavka = $components_model->getFilteredItems($filter);
             if (empty($items_vstavka[0])) $items_vstavka = $items_vstavka_bel;
         }
 
-        $filter = "a.title  LIKE('%п/сф 3,5*9,5%') AND component.title LIKE('%Саморез%') ";
+        $filter = "`co`.`title`  LIKE('%п/сф 3,5*9,5%') AND `c`.`title` LIKE('%Саморез%') ";
         $items_10 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%тарелка%') AND component.title LIKE('%Платформа под люстру%') ";
+        $filter = "`co`.`title`  LIKE('%тарелка%') AND `c`.`title` LIKE('%Платформа под люстру%') ";
         $items_16 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%6*40%') AND component.title LIKE('%Шуруп-полукольцо%') ";
+        $filter = "`co`.`title`  LIKE('%6*40%') AND `c`.`title` LIKE('%Шуруп-полукольцо%') ";
         $items_556 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%ПВС 2 х 0,75%') AND component.title LIKE('%Провод%') ";
+        $filter = "`co`.`title`  LIKE('%ПВС 2 х 0,75%') AND `c`.`title` LIKE('%Провод%') ";
         $items_4 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('50') AND component.title LIKE('%Круглое кольцо%') ";
+        $filter = "`co`.`title`  LIKE('50') AND `c`.`title` LIKE('%Круглое кольцо%') ";
         $items_58 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%П 60%') AND component.title LIKE('%Подвес прямой %') ";
+        $filter = "`co`.`title`  LIKE('%П 60%') AND `c`.`title` LIKE('%Подвес прямой %') ";
         $items_3 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%2,5 мм%') AND component.title LIKE('%Клеммная колодка%') ";
+        $filter = "`co`.`title`  LIKE('%2,5 мм%') AND `c`.`title` LIKE('%Клеммная колодка%') ";
         $items_2 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%40*50%') AND component.title LIKE('%Брус%') ";
+        $filter = "`co`.`title`  LIKE('%40*50%') AND `c`.`title` LIKE('%Брус%') ";
         $items_1 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%3,5 * 41%') AND component.title LIKE('%Саморез%') ";
+        $filter = "`co`.`title`  LIKE('%3,5 * 41%') AND `c`.`title` LIKE('%Саморез%') ";
         $items_8 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%4,2 * 102%') AND component.title LIKE('%Саморез%') ";
+        $filter = "`co`.`title`  LIKE('%4,2 * 102%') AND `c`.`title` LIKE('%Саморез%') ";
         $items_6 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%в разд 303 гриб%') AND component.title LIKE('%Вставка%') ";
+        $filter = "`co`.`title`  LIKE('%в разд 303 гриб%') AND `c`.`title` LIKE('%Вставка%') ";
         $items_14 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%для парящих потолков%') AND component.title LIKE('%Вставка%') ";
+        $filter = "`co`.`title`  LIKE('%для парящих потолков%') AND `c`.`title` LIKE('%Вставка%') ";
         $items_38 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%15 * 12,5 см.%') AND component.title LIKE('%Кронштейн%') ";
+        $filter = "`co`.`title`  LIKE('%15 * 12,5 см.%') AND `c`.`title` LIKE('%Кронштейн%') ";
         $items_430 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%разделительный аллюм%') AND component.title LIKE('%Багет%') ";
+        $filter = "`co`.`title`  LIKE('%разделительный аллюм%') AND `c`.`title` LIKE('%Багет%') ";
         $items_35 = $components_model->getFilteredItems($filter);
 
-        $filter = "component.title LIKE('%Гарпун%') ";
+        $filter = "`c`.`title` LIKE('%Гарпун%') ";
         $items_360 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%70*100 мм%') AND component.title LIKE('%Платформа для карнизов%') ";
+        $filter = "`co`.`title`  LIKE('%70*100 мм%') AND `c`.`title` LIKE('%Платформа для карнизов%') ";
         $items_495 = $components_model->getFilteredItems($filter);
 
-        $filter = "a.title  LIKE('%Декскор 2,5%') AND component.title LIKE('%Багет%') ";
+        $filter = "`co`.`title`  LIKE('%Декскор 2,5%') AND `c`.`title` LIKE('%Багет%') ";
         $items_233 = $components_model->getFilteredItems($filter);
 
-        $filter = "component.title LIKE('%Переход уровня%') ";
+        $filter = "`c`.`title` LIKE('%Переход уровня%') ";
         $items_659 = $components_model->getFilteredItems($filter);
         
-        $filter = "component.title LIKE('%Переход уровня с нишей%') ";
+        $filter = "`c`.`title` LIKE('%Переход уровня с нишей%') ";
         $items_660 = $components_model->getFilteredItems($filter);
 
         if ($data['n1'] == 28) {
