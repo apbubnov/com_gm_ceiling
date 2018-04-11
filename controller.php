@@ -1394,24 +1394,6 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
-    public function image()
-    {
-        try
-        {
-            $jinput = JFactory::getApplication()->input;
-            $id = $jinput->get('id', '0', 'INT');
-            $result = Gm_ceilingHelpersGm_ceiling::get_image_from_db($id);
-            die($result);
-        }
-        catch(Exception $e)
-        {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
-        }
-    }
-
     /* 	функция AJAX-отметки договора и назначения новой суммы
         используется на странице, которую использует бухгалтер (/view/projects/tmpl/default_dealer)
     */
