@@ -227,8 +227,6 @@ class Gm_ceilingHelpersGm_ceiling
                 }
 
                 //throw  new Exception("Test", 3);
-                $data['n1'] = $calculation_data->n1_id;
-                $data['n2'] = $calculation_data->n2_id;
                 $data['n3'] = $calculation_data->n3_id;
             } else {
                 //Получаем из запроса
@@ -236,8 +234,6 @@ class Gm_ceilingHelpersGm_ceiling
                     'jform' => array(
                         'id' => 'int', //id потолка
                         'dealer_id' => 'int', //владелец
-                        'n1' => 'int', //тип потолка
-                        'n2' => 'int', //тип фактуры
                         'n3' => 'string', //Производитель и ширина
                         'n4' => 'float', //Площадь
                         'n5' => 'float', //Периметр
@@ -472,9 +468,6 @@ class Gm_ceilingHelpersGm_ceiling
 
             $data["need_mount"] = $need_mount;
 
-            if($data['n2'] == 29){
-                $data['n1'] = 29;
-            } 
             //Получаем объект дилера
 
             /*Сделано, что бы при расчете ГМ в проекте дилера цены были дилерские*/
@@ -693,7 +686,7 @@ class Gm_ceilingHelpersGm_ceiling
                             <th class="center">Цена, руб.</th>
                             <th class="center">Кол-во</th>
                             <th class="center">Стоимость, руб.</th></tr>';
-        if ($data['n1'] && $data['n2'] && $data['n3']) {
+        if ($data['n3']) {
             if ($data['color'] > 0) {
                 $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
                 $color = $color_model->getData($data['color']);
@@ -708,7 +701,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
             $html .= '</tr>';
         }
-        if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] > 0) {
+        if ($data['n3'] && $data['offcut_square'] > 0) {
             $name = $offcut_square_data['title'];
             $html .= '<tr>';
             $html .= '<td>' . $name . '</td>';
@@ -857,8 +850,6 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
             }
-            $data['n1'] = $calculation_data->n1_id;
-            $data['n2'] = $calculation_data->n2_id;
             $data['n3'] = $calculation_data->n3_id;
             $n13 = $data['n13'];
             $n26 = $data['n26'];
@@ -1433,14 +1424,10 @@ class Gm_ceilingHelpersGm_ceiling
         if(!empty($calc_id)){
             $calc_model = self::getModel('calculation');
             $data = get_object_vars($calc_model->getData($calc_id));
-            $data['n1'] = $data['n1_id']; 
-            $data['n2'] = $data['n2_id'];
             $data['n3'] = $data['n3_id'];
         } else if (!empty($data["id"])) {
             $calculation_model = self::getModel('calculation');
             $data = get_object_vars($calculation_model->getData($data["id"]));
-            $data['n1'] = $data['n1_id'];
-            $data['n2'] = $data['n2_id'];
             $data['n3'] = $data['n3_id'];
         }
         $dealer_info = JFactory::getUser($data['dealer_id']);
@@ -1460,7 +1447,7 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases[$canvas->id] = $canvas;
         }
         $offcut_square_data = array();
-        if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] != 0) {
+        if ($data['n3'] && $data['offcut_square'] != 0) {
             $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
             $offcut_square_data['title'] = "Количество обрезков";                                                                //Название фактуры и полотна
             $offcut_square_data['quantity'] = $data['offcut_square'];                                                            //Кол-во
@@ -1485,8 +1472,6 @@ class Gm_ceilingHelpersGm_ceiling
         if(!empty($calc_id)){
             $calc_model = self::getModel('calculation');
             $data = get_object_vars($calc_model->getData($calc_id));
-            $data['n1'] = $data['n1_id']; 
-            $data['n2'] = $data['n2_id'];
             $data['n3'] = $data['n3_id'];
         }
         $project_model = self::getModel('project');
@@ -3427,7 +3412,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .=' <th>Итого</th>';
         }
         $html .='</tr>';
-        if ($data['n1'] && $data['n2'] && $data['n3']) {
+        if ($data['n3']) {
             if ($data['color'] > 0) {
                 $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
                 $color = $color_model->getData($data['color']);
@@ -3447,7 +3432,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '</tr>';
         }
 
-        if ($data['n1'] && $data['n2'] && $data['n3'] && $data['offcut_square'] > 0) {
+        if ($data['n3'] && $data['offcut_square'] > 0) {
             $name = $offcut_square_data['title'];
             $html .= '<tr>';
             $html .= '<td>' . $name . '</td>';
