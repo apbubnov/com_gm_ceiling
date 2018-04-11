@@ -195,9 +195,9 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 		<a class="btn" href="<?=JRoute::_('index.php?option=com_gm_ceiling&task=project.edit&id='.$this->item->id);?>">Изменить проект</a>
 	<?endif;*/?>
 
-	<a class="btn btn-success" href="<?=JRoute::_('index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id='.$this->item->id);?>">
+	<button class="btn btn-success" id="add_calc">
 		Создать новый расчет
-	</a>
+	</button>
 	
 	<?if(sizeof($calculations)>0) {?>
 		<?="<h3>Расчеты для проекта</h3>";?>
@@ -225,7 +225,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
             } ?>" id="calculation<?= $calculation->id; ?>" role="tabpanel">
                 <h3><?= $calculation->calculation_title; ?></h3>
                 <a class="btn btn-primary"
-                   href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=<?= $calculation->id; ?>">Изменить
+                   href="index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&calc_id=<?= $calculation->id; ?>">Изменить
                     расчет</a>
                 <?php if (!empty($filename)): ?>
                     <div class="sketch_image_block">
@@ -442,10 +442,17 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
         } ?>
     </div>
 	
+<script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
+
 <script>
 	jQuery(document).ready(function(){
 		
 		jQuery("#jform_project_mounting_date").mask("99.99.9999");
+
+		document.getElementById('add_calc').onclick = function()
+        {
+            create_calculation(<?php echo $this->item->id; ?>);
+        };
 	
 		jQuery("input[name^='include_calculation']").click(function(){
 			if( jQuery( this ).prop("checked") ) {

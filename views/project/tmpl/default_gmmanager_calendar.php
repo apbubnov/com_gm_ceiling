@@ -1269,6 +1269,8 @@
     endif;
 ?>
 
+<script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
+
 <script language="JavaScript">
 
     var $ = jQuery;
@@ -2451,7 +2453,7 @@
                 gauger: jQuery("#jform_project_gauger").val()
             },
             success: function (data) {
-                window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&id=" + id;
+                window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&calc_id=" + id;
             },
             dataType: "text",
             timeout: 10000,
@@ -3002,7 +3004,7 @@
                 gauger: jQuery("#jform_project_gauger").val()
             },
             success: function (data) {
-                window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&id=0&project_id=" +<?php echo $this->item->id; ?>;
+                create_calculation(<?php echo $this->item->id; ?>);
             },
             dataType: "text",
             timeout: 10000,
