@@ -21,6 +21,7 @@ if($user->dealer_id == 1){
 ?>
 
 <form>
+    <button id="add_mnfctr" type = "button" class="btn btn-primary">Добавить производителя</button>
     <h2>Выберите производителя</h2>
     <table class="table table-striped one-touch-view" id="manufacturers">
         <tbody>
@@ -51,13 +52,27 @@ if($user->dealer_id == 1){
             Отправьте ему запрос на подключение</strong></p>
             <p><button type="button" id="send" class="btn btn-primary">Отправить</button></p>
         </div>
+         <div id="modal_window_add" class="modal_window">
+            <p><strong>Добавить производителя</strong></p>
+            <P><label> Название производителя</label></p>
+            <p><input id = "mnfctr_name"/></p>
+            <P><label>Телефон</label></p>
+            <p><input id = "mnfct_phone"/></p>
+            <P><label>Эл.почта</label></p>
+            <p><input id = "mnfct_email"/></p>
+            <P><label>Город</label></p>
+            <p><input id = "mnfct_city"/></p>
+            <p><button type="button" id="save_mnfctr" class="btn btn-primary">Отправить</button></p>
+        </div>
     </div>
 </form>
 
 <script>
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_fio"); // тут указываем ID элемента
-        if (!div.is(e.target) && div.has(e.target).length === 0) {
+        var div1 = jQuery("#modal_window_add");
+        if (!div.is(e.target) && div.has(e.target).length === 0 && 
+            !div1.is(e.target) && div1.has(e.target).length === 0) {
             jQuery("#close").hide();
             jQuery("#mv_container").hide();
             jQuery("#modal_window_not_connected").hide();            
@@ -65,13 +80,44 @@ if($user->dealer_id == 1){
     });
     jQuery(document).ready(function(){
         jQuery("#manufacturers > tbody > tr").click(function(){
-            if(jQuery(this).data('connected')==0 || jQuery(this).data('connected') == ''){
-                jQuery("#close").show();
-                jQuery("#mv_container").show();
-                jQuery("#modal_window_not_connected").show();
-                jQuery("#send").attr("data-manufacturer",jQuery(this).data('id'));
-            }
+            console.log(jQuery(this).data('id'));
+            location.href = "index.php?option=com_gm_ceiling&view=manufacturers&type=info&id="+jQuery(this).data('id');
         });
+    });
+    jQuery("#add_mnfctr").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_add").show(); 
+        });
+    jQuery("#mnfct_phone").mask("+7(999)999-99-99");
+    jQuery("#save_mnfctr").click(function(){
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=register_mnfctr",
+            data:{
+                FIO: jQuery("#mnfctr_name").val(),
+                phone: jQuery("#mnfct_phone").val(),
+                email:jQuery("#mnfct_email").val(),
+                city:jQuery("#mnfct_city").val()
+            },
+            async: true,
+            success: function(data){
+               location.reload();
+            },
+            dataType: "json",
+            timeout: 30000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка, пожалуйста попробуйте позже"
+                });
+            }                   
+        });
+           
     });
     jQuery("#send").click(function(){
         jQuery.ajax({

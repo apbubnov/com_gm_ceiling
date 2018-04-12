@@ -298,8 +298,6 @@ class Gm_ceilingController extends JControllerLegacy
             $flag = $jinput->get('flag', 'clients', 'STRING');
             $manager_id = $jinput->get('manager_id', null, 'INT');
             $city = $jinput->get('city', null, 'STRING');
-            $dealer_price_sort = $jinput->get('dealer_price_sort', null, 'STRING');
-
             $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
             if ($flag == 'clients')
             {
@@ -319,52 +317,12 @@ class Gm_ceilingController extends JControllerLegacy
             }
 
             foreach ($result as $key => $dealer) {
-                $user_dealer = JFactory::getUser($dealer->dealer_id);
-                $result[$key]->min_canvas_price = $user_dealer->getFunctionCanvasesPrice("MIN");
-                $result[$key]->min_component_price = $user_dealer->getFunctionComponentsPrice("MIN");
-
                 /*Dealer history*/
                 /*$recoil_map_project_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
                 $dealer_history = $recoil_map_project_model->getData($client->dealer_id);
                 $dealer_history_sum = 0;
                 foreach ($dealer_history as $key => $item) {
                     $dealer_history_sum += $item->sum;*/
-            }
-
-            if ($dealer_price_sort != "") {
-                $result_temp = $result;
-                $result = [];
-                $nil = "000000000000000000000000000000000000000000000000000";
-
-                foreach ($result_temp as $key => $dealer) {
-                    $keyCanv = $dealer->min_canvas_price;
-                    $keyComp = $dealer->min_canvas_price;
-                    $key = "";
-                    $i = 0;
-                    for(;$i < strlen($keyCanv) && $i < strlen($keyComp); $i++)
-                        $key .= $keyCanv[$i] . $keyComp[$i];
-                    $key .= substr($keyCanv, $i, strlen($keyCanv));
-                    $key .= substr($keyComp, $i, strlen($keyComp));
-                    $key .= $dealer->dealer_id;
-
-                    $len = strlen($key);
-                    $nillen = strlen($nil);
-                    $key .= substr($nil, 0, $nillen - $len);
-
-                    $result[$key] = $dealer;
-                }
-
-                if ($dealer_price_sort == "asc")
-                    ksort($result);
-                else
-                    krsort($result);
-
-                $result_temp = $result;
-                $result = [];
-
-                foreach ($result_temp as $value)
-                    $result[] = $value;
-
             }
 
             die(json_encode($result));
@@ -389,6 +347,65 @@ class Gm_ceilingController extends JControllerLegacy
             die(json_encode($result));
         }
         catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    public function register_mnfctr(){
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $phone = $jinput->get('phone', '', 'STRING');
+            $phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+            $FIO = $jinput->get('FIO', '', 'STRING');
+            $email = $jinput->get('email', '', 'STRING');
+            $city = $jinput->get('city', '', 'STRING');
+            $id = Gm_ceilingHelpersGm_ceiling::registerUser($FIO,$phone,$email,null,6);
+            $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+            $dealer_info_model->update_city($id,$city);
+            die(json_encode(true));
+            
+       }
+       catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function update_mnfctr(){
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $field = $jinput->get('field', '', 'STRING');
+            $value = $jinput->get('value', '', 'STRING');
+            $id = $jinput->get('id', '', 'INT');
+            if($field == "city"){
+                $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+                $dealer_info_model->update_city($id,$value);
+            }
+            else{
+                $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                if($field == "phone"){
+                    $user_model->updatePhone($id,$value);
+                }
+                if($field == "name"){
+                    $user_model->updateName($id,$value);
+                }
+                if($field == "email"){
+                    $user_model->updateEmail($id,$value);
+                }
+            }
+            
+            die(true);
+            
+       }
+       catch(Exception $e)
         {
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
@@ -1104,6 +1121,219 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+    /* функция для AJAX-получения списка цветов для конкретного полотна */
+    public function getColorList()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $texture_id = $jinput->get('texture_id', '0', 'INT');
+
+
+            if ($texture_id > 0) {
+                $filter = "`texture_id` = " . $texture_id . " AND `count`>0";
+            } else {
+                die();
+            }
+            //$canvases = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            //$color_canvases = $canvases->getFilteredItems($filter);
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('colors');
+            //throw new Exception($filter, 1);
+
+            $items = $model->getFilteredItems($filter);
+            //throw new Exception(implode('|', $items), 11);
+            $colors = array();
+            foreach ($items as $i => $item) {
+                $colors[] = array($item->id, $item->title, $item->file);
+            }
+            //throw new Exception(implode('|', $colors), 11);
+            die(json_encode($colors));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    /* функция для AJAX-получения списка типов полотен */
+    public function getTypesList()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('types');
+            $items = $model->getItems();
+            $types = array();
+            foreach ($items as $i => $item) {
+                $types[] = array($item->id, $item->type_title);
+            }
+
+            die(json_encode($types));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    /* функция для AJAX-получения списка фактур определенного типа полотна */
+    public function getTexturesList()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('textures');
+
+            $items = $model->getFilteredItems();
+
+            $textures = array();
+            foreach ($items as $i => $item) {
+                if ($item->id != 28) {
+                    $textures[] = array($item->id, $item->texture_title, $item->texture_colored);
+                }
+            }
+            die(json_encode($textures));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getEcolaList()
+    {
+        try
+        {
+            /*SELECT b.id,b.title FROM `rgzbn_gm_ceiling_components` AS a INNER JOIN `rgzbn_gm_ceiling_components_option` AS b ON a.id = b.component_id
+         WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = $model->getAllList_Price();
+            $filter = "component.title = 'Светильник' && a.count > 0";
+            $items = $model->getFilteredItems($filter);
+            die(json_encode($items));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getEcolaBulbs()
+    {
+        try
+        {
+            /*SELECT b.id,b.title FROM `rgzbn_gm_ceiling_components` AS a INNER JOIN `rgzbn_gm_ceiling_components_option` AS b ON a.id = b.component_id
+             WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = $model->getAllList_Price();
+            $filter = "component.title = 'Лампа' && a.count > 0";
+            $items = $model->getFilteredItems($filter);
+            die(json_encode($items));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getListRings()
+    {
+        try
+        {
+            /*SELECT b.id,b.title FROM `rgzbn_gm_ceiling_components` AS a INNER JOIN `rgzbn_gm_ceiling_components_option` AS b ON a.id = b.component_id
+             WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = $model->getAllList_Price();
+            $filter = "component.title = 'Круглое кольцо'";
+            $items = $model->getFilteredItems($filter);
+            die(json_encode($items));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getListThermalSquare()
+    {
+        try
+        {
+            /*SELECT b.id,b.title FROM `rgzbn_gm_ceiling_components` AS a INNER JOIN `rgzbn_gm_ceiling_components_option` AS b ON a.id = b.component_id
+             WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = $model->getAllList_Price();
+            $filter = "component.title = 'Термоквадрат' AND (a.title NOT LIKE('%Эcola%') OR a.title NOT LIKE('%Экола%') )";
+            $items = $model->getFilteredItems($filter);
+            die(json_encode($items));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getListCornice()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = $model->getAllList_Price();
+            $filter = "component.title = 'Карниз для штор' AND a.title LIKE('%3 ряд%')";
+            $items = $model->getFilteredItems($filter);
+
+            die(json_encode($items));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getListProfil()
+    {
+        try
+        {
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = $model->getListProfil();
+            //$filter = "component.title = 'Профиль'";
+            //$items = $model->getFilteredItems($filter);
+            $items->image = base64_encode($items->image);
+            die(json_encode($items));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function getColor()
     {
         try
@@ -1127,120 +1357,211 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
-    public function getComponentsToCalculationForm()
+    //получаем обводы трубы
+    public function getListBypass()
+    {
+        try
+        {
+            /*SELECT b.id,b.title FROM `rgzbn_gm_ceiling_components` AS a INNER JOIN `rgzbn_gm_ceiling_components_option` AS b ON a.id = b.component_id
+             WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = $model->getAllList_Price();
+            $filter = "component.title = 'Пластина обвод трубы'";
+            $items = $model->getFilteredItems($filter);
+            die(json_encode($items));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function getListDiffuzor()
+    {
+        try
+        {
+            /*SELECT b.id,b.title FROM `rgzbn_gm_ceiling_components` AS a INNER JOIN `rgzbn_gm_ceiling_components_option` AS b ON a.id = b.component_id
+             WHERE a.title = 'Светильник' AND b.title LIKE('%Эcola%')*/
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $items = $model->getAllList_Price();
+            $filter = "component.title = 'Дифузор'";
+            $items = $model->getFilteredItems($filter);
+            die(json_encode($items));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    /* функция для AJAX-получения списка полотен определенной фактуры */
+    public function getCanvasesList()
     {
         try
         {
             $jinput = JFactory::getApplication()->input;
-            $component_code = $jinput->get('component_code', '', 'STRING');
+            $texture_id = $jinput->get('jform_n2', '0', 'INT');
+            $color_id = $jinput->get('jform_color', '0', 'INT');
+            $name = $jinput->get('jform_proizv', '', 'STRING');
+            /*SELECT DISTINCT `name`, `country`, `width`, `price` FROM `rgzbn_gm_ceiling_canvases` WHERE `count` > 0 AND `texture_id` = 2 AND `color_id` = 2*/
 
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('components');
-            $items = (object)array();
-
-            $filter = '`count` > 0 AND';
-            switch ($component_code)
-            {
-                case 'n13':
-                    $filter = '(`component_id` = 12 OR `component_id` = 21)';
-                    $arr = $model->getFilteredItems($filter);
-                    foreach ($arr as $key => $value)
-                    {
-                        if ($value->component_id == 12) {
-                            $items->n13_square[] = $value;
-                        }
-                        if ($value->component_id == 21) {
-                            $items->n13_ring[] = $value;
-                        }
-                    }
-                    $items->n13_type[] = array(
-                                                'id' => 2,
-                                                'title' => 'Круглый',
-                                            );
-                    $items->n13_type[] = array(
-                                                'id' => 3,
-                                                'title' => 'Квадратный',
-                                            );
-                    break;
-                case 'ecola':
-                    $filter = '(`component_id` = 19 OR `component_id` = 20)';
-                    $arr = $model->getFilteredItems($filter);
-                    foreach ($arr as $key => $value)
-                    {
-                        if ($value->component_id == 19) {
-                            $items->light_color[] = $value;
-                        }
-                        if ($value->component_id == 20) {
-                            $items->light_lamp_color[] = $value;
-                        }
-                    }
-                    break;
-                case 'n14':
-                    $filter = "`component_id` = 24";
-                    $items->n14_type = $model->getFilteredItems($filter);
-                    break;
-                case 'n16':
-                    $filter = "`component_id` = 51";
-                    $items->n15_size = $model->getFilteredItems($filter);
-                    $items->n15_type[] = array(
-                                                'id' => 10,
-                                                'title' => 'Трехрядный',
-                                            );
-                    break;
-                case 'n22':
-                    $filter = '(`component_id` = 12 OR `component_id` = 21)';
-                    $arr = $model->getFilteredItems($filter);
-                    foreach ($arr as $key => $value)
-                    {
-                        if ($value->component_id == 12) {
-                            $items->n22_square[] = $value;
-                        }
-                        if ($value->component_id == 21) {
-                            $items->n22_diam[] = $value;
-                        }
-                    }
-                    $items->n22_type[] = array(
-                                                'id' => 5,
-                                                'title' => 'Круглая вентиляция',
-                                            );
-                    $items->n22_type[] = array(
-                                                'id' => 6,
-                                                'title' => 'Квадратная вентиляция',
-                                            );
-                    $items->n22_type[] = array(
-                                                'id' => 7,
-                                                'title' => 'Круглая электровытяжка',
-                                            );
-                    $items->n22_type[] = array(
-                                                'id' => 8,
-                                                'title' => 'Квадратная электровытяжка',
-                                            );
-                    break;
-                case 'n23':
-                    $filter = "`component_id` = 22";
-                    $items->n23_size = $model->getFilteredItems($filter);
-                    break;
-                case 'n29':
-                    $items->n29_type[] = array(
-                                        'id' => 12,
-                                        'title' => 'По прямой',
-                                    );
-                    $items->n29_type[] = array(
-                                        'id' => 13,
-                                        'title' => 'По кривой',
-                                    );
-                    $items->n29_type[] = array(
-                                        'id' => 15,
-                                        'title' => 'По прямой (с нишей)',
-                                    );
-                    $items->n29_type[] = array(
-                                        'id' => 16,
-                                        'title' => 'По кривой (с нишей)',
-                                    );
-
-                    break;
+            if ($texture_id > 0 && $color_id > 0 && !empty($name)) {
+                $filter = "`count`>0 AND `texture_id` = " . $texture_id . " AND `color_id` = " . $color_id . " AND `name`=" . "'" . $name . "'";
+            } elseif ($texture_id > 0 && $color_id == 0 && !empty($name)) {
+                $filter = "`count`>0 AND `texture_id` = " . $texture_id . " AND `name`=" . "'" . $name . "'";
+            } else {
+                die();
             }
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            $items = $model->getFilteredItems($filter);
+            //$canvases = array();
+            foreach ($items as $i => $item) {
+                $width = (float)$item->width * 100;
+                //$canvases.= str_replace('.','',$item->width)."0;".$item->price.";";
+                $canvases .= $width . ";" . $item->price . ";";
+            }
+            die(json_encode($canvases));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    /* функция для AJAX-получения списка производителей полотен */
+    public function getManufacturersList()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('jform_proizv', '0', 'INT');
+            $texture_id = $jinput->get('jform_n2', '0', 'INT');
+            $color_id = $jinput->get('jform_color', '0', 'INT');
+            if ($texture_id > 0 && $color_id > 0) {
+                $filter = (($id != 0) ? "" : "`count`>0 AND ") . "`texture_id` = " . $texture_id . " `color_id` = " . $color_id;
+            } elseif ($texture_id > 0 && $color_id == 0) {
+                $filter = (($id != 0) ? "" : "`count`>0 AND ") . "`texture_id` = " . $texture_id;
+            } else {
+                die();
+            }
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            $items = $model->getNameCountryFilteredItems($filter);
+            $canvases = array();
+            foreach ($items as $i => $item) {
+                if (!$canvases[$item->name . $item->country] || $item->id == $id)
+                    $canvases[$item->name . $item->country] = array($item->name, $item->country, $item->id);
+            }
+            //print_r($canvases); exit;
+            die(json_encode($canvases));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    /* функция для AJAX-сохранения картинки из чертилки */
+    public function save_calculation_img()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $data = $jinput->get('data', '', 'string');
+            $auto = $jinput->get('auto', '', 'string');
+            $user_id = $jinput->get('id', 0, 'int');
+            $length_arr = $jinput->get('arr_length', null, 'array');
+            for ($i = 0; $i < count($length_arr); $i++) {
+                $str .= implode('=', $length_arr[$i]);
+                $str .= ';';
+            }
+
+            $filename = md5($user_id . "-" . date("d-m-Y H:i:s"));
+
+            //list($type, $data) = explode(';', $data);
+            //list(, $data) = explode(',', $data);
+            //$data = base64_decode($data);
+
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", base64_decode($data));
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
+
+            session_start();
+            $_SESSION['jform_n4'] = $jinput->get('jform_n4', '0', 'string');
+            $_SESSION['jform_n5'] = $jinput->get('jform_n5', '0', 'string');
+            $_SESSION['jform_n9'] = $jinput->get('jform_n9', '0', 'string');
+            $_SESSION['texture'] = $jinput->get('texture', '0', 'int');
+            $_SESSION['color'] = $jinput->get('color', '0', 'int');
+            $_SESSION['manufacturer'] = $jinput->get('manufacturer', '', 'STRING');
+            $_SESSION['calc_title'] = $jinput->get('calc_title', '', 'STRING');
+            $_SESSION['data'] = $filename;
+            if($auto==1){
+                $_SESSION['need_calc'] = 1;
+            }
+
+            die($filename);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function save_cut_img()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $data = $jinput->get('data', '', 'string');
+            $user_id = $jinput->get('id', 0, 'int');
+            $arr_points = $jinput->get('arr_points', null, 'array');
+            $offcut_square = $jinput->get('square_obrezkov', 0, 'FLOAT');
+            $cuts = $jinput->get('cuts', '', 'string');
+            $p_usadki = $jinput->get('p_usadki', '1', 'FLOAT');
+            $seam = $jinput->get('seam', 0, 'INT');
             
-            die(json_encode($items));
+            for ($i = 0; $i < count($arr_points); $i++)
+            {
+                $points_polonta = '';
+                for ($j = 0; $j < count($arr_points[$i]); $j++)
+                {
+                    $points_polonta .= implode($arr_points[$i][$j]).', ';
+                }
+                $points_polonta = substr($points_polonta, 0, -2);
+
+                $str .= "Полотно" . ($i + 1) . ": " . $points_polonta . "| ";
+            }
+            $str .= '||'.$p_usadki;
+            $filename = md5($user_id . "cut-" . date("d-m-Y H:i:s"));
+
+            //list($type, $data) = explode(';', $data);
+            //list(, $data) = explode(',', $data);
+            //$data = base64_decode($data);
+
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".svg", base64_decode($data));
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
+
+            session_start();
+            $_SESSION['cut'] = $filename;
+            $_SESSION['width'] = $jinput->get('width', 0, 'INT');
+            $_SESSION['offcut'] = $offcut_square;
+            $_SESSION['cuts'] = $cuts;
+            $_SESSION['seam'] = $seam;
+
+            die($filename);
         }
         catch(Exception $e)
         {
@@ -1384,6 +1705,24 @@ class Gm_ceilingController extends JControllerLegacy
             $items = $model_call->updateNotify($id);
             
             die(true);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function image()
+    {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $id = $jinput->get('id', '0', 'INT');
+            $result = Gm_ceilingHelpersGm_ceiling::get_image_from_db($id);
+            die($result);
         }
         catch(Exception $e)
         {
@@ -2012,6 +2351,47 @@ class Gm_ceilingController extends JControllerLegacy
 
             curl_close($curl); // Закрываем соединение
             die(json_encode($response));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public static function get_original_sketch()
+    {
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $wp = $jinput->get('walls_points', array(), 'ARRAY');
+            $dp = $jinput->get('diags_points', array(), 'ARRAY');
+            $pp = $jinput->get('pt_points', array(), 'ARRAY');
+            $code = $jinput->get('code', '0', 'INT');
+            $alphavite = $jinput->get('alfavit', '0', 'INT');
+            $user_id = $jinput->get('user_id', '0', 'int');
+            $filename = md5($user_id . "original-" . date("d-m-Y H:i:s"));
+            for ($i = 0; $i < count($wp); $i++) {
+                $str .= implode(';', $wp[$i]);
+                $str .= ';';
+            }
+            $str .= '||';
+            for ($i = 0; $i < count($dp); $i++) {
+                $str .= implode(';', $dp[$i]);
+                $str .= ';';
+            }
+            $str .= '||';
+            for ($i = 0; $i < count($pp); $i++) {
+                $str .= implode(';', $pp[$i]);
+                $str .= ';';
+            }
+            $str .= '||' . $code . '||' . $alphavite;
+
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/tmp/' . $filename . ".txt", $str);
+            session_start();
+            $_SESSION['original'] = $filename;
+            die($filename);
         }
         catch(Exception $e)
         {
@@ -2670,10 +3050,35 @@ class Gm_ceilingController extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }*/
+/*
+    public function copy_emails_from_users()
+    {
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('*');
+        $query->from('`#__gm_ceiling_clients_dop_contacts`');
 
+        $db->setQuery($query);
+        $items = $db->loadObjectList();
+
+        foreach ($items as $key => $value) {
+            if (mb_ereg('^\d+\@\d+$', $value->contact))
+            {
+                $query = $db->getQuery(true);
+                $query->delete('`#__gm_ceiling_clients_dop_contacts`');
+                $query->where("`id` = $value->id");
+
+                $db->setQuery($query);
+                $db->execute($query);
+                echo $value->id.' '.$value->contact.'<br>';
+            }
+        }
+        
+    }
+*/
 
     public function RepeatSendCommercialOffer(){
-        /*try
+        /* try
         {
             $user = JFactory::getUser();
             $groups = $user->get('groups');
@@ -2708,7 +3113,7 @@ class Gm_ceilingController extends JControllerLegacy
             $files = "components/com_gm_ceiling/";
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
-        }*/
+        } */
     }
 
 
@@ -3045,16 +3450,6 @@ class Gm_ceilingController extends JControllerLegacy
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             die((object) ["status" => "error", "message" => $e->getMessage()]);
-        }
-    }
-
-    function get_measurement_from_app()
-    {
-        $f = fopen('php://input', 'r');
-        $data = stream_get_contents($f);
-
-        if ($data) {
-            die($data);
         }
     }
         

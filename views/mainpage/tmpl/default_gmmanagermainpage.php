@@ -56,9 +56,9 @@ $_SESSION['dop_num'] = $dop_num;
 		<p>
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fa fa-usd" aria-hidden="true"></i> Касса</a>
 		</p>
-		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=search', false); ?>"><i class="fa fa-search"></i> Поиск</a>
-		</p>
+        <p class="center">
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=manufacturers', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Производители</a>
+        </p>
 		<!-- <p>
 			<a class="btn btn-large btn-primary" href="<?php //echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=clientorders', false); ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Клиентские заказы</a>
 		</p> -->
@@ -111,6 +111,9 @@ $_SESSION['dop_num'] = $dop_num;
 		<p>
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=colors', false); ?>"><i class="fa fa-eyedropper" aria-hidden="true"></i> Цвета полотен</a>
 		</p>
+        <p>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=search', false); ?>"><i class="fa fa-search"></i> Поиск</a>
+        </p>
 	</div>
 </div>
 

@@ -418,7 +418,62 @@ class Gm_ceilingModelUsers extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
+	function updateName($id, $name)
+	{
+		try
+		{
+			$db    = JFactory::getDbo();
 
+			$query = $db->getQuery(true);
+			$query->select("`id`");
+			$query->from("`#__users`");
+			$query->where("`name` = '$name'");
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+
+			if (count($items) == 0)
+			{
+				$query = $db->getQuery(true);
+				$query->update("`#__users`");
+				$query->set("`name` = '$name'");
+				$query->where("`id` = $id");
+				$db->setQuery($query);
+				$db->execute();
+			}
+			
+			return true;
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
+		function updatePhone($id, $phone)
+		{
+			try
+			{
+
+				$query = $db->getQuery(true);
+				$query->update("`#__users`");
+				$query->set("`username` = '$phone'");
+				$query->where("`id` = $id");
+				$db->setQuery($query);
+				$db->execute();
+			
+				return true;
+			}
+			catch(Exception $e)
+	        {
+	            $date = date("d.m.Y H:i:s");
+	            $files = "components/com_gm_ceiling/";
+	            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+	            throw new Exception('Ошибка!', 500);
+	        }
+		}
 	public function update_demo_date($dealer_id,$date){
 		try
 		{

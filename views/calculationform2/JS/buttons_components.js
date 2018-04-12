@@ -1,6 +1,6 @@
 const help_block_n28 = '<span class="airhelp">В расчет входит багет (2,5 м) </br>А также на 1 м багета:<ul style="text-align: left;"><li>10 саморезов (ГДК 3,5*51)</li><li>10 дюбелей (красн. 6*51)</li></ul>+ монтажная работа по обагечиванию</span>';
 
-const help_block_n6 = '<span class="airhelp"><img src="/images/vstavka.png" width="280"/><br>Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой.<br>В расчет входит вставка по периметру + монтажная работа по установке вставки</span>';
+const help_block_n6 = '<span class="airhelp"><img src="/images/vstavka.jpg" width="280"/><br>Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой.<br>В расчет входит вставка по периметру + монтажная работа по установке вставки</span>';
 
 const help_block_n12 = '<span class="airhelp">В расчет входит:<ul style="text-align: left;"><li>3 самореза (ГДК 3,5*51)</li><li>3 дюбеля (красн. 6*51)</li><li>8 саморезов (п/сф 305*9,5 цинк)</li><li>1 шуруп кольцо (6*40)</li><li>2 клеммные пары</li><li>1 круглое кольцо (50)</li><li>1 платформа под люстру (тарелка)</li><li>4 подвеса прямых (П 60 (0,8))</li><li>0,5м провода (ПВС 2*0,75)</li></ul>+ монтажная работа по установке люстр</span>';
 
@@ -10,7 +10,7 @@ const help_block_n19 = '<span class="airhelp">В расчет входит пр�
 
 const help_block_n14 = '<span class="airhelp">В расчет на 1 трубу входит 1 пластина</br>+ монтажная работа по обводу трубы</span>';
 
-const help_block_n16 = '<span class="airhelp">Шторный карниз можно крепить на потолок двумя способами.<br> Видимый:<br><img src="/images/karniz.png" width="280"/><br>В расчет на 1м карниза входит:<br><ul style="text-align: left;"><li>1м бруса (40*50)</li><li>6 саморезов (ГДК 3,5*51)</li><li>6 дюбелей (красн. 6*51)</li><li>9 саморезов (ГДК 3,5*41)</li><li>3 подвеса прямых (П 60 (0,8))</li></ul>Скрытый:<br><img src="/images/karniz2.png" width="280"/><br>В расчет на 1м скрытого карниза входит:<br><ul style="text-align: left;"><li>1м бруса (40*50)</li><li>6 саморезов (ГДК 3,5*51)</li><li>6 дюбелей (красн. 6*51)</li><li>13 саморезов (ГДК 3,5*41)</li><li>3 подвеса прямых (П 60 (0,8))</li><li>2 белых кронштейна (15*12,5)</li></ul>+ монтжаная работа по установке шторного карниза</span>';
+const help_block_n16 = '<span class="airhelp">Шторный карниз можно крепить на потолок двумя способами.<br> Видимый:<br><img src="/images/karniz.jpg" width="280"/><br>В расчет на 1м карниза входит:<br><ul style="text-align: left;"><li>1м бруса (40*50)</li><li>6 саморезов (ГДК 3,5*51)</li><li>6 дюбелей (красн. 6*51)</li><li>9 саморезов (ГДК 3,5*41)</li><li>3 подвеса прямых (П 60 (0,8))</li></ul>Скрытый:<br><img src="/images/karniz2.jpg" width="280"/><br>В расчет на 1м скрытого карниза входит:<br><ul style="text-align: left;"><li>1м бруса (40*50)</li><li>6 саморезов (ГДК 3,5*51)</li><li>6 дюбелей (красн. 6*51)</li><li>13 саморезов (ГДК 3,5*41)</li><li>3 подвеса прямых (П 60 (0,8))</li><li>2 белых кронштейна (15*12,5)</li></ul>+ монтжаная работа по установке шторного карниза</span>';
 
 const help_block_n17 = '<span class="airhelp">В расчет на 1м бруса входит:<br><ul style="text-align: left;"><li>1м бруса (40*50)</li><li>6 саморезов (ГДК 3,5*51)</li><li>6 дюбелей (красн. 6*51)</li><li>6 саморезов (ГДК 3,5*41)</li><li>3 подвеса прямых (П 60 (0,8))</li></ul>+ монтжаная работа по установке закладной брусом</span>';
 
@@ -28,7 +28,7 @@ const help_block_n21 = '<span class="airhelp">В расчет на 1 пожар�
 
 const help_block_n22 = '<span class="airhelp">В расчет на 1 вентиляцию входит:<br><ul style="text-align: left;"><li>2 дюбеля (красн. 6*51)</li><li>1 квадратная или круглая платформа</li><li>4 самореза (ГКД 3,5*51)</li><li>4 самореза (п/сф 3,5*9,5 цинк)</li><li>1 термоквадрат или круглое кольцо</li></ul>В расчет на 1 электровытяжку входит:<br><ul style="text-align: left;"><li>2 дюбеля (красн. 6*51)</li><li>1 клеммная пара</li><li>1 круглая или квадратная платформа</li><li>1 круглое кольцо или термоквадрат</li><li>2 подвеса прямых (П 60 (0,8))</li><li>0,5м провода (ПВС 2*0,75)</li><li>4 самореза (ГКД 3,5*51)</li><li>4 самореза (п/сф 3,5*9,5 цинк)</li></ul>+ монтжаная работа по установке вытяжки</span>';
 
-const help_block_n23 = '<span class="airhelp"><img src="/images/diffuser.png" width="280"/><br>В расчет входит 1 диффузор + монтжаная работа по установке диффузора</span>';
+const help_block_n23 = '<span class="airhelp"><img src="/images/diffuser.jpg" width="280"/><br>В расчет входит 1 диффузор + монтжаная работа по установке диффузора</span>';
 
 const help_block_n30 = '<span class="airhelp">В расчет на 1м парящего потолка входит:<ul style="text-align: left;"><li>1м багета для парящих потолков (а из периметра вычитается 1м стенового багета)</li><li>1м светопропускающей вставки для парящих потолков</li></ul>+ монтажная работа по установке профиля для парящих потолков</span>';
 
@@ -304,6 +304,7 @@ function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_aja
 /* ______________ */
 /* radio buttons */
 function create_single_radio(name,id,value,text,selected){
+    console.log(selected);
     let checked_attr = (selected) ? 'checked = "checked"': '';
     return `<div style="display: inline-block; width: 100%;">
                 <input name="${name}" id="${id}" class="radio" value="${value}" ${checked_attr} type="radio">
@@ -313,8 +314,10 @@ function create_single_radio(name,id,value,text,selected){
 
 function create_radios_group(object){
     result = '<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">';
+    console.log(object);
     for(let i=object.values.length;i--;){
-        result += create_single_radio(object.name,object.values[i].id,object.values[i].value,object.values[i].text,(object.selected) ? object.selected : null);
+        
+        result += create_single_radio(object.name,object.values[i].id,object.values[i].value,object.values[i].text,(object.values[i].selected) ? object.values[i].selected : null);
     }
     result += '</div>';
     return result;
@@ -419,9 +422,17 @@ jQuery('.add_fields').click(function(){
 });
 function open_blocks(){
     for(let i = Object.keys(calculation).length;i--;){
-        if(calculation[Object.keys(calculation)[i]]){
-            if(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0]){
-                jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
+        if(Object.keys(calculation)[i] == 'n16'){
+            if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
+                jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
+            }
+
+        }
+        else{
+            if(!empty(calculation[Object.keys(calculation)[i]]) ){
+                if(!empty(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0])){
+                    jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
+                }
             }
         }
     }
@@ -429,11 +440,14 @@ function open_blocks(){
 }
 let change_radio = function(){
     if(this.id == "jform_n6_1"){
-        if(jQuery("#n6_color_cnt")){
+        console.log(jQuery("#n6_color_cnt").length);
+        if(jQuery("#n6_color_cnt").length){
+
             jQuery("#n6_color_cnt").show();
         }
         else{
-            create_n6_button();
+            jQuery("#jform_n6_inside").append(create_n6_button());
+            document.getElementById("btn_select_n6_color").onclick = show_color_switch;
             jQuery("#n6_color_cnt").show();
         }
     }
@@ -688,7 +702,7 @@ let change_select_event = function(){
             jQuery(`[name = '${target_name}']`)[index].append(options[i]);
         }
     }
-    if(this.vaue == 2 || this.value == 5 || this.value == 7 ){
+    if(this.value == 2 || this.value == 5 || this.value == 7 ){
         if(this.id == 'n13'){
             options  = create_options(n_data[this.id][`${this.id}_ring`]);
             target_name = `${this.id}_ring[]`;
@@ -904,6 +918,11 @@ function SelectItem(e) {
         elements.attr({"clear": "false", "add": "false"});
         parent.find("#ID").val(e.attr("ID"));
     }
+}
+
+function empty( mixed_var ) { 
+
+    return ( mixed_var === "" || mixed_var === 0  || mixed_var === "0" || mixed_var === null  || mixed_var === false  ||  ( mixed_var instanceof Array && mixed_var.length === 0 ) ||  mixed_var === "[]" );
 }
 
 function ClearSelect(e) {
