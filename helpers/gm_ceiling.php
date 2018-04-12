@@ -280,7 +280,6 @@ class Gm_ceilingHelpersGm_ceiling
                     $data[$key] = 0;
             }
             $calculation_id = $data['id'];
-        
             $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
             $calculation_data = $calculation_model->getData($calculation_id);
             $calculation_data2 = (array) $calculation_model->getDataById($calculation_id);
@@ -291,6 +290,8 @@ class Gm_ceilingHelpersGm_ceiling
                 else
                     $data[$key] = $item;
             }
+            $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id']);
+            $data['n1'] = $canvasData[0]->texture_id;
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
             $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -456,7 +457,7 @@ class Gm_ceilingHelpersGm_ceiling
             //}
 
             $data["need_mount"] = $need_mount;
-            die(json_encode($data));
+            //die(json_encode($data));
             //Получаем объект дилера
             /*Сделано, что бы при расчете ГМ в проекте дилера цены были дилерские*/
             $data['dealer_id'] = $ProjectData = self::getModel("project")->getData($data["project_id"])->dealer_id;
@@ -960,7 +961,7 @@ class Gm_ceilingHelpersGm_ceiling
         $filter = "`c`.`title` LIKE('%Переход уровня с нишей%') ";
         $items_660 = $components_model->getFilteredItems($filter);
 
-        if ($data['n1'] == 28) {
+        if ($data['n1'] != 29) {
             if ($data['n28'] !=3){
                 $component_count[$items_9[0]->id] += $data['n5'] * 10;
                 $component_count[$items_5[0]->id] += $data['n5'] * 10;
@@ -1008,7 +1009,7 @@ class Gm_ceilingHelpersGm_ceiling
          
             
         }
-        if ($data['n1'] == 28 && $data['n6']) {
+        if ($data['n1'] != 29 && $data['n6']) {
             $n5_count = ceil($data['n5']);
             $component_count[$data['n6']] += $n5_count;
         }
@@ -1200,7 +1201,7 @@ class Gm_ceilingHelpersGm_ceiling
         $component_count[$items_9[0]->id] += $data['n19'] * 2;
         $component_count[$items_5[0]->id] += $data['n19'] * 2;
         //разделитель ТОЛЬКО ДЛЯ ПВХ
-        if ($data['n1'] == 28) {
+        if ($data['n1'] != 29) {
             $component_count[$items_1[0]->id] += $data['n20'];
             $component_count[$items_6[0]->id] += $data['n20'] * 3;
             $component_count[$items_9[0]->id] += $data['n20'] * 20;
@@ -1480,7 +1481,7 @@ class Gm_ceilingHelpersGm_ceiling
         $margin = self::get_margin($data['project_id']);
 
         $guild_data = array();
-        if ($data['n1'] == 28 && $data['n9'] > 4) {
+        if ($data['n1'] != 29 && $data['n9'] > 4) {
             //Обработка 1 угла
             $gm_mp20 = margin($results->mp20, $margin['gm_canvases_margin']);
             $dealer_mp20 = margin($gm_mp20, $margin['dealer_canvases_margin']);
@@ -1627,7 +1628,7 @@ class Gm_ceilingHelpersGm_ceiling
         $guild_data = [];
 
         if ($data["need_mount"]) {
-            if ($data['n1'] == 28 && $data['n9'] > 4) {
+            if ($data['n1'] != 29 && $data['n9'] > 4) {
                 //Обработка 1 угла
                 if ($data['n9']) {
                     $guild_data[] = array(
@@ -1641,7 +1642,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
 
-            if ($data['n1'] == 28 && $data['n11'] > 0) {
+            if ($data['n1'] != 29 && $data['n11'] > 0) {
                 //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
                 $mounting_data[] = array(
                     "title" => "Внутренний вырез (ПВХ)",                                                                    //Название
@@ -1653,7 +1654,7 @@ class Gm_ceilingHelpersGm_ceiling
                 );
             }
             //только для ПВХ
-            if ($data['n1'] == 28) {
+            if ($data['n1'] != 29) {
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 0) {
                     $mounting_data[] = array(
