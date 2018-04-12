@@ -4425,7 +4425,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 if ($value[1] == 0) {
                                     $DayMounters[$r] = "red";
                                 } else if ($value[1] == 1) {
-                                    if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10) {
+                                    if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
                                         $DayMounters[$r] = "yellow";
                                     }
                                     if ($value[2] == 16) {
@@ -4509,7 +4509,7 @@ class Gm_ceilingHelpersGm_ceiling
                                 if ($value[1] == 0) {
                                     $DayMounter[$r] = ["red", $perimeter];
                                 } else if ($value[1] == 1) {
-                                    if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10) {
+                                    if ($value[2] == 5 || $value[2] == 6 || $value[2] == 7 || $value[2] == 8 || $value[2] == 10 || $value[2] == 19) {
                                         $DayMounter[$r] = ["yellow", $perimeter];
                                     }
                                     if ($value[2] == 16) {
