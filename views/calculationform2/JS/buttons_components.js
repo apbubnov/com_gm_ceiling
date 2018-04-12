@@ -68,7 +68,7 @@ let arr_blocks = [
     {block_id:"block_n7",btn_cont_id:"btn_cont_n7",prev_id:"block_n20",btn_id:"btn_n7",btn_text:"Метраж стен с плиткой",need_ajax : 0},
     {block_id:"block_n8",btn_cont_id:"btn_cont_n8",prev_id:"block_n7",btn_id:"btn_n8",btn_text:"Метраж стен с керамогранитом",need_ajax : 0},
     {block_id:"block_n18",btn_cont_id:"btn_cont_n18",prev_id:"block_n8",btn_id:"btn_n18",btn_text:"Усиление стен",need_ajax : 0},
-    {block_id:"block_dop_krepezh",btn_cont_id:"btn_dop_krepezh",prev_id:"block_n18",btn_id:"btn_dop_krepezh",btn_text:"Дополнительный крепеж",need_ajax : 0},
+    {block_id:"block_dop_krepezh",btn_cont_id:"btn_cont_dop_krepezh",prev_id:"block_n18",btn_id:"btn_dop_krepezh",btn_text:"Дополнительный крепеж",need_ajax : 0},
     {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_dop_krepezh",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0},
     {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1},
     {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_n22",btn_id:"btn_n23",btn_text:"Диффузор",need_ajax : 1},
@@ -281,7 +281,6 @@ function create_container(cnt_id,col_id){
                             <div class = "col-sm-4"></div>
                         </div>
                     </div>`;
-    
 }
 
 function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_ajax){
@@ -304,7 +303,7 @@ function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_aja
 /* ______________ */
 /* radio buttons */
 function create_single_radio(name,id,value,text,selected){
-    console.log(selected);
+    
     let checked_attr = (selected) ? 'checked = "checked"': '';
     return `<div style="display: inline-block; width: 100%;">
                 <input name="${name}" id="${id}" class="radio" value="${value}" ${checked_attr} type="radio">
@@ -314,7 +313,7 @@ function create_single_radio(name,id,value,text,selected){
 
 function create_radios_group(object){
     result = '<div class="form-group" style="text-align: left; margin-left: calc(50% - 47px);">';
-    console.log(object);
+   
     for(let i=object.values.length;i--;){
         
         result += create_single_radio(object.name,object.values[i].id,object.values[i].value,object.values[i].text,(object.values[i].selected) ? object.values[i].selected : null);
@@ -396,6 +395,8 @@ jQuery('.add_fields').click(function(){
     let col_id = `jform_${var_name}_inside`;
     let cont =  create_container("",col_id);
     let element = eval(var_name);
+    console.log(cont_id);
+
     if(!document.getElementById(col_id)){
         jQuery(`#${cont_id}`).after(cont);
         jQuery(`#${col_id}`).append(element); 
@@ -422,6 +423,7 @@ jQuery('.add_fields').click(function(){
 });
 function open_blocks(){
     for(let i = Object.keys(calculation).length;i--;){
+
         if(Object.keys(calculation)[i] == 'n16'){
             if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
                 jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
@@ -431,6 +433,7 @@ function open_blocks(){
         else{
             if(!empty(calculation[Object.keys(calculation)[i]]) ){
                 if(!empty(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0])){
+                   console.log(`#btn_${Object.keys(calculation)[i]}`);
                     jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
                 }
             }
@@ -440,7 +443,7 @@ function open_blocks(){
 }
 let change_radio = function(){
     if(this.id == "jform_n6_1"){
-        console.log(jQuery("#n6_color_cnt").length);
+    
         if(jQuery("#n6_color_cnt").length){
 
             jQuery("#n6_color_cnt").show();
@@ -590,7 +593,7 @@ function fill_calc_data(){
                 break;
                 case 'components_stock':
                 let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                    console.log(stock_data);
+                    
                      for(let j = 1;j<Object.keys(stock_data).length;j++){
                         jQuery(`#add_${Object.keys(calculation)[i]}`).click();
                     }
@@ -674,6 +677,7 @@ function find_radio_element(elements,value){
         }
     }
 }
+
 function check_radio(elements,value){
     jQuery(find_radio_element(elements,value)).attr('checked',true);
 }
@@ -922,7 +926,7 @@ function SelectItem(e) {
 
 function empty( mixed_var ) { 
 
-    return ( mixed_var === "" || mixed_var === 0  || mixed_var === "0" || mixed_var === null  || mixed_var === false  ||  ( mixed_var instanceof Array && mixed_var.length === 0 ) ||  mixed_var === "[]" );
+    return ( mixed_var === "" || mixed_var === 0  || mixed_var === "0" || mixed_var === null  || mixed_var === false  ||  ( mixed_var instanceof Array && mixed_var.length === 0 ) ||  mixed_var === "[]" || mixed_var ==="{}" );
 }
 
 function ClearSelect(e) {

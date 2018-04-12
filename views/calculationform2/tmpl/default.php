@@ -4,10 +4,12 @@
     //JHtml::_('behavior.tooltip');
     JHtml::_('behavior.formvalidation');
     $jinput = JFactory::getApplication()->input;
-    $lang = JFactory::getLanguage();
-    $lang->load('com_gm_ceiling', JPATH_SITE);
-    $doc = JFactory::getDocument();
-    $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
+    //$lang = JFactory::getLanguage();
+    //$lang->load('com_gm_ceiling', JPATH_SITE);
+    //$doc = JFactory::getDocument();
+    //$doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
+
+    echo parent::getPreloaderNotJS();
 
     $user = JFactory::getUser();
     $user_groups = $user->groups;
@@ -18,6 +20,18 @@
 
     $type = $jinput->get('type', '', 'STRING');
     $subtype = $jinput->get('subtype', '', 'STRING');
+
+    $type_url = '';
+    if (!empty($type))
+    {
+        $type_url = "&type=$type";
+    }
+
+    $subtype_url = '';
+    if (!empty($subtype))
+    {
+        $subtype_url = "&subtype=$subtype";
+    }
 
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
@@ -67,11 +81,13 @@
     <input name = "auto" id = "auto" value="" type = "hidden">
     <input name = "walls" id = "walls" value="" type= "hidden">
     <input name = "calc_id" id = "calc_id" value="<?php echo $calculation_id;?>" type = "hidden">
-    <input name = "n4" id = "n4" value ="" type ="hidden">
-    <input name = "n5" id = "n5" value ="" type ="hidden">
-    <input name = "n9" id = "n9" value ="" type ="hidden">
+    <input name = "n4" id="n4" value="" type ="hidden">
+    <input name = "n5" id="n5" value="" type ="hidden">
+    <input name = "n9" id="n9" value="" type ="hidden">
 	<input name = "triangulator_pro" id = "triangulator_pro" value = "<?php echo $triangulator_pro?>" type = "hidden">
-	<input name="proj_id" id="proj_id" value = "" type="hidden">
+	<input name="proj_id" id="proj_id" value="<?php echo $project_id; ?>" type="hidden">
+    <input name="type_url" id="type_url" value="<?php echo $type_url; ?>" type="hidden">
+    <input name="subtype_url" id="subtype_url" value="<?php echo $subtype_url; ?>" type="hidden">
 </form>
 <form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
     <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $calculation_id;?>"/> 
@@ -363,17 +379,6 @@
 								<td style="text-align: center;">
 									<!-- сохранить -->
                                     <?php
-                                        $type_url = '';
-                                        if (!empty($type))
-                                        {
-                                            $type_url = "&type=$type";
-                                        }
-
-                                        $subtype_url = '';
-                                        if (!empty($subtype))
-                                        {
-                                            $subtype_url = "&subtype=$subtype";
-                                        }
                                         $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url&id=$project_id";
                                     ?>
 									<a id="save_button" class="btn btn-success" href="<?php echo $save_button_url; ?>">Сохранить</a>
@@ -687,7 +692,7 @@
        
         jQuery("#btn_add_components").click(function(){
             include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
-            setTimeout(event_help_proccess, 500);
+            setTimeout(event_help_proccess, 2000);
         });
         
         function include(url) { 
@@ -795,6 +800,11 @@
             }
             return result;
         }
+
+        document.body.onload = function(){
+            jQuery(".PRELOADER_GM").hide();
+        };
+
         function click_after_recalc(){
             if(need_click){
                 jQuery("#calculate_button").click();
