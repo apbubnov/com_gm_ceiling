@@ -171,12 +171,13 @@ class Gm_ceilingModelColor extends JModelItem
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query
-	            ->select('CONCAT( canvases.name , \' \', canvases.country, \' \', canvases.width ) AS full_name,canvases.count' )
+	            ->select('CONCAT( manufac.name , \' \', manufac.country, \' \', canvases.width ) AS full_name,canvases.count' )
 	            ->from('`#__gm_ceiling_canvases` AS canvases')
 	            ->select('textures.texture_title AS texture_title')
 	            ->join('LEFT', '`#__gm_ceiling_textures` AS textures ON canvases.texture_id = textures.id')
 	            ->select('colors.title AS colors_title, colors.file AS file, colors.id AS id , colors.hex AS hex ')
 	            ->join('LEFT', '`#__gm_ceiling_colors` AS colors ON canvases.color_id = colors.id')
+	            ->join('LEFT', '`#__gm_ceiling_canvases_manufacturers` AS manufac ON canvases.manufacturer_id = manufac.id')
 	            ->where('canvases.color_id =' . $id);
 
 	        $db->setQuery($query);
