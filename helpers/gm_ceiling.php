@@ -213,16 +213,6 @@ class Gm_ceilingHelpersGm_ceiling
                 $canvases[$canvas->id] = $canvas;
             }
             //Получаем данные
-            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-            $calculation_data = $calculation_model->getData($calculation_id);
-            $calculation_data2 = (array) $calculation_model->getDataById($calculation_id);
-
-            foreach ($calculation_data as $key => $item) {
-                if (empty($item) && array_key_exists($key, $calculation_data2))
-                    $data[$key] = $calculation_data2[$key];
-                else
-                    $data[$key] = $item;
-            }
             /*if ($from_db == 1) {
                 //Загружаем из БД
                 $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
@@ -243,9 +233,6 @@ class Gm_ceilingHelpersGm_ceiling
             $data = $jinput->getArray(array(
                 'jform' => array(
                     'id' => 'int', //id потолка
-                    'n3' => 'string', //Производитель и ширина
-                    'n4' => 'float', //Площадь
-                    'n5' => 'float', //Периметр
                     'n6' => 'int', //Со вставкой
                     'n7' => 'float', //Крепление в плитку
                     'n8' => 'float', //Крепление в керамогранит
@@ -292,20 +279,18 @@ class Gm_ceilingHelpersGm_ceiling
                 else if ($value == '')
                     $data[$key] = 0;
             }
+            $calculation_id = $data['id'];
+        
+            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            $calculation_data = $calculation_model->getData($calculation_id);
+            $calculation_data2 = (array) $calculation_model->getDataById($calculation_id);
 
-            $color = $data['color'];
-            $color_filter = $color ? "= " .$color : "IS NULL";       
-            $filter = "texture_id = '".$data['n2']."' and `name` = '" . $data['proizv'] . "' AND width = '" . $data['n3'] . "' AND color_id " . $color_filter . "";
-            $model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-            $items = $model->getIdFilteredItems($filter);
-            if(count($items)>0){
-                $data['n3'] = $items[0]->id;
+            foreach ($calculation_data as $key => $item) {
+                if (empty($item) && array_key_exists($key, $calculation_data2))
+                    $data[$key] = $calculation_data2[$key];
+                else
+                    $data[$key] = $item;
             }
-            
-            if($data['n2'] == 0) {
-                $data['n3'] = 0; $data['n4'] = 0; $data['n5'] = 0; $data['n9'] = 0;
-            }
-
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
             $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -415,13 +400,13 @@ class Gm_ceilingHelpersGm_ceiling
             }
 
             //Получаем массив из переменной дополнительных комплектующих со склада
-            $components_title_stock = $jinput->get('components_title_stock', '-', 'ARRAY');
+            $components_title_stock = $jinput->get('components_stock_title', '-', 'ARRAY');
             if ($components_title_stock == '-')
-                $components_title_stock = $_POST['components_title_stock'];
+                $components_title_stock = $_POST['components_stock_title'];
 
-            $components_value_stock = $jinput->get('components_value_stock', '-', 'ARRAY');
+            $components_value_stock = $jinput->get('components_stock_value', '-', 'ARRAY');
             if ($components_value_stock == '-')
-                $components_value_stock = $_POST['components_value_stock'];
+                $components_value_stock = $_POST['components_stock_value'];
 
             $components_stock = array();
             if ($components_title_stock !== '-') {
@@ -471,9 +456,8 @@ class Gm_ceilingHelpersGm_ceiling
             //}
 
             $data["need_mount"] = $need_mount;
-
+            die(json_encode($data));
             //Получаем объект дилера
-
             /*Сделано, что бы при расчете ГМ в проекте дилера цены были дилерские*/
             $data['dealer_id'] = $ProjectData = self::getModel("project")->getData($data["project_id"])->dealer_id;
 
@@ -1391,8 +1375,8 @@ class Gm_ceilingHelpersGm_ceiling
         }
         else
         {
-            $color = $color_model->getData($canvasesData[0]->color_id);
-            $color_title = $color->colors_title;
+            //$color = $color_model->getData($canvasesData[0]->color_id);
+            $color_title = $canvasesData[0]->colors_title;
         }
 
         $facture = $canvasesData[0]->texture_title;

@@ -428,6 +428,7 @@
     {
         jQuery("body").addClass("yellow_home");
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
+        console.log(canvases_data);
         let textures = [];
         let canvases_data_of_selected_texture = [];
         

@@ -701,7 +701,8 @@ let change_select_event = function(){
         if(this.id == 'n22'){
             target_name = `${this.id}_diam[]`;
         }
-        jQuery(`[name = '${target_name}']`)[index].empty();
+         
+        jQuery('option', jQuery(`[name = '${target_name}']`)[index]).remove();
         for(let i=0;i<options.length;i++){
             jQuery(`[name = '${target_name}']`)[index].append(options[i]);
         }
@@ -715,7 +716,7 @@ let change_select_event = function(){
             options  = create_options(n_data[this.id][`${this.id}_diam`]);
             target_name = `${this.id}_diam[]`;
         }
-        jQuery(`[name = '${target_name}']`)[index].empty();
+        jQuery('option', jQuery(`[name = '${target_name}']`)[index]).remove();
         for(let i=0;i<options.length;i++){
             jQuery(`[name = '${target_name}']`)[index].append(options[i]);
         } 
