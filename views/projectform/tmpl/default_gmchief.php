@@ -26,7 +26,7 @@
     $userId = $user->get('id');
 
     $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations = $model->getProjectItems($this->item->id);
+    $calculations = $model->new_getProjectItems($this->item->id);
 
     foreach ($calculations as $calculation) {
         $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, $this->item->gm_canvases_margin, $this->item->dealer_canvases_margin);
