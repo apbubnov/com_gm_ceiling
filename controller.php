@@ -1320,8 +1320,6 @@ public function register_mnfctr(){
         try
         {
             $jinput = JFactory::getApplication()->input;
-
-            //if ($_SESSION['manufacturer']) ;
             $from_db = 0;
             $id = $jinput->get('id', '0', 'INT');
             $save = $jinput->get('save', '0', 'INT');
@@ -1329,6 +1327,7 @@ public function register_mnfctr(){
             $need_mount = $jinput->get('need_mount', '0', 'INT');
             
             $del_flag = $jinput->get('del_flag', '0', 'INT');
+           
             $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount);
             die($result);
          }

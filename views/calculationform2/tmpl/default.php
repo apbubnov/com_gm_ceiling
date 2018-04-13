@@ -637,13 +637,16 @@
             data = jQuery( "#form-calculation").serialize();
             jQuery("#under_calculate").show();
             var calculate_button = jQuery( this );
+            let id = jQuery('#jform_id').val();
+            let need_mount = jQuery("input[name = 'need_mount']").val();
             if (!calculate_button.hasClass("loading")) {
                 calculate_button.addClass("loading");
                 calculate_button.find("span.static").hide();
                 calculate_button.find("span.loading").show();
+
                 jQuery.ajax({
                     type: 'POST',
-                    url: "index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val(),
+                    url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=0&del_flag=1&id=${id}&need_mount=${need_mount}`,
                     data: data,
                     success: function(data){
                         var html = "",
