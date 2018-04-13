@@ -428,6 +428,7 @@
     {
         jQuery("body").addClass("yellow_home");
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
+        console.log(canvases_data);
         let textures = [];
         let canvases_data_of_selected_texture = [];
         
@@ -642,7 +643,7 @@
                 calculate_button.find("span.loading").show();
                 jQuery.ajax({
                     type: 'POST',
-                    url: "index.php?option=com_gm_ceiling&task=calculate&save=0&pdf=0&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val(),
+                    url: "index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&need_mount="+jQuery("input[name = 'need_mount']").val(),
                     data: data,
                     success: function(data){
                         var html = "",

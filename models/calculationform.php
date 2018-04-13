@@ -1121,11 +1121,11 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 if($data['n3'] == 0) $data['n3'] = "NULL";
                
                 $query = $db->getQuery(true);
-                $columns = array('ordering', 'state', 'checked_out', 'checked_out_time', 'created_by', 'modified_by',  'calculation_title', 'project_id', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7', 'n8', 'n9', 'n10', 'n11', 'n12', 'n16', 'n17', 'n18', 'n19', 'n20', 'n21', 'n24', 'n25', 'n27','n28','n30','n31', 'n32','height','components_sum', 'canvases_sum', 'mounting_sum', 'dealer_components_sum', 'dealer_canvases_sum', /*'transport', */'dop_krepezh', 'extra_components', 'extra_mounting', 'components_stock', 'color', 'details',/* 'calc_image',*/ 'original_sketch', 'calc_data',/* 'cut_image', */'cut_data', 'offcut_square',/*'distance', 'distance_col',*/'discount');
+                $columns = array('ordering', 'state', 'checked_out', 'checked_out_time', 'created_by', 'modified_by',  'calculation_title', 'project_id', 'n3', 'n4', 'n5', 'n6', 'n7', 'n8', 'n9', 'n10', 'n11', 'n12', 'n16', 'n17', 'n18', 'n19', 'n20', 'n21', 'n24', 'n25', 'n27','n28','n30','n31', 'n32','height','components_sum', 'canvases_sum', 'mounting_sum', 'dealer_components_sum', 'dealer_canvases_sum', /*'transport', */'dop_krepezh', 'extra_components', 'extra_mounting', 'components_stock', 'color', 'details',/* 'calc_image',*/ 'original_sketch', 'calc_data',/* 'cut_image', */'cut_data', 'offcut_square',/*'distance', 'distance_col',*/'discount');
                 $query
                     ->insert($db->quoteName('#__gm_ceiling_calculations'))
                     ->columns($db->quoteName($columns))
-                    ->values(
+                    ->values( 
                         $data['id'] . ', '
                         . $data['state'] . ', '
                         . $data['checked_out'] . ', '
@@ -1134,8 +1134,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         . $user->id . ', '
                         . $db->quote($data['calculation_title']) . ', '
                         . $data['project_id'] . ', '
-                        . $data['n1'] . ', '
-                        . $data['n2'] . ', '
                         . $data['n3'] . ', '
                         . $data['n4'] . ', '
                         . $data['n5'] . ', '
@@ -1284,12 +1282,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 $query = $db->getQuery(true);
                 $query->update('`#__gm_ceiling_calculations` AS calc')
                     ->set('calc.checked_out_time = ' . $db->quote($date_created))
-                    ->set('calc.calculation_title = ' . $db->quote($data['calculation_title']))
-                    ->set('calc.n1 = ' . $data['n1']);
-                   // ->set('calc.n2 = ' . $data['n2'])
-                   // ->set('calc.n3 = ' . $data['n3']);
-                if (empty($data['n2'])) $query->set('calc.n2 = NULL');
-                else $query->set('calc.n2 = ' . $db->quote($data['n2']));
+                    ->set('calc.calculation_title = ' . $db->quote($data['calculation_title']));
                 if (empty($data['n3'])) $query->set('calc.n3 = NULL');
                 else $query->set('calc.n3 = ' . $db->quote($data['n3']));
                 if (empty($data['n4'])) $query->set('calc.n4 = 0');

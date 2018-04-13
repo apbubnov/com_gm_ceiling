@@ -397,6 +397,66 @@ class Gm_ceilingController extends JControllerLegacy
         }
     }
 
+public function register_mnfctr(){
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $phone = $jinput->get('phone', '', 'STRING');
+            $phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+            $FIO = $jinput->get('FIO', '', 'STRING');
+            $email = $jinput->get('email', '', 'STRING');
+            $city = $jinput->get('city', '', 'STRING');
+            $id = Gm_ceilingHelpersGm_ceiling::registerUser($FIO,$phone,$email,null,6);
+            $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+            $dealer_info_model->update_city($id,$city);
+            die(json_encode(true));
+            
+       }
+       catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function update_mnfctr(){
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $field = $jinput->get('field', '', 'STRING');
+            $value = $jinput->get('value', '', 'STRING');
+            $id = $jinput->get('id', '', 'INT');
+            if($field == "city"){
+                $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
+                $dealer_info_model->update_city($id,$value);
+            }
+            else{
+                $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+                if($field == "phone"){
+                    $user_model->updatePhone($id,$value);
+                }
+                if($field == "name"){
+                    $user_model->updateName($id,$value);
+                }
+                if($field == "email"){
+                    $user_model->updateEmail($id,$value);
+                }
+            }
+            
+            die(true);
+            
+       }
+       catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+    
     public function register_user()
     {
         try
@@ -2444,7 +2504,7 @@ class Gm_ceilingController extends JControllerLegacy
     }
 
 
-    public function sendCommercialOffer($user_id = null, $email = null, $dealer_type = null){
+   public function sendCommercialOffer($user_id = null, $email = null, $dealer_type = null){
         try
         {
             $user = JFactory::getUser();
@@ -2475,6 +2535,7 @@ class Gm_ceilingController extends JControllerLegacy
                 $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code_instruction";
                 $site3 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=2&code=$code_quick";
+                $site4 = $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
                 // письмо
                 $mailer = JFactory::getMailer();
                 $config = JFactory::getConfig();
@@ -2501,23 +2562,35 @@ class Gm_ceilingController extends JControllerLegacy
                 $body .= '<p>Почта: gm-partner@mail.ru</p>';
                 $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
                 $body .= '</div></td></tr></table>';
-                $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку:
-                <ul>
-                    <li> на <a href=\"$site\">коммерческое предложение</a></li>
-                    <br>";
-                    if ($dealer_type==1) {
-                        $body .= "<li>краткий обзор программы</li>
-                        <br>
-                        <a href=\"$site2\"><img src=\"http://".$server_name."/images/short_instruction2.png\"></a>
-                        <br>
-                        <br>
-                        <li>инструкцию по быстрому заказу</li>
-                        <br>
-                        <a href=\"$site3\"><img src=\"http://".$server_name."/images/video.jpg\"></a>";
+                if ($dealer_type==3) {
+                        $body .= "<div style=\"width: 100%\">
+                            <a href=\"$site4\"><img src=\"http://".$server_name."/images/KP_OTD.jpg\"></a><br>";
                     }
-                $body .=" </ul>";
+
+                  if ($dealer_type==1) {
+                        $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку:
+                        <ul>
+                            <li> на <a href=\"$site\">коммерческое предложение</a></li>
+                            <br>
+                            <li>краткий обзор программы</li>
+                            <br>
+                            <a href=\"$site2\"><img src=\"http://".$server_name."/images/short_instruction2.png\"></a>
+                            <br>
+                            <br>
+                            <li>инструкцию по быстрому заказу</li>
+                            <br>
+                            <a href=\"$site3\"><img src=\"http://".$server_name."/images/video.jpg\"></a>";
+                    
+                        $body .=" </ul>";
+                }
                 $body .= "По всем вопросам писать на почту gm-partner@mail.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
-                $mailer->setSubject('Коммерческое предложение');
+                if($dealer_type == 3){
+                    $mailer->setSubject('+15 000 руб/в мес. каждому Отделочнику ');
+                }
+                else{
+                    $mailer->setSubject('Коммерческое предложение');
+                }
+                
                 $mailer->isHtml(true);
                 $mailer->Encoding = 'base64';
                 $mailer->setBody($body);
