@@ -34,6 +34,7 @@
     Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+
     //транспорт
     $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
     $sum_transport = $transport['client_sum'];
@@ -88,7 +89,6 @@
     // все замерщики
     $AllGauger = $model_calculations->FindAllGauger($user->dealer_id, 22);
     //----------------------------------------------------------------------------------
-
 ?>
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
@@ -977,7 +977,7 @@
         </div>
         <?php foreach ($calculations as $k => $calculation) { ?>
             <?php $mounters = json_decode($calculation->mounting_sum); ?>
-            <?php if(!empty($calculation->n2)) $filename = "/calculation_images/".md5("calculation_sketch".$calculation->id).".svg";
+            <?php if(!empty($calculation->n3)) $filename = "/calculation_images/".md5("calculation_sketch".$calculation->id).".svg";
            ?>
 
             <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
