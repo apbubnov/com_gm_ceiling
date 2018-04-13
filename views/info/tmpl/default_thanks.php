@@ -22,9 +22,3 @@ JHtml::_('formbehavior.chosen', 'select');
     <h2>Ваше мнение очень важно для нас.</h2>
     <hr>
 </form>
-<script type="text/javascript">
-	while (true)
-	{
-		alert('Спасибо!');
-	}
-</script>
