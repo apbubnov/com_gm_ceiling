@@ -159,7 +159,7 @@ class Gm_ceilingModelUsers extends JModelList
         }
 	}
 
-	function acceptCommercialOfferCode($code)
+	function acceptCommercialOfferCode($code, $type_kp)
 	{
 		try
 		{
@@ -177,7 +177,8 @@ class Gm_ceilingModelUsers extends JModelList
 			}
 			if ($item->status == 0)
 			{
-				$client_id = JFactory::getUser($item->user_id)->associated_client;
+				$user = JFactory::getUser($item->user_id);
+				$client_id = $user->associated_client;
 				if (!empty($item->manager_id))
 				{
 					$manager_id = $item->manager_id;
@@ -188,8 +189,18 @@ class Gm_ceilingModelUsers extends JModelList
 				}
 				
 				$callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-				$callback_model->save(date('Y-m-d H:i:s'),'Просмотрено коммерческое предложение',
+
+				if ($type_kp == 0 && $user->dealer_type == 6)
+				{
+					$callback_model->save(date('Y-m-d H:i:s'),'Коммерческое предложение отклонено',
 					$client_id,$manager_id);
+				}
+				else
+				{
+					$callback_model->save(date('Y-m-d H:i:s'),'Просмотрено коммерческое предложение',
+					$client_id,$manager_id);
+				}
+				
 
 				$query = $db->getQuery(true);
 				$query->update('`rgzbn_users_commercial_offer`');

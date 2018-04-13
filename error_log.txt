@@ -1,6 +1,0 @@
-23.01.2018 15:32:59 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Класс представления не найден [class, file]: gm_ceilingViewdealers, /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/views/dealers/view.html.php
-----------
-23.01.2018 15:49:53 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/models/project.php | getDiscount | SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
-----------
-24.01.2018 03:50:04 | /home/srv112238/test1.gm-vrn.ru/components/com_gm_ceiling/controller.php | display | Представление не найдено [name, type, prefix]: registration, html, gm_ceilingView
-----------
