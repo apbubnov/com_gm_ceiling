@@ -264,10 +264,10 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
         try{
             $jinput = JFactory::getApplication()->input;
             $code = $jinput->get('code', null, 'STRING');
-            $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-            $result  = $users_model->acceptCommercialOfferCode($code);
-            $type = JFactory::getUser($result->user_id)->dealer_type;
             $type_kp = $jinput->get('type', null, 'INT');
+            $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $result  = $users_model->acceptCommercialOfferCode($code, $type_kp);
+            $type = JFactory::getUser($result->user_id)->dealer_type;
             $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('dealer_info');
             $dealer_city = $dealer_info_model->getDataById($result->user_id)->city;
             if ($type == 3)
@@ -282,7 +282,13 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             }
             else if ($type == 6)
             {
-                $this->setRedirect(JRoute::_('/files/KP_Proizv.pdf', false));
+                if($type_kp==1){
+                    $this->setRedirect(JRoute::_('/files/KP_Proizv.pdf', false));
+                }
+                else{
+                    $this->setRedirect(JRoute::_('http://promo.gm-vrn.ru/4', false));
+                }
+                
             }
             else
             {
