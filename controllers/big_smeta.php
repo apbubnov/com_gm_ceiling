@@ -286,7 +286,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
                     $this->setRedirect(JRoute::_('/files/KP_Proizv.pdf', false));
                 }
                 else{
-                    $this->setRedirect(JRoute::_('http://promo.gm-vrn.ru/4', false));
+                    $this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=info&type=thanks', false));
                 }
                 
             }

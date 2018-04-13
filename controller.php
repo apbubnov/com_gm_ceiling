@@ -2591,7 +2591,110 @@ public function register_mnfctr(){
                 }
 
                 if ($dealer_type==6) {
-                    $body .= '<div><div style="color:rgb(0,0,0);font-family:arial,helvetica,sans-serif;font-size:15px;font-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-weight:400;text-transform:none;white-space:normal;text-align:center"><strong><span style="background-color:#4866e7;font-size:36px"><font color="#ffffff">Привлечь</font></span><span style="background-color:#4866e7;color:#ffffff;font-size:36px">&nbsp;новых дилеров - легко!</span></strong><br><br><span style="color:#173bd3">Устанавливай систему<span>&nbsp;</span><strong>IT-Ceiling</strong><span>&nbsp;</span>и получай новых дилеров.</span></div><div style="color:rgb(0,0,0);font-family:arial,helvetica,sans-serif;font-size:15px;font-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-weight:400;text-transform:none;white-space:normal;margin-left:30px;text-align:center"><br><br>Вы наверняка пробовали привлекать новых дилеров через акции или демпинг, обзвон или емайл-рассылку?<br><br>Но не получили желаемого результата!(<br><br><strong>А что Вы дали своим дилерам? Как анализировали всю проделанную гигантскую работу?<br>&nbsp;<br><span style="color:#173bd3">Система IT-Ceiling дает Вашим дилерам совершенно простой способ заказа Натяжных потолков, при этом показывая им точную себестоимость всех расходных материалов и полотен с учетом обрезков на замере и дает возможность забрать любой заказ и полноценно вести клиентскую базу, при чем все это она дает через простое в использовании мобильное приложение.<br><br><span style="background-color:#173bd3;color:#ffffff">Как это решит Ваши проблемы?&nbsp;<br><br><span style="background-color:#ffffff;color:#000000">Заказ дилера сделанный через приложение попадает в вашу CRM - систему IT-Ceiling и Вы точно знаете какой дилер сколько заказывает, как часто и когда он перестал заказывать. Каждого дилера можно проследить от куда он пришел и по какой акции, только так можно определить успешный канал привлечения и порядок работ с дилером.</span><br><br>Так же IT-Ceiling сама рекламирует себя для дилеров и у нас уже есть те кто работает с приложением в разных городах, но заказывает не у Вас!!!</span></span></strong></div><div style="color:rgb(0,0,0);font-family:arial,helvetica,sans-serif;font-size:15px;font-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-weight:400;text-transform:none;white-space:normal;margin-left:30px;text-align:center">&nbsp;</div><div style="color:rgb(0,0,0);font-family:arial,helvetica,sans-serif;font-size:15px;font-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-weight:400;text-transform:none;white-space:normal;margin-left:30px;text-align:center"><span style="color:#0000ff"><span style="font-size:18px">Хотите узнать подробнее?</span></span><br><a href="'.$site5.'">Да</a> <a href="'.$site6.'">Нет</a></div></div>';
+                    $body .= '<div><div style="color:rgb(0,0,0);font-family:arial,helvetica,sans-serif;font-size:15px;font-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-weight:400;text-transform:none;white-space:normal;text-align:center"><strong><span style="background-color:#4866e7;font-size:36px"><font color="#ffffff">Привлечь</font></span><span style="background-color:#4866e7;color:#ffffff;font-size:36px">&nbsp;новых дилеров - легко!</span></strong><br><br><span style="color:#173bd3">Устанавливай систему<span>&nbsp;</span><strong>IT-Ceiling</strong><span>&nbsp;</span>и получай новых дилеров.</span></div><div style="color:rgb(0,0,0);font-family:arial,helvetica,sans-serif;font-size:15px;font-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-weight:400;text-transform:none;white-space:normal;margin-left:30px;text-align:center"><br><br>Вы наверняка пробовали привлекать новых дилеров через акции или демпинг, обзвон или емайл-рассылку?<br><br>Но не получили желаемого результата!(<br><br><strong>А что Вы дали своим дилерам? Как анализировали всю проделанную гигантскую работу?<br>&nbsp;<br><span style="color:#173bd3">Система IT-Ceiling дает Вашим дилерам совершенно простой способ заказа Натяжных потолков, при этом показывая им точную себестоимость всех расходных материалов и полотен с учетом обрезков на замере и дает возможность забрать любой заказ и полноценно вести клиентскую базу, при чем все это она дает через простое в использовании мобильное приложение.<br><br><span style="background-color:#173bd3;color:#ffffff">Как это решит Ваши проблемы?&nbsp;<br><br><span style="background-color:#ffffff;color:#000000">Заказ дилера сделанный через приложение попадает в вашу CRM - систему IT-Ceiling и Вы точно знаете какой дилер сколько заказывает, как часто и когда он перестал заказывать. Каждого дилера можно проследить от куда он пришел и по какой акции, только так можно определить успешный канал привлечения и порядок работ с дилером.</span><br><br>Так же IT-Ceiling сама рекламирует себя для дилеров и у нас уже есть те кто работает с приложением в разных городах, но заказывает не у Вас!!!</span></span></strong></div><div style="color:rgb(0,0,0);font-family:arial,helvetica,sans-serif;font-size:15px;font-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-weight:400;text-transform:none;white-space:normal;margin-left:30px;text-align:center">&nbsp;</div><div style="color:rgb(0,0,0);font-family:arial,helvetica,sans-serif;font-size:15px;font-style:normal;font-variant-ligatures:normal;font-variant-caps:normal;font-weight:400;text-transform:none;white-space:normal;margin-left:30px;text-align:center"><span style="color:#0000ff"><span style="font-size:18px">Хотите узнать подробнее?</span></span><br><a class="btn-success" href="'.$site5.'">Да</a> <a class="btn-danger" href="'.$site6.'">Нет</a></div></div><style>
+                    .btn {
+                      display: inline-block;
+                      font-weight: 400;
+                      text-align: center;
+                      white-space: nowrap;
+                      vertical-align: middle;
+                      -webkit-user-select: none;
+                      -moz-user-select: none;
+                      -ms-user-select: none;
+                      user-select: none;
+                      border: 1px solid transparent;
+                      padding: 0.375rem 0.75rem;
+                      font-size: 1rem;
+                      line-height: 1.5;
+                      border-radius: 0.25rem;
+                      transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                    }
+                    .btn:hover, .btn:focus {
+                      text-decoration: none;
+                    }
+
+                    .btn:focus, .btn.focus {
+                      outline: 0;
+                      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                    }
+
+                    .btn.disabled, .btn:disabled {
+                      opacity: 0.65;
+                    }
+
+                    .btn:not(:disabled):not(.disabled) {
+                      cursor: pointer;
+                    }
+
+                    .btn:not(:disabled):not(.disabled):active, .btn:not(:disabled):not(.disabled).active {
+                      background-image: none;
+                    }
+                    .btn-success {
+                      color: #fff;
+                      background-color: #28a745;
+                      border-color: #28a745;
+                    }
+
+                    .btn-success:hover {
+                      color: #fff;
+                      background-color: #218838;
+                      border-color: #1e7e34;
+                    }
+
+                    .btn-success:focus, .btn-success.focus {
+                      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
+                    }
+
+                    .btn-success.disabled, .btn-success:disabled {
+                      color: #fff;
+                      background-color: #28a745;
+                      border-color: #28a745;
+                    }
+
+                    .btn-success:not(:disabled):not(.disabled):active, .btn-success:not(:disabled):not(.disabled).active,
+                    .show > .btn-success.dropdown-toggle {
+                      color: #fff;
+                      background-color: #1e7e34;
+                      border-color: #1c7430;
+                    }
+
+                    .btn-success:not(:disabled):not(.disabled):active:focus, .btn-success:not(:disabled):not(.disabled).active:focus,
+                    .show > .btn-success.dropdown-toggle:focus {
+                      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
+                    }
+                    .btn-danger {
+                      color: #fff;
+                      background-color: #dc3545;
+                      border-color: #dc3545;
+                    }
+
+                    .btn-danger:hover {
+                      color: #fff;
+                      background-color: #c82333;
+                      border-color: #bd2130;
+                    }
+
+                    .btn-danger:focus, .btn-danger.focus {
+                      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5);
+                    }
+
+                    .btn-danger.disabled, .btn-danger:disabled {
+                      color: #fff;
+                      background-color: #dc3545;
+                      border-color: #dc3545;
+                    }
+
+                    .btn-danger:not(:disabled):not(.disabled):active, .btn-danger:not(:disabled):not(.disabled).active,
+                    .show > .btn-danger.dropdown-toggle {
+                      color: #fff;
+                      background-color: #bd2130;
+                      border-color: #b21f2d;
+                    }
+
+                    .btn-danger:not(:disabled):not(.disabled):active:focus, .btn-danger:not(:disabled):not(.disabled).active:focus,
+                    .show > .btn-danger.dropdown-toggle:focus {
+                      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5);
+                    }</style>';
                 }
 
                 $body .= "По всем вопросам писать на почту gm-partner@mail.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
