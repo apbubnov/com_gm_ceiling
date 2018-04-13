@@ -2589,7 +2589,7 @@ public function register_mnfctr(){
                     $body .=" </ul>";
                 }
 
-                if ($dealer_type==5) {
+                if ($dealer_type==6) {
                     $body .= "<a href=\"$site5\">Коммерческое предложение</a>";
                 }
 
