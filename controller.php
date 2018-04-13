@@ -2536,6 +2536,7 @@ public function register_mnfctr(){
                 $site2 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=1&code=$code_instruction";
                 $site3 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.dealerInstruction&short=2&code=$code_quick";
                 $site4 = $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
+                $site5 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 // письмо
                 $mailer = JFactory::getMailer();
                 $config = JFactory::getConfig();
@@ -2559,6 +2560,10 @@ public function register_mnfctr(){
                 {
                     $body .= '<p>Тел.: +7(473)212-34-01</p>';
                 }
+                elseif ($dealer_type == 6)
+                {
+                    $body .= '<p>Тел.: +7(473)212-34-40</p>';
+                }
                 $body .= '<p>Почта: gm-partner@mail.ru</p>';
                 $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
                 $body .= '</div></td></tr></table>';
@@ -2567,22 +2572,27 @@ public function register_mnfctr(){
                             <a href=\"$site4\"><img src=\"http://".$server_name."/images/KP_OTD.jpg\"></a><br>";
                     }
 
-                  if ($dealer_type==1) {
-                        $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку:
-                        <ul>
-                            <li> на <a href=\"$site\">коммерческое предложение</a></li>
-                            <br>
-                            <li>краткий обзор программы</li>
-                            <br>
-                            <a href=\"$site2\"><img src=\"http://".$server_name."/images/short_instruction2.png\"></a>
-                            <br>
-                            <br>
-                            <li>инструкцию по быстрому заказу</li>
-                            <br>
-                            <a href=\"$site3\"><img src=\"http://".$server_name."/images/video.jpg\"></a>";
-                    
-                        $body .=" </ul>";
+                if ($dealer_type==1) {
+                    $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку:
+                    <ul>
+                        <li> на <a href=\"$site\">коммерческое предложение</a></li>
+                        <br>
+                        <li>краткий обзор программы</li>
+                        <br>
+                        <a href=\"$site2\"><img src=\"http://".$server_name."/images/short_instruction2.png\"></a>
+                        <br>
+                        <br>
+                        <li>инструкцию по быстрому заказу</li>
+                        <br>
+                        <a href=\"$site3\"><img src=\"http://".$server_name."/images/video.jpg\"></a>";
+                
+                    $body .=" </ul>";
                 }
+
+                if ($dealer_type==5) {
+                    $body .= "<a href=\"$site5\">Коммерческое предложение</a>";
+                }
+
                 $body .= "По всем вопросам писать на почту gm-partner@mail.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
                 if($dealer_type == 3){
                     $mailer->setSubject('+15 000 руб/в мес. каждому Отделочнику ');
@@ -2626,6 +2636,7 @@ public function register_mnfctr(){
             throw new Exception('Ошибка!', 500);
         }
     }
+
     public function sendCommercialQuickWay($user_id = null, $email = null){
         try
         {
@@ -2709,12 +2720,22 @@ public function register_mnfctr(){
 
 
     //вызов из урл
-    //закоменчено 28.03.2018
-    /*public function RepeatSendCommercialQuickWay(){
+    //не удалять
+    public function Send_all_from_url(){
         try
         {
-            $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
-            $items = $users_model->findDealersByCity('Воронеж');
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->select('`u`.`id`,`u`.`name`,`u`.`associated_client`,`c`.created,GROUP_CONCAT(`b`.`phone` SEPARATOR \', \') AS `client_contacts`,`u`.`refused_to_cooperate`, `u`.`dealer_type`');
+            $query->from('`#__users` AS `u`');
+            $query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
+            $query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
+            $query->where('`dealer_type` = 6');
+            $query->group('`id`');
+            $query->order('`id` DESC');
+            $db->setQuery($query);
+            $items = $db->loadObjectList();
+
             $count = 0;
 
             $dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
@@ -2726,15 +2747,14 @@ public function register_mnfctr(){
                     $emails = $dop_contacts_model->getEmailByClientID($client_id);
                     foreach ($emails as $j => $email)
                     {
-                        $this->sendCommercialQuickWay($item->id, $email->contact);
-                        echo "$item->name $email->contact<br>";
+                        $this->sendCommercialOffer($item->id, $email->contact, 6);
+                        echo "$item->name $email->contact $item->dealer_type<br>";
                         $count++;
                     }
                 }
             }
             echo $count;
             exit();
-            //die(json_encode($count));
         }
         catch (Exception $e) {
             $date = date("d.m.Y H:i:s");
@@ -2742,7 +2762,7 @@ public function register_mnfctr(){
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }*/
+    }
 
 
     public function RepeatSendCommercialOffer(){

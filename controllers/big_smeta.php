@@ -280,6 +280,10 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
                 }
                 
             }
+            else if ($type == 6)
+            {
+                $this->setRedirect(JRoute::_('/files/12.04.2018.txt', false));
+            }
             else
             {
                 if($dealer_city == "Москва"){
