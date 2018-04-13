@@ -423,6 +423,12 @@ jQuery('.add_fields').click(function(){
     for(let i = btns_add.length;i--;){
         btns_add[i].onclick = btn_add_event;
     }
+    if(var_name == 'need_mount'){
+        jQuery("[name = 'need_mount']").click(function(){
+            jQuery(this).attr('fix',true);
+        });
+    }
+    jQuery("#with_mount").attr("checked",true);
 });
 function open_blocks(){
     for(let i = Object.keys(calculation).length;i--;){
@@ -448,7 +454,31 @@ let change_event_radio = function(){
     jQuery(`[name = '${this.name}']`).attr('checked',false);
 
     jQuery(this).attr("checked",true); 
-    jQuery(this).val(jQuery(this).val());
+    
+    if(this.name == 'jform[n28]' && this.value !=3){
+        console.log(jQuery('[name = "need_mount"]'));
+        if(jQuery('[name = "need_mount"]').length){
+            jQuery("#jform_need_mount_inside").show();
+        }
+        else{
+            jQuery("#btn_need_mount").trigger("click");
+
+        } 
+        if( jQuery('#with_mount').attr("fix") !="true" || jQuery('#without').attr("fix")!="true"){
+            jQuery(`[name = 'need_mount']`).attr('checked',false);
+            jQuery('#with_mount').attr("checked",true); 
+        }
+
+        
+    }
+   if(this.name == 'jform[n28]' && this.value ==3){
+         if( jQuery('#with_mount').attr("fix") !="true"  || jQuery('#without').attr("fix") !="true"){
+            jQuery(`[name = 'need_mount']`).attr('checked',false);
+            jQuery('#without').attr("checked",true); 
+            jQuery("#jform_need_mount_inside").hide();
+        }
+
+   }
 };
 let change_radio = function(){
     if(this.id == "jform_n6_1"){

@@ -462,12 +462,11 @@ class Gm_ceilingModelUsers extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
-
 		function updatePhone($id, $phone)
 		{
 			try
 			{
-
+				$db    = JFactory::getDbo();
 				$query = $db->getQuery(true);
 				$query->update("`#__users`");
 				$query->set("`username` = '$phone'");
@@ -483,6 +482,30 @@ class Gm_ceilingModelUsers extends JModelList
 	            $files = "components/com_gm_ceiling/";
 	            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
 	            throw new Exception('Ошибка!', 500);
+	      
+	        }
+		}
+		function updateAssocClient($id,$client_id)
+		{
+			try
+			{
+				$db    = JFactory::getDbo();
+				$query = $db->getQuery(true);
+				$query->update("`#__users`");
+				$query->set("`associated_client` = '$client_id'");
+				$query->where("`id` = $id");
+				$db->setQuery($query);
+				$db->execute();
+			
+				return true;
+			}
+			catch(Exception $e)
+	        {
+	            $date = date("d.m.Y H:i:s");
+	            $files = "components/com_gm_ceiling/";
+	            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+	            throw new Exception('Ошибка!', 500);
+	      
 	        }
 		}
 	public function update_demo_date($dealer_id,$date){

@@ -19,7 +19,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
-//Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
 /*_____________блок для всех моделей/models block________________*/ 
 $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');

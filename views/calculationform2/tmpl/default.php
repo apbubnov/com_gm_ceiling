@@ -646,7 +646,7 @@
 
                 jQuery.ajax({
                     type: 'POST',
-                    url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=0&del_flag=1&id=${id}&need_mount=${need_mount}`,
+                    url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&id=${id}&need_mount=${need_mount}`,
                     data: data,
                     success: function(data){
                         var html = "",

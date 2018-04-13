@@ -580,10 +580,14 @@ class Gm_ceilingHelpersGm_ceiling
                 if($need_mount || $data["need_mount_extra"]){
                     self::create_single_mount_estimate(null,$data,$mounting_data);
                 }
-                //PDF раскроя
-                self::create_cut_pdf(null,$data);
-                //для менеджера
-                self::create_manager_estimate(1,null,$data,$canvases_data,$offcut_square_data,$guild_data);
+                if(!empty($data['n1'])){
+                     //PDF раскроя
+                    self::create_cut_pdf(null,$data);
+                    //для менеджера
+                    self::create_manager_estimate(1,null,$data,$canvases_data,$offcut_square_data,$guild_data);
+                }
+               
+                
                 //клиентская смета
                 self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
             }         
@@ -614,10 +618,15 @@ class Gm_ceilingHelpersGm_ceiling
     public static function create_client_single_estimate_html($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
     $mounting_data = null){
         if(empty($canvases_data)){
-            $canvases_data = self::calculate_canvases($calc_id);
+            if(!empty($calc_id)){
+                $canvases_data = self::calculate_canvases($calc_id);
+            }
+            
         }
         if(empty($offcut_square_data)){
-            $offcut_square_data = self::calculate_offcut($calc_id);
+             if(!empty($calc_id)){
+                $offcut_square_data = self::calculate_offcut($calc_id);
+            }
         }
         if(empty($components_data)){
             $components_data = self::calculate_components($calc_id,null,0);
@@ -669,7 +678,7 @@ class Gm_ceilingHelpersGm_ceiling
                             <th class="center">Цена, руб.</th>
                             <th class="center">Кол-во</th>
                             <th class="center">Стоимость, руб.</th></tr>';
-        if ($data['n3']) {
+        if ($data['n3_id']) {
             if ($data['color'] > 0) {
                 $color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
                 $color = $color_model->getData($data['color']);
@@ -684,7 +693,7 @@ class Gm_ceilingHelpersGm_ceiling
             $html .= '<td class="center">' . $canvases_data['dealer_total'] . '</td>';
             $html .= '</tr>';
         }
-        if ($data['n3'] && $data['offcut_square'] > 0) {
+        if ($data['n3_id'] && $data['offcut_square'] > 0) {
             $name = $offcut_square_data['title'];
             $html .= '<tr>';
             $html .= '<td>' . $name . '</td>';
