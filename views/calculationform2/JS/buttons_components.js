@@ -395,7 +395,6 @@ jQuery('.add_fields').click(function(){
     let col_id = `jform_${var_name}_inside`;
     let cont =  create_container("",col_id);
     let element = eval(var_name);
-    console.log(cont_id);
 
     if(!document.getElementById(col_id)){
         jQuery(`#${cont_id}`).after(cont);
@@ -415,6 +414,10 @@ jQuery('.add_fields').click(function(){
     }
     if(var_name == 'n13' || var_name == 'n22' ){
        jQuery(`[name = '${var_name}_type[]']`).change(change_select_event);
+    }
+    let radios = jQuery('.radio');
+    for(let i = radios.length;i--;){
+        radios[i].onclick = change_event_radio;
     }
     let btns_add = document.getElementsByClassName('add');
     for(let i = btns_add.length;i--;){
@@ -441,6 +444,12 @@ function open_blocks(){
     }
     jQuery("[name = 'jform[n6]'").click(change_radio);
 }
+let change_event_radio = function(){
+    jQuery(`[name = '${this.name}']`).attr('checked',false);
+
+    jQuery(this).attr("checked",true); 
+    jQuery(this).val(jQuery(this).val());
+};
 let change_radio = function(){
     if(this.id == "jform_n6_1"){
     

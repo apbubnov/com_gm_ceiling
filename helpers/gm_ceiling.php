@@ -200,37 +200,36 @@ class Gm_ceilingHelpersGm_ceiling
     public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount){
         try{
             $jinput = JFactory::getApplication()->input;
-            //Получаем прайс-лист комплектующих
+            /*____________________Модели_______________________*/
             $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+            /*_________________________________________________*/
+            //Получаем прайс-лист комплектующих
+            
             $components_list = $components_model->getFilteredItems();
             foreach ($components_list as $i => $component) {
                 $components[$component->id] = $component;
             }
             //Получаем прайс-лист полотен
-            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            
             $canvases_list = $canvases_model->getFilteredItemsCanvas();
             foreach ($canvases_list as $i => $canvas) {
                 $canvases[$canvas->id] = $canvas;
             }
+             
+            $calculation_data = $calculation_model->getData($calculation_id);
+            $calculation_data2 = (array) $calculation_model->getDataById($calculation_id);
+
+            foreach ($calculation_data as $key => $item) {
+                if (empty($item) && array_key_exists($key, $calculation_data2))
+                    $data[$key] = $calculation_data2[$key];
+                else
+                    $data[$key] = $item;
+            }
+            
             //Получаем данные
-            /*if ($from_db == 1) {
-                //Загружаем из БД
-                $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-                $calculation_data = $calculation_model->getData($calculation_id);
-                $calculation_data2 = (array) $calculation_model->getDataById($calculation_id);
-
-                foreach ($calculation_data as $key => $item) {
-                    if (empty($item) && array_key_exists($key, $calculation_data2))
-                        $data[$key] = $calculation_data2[$key];
-                    else
-                        $data[$key] = $item;
-                }
-
-                //throw  new Exception("Test", 3);
-                $data['n3'] = $calculation_data->n3_id;
-            } else {*/
-            //Получаем из запроса
-            $data = $jinput->getArray(array(
+            $data_form = $jinput->getArray(array(
                 'jform' => array(
                     'id' => 'int', //id потолка
                     'n6' => 'int', //Со вставкой
@@ -271,27 +270,23 @@ class Gm_ceilingHelpersGm_ceiling
                     // 'proizv' => 'string'
                 )
             ));
-            $data = $data['jform'];
-            foreach ($data as $key => $value)
+            $data_form = $data_form['jform'];
+            foreach ($data_form as $key => $value)
             {
-                if (array_key_exists($key, $_POST))
+                $data[$key] = $value;
+                /*if (array_key_exists($key, $_POST))
                     $data[$key] = $_POST[$key];
                 else if ($value == '')
-                    $data[$key] = 0;
+                    $data[$key] = 0;*/
             }
-            $calculation_id = $data['id'];
-            $calculation_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
-            $calculation_data = $calculation_model->getData($calculation_id);
-            $calculation_data2 = (array) $calculation_model->getDataById($calculation_id);
-
-            foreach ($calculation_data as $key => $item) {
-                if (empty($item) && array_key_exists($key, $calculation_data2))
-                    $data[$key] = $calculation_data2[$key];
-                else
-                    $data[$key] = $item;
+            if(!empty($data['n3_id'])){
+                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id']);
+                $data['n1'] = $canvasData[0]->texture_id;
             }
-            $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id']);
-            $data['n1'] = $canvasData[0]->texture_id;
+            else{
+                $data['n1'] = null;
+            }
+          
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
             $ecola_type = $jinput->get('light_color', array(), 'ARRAY');
@@ -457,7 +452,6 @@ class Gm_ceilingHelpersGm_ceiling
             //}
 
             $data["need_mount"] = $need_mount;
-            //die(json_encode($data));
             //Получаем объект дилера
             /*Сделано, что бы при расчете ГМ в проекте дилера цены были дилерские*/
             $data['dealer_id'] = $ProjectData = self::getModel("project")->getData($data["project_id"])->dealer_id;
@@ -476,15 +470,17 @@ class Gm_ceilingHelpersGm_ceiling
                     $dealer = JFactory::getUser($data->dealer_id);
                 }
             }
-
             //счиатем работы ГМ
             $guild_data = self::calculate_guild_jobs(null,$data);
             $data["guild_data"] = $guild_data;
-            //cчитаем полотно
-            $canvases_data = self::calculate_canvases(null,$data);
-            //считаем обрезки
-            $offcut_square_data = self::calculate_offcut(null,$data);
-            //считаем комплектующие
+            if(!empty($data['n1'])){
+                //cчитаем полотно
+                $canvases_data = self::calculate_canvases(null,$data);
+                //считаем обрезки
+                $offcut_square_data = self::calculate_offcut(null,$data);
+           
+            }
+           //считаем комплектующие
             $components_data = self::calculate_components(null,$data,$del_flag);
             //считаем монтаж
 
@@ -576,7 +572,7 @@ class Gm_ceilingHelpersGm_ceiling
             if ($save == 1)
             {
                 $ajax_return['id'] = $calculation_model->save($data, $del_flag);
-                $data['id'] = $ajax_return['id'];
+                //$data['id'] = $ajax_return['id'];
             }
            
             //Пошла печать PDF
@@ -585,10 +581,8 @@ class Gm_ceilingHelpersGm_ceiling
                     self::create_single_mount_estimate(null,$data,$mounting_data);
                 }
                 //PDF раскроя
-                
                 self::create_cut_pdf(null,$data);
                 //для менеджера
-                
                 self::create_manager_estimate(1,null,$data,$canvases_data,$offcut_square_data,$guild_data);
                 //клиентская смета
                 self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
@@ -865,12 +859,6 @@ class Gm_ceilingHelpersGm_ceiling
         foreach ($components_list as $i => $component) {
             $components[$component->id] = $component;
         }
-        //Получаем прайс-лист полотен
-        $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-        $canvases_list = $canvases_model->getFilteredItemsCanvas();
-        foreach ($canvases_list as $i => $canvas) {
-            $canvases[$canvas->id] = $canvas;
-        }
         $component_count = array();
         foreach ($components as $key => $value) $component_count[$key] = 0;
         //периметр ТОЛЬКО ДЛЯ ПВХ
@@ -961,7 +949,7 @@ class Gm_ceilingHelpersGm_ceiling
         $filter = "`c`.`title` LIKE('%Переход уровня с нишей%') ";
         $items_660 = $components_model->getFilteredItems($filter);
 
-        if ($data['n1'] != 29) {
+        if (!empty($data['n1']) && $data['n1'] != 29) {
             if ($data['n28'] !=3){
                 $component_count[$items_9[0]->id] += $data['n5'] * 10;
                 $component_count[$items_5[0]->id] += $data['n5'] * 10;
@@ -1009,7 +997,7 @@ class Gm_ceilingHelpersGm_ceiling
          
             
         }
-        if ($data['n1'] != 29 && $data['n6']) {
+        if (!empty($data['n1']) && $data['n1'] != 29 && $data['n6']) {
             $n5_count = ceil($data['n5']);
             $component_count[$data['n6']] += $n5_count;
         }
@@ -1201,7 +1189,7 @@ class Gm_ceilingHelpersGm_ceiling
         $component_count[$items_9[0]->id] += $data['n19'] * 2;
         $component_count[$items_5[0]->id] += $data['n19'] * 2;
         //разделитель ТОЛЬКО ДЛЯ ПВХ
-        if ($data['n1'] != 29) {
+        if (!empty($data['n1']) &&  $data['n1'] != 29) {
             $component_count[$items_1[0]->id] += $data['n20'];
             $component_count[$items_6[0]->id] += $data['n20'] * 3;
             $component_count[$items_9[0]->id] += $data['n20'] * 20;
@@ -1236,9 +1224,6 @@ class Gm_ceilingHelpersGm_ceiling
             $component_count[$comp_stock->title] += $comp_stock->value;
         }
         //---------------------------------- ВОЗВРАЩАЕМ СТОИМОСТЬ КОМПЛЕКТУЮЩИХ --------------------------------------//
-        //Сюда считаем итоговую сумму полотна
-        $canvases_data = self::calculate_canvases($data['id']);
-        $offcut_square_data = self::calculate_offcut($data['id']);
         //Сюда считаем итоговую сумму компонентов
         $components_data = array();
 
@@ -1481,7 +1466,7 @@ class Gm_ceilingHelpersGm_ceiling
         $margin = self::get_margin($data['project_id']);
 
         $guild_data = array();
-        if ($data['n1'] != 29 && $data['n9'] > 4) {
+        if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 4) {
             //Обработка 1 угла
             $gm_mp20 = margin($results->mp20, $margin['gm_canvases_margin']);
             $dealer_mp20 = margin($gm_mp20, $margin['dealer_canvases_margin']);
@@ -1628,7 +1613,7 @@ class Gm_ceilingHelpersGm_ceiling
         $guild_data = [];
 
         if ($data["need_mount"]) {
-            if ($data['n1'] != 29 && $data['n9'] > 4) {
+            if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 4) {
                 //Обработка 1 угла
                 if ($data['n9']) {
                     $guild_data[] = array(
@@ -1642,7 +1627,7 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
 
-            if ($data['n1'] != 29 && $data['n11'] > 0) {
+            if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n11'] > 0) {
                 //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
                 $mounting_data[] = array(
                     "title" => "Внутренний вырез (ПВХ)",                                                                    //Название
@@ -1654,7 +1639,7 @@ class Gm_ceilingHelpersGm_ceiling
                 );
             }
             //только для ПВХ
-            if ($data['n1'] != 29) {
+            if (!empty($data['n1']) &&  $data['n1'] != 29) {
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 0) {
                     $mounting_data[] = array(
