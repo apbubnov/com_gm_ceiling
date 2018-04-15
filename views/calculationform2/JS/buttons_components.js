@@ -423,12 +423,18 @@ jQuery('.add_fields').click(function(){
     for(let i = btns_add.length;i--;){
         btns_add[i].onclick = btn_add_event;
     }
+    jQuery("[name = 'jform[n6]'").click(change_radio);
     if(var_name == 'need_mount'){
         jQuery("[name = 'need_mount']").click(function(){
+            jQuery("[name = 'need_mount']").removeAttr('fix');
             jQuery(this).attr('fix',true);
         });
     }
-    jQuery("#with_mount").attr("checked",true);
+    if(jQuery("#without").attr("fix") != "true" ){
+        jQuery("#with_mount").attr("checked",true);
+    }
+    
+    
 });
 function open_blocks(){
     for(let i = Object.keys(calculation).length;i--;){
@@ -448,7 +454,6 @@ function open_blocks(){
             }
         }
     }
-    jQuery("[name = 'jform[n6]'").click(change_radio);
 }
 let change_event_radio = function(){
     jQuery(`[name = '${this.name}']`).attr('checked',false);
@@ -456,7 +461,6 @@ let change_event_radio = function(){
     jQuery(this).attr("checked",true); 
     
     if(this.name == 'jform[n28]' && this.value !=3){
-        console.log(jQuery('[name = "need_mount"]'));
         if(jQuery('[name = "need_mount"]').length){
             jQuery("#jform_need_mount_inside").show();
         }
@@ -464,7 +468,7 @@ let change_event_radio = function(){
             jQuery("#btn_need_mount").trigger("click");
 
         } 
-        if( jQuery('#with_mount').attr("fix") !="true" || jQuery('#without').attr("fix")!="true"){
+        if(jQuery('#without').attr("fix")!="true"){
             jQuery(`[name = 'need_mount']`).attr('checked',false);
             jQuery('#with_mount').attr("checked",true); 
         }
@@ -472,7 +476,7 @@ let change_event_radio = function(){
         
     }
    if(this.name == 'jform[n28]' && this.value ==3){
-         if( jQuery('#with_mount').attr("fix") !="true"  || jQuery('#without').attr("fix") !="true"){
+         if( jQuery('#with_mount').attr("fix") !="true"){
             jQuery(`[name = 'need_mount']`).attr('checked',false);
             jQuery('#without').attr("checked",true); 
             jQuery("#jform_need_mount_inside").hide();
@@ -482,7 +486,7 @@ let change_event_radio = function(){
 };
 let change_radio = function(){
     if(this.id == "jform_n6_1"){
-    
+    alert();
         if(jQuery("#n6_color_cnt").length){
 
             jQuery("#n6_color_cnt").show();

@@ -1562,7 +1562,6 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $project_id = $calculation_data->project_id;
         }
-       
         $project_model = self::getModel('project');
         $client_id = $project_model->getData($project_id)->id_client;
         if(!empty($client_id)){
@@ -1622,6 +1621,7 @@ class Gm_ceilingHelpersGm_ceiling
         $guild_data = [];
 
         if ($data["need_mount"]) {
+           
             if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 4) {
                 //Обработка 1 угла
                 if ($data['n9']) {
@@ -1684,6 +1684,7 @@ class Gm_ceilingHelpersGm_ceiling
                     );
 
                 }
+            }
                 //?????????????????????????????????????????????????????????????????? здесь тоже + 10рублей????
                 if ($data['n31'] > 0) {
                     $mounting_data[] = array(
@@ -1760,370 +1761,185 @@ class Gm_ceilingHelpersGm_ceiling
                 else {
                     $cornice = "Шторный карниз / Обычный (ПВХ)";
                 }
-                if ($del_flag == 0) {
-                    //Установка светильников
-                    if (count($n13) > 0) {
-                        foreach ($n13 as $svet) {
-                            if ($svet->n13_count > 0) {
-                                if($svet->n13_type == 2){
-                                    $count_round_lamp += $svet->n13_count;
-                                }
-                                if($svet->n13_type == 3){
-                                    $count_square_lamp += $svet->n13_count;
-                                }
+                //Установка светильников
+                if (count($n13) > 0) {
+                    foreach ($n13 as $svet) {
+                        if ($svet->n13_count > 0) {
+                            if($svet->n13_type == 2){
+                                $count_round_lamp += $svet->n13_count;
                             }
-                        }
-
-                        if ($count_round_lamp > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка круглых светильников (ПВХ)",                                //Название
-                                "quantity" => $count_round_lamp,                                            //Кол-во
-                                "gm_salary" => $results->mp4,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_round_lamp * $results->mp4,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp4,                                           //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_round_lamp * $results->mp4                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_square_lamp > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка квадратных светильников (ПВХ)",                 //Название
-                                "quantity" => $count_square_lamp,                               //Кол-во
-                                "gm_salary" => $results->mp5,                                   //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_square_lamp * $results->mp5,        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp5,                               //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_square_lamp * $results->mp5     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                    }
-                    if (count($n22) > 0) {
-                        foreach ($n22 as $ventilation) {
-                            if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 5 || $ventilation->n22_type == 6)) {
-                                $count_ventilation += $ventilation->n22_count;
+                            if($svet->n13_type == 3){
+                                $count_square_lamp += $svet->n13_count;
                             }
-                            if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 7 || $ventilation->n22_type == 8)) {
-                                $count_ventilation_1 += $ventilation->n22_count;
-
-                            }
-                        }
-                        if ($count_ventilation > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка вентиляции (ПВХ)",                                                    //Название
-                                "quantity" => $count_ventilation,                                                    //Кол-во
-                                "gm_salary" => $results->mp12,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_ventilation * $results->mp12,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp12,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_ventilation * $results->mp12                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_ventilation_1 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка электровытяжки (ПВХ)",                                                    //Название
-                                "quantity" => $count_ventilation_1,                                                    //Кол-во
-                                "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_ventilation_1 * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_ventilation_1 * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-
-                    }
-                    if (count($n29) > 0) {
-                        foreach ($n29 as $profil) {
-                            if ($profil->n29_count > 0 && $profil->n29_type == 12) {
-                                $count_profil_1 += $profil->n29_count;
-                            }
-                            if ($profil->n29_count > 0 && $profil->n29_type == 13) {
-                                $count_profil_2 += $profil->n29_count;
-                            }
-                            if ($profil->n29_count > 0 && $profil->n29_type == 15) {
-                                $count_profil_3 += $profil->n29_count;
-                            }
-                            if ($profil->n29_count > 0 && $profil->n29_type == 16) {
-                                $count_profil_4 += $profil->n29_count;
-                            }
-                        }
-                        if ($count_profil_1 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Переход уровня по прямой (ПВХ)",                                                    //Название
-                                "quantity" => $count_profil_1,                                                    //Кол-во
-                                "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_profil_1 * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_1 * $results->mp23                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_profil_2 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Переход уровня по кривой (ПВХ)",                                                    //Название
-                                "quantity" => $count_profil_2,                                                    //Кол-во
-                                "gm_salary" => $results->mp24,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_profil_2 * $results->mp24,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp24,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_2 * $results->mp24                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_profil_3 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Переход уровня по прямой с нишей (ПВХ)",                                                    //Название
-                                "quantity" => $count_profil_3,                                                    //Кол-во
-                                "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_profil_3 * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_3 * $results->mp25                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_profil_4 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Переход уровня по кривой с нишей (ПВХ)",                                                    //Название
-                                "quantity" => $count_profil_4,                                                    //Кол-во
-                                "gm_salary" => $results->mp26,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_profil_4 * $results->mp26,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp26,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_4 * $results->mp26                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-
-                    }
-                    // установка диффузора
-                    if (count($n23) > 0) {
-                        foreach ($n23 as $diffuzor) {
-                            if ($diffuzor->n23_count > 0) {
-                                $count_diffuzor += $diffuzor->n23_count;
-
-                            }
-                        }
-                        if ($count_diffuzor > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка диффузора (ПВХ)",                                                    //Название
-                                "quantity" => $count_diffuzor,                                                    //Кол-во
-                                "gm_salary" => $results->mp19,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_diffuzor * $results->mp19,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp19,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_diffuzor * $results->mp19                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                    }
-                    //обвод трубы
-                    if (count($n14) > 0) {
-                        foreach ($n14 as $truba) {
-                            if ($truba->n14_count > 0) {
-                                $size_str = $components[$truba->n14_type]->title;
-                                $size = preg_replace("/[^-0-9]/", '', $size_str);
-                                $size_arr = explode('-',$size);
-                                (empty($size_arr[1])) ? $diam = $size_arr[0] : $diam = $size_arr[1];
-                                if($diam > 100){
-                                    $count_big_pipe += $truba->n14_count;
-                                }
-                                else{
-                                    $count_pipe += $truba->n14_count;
-                                }
-                            }
-                        }
-                        if ($count_pipe > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Обвод трубы (<100мм) (ПВХ)",                                                    //Название
-                                "quantity" => $count_pipe,                                                  //Кол-во
-                                "gm_salary" => $results->mp8,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_pipe * $results->mp8,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_pipe * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_big_pipe > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Обвод трубы (>100мм) (ПВХ)",                                                    //Название
-                                "quantity" => $count_big_pipe,                                                  //Кол-во
-                                "gm_salary" => $results->mp7,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_big_pipe * $results->mp7,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp7,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_big_pipe * $results->mp7                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                    }
-                } else {
-                    //Установка светильников
-                    if (count($n13) > 0) {
-                        foreach ($n13 as $svet) {
-                            if ($svet[0] > 0) {
-                                if($svet[1] == 2){
-                                    $count_round_lamp += $svet[0];
-                                }
-                                if($svet[1] == 3){
-                                    $count_square_lamp += $svet[0];
-                                }
-                               
-                            }
-                        }
-                        if ($count_round_lamp > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка круглых светильников (ПВХ)",                                 //Название
-                                "quantity" => $count_round_lamp,                                             //Кол-во
-                                "gm_salary" => $results->mp4,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_round_lamp * $results->mp4,                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp4,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_round_lamp * $results->mp4                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_square_lamp > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка квадратных светильников (ПВХ)",                              //Название
-                                "quantity" => $count_square_lamp,                                            //Кол-во
-                                "gm_salary" => $results->mp5,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_square_lamp * $results->mp5,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp5,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_square_lamp * $results->mp5                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                    }
-                    if (count($n22) > 0) {
-                        foreach ($n22 as $ventilation) {
-                            if ($ventilation[0] > 0 && ($ventilation[1] == 5 || $ventilation[1] == 6)) {
-                                $count_ventilation += $ventilation[0];
-                            }
-                            if ($ventilation[0] > 0 && ($ventilation[1] == 7 || $ventilation[1] == 8)) {
-                                $count_ventilation_1 += $ventilation[0];
-
-                            }
-                        }
-                        if ($count_ventilation > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка вентиляции (ПВХ)",                                                    //Название
-                                "quantity" => $count_ventilation,                                                    //Кол-во
-                                "gm_salary" => $results->mp12,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_ventilation * $results->mp12,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp12,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_ventilation * $results->mp12                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_ventilation_1 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка электровытяжки (ПВХ)",                                                    //Название
-                                "quantity" => $count_ventilation_1,                                                    //Кол-во
-                                "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_ventilation_1 * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_ventilation_1 * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-
-                    }
-
-                    // установка диффузора
-                    if (count($n23) > 0) {
-                        foreach ($n23 as $diffuzor) {
-                            if ($diffuzor[0] > 0) {
-                                $count_diffuzor += $diffuzor[0];
-
-                            }
-                        }
-                        if ($count_diffuzor > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Установка диффузора (ПВХ)",                                                    //Название
-                                "quantity" => $count_diffuzor,                                                    //Кол-во
-                                "gm_salary" => $results->mp19,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_diffuzor * $results->mp19,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp19,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_diffuzor * $results->mp19                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                    }
-                    //обвод трубы
-                    if (count($n14) > 0) {
-                        foreach ($n14 as $truba) {
-                            if ($truba[0] > 0) {
-                                $size_str = $components[$truba[1]]->title;
-                                $size = preg_replace("/[^-0-9]/", '', $size_str);
-                                $size_arr = explode('-',$size);
-                                (empty($size_arr[1])) ? $diam = $size_arr[0] : $diam = $size_arr[1];
-                                if($diam > 100){
-                                    $count_big_pipe += $truba[0];
-                                }
-                                else{
-                                    $count_pipe += $truba[0];
-                                }
-                            }
-                        }
-                        if ($count_pipe > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Обвод трубы (<100мм) (ПВХ)",                                                    //Название
-                                "quantity" => $count_pipe,                                                    //Кол-во
-                                "gm_salary" => $results->mp8,                                                 //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_pipe * $results->mp8,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_pipe * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_big_pipe > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Обвод трубы (>100мм) (ПВХ)",                                                    //Название
-                                "quantity" => $count_big_pipe,                                                    //Кол-во
-                                "gm_salary" => $results->mp7,                                                 //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_big_pipe * $results->mp7,                             //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp7,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_big_pipe * $results->mp7                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
                         }
                     }
 
-                    if (count($n29) > 0) {
-                        foreach ($n29 as $profil) {
-                            if ($profil[0] > 0 && $profil[1] == 12) {
-                                $count_profil_1 += $profil[0];
-                            }
-                            if ($profil[0] > 0 && $profil[1] == 13) {
-                                $count_profil_2 += $profil[0];
-                            }
-                            if ($profil[0] > 0 && $profil[1] == 15) {
-                                $count_profil_3 += $profil[0];
-                            }
-                            if ($profil[0] > 0 && $profil[1] == 16) {
-                                $count_profil_4 += $profil[0];
-                            }
-                        }
-                        if ($count_profil_1 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Переход уровня по прямой (ПВХ)",                                                    //Название
-                                "quantity" => $count_profil_1,                                                    //Кол-во
-                                "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_profil_1 * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_1 * $results->mp23                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_profil_2 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Переход уровня по кривой (ПВХ)",                                                    //Название
-                                "quantity" => $count_profil_2,                                                    //Кол-во
-                                "gm_salary" => $results->mp24,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_profil_2 * $results->mp24,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp24,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_2 * $results->mp24                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_profil_3 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Переход уровня по прямой с нишей (ПВХ)",                                                    //Название
-                                "quantity" => $count_profil_3,                                                    //Кол-во
-                                "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_profil_3 * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_3 * $results->mp25                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-                        if ($count_profil_4 > 0) {
-                            $mounting_data[] = array(
-                                "title" => "Переход уровня по кривой с нишей (ПВХ)",                                                    //Название
-                                "quantity" => $count_profil_4,                                                    //Кол-во
-                                "gm_salary" => $results->mp26,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                                "gm_salary_total" => $count_profil_4 * $results->mp26,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                                "dealer_salary" => $results->mp26,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                                "dealer_salary_total" => $count_profil_4 * $results->mp26                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
-                            );
-                        }
-
+                    if ($count_round_lamp > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка круглых светильников (ПВХ)",                                //Название
+                            "quantity" => $count_round_lamp,                                            //Кол-во
+                            "gm_salary" => $results->mp4,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_round_lamp * $results->mp4,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp4,                                           //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_round_lamp * $results->mp4                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_square_lamp > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка квадратных светильников (ПВХ)",                 //Название
+                            "quantity" => $count_square_lamp,                               //Кол-во
+                            "gm_salary" => $results->mp5,                                   //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_square_lamp * $results->mp5,        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp5,                               //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_square_lamp * $results->mp5     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
                     }
                 }
-                
+                if (count($n22) > 0) {
+                    foreach ($n22 as $ventilation) {
+                        if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 5 || $ventilation->n22_type == 6)) {
+                            $count_ventilation += $ventilation->n22_count;
+                        }
+                        if ($ventilation->n22_count > 0 && ($ventilation->n22_type == 7 || $ventilation->n22_type == 8)) {
+                            $count_ventilation_1 += $ventilation->n22_count;
+
+                        }
+                    }
+                    if ($count_ventilation > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка вентиляции (ПВХ)",                                                    //Название
+                            "quantity" => $count_ventilation,                                                    //Кол-во
+                            "gm_salary" => $results->mp12,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation * $results->mp12,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp12,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation * $results->mp12                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_ventilation_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка электровытяжки (ПВХ)",                                                    //Название
+                            "quantity" => $count_ventilation_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation_1 * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation_1 * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+
+                }
+                if (count($n29) > 0) {
+                    foreach ($n29 as $profil) {
+                        if ($profil->n29_count > 0 && $profil->n29_type == 12) {
+                            $count_profil_1 += $profil->n29_count;
+                        }
+                        if ($profil->n29_count > 0 && $profil->n29_type == 13) {
+                            $count_profil_2 += $profil->n29_count;
+                        }
+                        if ($profil->n29_count > 0 && $profil->n29_type == 15) {
+                            $count_profil_3 += $profil->n29_count;
+                        }
+                        if ($profil->n29_count > 0 && $profil->n29_type == 16) {
+                            $count_profil_4 += $profil->n29_count;
+                        }
+                    }
+                    if ($count_profil_1 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой (ПВХ)",                                                    //Название
+                            "quantity" => $count_profil_1,                                                    //Кол-во
+                            "gm_salary" => $results->mp23,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_1 * $results->mp23,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp23,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_1 * $results->mp23                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_profil_2 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по кривой (ПВХ)",                                                    //Название
+                            "quantity" => $count_profil_2,                                                    //Кол-во
+                            "gm_salary" => $results->mp24,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_2 * $results->mp24,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp24,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_2 * $results->mp24                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_profil_3 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по прямой с нишей (ПВХ)",                                                    //Название
+                            "quantity" => $count_profil_3,                                                    //Кол-во
+                            "gm_salary" => $results->mp25,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_3 * $results->mp25,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp25,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_3 * $results->mp25                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_profil_4 > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Переход уровня по кривой с нишей (ПВХ)",                                                    //Название
+                            "quantity" => $count_profil_4,                                                    //Кол-во
+                            "gm_salary" => $results->mp26,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_profil_4 * $results->mp26,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp26,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_profil_4 * $results->mp26                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+
+                }
+                // установка диффузора
+                if (count($n23) > 0) {
+                    foreach ($n23 as $diffuzor) {
+                        if ($diffuzor->n23_count > 0) {
+                            $count_diffuzor += $diffuzor->n23_count;
+
+                        }
+                    }
+                    if ($count_diffuzor > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Установка диффузора (ПВХ)",                                                    //Название
+                            "quantity" => $count_diffuzor,                                                    //Кол-во
+                            "gm_salary" => $results->mp19,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_diffuzor * $results->mp19,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp19,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_diffuzor * $results->mp19                    //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
+                //обвод трубы
+                if (count($n14) > 0) {
+                    foreach ($n14 as $truba) {
+                        if ($truba->n14_count > 0) {
+                            $size_str = $components[$truba->n14_type]->title;
+                            $size = preg_replace("/[^-0-9]/", '', $size_str);
+                            $size_arr = explode('-',$size);
+                            (empty($size_arr[1])) ? $diam = $size_arr[0] : $diam = $size_arr[1];
+                            if($diam > 100){
+                                $count_big_pipe += $truba->n14_count;
+                            }
+                            else{
+                                $count_pipe += $truba->n14_count;
+                            }
+                        }
+                    }
+                    if ($count_pipe > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Обвод трубы (<100мм) (ПВХ)",                                                    //Название
+                            "quantity" => $count_pipe,                                                  //Кол-во
+                            "gm_salary" => $results->mp8,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_pipe * $results->mp8,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_pipe * $results->mp8                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                    if ($count_big_pipe > 0) {
+                        $mounting_data[] = array(
+                            "title" => "Обвод трубы (>100мм) (ПВХ)",                                                    //Название
+                            "quantity" => $count_big_pipe,                                                  //Кол-во
+                            "gm_salary" => $results->mp7,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_big_pipe * $results->mp7,                           //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp7,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_big_pipe * $results->mp7                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        );
+                    }
+                }
                 //шторный карниз
                 if ($data['n27'] > 0) {
                     $mounting_data[] = array(
@@ -2180,7 +1996,7 @@ class Gm_ceilingHelpersGm_ceiling
                         "dealer_salary_total" => $data['n20'] * $results->mp9                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
-
+                
                 if ($data['n32'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Слив воды (ПВХ)",                                                        //Название
@@ -2191,7 +2007,6 @@ class Gm_ceilingHelpersGm_ceiling
                         "dealer_salary_total" => $data['n32'] * $results->mp27                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
-            }
             //--------------------------------------- ПРОСЧЕТ МОНТАЖА ДЛЯ ТКАНИ -----------------------------
             if ($data['n1'] == 29) {
                 //периметр
