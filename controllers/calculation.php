@@ -249,11 +249,9 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 			$query->update('`#__gm_ceiling_calculations`');
 			if(!empty($title)){
 				$query->set("`calculation_title`='$title'");
-			
 			}
 			if(!empty($comment)){
 				$query->set("`details`='$comment'");
-			
 			}
 			$query->where("`id`=$calc_id");
 			$db->setQuery($query);
