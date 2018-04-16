@@ -155,15 +155,25 @@ class Gm_ceilingModelClient extends JModelItem
 	}
 	function create($dealer_id){
 		try{
+			$date = date('Y-m-d H:i:s');
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
 				->insert("`#__gm_ceiling_clients`")
-				->columns('client_name,dealer_id,manager_id')
-				->values("' ',$dealer_id,$dealer_id");
+				->columns('`client_name`, `dealer_id`, `manager_id`, `created`')
+				->values("' ', $dealer_id, $dealer_id, '$date'");
 			$db->setQuery($query);
 			$db->execute();
-			return $db->insertid();
+			$last_id = $db->insertid();
+
+			$query = $db->getQuery(true);
+			$query
+				->update("`#__gm_ceiling_clients`")
+				->set("`client_name` = '$last_id'")
+				->where("`id` = $last_id");
+			$db->setQuery($query);
+			$db->execute();
+			return $last_id;
 		}
 		catch(Exception $e)
         {
