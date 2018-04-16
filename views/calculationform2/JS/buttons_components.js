@@ -270,7 +270,7 @@ let extra_mounting_src = {
 }
 let extra_mounting =  create_block_with_divs(extra_mounting_src);
 
-let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
+//let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
 
 
 

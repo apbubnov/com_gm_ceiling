@@ -244,18 +244,20 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 			$title = $jinput->get('title', "", 'STRING');
 			$comment = $jinput->get('details', "", 'STRING');
 			$calc_id  = $jinput->get('calc_id', "", 'INT');
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			$query->update('`#__gm_ceiling_calculations`');
-			if(!empty($title)){
-				$query->set("`calculation_title`='$title'");
-			}
-			if(!empty($comment)){
-				$query->set("`details`='$comment'");
-			}
-			$query->where("`id`=$calc_id");
-			$db->setQuery($query);
-	        $db->execute();
+			if(!empty($title) && !empty($comment) && !empty($calc_id)){
+				$db = JFactory::getDbo();
+				$query = $db->getQuery(true);
+				$query->update('`#__gm_ceiling_calculations`');
+				if(!empty($title)){
+					$query->set("`calculation_title`='$title'");
+				}
+				if(!empty($comment)){
+					$query->set("`details`='$comment'");
+				}
+				$query->where("`id`=$calc_id");
+				$db->setQuery($query);
+		        $db->execute();
+	        }
 		}
 		catch(Exception $e)
         {

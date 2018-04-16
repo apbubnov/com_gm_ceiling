@@ -370,6 +370,7 @@
 									</td>
 								</tr>
 							</table>
+                            <input type="text" id="jform_details" name="jform[details]" class="form-control"  placeholder="Комментарий" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
@@ -651,6 +652,7 @@
             let id = jQuery('#jform_id').val();
             let need_mount = jQuery("input[name = 'need_mount']").val();
             if (!calculate_button.hasClass("loading")) {
+                console.log(calculate_button);
                 calculate_button.addClass("loading");
                 calculate_button.find("span.static").hide();
                 calculate_button.find("span.loading").show();
@@ -710,6 +712,10 @@
             setTimeout(event_help_proccess, 2000);
         });
         
+        jQuery("#btn_details").click(function(){
+            jQuery("#jform_details").toggle();
+        });
+
         jQuery("#save_button").click(function(){
             let url = '<?php echo $save_button_url;?>';
             jQuery.ajax({
@@ -732,9 +738,6 @@
                             type: "error",
                             text: "Ошибка при сохранении данных. Попробуйте позже"
                         });
-                        calculate_button.removeClass("loading");
-                        calculate_button.find("span.loading").hide();
-                        calculate_button.find("span.static").show();
                     }
             });
         });
@@ -752,7 +755,8 @@
         }
 
         //если есть комплектующие раскрыть
-        if(calculation.components_sum){
+        if(calculation.components_sum > 0){
+                alert(calculation.components_sum);
                 jQuery("#btn_add_components").trigger("click");
             }
 
