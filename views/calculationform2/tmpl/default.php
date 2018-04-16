@@ -21,6 +21,8 @@
     $type = $jinput->get('type', '', 'STRING');
     $subtype = $jinput->get('subtype', '', 'STRING');
     $precalculation = $jinput->get('precalculation', '', 'STRING');
+    $recalc = $jinput->get('recalc', 0, 'INT');
+    $seam = $jinput->get('seam', 0, 'INT');
 
     $type_url = '';
     if (!empty($type))
@@ -68,7 +70,7 @@
         if(empty($project_id)){
             throw new Exception("Пустой id проекта");
         }
-        $recalc = $jinput->get('recalc',0,'INT');
+        
         $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url&id=$project_id";
     }
     else{
@@ -77,6 +79,14 @@
     }
     
 ?>
+<div class="modal_window_container" id="mv_container">
+    <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+    <div class="modal_window" id="modal_window_seam">
+        <p>Потолок со швом. Изменить раскрой вручную?</p>
+        <p><button type="button" id="hide_redactor" class="btn btn-primary">Нет</button>
+        <button type="button" id="show_redactor" class="btn btn-primary">Да</button></p>
+    </div>
+</div>
 <!-- форма для чертилки-->
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
 	<input name="user_id" id="user_id" value="<?php echo $user->id ;?>" type="hidden">
@@ -194,15 +204,7 @@
             <div class="col-sm-4"></div>
         </div>
     </div>
-    <div class="container">
-			<div class="row sm-margin-bottom">
-				<div class="col-sm-4"></div>
-				<div class="col-sm-4 ">
-					<button id="redactor" class="btn btn-primary" type="button">Редактор</button>
-				</div>
-				<div class="col-sm-4"></div>
-			</div>
-	</div>
+
     <!-- S,P,углы -->
     <div class="container">
         <div id="data-wrapper" style = "display:none;">
@@ -366,7 +368,7 @@
 							<table class="table_calcform">
 								<tr>
 									<td class="td_calcform3">
-										<button type="button" id="btn_details" data-cont_id="block_details" class="btn add_fields">Комментарий</button>
+										<button type="button" id="btn_details" data-cont_id="block_details" class="btn btn-primary" style="width: 100%;">Комментарий</button>
 									</td>
 								</tr>
 							</table>
@@ -429,6 +431,21 @@
     };
     jQuery('document').ready(function()
     {
+        var seam = '<?php echo $seam; ?>';
+        if (seam == '1')
+        {
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_seam").show("slow");
+        }
+
+        document.getElementById('hide_redactor').onclick = function()
+        {
+            jQuery("#close").hide();
+            jQuery("#mv_container").hide();
+            jQuery("#modal_window_kp").hide();
+        };
+
         var precalculation = '<?php echo $precalculation; ?>';
         jQuery("body").addClass("yellow_home");
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
@@ -560,9 +577,14 @@
         {
             let arr_widths = [];
             let select_proizv = document.getElementById('jform_proizv').value;
+            let select_color = document.getElementById('jform_color').value;
+            if (select_color == "")
+            {
+                select_color = null;
+            }
             let width_polotna = [];
             jQuery.each(canvases_data_of_selected_texture, function(key,value){
-                if (value.manufacturer_id === select_proizv)
+                if (value.manufacturer_id === select_proizv && value.color_id === select_color)
                 {
                     let width = Math.round(value.width * 100);
     
@@ -700,12 +722,12 @@
 
         
 
-        jQuery("#redactor").click(function(){
+        jQuery("#show_redactor").click(function(){
             jQuery("#calc_id").val(calculation.id);
             jQuery("#proj_id").val(calculation.project_id);
             jQuery("#form_url").attr('action','sketch/cut_redactor_2/index.php');
             submit_form_sketch();
-		});        
+		});
        
         jQuery("#btn_add_components").click(function(){
             include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
@@ -756,7 +778,6 @@
 
         //если есть комплектующие раскрыть
         if(calculation.components_sum > 0){
-                alert(calculation.components_sum);
                 jQuery("#btn_add_components").trigger("click");
             }
 

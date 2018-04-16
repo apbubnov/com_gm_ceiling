@@ -39,7 +39,7 @@ class Gm_ceilingControllerSketch extends JControllerLegacy
             $offcut_square = $jinput->get('square_obrezkov', 0, 'FLOAT');
             $cuts = $jinput->get('cuts', '', 'string');
             $p_usadki = $jinput->get('p_usadki', '1', 'FLOAT');
-            $seam = $jinput->get('seam', 0, 'INT');
+            
             $wp = $jinput->get('walls_points', array(), 'ARRAY');
             $dp = $jinput->get('diags_points', array(), 'ARRAY');
             $pp = $jinput->get('pt_points', array(), 'ARRAY');
