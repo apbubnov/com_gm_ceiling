@@ -106,7 +106,7 @@ class Gm_ceilingModelClient_phones extends JModelList
 			{
 	            if(!empty($phone))
 	            {
-	            	$phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+	            	$phone = preg_replace('/[^\d]/', '', $phone);
 					if (strlen($phone) != 11)
 					{
 		            	throw new Exception('Invalid phone number');

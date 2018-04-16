@@ -87,7 +87,12 @@ class Gm_ceilingControllerClientForm extends JControllerForm
 			// Get the user data.
 			$data = JFactory::getApplication()->input->get('jform', array(), 'array');
 			
-			$data['client_contacts'] = preg_replace('/[\(\)\-\s]/', '', $data['client_contacts']);
+			$data['client_contacts'] = preg_replace('/[^\d]/', '', $data['client_contacts']);
+
+			$data['client_name'] = mb_ereg_replace('[^А-ЯЁа-яёA-Za-z0-9\-\@\.\s]', '', $data['client_name']);
+		    $data['client_name'] = str_replace(array("\r","\n"), '', $data['client_name']);
+		    $data['client_name'] = mb_ereg_replace('[\s]+', ' ', $data['client_name']);
+		    $data['client_name'] = trim($data['client_name']);
 
 			// Validate the posted data.
 			$form = $model->getForm();
