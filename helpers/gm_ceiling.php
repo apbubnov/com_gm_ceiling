@@ -450,7 +450,6 @@ class Gm_ceilingHelpersGm_ceiling
             $data['extra_mounting'] = json_encode($extra_mounting, JSON_FORCE_OBJECT);
 
             //}
-
             $data["need_mount"] = $need_mount;
             //Получаем объект дилера
             /*Сделано, что бы при расчете ГМ в проекте дилера цены были дилерские*/

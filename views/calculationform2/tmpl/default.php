@@ -62,6 +62,7 @@
             throw new Exception("Пустой id проекта");
         }
         $recalc = $jinput->get('recalc',0,'INT');
+        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url&id=$project_id";
     }
     else{
         /* сгенерировать ошибку или создать калькуляцию? */
@@ -352,18 +353,17 @@
 					</div>
 				</div>
 			<?php if ($type === "gmcalculator" || $type === "calculator") { ?>
-				<div class="container">
+				<div class="container" id ="block_details">
 					<div class="row"  style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4">
 							<table class="table_calcform">
 								<tr>
 									<td class="td_calcform3">
-										<button type="button" id="btn_comment" class="btn add_fields">Комментарий</button>
+										<button type="button" id="btn_details" data-cont_id="block_details" class="btn add_fields">Комментарий</button>
 									</td>
 								</tr>
 							</table>
-							<input type="text" id="comment" name="jform[details]"  class="form-control"  placeholder="комментарий" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
@@ -377,11 +377,7 @@
 						<table style="width:100%; text-align: center;">
 							<tr>
 								<td style="text-align: center;">
-									<!-- сохранить -->
-                                    <?php
-                                        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url&id=$project_id";
-                                    ?>
-									<a id="save_button" class="btn btn-success" href="<?php echo $save_button_url; ?>">Сохранить</a>
+									<button id="save_button" class="btn btn-success">Сохранить</button>
 								</td>
 								<td style="text-align: center;">
 									<!-- отменить -->
@@ -699,6 +695,33 @@
             setTimeout(event_help_proccess, 2000);
         });
         
+        jQuery("#save_button").click(function(){
+            let url = '<?php echo $save_button_url;?>';
+            jQuery.ajax({
+                 type: 'POST',
+                    url: 'index.php?option=com_gm_ceiling&task=calculation.save',
+                    data: {
+                        title: jQuery("#jform_calculation_title").val() , 
+                        details: jQuery("#jform_detailes").val()
+                    },
+                    success: function(data){
+                        location.href = url;
+                    },
+                    error: function(data){
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка при сохранении данных. Попробуйте позже"
+                        });
+                        calculate_button.removeClass("loading");
+                        calculate_button.find("span.loading").hide();
+                        calculate_button.find("span.static").show();
+                    }
+            });
+        });
         function include(url) { 
             let scripts = document.getElementsByTagName('script');
             let reg_exp = new RegExp(url);

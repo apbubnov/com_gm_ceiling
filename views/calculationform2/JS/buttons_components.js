@@ -270,6 +270,8 @@ let extra_mounting_src = {
 }
 let extra_mounting =  create_block_with_divs(extra_mounting_src);
 
+let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
+
 
 
 /* контейнер и колонки */
@@ -397,8 +399,10 @@ jQuery('.add_fields').click(function(){
     let element = eval(var_name);
 
     if(!document.getElementById(col_id)){
+        console.log(cont_id,col_id);
         jQuery(`#${cont_id}`).after(cont);
         jQuery(`#${col_id}`).append(element); 
+
     }
     else{
         jQuery(`#${col_id}`).toggle();
