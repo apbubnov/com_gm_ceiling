@@ -20,6 +20,7 @@
 
     $type = $jinput->get('type', '', 'STRING');
     $subtype = $jinput->get('subtype', '', 'STRING');
+    $precalculation = $jinput->get('precalculation', '', 'STRING');
 
     $type_url = '';
     if (!empty($type))
@@ -31,6 +32,12 @@
     if (!empty($subtype))
     {
         $subtype_url = "&subtype=$subtype";
+    }
+
+    $precalculation_url = '';
+    if (!empty($precalculation))
+    {
+        $precalculation_url = "&precalculation=$precalculation";
     }
 
     /*____________________Models_______________________  */
@@ -69,8 +76,6 @@
         throw new Exception("Пустой id калькуляции");
     }
     
-    
-   
 ?>
 <!-- форма для чертилки-->
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
@@ -89,6 +94,7 @@
 	<input name="proj_id" id="proj_id" value="<?php echo $project_id; ?>" type="hidden">
     <input name="type_url" id="type_url" value="<?php echo $type_url; ?>" type="hidden">
     <input name="subtype_url" id="subtype_url" value="<?php echo $subtype_url; ?>" type="hidden">
+    <input name="precalculation" id="precalculation" value="<?php echo $precalculation_url; ?>" type="hidden">
 </form>
 <form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
     <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $calculation_id;?>"/> 
@@ -422,6 +428,7 @@
     };
     jQuery('document').ready(function()
     {
+        var precalculation = '<?php echo $precalculation; ?>';
         jQuery("body").addClass("yellow_home");
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
         console.log(canvases_data);
@@ -455,29 +462,37 @@
 
         document.getElementById('cancel_button').onclick = function()
         {
-            jQuery.ajax({
-                type: 'POST',
-                url: '/index.php?option=com_gm_ceiling&task=calculationform.removeClientByProjectId',
-                dataType: "json",
-                timeout: 20000,
-                data: {
-                    proj_id: <?php echo $project_id; ?>
-                },
-                success: function(data){
-                    console.log(data);
-                    location.href = '/index.php?option=com_gm_ceiling&task=mainpage';
-                },
-                error: function(data){
-                    var n = noty({
-                        theme: 'relax',
-                        timeout: 2000,
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка сервера"
-                    });
-                }
-            });
+            if (precalculation == '1')
+            {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: '/index.php?option=com_gm_ceiling&task=calculationform.removeClientByProjectId',
+                    dataType: "json",
+                    timeout: 20000,
+                    data: {
+                        proj_id: <?php echo $project_id; ?>
+                    },
+                    success: function(data){
+                        console.log(data);
+                        location.href = '/index.php?option=com_gm_ceiling&task=mainpage';
+                    },
+                    error: function(data){
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                });
+            }
+            else
+            {
+                let url = '<?php echo $save_button_url;?>';
+                location.href = url;
+            }
         };
         
         function select_colors(){
@@ -702,7 +717,8 @@
                     url: 'index.php?option=com_gm_ceiling&task=calculation.save_title',
                     data: {
                         title: jQuery("#jform_calculation_title").val() , 
-                        details: jQuery("#jform_details").val()
+                        details: jQuery("#jform_details").val(),
+                        calc_id: calculation.id
                     },
                     success: function(data){
                         location.href = url;
