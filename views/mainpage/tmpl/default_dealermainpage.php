@@ -277,6 +277,33 @@ $rest = -($total_sum) - $contributed;
             jQuery("#components_price_btn").toggle();
             jQuery("#mounting_price_btn").toggle();
         });
+
+
+        function create_precalculation(proj_id)
+        {
+            jQuery.ajax({
+                type: 'POST',
+                url: "/index.php?option=com_gm_ceiling&task=calculation.create_calculation",
+                data: {
+                    proj_id: proj_id
+                },
+                success: function(data){
+                    console.log(data);
+                    location.href = `/index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=calendar&calc_id=${data}&precalculation=1`;
+                },
+                error: function(data){
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера."
+                    });
+                }
+            });
+        }
+
         function create_project(client_id){
             jQuery.ajax({
                 type: 'POST',
@@ -286,9 +313,7 @@ $rest = -($total_sum) - $contributed;
                     owner: "<?php echo $userId?>"
                 },
                 success: function (data) {
-                    data = JSON.parse(data);
-                    url = '/index.php?option=com_gm_ceiling&view=calculationform&type=calculator&subtype=calendar&id=0&project_id=' + data +'&precalculation=1';
-                    location.href = url;
+                    create_precalculation(data);
                 },
                 dataType: "text",
                 timeout: 10000,
