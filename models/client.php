@@ -155,12 +155,13 @@ class Gm_ceilingModelClient extends JModelItem
 	}
 	function create($dealer_id){
 		try{
+			$date = date('Y-m-d H:i:s');
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query
 				->insert("`#__gm_ceiling_clients`")
 				->columns('`client_name`, `dealer_id`, `manager_id`, `created`')
-				->values("' ', $dealer_id, $dealer_id, date('Y-m-d H:i:s')");
+				->values("' ', $dealer_id, $dealer_id, '$date'");
 			$db->setQuery($query);
 			$db->execute();
 			$last_id = $db->insertid();
