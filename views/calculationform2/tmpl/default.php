@@ -377,7 +377,7 @@
 						<table style="width:100%; text-align: center;">
 							<tr>
 								<td style="text-align: center;">
-									<button id="save_button" class="btn btn-success">Сохранить</button>
+									<button id="save_button" type = "button" class="btn btn-success">Сохранить</button>
 								</td>
 								<td style="text-align: center;">
 									<!-- отменить -->
@@ -699,10 +699,11 @@
             let url = '<?php echo $save_button_url;?>';
             jQuery.ajax({
                  type: 'POST',
-                    url: 'index.php?option=com_gm_ceiling&task=calculation.save',
+                    url: 'index.php?option=com_gm_ceiling&task=calculation.save_title',
                     data: {
                         title: jQuery("#jform_calculation_title").val() , 
-                        details: jQuery("#jform_detailes").val()
+                        details: jQuery("#jform_details").val(),
+                        calc_id: calculation.id
                     },
                     success: function(data){
                         location.href = url;
