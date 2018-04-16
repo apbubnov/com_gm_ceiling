@@ -1090,7 +1090,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             $user = JFactory::getUser();
             if (empty($user->id)) $user->id = 2;
             //эта функция на всякий случай, если вдруг цвет не запишется, пока причину потери цвета найти не могу!
-            if(!empty($data['n3']) && empty($data['color']) && ($data['n2'] == 2 || $data['n2'] == 4 || $data['n2'] == 6 || $data['n2'] == 29))
+   /*         if(!empty($data['n3']) && empty($data['color']) && ($data['n2'] == 2 || $data['n2'] == 4 || $data['n2'] == 6 || $data['n2'] == 29))
             {
                 $query = $db->getQuery(true);
                 $query
@@ -1100,7 +1100,7 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 $db->setQuery($query);
                 $color_id = $db->loadObject()->color_id;
                 $data['color'] = $color_id;
-            }
+            }*/
 
             $n13 = json_decode($data['n13']);
             $n14 = json_decode($data['n14']);
@@ -1116,10 +1116,10 @@ class Gm_ceilingModelCalculationForm extends JModelForm
             //print_r($n29); exit;
             $data['n16'] = ($data['n16'] == 1) ? '1' : '0';
             if (empty($calculationId)) {
-                foreach ($data as  $key => $value) if ($value === "") $data[$key] = "NULL";
+               /* foreach ($data as  $key => $value) if ($value === "") $data[$key] = "NULL";
                 if($data['n2'] == 0) $data['n2'] = "NULL";
                 if($data['n3'] == 0) $data['n3'] = "NULL";
-               
+               */
                 $query = $db->getQuery(true);
                 $columns = array('ordering', 'state', 'checked_out', 'checked_out_time', 'created_by', 'modified_by',  'calculation_title', 'project_id', 'n3', 'n4', 'n5', 'n6', 'n7', 'n8', 'n9', 'n10', 'n11', 'n12', 'n16', 'n17', 'n18', 'n19', 'n20', 'n21', 'n24', 'n25', 'n27','n28','n30','n31', 'n32','height','components_sum', 'canvases_sum', 'mounting_sum', 'dealer_components_sum', 'dealer_canvases_sum', /*'transport', */'dop_krepezh', 'extra_components', 'extra_mounting', 'components_stock', 'color', 'details',/* 'calc_image',*/ 'original_sketch', 'calc_data',/* 'cut_image', */'cut_data', 'offcut_square',/*'distance', 'distance_col',*/'discount');
                 $query
@@ -1134,9 +1134,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         . $user->id . ', '
                         . $db->quote($data['calculation_title']) . ', '
                         . $data['project_id'] . ', '
-                        . $data['n3'] . ', '
-                        . $data['n4'] . ', '
-                        . $data['n5'] . ', '
                         . $data['n6'] . ', '
                         . $data['n7'] . ', '
                         . $data['n8'] . ', '
@@ -1170,14 +1167,6 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                         . $db->quote($data['components_stock']) . ', '
                         . $db->quote($data['color']) . ', '
                         . $db->quote($data['details']) . ', '
-                       /*  . $db->quote($data['calc_image']) . ', ' */
-                        . $db->quote($data['original_sketch']) . ', '
-                        . $db->quote($data['calc_data']) . ', '
-                     /*    . $db->quote($data['cut_image']) . ', ' */
-                        . $db->quote($data['cut_data']) . ', '
-                        . $db->quote($data['offcut_square']). ', '
-                       /* . $db->quote($data['distance']) . ', '
-                        . $db->quote($data['distance_col']). ', '*/
                         . $db->quote($data['discount']));
  //print_r((string) $query); exit;
                 $db->setQuery($query);
@@ -1283,20 +1272,12 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 $query->update('`#__gm_ceiling_calculations` AS calc')
                     ->set('calc.checked_out_time = ' . $db->quote($date_created))
                     ->set('calc.calculation_title = ' . $db->quote($data['calculation_title']));
-                if (empty($data['n3'])) $query->set('calc.n3 = NULL');
-                else $query->set('calc.n3 = ' . $db->quote($data['n3']));
-                if (empty($data['n4'])) $query->set('calc.n4 = 0');
-                else $query->set('calc.n4 = ' . $db->quote($data['n4']));
-                if (empty($data['n5'])) $query->set('calc.n5 = 0');
-                else $query->set('calc.n5 = ' . $db->quote($data['n5']));
                 if (empty($data['n6'])) $query->set('calc.n6 = 0');
                 else $query->set('calc.n6 = ' . $db->quote($data['n6']));
                 if (empty($data['n7'])) $query->set('calc.n7 = 0');
                 else $query->set('calc.n7 = ' . $db->quote($data['n7']));
                 if (empty($data['n8'])) $query->set('calc.n8 = 0');
                 else $query->set('calc.n8 = ' . $db->quote($data['n8']));
-                if (empty($data['n9'])) $query->set('calc.n9 = 0');
-                else $query->set('calc.n9 = ' . $db->quote($data['n9']));
                 if (empty($data['n10'])) $query->set('calc.n10 = 0');
                 else $query->set('calc.n10 = ' . $db->quote($data['n10']));
                 if (empty($data['n11'])) $query->set('calc.n11 = 0');
@@ -1345,17 +1326,8 @@ class Gm_ceilingModelCalculationForm extends JModelForm
                 //$query->set('calc.color = ' . $data['color']);
                 $query->set('calc.details = ' . $db->quote($data['details']));
                // if (!empty($data['calc_image'])) $query->set('calc.calc_image = ' . $db->quote($data['calc_image']));
-                if (!empty($data['calc_data'])) $query->set('calc.calc_data = ' . $db->quote($data['calc_data']));
-                if (!empty($data['original_sketch'])) $query->set('calc.original_sketch = ' . $db->quote($data['original_sketch']));
-               // if (!empty($data['cut_image'])) $query->set('calc.cut_image = ' . $db->quote($data['cut_image']));
-                if (!empty($data['cut_data'])) $query->set('calc.cut_data = ' . $db->quote($data['cut_data']));
-                if (!empty($data['offcut_square'])) $query->set('calc.offcut_square = ' . $db->quote($data['offcut_square']));
-                if($data['n2'] == 0) {
-                    $query->set('calc.calc_data = NULL');
-                    $query->set('calc.original_sketch = NULL');
-                    $query->set('calc.cut_data = NULL');
-                    $query->set('calc.offcut_square = NULL');
-                }
+               
+
                /* if (empty($data['distance'])) $query->set('calc.distance = 0');
                 else $query->set('calc.distance = ' . $db->quote($data['distance']));
                 if (empty($data['distance_col'])) $query->set('calc.distance_col = 0');

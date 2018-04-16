@@ -443,13 +443,13 @@
                                                             <td>Белая</td>
                                                             <td></td>
                                                         <?php
-                                                            } else  {
+                                                            } else{
                                                            
-                                                            $color_1 = $color_model_1->getColorId($calculation->n6);
+                                                            $color = $color_model->getColorById($calculation->n6);
                                                         ?>
                                                                 <td>Цветная:</td>
                                                                 <td>
-                                                                    <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>" alt=""/>
+                                                                    <?php echo $color->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color->file; ?>"/>
                                                                 </td>
                                                         <?php } ?>
                                                     </tr>
@@ -472,7 +472,7 @@
                                                     </tr>
                                                 </table>
                                             <?php } ?>
-                                            <?php if ($calculation->n13) { ?>
+                                            <?php if (count($calculation->n13)>0) { ?>
                                                 <h4 style="margin: 10px 0;">Установка светильников</h4>
                                                 <table class="table_info2">
                                                     <?php 

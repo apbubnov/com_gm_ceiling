@@ -660,6 +660,7 @@ function fill_calc_data(){
 let show_color_switch = function(){    
         data = n6_colors;
         var items = "<div class='center'>";
+        console.log(data);
         jQuery.each( data, function( key, val ) {
             items += "<button class='click_color_1' style='width: 70px; height: 80px; display: inline-block; float: left; margin:3px;' type='button' data-color_id_1='"+ val.id + "' data-color_img_1='" + val.file + "'><img style='width: 70px; height: 70px; display: inline-block; float: left; margin:3px;' src='"+ val.file + "' alt='' /><div class='color_title1'>" + val.title + "</div><div class='color_title2'>" + val.title+ "</div></button>";
         

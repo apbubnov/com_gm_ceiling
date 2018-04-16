@@ -27,7 +27,7 @@ $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
 $reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
 $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
 $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-$color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
+$color_model = Gm_ceilingHelpersGm_ceiling::getModel('color');
 $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 
 /*________________________________________________________________*/
