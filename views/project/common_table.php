@@ -387,14 +387,15 @@
                             <?php if($this->item->project_status < 5 || $this->item->project_status == 22) {?>
                                 <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=calendar&calc_id=<?php echo $calculation->id; ?>">Изменить расчет</a>
                             <?php } ?>
-                                <?php if (!empty($filename)):?>
+                                <?php if (!empty($filename)) { ?>
                                     <div class="sketch_image_block" style="margin-top: 15px;">
                                         <h4>Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
                                         <div class="section_content">
                                             <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>"/>
                                         </div>
                                     </div>
-                                <?php endif; ?>
+                                <?php } 
+                                    $filename = ''; ?>
                                 <div class="row">
                                     <div class="col-xs-12 wtf_padding">
                                         <?php 
@@ -444,8 +445,7 @@
                                                             <td></td>
                                                         <?php
                                                             } else{
-                                                           
-                                                            $color = $color_model->getColorById($calculation->n6);
+                                                                $color = $components_model->getColorId($calculation->n6);
                                                         ?>
                                                                 <td>Цветная:</td>
                                                                 <td>
@@ -471,8 +471,9 @@
                                                         <td></td>
                                                     </tr>
                                                 </table>
-                                            <?php } ?>
-                                            <?php if (count($calculation->n13)>0) { ?>
+                                            <?php }
+                                             ?>
+                                            <?php if ($calculation->n13) { ?>
                                                 <h4 style="margin: 10px 0;">Установка светильников</h4>
                                                 <table class="table_info2">
                                                     <?php 
