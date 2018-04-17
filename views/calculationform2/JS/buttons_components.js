@@ -527,6 +527,7 @@ function fill_calc_data(){
                     if(value != 0 && value != 314){
                         jQuery("#jform_n6_inside").append(create_n6_button());
                         jQuery("#jform_n6_1").attr("checked",true);
+                        jQuery("#jform_n6_1").val(value);
                         jQuery("#n6_color_img").prop('src',get_color_file(value));
                         jQuery("#n6_color_img").show();
                         jQuery("#n6_color_cnt").show();
