@@ -3284,6 +3284,36 @@ public function register_mnfctr(){
             die($data);
         }
     }
+
+    function FromGMPotolkiRF() {
+        try
+        {
+            header('Access-Control-Allow-Origin: https://гмпотолки.рф');
+            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type');
+            header('Access-Control-Max-Age: 1000');
+            header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
+
+            $what_funct = $_POST["what_funct"];
+
+            switch ($what_funct) {
+                case 'get_factures':
+                    echo "зашел";
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
         
 }
 
