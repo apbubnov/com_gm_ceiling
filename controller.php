@@ -3306,7 +3306,7 @@ public function register_mnfctr(){
                     break;
             }
  */
-            return($_POST["what_funct"]);
+            return("бла бла бла");
         }
         catch(Exception $e)
         {
