@@ -637,9 +637,8 @@ class Gm_ceilingModelComponents extends JModelList
                 ->join('LEFT', '`#__gm_ceiling_colors` AS color  ON color.title = options.title ')
                 ->where(' options.id = ' . $id . ' AND  (color.file LIKE \'%mat%\' OR color.file LIKE \'%sat%\') ')
                 ->group('options.title');
-
             $db->setQuery($query);
-            $return = $db->loadObjectList();
+            $return = $db->loadObject();
 
             return $return;
         }

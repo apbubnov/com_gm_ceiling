@@ -444,8 +444,7 @@
                                                             <td></td>
                                                         <?php
                                                             } else{
-                                                           
-                                                            $color = $color_model->getColorById($calculation->n6);
+                                                                $color = $components_model->getColorId($calculation->n6);
                                                         ?>
                                                                 <td>Цветная:</td>
                                                                 <td>
@@ -471,8 +470,9 @@
                                                         <td></td>
                                                     </tr>
                                                 </table>
-                                            <?php } ?>
-                                            <?php if (count($calculation->n13)>0) { ?>
+                                            <?php }
+                                             ?>
+                                            <?php if ($calculation->n13) { ?>
                                                 <h4 style="margin: 10px 0;">Установка светильников</h4>
                                                 <table class="table_info2">
                                                     <?php 
