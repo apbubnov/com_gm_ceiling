@@ -3303,7 +3303,7 @@ public function register_mnfctr(){
                     $answer = $canvases_model->getFilteredItemsCanvas("count>0");
                     break;
             }
-
+            
             die($answer);
         }
         catch(Exception $e)
