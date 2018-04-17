@@ -3295,9 +3295,9 @@ public function register_mnfctr(){
             header('Access-Control-Max-Age: 1000');
             header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
 
-            $what_funct = $_POST["what_funct"];
+            //$what_funct = $_POST["what_funct"];
 
-            switch ($what_funct) {
+/*             switch ($what_funct) {
                 case 'get_factures':
                     $answer = "зашел";
                     break;
@@ -3305,8 +3305,8 @@ public function register_mnfctr(){
                     # code...
                     break;
             }
-
-            return($answer);
+ */
+            return($_POST["what_funct"]);
         }
         catch(Exception $e)
         {
