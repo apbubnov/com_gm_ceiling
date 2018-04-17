@@ -3299,12 +3299,14 @@ public function register_mnfctr(){
 
             switch ($what_funct) {
                 case 'get_factures':
-                    echo "зашел";
+                    $answer = "зашел";
                     break;
                 default:
                     # code...
                     break;
             }
+
+            return($answer);
         }
         catch(Exception $e)
         {
