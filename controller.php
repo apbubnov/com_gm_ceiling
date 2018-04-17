@@ -3295,18 +3295,16 @@ public function register_mnfctr(){
             header('Access-Control-Max-Age: 1000');
             header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
 
-            //$what_funct = $_POST["what_funct"];
+            $what_funct = $_POST["what_funct"];
 
-/*             switch ($what_funct) {
+             switch ($what_funct) {
                 case 'get_factures':
-                    $answer = "зашел";
-                    break;
-                default:
-                    # code...
+                    $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
+                    $answer = $canvases_model->getFilteredItemsCanvas("count>0");
                     break;
             }
- */
-            return("бла бла бла");
+
+            die($answer);
         }
         catch(Exception $e)
         {
