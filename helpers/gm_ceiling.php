@@ -1251,10 +1251,10 @@ class Gm_ceilingHelpersGm_ceiling
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
-            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
             $components_data[] = $component_item;
@@ -1279,11 +1279,11 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
 
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components);
 
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
-            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]->value, $dealer_info_components[$component_item['id']]->type);
+            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components);
 
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
@@ -1392,11 +1392,11 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
 
         //себестоимость дилера, с учетом его прайса
-        $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
+        $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases);
         //Кол-во * себестоимость дилера
         $canvases_data['self_dealer_total'] = round($data['n4'] * $canvases_data['self_dealer_price'], 2);
         //дилерская цена для клиента
-        $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type);
+        $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases);
         //Кол-во * дилерскую цену (для клиента)
         $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
 
@@ -1441,10 +1441,10 @@ class Gm_ceilingHelpersGm_ceiling
             $offcut_square_data['gm_total'] = round($data['offcut_square'] * $offcut_square_data['gm_price'], 2);
             //Стоимость с маржой ГМ и дилера (для клиента)
 
-            $offcut_square_data['self_dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, 0, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type) * 0.4, 2);
+            $offcut_square_data['self_dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, 0, $dealer_info_canvases) * 0.4, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['self_dealer_total'] = round($data['offcut_square'] * $offcut_square_data['self_dealer_price'], 2);
-            $offcut_square_data['dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]->value, $dealer_info_canvases[$canvas_id]->type) * 0.4, 2);
+            $offcut_square_data['dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, $dealer_canvases_margin, $dealer_info_canvases) * 0.4, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
         }
