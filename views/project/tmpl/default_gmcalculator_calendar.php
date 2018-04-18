@@ -484,6 +484,89 @@
     
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 
+    <?php if ($this->item->project_verdict == 0) { ?>
+            <?php if ($user->dealer_type != 2) { ?>
+                <table>
+                    <tr>
+                        <td>
+                            <a class="btn  btn-success" id="accept_project">Договор</a>
+                        </td>
+                        <td>
+                            <a class="btn  btn-danger" id="refuse_project">Отказ</a>
+                        </td>
+                    </tr>
+                </table>
+            <?php } ?>
+        <?php } ?>
+        <div class="project_activation" style="display: none;" id="project_activation">
+            <?php if ($user->dealer_type != 2) { ?>
+                <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">Примечание к договору</label>
+                <div class="controls">
+                    <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
+                </div>
+                <button id="refuse" class="btn btn-success" type="submit" style="display: none;">Переместить в отказы</button>
+                <table id="mounter_wraper" style="display: none;">
+                    <tr>
+                        <td colspan=4>
+                            <h4 id="title" style="display: none;">Назначить монтажную бригаду</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                        </td>
+                        <td>
+                            <div id="calendar1">
+                                <?php echo $calendar1; ?>
+                            </div>
+                        </td>
+                        <td>
+                            <div id="calendar2">
+                                <?php echo $calendar2; ?>
+                            </div>
+                        </td>
+                        <td>
+                            <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan=4>
+                            <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label>
+                            <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false">
+                                <?php echo $this->item->gm_chief_note; ?>
+                            </textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="validate btn btn-primary" id="save" type="button">Сохранить и запустить <br> в производство</button>
+                        </td>
+                        <td colspan=3 style="text-align: left;">
+                            <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=projects&type=chief'); ?>">Перейти к монтажам</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan = 3 id = "new_call" style = "display:none;" >
+                            <label>Введите дату и время звонка</label>
+                            <input type  = "date" class = "" name ="calldate_without_mounter" id  = "calldate_without_mounter" >
+                            <select name = "calltime_without_mounter" class = "" id = "calltime_without_mounter" >
+                                <option value="9:00">9:00</option>
+                                <option value="10:00">10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="15:00">15:00</option>
+                                <option value="16:00">16:00</option>
+                                <option value="17:00">17:00</option>
+                            </select>
+                            <button class = "btn btn-primary" id = "ok_btn" type = "button"><i class="fa fa-check" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            <?php } ?>
+        </div>
+    </div>
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="modal-window-choose-tar">
@@ -525,7 +608,6 @@
         </div>
     </div>
 </form>
-
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 
 <script type="text/javascript">

@@ -13,7 +13,7 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-$result_clients = $clients_model->getDesignersByClientName('', 3);
+$result_clients = $clients_model->getDesignersByClientName('', 7);
 ?>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
@@ -57,7 +57,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
                             $color = 'style="background-color: PaleGreen;"';
                         }
             ?>
-                    <tr class="row<?php echo $i % 2; ?>" <?= $color ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=designer&id='.(int) $value->id); ?>">
+                    <tr class="row<?php echo $i % 2; ?>" <?= $color ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=builder&id='.(int) $value->id); ?>">
                         <td>
                            <?php echo $value->client_name; ?>
                         </td>
@@ -115,7 +115,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 3);
             }
         });
 
-        jQuery("#new_designer").click(function(){
+        jQuery("#new_builder").click(function(){
             jQuery("#close4-tar").show();
             jQuery("#modal-window-container").show();
             jQuery("#modal-window-1-tar").show("slow");
