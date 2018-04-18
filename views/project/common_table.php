@@ -384,8 +384,26 @@
                 ?>
                         <div class="tab-pane <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                             <div class="other_tabs">
-                            <?php if($this->item->project_status < 5 || $this->item->project_status == 22) {?>
-                                <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=calendar&calc_id=<?php echo $calculation->id; ?>">Изменить расчет</a>
+                            <?php if($this->item->project_status < 5 || $this->item->project_status == 22)
+                            {
+                                $type = $jinput->get('type', '', 'STRING');
+                                $subtype = $jinput->get('subtype', '', 'STRING');
+
+                                $type_url = '';
+                                if (!empty($type))
+                                {
+                                    $type_url = "&type=$type";
+                                }
+
+                                $subtype_url = '';
+                                if (!empty($subtype))
+                                {
+                                    $subtype_url = "&subtype=$subtype";
+                                }
+
+                                $button_url = "index.php?option=com_gm_ceiling&view=calculationform2$type_url$subtype_url&calc_id=$calculation->id";
+                            ?>
+                                <a class="btn btn-primary" href="<?php echo $button_url; ?>">Изменить расчет</a>
                             <?php } ?>
                                 <?php if (!empty($filename)) { ?>
                                     <div class="sketch_image_block" style="margin-top: 15px;">
