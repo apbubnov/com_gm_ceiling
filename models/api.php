@@ -738,4 +738,50 @@ class Gm_ceilingModelApi extends JModelList
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    public function get_measure_time($date){
+        try{
+            $result = [];
+            $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
+            $all_gaugers = $gauger_model->getDatas(1);
+            $gaugers_count = count($all_gaugers);
+            $times = [
+                "9:00:00" => $gaugers_count,
+                "10:00:00" => $gaugers_count,
+                "11:00:00" => $gaugers_count,
+                "12:00:00" => $gaugers_count,
+                "13:00:00" => $gaugers_count,
+                "14:00:00" => $gaugers_count,
+                "15:00:00" => $gaugers_count,
+                "16:00:00" => $gaugers_count,
+                "17:00:00" => $gaugers_count,
+                "18:00:00" => $gaugers_count,
+                "19:00:00" => $gaugers_count,
+                "20:00:00" => $gaugers_count
+            ];
+            $measures =[];
+            foreach ($all_gaugers as $gauger) {
+                $measures_times = $gauger_model->GetAllGaugingOfGaugers($gauger->id,$date,$date);
+                foreach($measures_times as $time){
+                    $time = explode(" ",$time->project_calculation_date)[1];
+                    $times[$time]--;
+                }
+                
+            }
+            foreach ($times as $key => $value) {
+                if($value != 0){
+                    array_push($result,$key);
+                }
+                
+            }
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }

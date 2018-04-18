@@ -1,0 +1,72 @@
+.SelectPrice {
+    width: auto;
+    height: 38px;
+    line-height: 38px;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(64, 65, 154);
+    color: rgb(255, 255, 255);
+    float: left;
+    display: inline-block;
+    text-align: center;
+    padding-left: 10px;
+}
+
+.HelpMessage {
+    position: relative;
+}
+
+.HelpMessage .HelpMessageSpan {
+    position: absolute;
+    left: -125%;
+    bottom: calc(100% + 5px);
+    width: 350%;
+    height: auto;
+    font-size: 14px;
+    color: rgb(255,255,255);
+    background-color: rgb(64,65,154);
+    border-radius: 3px;
+    padding: 3px;
+    white-space: normal;
+    display: none;
+}
+
+.HelpMessage:hover .HelpMessageSpan {
+    display: inline-block;
+}
+
+.HelpMessage .HelpMessageSpan:before {
+    content: "▼";
+    width: 10px;
+    height: 10px;
+    font-size: 7px;
+    margin-top: -2px;
+    color: rgb(64,65,154);
+    position: absolute;
+    left: calc(50% - 5px);
+    top: 100%;
+}
+
+th {
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+@media (max-width: 767px) {
+    .HelpMessage .HelpMessageSpan {
+        display: inline-block;
+        position: relative;
+        top: 0;
+        left: 0;
+        width: auto;
+        height: 100%;
+        white-space: nowrap;
+        margin-left: 5px;
+        color: inherit;
+        background-color: inherit;
+    }
+
+    .HelpMessage .HelpMessageSpan:before{
+        content: none;
+    }
+}

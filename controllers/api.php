@@ -354,7 +354,31 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                 throw new Exception('Ошибка!', 500);
             } 
         }
-
+    /*
+         * Розничная версия
+     */
+    public function getMeasureTimes(){
+        try
+            {
+                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+                if(!empty($_POST['date']))
+                {
+                    $date = json_decode($_POST['date']);
+                    $times = $model->get_measure_time($date->date);
+                    $result = $times;
+                }
+                
+                
+                die(json_encode($result));
+            }
+            catch(Exception $e)
+            {
+                $date = date("d.m.Y H:i:s");
+                $files = "components/com_gm_ceiling/";
+                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+                throw new Exception('Ошибка!', 500);
+            }
+    }
     /*
      * CEH4TOP IOS Клиентская версия
      *
