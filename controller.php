@@ -3295,6 +3295,7 @@ public function register_mnfctr(){
                     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
                     $answer = json_encode($canvases_model->getFilteredItemsCanvas("count>0"));
                     break;
+
             }
             
             die($answer);
