@@ -59,9 +59,9 @@ $_SESSION['dop_num'] = $dop_num;
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=manufacturers', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Производители</a>
         </p>
-		<!-- <p>
-			<a class="btn btn-large btn-primary" href="<?php //echo JRoute::_('/index.php?option=com_gm_ceiling&view=projects&type=gmmanager&subtype=clientorders', false); ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Клиентские заказы</a>
-		</p> -->
+		<p>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Застройщики</a>
+		</p>
 	</div>
 	<div class="columns-tar">
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">

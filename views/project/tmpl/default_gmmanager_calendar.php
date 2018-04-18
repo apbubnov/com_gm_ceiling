@@ -836,6 +836,7 @@
     //------------------------------------------
 
     jQuery(document).ready(function() {
+    
         if (jQuery("#selected_advt"))
         {
             jQuery("#selected_advt").val(jQuery("#advt_choose").val());
@@ -1567,12 +1568,6 @@
         jQuery("#update_discount").click(function () {
             console.log(<?php echo $skidka; ?>);
             console.log(jQuery("#jform_new_discount").val());
-            var phones = [];
-            var s = window.location.href;
-            var classname = jQuery("input[name='new_client_contacts[]']");
-            Array.from(classname).forEach(function (element) {
-                phones.push(element.value);
-            });
             jQuery("input[name='isDiscountChange']").val(1);
             if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
             save_data_to_session(3);
@@ -1580,12 +1575,6 @@
         });
 
         jQuery("#ok").click(function () {
-            var phones = [];
-            var s = window.location.href;
-            var classname = jQuery("input[name='new_client_contacts[]']");
-            Array.from(classname).forEach(function (element) {
-                phones.push(element.value);
-            });
             jQuery("input[name='data_delete']").val(1);
             save_data_to_session(3);
 
@@ -2043,6 +2032,7 @@
                 jQuery("#selected_advt").val(data.id);
             },
             error: function (data) {
+                console.log(data);
                 var n = noty({
                     timeout: 2000,
                     theme: 'relax',
@@ -2368,19 +2358,16 @@ function change_transport(sum){
     }
 
     jQuery("#add_calc").click(function () {
-        var phones = [];
-        var s = window.location.href;
-        var classname = jQuery("input[name='new_client_contacts[]']");
-        Array.from(classname).forEach(function (element) {
-            phones.push(element.value);
-        });
         save_data_to_session(1);
     });
     function save_data_to_session(action_type,id=null){
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-            data: {
+        var phones = [];
+            var s = window.location.href;
+            var classname = jQuery("input[name='new_client_contacts[]']");
+            Array.from(classname).forEach(function (element) {
+                phones.push(element.value);
+            });
+        let data = {
                 fio: jQuery("#jform_client_name").val(),
                 address: jQuery("#jform_address").val(),
                 house: jQuery("#jform_house").val(),
@@ -2395,11 +2382,16 @@ function change_transport(sum){
                 phones: phones,
                 comments: jQuery("#comments_id").val(),
                 gauger: jQuery("#jform_project_gauger").val(),
-                sex: jQuery('name = "slider-sex"').val(),
-                type : jQuery('name = "slider-radio"').val(),
+                sex: jQuery('[name = "slider-sex"]').val(),
+                type : jQuery('[name = "slider-radio"]').val(),
                 recool: jQuery("#recoil_choose").val(),
                 advt: jQuery("#advt_choose").val()
-            },
+            };
+        let object = {proj_id : jQuery("#project_id").val(), data:JSON.stringify(data)};
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
+            data: object,
             success: function (data) {
                 if(action_type == 1){
                     create_calculation(<?php echo $this->item->id; ?>);
