@@ -217,7 +217,6 @@ class Gm_ceilingHelpersGm_ceiling
             foreach ($canvases_list as $i => $canvas) {
                 $canvases[$canvas->id] = $canvas;
             }
-             
             $calculation_data = $calculation_model->getData($calculation_id);
             $calculation_data2 = (array) $calculation_model->getDataById($calculation_id);
 
@@ -227,58 +226,60 @@ class Gm_ceilingHelpersGm_ceiling
                 else
                     $data[$key] = $item;
             }
-            
-            //Получаем данные
-            $data_form = $jinput->getArray(array(
-                'jform' => array(
-                    'id' => 'int', //id потолка
-                    'n6' => 'int', //Со вставкой
-                    'n7' => 'float', //Крепление в плитку
-                    'n8' => 'float', //Крепление в керамогранит
-                    'n9' => 'int', //Углы
-                    'n10' => 'float', //Криволинейный участок
-                    'n11' => 'float', //Внутренний вырез
-                    'n12' => 'int', //Упрощенные люстры
-                    'n13' => 'int', //Упрощенные светильники
-                    'n14' => 'int', //Упрощенные обводы труб
-                    'n15' => 'int', //Шторный карниз
-                    'n16' => 'int', //Скрытый карниз
-                    'n17' => 'float', //Закладная брусом
-                    'n18' => 'float', //Укрепление стены
-                    'n19' => 'float', //Провод
-                    'n20' => 'float', //Разделитель
-                    'n21' => 'float', //Пожарная сигнализация
-                    'n22' => 'int',
-                    'n23' => 'int',
-                    'n24' => 'float', //Сложность к месту доступа
-                    'n25' => 'int',
-                    'n26' => 'int',
-                    'n27' => 'float',
-                    'n28' => 'int',
-                    'n29' => 'float',
-                    'n30' => 'float',
-                    'n31' => 'float',
-                    'n32' => 'int',
-                    'height'=>'int',
-                    'dop_krepezh' => 'float', //Доп. крепеж
-                    'calculation_title' => 'string',
-                    'color' => 'string', //цвет
-                    'details' => 'string', //цвет
-                    'offcut_square' => 'float',
-                    'discount' => 'int'
-                    // 'rek' => 'int',
-                    // 'proizv' => 'string'
-                )
-            ));
-            $data_form = $data_form['jform'];
-            foreach ($data_form as $key => $value)
-            {
-                $data[$key] = $value;
-                /*if (array_key_exists($key, $_POST))
-                    $data[$key] = $_POST[$key];
-                else if ($value == '')
-                    $data[$key] = 0;*/
+            if(!$from_db){
+                   //Получаем данные
+                $data_form = $jinput->getArray(array(
+                    'jform' => array(
+                        'id' => 'int', //id потолка
+                        'n6' => 'int', //Со вставкой
+                        'n7' => 'float', //Крепление в плитку
+                        'n8' => 'float', //Крепление в керамогранит
+                        'n9' => 'int', //Углы
+                        'n10' => 'float', //Криволинейный участок
+                        'n11' => 'float', //Внутренний вырез
+                        'n12' => 'int', //Упрощенные люстры
+                        'n13' => 'int', //Упрощенные светильники
+                        'n14' => 'int', //Упрощенные обводы труб
+                        'n15' => 'int', //Шторный карниз
+                        'n16' => 'int', //Скрытый карниз
+                        'n17' => 'float', //Закладная брусом
+                        'n18' => 'float', //Укрепление стены
+                        'n19' => 'float', //Провод
+                        'n20' => 'float', //Разделитель
+                        'n21' => 'float', //Пожарная сигнализация
+                        'n22' => 'int',
+                        'n23' => 'int',
+                        'n24' => 'float', //Сложность к месту доступа
+                        'n25' => 'int',
+                        'n26' => 'int',
+                        'n27' => 'float',
+                        'n28' => 'int',
+                        'n29' => 'float',
+                        'n30' => 'float',
+                        'n31' => 'float',
+                        'n32' => 'int',
+                        'height'=>'int',
+                        'dop_krepezh' => 'float', //Доп. крепеж
+                        'calculation_title' => 'string',
+                        'color' => 'string', //цвет
+                        'details' => 'string', //цвет
+                        'offcut_square' => 'float',
+                        'discount' => 'int'
+                        // 'rek' => 'int',
+                        // 'proizv' => 'string'
+                    )
+                ));
+                $data_form = $data_form['jform'];
+                foreach ($data_form as $key => $value)
+                {
+                    $data[$key] = $value;
+                    /*if (array_key_exists($key, $_POST))
+                        $data[$key] = $_POST[$key];
+                    else if ($value == '')
+                        $data[$key] = 0;*/
+                } 
             }
+            
             if(!empty($data['n3_id'])){
                 $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id']);
                 $data['n1'] = $canvasData[0]->texture_id;
@@ -286,6 +287,7 @@ class Gm_ceilingHelpersGm_ceiling
             else{
                 $data['n1'] = null;
             }
+          
           
             //ecola
             $ecola_count = $jinput->get('ecola_count', array(), 'ARRAY');
@@ -479,6 +481,7 @@ class Gm_ceilingHelpersGm_ceiling
                 $offcut_square_data = self::calculate_offcut(null,$data);
            
             }
+
            //считаем комплектующие
             $components_data = self::calculate_components(null,$data,$del_flag);
             //считаем монтаж
@@ -589,7 +592,7 @@ class Gm_ceilingHelpersGm_ceiling
                 
                 //клиентская смета
                 self::create_client_single_estimate($need_mount,null,$data,$components_data,$canvases_data,$offcut_square_data,$guild_data,$mounting_data);
-            }         
+            }      
             $return = json_encode($ajax_return);
            
             return $return;
@@ -3162,11 +3165,14 @@ class Gm_ceilingHelpersGm_ceiling
             $data = get_object_vars($data);
         }
         if(empty($calc_id)){
+
             $calc_id = $data['id'];
+
         }
         $project_model = self::getModel('project');
         $project = $project_model->getData($data['project_id']);
         $canvases_data = self::calculate_canvases($calc_id);
+
         $client_model = self::getModel('client');
         $client = $client_model->getClientById($project->id_client);
         $dealer_name = JFactory::getUser($client->dealer_id)->name;

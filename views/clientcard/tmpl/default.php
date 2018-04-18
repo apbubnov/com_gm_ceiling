@@ -70,10 +70,10 @@
 
 <button id="back_btn" class="btn btn-primary" style="margin-bottom: 1em;"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 <h3 class="center">Карточка клиента</h3>
-<div id="FIO-container-tar" style="margin-top: 15px;">
-    <h4 style="text-align: left;">Имя клиента:</h4>
-    <p style="text-align: left;">
-        <label id = "FIO" style="font-size: 18px;"><?php echo $this->item->client_name; ?></label>
+<div id="FIO-container-tar">
+    <label>Имя клиента:</label>
+    
+        <label id = "FIO" ><?php echo $this->item->client_name; ?></label>
         <button type="button" id="edit" value="" class = "btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></button>
         <?php if ($user->dealer_type != 1):?>
             <button class = "btn btn-primary" type = "button" id="but_call"><i class="fa fa-phone" aria-hidden="true"></i></button>
@@ -83,7 +83,7 @@
             <br>
             <label>Менеджер: <?php echo $manager_name;?></label>
         <?php endif;?>
-    </p>
+   
 </div>
 <!-- стиль исправить не могу, пока не увижу где селект показывается -->
     <select id="select_phones" style="display:none;">

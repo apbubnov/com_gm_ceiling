@@ -696,23 +696,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 					}
 
-					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-					$calculations = $calculationsModel->getProjectItems($data->id);
-					$components_data = array();
-					$project_sum = 0;
-					foreach($include_calculation as $calculation){
-						if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
-						$calculations = $calculationsModel->getProjectItems($calculation);
-						$from_db = 1;
-						$save = 0;
-						$ajax = 0;
-						$pdf = 0;
-						$print_components = 1;
-						$del_flag = 0;
-
-						$components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db,$calculation, $save, $ajax, $pdf, $print_components,$del_flag);
-					} 
-					Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
 					if(count($ignored_calculations) > 0 ) {
 						$data = $model->getNewData($project_id);
 						$data->refuse_id = $refuse_id;

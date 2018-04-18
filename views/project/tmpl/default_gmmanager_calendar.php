@@ -1623,43 +1623,7 @@
                 phones.push(element.value);
             });
             jQuery("input[name='data_delete']").val(1);
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-                data: {
-                    fio: jQuery("#jform_client_name").val(),
-                    address: jQuery("#jform_address").val(),
-                    house: jQuery("#jform_house").val(),
-                    bdq: jQuery("#jform_bdq").val(),
-                    apartment: jQuery("#jform_apartment").val(),
-                    porch: jQuery("#jform_porch").val(),
-                    floor: jQuery("#jform_floor").val(),
-                    code: jQuery("#jform_code").val(),
-                    date: jQuery("#jform_project_new_calc_date").val(),
-                    time: jQuery("#jform_new_project_calculation_daypart").val(),
-                    manager_comment: jQuery("#gmmanager_note").val(),
-                    client_name: jQuery("#jform_client_name").val(),
-                    phones: phones,
-                    comments: jQuery("#comments_id").val(),
-                    s: s,
-                    gauger: jQuery("#jform_project_gauger").val()
-                },
-                success: function (data) {
-                    jQuery("#form-client").submit();
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка cервер не отвечает"
-                    });
-                }
-            });
+            save_data_to_session(3);
 
         });
 
@@ -1960,43 +1924,7 @@
         Array.from(classname).forEach(function (element) {
             phones.push(element.value);
         });
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-            data: {
-                fio: jQuery("#jform_client_name").val(),
-                address: jQuery("#jform_address").val(),
-                house: jQuery("#jform_house").val(),
-                bdq: jQuery("#jform_bdq").val(),
-                apartment: jQuery("#jform_apartment").val(),
-                porch: jQuery("#jform_porch").val(),
-                floor: jQuery("#jform_floor").val(),
-                code: jQuery("#jform_code").val(),
-                date: jQuery("#jform_project_new_calc_date").val(),
-                time: jQuery("#jform_new_project_calculation_daypart").val(),
-                manager_comment: jQuery("#gmmanager_note").val(),
-                client_name: jQuery("#jform_client_name").val(),
-                phones: phones,
-                comments: jQuery("#comments_id").val(),
-                s: s,
-                gauger: jQuery("#jform_project_gauger").val()
-            },
-            success: function (data) {
-                window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&calc_id=" + id;
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function () {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка cервер не отвечает"
-                });
-            }
-        });
+        save_data_to_session(2,id);
 
     }
 
@@ -2220,11 +2148,6 @@
         var id  = jQuery("#project_id").val();
         var client_id = jQuery("#client_id").val();
         var testfilename = <?php echo $json2;?>;
-        //        for (var i = 0; i < testfilename.length; i++) {
-        //            var id = testfilename[i].id;
-        //            var el = jQuery("#section_mount_" + id);
-        //            if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-        //        }
         var filenames = [];
         var formData = new FormData();
         jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {
@@ -2487,6 +2410,9 @@ function change_transport(sum){
         Array.from(classname).forEach(function (element) {
             phones.push(element.value);
         });
+
+    });
+    function  save_data_to_session(action_type,id=null){
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
@@ -2502,14 +2428,25 @@ function change_transport(sum){
                 date: jQuery("#jform_project_new_calc_date").val(),
                 time: jQuery("#jform_new_project_calculation_daypart").val(),
                 manager_comment: jQuery("#gmmanager_note").val(),
-                client_name: jQuery("#jform_client_name").val(),
                 phones: phones,
                 comments: jQuery("#comments_id").val(),
-                s: s,
-                gauger: jQuery("#jform_project_gauger").val()
+                gauger: jQuery("#jform_project_gauger").val(),
+                sex: jQuery('name = "slider-sex"').val(),
+                type : jQuery('name = "slider-radio"').val(),
+                recool: jQuery("#recoil_choose").val(),
+                advt: jQuery("#advt_choose").val()
             },
             success: function (data) {
-                create_calculation(<?php echo $this->item->id; ?>);
+                if(action_type == 1){
+                    create_calculation(<?php echo $this->item->id; ?>);
+                }
+                if(action_type == 2){
+                   window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&calc_id=" + id;
+                }
+                if(action_type == 3){
+                    jQuery("#form-client").submit();
+                }
+                
             },
             dataType: "text",
             timeout: 10000,
@@ -2524,8 +2461,7 @@ function change_transport(sum){
                 });
             }
         });
-    });
-
+    }
     jQuery("#add_birthday").click(function () {
         var birthday = jQuery("#jform_birthday").val();
         var id_client = <?php echo $this->item->id_client;?>;
