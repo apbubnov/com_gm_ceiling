@@ -863,8 +863,13 @@ let btn_add_event = function(){
 };
 function create_options(data){
     let options = [];
+    let option;
     for(let i = 0;i<data.length;i++){
-        options.push(new Option(data[i].title,data[i].id));
+        option = new Option(data[i].title,data[i].id);
+        if(data[i].id == 19 || data[i].id == 66){
+            option = new Option(data[i].title,data[i].id,true,true);
+        }
+        options.push(option);
     }
     return options;
 }

@@ -700,7 +700,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         var min_project_sum = <?php echo  $min_project_sum;?>;
         var min_components_sum = <?php echo $min_components_sum;?>;
         var self_data = JSON.parse('<?php echo $self_calc_data;?>');
-        console.log(self_data);
         var precalculation = <?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>;
 
         function PressEnter(your_text, your_event) {
@@ -1771,8 +1770,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 jQuery("#calcs_total_border").text(old_all - canv_data - comp_data - mount_data);
                 jQuery("#project_total span.sum").text(old_total - calc_sum);
                 jQuery("#project_total_discount span.sum").text(old_total_discount - calc_sum_discount);
-                jQuery("#total_square span.sum").text(old_n4 - n4);
-                jQuery("#total_perimeter span.sum").text(old_n5 - n5);
+                jQuery("#total_square span.sum").text((old_n4 - n4).toFixed(2));
+                jQuery("#total_perimeter span.sum").text((old_n5 - n5).toFixed(2));
                 let more_one = check_selected();
                 if(!more_one){
                     jQuery("#project_total_discount span.sum").text(jQuery("#transport_sum span.sum").text());

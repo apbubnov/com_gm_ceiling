@@ -20,20 +20,80 @@
 
     $user = JFactory::getUser();
     $dealer = JFactory::getUser($user->dealer_id);
-    $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations = $model->getProjectItems($this->item->id);
     $project_id = $this->item->id;
-    foreach ($calculations as $calculation) {
-        $calculation->dealer_gm_mounting_sum = double_margin($calculation->gm_mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-        $calculation->calculation_total = round($calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum, 2);
-        $calculation->calculation_total_discount = round($calculation->calculation_total * ((100 - $this->item->project_discount) / 100), 2);
-        $project_total += $calculation->calculation_total;
-        $project_total_discount += $calculation->calculation_total_discount;
-    }
-    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-    $phones = $client_model->getItemsByClientId($this->item->id_client);
-    $project_total = round($project_total, 2);
-    $project_total_discount = round($project_total_discount, 2);
+
+/*_____________блок для всех моделей/models block________________*/ 
+$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+$calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
+$reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
+$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+$clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+$components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+
+/*________________________________________________________________*/
+$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
+$client_sum_transport = $transport['client_sum'];
+$self_sum_transport = $transport['mounter_sum'];//идет в монтаж
+$self_calc_data = [];
+$self_canvases_sum = 0;
+$self_components_sum = 0;
+$self_mounting_sum = 0;
+$project_self_total = 0;
+$project_total = 0;
+$project_total_discount = 0;
+$total_square = 0;
+$total_perimeter = 0;
+$calculation_total_discount = 0;
+$calculations = $calculationsModel->new_getProjectItems($this->item->id);
+foreach ($calculations as $calculation) {
+    $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
+    $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
+    $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
+    $calculation->dealer_self_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
+    $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
+    $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
+    $self_components_sum += $calculation->dealer_self_components_sum;
+    $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+    $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
+    $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
+    $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
+    $calculation->n13 = $calculationform_model->n13_load($calculation->id);
+    $calculation->n14 = $calculationform_model->n14_load($calculation->id);
+    $calculation->n15 = $calculationform_model->n15_load($calculation->id);
+    $calculation->n22 = $calculationform_model->n22_load($calculation->id);
+    $calculation->n23 = $calculationform_model->n23_load($calculation->id);
+    $calculation->n26 = $calculationform_model->n26_load($calculation->id);
+    $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+    $total_square +=  $calculation->n4;
+    $total_perimeter += $calculation->n5;
+    $project_total += $calculation->calculation_total;
+    $project_total_discount += $calculation->calculation_total_discount;
+    $self_calc_data[$calculation->id] = array(
+        "canv_data" => $calculation->dealer_self_canvases_sum,
+        "comp_data" => $calculation->dealer_self_components_sum,
+        "mount_data" => $calculation->dealer_self_gm_mounting_sum,
+        "square" => $calculation->n4,
+        "perimeter" => $calculation->n5,
+        "sum" => $calculation->calculation_total,
+        "sum_discount" => $calculation->calculation_total_discount
+    );
+    $calculation_total = $calculation->calculation_total;
+    $calculation_total_discount =  $calculation->calculation_total_discount;
+}
+$self_calc_data = json_encode($self_calc_data);//массив с себестоимотью по каждой калькуляции
+$project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
+
+$mount_transport = $mountModel->getDataAll($this->item->dealer_id);
+$min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
+$min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
+
+$project_total_discount_transport = $project_total_discount + $client_sum_transportt;
+
+$del_flag = 0;
+$project_total = $project_total + $client_sum_transport;
+$project_total_discount = $project_total_discount  + $client_sum_transport;
     if (!empty($this->item->sb_order_id))
         $sb_project_id = $this->item->sb_order_id;
     else  $sb_project_id = 0;
@@ -44,12 +104,21 @@
 ?>
 
 <style>
-    .container {
-        padding: 0;
+    .center-left {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .calculation_sum {
+        width: 100%;
+        margin-bottom: 25px;
+    }
+    .calculation_sum td {
+        padding: 0 5px;
     }
     #table1 {
         width: 100%;
-        max-width: 330px;
+        max-width: 300px;
         font-size: 13px;
     }
     #table1 button, #table1 a, #table1 input {
@@ -59,13 +128,33 @@
     #table1 td, #table1 th {
         padding: 10px 5px;
     }
-    .small_complectuushie a {
-        padding: 6px 12px;
-    }
     .wtf_padding {
         padding: 0;
     }
+    .no_yes_padding {
+        padding: 0;
+    }
+    #calendar1, #calendar2 {
+        display: inline-block;
+        width: 100%;
+        padding: 0;
+    }
+    #container_calendars {
+        width: 100%;
+    }
+    #button-prev, #button-next {
+        padding: 0;
+    }
+    #calcs_total_border {
+        display: inline-block;
+        width: auto;
+        padding: 3px 7px;
+        border: 2px solid #414099;
+    }
     @media screen and (min-width: 768px) {
+        .center-left {
+            text-align: left;
+        }
         #table1 {
             width: 100%;
             max-width: 3000px;
@@ -79,11 +168,17 @@
             width: auto;
             max-width: 200px;
         }
-        .small_complectuushie a {
-            padding: 8px 16px;
-        }
         .wtf_padding {
             padding: 15px;
+        }
+        .no_yes_padding {
+            padding: 15px;
+        }
+        #calendar1, #calendar2 {
+            width: calc(50% - 25px);
+        }
+        #calendar2 {
+            margin-left: 30px;
         }
     }
 </style>

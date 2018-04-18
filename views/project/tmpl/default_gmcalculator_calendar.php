@@ -12,64 +12,91 @@
     $user = JFactory::getUser();
     $userId = $user->get('id');
 
-    $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-
+    $userId = $user->get('id');
+    $userName = $user->get('username');
     $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-
     if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
         $canEdit = JFactory::getUser()->id == $this->item->created_by;
     }
-    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
-    $sum_transport = $transport['client_sum'];
-    $sum_transport_1 = $transport['mounter_sum'];
-    //генерация общих смет
+
     Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+
+    /*_____________блок для всех моделей/models block________________*/ 
+    $calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+    $calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
+    $reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
+    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+    $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+    $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+    $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+    $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+
+    /*________________________________________________________________*/
+    $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
+    $client_sum_transport = $transport['client_sum'];
+    $self_sum_transport = $transport['mounter_sum'];//идет в монтаж
+    $self_calc_data = [];
+    $self_canvases_sum = 0;
+    $self_components_sum = 0;
+    $self_mounting_sum = 0;
+    $project_self_total = 0;
     $project_total = 0;
     $project_total_discount = 0;
     $total_square = 0;
     $total_perimeter = 0;
-    $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations = $model->new_getProjectItems($this->item->id);
-
+    $calculation_total_discount = 0;
+    $calculations = $calculationsModel->new_getProjectItems($this->item->id);
     foreach ($calculations as $calculation) {
-
         $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
         $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
         $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
-
-        $calculation->dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-        $calculation->dealer_components_sum_1 = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
-        $calculation->dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
-
+        $calculation->dealer_self_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
+        $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
+        $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
+        $self_components_sum += $calculation->dealer_self_components_sum;
+        $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+        $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
         $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
         $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
+        $calculation->n13 = $calculationform_model->n13_load($calculation->id);
+        $calculation->n14 = $calculationform_model->n14_load($calculation->id);
+        $calculation->n15 = $calculationform_model->n15_load($calculation->id);
+        $calculation->n22 = $calculationform_model->n22_load($calculation->id);
+        $calculation->n23 = $calculationform_model->n23_load($calculation->id);
+        $calculation->n26 = $calculationform_model->n26_load($calculation->id);
+        $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+        $total_square +=  $calculation->n4;
+        $total_perimeter += $calculation->n5;
         $project_total += $calculation->calculation_total;
         $project_total_discount += $calculation->calculation_total_discount;
-
-        if ($user->dealer_type != 2) {
-            $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-            $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
-            $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
-            $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
-            $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
-            $calculation_total_11 += $calculation_total_1;
-            $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
-        }
-        $project_total_11 += $project_total_1;
-
+        $self_calc_data[$calculation->id] = array(
+            "canv_data" => $calculation->dealer_self_canvases_sum,
+            "comp_data" => $calculation->dealer_self_components_sum,
+            "mount_data" => $calculation->dealer_self_gm_mounting_sum,
+            "square" => $calculation->n4,
+            "perimeter" => $calculation->n5,
+            "sum" => $calculation->calculation_total,
+            "sum_discount" => $calculation->calculation_total_discount
+        );
         $calculation_total = $calculation->calculation_total;
+        $calculation_total_discount =  $calculation->calculation_total_discount;
     }
+    $self_calc_data = json_encode($self_calc_data);//массив с себестоимотью по каждой калькуляции
+    $project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
 
-    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
     $mount_transport = $mountModel->getDataAll($this->item->dealer_id);
     $min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
     $min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
-    $project_total_discount_transport = $project_total_discount + $sum_transport;
+
+    $project_total_discount_transport = $project_total_discount + $client_sum_transportt;
 
     $del_flag = 0;
-    $project_total = $project_total  + $sum_transport;
-    $project_total_discount = $project_total_discount  + $sum_transport;
+    $project_total = $project_total + $client_sum_transport;
+    $project_total_discount = $project_total_discount  + $client_sum_transport;
+
 
     // календарь
     $month1 = date("n");
@@ -89,7 +116,7 @@
     //----------------------------------------------------------------------------------
 
     // все бригады
-    $Allbrigades = $model->FindAllbrigades($user->dealer_id);
+    $Allbrigades = $calculationsModel->FindAllbrigades($user->dealer_id);
     // все монтажники
     $masid = [];
     foreach ($Allbrigades as $value) {
@@ -102,7 +129,7 @@
             $where .= ", '".$value."'";
         }
     }
-    $AllMounters = $model->FindAllMounters($where);
+    $AllMounters = $calculationsModel->FindAllMounters($where);
     // ---------------------------------------------------------------------------------
 
     // календарь
@@ -111,7 +138,7 @@
     //----------------------------------------------------------------------------------
 
     // все замерщики
-    $AllGauger = $model->FindAllGauger($user->dealer_id, 22);
+    $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
     //----------------------------------------------------------------------------------
 
 ?>
@@ -129,16 +156,92 @@
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
+<style>
+    .center-left {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .calculation_sum {
+        width: 100%;
+        margin-bottom: 25px;
+    }
+    .calculation_sum td {
+        padding: 0 5px;
+    }
+    #table1 {
+        width: 100%;
+        max-width: 300px;
+        font-size: 13px;
+    }
+    #table1 button, #table1 a, #table1 input {
+        font-size: 13px;
+        max-width: 150px;
+    }
+    #table1 td, #table1 th {
+        padding: 10px 5px;
+    }
+    .wtf_padding {
+        padding: 0;
+    }
+    .no_yes_padding {
+        padding: 0;
+    }
+    #calendar1, #calendar2 {
+        display: inline-block;
+        width: 100%;
+        padding: 0;
+    }
+    #container_calendars {
+        width: 100%;
+    }
+    #button-prev, #button-next {
+        padding: 0;
+    }
+    #calcs_total_border {
+        display: inline-block;
+        width: auto;
+        padding: 3px 7px;
+        border: 2px solid #414099;
+    }
+    @media screen and (min-width: 768px) {
+        .center-left {
+            text-align: left;
+        }
+        #table1 {
+            width: 100%;
+            max-width: 3000px;
+            font-size: 1em;
+        }
+        #table1 td, #table1 th {
+            padding: 15px;
+        }
+        #table1 button, #table1 a, #table1 input {
+            font-size: 1em;
+            width: auto;
+            max-width: 200px;
+        }
+        .wtf_padding {
+            padding: 15px;
+        }
+        .no_yes_padding {
+            padding: 15px;
+        }
+        #calendar1, #calendar2 {
+            width: calc(50% - 25px);
+        }
+        #calendar2 {
+            margin-left: 30px;
+        }
+    }
+</style>
 <?=parent::getButtonBack();?>
 
 <h2 class="center">Просмотр проекта</h2>
 
 <?php if ($this->item) : ?>
-<?php $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations'); ?>
-<?php
-    $calculations = $model->new_getProjectItems($this->item->id);
-    $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-    $phones = $client_model->getItemsByClientId($this->item->id_client);
+<?php    
+    $phones = $phones_model->getItemsByClientId($this->item->id_client);
 ?>
 <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.activate&type=gmcalculator&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data" >
     <div class="container">
@@ -190,8 +293,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <?php 
-                                            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');  
+                                        <?php  
                                             $birthday = $client_model->getClientBirthday($this->item->id_client);
                                         ?>
                                         <tr>
@@ -211,7 +313,6 @@
                                             <th>Почта</th>
                                             <td>
                                                 <?php
-                                                    $clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
                                                     $contact_email = $clients_dop_contacts_model->getContact($this->item->id_client);
                                                     foreach ($contact_email AS $contact):?>
                                                         <a href="mailto:<?=$contact->contact;?>"><?=$contact->contact;?></a>
@@ -432,6 +533,8 @@
     var $ = jQuery;
     var min_project_sum = <?php echo  $min_project_sum;?>;
     var min_components_sum = <?php echo $min_components_sum;?>;
+    var self_data = JSON.parse('<?php echo $self_calc_data;?>');
+    console.log(self_data);
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
         jQuery('#modal_window_container').addClass("submit");
@@ -1271,32 +1374,23 @@
             jQuery("#jform_new_project_calculation_daypart").prop("disabled",false);
         });
 
-        jQuery("input[name^='include_calculation']").click(function () {
-            var _this = jQuery(this);
-            var id = _this.val();
-            var estimate = jQuery("#section_estimate_" + id);
-            var mount = jQuery("#section_mount_" + id);
-            if (jQuery(this).prop("checked")) {
-                jQuery(this).closest("tr").removeClass("not-checked");
-                estimate.attr("vis", "");
-                if (flag1 == 1) estimate.show();
-                mount.attr("vis", "");
-                if (flag2 == 1) mount.show();
-            } else {
-                jQuery(this).closest("tr").addClass("not-checked");
-                estimate.attr("vis", "hide").hide();
-                mount.attr("vis", "hide").hide();
-            }
-            square_total();
-            calculate_total();
-            calculate_total1();
-            trans();
-        });
+
 
         jQuery("input[name^='smeta']").click(function () {
-            if(jQuery("input[name^='smeta']").attr("checked") == 'checked')
-                jQuery("input[name='smeta']").val(1);
-            else jQuery("input[name='smeta']").val(0);
+            let old_self_comp = jQuery("#calcs_self_components_total span.sum").data('oldval');
+                let self_component = jQuery("#calcs_self_components_total span.sum").text();
+                let calcs_total = jQuery("#calcs_total_border").text();
+                if(jQuery(this).prop("checked") == true){
+                    jQuery("input[name='smeta']").val(1);
+                    jQuery("#calcs_self_components_total span.sum").text(0);
+                    jQuery("#calcs_total_border").text(calcs_total - self_component);
+                }
+                else{
+                    jQuery("input[name='smeta']").val(0);
+              
+                    jQuery("#calcs_self_components_total span.sum").text(old_self_comp);
+                    jQuery("#calcs_total_border").text(parseInt(calcs_total) + parseInt(old_self_comp));
+                } 
         });
 
         jQuery("#client_order").click(function () {
@@ -1412,11 +1506,11 @@
                 jQuery("#distance_col").val('');
             }
             if(transport == 0){
-                trans();
+                calculate_transport();
             }
         });
         jQuery("[name = click_transport]").click(function () {
-            trans();
+            calculate_transport();
         });
 
 
@@ -1646,11 +1740,94 @@
         });
 
     });
-
+    jQuery("[name = 'include_calculation[]']").change(function(){
+        let canv_data = (self_data[jQuery(this).val()].canv_data).toFixed(0);
+        let comp_data = (self_data[jQuery(this).val()].comp_data).toFixed(0);
+        let mount_data = (self_data[jQuery(this).val()].mount_data).toFixed(0);
+        let calc_sum = (self_data[jQuery(this).val()].sum).toFixed(0);
+        let calc_sum_discount = (self_data[jQuery(this).val()].sum_discount).toFixed(0);
+        let n4 = self_data[jQuery(this).val()].square;
+        let n5 = self_data[jQuery(this).val()].perimeter;
+        let old_canv = jQuery("#calcs_self_canvases_total span.sum").text();
+        let old_comp = jQuery("#calcs_self_components_total span.sum").text();
+        let old_mount = jQuery("#calcs_self_mount_total span.sum" ).text();
+        let old_all = jQuery("#calcs_total_border").text();
+        let old_total = jQuery("#project_total span.sum").text();
+        let old_total_discount = jQuery("#project_total_discount span.sum").text();
+        let old_n4 = jQuery("#total_square span.sum").text();
+        let old_n5 = jQuery("#total_perimeter span.sum").text();
+        if(jQuery(this).prop("checked") == true){
+           jQuery("#calcs_self_canvases_total span.sum").text(parseInt(old_canv) + parseInt(canv_data));
+           if(jQuery("input[name='smeta']").val()!=1){
+               jQuery("#calcs_self_components_total span.sum").text(parseInt(old_comp) + parseInt(comp_data));
+           }
+           jQuery("#calcs_self_mount_total span.sum").text(parseInt(old_mount) + parseInt(mount_data));
+           jQuery("#calcs_total_border").text(parseInt(old_all) + parseInt(canv_data) +  parseInt(comp_data) + parseInt(mount_data));
+           jQuery("#project_total span.sum").text(parseInt(old_total)+ parseInt(calc_sum));
+           jQuery("#project_total_discount span.sum").text(parseInt(old_total_discount)+ parseInt(calc_sum_discount));
+           jQuery("#total_square span.sum").text(parseFloat(old_n4) + parseFloat(n4));
+           jQuery("#total_perimeter span.sum").text(parseFloat(old_n5) + parseFloat(n5));
+          
+        }
+        else{
+            jQuery("#calcs_self_canvases_total span.sum").text(old_canv-canv_data);
+            if(jQuery("input[name='smeta']").val()!=1){
+                jQuery("#calcs_self_components_total span.sum").text(old_comp-comp_data);
+            }
+            jQuery("#calcs_self_mount_total span.sum").text(old_mount-mount_data);
+            jQuery("#calcs_total_border").text(old_all - canv_data - comp_data - mount_data);
+            jQuery("#project_total span.sum").text(old_total - calc_sum);
+            jQuery("#project_total_discount span.sum").text(old_total_discount - calc_sum_discount);
+            jQuery("#total_square span.sum").text((old_n4 - n4).toFixed(2));
+            jQuery("#total_perimeter span.sum").text((old_n5 - n5).toFixed(2));
+            let more_one = check_selected();
+            if(!more_one){
+                jQuery("#project_total_discount span.sum").text(jQuery("#transport_sum span.sum").text());
+            }
+            
+        }
+        
+        jQuery("#calcs_self_components_total span.sum").data('oldval',jQuery("#calcs_self_components_total span.sum").text());
+        check_min_sum(jQuery("#calcs_self_canvases_total span.sum").text());
+    });
     jQuery("#jform_project_new_calc_date").change(function(){
         jQuery("#jform_new_project_calculation_daypart").prop("disabled",false);
     })
+    function check_min_sum(canv_sum){
+        let min_sum = 0;
+        if(canv_sum == 0) {
+            if(min_components_sum>0){
+                min_sum = min_components_sum;
+            }
+        }
+        else{
+            if(min_project_sum>0){
+                min_sum = min_project_sum;
+            }
+        }            
+        let project_total = jQuery("#project_total span.sum").text();
+        if(jQuery("#project_total_discount span.dop").length == 0){
+            jQuery("#project_total_discount").append('<span class = \"dop\" style = \"font-size: 9px\";></span>');
+        }
+        if(project_total < min_sum){
+            jQuery("#project_total_discount span.dop").html(` * минимальная сумма заказа ${min_sum} р.`);
+            jQuery("#project_total_discount span.sum").text(min_sum);
 
+        }
+        else{
+            jQuery("#project_total_discount span.dop").html(" ");
+        }
+        jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
+    }
+    function check_selected(){
+        let result = false;
+        jQuery("[name = 'include_calculation[]']").each(function(){
+            if(jQuery(this).prop("checked") == true ){
+                result = true;
+            }
+        });
+        return result;
+    }
     function update_times(fieldName, fieldName2) {
         var date = jQuery(fieldName).val();
         if (isDate(date)) {
@@ -1698,106 +1875,99 @@
         return true;
     }
 
-// ругается когда вставила календарь!!!
-    /* var time = <?php if(isset( $_SESSION['time'])){echo "\"".$_SESSION['time']."\"";} else echo "\"".$time."\"";?>;
-    var lnk=document.getElementById('jform_new_project_calculation_daypart').options;
-    for (var i=0;i<lnk.length;i++) {
-        if (lnk[i].value==time) {
-            document.getElementById('jform_new_project_calculation_daypart').disabled = false;
-            lnk[i].selected=true;
-        }
-    } */
-
-     function trans()
-    {
-        var id = <?php echo $this->item->id; ?>;
-        var calcul = jQuery("input[name='transport']:checked").val();
-        var transport = jQuery("input[name='transport']:checked").val();
-        var distance = jQuery("#distance").val();
-        var distance_col = jQuery("#distance_col").val();
-        var distance_col_1 = jQuery("#distance_col_1").val();
-        var send_data = [];
-        send_data["id"] = id; 
-        send_data["transport"] = transport;
-        switch(transport){
-            case "0" :
-                send_data["distance_col"] = 0;
-                send_data["distance"] = 0;
-                break;
-            case "1":
-                send_data["distance_col"] = distance_col_1;
-                send_data["distance"] = 0;
-                break;
-            case "2" :
-                send_data["distance_col"] = distance_col;
-                send_data["distance"] = distance;
-                break;
-        }
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=project.update_transport",
-            data:{
-                id : send_data["id"],
-                transport : send_data["transport"],
-                distance : send_data["distance"] ,
-                distance_col :send_data["distance_col"]
-            },
-            success: function(data){
-                calc_transport(data);
-            },
-            dataType: "json",
-            timeout: 10000,
-            error: function(data){
-                var n = noty({
-                    theme: 'relax',
-                    timeout: 2000,
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
-                });
+     
+    jQuery("input[name='transport']").click(function () {
+            var transport = jQuery("input[name='transport']:checked").val();
+            if (transport == '2') {
+                jQuery("#transport_dist").show();
+                jQuery("#transport_dist_col").hide();
+                jQuery("#distance").val('');
+                jQuery("#distance_col_1").val('');
             }
-        }); 
-    }
-    function calc_transport(data){
-        data = JSON.parse(data);
-                var html = "",
-                    transport_sum = parseFloat(data);
-                var calc_sum = 0, calc_total = 0; canvas = 0;
-                jQuery.each(jQuery("[name='include_calculation[]']:checked"), function (i,e) {
-                    calc_sum += parseFloat(jQuery("[name='calculation_total_discount["+jQuery(e).val()+"]']").val());
-                    calc_total += parseFloat(jQuery("[name='calculation_total["+jQuery(e).val()+"]']").val());
-                    canvas += parseFloat(jQuery("[name='canvas["+jQuery(e).val()+"]']").val());
-                });
-
-                var sum = Float(calc_sum + transport_sum);
-                var sum_total = Float(calc_total + transport_sum);
-
-                if (canvas == 0) {
-                    sum = (sum <= min_components_sum)?min_components_sum:sum;
-                    sum_total = (sum_total <= min_components_sum)?min_components_sum:sum_total;
-                } else {
-                    sum = (sum <= min_project_sum)?min_project_sum:sum;
-                    sum_total = (sum_total <= min_project_sum)?min_project_sum:sum_total;
+            else if(transport == '1') {
+                jQuery("#transport_dist").hide();
+                jQuery("#transport_dist_col").show();
+                jQuery("#distance_col").val('');
+                jQuery("#distance").val('');
+            }
+            else {
+                jQuery("#transport_dist").hide();
+                jQuery("#transport_dist_col").hide();
+                jQuery("#distance").val('');
+                jQuery("#distance_col").val('');
+            }
+            if(transport == 0){
+                calculate_transport();
+            }
+        });
+        function change_transport(sum){
+            let old_transport = jQuery("#transport_sum span.sum").text();
+            let new_transport = sum.client_sum;
+            let new_self_transport = sum.mounter_sum;
+            let old_self_transport = jQuery("#transport_sum span.sum").data('selfval');
+            jQuery("#project_sum_transport").val(new_transport);
+            jQuery("#transport_sum span.sum").text(new_transport);
+            let old_self_mount = jQuery("#calcs_self_mount_total span.sum").text();
+            let old_self_total = jQuery("#calcs_total_border").text();
+            let old_total = jQuery("#project_total span.sum").text();
+            let old_total_discount = jQuery("#project_total_discount span.sum").text();
+            jQuery("#project_total span.sum").text(parseInt(old_total) - old_transport + parseInt(new_transport));
+            jQuery("#project_total_discount span.sum").text(old_total_discount - old_transport + new_transport);
+            jQuery("#calcs_self_mount_total span.sum").text(old_self_mount - old_self_transport + new_self_transport);
+            jQuery("#calcs_total_border").text(old_self_total - old_self_transport + new_self_transport);
+            jQuery("#transport_sum span.sum").data('selfval',new_self_transport);
+            jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
+        }
+       
+        function update_transport(id,transport,distance,distance_col){
+            jQuery.ajax({
+                type: 'POST',
+                url: "index.php?option=com_gm_ceiling&task=project.update_transport",
+                data:{
+                    id : id,
+                    transport : transport,
+                    distance : distance,
+                    distance_col : distance_col
+                },
+                success: function(data){
+                    change_transport(data);
+                },
+                dataType: "json",
+                timeout: 10000,
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
+                    });
                 }
-                sum = Math.round(sum * 100) / 100;
-                sum_total = Math.round(sum_total * 100) / 100;
+            }); 
+        }
 
-                jQuery("#transport_sum").text(transport_sum.toFixed(0) + " руб.");
-                jQuery("#project_total span.sum").text(sum_total);
-                jQuery("#project_total_discount span.sum").text(sum  + " руб.");
-                jQuery("#project_sum_transport").val(sum);
-                jQuery(" #project_sum").val(sum);
-
-                if(canvas == 0) {
-                    jQuery("#project_total span.dop").html((sum_total == min_components_sum)?" * минимальная сумма заказа "+min_components_sum+"р.":"");
-                    jQuery("#project_total_discount span.dop").html((sum == min_components_sum)?" * минимальная сумма заказа"+min_components_sum+"р.":"");
-                }
-                else {
-                    jQuery("#project_total span.dop").html((sum_total == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+"р.":"");
-                    jQuery("#project_total_discount span.dop").html((sum == min_project_sum)?" * минимальная сумма заказа"+min_project_sum+".":"");
-                }
-    }
+        function calculate_transport(){
+            var id = <?php echo $this->item->id; ?>;
+            var transport = jQuery("input[name='transport']:checked").val();
+            var distance = jQuery("#distance").val();
+            var distance_col = jQuery("#distance_col").val();
+            var distance_col_1 = jQuery("#distance_col_1").val();
+            console.log(distance,distance_col,distance_col_1);
+            switch(transport){
+                case "0" :
+                    update_transport(id,0,0,0);
+                    break;
+                case "1":
+                   
+                    update_transport(id,transport,distance,distance_col_1);
+                    break;
+                case "2" :
+                                       
+                    update_transport(id,transport,distance,distance_col);
+                    break;
+            }
+        }
 
     /**
      * @return {number}
@@ -1918,19 +2088,7 @@
 
     var mountArray = {};
 
-    jQuery("input[name^='smeta']").change(function () {
-        comp_sum = <?php echo $dealer_comp_all;?>;
-        console.log(comp_sum);
-        var sum = jQuery("#calculation_total1")[0].innerText;
-        if(jQuery("input[name^='smeta']").attr("checked") == 'checked'){
-            jQuery("#calculation_total1")[0].innerText = +sum-comp_sum;
 
-        }
-        else{
-            jQuery("#calculation_total1")[0].innerText = +sum+comp_sum;
-
-        }
-    });
 
     jQuery("#spend-form input").on("keyup", function () {
         jQuery('#extra_spend_submit').fadeIn();

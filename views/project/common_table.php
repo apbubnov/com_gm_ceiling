@@ -71,10 +71,10 @@
                         <tr>
                             <th>Общая S/общий P :</th>
                             <th id="total_square">
-                                <span class = "sum"><?php echo $total_square;?></span> м<sup>2</sup> /
+                                <span class = "sum"><?php echo round($total_square,2);?></span> м<sup>2</sup> /
                             </th>
                             <th colspan="2" id="total_perimeter">
-                                <span class = "sum"><?php echo $total_perimeter; ?></span> м
+                                <span class = "sum"><?php echo  round($total_perimeter,2); ?></span> м
                             </th>
                         </tr>
                         <tr>
@@ -182,7 +182,7 @@
                                             $project_total =  $min_project_sum;
                                         }
                                     ?>
-                                    <span class="sum"><?= round($project_total, 0);?> р.</span>
+                                    <span class="sum"><?= round($project_total, 0);?> </span>р.
                                     <?php if($old_price != $project_total): ?>
                                         <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа <?php echo $min_project_sum;?>. </span>
                                     <?endif;?>
@@ -387,14 +387,15 @@
                             <?php if($this->item->project_status < 5 || $this->item->project_status == 22) {?>
                                 <a class="btn btn-primary" href="index.php?option=com_gm_ceiling&view=calculationform2&type=calculator&subtype=calendar&calc_id=<?php echo $calculation->id; ?>">Изменить расчет</a>
                             <?php } ?>
-                                <?php if (!empty($filename)):?>
+                                <?php if (!empty($filename)) { ?>
                                     <div class="sketch_image_block" style="margin-top: 15px;">
                                         <h4>Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
                                         <div class="section_content">
                                             <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>"/>
                                         </div>
                                     </div>
-                                <?php endif; ?>
+                                <?php } 
+                                    $filename = ''; ?>
                                 <div class="row">
                                     <div class="col-xs-12 wtf_padding">
                                         <?php 
