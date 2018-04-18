@@ -1575,43 +1575,7 @@
             });
             jQuery("input[name='isDiscountChange']").val(1);
             if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-                data: {
-                    fio: jQuery("#jform_client_name").val(),
-                    address: jQuery("#jform_address").val(),
-                    house: jQuery("#jform_house").val(),
-                    bdq: jQuery("#jform_bdq").val(),
-                    apartment: jQuery("#jform_apartment").val(),
-                    porch: jQuery("#jform_porch").val(),
-                    floor: jQuery("#jform_floor").val(),
-                    code: jQuery("#jform_code").val(),
-                    date: jQuery("#jform_project_new_calc_date").val(),
-                    time: jQuery("#jform_new_project_calculation_daypart").val(),
-                    manager_comment: jQuery("#gmmanager_note").val(),
-                    client_name: jQuery("#jform_client_name").val(),
-                    phones: phones,
-                    comments: jQuery("#comments_id").val(),
-                    s: s,
-                    gauger: jQuery("#jform_project_gauger").val()
-                },
-                success: function (data) {
-                    jQuery("#form-client").submit();
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка cервер не отвечает"
-                    });
-                }
-            });
+            save_data_to_session(3);
 
         });
 
@@ -2410,9 +2374,9 @@ function change_transport(sum){
         Array.from(classname).forEach(function (element) {
             phones.push(element.value);
         });
-
+        save_data_to_session(1);
     });
-    function  save_data_to_session(action_type,id=null){
+    function save_data_to_session(action_type,id=null){
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=save_data_to_session",

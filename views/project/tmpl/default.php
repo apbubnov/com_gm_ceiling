@@ -48,10 +48,10 @@ $n14_type_text = array(
 	"22, 27, 32 мм"
 );
 
-$canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
-if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
+//$canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
+/*if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
 	$canEdit = JFactory::getUser()->id == $this->item->created_by;
-}
+}*/
 ?>
 <h2>Просмотр проекта</h2>
 <?php if ($this->item) : ?>
