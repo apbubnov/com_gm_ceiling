@@ -14,7 +14,7 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
 $model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations = $model_calculations->getProjectItems($this->item->id);
+$calculations = $model_calculations->new_getProjectItems($this->item->id);
 foreach($calculations as $calc){
     Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);    
 }
@@ -91,37 +91,12 @@ $AllMounters = $model->FindAllMounters($where);
 <?php if ($this->item) : ?>
 
     <?php
-        $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-        $calculations = $model->getProjectItems($this->item->id);
         $app = JFactory::getApplication();
         $subtype = $app->input->getString('subtype', NULL);
-        /*
-            if($user->dealer_type!=2)
-                $need_mount = 1;
-            else $need_mount = 0;
-        */
         $del_flag = 0;
         $components_data = array();
         $project_sum = 0;
         $counter = 0;
-        /*foreach ($calculations as $calculation) {
-            $counter++;
-            $from_db = 1;
-            $save = 1;
-            $ajax = 0;
-            $pdf = 1;
-            $print_components = 0;
-            if ($calculation->mounting_sum == 0) $need_mount = 0;
-            else $need_mount = 1;
-            Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-            $from_db = 1;
-            $save = 0;
-            $ajax = 0;
-            $pdf = 0;
-            $print_components = 1;
-            $components_data[] = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components, $del_flag, $need_mount);
-        }*/
-        //Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
         $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
         $client = $client_model->getClientById($this->item->id_client);
         $dealer = JFactory::getUser($client->dealer_id);

@@ -227,7 +227,7 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 
             $calc_model = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
             $result  = $calc_model->create_calculation($proj_id);
-            die($result);
+            die(json_encode($result));
 		}
 		catch(Exception $e)
         {

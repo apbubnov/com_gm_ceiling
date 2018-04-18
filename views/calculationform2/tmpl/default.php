@@ -578,7 +578,7 @@
             let arr_widths = [];
             let select_proizv = document.getElementById('jform_proizv').value;
             let select_color = document.getElementById('jform_color').value;
-            if (select_color == "")
+            if (select_color == "" || select_color == 0)
             {
                 select_color = null;
             }
@@ -804,7 +804,6 @@
         }
         function initial_fill(){
             let n2_options = jQuery("#jform_n2 option");
-            let proizv_options = jQuery("#jform_proizv option");
             if(canvas){
                 add_select_attr_to_option(n2_options,canvas.texture_id);
                 select_colors();
@@ -812,6 +811,7 @@
                     jQuery("#jform_color_switch-lbl").show();
                     jQuery("#color_switch").show();
                 }
+                let proizv_options = jQuery("#jform_proizv option");
                 add_select_attr_to_option(proizv_options,canvas.manufacturer_id);
                 canvas.filled = true;
             } 

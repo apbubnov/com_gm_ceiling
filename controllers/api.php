@@ -40,7 +40,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $authorization = json_decode($_POST['authorizations']);
             $model = $this->getModel();
 
-            $username = mb_ereg_replace('[^\d]', '', $username);
+            $username = mb_ereg_replace('[^\d]', '', $authorization->username);
             if (mb_substr($username, 0, 1) == '9' && strlen($username) == 10)
             {
                 $username = '7'.$username;
