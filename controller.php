@@ -3300,7 +3300,7 @@ public function register_mnfctr(){
              switch ($what_funct) {
                 case 'get_factures':
                     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
-                    $answer = $canvases_model->getFilteredItemsCanvas("count>0");
+                    $answer = json_encode($canvases_model->getFilteredItemsCanvas("count>0"));
                     break;
             }
             
