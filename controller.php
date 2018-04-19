@@ -2562,6 +2562,7 @@ public function register_mnfctr(){
                 $site4 = $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
                 $site5 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
                 $site6 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=0";
+                $site_dev = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 // письмо
                 $mailer = JFactory::getMailer();
                 $config = JFactory::getConfig();
@@ -2724,6 +2725,10 @@ public function register_mnfctr(){
                 $body .= "По всем вопросам писать на почту gm-partner@mail.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
                 if($dealer_type == 3){
                     $mailer->setSubject('+15 000 руб/в мес. каждому Отделочнику ');
+                }
+                elseif($dealer_type == 7)
+                {
+                    $mailer->setSubject('Натяжные потолки для застройщиков от 280 руб.');
                 }
                 else{
                     $mailer->setSubject('Коммерческое предложение');
