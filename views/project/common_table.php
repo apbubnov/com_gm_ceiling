@@ -409,7 +409,7 @@
 
                                 $button_url = "index.php?option=com_gm_ceiling&view=calculationform2$type_url$subtype_url&calc_id=$calculation->id";
                             ?>
-                                <a class="btn btn-primary" href="<?php echo $button_url; ?> <?php echo $hidden?>">Изменить расчет</a>
+                                <a class="btn btn-primary change_calc" href="<?php echo $button_url; ?>" data-calc_id="<?php echo $calculation->id; ?>" <?php echo $hidden; ?>>Изменить расчет</a>
                             <?php  
                             } ?>
                                 <?php if (!empty($filename)) { ?>

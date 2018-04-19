@@ -1592,6 +1592,17 @@
                         text: "Укажите рекламу"
                     });
                 }
+                else if (document.getElementById('call_date').value == '')
+                {
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Укажите время перезвона"
+                    });
+                }
                 else {
                     jQuery("#form-client").submit();
                 }
@@ -1760,6 +1771,18 @@
 
         jQuery("#add_call_and_submit_up").click(function(){
             client_id = <?php echo $this->item->id_client;?>;
+            if (jQuery("#call_date_up").val() == '')
+            {
+                var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Укажите время перезвона"
+                    });
+                return;
+            }
                     jQuery.ajax({
                         url: "index.php?option=com_gm_ceiling&task=changeCallTime",
                         data: {
@@ -1771,15 +1794,6 @@
                         async: true,
                         success: function (data) {
                             add_history(client_id,"Звонок перенесен");
-                            var n = noty({
-                                timeout: 2000,
-                                theme: 'relax',
-                                layout: 'center',
-                                maxVisible: 5,
-                                type: "success",
-                                text: "Звонок сдвинут на 30 минут"
-                            });
-
                         },
                         error: function (data) {
                             var n = noty({
@@ -1906,18 +1920,12 @@
         jQuery("#close-tar").hide();
         jQuery("#modal-window-container").hide();
         jQuery("#modal-window-call-tar").hide();
-    })
+    });
 
-    function send_and_redirect(id) {
-        var phones = [];
-        var s = window.location.href;
-        var classname = jQuery("input[name='new_client_contacts[]']");
-        Array.from(classname).forEach(function (element) {
-            phones.push(element.value);
-        });
-        save_data_to_session(2,id);
-
-    }
+    jQuery('.change_calc').click(function() {
+        let id = jQuery(this).data('calc_id');
+        save_data_to_session(2, id);
+    });
 
     jQuery("#add_phone").click(function () {
         var html = "";
@@ -2434,13 +2442,13 @@ function change_transport(sum){
             success: function (data) {
                 console.log(data);
                 if(action_type == 1){
-                    //create_calculation(<?php echo $this->item->id; ?>);
+                    create_calculation(<?php echo $this->item->id; ?>);
                 }
                 if(action_type == 2){
-                   //window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&calc_id=" + id;
+                   window.location = "index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=" + id;
                 }
                 if(action_type == 3){
-                    //jQuery("#form-client").submit();
+                    jQuery("#form-client").submit();
                 }
                 
             },
