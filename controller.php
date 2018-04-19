@@ -1987,17 +1987,10 @@ public function register_mnfctr(){
     {
         try{
             $jinput = JFactory::getApplication()->input;
-            $_SESSION['FIO'] = $jinput->get('fio', '', 'STRING');
-            $_SESSION['address'] = $jinput->get('address', '', 'STRING');
-            $_SESSION['date'] = $jinput->get('date', '', 'STRING');
-            $_SESSION['time'] = $jinput->get('time', '', 'STRING');
-            $_SESSION['manager_comment'] = $jinput->get('manager_comment', '', 'STRING');
-            $_SESSION['phones'] = $jinput->get('phones', '', 'ARRAY');
-            $_SESSION['comments'] = $jinput->get('comments', '', 'STRING');
-            $_SESSION['url'] = $jinput->get('s', '', 'STRING');
-            $_SESSION['gauger'] = $jinput->get('gauger', '', 'STRING');            
-            
-            die(true);
+            $proj_id = $jinput->get('proj_id', null, 'INT');
+            $data = $jinput->get('data', '', 'STRING');
+            $_SESSION[$proj_id] = $data;
+            die(json_encode($_SESSION[$proj_id]));
         }
         catch(Exception $e)
         {

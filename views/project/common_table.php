@@ -1,3 +1,12 @@
+<?php
+    $jinput = JFactory::getApplication()->input;
+    $flag_hidden = "";
+    $type = $jinput->get('type', '', 'STRING');
+    $subtype = $jinput->get('subtype', '', 'STRING');
+    if($subtype == "project" || $subtype == "refused"){
+       $hidden = "hidden";
+    }
+?>
 <div class="row">
     <div class="col-xs-12 no_padding">
         <h4>Расчеты для проекта</h4>
@@ -13,11 +22,11 @@
                     </a>
                 </li>
             <?php } ?>
-            <li class="nav-item"> 
-                <button type="button" class="nav-link" id="add_calc" style="color:white;">
-                    Добавить потолок <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-                </button>
-            </li>
+                <li class="nav-item"> 
+                    <button type="button" class="nav-link" id="add_calc" style="color:white;" <?php echo $hidden?>>
+                        Добавить потолок <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                    </button>
+                </li>
         </ul>
         <?php if($user->dealer_type == 1 && count($calculations) <= 0) { ?>
             <p>У Вас еще нет потолков</p>
@@ -36,7 +45,7 @@
                         ?>
                             <tr class="section_ceilings">
                                 <td class="include_calculation" colspan="4">
-                                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
+                                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $hidden?>>
                                     <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
                                     <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
                                     <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
@@ -386,10 +395,6 @@
                             <div class="other_tabs">
                             <?php if($this->item->project_status < 5 || $this->item->project_status == 22)
                             {
-                                $jinput = JFactory::getApplication()->input;
-                                $type = $jinput->get('type', '', 'STRING');
-                                $subtype = $jinput->get('subtype', '', 'STRING');
-
                                 $type_url = '';
                                 if (!empty($type))
                                 {
@@ -404,8 +409,9 @@
 
                                 $button_url = "index.php?option=com_gm_ceiling&view=calculationform2$type_url$subtype_url&calc_id=$calculation->id";
                             ?>
-                                <a class="btn btn-primary" href="<?php echo $button_url; ?>">Изменить расчет</a>
-                            <?php } ?>
+                                <a class="btn btn-primary" href="<?php echo $button_url; ?> <?php echo $hidden?>">Изменить расчет</a>
+                            <?php  
+                            } ?>
                                 <?php if (!empty($filename)) { ?>
                                     <div class="sketch_image_block" style="margin-top: 15px;">
                                         <h4>Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
@@ -670,7 +676,7 @@
                                             <?php } ?>
                                     </div>
                                     <?php if($this->item->project_status < 5 || $this->item->project_status == 22){?>
-                                        <button class="btn btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);"> Удалить потолок </button>
+                                        <button class="btn btn-danger"  id="delete" style="margin:10px;" type="button" onclick="submit_form(this);" <?php echo $hidden?>> Удалить потолок </button>
                                     <?php } ?>
                                     <input id="idCalcDeleteSelect" value="<?=$calculation->id;?>" type="hidden" disabled>
                                 </div>
