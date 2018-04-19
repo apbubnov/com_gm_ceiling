@@ -29,6 +29,7 @@
     $precalculation = $jinput->get('precalculation', '', 'STRING');
     $recalc = $jinput->get('recalc', 0, 'INT');
     $seam = $jinput->get('seam', 0, 'INT');
+    $api = $jinput->get('api', 0, 'INT');
 
     $type_url = '';
     if (!empty($type))
@@ -85,6 +86,19 @@
     }
     
 ?>
+
+<?php if ($api == 1): ?>
+    <style type="text/css">
+        header
+        {
+            display: none;
+        }
+        footer
+        {
+            display: none;
+        }
+    </style>
+<?php endif ?>
 <div class="modal_window_container" id="mv_container">
     <button type="button" class="close_btn" id="close"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
     <div class="modal_window" id="modal_window_seam">

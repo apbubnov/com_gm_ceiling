@@ -21,6 +21,7 @@ function create_calculation(proj_id)
             proj_id: proj_id
         },
         success: function(data){
+        	data = data.replace(/\"/g,'');
 			console.log(data);
 			var url_type = '';
 			var url_subtype = '';
