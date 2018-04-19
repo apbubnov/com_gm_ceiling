@@ -451,6 +451,7 @@
     };
     jQuery('document').ready(function()
     {
+        let api = "<?php echo $api;?>";
         var seam = '<?php echo $seam; ?>';
         if (seam == '1')
         {
@@ -750,7 +751,13 @@
 		});
        
         jQuery("#btn_add_components").click(function(){
-            include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
+            if(api){
+                include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components_client.js');
+            }
+            else{
+                include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
+            }
+           
             setTimeout(event_help_proccess, 2000);
         });
         
