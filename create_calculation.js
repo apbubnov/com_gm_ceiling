@@ -32,7 +32,7 @@ function create_calculation(proj_id)
 			{
 				url_subtype = `&subtype=${url_getparams['subtype']}`;
 			}
-			location.href = `/index.php?option=com_gm_ceiling&view=calculationform2${url_type}${url_subtype}&calc_id=${data}`;
+			location.href = `/index.php?option=com_gm_ceiling&view=calculationform2${url_type}${url_subtype}&calc_id=${data-0}`;
         },
         error: function(data){
             var n = noty({

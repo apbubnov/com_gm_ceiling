@@ -1990,7 +1990,8 @@ public function register_mnfctr(){
             $proj_id = $jinput->get('proj_id', null, 'INT');
             $data = $jinput->get('data', '', 'STRING');
             $_SESSION[$proj_id] = $data;
-            die(json_encode($_SESSION[$proj_id]));
+            //die(json_encode($_SESSION[$proj_id]));
+            die(json_encode($_SESSION));
         }
         catch(Exception $e)
         {
@@ -3295,7 +3296,6 @@ public function register_mnfctr(){
                     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
                     $answer = json_encode($canvases_model->getFilteredItemsCanvas("count>0"));
                     break;
-
             }
             
             die($answer);
