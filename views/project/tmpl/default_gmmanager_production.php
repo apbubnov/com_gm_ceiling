@@ -114,7 +114,7 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
 
 ?>
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
+<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <style>
     .center-left {
         width: 100%;
@@ -512,6 +512,57 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
     </div>
     
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
+<?php if ($this->item->project_verdict == 0) { ?>
+            <table>
+                <tr>
+                    <td>
+                        <a class="btn  btn-primary" id="run_in_production">
+                            Запустить в производство
+                        </a>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td colspan=3>
+                        <div id="call" class="call" style="display:none;">
+                            <label for="call">Добавить звонок</label>
+                            <br>
+                            <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
+                            <input name="call_comment" id="call_comment" placeholder="Введите примечание">
+                            <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
+                                        class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        </div>
+                    <td>
+                </tr>
+            </table>
+        <?php } ?>
+
+    </div>
+    <div id="modal-window-container-tar">
+        <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="modal-window-choose-tar">
+            <p id="date-modal"></p>
+            <p><strong>Выберите время замера:</strong></p>
+            <p>
+                <table id="projects_gaugers"></table>
+            </p>
+            <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+        </div>
+    </div>
+    <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
+    </form>
+    </div>
+    <div id="modal_window_container" class="modal_window_container">
+        <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+        </button>
+        <div id="modal_window_del" class="modal_window">
+            <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
+            <p>
+                <button type="button" id="ok" class="btn btn-primary">Да</button>
+                <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
+            </p>
+        </div>
+    </div>
 <?php
     else:
         echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');

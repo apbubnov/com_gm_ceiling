@@ -662,7 +662,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$cl_phones_model->update($client_id,$change_phones);
 				}
 				$data->project_verdict = 1;
-				$calculations = $calculationsModel->getProjectItems($data->id);
+				$calculations = $calculationsModel->new_getProjectItems($data->id);
 				$all_calculations = array();
 				foreach($calculations as $calculation){
 					$all_calculations[] = $calculation->id;
@@ -939,13 +939,14 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$data->project_verdict = 1;
 					}
 					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-					$calculations = $calculationsModel->getProjectItems($data->id);
+					$calculations = $calculationsModel->new_getProjectItems($data->id);
 					$all_calculations = array();
 					foreach($calculations as $calculation){
 						$all_calculations[] = $calculation->id;
 					}
 					//$checked_calculations = array_intersect($data['include_calculation'], $all_calculations);
 					$ignored_calculations = array_diff($all_calculations, $include_calculation);
+                    
 					// Attempt to save the data.
 					if($activate_by_email==0){
 						$gm_calculator_note = $jinput->get('gm_calculator_note','Отсутсвует','STRING');
@@ -954,14 +955,13 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 							
 							$c_date = date_create($data->project_mounting_date);
 							date_sub($c_date, date_interval_create_from_date_string('1 day'));
-							
 							if(empty($data->project_mounting_date)){
-								
 								$data->project_status = 4;
 								$data->project_verdict = 0;
 								$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор без даты монтажа");
 								$call_mount_date = $jinput->get('calldate_without_mounter','','STRING');
 								$call_mount_time = $jinput->get('calltime_without_mounter','','STRING'); 
+
 								if(!empty($data->read_by_manager)){
 									$callback_model->save($call_mount_date.' '.$call_mount_time,"Примечание от замерщика : ".$gm_calculator_note,$data->id_client,$data->read_by_manager);
 									$client_history_model->save($data->id_client,"Добавлен новый звонок. Примечание от замерщика: ".$gm_calculator_note);
@@ -983,15 +983,16 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 								} else {
 									$client_history_model->save($data->id_client,"По проекту №".$project_id." заключен договор");
+
 									$client_history_model->save($data->id_client,"Проект №".$project_id." назначен на монтаж на ".$data->project_mounting_date);
+
 									if(!empty($data->read_by_manager)){
 										$callback_model->save(date_format($c_date, 'Y-m-d H:i'),"Уточнить готов ли клиент к монтажу",$data->id_client,$data->read_by_manager);
 										$client_history_model->save($data->id_client,"Добавлен новый звонок по причине: Уточнить готов ли клиент к монтажу");
 									}
 									$return = $model->activate($data, 5/*3*/);
-								}
 
-								
+								}	
 							}
 							
 						}
@@ -1009,7 +1010,9 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						$return = $model->activate($data, 23);
 						$array = [];
 						foreach($include_calculation as $calc){
-							Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc);
+                            if($calc->n3){
+                                Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc);
+                            }
 							$array[] = $_SERVER["DOCUMENT_ROOT"] . "/costsheets/" . md5($calc. "managernone") . ".pdf";
 						}
 						Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id,0);
@@ -1049,7 +1052,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					else {
 
 						if($project_verdict == 1 && count($ignored_calculations) > 0) {
-
                             $project_data = $model->getData($project_id);
                             $project_data->project_sum = 0;
 						    foreach ($calculations as $calculation)
@@ -1074,6 +1076,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
 							$repeat_request = Gm_ceilingHelpersGm_ceiling::getModel('RepeatRequest');
 							$repeat_request->save($refuse_id,$old_advt);
+
 							$client_history_model->save($client_id, "Не вошедшие в договор № ".$project_id." потолки перемещены в проект №".$refuse_id);
 							$calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
 							foreach($ignored_calculations as $ignored_calculation){
@@ -1082,12 +1085,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 					}
 					$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-					$calculations = $calculationsModel->getProjectItems($data->id);
+					$calculations = $calculationsModel->new_getProjectItems($project_id);
 					$components_data = array();
 					$project_sum = 0;
 					foreach($include_calculation as $calculation){
-						if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
-						$calculations = $calculationsModel->getProjectItems($calculation);
+						if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation->id);
+						$calculations = $calculationsModel->new_getProjectItems($calculation);
 						$from_db = 1;
 						$save = 0;
 						$ajax = 0;
@@ -1102,7 +1105,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 						}
 					if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
 					} 
-					if($smeta == 0) Gm_ceilingHelpersGm_ceiling::print_components($project_id, $components_data);
 
 					// Clear the profile id from the session.
 					$app->setUserState('com_gm_ceiling.edit.project.id', null);
@@ -1184,7 +1186,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$project_id = $jinput->get('id', null, 'INT');
 			$email = $jinput->get('email', null, 'STRING');
 			$calculations_model = self::getModel('calculations');
-			$calculations = $calculations_model->getProjectItems($project_id);
+			$calculations = $calculations_model->new_getProjectItems($project_id);
 			$array = [];
 			foreach($calculations as $calc){
 				Gm_ceilingHelpersGm_ceiling::create_manager_estimate(0,$calc->id);

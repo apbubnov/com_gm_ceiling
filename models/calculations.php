@@ -506,28 +506,47 @@ class Gm_ceilingModelCalculations extends JModelList {
 
     public function new_getProjectItems($project_id)
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query
-            ->select('*')
-            ->from('#__gm_ceiling_calculations')
-            ->where('project_id = '.$project_id);
-        $db->setQuery($query);
-        $results = $db->loadObjectList();
-        return $results;
+        try{
+             $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->select('*')
+                ->from('#__gm_ceiling_calculations')
+                ->where('project_id = '.$project_id);
+            $db->setQuery($query);
+            $results = $db->loadObjectList();
+            return $results;
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+       
     }
 
     public function updateComponents_sum($id)
     {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query->update($db->quoteName('#__gm_ceiling_calculations'));
-        $query->set("`components_sum` = 0")
-            ->where('id = '.$id);
-        //print_r((string)$query); exit;
-        $db->setQuery($query);
-        $db->execute();
-        return true;
+        try{
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query->update($db->quoteName('#__gm_ceiling_calculations'));
+            $query->set("`components_sum` = 0")
+                ->where('id = '.$id);
+            //print_r((string)$query); exit;
+            $db->setQuery($query);
+            $db->execute();
+            return true;
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
 
     //KM_CHANGED START
