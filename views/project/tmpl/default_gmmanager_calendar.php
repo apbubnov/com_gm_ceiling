@@ -9,6 +9,8 @@
     // No direct access
     defined('_JEXEC') or die;
 
+    print_r($_SESSION);
+
     $user       = JFactory::getUser();
     $userId     = $user->get('id');
     $user_group = $user->groups;
@@ -1088,7 +1090,6 @@
             echo "\"" . $_SESSION['time'] . "\"";
         } else echo "\"" . $time . "\"";?>;
 
-        var ne = <?php unset($_SESSION['FIO'], $_SESSION['address'],$_SESSION['house'],$_SESSION['bdq'],$_SESSION['apartment'],$_SESSION['porch'],$_SESSION['floor'],$_SESSION['code'], $_SESSION['date'], $_SESSION['time'], $_SESSION['phones'], $_SESSION['manager_comment'], $_SESSION['comments'], $_SESSION['url'], $_SESSION['gauger']); echo 1;?>;
         show_comments();
 
         function formatDate(date) {
@@ -2393,14 +2394,15 @@ function change_transport(sum){
             url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
             data: object,
             success: function (data) {
+                console.log(data);
                 if(action_type == 1){
-                    create_calculation(<?php echo $this->item->id; ?>);
+                    //create_calculation(<?php echo $this->item->id; ?>);
                 }
                 if(action_type == 2){
-                   window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&calc_id=" + id;
+                   //window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&calc_id=" + id;
                 }
                 if(action_type == 3){
-                    jQuery("#form-client").submit();
+                    //jQuery("#form-client").submit();
                 }
                 
             },
