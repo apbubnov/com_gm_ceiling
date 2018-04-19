@@ -195,6 +195,10 @@ class Gm_ceilingModelUsers extends JModelList
 					$callback_model->save(date('Y-m-d H:i:s'),'Коммерческое предложение отклонено',
 					$client_id,$manager_id);
 				}
+				elseif ($user->dealer_type == 7) {
+					$callback_model->save(date('Y-m-d H:i:s'),'Застройщик просмотрел коммерческое предложение',
+					$client_id,$manager_id);
+				}
 				else
 				{
 					$callback_model->save(date('Y-m-d H:i:s'),'Просмотрено коммерческое предложение',
