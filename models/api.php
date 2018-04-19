@@ -746,7 +746,7 @@ class Gm_ceilingModelApi extends JModelList
             $all_gaugers = $gauger_model->getDatas(1);
             $gaugers_count = count($all_gaugers);
             $times = [
-                "9:00:00" => $gaugers_count,
+                "09:00:00" => $gaugers_count,
                 "10:00:00" => $gaugers_count,
                 "11:00:00" => $gaugers_count,
                 "12:00:00" => $gaugers_count,
@@ -783,5 +783,40 @@ class Gm_ceilingModelApi extends JModelList
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
+    }
+
+    public function rec_to_measure($data){
+        $name = delete_string_characters($data->name);
+        $phone = $data->phone;
+        $city  = 'Воронеж';//пока по дефолту
+        $address = $data->address;
+        $date_time = $data->date_time;
+        //Создание клиента
+        $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
+        $client_data['client_name'] = $name;
+        $client_data['client_contacts'] = $phone;
+        $client_id = $clientform_model->save($client_data);
+        //создание user'а
+        $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, "$client_id@$client_id", $client_id,2);
+
+        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
+        $client_model->updateClient($client_id, null, $dealer_id);
+
+        $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
+        $dealer_info_model->update_city($dealer_id, $city);
+
+        $project_data = [
+                    "client_id" => $client_id,
+                    "project_info" => $address,
+                    "project_calculation_date" => $date_time
+                ];
+
+        $projectform_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform', 'Gm_ceilingModel');
+        $project = $projectform_model->save($project_data);
+        $result = [
+                    "client_id"=> $client_id,
+                    "user_id" => $dealer_id
+                    ];
+        return (object)$result;
     }
 }

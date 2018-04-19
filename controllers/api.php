@@ -358,26 +358,50 @@ class Gm_ceilingControllerApi extends JControllerLegacy
          * Розничная версия
      */
     public function getMeasureTimes(){
-        try
+        try{
+            header('Access-Control-Allow-Origin: http://гмпотолки.рф');
+            header('Access-Control-Allow-Credentials: true');
+            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type');
+            header('Access-Control-Max-Age: 1000');
+            header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
+
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['date']))
             {
-                $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
-                if(!empty($_POST['date']))
-                {
-                    $date = json_decode($_POST['date']);
-                    $times = $model->get_measure_time($date->date);
-                    $result = $times;
-                }
-                
-                
+                $date = json_decode($_POST['date']);
+                $times = $model->get_measure_time($date->date);
+                $result = $times;
                 die(json_encode($result));
             }
-            catch(Exception $e)
-            {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
+            else die($_POST['date']);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
+    public function recToMeasure(){
+        try{
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['rec_data'])){
+                $data = json_decode($_POST['rec_data']);
+                $result = $model->rec_to_measure($data);
+                die(json_encode($result));
             }
+            else throw new Exception("Empty post data");
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
     /*
      * CEH4TOP IOS Клиентская версия
