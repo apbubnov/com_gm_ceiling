@@ -457,6 +457,12 @@ function open_blocks(){
                 }
             }
         }
+        if(Object.keys(calculation)[i] == 'mounting_sum'){
+            if(calculation[Object.keys(calculation)[i]]>0){
+                alert("123123");
+                jQuery(`#btn_need_mount`).trigger("click");
+            }
+        }
     }
 }
 let change_event_radio = function(){

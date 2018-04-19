@@ -403,6 +403,24 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+    public function changePwd(){
+        try{
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($_POST['u_data'])){
+                $data = json_decode($_POST['u_data']);
+                $result = $model->change_password($data);
+                die(json_encode($result));
+            }
+            else throw new Exception("Empty post data");
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
     /*
      * CEH4TOP IOS Клиентская версия
      *
