@@ -17,6 +17,8 @@ $dop_num = $dop_num_model->getData($userId)->dop_number;
 $_SESSION['user_group'] = $user_group;
 $_SESSION['dop_num'] = $dop_num;
 
+$project_id = $this->item->id;
+
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
@@ -111,10 +113,16 @@ $calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $year,
 $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
 //----------------------------------------------------------------------------------
 
-
+$project_card = '';
+$phones = [];
+if (!empty($_SESSION["project_card_$project_id"]))
+{
+    $project_card = $_SESSION["project_card_$project_id"];
+    $phones = json_decode($project_card)->phones;
+}
 ?>
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
+<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <style>
     .center-left {
         width: 100%;
@@ -242,7 +250,7 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
                       method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
                     <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
-                    <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
+                    <input name="comments_id" id="comments_id" type="hidden">
                     <input name="status" id="project_status" value="" type="hidden">
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
                     <input name="type" value="gmmanager" type="hidden">
@@ -259,9 +267,7 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
                                     <td><input name="new_client_name"
                                                class="<?php if ($this->item->id_client != "1") echo "inputactive"; else echo "inputactive"; ?>"
-                                               id="jform_client_name" value="<?php if (isset($_SESSION['FIO'])) {
-                                            echo $_SESSION['FIO'];
-                                        } else echo $this->item->client_id; ?>"
+                                               id="jform_client_name" value="<?php echo $this->item->client_id; ?>"
                                                placeholder="ФИО клиента" type="text"></td>
                                     <?php if($this->item->id_client == "1"){?>
                                         <td>
@@ -512,6 +518,57 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
     </div>
     
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
+<?php if ($this->item->project_verdict == 0) { ?>
+            <table>
+                <tr>
+                    <td>
+                        <a class="btn  btn-primary" id="run_in_production">
+                            Запустить в производство
+                        </a>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td colspan=3>
+                        <div id="call" class="call" style="display:none;">
+                            <label for="call">Добавить звонок</label>
+                            <br>
+                            <input name="call_date" id="call_date" type="datetime-local" placeholder="Дата звонка">
+                            <input name="call_comment" id="call_comment" placeholder="Введите примечание">
+                            <button class="btn btn-primary" id="add_call_and_submit" type="button"><i
+                                        class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        </div>
+                    <td>
+                </tr>
+            </table>
+        <?php } ?>
+
+    </div>
+    <div id="modal-window-container-tar">
+        <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
+        <div id="modal-window-choose-tar">
+            <p id="date-modal"></p>
+            <p><strong>Выберите время замера:</strong></p>
+            <p>
+                <table id="projects_gaugers"></table>
+            </p>
+            <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
+        </div>
+    </div>
+    <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
+    </form>
+    </div>
+    <div id="modal_window_container" class="modal_window_container">
+        <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
+        </button>
+        <div id="modal_window_del" class="modal_window">
+            <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
+            <p>
+                <button type="button" id="ok" class="btn btn-primary">Да</button>
+                <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
+            </p>
+        </div>
+    </div>
 <?php
     else:
         echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
@@ -571,6 +628,43 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
     //------------------------------------------
 
     jQuery(document).ready(function () {
+
+        var project_card = '<?php echo $project_card; ?>';
+        if (project_card != '')
+        {
+            project_card = JSON.parse(project_card);
+            jQuery("#jform_client_name").val(project_card.fio);
+            jQuery("#jform_address").val(project_card.address);
+            jQuery("#jform_house").val(project_card.house);
+            jQuery("#jform_bdq").val(project_card.bdq);
+            jQuery("#jform_apartment").val(project_card.apartment);
+            jQuery("#jform_porch").val(project_card.porch);
+            jQuery("#jform_floor").val(project_card.floor);
+            jQuery("#jform_code").val(project_card.code);
+            jQuery("#jform_project_new_calc_date").val(project_card.date);
+            jQuery("#jform_new_project_calculation_daypart").val(project_card.time);
+            jQuery("#gmmanager_note").val(project_card.manager_comment);
+            jQuery("#comments_id").val(project_card.comments);
+            jQuery("#jform_project_gauger").val(project_card.gauger);
+            let slider_sex = document.getElementsByName('slider-sex');
+            for (let i = slider_sex.length; i--;)
+            {
+                if (slider_sex[i].value == project_card.sex)
+                {
+                    slider_sex[i].checked = 'checked';
+                }
+            }
+            let slider_radio = document.getElementsByName('slider-radio');
+            for (let i = slider_radio.length; i--;)
+            {
+                if (slider_radio[i].value == project_card.type)
+                {
+                    slider_radio[i].checked = 'checked';
+                }
+            }
+        }
+        console.log(project_card);
+
         $("#modal_window_container #ok").click(function() { click_ok(this); });
         var hrefs = document.getElementsByTagName("a");
         var regexp = /index\.php\?option=com_gm_ceiling\&task=mainpage/;
@@ -651,11 +745,8 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
             });
 
         }
-        var time = <?php if (isset($_SESSION['time'])) {
-            echo "\"" . $_SESSION['time'] . "\"";
-        } else echo "\"" . $time . "\"";?>;
+        var time = <?php echo "\"" . $time . "\"";?>;
 
-        var ne = <?php unset($_SESSION['FIO'], $_SESSION['address'],$_SESSION['house'],$_SESSION['bdq'],$_SESSION['apartment'],$_SESSION['porch'],$_SESSION['floor'],$_SESSION['code'], $_SESSION['date'], $_SESSION['time'], $_SESSION['phones'], $_SESSION['manager_comment'], $_SESSION['comments'], $_SESSION['url'], $_SESSION['gauger']); echo 1;?>;
         show_comments();
 
         function formatDate(date) {
@@ -1029,92 +1120,12 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
             });
             jQuery("input[name='isDiscountChange']").val(1);
             if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-                data: {
-                    fio: jQuery("#jform_client_name").val(),
-                    address: jQuery("#jform_address").val(),
-                    house: jQuery("#jform_house").val(),
-                    bdq: jQuery("#jform_bdq").val(),
-                    apartment: jQuery("#jform_apartment").val(),
-                    porch: jQuery("#jform_porch").val(),
-                    floor: jQuery("#jform_floor").val(),
-                    code: jQuery("#jform_code").val(),
-                    date: jQuery("#jform_project_new_calc_date").val(),
-                    time: jQuery("#jform_new_project_calculation_daypart").val(),
-                    manager_comment: jQuery("#gmmanager_note").val(),
-                    client_name: jQuery("#jform_client_name").val(),
-                    phones: phones,
-                    comments: jQuery("#comments_id").val(),
-                    s: s,
-                    gauger: jQuery("#jform_project_gauger").val()
-                },
-                success: function (data) {
-                    jQuery("#form-client").submit();
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка cервер не отвечает"
-                    });
-                }
-            });
-
+            save_data_to_session(3);
         });
 
         jQuery("#ok").click(function () {
-            var phones = [];
-            var s = window.location.href;
-            var classname = jQuery("input[name='new_client_contacts[]']");
-            Array.from(classname).forEach(function (element) {
-                phones.push(element.value);
-            });
             jQuery("input[name='data_delete']").val(1);
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-                data: {
-                    fio: jQuery("#jform_client_name").val(),
-                    address: jQuery("#jform_address").val(),
-                    house: jQuery("#jform_house").val(),
-                    bdq: jQuery("#jform_bdq").val(),
-                    apartment: jQuery("#jform_apartment").val(),
-                    porch: jQuery("#jform_porch").val(),
-                    floor: jQuery("#jform_floor").val(),
-                    code: jQuery("#jform_code").val(),
-                    date: jQuery("#jform_project_new_calc_date").val(),
-                    time: jQuery("#jform_new_project_calculation_daypart").val(),
-                    manager_comment: jQuery("#gmmanager_note").val(),
-                    client_name: jQuery("#jform_client_name").val(),
-                    phones: phones,
-                    comments: jQuery("#comments_id").val(),
-                    s: s,
-                    gauger: jQuery("#jform_project_gauger").val()
-                },
-                success: function (data) {
-                    jQuery("#form-client").submit();
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка cервер не отвечает"
-                    });
-                }
-            });
-
+            save_data_to_session(3);
         });
 
         function add_history(id_client, comment) {
@@ -1237,6 +1248,18 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
         })
         jQuery("#add_call_and_submit_up").click(function(){
             client_id = <?php echo $this->item->id_client;?>;
+            if (jQuery("#call_date_up").val() == '')
+            {
+                var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Укажите время перезвона"
+                    });
+                return;
+            }
                     jQuery.ajax({
                         url: "index.php?option=com_gm_ceiling&task=changeCallTime",
                         data: {
@@ -1381,52 +1404,10 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
         jQuery("#modal-window-call-tar").hide();
     })
 
-    function send_and_redirect(id) {
-        var phones = [];
-        var s = window.location.href;
-        var classname = jQuery("input[name='new_client_contacts[]']");
-        Array.from(classname).forEach(function (element) {
-            phones.push(element.value);
-        });
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-            data: {
-                fio: jQuery("#jform_client_name").val(),
-                address: jQuery("#jform_address").val(),
-                house: jQuery("#jform_house").val(),
-                bdq: jQuery("#jform_bdq").val(),
-                apartment: jQuery("#jform_apartment").val(),
-                porch: jQuery("#jform_porch").val(),
-                floor: jQuery("#jform_floor").val(),
-                code: jQuery("#jform_code").val(),
-                date: jQuery("#jform_project_new_calc_date").val(),
-                time: jQuery("#jform_new_project_calculation_daypart").val(),
-                manager_comment: jQuery("#gmmanager_note").val(),
-                client_name: jQuery("#jform_client_name").val(),
-                phones: phones,
-                comments: jQuery("#comments_id").val(),
-                s: s,
-                gauger: jQuery("#jform_project_gauger").val()
-            },
-            success: function (data) {
-                window.location = "index.php?option=com_gm_ceiling&view=calculationform&type=gmmanager&subtype=calendar&calc_id=" + id;
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function () {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка cервер не отвечает"
-                });
-            }
-        });
-
-    }
+    jQuery('.change_calc').click(function() {
+        let id = jQuery(this).data('calc_id');
+        save_data_to_session(2, id);
+    });
 
     jQuery("#add_phone").click(function () {
         var html = "";
@@ -1884,16 +1865,18 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
     }
 
     jQuery("#add_calc").click(function () {
+        save_data_to_session(1);
+    });
+    
+    function save_data_to_session(action_type,id=null){
         var phones = [];
-        var s = window.location.href;
-        var classname = jQuery("input[name='new_client_contacts[]']");
-        Array.from(classname).forEach(function (element) {
-            phones.push(element.value);
-        });
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-            data: {
+            var s = window.location.href;
+            var classname = jQuery("input[name='new_client_contacts[]']");
+            Array.from(classname).forEach(function (element) {
+                phones.push(element.value);
+            });
+        console.log(phones);
+        let data = {
                 fio: jQuery("#jform_client_name").val(),
                 address: jQuery("#jform_address").val(),
                 house: jQuery("#jform_house").val(),
@@ -1905,14 +1888,31 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
                 date: jQuery("#jform_project_new_calc_date").val(),
                 time: jQuery("#jform_new_project_calculation_daypart").val(),
                 manager_comment: jQuery("#gmmanager_note").val(),
-                client_name: jQuery("#jform_client_name").val(),
                 phones: phones,
                 comments: jQuery("#comments_id").val(),
-                s: s,
-                gauger: jQuery("#jform_project_gauger").val()
-            },
+                gauger: jQuery("#jform_project_gauger").val(),
+                sex: jQuery('[name = "slider-sex"]:checked').val(),
+                type : jQuery('[name = "slider-radio"]:checked').val(),
+                recool: jQuery("#recoil_choose").val(),
+                advt: jQuery("#advt_choose").val()
+            };
+        let object = {proj_id : jQuery("#project_id").val(), data:JSON.stringify(data)};
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
+            data: object,
             success: function (data) {
-                create_calculation(<?php echo $this->item->id; ?>);
+                console.log(data);
+                if(action_type == 1){
+                    create_calculation(<?php echo $this->item->id; ?>);
+                }
+                if(action_type == 2){
+                   window.location = "index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=production&calc_id=" + id;
+                }
+                if(action_type == 3){
+                    jQuery("#form-client").submit();
+                }
+                
             },
             dataType: "text",
             timeout: 10000,
@@ -1927,7 +1927,7 @@ $AllGauger = $calculationsModel->FindAllGauger($user->dealer_id, 22);
                 });
             }
         });
-    });
+    }
 
     jQuery("#add_birthday").click(function () {
         var birthday = jQuery("#jform_birthday").val();
