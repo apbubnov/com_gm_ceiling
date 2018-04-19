@@ -1989,9 +1989,9 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
             $proj_id = $jinput->get('proj_id', null, 'INT');
             $data = $jinput->get('data', '', 'STRING');
-            $_SESSION[$proj_id] = $data;
-            //die(json_encode($_SESSION[$proj_id]));
-            die(json_encode($_SESSION));
+            $_SESSION["project_card_$proj_id"] = $data;
+            //die(json_encode($_SESSION));
+            die(json_encode(true));
         }
         catch(Exception $e)
         {
