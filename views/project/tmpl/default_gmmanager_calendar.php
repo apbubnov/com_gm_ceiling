@@ -9,8 +9,6 @@
     // No direct access
     defined('_JEXEC') or die;
 
-    print_r($_SESSION);
-
     $user       = JFactory::getUser();
     $userId     = $user->get('id');
     $user_group = $user->groups;
@@ -37,6 +35,8 @@
     Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+
+    $project_id = $this->item->id;
 
     //транспорт
     $transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
@@ -116,6 +116,14 @@
     // все замерщики
     $AllGauger = $model_calculations->FindAllGauger($user->dealer_id, 22);
     //----------------------------------------------------------------------------------
+
+    $project_card = '';
+    $phones = [];
+    if (!empty($_SESSION["project_card_$project_id"]))
+    {
+        $project_card = $_SESSION["project_card_$project_id"];
+        $phones = json_decode($project_card)->phones;
+    }
 ?>
 
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
@@ -306,10 +314,10 @@
             <div class="item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
                 <form id="form-client" action="/index.php?option=com_gm_ceiling&task=project.recToMeasurement&type=gmmanager&subtype=calendar" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-                    <input name="project_id" id = "project_id"  value="<?php echo $this->item->id; ?>" type="hidden">
+                    <input name="project_id" id = "project_id"  value="<?php echo $project_id; ?>" type="hidden">
                     <input name="client_id" id="client_id" value="<?php echo $this->item->id_client; ?>" type="hidden">
                     <input name="advt_id" id="advt_id" value="<?php echo $reklama->id; ?>" type="hidden">
-                    <input name="comments_id" id="comments_id" value="<?php if (isset($_SESSION['comments'])) echo $_SESSION['comments']; ?>" type="hidden">
+                    <input name="comments_id" id="comments_id" type="hidden">
                     <input name="status" id="project_status" value="" type="hidden">
                     <input name="call_id" value="<?php echo $call_id; ?>" type="hidden">
                     <input name="type" value="gmmanager" type="hidden">
@@ -318,9 +326,9 @@
                     <input name="data_delete" value="0" type="hidden">
                     <input name="selected_advt" id="selected_advt" value="<?php echo (!empty($this->item->api_phone_id))? $this->item->api_phone_id: '0' ?>" type="hidden">
                     <input name = "recoil" id = "recoil" value = "" type = "hidden">
-                    <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if(isset($_SESSION['time'])){ echo $_SESSION['time']; } else if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); }?>"class="inputactive" type="hidden">
-                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if(isset($_SESSION['date'])){ echo $_SESSION['date']; } else if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;}?>" type="hidden">
-                    <input name = "project_gauger" id = "jform_project_gauger" class ="inputactive" value="<?php if(isset($_SESSION['gauger'])){ echo $_SESSION['gauger']; } else if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else {echo "0";}?>" type="hidden">
+                    <input id="jform_new_project_calculation_daypart" name="new_project_calculation_daypart" value = "<?php if ($this->item->project_calculation_date != null && $this->item->project_calculation_date != "0000-00-00 00:00:00") { echo substr($this->item->project_calculation_date, 11); }?>"class="inputactive" type="hidden">
+                    <input name = "project_new_calc_date" id = "jform_project_new_calc_date" class ="inputactive" value="<?php if (isset($this->item->project_calculation_date)) { echo $this->item->project_calculation_date;}?>" type="hidden">
+                    <input name = "project_gauger" id = "jform_project_gauger" class ="inputactive" value="<?php if ($this->item->project_calculator != null) { echo $this->item->project_calculator; } else {echo "0";}?>" type="hidden">
                     <input id="project_sum" name="project_sum" value="<?php echo $project_total_discount ?>" type="hidden">
                     <input id="project_sum_transport" name="project_sum_transport" value="<?php echo $project_total_discount_transport ?>" type="hidden">
                     <input id = "emails" name = "emails" value = "" type = "hidden"> 
@@ -331,9 +339,7 @@
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_CLIENT_ID'); ?></th>
                                     <td>
                                         <input name="new_client_name" class="<?php if ($this->item->id_client != "1") echo "inputactive"; else echo "inputactive"; ?>"
-                                        id="jform_client_name" value="<?php if (isset($_SESSION['FIO'])) {
-                                        echo $_SESSION['FIO'];
-                                        } else echo $this->item->client_id; ?>" placeholder="ФИО клиента" type="text">
+                                        id="jform_client_name" value="<?php echo $this->item->client_id; ?>" placeholder="ФИО клиента" type="text">
                                     </td>
                                     <?php if($this->item->id_client == "1"){?>
                                         <td>
@@ -430,12 +436,12 @@
                                         </td>
                                     </tr>
                                 <?php endif; ?>
-                                <?php if (isset($_SESSION['phones']) && count($_SESSION['phones'] > 1)) {
-                                    for ($i = 1; $i < count($_SESSION['phones']); $i++) { ?>
+                                <?php if (!empty($phones) && count($phones > 1)) {
+                                    for ($i = 1; $i < count($phones); $i++) { ?>
                                         <tr class='dop-phone'>
                                             <th></th>
                                             <td>
-                                                <input name='new_client_contacts[<?php echo $i; ?>]' id='jform_client_contacts' class='inputactive' value="<?php echo $_SESSION['phones'][$i]; ?>">
+                                                <input name='new_client_contacts[<?php echo $i; ?>]' id='jform_client_contacts' class='inputactive' value="<?php echo $phones[$i]; ?>">
                                             </td>
                                             <td>
                                                 <button class='clear_form_group btn btn-danger' type='button'><i class='fa fa-trash' aria-hidden='true'></i></button>
@@ -479,37 +485,29 @@
                                 ?>
                                 <tr>
                                     <th><?php echo JText::_('COM_GM_CEILING_FORM_LBL_PROJECT_PROJECT_INFO'); ?></th>
-                                    <td><input name="new_address" id="jform_address" class="inputactive" value="<?php if (isset($_SESSION['address'])) {
-                                        echo $_SESSION['address'];
-                                        } else echo $street ?>" placeholder="Адрес" type="text" required="required"></td>
+                                    <td><input name="new_address" id="jform_address" class="inputactive" value="<?php echo $street ?>" placeholder="Адрес" type="text" required="required"></td>
                                 </tr>
                                 <tr class="controls">
                                     <td>Дом / Корпус</td>
                                     <td>
-                                        <input name="new_house" id="jform_house" value="<?php if (isset($_SESSION['house'])) {echo $_SESSION['house'];
-                                            } else echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" required="required" aria-required="true" type="text">
-                                        <input name="new_bdq" id="jform_bdq"  value="<?php if (isset($_SESSION['bdq'])) {echo $_SESSION['bdq'];
-                                            } else echo $bdq ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
+                                        <input name="new_house" id="jform_house" value="<?php echo $house ?>" class="inputactive" style="width: 50%; margin-bottom: 1em; float: left; margin: 0 5px 0 0;" placeholder="Дом" required="required" aria-required="true" type="text">
+                                        <input name="new_bdq" id="jform_bdq"  value="<?php echo $bdq ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Корпус" aria-required="true" type="text">
                                     </td>
                                 </tr>
                                 <tr class="controls">
                                     <td> Квартира / Подъезд</td>
                                     <td>
-                                        <input name="new_apartment" id="jform_apartment" value="<?php if (isset($_SESSION['apartment'])) {echo $_SESSION['apartment'];
-                                            } else echo $apartment ?>" class="inputactive" style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;" placeholder="Квартира"  aria-required="true" type="text">
+                                        <input name="new_apartment" id="jform_apartment" value="<?php echo $apartment ?>" class="inputactive" style="width:50%;margin-bottom:1em;margin-right: 5px;float: left;" placeholder="Квартира"  aria-required="true" type="text">
                                 
-                                        <input name="new_porch" id="jform_porch"  value="<?php if (isset($_SESSION['porch'])) {echo $_SESSION['porch'];
-                                            } else echo $porch ?>" class="inputactive"   style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
+                                        <input name="new_porch" id="jform_porch"  value="<?php echo $porch ?>" class="inputactive"   style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Подъезд"  aria-required="true" type="text">
                                     </td>
                                 </tr>
                                 <tr class="controls">
                                     <td> Этаж / Код домофона</td>
                                     <td>
-                                        <input name="new_floor" id="jform_floor"  value="<?php if (isset($_SESSION['floor'])) {echo $_SESSION['floor'];
-                                            } else echo $floor ?>" class="inputactive"  style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;" placeholder="Этаж" aria-required="true" type="text">
+                                        <input name="new_floor" id="jform_floor"  value="<?php echo $floor ?>" class="inputactive"  style="width:50%; margin-bottom:1em;  margin: 0 5px  0 0; float: left;" placeholder="Этаж" aria-required="true" type="text">
                                 
-                                        <input name="new_code" id="jform_code"  value="<?php if (isset($_SESSION['code'])) {echo $_SESSION['code'];
-                                            } else echo $code ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код" aria-required="true" type="text">
+                                        <input name="new_code" id="jform_code"  value="<?php echo $code ?>" class="inputactive"  style="width: calc(50% - 5px); margin-bottom: 1em;" placeholder="Код" aria-required="true" type="text">
                                     </td>
                                 </tr>
                                 <tr>
@@ -530,9 +528,7 @@
                                     <th>Примечание менеджера</th>
                                     <td>
                                         <input name="gmmanager_note" id="gmmanager_note" class="inputactive"
-                                            value="<?php if (isset($_SESSION['manager_comment'])) {
-                                            echo $_SESSION['manager_comment'];
-                                            } else echo $this->item->gm_manager_note; ?>">
+                                            value="<?php echo $this->item->gm_manager_note; ?>">
                                     </td>
                                 </tr>
                                 <tr>
@@ -838,6 +834,44 @@
     //------------------------------------------
 
     jQuery(document).ready(function() {
+
+        var project_card = '<?php echo $project_card; ?>';
+        if (project_card != '')
+        {
+            project_card = JSON.parse(project_card);
+            jQuery("#jform_client_name").val(project_card.fio);
+            jQuery("#jform_address").val(project_card.address);
+            jQuery("#jform_house").val(project_card.house);
+            jQuery("#jform_bdq").val(project_card.bdq);
+            jQuery("#jform_apartment").val(project_card.apartment);
+            jQuery("#jform_porch").val(project_card.porch);
+            jQuery("#jform_floor").val(project_card.floor);
+            jQuery("#jform_code").val(project_card.code);
+            jQuery("#jform_project_new_calc_date").val(project_card.date);
+            jQuery("#jform_new_project_calculation_daypart").val(project_card.time);
+            jQuery("#gmmanager_note").val(project_card.manager_comment);
+            jQuery("#comments_id").val(project_card.comments);
+            jQuery("#jform_project_gauger").val(project_card.gauger);
+            let slider_sex = document.getElementsByName('slider-sex');
+            for (let i = slider_sex.length; i--;)
+            {
+                if (slider_sex[i].value == project_card.sex)
+                {
+                    slider_sex[i].checked = 'checked';
+                }
+            }
+            let slider_radio = document.getElementsByName('slider-radio');
+            for (let i = slider_radio.length; i--;)
+            {
+                if (slider_radio[i].value == project_card.type)
+                {
+                    slider_radio[i].checked = 'checked';
+                }
+            }
+            jQuery("#recoil_choose").val(project_card.recool);
+            jQuery("#advt_choose").val(project_card.advt);
+        }
+        console.log(project_card);
     
         if (jQuery("#selected_advt"))
         {
@@ -1086,9 +1120,12 @@
 
         }
 
-        var time = <?php if (isset($_SESSION['time'])) {
-            echo "\"" . $_SESSION['time'] . "\"";
-        } else echo "\"" . $time . "\"";?>;
+        var time = <?php echo '"'.$time.'"';?>;
+
+        if (project_card.time != '')
+        {
+            time = project_card.time;
+        }
 
         show_comments();
 
@@ -2368,6 +2405,7 @@ function change_transport(sum){
             Array.from(classname).forEach(function (element) {
                 phones.push(element.value);
             });
+        console.log(phones);
         let data = {
                 fio: jQuery("#jform_client_name").val(),
                 address: jQuery("#jform_address").val(),
@@ -2383,8 +2421,8 @@ function change_transport(sum){
                 phones: phones,
                 comments: jQuery("#comments_id").val(),
                 gauger: jQuery("#jform_project_gauger").val(),
-                sex: jQuery('[name = "slider-sex"]').val(),
-                type : jQuery('[name = "slider-radio"]').val(),
+                sex: jQuery('[name = "slider-sex"]:checked').val(),
+                type : jQuery('[name = "slider-radio"]:checked').val(),
                 recool: jQuery("#recoil_choose").val(),
                 advt: jQuery("#advt_choose").val()
             };
