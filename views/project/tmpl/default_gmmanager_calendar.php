@@ -2406,6 +2406,7 @@ function change_transport(sum){
     jQuery("#add_calc").click(function () {
         save_data_to_session(1);
     });
+    
     function save_data_to_session(action_type,id=null){
         var phones = [];
             var s = window.location.href;

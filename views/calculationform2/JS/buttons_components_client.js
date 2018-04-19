@@ -38,28 +38,18 @@ const help_block_need_mount = '<span class="airhelp">Данная кнопка �
 
 let discount_el = create_single_input(1,"new_discount","jform[discount]","","%","number","0","100");
 let arr_blocks = [
-    {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0},
+    {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"add_mount_and_components",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0},
     {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_n6",btn_id:"",btn_text:"<h3>Освещение</h3>"},
     {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Добавить люстры",need_ajax : 0},
     {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_n13",btn_text:"Добавить светильники",need_ajax : 1},
-    {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_n19",btn_id:"",btn_text:"<h4>Прочий монтаж</h4>"},
+    {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_n13",btn_id:"",btn_text:"<h4>Прочий монтаж</h4>"},
     {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_oter_mount_cptn",btn_id:"btn_n14",btn_text:"Добавить трубы входящие в потолок",need_ajax : 1},
     {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_n16",btn_text:"Добавить шторный карниз",need_ajax : 1},
-    {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_dop_krepezh",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0},
+    {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_n16",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0},
     {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1},
-    {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_n23",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0},
-    {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n30",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1},
-    {block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_n31",btn_text:"Внутренний вырез (в цеху)",need_ajax : 0},
-    {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_n31",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0},
-    {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_n11",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0},
-    {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n32",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0},
-    {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_height",btn_id:"btn_n24",btn_text:"Сложность доступа",need_ajax : 0},
-    {block_id:"block_extra_components",btn_cont_id:"btn_cont_extra_components",prev_id:"block_n24",btn_id:"btn_extra_components",btn_text:"Другие комплектующие",need_ajax : 0},
-    {block_id:"block_components_stock",btn_cont_id:"btn_cont_components_stock",prev_id:"block_extra_components",btn_id:"btn_components_stock",btn_text:"Другие комплектующие со склада",need_ajax : 1},
-    {block_id:"block_extra_mounting",btn_cont_id:"btn_cont_extra_mounting",prev_id:"block_components_stock",btn_id:"btn_extra_mounting",btn_text:"Другие работы по монтажу",need_ajax : 0},
-    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_extra_mounting",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0},
-    {block_id:"block_discount",btn_cont_id:"btn_cont_discount",prev_id:"block_need_mount",btn_id:"",btn_text:`<h3>Новый процент скидки</h3>
-     ${discount_el}`}
+    {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n22",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1},
+    {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n29",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0},
+    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_height",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0}
 ];
 
 arr_blocks.forEach(function(item){
@@ -188,35 +178,6 @@ let n29_src = {
 }
 let n29 =  create_block_with_divs(n29_src);
 
-let extra_components_src = {
-    id : 'extra_components',
-    name : 'jform[extra_components]',
-    columns:[
-        {div_class:'advanced_col_half',text:'Название',input_name:"extra_components_title[]",input_id:"extra_components_title",input_type:1},
-        {div_class:'advanced_col_half',text:'Стоимость',input_name:"extra_components_value[]",input_id:"extra_components_value",input_type:1}
-    ]
-}
-let extra_components =  create_block_with_divs(extra_components_src);
-
-let components_stock_src = {
-    id : 'components_stock',
-    name : 'jform[components_stock]',
-    columns:[
-        {div_class:'advanced_col_half',text:'Название',input_name:"components_stock_title[]",input_id:"components_stock_title",input_type:3},
-        {div_class:'advanced_col_half',text:'Количество',input_name:"components_stock_value[]",input_id:"components_stock_value",input_type:1}
-    ]
-}
-let components_stock =  create_block_with_divs(components_stock_src);
-
-let extra_mounting_src = {
-    id : 'extra_mounting',
-    name : 'jform[extra_mounting]',
-    columns:[
-        {div_class:'advanced_col_half',text:'Название',input_name:"extra_mounting_title[]",input_id:"extra_mounting_title",input_type:1},
-        {div_class:'advanced_col_half',text:'Стоимость',input_name:"extra_mounting_value[]",input_id:"extra_mounting_value",input_type:1}
-    ]
-}
-let extra_mounting =  create_block_with_divs(extra_mounting_src);
 
 //let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
 
@@ -344,13 +305,14 @@ jQuery('.add_fields').click(function(){
     let var_name = cont_id.replace('block_','');
     let col_id = `jform_${var_name}_inside`;
     let cont =  create_container("",col_id);
+
     let element = eval(var_name);
 
     if(!document.getElementById(col_id)){
-        console.log(cont_id,col_id);
         jQuery(`#${cont_id}`).after(cont);
-        jQuery(`#${col_id}`).append(element); 
-
+        if(!empty(element)){
+           jQuery(`#${col_id}`).append(element);  
+        }
     }
     else{
         jQuery(`#${col_id}`).toggle();
@@ -829,6 +791,7 @@ function toggle_color(element){
     }
 }
 function generate_block(object){
+    alert();
     let cnt = create_container(object.block_id,object.btn_cont_id);
     jQuery(`#${object.prev_id}`).after(cnt);
     if(object.btn_id){

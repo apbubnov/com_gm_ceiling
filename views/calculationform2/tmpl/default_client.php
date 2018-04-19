@@ -340,13 +340,11 @@
         var precalculation = '<?php echo $precalculation; ?>';
         jQuery("body").addClass("yellow_home");
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
-        console.log(canvases_data);
         let textures = [];
         let canvases_data_of_selected_texture = [];
         
         let canvas = JSON.parse('<?php echo $canvas;?>');
         let need_click = <?php echo $recalc;?>; 
-        console.log(calculation);
         fill_calc_data();
         var event_help_proccess = event_help.process();
         event_help();
@@ -368,46 +366,10 @@
         document.getElementById('jform_n2').onchange = select_colors;
         jQuery('.click_color').change(select_manufacturers);
         document.getElementById('jform_proizv').onchange = select_widths;
-
-        document.getElementById('cancel_button').onclick = function()
-        {
-            if (precalculation == '1')
-            {
-                jQuery.ajax({
-                    type: 'POST',
-                    url: '/index.php?option=com_gm_ceiling&task=calculationform.removeClientByProjectId',
-                    dataType: "json",
-                    timeout: 20000,
-                    data: {
-                        proj_id: <?php echo $project_id; ?>
-                    },
-                    success: function(data){
-                        console.log(data);
-                        location.href = '/index.php?option=com_gm_ceiling&task=mainpage';
-                    },
-                    error: function(data){
-                        var n = noty({
-                            theme: 'relax',
-                            timeout: 2000,
-                            layout: 'center',
-                            maxVisible: 5,
-                            type: "error",
-                            text: "Ошибка сервера"
-                        });
-                    }
-                });
-            }
-            else
-            {
-                let url = '<?php echo $save_button_url;?>';
-                location.href = url;
-            }
-        };
         
         function select_colors(){
             let colors = [];
             canvases_data_of_selected_texture = [];
-
             jQuery.each(canvases_data, function(key,value){
                 let select_texture = document.getElementById('jform_n2').value;
                 if (value.texture_id === select_texture)
@@ -621,7 +583,7 @@
 		});
        
         jQuery("#btn_add_components").click(function(){
-            include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
+            include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components_client.js');
             setTimeout(event_help_proccess, 2000);
         });
         

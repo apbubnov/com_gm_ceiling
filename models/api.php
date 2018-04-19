@@ -836,6 +836,7 @@ class Gm_ceilingModelApi extends JModelList
         if(!$user->save()){
             return 'Could not save user. Error: '.$user->getError();
         }
+        return true;
         
     }
 }

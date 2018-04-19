@@ -2562,6 +2562,7 @@ public function register_mnfctr(){
                 $site4 = $site = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
                 $site5 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
                 $site6 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=0";
+                $site_dev = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
                 // письмо
                 $mailer = JFactory::getMailer();
                 $config = JFactory::getConfig();
@@ -2588,6 +2589,10 @@ public function register_mnfctr(){
                 elseif ($dealer_type == 6)
                 {
                     $body .= '<p>Тел.: +7(473)212-34-40</p>';
+                }
+                elseif ($dealer_type == 7)
+                {
+                    $body .= '<p>Тел.: +7(930)417-10-58</p>';
                 }
                 $body .= '<p>Почта: gm-partner@mail.ru</p>';
                 $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
@@ -2721,9 +2726,22 @@ public function register_mnfctr(){
                     }</style>';
                 }
 
-                $body .= "По всем вопросам писать на почту gm-partner@mail.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
+                if ($dealer_type == 7) {
+                    $body .= "<div style=\"width: 20%\">
+                        <a href=\"$site_dev\"><img src=\"http://".$server_name."/images/KP_DEV.jpg\"></a><br>
+                        <a href=\"$site_dev\">Коммерческое предложение</a><br>";
+                    $body .= "По всем вопросам писать на почту gm-vrn84@bk.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
+                }
+                else
+                {
+                    $body .= "По всем вопросам писать на почту gm-partner@mail.ru или mgildiya@bk.ru или звонить по телефону.</div></body>";
+                }
                 if($dealer_type == 3){
                     $mailer->setSubject('+15 000 руб/в мес. каждому Отделочнику ');
+                }
+                elseif($dealer_type == 7)
+                {
+                    $mailer->setSubject('Натяжные потолки для застройщиков от 280 руб.');
                 }
                 else{
                     $mailer->setSubject('Коммерческое предложение');
@@ -2806,9 +2824,9 @@ public function register_mnfctr(){
             $body .= '<tr><td style="vertical-align:middle;"><a href="test1.gm-vrn.ru/">';
             $body .= '<img src="http://'.$server_name.'/images/gm-logo.png" alt="Логотип" style="padding-top: 15px; height: 70px; width: auto;">';
             $body .= '</a></td><td><div style="vertical-align:middle; padding-right: 50px; padding-top: 7px; text-align: right; line-height: 0.5;">';
-            $body .= '<p>Тел.: +7(473)212-34-01</p>';
-            $body .= '<p>Почта: gm-partner@mail.ru</p>';
-            $body .= '<p>Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
+            $body .= '<p style="margin: 10px;">Тел.: +7(473)212-34-01</p>';
+            $body .= '<p style="margin: 10px;">Почта: gm-partner@mail.ru</p>';
+            $body .= '<p style="margin: 10px;">Адрес: г. Воронеж, Проспект Труда, д. 48, литер. Е-Е2</p>';
             $body .= '</div></td></tr></table>';
             $body .= "<div style=\"width: 100%\"> Быстрый способ заказа натяжных потолков по 60 р/м<sup>2</sup><br> 
                         <a href=\"$site2\"><img src=\"http://".$server_name."/images/video.jpg\"></a><br>
@@ -2849,7 +2867,7 @@ public function register_mnfctr(){
 
     //вызов из урл
     //не удалять
-    /*public function Send_all_from_url(){
+    public function Send_all_from_url(){
         try
         {
             $db = JFactory::getDbo();
@@ -2858,7 +2876,7 @@ public function register_mnfctr(){
             $query->from('`#__users` AS `u`');
             $query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
             $query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
-            $query->where('`dealer_type` = 6');
+            $query->where('`dealer_type` = 7');
             $query->group('`id`');
             $query->order('`id` DESC');
             $db->setQuery($query);
@@ -2875,7 +2893,7 @@ public function register_mnfctr(){
                     $emails = $dop_contacts_model->getEmailByClientID($client_id);
                     foreach ($emails as $j => $email)
                     {
-                        $this->sendCommercialOffer($item->id, $email->contact, 6);
+                        $this->sendCommercialOffer($item->id, $email->contact, 7);
                         echo "$item->name $email->contact $item->dealer_type<br>";
                         $count++;
                     }
@@ -2890,7 +2908,7 @@ public function register_mnfctr(){
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }*/
+    }
 
 
     public function RepeatSendCommercialOffer(){
