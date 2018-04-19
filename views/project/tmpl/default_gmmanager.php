@@ -16,8 +16,11 @@ if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling
 $model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
 $calculations = $model_calculations->new_getProjectItems($this->item->id);
 foreach($calculations as $calc){
-    Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);    
+    if(!empty($calc->n3)){
+        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);  
+    }
 }
+
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
@@ -184,7 +187,6 @@ $AllMounters = $model->FindAllMounters($where);
                                 <?php echo $calculation->canvases_sum; $common_canvases_sum += $calculation->canvases_sum;?> руб.
                             </td>
                             <td>
-                                <?php /*Позже удалить!!!*/ Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1, $calculation->id);?>
                                 <?php $path = "/costsheets/" . md5($calculation->id . "manager") . ".pdf"; ?>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary"

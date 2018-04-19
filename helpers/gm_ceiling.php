@@ -38,7 +38,6 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
 
         $objectDealerPrice->value = floatval($objectDealerPrice->value);
         $objectDealerPrice->price = floatval($objectDealerPrice->price);
-
         switch ($objectDealerPrice->type)
         {
             case 0: $result = $price; break;
@@ -189,14 +188,14 @@ class Gm_ceilingHelpersGm_ceiling
         //header('location: /index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage');
     }
 
-    /* 	основная функция для расчета стоимости потолка
-		$from_db - 0,1 флаг, брать ли данные калькуляции из БД
-		$calculation_id - id калькуляции в БД
-		$save - 0,1 флаг, чтобы сохранить калькуляцию в БД
-		$ajax - 0,1 флаг AJAX-запроса
-		$pdf - 0,1 флаг формирования PDF
-		$print_components - 0,1 флаг возвращения расчета при вызове в переменную
-	*/
+    /*  основная функция для расчета стоимости потолка
+        $from_db - 0,1 флаг, брать ли данные калькуляции из БД
+        $calculation_id - id калькуляции в БД
+        $save - 0,1 флаг, чтобы сохранить калькуляцию в БД
+        $ajax - 0,1 флаг AJAX-запроса
+        $pdf - 0,1 флаг формирования PDF
+        $print_components - 0,1 флаг возвращения расчета при вызове в переменную
+    */
     public static function calculate($from_db, $calculation_id, $save, $pdf, $del_flag, $need_mount){
         try{
             $jinput = JFactory::getApplication()->input;
@@ -485,7 +484,6 @@ class Gm_ceilingHelpersGm_ceiling
            //считаем комплектующие
             $components_data = self::calculate_components(null,$data,$del_flag);
             //считаем монтаж
-
             $data["need_mount_extra"] = !empty((array) json_decode($data['extra_mounting']));
             if ($need_mount || $data["need_mount_extra"]) {
                 $mounting_data = self::calculate_mount($del_flag,null,$data);
@@ -841,10 +839,15 @@ class Gm_ceilingHelpersGm_ceiling
         if(!empty($calc_id)){
             $calculation_model = self::getModel('calculation');
             $calculation_data = $calculation_model->getData($calc_id);
+            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
             foreach ($calculation_data as $key => $item) {
                 $data[$key] = $item;
             }
             $data['n3'] = $calculation_data->n3_id;
+            if(!empty($data['n3'])){
+                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3']);
+                $data['n1'] = $canvasData[0]->texture_id;
+            }
             $n13 = $data['n13'];
             $n26 = $data['n26'];
             $n22 = $data['n22'];
@@ -961,6 +964,7 @@ class Gm_ceilingHelpersGm_ceiling
         $items_660 = $components_model->getFilteredItems($filter);
 
         if (!empty($data['n1']) && $data['n1'] != 29) {
+
             if ($data['n28'] !=3){
                 $component_count[$items_9[0]->id] += $data['n5'] * 10;
                 $component_count[$items_5[0]->id] += $data['n5'] * 10;
@@ -1241,7 +1245,7 @@ class Gm_ceilingHelpersGm_ceiling
         foreach ($component_count as $key => $cost) {
             $component_item = array();
 
-            $component_item['title'] = $components[$key]->full_name;    						//Название комплектующего
+            $component_item['title'] = $components[$key]->full_name;                            //Название комплектующего
             $component_item['unit'] = $components[$key]->component_unit;                        //В чем измеряется
             $component_item['id'] = $components[$key]->id;                                      //ID
             $component_item['quantity'] = self::rounding($cost, $components[$key]->count_sale); // Округление
@@ -1254,10 +1258,10 @@ class Gm_ceilingHelpersGm_ceiling
             //Кол-во * Стоимость с маржой ГМ (для дилера)
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components);
+            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
-            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components);
+            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
                 //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
             $components_data[] = $component_item;
@@ -1282,11 +1286,11 @@ class Gm_ceilingHelpersGm_ceiling
             $component_item['gm_total'] = round($component_item['quantity'] * $component_item['gm_price'], 2);
 
             //Стоимость с маржой ГМ и дилера (для клиента)
-            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components);
+            $component_item['self_dealer_price'] = dealer_margin($component_item['gm_price'], 0, $dealer_info_components[$component_item['id']]);
 
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['self_dealer_total'] = round($component_item['quantity'] * $component_item['self_dealer_price'], 2);
-            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components);
+            $component_item['dealer_price'] = dealer_margin($component_item['gm_price'], $dealer_components_margin, $dealer_info_components[$component_item['id']]);
 
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $component_item['dealer_total'] = round($component_item['quantity'] * $component_item['dealer_price'], 2);
@@ -1349,7 +1353,6 @@ class Gm_ceilingHelpersGm_ceiling
             $dealer_info_canvases = $dealer_info->getCanvasesPrice();
         }
         
-
         //Получаем прайс-лист полотен
         $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
         $canvases_list = $canvases_model->getFilteredItemsCanvas();
@@ -1395,11 +1398,11 @@ class Gm_ceilingHelpersGm_ceiling
         $canvases_data['gm_total'] = round($data['n4'] * $canvases_data['gm_price'], 2);
 
         //себестоимость дилера, с учетом его прайса
-        $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases);
+        $canvases_data['self_dealer_price'] = dealer_margin($canvases_data['gm_price'], 0, $dealer_info_canvases[$canvas_id]);
         //Кол-во * себестоимость дилера
         $canvases_data['self_dealer_total'] = round($data['n4'] * $canvases_data['self_dealer_price'], 2);
         //дилерская цена для клиента
-        $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases);
+        $canvases_data['dealer_price'] = dealer_margin($canvases_data['gm_price'], $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]);
         //Кол-во * дилерскую цену (для клиента)
         $canvases_data['dealer_total'] = round($data['n4'] * $canvases_data['dealer_price'], 2);
 
@@ -1444,10 +1447,10 @@ class Gm_ceilingHelpersGm_ceiling
             $offcut_square_data['gm_total'] = round($data['offcut_square'] * $offcut_square_data['gm_price'], 2);
             //Стоимость с маржой ГМ и дилера (для клиента)
 
-            $offcut_square_data['self_dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, 0, $dealer_info_canvases) * 0.4, 2);
+            $offcut_square_data['self_dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, 0, $dealer_info_canvases[$canvas_id]) * 0.4, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['self_dealer_total'] = round($data['offcut_square'] * $offcut_square_data['self_dealer_price'], 2);
-            $offcut_square_data['dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, $dealer_canvases_margin, $dealer_info_canvases) * 0.4, 2);
+            $offcut_square_data['dealer_price'] = round(dealer_margin($canvases[$canvas_id]->price, $dealer_canvases_margin, $dealer_info_canvases[$canvas_id]) * 0.4, 2);
             //Кол-во * Стоимость с маржой ГМ и дилера (для клиента)
             $offcut_square_data['dealer_total'] = round($data['offcut_square'] * $offcut_square_data['dealer_price'], 2);
         }
@@ -1515,11 +1518,11 @@ class Gm_ceilingHelpersGm_ceiling
         }
         return $result;
     }
-    /* 	основная функция для расчета стоимости монтажа
+    /*  основная функция для расчета стоимости монтажа
         $del_flag 0 - не удалать светильники, трубы и т.д что хранится в др. таблицах
-		$calc_id - id калькуляции в БД
-		$data - массив данных для просчета, если новый просчет
-	*/
+        $calc_id - id калькуляции в БД
+        $data - массив данных для просчета, если новый просчет
+    */
     public static function calculate_mount($del_flag,$calc_id=null,$data=null){
         $user = JFactory::getUser();
         $mount_model = self::getModel('mount');
@@ -1750,11 +1753,11 @@ class Gm_ceilingHelpersGm_ceiling
                 if ($data['n12'] > 0) {
                     $mounting_data[] = array(
                         "title" => "Установка люстр (ПВХ)",                                                                       //Название
-                        "quantity" => $data['n12'],//$count_lust,															//Кол-во
-                        "gm_salary" => $results->mp2,//max($gm->mp4, $gm->mp5),												//Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => $results->mp2 * $data['n12'],//$count_lust * max($gm->mp4, $gm->mp5),			//Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                        "dealer_salary" => $results->mp2,//max($dealer->mp4, $dealer->mp5),									//Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => $data['n12'] * $results->mp2//max($dealer->mp4, $dealer->mp5)				//Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "quantity" => $data['n12'],//$count_lust,                                                           //Кол-во
+                        "gm_salary" => $results->mp2,//max($gm->mp4, $gm->mp5),                                             //Себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => $results->mp2 * $data['n12'],//$count_lust * max($gm->mp4, $gm->mp5),          //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "dealer_salary" => $results->mp2,//max($dealer->mp4, $dealer->mp5),                                 //Себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => $data['n12'] * $results->mp2//max($dealer->mp4, $dealer->mp5)              //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
                 if($data['n16']){
@@ -3120,8 +3123,8 @@ class Gm_ceilingHelpersGm_ceiling
         }
 
         $html .= '<p>&nbsp;</p>
-		<h2>Дата: ' . date("d.m.Y") . '</h2>
-		<table border="0" cellspacing="0" width="100%">
+        <h2>Дата: ' . date("d.m.Y") . '</h2>
+        <table border="0" cellspacing="0" width="100%">
         <tbody><tr><th>Наименование</th><th class="center">Ед. изм.</th><th class="center">Кол-во</th>';
         if($need_price == 1){
             $html .='<th class="center">Общая стоимость</th></tr>';
@@ -3545,10 +3548,10 @@ class Gm_ceilingHelpersGm_ceiling
         }
 
         $html .= '<p>&nbsp;</p>
-		
-		<h2>Дата: ' . date("d.m.Y") . '</h2>
-		<table border="0" cellspacing="0" width="100%">
-		<tbody><tr><th>Наименование</th><th class="center">Ед. изм.</th><th class="center">Кол-во</th><th class="center">Общая стоимость</th></tr>';
+        
+        <h2>Дата: ' . date("d.m.Y") . '</h2>
+        <table border="0" cellspacing="0" width="100%">
+        <tbody><tr><th>Наименование</th><th class="center">Ед. изм.</th><th class="center">Кол-во</th><th class="center">Общая стоимость</th></tr>';
 
         //throw new Exception(implode("//", $items_11[0]->id) , 1);
         $print_data[$it_11]['quantity'] = self::rounding($print_data[$it_11]['quantity'], 2.5);
@@ -3710,7 +3713,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             $db = JFactory::getDBO();
             $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` ='.$group_id;
+                  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` ='.$group_id;
             $db->setQuery($q);
             $users = $db->loadObjectList();
 
@@ -3763,7 +3766,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Уведомление о назначении договора на монтаж
             $db = JFactory::getDBO();
             $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 17';
+                  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 17';
 
             $db->setQuery($q);
             $users = $db->loadObjectList();
@@ -3796,7 +3799,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Уведомление об отправке договора в производство
             $db = JFactory::getDBO();
             $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
+                  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
             $db->setQuery($q);
             $users = $db->loadObjectList();
 
@@ -3827,7 +3830,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Уведомление о выполнении договора
             $db = JFactory::getDBO();
             $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
+                  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
 
             $db->setQuery($q);
             $users = $db->loadObjectList();
@@ -3865,7 +3868,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Уведомление об отправке договора в отказы
             $db = JFactory::getDBO();
             $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
+                  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
             $db->setQuery($q);
             $users = $db->loadObjectList();
 
@@ -3903,7 +3906,7 @@ class Gm_ceilingHelpersGm_ceiling
             //Уведомление об отправке договора в производство и отказы
             $db = JFactory::getDBO();
             $q = 'SELECT t1.`id`, t1.`email`, t2.`group_id` FROM `#__users` as t1
-				  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
+                  LEFT JOIN `#__user_usergroup_map` as t2 ON t1.`id` = t2.`user_id` WHERE t1.`block` = 0 AND t2.`group_id` = 16';
             $db->setQuery($q);
             $users = $db->loadObjectList();
 
@@ -4126,7 +4129,7 @@ class Gm_ceilingHelpersGm_ceiling
         return 1;
     }
 
-    /* 	функция декодирования дополнительных комплектующих, монтажных работ и пр. */
+    /*  функция декодирования дополнительных комплектующих, монтажных работ и пр. */
     public static function decode_extra($extra){
 
         $extra_array = json_decode($extra);
