@@ -109,7 +109,7 @@ function get_selected_calcs(){
     return ids;
 }
 function regenerate_common_estimate(){
-    let project_id = project_id;
+    let project_id = project_id.value;
     let calc_ids = get_selected_calcs();
      jQuery.ajax({
         url: "index.php?option=com_gm_ceiling&task=regenerate_common_estimate",
@@ -253,7 +253,7 @@ function update_transport(id,transport,distance,distance_col){
 }
 
 function calculate_transport(){
-    var id = project_id;
+    var id = project_id.value;
     var transport = jQuery("input[name='transport']:checked").val();
     var distance = jQuery("#distance").val();
     var distance_col = jQuery("#distance_col").val();

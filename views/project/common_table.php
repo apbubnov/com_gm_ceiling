@@ -461,8 +461,9 @@
                                                     <td><?php echo $calculation->n5; ?></td>
                                                 </tr>
                                             </table>
-                                            <h4 style="margin: 10px 0;">Вставка</h4>
+                                            
                                             <?php if ($calculation->n6 > 0) { ?>
+                                                <h4 style="margin: 10px 0;">Вставка</h4>
                                                 <table class="table_info2">
                                                     <tr>
                                                         <?php if ($calculation->n6 == 314) { ?>

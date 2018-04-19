@@ -700,7 +700,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         var min_project_sum = <?php echo  $min_project_sum;?>;
         var min_components_sum = <?php echo $min_components_sum;?>;
         var self_data = JSON.parse('<?php echo $self_calc_data;?>');
-        var project_id = "<?php echo $this->item->id ?>;";
+        let project_id = "<?php echo $this->item->id ?>;";
         var precalculation = <?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>;
 
         function PressEnter(your_text, your_event) {
