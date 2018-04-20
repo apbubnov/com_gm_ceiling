@@ -434,7 +434,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         $jsonData = stream_get_contents($f);
         $Data = json_decode($jsonData);
 
-        $Answer = ["status" => "success", "title" => "Успешно", "message" => "Замер успешно добавлен в базу"];
+        $Answer = ["status" => "success", "title" => "Успешно", "message" => "Замер сформирован. В ближайшее время с Вами свяжется менеджер для подтверждения."];
         $Error = ["status" => "error", "title" => "Не успешно", "message" => "Замер не успешно добавлен в базу, попробуйте позже"];
 
         if ($jsonData) {
