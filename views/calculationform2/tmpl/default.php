@@ -297,7 +297,6 @@
                     </span>
                     <span class="static">Рассчитать</span>
                 </button>
-                <button class="btn btn-primary" type="button" id = "clear">Очистить</button>
             </div>
             <div class="col-sm-4"></div>
         </div>
@@ -309,6 +308,7 @@
 						<div class="col-sm-4"></div>
                         <div class="col-sm-4 total_price center">
                             <div class="price_value">
+                                <span id="price_api" style="display: none;"></span>
                                 <span id="final_price">0.00</span> руб.
                             </div>
                             <div class="price_title">
@@ -405,7 +405,7 @@
 				</div>
 			<?php } ?>
 			<!-- кнопки -->
-			<div class="container">
+			<div class="container btn_tar">
 				<div class="row sm-margin-bottom">
 					<div class="col-sm-4"></div>
 					<div class="col-sm-4">
@@ -423,7 +423,12 @@
 					</div>
 					<div class="col-sm-4"></div>
 				</div>
-			</div>
+            </div>
+    </div>
+    <div class="btn_api" style="width:100%; text-align:center;">
+        <button class="btn btn-primary" type="button" id = "clear">Очистить</button>
+        <button class="btn btn-primary" type="button" id = "back_to_gm" style="display: none;">Вернуться</button>
+    </div>
 </form>
 <script>
     ///////////////////////
@@ -458,7 +463,23 @@
     jQuery('document').ready(function()
     {
         let api = "<?php echo $api;?>";
+        let device = "<?php echo $device ?>";
+        if (api == 1) {
+            jQuery(".smeta_hide").hide();
+            jQuery(".under_calculate").hide();
+            jQuery(".btn_tar").hide();
+            jQuery("#block_details").hide();
+            jQuery(".btn_api").show();
+        }
+        if (device == "web") {
+            jQuery("#back_to_gm").show();
+        }
+
+        jQuery("#back_to_gm").click(function () {
+            window.location.href = "http://гмпотолки.рф";
+        });
         var seam = '<?php echo $seam; ?>';
+
         if (seam == '1')
         {
             jQuery("#close").show();
@@ -751,6 +772,10 @@
                         console.log(data);
                         jQuery("#result_block").show();
                         jQuery("#total_price").text( total_sum.toFixed(0) );
+                        if (api == 1) {
+                            jQuery("#price_api").text( total_sum +" - 50% = ");
+                            jQuery("#price_api").show();
+                        }
                         jQuery("#final_price").text( dealer_final.toFixed(0) );
                         jQuery("#discount_price").text( discount_price.toFixed(0) );
                         calculate_button.removeClass("loading");
