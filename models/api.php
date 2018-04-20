@@ -786,69 +786,102 @@ class Gm_ceilingModelApi extends JModelList
     }
 
     public function rec_to_measure($data){
-        if(!empty($data->user_id)){
+        try{
+            if(!empty($data->user_id)){
 
-            $client_id = JFactory::getUser($data->user_id)->associated_client;
-            $dealer_id = $data->user_id;
-        }
-        else{
-            if(!empty($data->name)){
-                 $name = delete_string_characters($data->name);
+                $client_id = JFactory::getUser($data->user_id)->associated_client;
+                $dealer_id = $data->user_id;
             }
-            else {
-                $name = "Клиент";
+            else{
+                if(!empty($data->name)){
+                     $name = delete_string_characters($data->name);
+                }
+                else {
+                    $name = "Клиент";
+                }
+                $phone = $data->phone;
+                $city  = 'Воронеж';//пока по дефолту
+                //Создание клиента
+                $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
+                $client_data['client_name'] = $name;
+                $client_data['client_contacts'] = $phone;
+                $client_id = $clientform_model->save($client_data);
+                if($name == "Клиент"){
+                    $name.=$client_id;
+                }
+                //создание user'а
+                $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, "$client_id@$client_id", $client_id,2);
+
+                $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
+                $client_model->updateClient($client_id, null, $dealer_id);
+
+                $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
+                $dealer_info_model->update_city($dealer_id, $city);
             }
-            $phone = $data->phone;
-            $city  = 'Воронеж';//пока по дефолту
-            //Создание клиента
-            $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('ClientForm', 'Gm_ceilingModel');
-            $client_data['client_name'] = $name;
-            $client_data['client_contacts'] = $phone;
-            $client_id = $clientform_model->save($client_data);
-            if($name == "Клиент"){
-                $name.=$client_id;
-            }
-            //создание user'а
-            $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, "$client_id@$client_id", $client_id,2);
-
-            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('Client', 'Gm_ceilingModel');
-            $client_model->updateClient($client_id, null, $dealer_id);
-
-            $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
-            $dealer_info_model->update_city($dealer_id, $city);
-        }
-       
-        $address = $data->address;
-        $date_time = $data->date_time;
-        
-        $project_data = [
-                    "client_id" => $client_id,
-                    "project_info" => $address,
-                    "project_calculation_date" => $date_time,
-                    "project_status"=>1
-                ];
-
-        $projectform_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform', 'Gm_ceilingModel');
-        $project = $projectform_model->save($project_data);
-        $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-        $callback_model->save(date("Y-m-d H:i:s"), "Клиент заказал замер через гмпотолки. Уточнить данные", $client_id, 1);
-        $result = [
-                    "user_id" => $dealer_id,
-                    "username" => JFactory::getUser($dealer_id)->username
+           
+            $address = $data->address;
+            $date_time = $data->date_time;
+            
+            $project_data = [
+                        "client_id" => $client_id,
+                        "project_info" => $address,
+                        "project_calculation_date" => $date_time,
+                        "project_status"=>1
                     ];
-        return (object)$result;
+
+            $projectform_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform', 'Gm_ceilingModel');
+            $project = $projectform_model->save($project_data);
+            $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $callback_model->save(date("Y-m-d H:i:s"), "Клиент заказал замер через гмпотолки. Уточнить данные", $client_id, 1);
+            $result = [
+                        "user_id" => $dealer_id,
+                        "username" => JFactory::getUser($dealer_id)->username
+                        ];
+            return (object)$result;
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
 
     public function change_password($data){
-        $user = JFactory::getUser($data->user_id);
-        $password = array('password' => $data->password, 'password2' => $data->password);
-        if(!$user->bind($password)){
-            return 'Could not bind data. Error: '.$user->getError();
+        try{
+            $user = JFactory::getUser($data->user_id);
+            if(!empty($data->old_password)){
+                $verifyPass = JUserHelper::verifyPassword($data->old_password, $user->password, $user->id);
+                if($verifyPass){
+                    return $this->change_pass($user->id,$password);;
+                }
+                else return false;
+            }
+            else{
+                return $this->change_pass($user->id,$password);
+            }
         }
-        if(!$user->save()){
-            return 'Could not save user. Error: '.$user->getError();
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
         }
-        return true;
-        
+    }
+
+    public function change_pass($user_id,$pass){
+        try{
+            $user_model = Gm_ceilingHelpersGm_ceiling::getModel('Users');
+            return $user_model->change_user_pass($user_id,$pass);
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
 }
