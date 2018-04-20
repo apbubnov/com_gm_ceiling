@@ -1,3 +1,4 @@
+
 const help_block_n6 = '<span class="airhelp"><img src="/images/vstavka.jpg" width="280"/><br>Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой.<br>В расчет входит вставка по периметру + монтажная работа по установке вставки</span>';
 
 const help_block_n12 = '<span class="airhelp">В расчет входит:<ul style="text-align: left;"><li>3 самореза (ГДК 3,5*51)</li><li>3 дюбеля (красн. 6*51)</li><li>8 саморезов (п/сф 305*9,5 цинк)</li><li>1 шуруп кольцо (6*40)</li><li>2 клеммные пары</li><li>1 круглое кольцо (50)</li><li>1 платформа под люстру (тарелка)</li><li>4 подвеса прямых (П 60 (0,8))</li><li>0,5м провода (ПВС 2*0,75)</li></ul>+ монтажная работа по установке люстр</span>';
@@ -36,7 +37,8 @@ const help_block_extra_mounting = '<span class="airhelp">Это поле пре�
 
 const help_block_need_mount = '<span class="airhelp">Данная кнопка может отменить все монтажные работы</span>';
 
-let discount_el = create_single_input(1,"new_discount","jform[discount]","","%","number","0","100");
+let discount_el = create_single_input(1,"new_discount","jform[discount]","","","hidden","0","100");
+let n28_el = create_single_input(1,"jform_n28","jform[n28]","","","hidden");
 let arr_blocks = [
     {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"add_mount_and_components",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0},
     {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_n6",btn_id:"",btn_text:"<h3>Освещение</h3>"},
@@ -55,6 +57,11 @@ let arr_blocks = [
 arr_blocks.forEach(function(item){
     generate_block(item);
 });
+jQuery("#add_mount_and_components").append(n28_el);
+jQuery("#add_mount_and_components").append(discount_el);
+
+jQuery("#jform_n28").val(0);
+jQuery("#new_discount").val(50);
 
 let n_data = {};
 let n6_src = {
@@ -362,7 +369,6 @@ function open_blocks(){
         else{
             if(!empty(calculation[Object.keys(calculation)[i]]) ){
                 if(!empty(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0])){
-                   console.log(`#btn_${Object.keys(calculation)[i]}`);
                     jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
                 }
             }
@@ -417,160 +423,10 @@ let change_radio = function(){
             jQuery("#n6_color_cnt").hide();
         }
 };
-function fill_calc_data(){
-    let values;
-    let value;
-    let count;
-    let obj;
-    for(let i = Object.keys(calculation).length;i--;){
-       if(calculation[Object.keys(calculation)[i]]){
-           switch(Object.keys(calculation)[i]){
-                case 'n28':
-                case 'height':
-                    values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
-                    value = calculation[Object.keys(calculation)[i]];
-                    check_radio(values,value);
-                    break;
-                case 'n6':
-                    values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
-                    value = calculation[Object.keys(calculation)[i]];
-                    if(value != 0 && value != 314){
-                        jQuery("#jform_n6_inside").append(create_n6_button());
-                        jQuery("#jform_n6_1").attr("checked",true);
-                        jQuery("#jform_n6_1").val(value);
-                        jQuery("#n6_color_img").prop('src',get_color_file(value));
-                        jQuery("#n6_color_img").show();
-                        jQuery("#n6_color_cnt").show();
-                        document.getElementById("btn_select_n6_color").onclick = show_color_switch;
-                    }else{
-                        check_radio(values,value);
-                    }
-                    break;
-                case 'n13':
-                    let n13_objs = calculation[Object.keys(calculation)[i]];
-                    for(let j = 1;j<n13_objs.length;j++){
-                        jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
-                    }
-                    for(let j = 0;j<n13_objs.length;j++){
-                        jQuery("[name = 'n13_count[]']")[j].value = n13_objs[j]['n13_count'];
-                        check_select_option('n13_type[]',j,n13_objs[j]['n13_type']);                        
-                        check_select_option('n13_ring[]',j,n13_objs[j]['n13_size']);
-                    }
-                    
-                    break;
-                case 'n26':
-                    let n26_objs = calculation[Object.keys(calculation)[i]];
-                    for(let j = 1;j<n26_objs.length;j++){
-                        jQuery(`#add_jform_ecola`).click();
-                    }
-                    for(let j = 0;j<n26_objs.length;j++){
-                        jQuery("[name = 'ecola_count[]']")[j].value = n26_objs[j]['n26_count'];
-                        check_select_option('light_color[]',j,n26_objs[j]['n26_illuminator']);
-                        check_select_option('light_lamp_color[]',j,n26_objs[j]['n26_lamp']);
-                    }
-                    break;
-                case 'n14':
-                    let n14_objs = calculation[Object.keys(calculation)[i]];
-                    for(let j = 1;j<n14_objs.length;j++){
-                        jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
-                    }
-                    for(let j = 0;j<n14_objs.length;j++){
-                        jQuery("[name = 'n14_count[]']")[j].value = n14_objs[j]['n14_count'];
-                        check_select_option('n14_type[]',j,n14_objs[j]['n14_size']);
-                    }
-                    break;
-                case 'n16':
-                    jQuery('#jform_n27').val(calculation['n27']);//я считаю не совсем корректно
-                    values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
-                    value = calculation[Object.keys(calculation)[i]];
-                    check_radio(values,value);
-                    let n15_objs = calculation['n15'];
-                    for(let j = 1;j<n15_objs.length;j++){
-                        jQuery(`#add_jform_n15`).click();
-                    }
-                    for(let j = 0;j<n15_objs.length;j++){
-                        jQuery("[name = 'n15_count[]']")[j].value = n15_objs[j]['n15_count'];
-                        check_select_option('n15_type[]',j,n15_objs[j]['n15_type']);
-                        
-                        check_select_option('n15_size[]',j,n15_objs[j]['n15_size']);
-                    }
-                    break;
-                case 'n22':
-                    let n22_objs = calculation[Object.keys(calculation)[i]];
-                    for(let j = 1;j<n22_objs.length;j++){
-                        jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
-                    }
-                    for(let j = 0;j<n22_objs.length;j++){
-                        jQuery("[name = 'n22_count[]']")[j].value = n22_objs[j]['n22_count'];
-                        check_select_option('n22_type[]',j,n22_objs[j]['n22_type']);                        
-                        check_select_option('n22_diam[]',j,n22_objs[j]['n22_size']);
-                    }
-                    break;
-                case 'n23':
-                    let n23_objs = calculation[Object.keys(calculation)[i]];
-                    for(let j = 1;j<n23_objs.length;j++){
-                        jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
-                    }
-                    for(let j = 0;j<n23_objs.length;j++){
-                        jQuery("[name = 'n23_count[]']")[j].value = n23_objs[j]['n23_count'];
-                        check_select_option('n23_size[]',j,n23_objs[j]['n23_size']);
-                    }
-                    break;
-                case 'n29':
-                    let n29_objs = calculation[Object.keys(calculation)[i]];
-                    for(let j = 1;j<n29_objs.length;j++){
-                        jQuery(`#add_jform_${Object.keys(calculation)[i]}`).click();
-                    }
-                    for(let j = 0;j<n29_objs.length;j++){
-                        jQuery("[name = 'n29_count[]']")[j].value = n29_objs[j]['n29_count'];
-                        check_select_option('n29_type[]',j,n29_objs[j]['n29_type']);
-                    }
-                    break;
-                case 'extra_components':
-                    let extra_comp_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                    for(let j = 1;j<Object.keys(extra_comp_data).length;j++){
-                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
-                    }
-                    for(let j = 0;j<Object.keys(extra_comp_data).length;j++){
-                        jQuery("[name = 'extra_components_title[]']")[j].value = extra_comp_data[Object.keys(extra_comp_data)[j]]['title'];
-                        jQuery("[name = 'extra_components_value[]']")[j].value = extra_comp_data[Object.keys(extra_comp_data)[j]]['value'];
-                       
-                    }
-                break;
-                case 'extra_mounting':
-                let extra_mount_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                    for(let j = 1;j<Object.keys(extra_mount_data).length;j++){
-                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
-                    }
-                    for(let j = 0;j<Object.keys(extra_mount_data).length;j++){
-                        jQuery("[name = 'extra_mounting_title[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['title'];
-                        jQuery("[name = 'extra_mounting_value[]']")[j].value = extra_mount_data[Object.keys(extra_mount_data)[j]]['value'];
-                       
-                    }
-                break;
-                case 'components_stock':
-                let stock_data = JSON.parse(calculation[Object.keys(calculation)[i]]);
-                    
-                     for(let j = 1;j<Object.keys(stock_data).length;j++){
-                        jQuery(`#add_${Object.keys(calculation)[i]}`).click();
-                    }
-                     for(let j = 0;j<Object.keys(stock_data).length;j++){
-                        jQuery("[name = 'components_stock_name[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['title'];
-                        jQuery("[name = 'components_stock_title[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['id'];
-                        jQuery("[name = 'components_stock_value[]']")[j].value = stock_data[Object.keys(stock_data)[j]]['value'];
-                       
-                    }  
-                break;
-                default:
-                    jQuery(`#jform_${Object.keys(calculation)[i]}`).val(calculation[Object.keys(calculation)[i]]);
-           }
-       }
-    }
-}
+
 let show_color_switch = function(){    
         data = n6_colors;
         var items = "<div class='center'>";
-        console.log(data);
         jQuery.each( data, function( key, val ) {
             items += "<button class='click_color_1' style='width: 70px; height: 80px; display: inline-block; float: left; margin:3px;' type='button' data-color_id_1='"+ val.id + "' data-color_img_1='" + val.file + "'><img style='width: 70px; height: 70px; display: inline-block; float: left; margin:3px;' src='"+ val.file + "' alt='' /><div class='color_title1'>" + val.title + "</div><div class='color_title2'>" + val.title+ "</div></button>";
         
@@ -791,7 +647,6 @@ function toggle_color(element){
     }
 }
 function generate_block(object){
-    alert();
     let cnt = create_container(object.block_id,object.btn_cont_id);
     jQuery(`#${object.prev_id}`).after(cnt);
     if(object.btn_id){
@@ -799,6 +654,7 @@ function generate_block(object){
         jQuery(`#${object.btn_cont_id}`).append(block);
     }
     else{
+        console.log(object.btn_text)
         jQuery(`#${object.btn_cont_id}`).append(object.btn_text);
     }
 }
@@ -902,5 +758,3 @@ function ClearSelect(e) {
     }, 200);
 }
 
-open_blocks();
-fill_calc_data();

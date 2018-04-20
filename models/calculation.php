@@ -808,6 +808,29 @@ class Gm_ceilingModelCalculation extends JModelItem
         }
     }
 
+    public function save($id,$project_id){
+    	try
+        {
+            $db    = JFactory::getDbo();
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`#__gm_ceiling_calculations`')
+                ->columns('`id`,`project_id`')
+                ->values("$id, $project_id");
+            $db->setQuery($query);
+            $db->execute();
+            return $last_id = $db->insertid();
+
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
+
     public function update_calculation($data)
     {
         try

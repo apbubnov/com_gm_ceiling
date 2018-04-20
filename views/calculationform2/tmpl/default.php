@@ -30,6 +30,9 @@
     $recalc = $jinput->get('recalc', 0, 'INT');
     $seam = $jinput->get('seam', 0, 'INT');
     $api = $jinput->get('api', 0, 'INT');
+    $device = $jinput->get('device','',"STRING");
+    $lattitude = $jinput->get('latitude','',"STRING");
+    $longitude = $jinput->get('longitude','',"STRING");
 
     $type_url = '';
     if (!empty($type))
@@ -48,6 +51,8 @@
     {
         $precalculation_url = "&precalculation=$precalculation";
     }
+    $ll = (!empty($lattitude) && !empty($longitude)) ? "$lattitude;$longitude" :"";
+    $details = "device: $device;$ll";
 
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
@@ -292,6 +297,7 @@
                     </span>
                     <span class="static">Рассчитать</span>
                 </button>
+                <button class="btn btn-primary" type="button" id = "clear">Очистить</button>
             </div>
             <div class="col-sm-4"></div>
         </div>
@@ -380,7 +386,7 @@
 						</div>
 					</div>
 				</div>
-			<?php if ($type === "gmcalculator" || $type === "calculator") { ?>
+			<?php if ($type === "gmcalculator" || $type === "calculator" || $api == 1)  { ?>
 				<div class="container" id ="block_details">
 					<div class="row"  style="margin-bottom: 15px;">
 						<div class="col-sm-4"></div>
@@ -392,7 +398,7 @@
 									</td>
 								</tr>
 							</table>
-                            <input type="text" id="jform_details" name="jform[details]" class="form-control"  placeholder="Комментарий" style="display: none; margin-top: 20px; margin-bottom: 5px;">
+                            <input type="text" id="jform_details" name="jform[details]" value = "<?php echo $details;?>" class="form-control"  placeholder="Комментарий" style="display: none; margin-top: 20px; margin-bottom: 5px;">
 						</div>
 						<div class="col-sm-4"></div>
 					</div>
@@ -466,6 +472,36 @@
             jQuery("#mv_container").hide();
             jQuery("#modal_window_kp").hide();
         };
+
+        if(document.getElementById('clear')){
+          
+            document.getElementById('clear').onclick = function(){
+                  console.log(calculation.id);
+                jQuery.ajax({
+                    type: 'POST',
+                    url: '/index.php?option=com_gm_ceiling&task=calculation.clearCalculation',
+                    dataType: "json",
+                    timeout: 20000,
+                    data: {
+                        calc_id: calculation.id,
+                        project_id: <?php echo $project_id; ?>
+                    },
+                    success: function(data){
+                        location.reload();
+                    },
+                    error: function(data){
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+                }); 
+            }
+        }
 
         var precalculation = '<?php echo $precalculation; ?>';
         jQuery("body").addClass("yellow_home");
