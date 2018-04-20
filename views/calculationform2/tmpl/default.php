@@ -55,25 +55,25 @@
     $device_url = '';
     if (!empty($device))
     {
-        $device_url = "&precalculation=$device";
+        $device_url = "&device=$device";
     }
 
     $api_url = '';
     if (!empty($api))
     {
-        $api_url = "&precalculation=$api";
+        $api_url = "&api=$api";
     }
 
     $lattitude_url = '';
     if (!empty($lattitude))
     {
-        $lattitude_url = "&precalculation=$lattitude";
+        $lattitude_url = "&latitude=$lattitude";
     }
 
     $longitude_url = '';
     if (!empty($longitude))
     {
-        $longitude_url = "&precalculation=$longitude";
+        $longitude_url = "&longitude=$longitude";
     }
     $ll = (!empty($lattitude) && !empty($longitude)) ? "$lattitude;$longitude" :"";
     $details = "device: $device;$ll";
