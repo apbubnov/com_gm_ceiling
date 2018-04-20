@@ -154,7 +154,7 @@
     <input name="type_url" id="type_url" value="<?php echo $type_url; ?>" type="hidden">
     <input name="subtype_url" id="subtype_url" value="<?php echo $subtype_url; ?>" type="hidden">
     <input name="precalculation" id="precalculation" value="<?php echo $precalculation_url; ?>" type="hidden">
-    <input name="device" id="device" value="<?php echo $precalculation_url; ?>"  type="hidden">
+    <input name="device" id="device" value="<?php echo $device_url; ?>"  type="hidden">
     <input name="api" id="api" value="<?php echo $api_url; ?>"  type="hidden">
     <input name="latitude" id="latitude" value="<?php echo $lattitude_url; ?>" type="hidden">
     <input name="longitude" id="longitude" value="<?php echo $longitude_url; ?>" type="hidden">
