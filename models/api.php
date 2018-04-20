@@ -792,7 +792,12 @@ class Gm_ceilingModelApi extends JModelList
             $dealer_id = $data->user_id;
         }
         else{
-            $name = delete_string_characters($data->name);
+            if(!empty($data->name)){
+                 $name = delete_string_characters($data->name);
+            }
+            else {
+                $name = "Клиент";
+            }
             $phone = $data->phone;
             $city  = 'Воронеж';//пока по дефолту
             //Создание клиента
@@ -800,6 +805,9 @@ class Gm_ceilingModelApi extends JModelList
             $client_data['client_name'] = $name;
             $client_data['client_contacts'] = $phone;
             $client_id = $clientform_model->save($client_data);
+            if($name == "Клиент"){
+                $name.=$client_id;
+            }
             //создание user'а
             $dealer_id = Gm_ceilingHelpersGm_ceiling::registerUser($name, $phone, "$client_id@$client_id", $client_id,2);
 
