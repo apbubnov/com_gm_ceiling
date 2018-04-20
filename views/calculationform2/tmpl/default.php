@@ -154,10 +154,10 @@
     <input name="type_url" id="type_url" value="<?php echo $type_url; ?>" type="hidden">
     <input name="subtype_url" id="subtype_url" value="<?php echo $subtype_url; ?>" type="hidden">
     <input name="precalculation" id="precalculation" value="<?php echo $precalculation_url; ?>" type="hidden">
-    <input type="text" name="device" id="device" value="<?php echo $precalculation_url; ?>"  type="hidden">
-    <input type="text" name="api" id="api" value="<?php echo $api_url; ?>"  type="hidden">
-    <input type="text" name="latitude" id="latitude" value="<?php echo $lattitude_url; ?>" type="hidden">
-    <input type="text" name="longitude" id="longitude" value="<?php echo $longitude_url; ?>" type="hidden">
+    <input name="device" id="device" value="<?php echo $precalculation_url; ?>"  type="hidden">
+    <input name="api" id="api" value="<?php echo $api_url; ?>"  type="hidden">
+    <input name="latitude" id="latitude" value="<?php echo $lattitude_url; ?>" type="hidden">
+    <input name="longitude" id="longitude" value="<?php echo $longitude_url; ?>" type="hidden">
 </form>
 <form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
     <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $calculation_id;?>"/> 
