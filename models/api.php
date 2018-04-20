@@ -854,12 +854,12 @@ class Gm_ceilingModelApi extends JModelList
             if(!empty($data->old_password)){
                 $verifyPass = JUserHelper::verifyPassword($data->old_password, $user->password, $user->id);
                 if($verifyPass){
-                    return $this->change_pass($user->id,$password);;
+                    return $this->change_pass($user->id,$data->password);
                 }
                 else return false;
             }
             else{
-                return $this->change_pass($user->id,$password);
+                return $this->change_pass($user->id,$data->password);
             }
         }
         catch(Exception $e)
