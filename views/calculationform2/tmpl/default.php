@@ -107,7 +107,7 @@
             throw new Exception("Пустой id проекта");
         }
         
-        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url&id=$project_id";
+        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url$precalculation_url&id=$project_id";
     }
     else{
         /* сгенерировать ошибку или создать калькуляцию? */
@@ -454,7 +454,7 @@
             </div>
     </div>
     <div class="btn_api" style="width:100%; text-align:center;">
-        <button class="btn btn-primary" type="button" id = "clear">Очистить</button>
+        <button class="btn btn-primary" type="button" id = "clear" style="display: none;">Очистить</button>
         <button class="btn btn-primary" type="button" id = "back_to_gm" style="display: none;">Вернуться</button>
     </div>
 </form>
@@ -497,6 +497,7 @@
             jQuery(".under_calculate").hide();
             jQuery(".btn_tar").hide();
             jQuery("#block_details").hide();
+            jQuery("#clear").show();
             jQuery(".btn_api").show();
         }
         if (device == "web") {
