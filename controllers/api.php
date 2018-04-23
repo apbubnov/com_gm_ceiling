@@ -421,6 +421,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+
     /*
      * CEH4TOP IOS Клиентская версия
      *
@@ -435,11 +436,13 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $jsonData = stream_get_contents($f);
             $Data = json_decode($jsonData);
 
-            if(!empty($Data)){
-                    $times = $model->get_measure_time($Data->date);
-                    $Answer = $times;
-                }
-            else{
+            if(!empty($Data)) {
+                $times = $model->get_measure_time($Data->date);
+                foreach ($times as $key => $value)
+                    $times[$key] = substr($value, 0, 5);
+                $Answer = ["status" => "success", "times" => $times];
+            }
+            else {
                 $Answer = ["status" => "error", "title" => "Не успешно", "message" => "Произошла ошибка при получении свободного времени замера, попробуйте позже"];
             }
 
