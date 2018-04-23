@@ -131,7 +131,7 @@ let n20 = create_single_input(1,"jform_n20","jform[n20]","","Кол-во,м.","t
 let n7 = create_single_input(1,"jform_n7","jform[n7]","","Кол-во,м.","tel");
 let n8 = create_single_input(1,"jform_n8","jform[n8]","","Кол-во,м.","tel");
 let n18 = create_single_input(1,"jform_n18","jform[n18]","","Кол-во,м.","tel");
-let dop_krepezh = create_single_input(1,"jform_dop_krepezh","jform[dop_krepezh]","","м.","tel");
+let dop_krepezh = create_single_input(1,"jform_dop_krepezh","jform[dop_krepezh]","","Кол-во,м.","tel");
 let n21 = create_single_input(1,"jform_n21","jform[n21]","","Кол-во,шт.","tel");
 let n30 = create_single_input(1,"jform_n30","jform[n30]","","Кол-во,м.","tel");
 let n31 = create_single_input(1,"jform_n31","jform[n31]","","Кол-во,м.","tel");
@@ -449,11 +449,18 @@ jQuery('.add_fields').click(function(){
     if(jQuery("#without").attr("fix") != "true" ){
         jQuery("#with_mount").attr("checked",true);
     }
-    /*jQuery('input[type=tel]').keyPress(function(e){
-        console.log(e.keyCode);
-    });*/
-    
-});
+    let inputs = jQuery('input[type=tel]');
+    [].forEach.call(inputs,function(el){
+        el.addEventListener("keypress",auto_replace);
+    });
+}); 
+
+function  auto_replace (e){
+            if(e.keyCode == 44){
+                this.value += '.';
+                e.preventDefault ? e.preventDefault() : e.returnValue = false;
+            }
+        };
 function open_blocks(){
     for(let i = Object.keys(calculation).length;i--;){
 

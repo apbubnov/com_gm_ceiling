@@ -74,14 +74,14 @@ let n6_src = {
     ]
 };
 let n6 =  create_radios_group(n6_src);
-let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","шт.","tel");
-let dop_krepezh = create_single_input(1,"jform_dop_krepezh","jform[dop_krepezh]","","м.","tel");
-let n21 = create_single_input(1,"jform_n21","jform[n21]","","м.","tel");
+let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","Кол-во,шт.","tel");
+let dop_krepezh = create_single_input(1,"jform_dop_krepezh","jform[dop_krepezh]","","Кол-во,м.","tel");
+let n21 = create_single_input(1,"jform_n21","jform[n21]","","Кол-во,шт.","tel");
 let n30 = create_single_input(1,"jform_n30","jform[n30]","","м.","tel");
-let n31 = create_single_input(1,"jform_n31","jform[n31]","","м.","tel");
-let n11 = create_single_input(1,"jform_n11","jform[n11]","","м.","tel");
-let n32 = create_single_input(1,"jform_n32","jform[n32]","","м.","tel");
-let n24 = create_single_input(1,"jform_n24","jform[n24]","","м.","tel");
+let n31 = create_single_input(1,"jform_n31","jform[n31]","","Кол-во,м.","tel");
+let n11 = create_single_input(1,"jform_n11","jform[n11]","","Кол-во,м.","tel");
+let n32 = create_single_input(1,"jform_n32","jform[n32]","","Кол-во комнат,шт.","tel");
+let n24 = create_single_input(1,"jform_n24","jform[n24]","","Кол-во,м.","tel");
 let height_src = {
     name : 'jform[height]',
     values : [
@@ -105,8 +105,8 @@ n16 += create_radios_group(cornice_src);
 let need_mount_src = {
     name : 'need_mount',
     values : [
-        {id:'with_mount',value:1,text:"Нужен"},
-        {id:'without',value:0,text:"Не нужен",selected:true}
+        {id:'with_mount',value:1,text:"Нужен",selected:true},
+        {id:'without',value:0,text:"Не нужен"}
     ]
 }
 let need_mount =  create_radios_group(need_mount_src);
