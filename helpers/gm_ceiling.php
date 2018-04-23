@@ -1480,7 +1480,7 @@ class Gm_ceilingHelpersGm_ceiling
         $margin = self::get_margin($data['project_id']);
 
         $guild_data = array();
-        if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 4) {
+        if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
             //Обработка 1 угла
             $gm_mp20 = margin($results->mp20, $margin['gm_canvases_margin']);
             $dealer_mp20 = margin($gm_mp20, $margin['dealer_canvases_margin']);
@@ -1488,9 +1488,9 @@ class Gm_ceilingHelpersGm_ceiling
                 "title" => "Обработка 1 угла",                                                   //Название
                 "quantity" => $data['n9'] - 4,                                                   //Кол-во
                 "gm_salary" => $gm_mp20,                                                         //Себестоимость монтажа ГМ (зарплата монтажников)
-                "gm_salary_total" => ($data['n9'] - 4) * $gm_mp20,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                "gm_salary_total" => ($data['n9'] - 6) * $gm_mp20,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                 "dealer_salary" => $dealer_mp20,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
-                "dealer_salary_total" => ($data['n9'] - 4) * $dealer_mp20                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                "dealer_salary_total" => ($data['n9'] - 6) * $dealer_mp20                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
         if ( $data['n31'] > 0) {  
@@ -1627,16 +1627,16 @@ class Gm_ceilingHelpersGm_ceiling
 
         if ($data["need_mount"]) {
            
-            if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 4) {
+            if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
                 //Обработка 1 угла
                 if ($data['n9']) {
                     $guild_data[] = array(
                         "title" => "Обработка 1 угла (ПВХ)",                                                                //Название
-                        "quantity" => $data['n9'] - 4,                                                                //Кол-во
+                        "quantity" => $data['n9'] - 6,                                                                //Кол-во
                         "gm_salary" => $results->mp20,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                        "gm_salary_total" => ($data['n9'] - 4) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                        "gm_salary_total" => ($data['n9'] - 6) * $results->mp20,                                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                         "dealer_salary" => $results->mp20,                                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                        "dealer_salary_total" => ($data['n9'] - 4) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                        "dealer_salary_total" => ($data['n9'] - 6) * $results->mp20                                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                     );
                 }
             }

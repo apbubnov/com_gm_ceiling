@@ -428,20 +428,78 @@ class Gm_ceilingControllerApi extends JControllerLegacy
      * Address, ApartmentNumber, Date, Name, Phone, Type = Client;
      * Ответ: любой
      * */
+    public function getTimes() {
+        try{
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $f = fopen('php://input', 'r');
+            $jsonData = stream_get_contents($f);
+            $Data = json_decode($jsonData);
 
+            if(!empty($Data)){
+                    $times = $model->get_measure_time($Data->date);
+                    $Answer = $times;
+                }
+            else{
+                $Answer = ["status" => "error", "title" => "Не успешно", "message" => "Произошла ошибка при получении свободного времени замера, попробуйте позже"];
+            }
+
+            die(json_encode($Answer)); 
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
     public function addNewClient() {
-        $f = fopen('php://input', 'r');
-        $jsonData = stream_get_contents($f);
-        $Data = json_decode($jsonData);
+        try{
+            $f = fopen('php://input', 'r');
+            $jsonData = stream_get_contents($f);
+            $Data = json_decode($jsonData);
 
-        $Answer = ["status" => "success", "title" => "Успешно", "message" => "Замер сформирован. В ближайшее время с Вами свяжется менеджер для подтверждения."];
-        $Error = ["status" => "error", "title" => "Не успешно", "message" => "Замер не успешно добавлен в базу, попробуйте позже"];
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            if(!empty($Data)){
+                $Data->address = "$Data->address, квартира: $Data->apartmentNumber";
+                $Answer = $model->rec_to_measure($Data);
+            }
+            else {
+                 $Answer = ["status" => "error", "title" => "Не успешно", "message" => "Замер не успешно добавлен в базу, попробуйте позже"];
+            }
 
-        if ($jsonData) {
             die(json_encode($Answer));
-        } else {
-            die(json_encode($Error));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
         }
     }
 
+    public function changePswd(){
+        try{
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $f = fopen('php://input', 'r');
+            $jsonData = stream_get_contents($f);
+            $Data = json_decode($jsonData);
+            if(!empty($Data)){
+                $Answer = $model->change_password($Data);
+            }
+            else {
+                $Answer = ["status" => "error", "title" => "Не успешно", "message" => "Пароль не изменен, попробуйте позже"];
+            }
+            die(json_encode($Answer));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
     }
+
+}

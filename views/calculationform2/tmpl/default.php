@@ -475,6 +475,7 @@
         process.handler= this;
         return process;
     };
+    let dealer_id = "<?php echo $user->dealer_id;?>";
     let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
     let n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
@@ -664,7 +665,7 @@
             jQuery.each(canvases_data_of_selected_texture, function(key,value){
                 if (value.texture_id === select_texture && value.color_id === select_color)
                 {
-                    let proizv = value.name + " " + value.country;
+                    let proizv = value.name;
                     if(!in_array(manufacturers, proizv)){
                         manufacturers.push(proizv);
                         let option = jQuery("<option></option>")
@@ -841,7 +842,7 @@
 		});
        
         jQuery("#btn_add_components").click(function(){
-            if(api){
+            if(api == 1){
                 include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components_client.js');
             }
             else{

@@ -53,8 +53,20 @@ const help_block_extra_mounting = '<span class="airhelp">Это поле пре�
 const help_block_need_mount = '<span class="airhelp">Данная кнопка может отменить все монтажные работы</span>';
 
 let discount_el = create_single_input(1,"new_discount","jform[discount]","","%","number","0","100");
+
+let attention_el  = '';
+console.log(dealer_id);
+if(dealer_id != 1){
+    attention_el = `<p>
+                        ВНИМАНИЕ! <br>
+                        Все комплектующие расчитываются с крепежем (саморезы, дюбеля, подвесы и т.д.) и работой. <br>
+                        Изменить прайс монтажа <a href="index.php?option=com_gm_ceiling&view=dealerprofile&type=edit" class="btn btn-primary"><i class="fa fa-edit"></i></a>
+                    </p>`;
+
+}
 let arr_blocks = [
-    {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"add_mount_and_components",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить багет" : "Добавить багет",need_ajax : 0},
+    {block_id:"block_attention",btn_cont_id:"attention",prev_id:"add_mount_and_components",btn_id:"",btn_text:attention_el},
+    {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"block_attention",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить багет" : "Добавить багет",need_ajax : 0},
     {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0},
     {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_n6",btn_id:"",btn_text:"<h3>Освещение</h3>"},
     {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Добавить люстры",need_ajax : 0},
@@ -112,20 +124,20 @@ let n6_src = {
     ]
 };
 let n6 =  create_radios_group(n6_src);
-let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","шт.","tel");
-let n19 = create_single_input(1,"jform_n19","jform[n19]","","м.","tel");
-let n17 = create_single_input(1,"jform_n17","jform[n17]","","м.","tel");
-let n20 = create_single_input(1,"jform_n20","jform[n20]","","м.","tel");
-let n7 = create_single_input(1,"jform_n7","jform[n7]","","м.","tel");
-let n8 = create_single_input(1,"jform_n8","jform[n8]","","м.","tel");
-let n18 = create_single_input(1,"jform_n18","jform[n18]","","м.","tel");
+let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","Кол-во,шт.","tel");
+let n19 = create_single_input(1,"jform_n19","jform[n19]","","Кол-во,м.","tel");
+let n17 = create_single_input(1,"jform_n17","jform[n17]","","Кол-во,м.","tel");
+let n20 = create_single_input(1,"jform_n20","jform[n20]","","Кол-во,м.","tel");
+let n7 = create_single_input(1,"jform_n7","jform[n7]","","Кол-во,м.","tel");
+let n8 = create_single_input(1,"jform_n8","jform[n8]","","Кол-во,м.","tel");
+let n18 = create_single_input(1,"jform_n18","jform[n18]","","Кол-во,м.","tel");
 let dop_krepezh = create_single_input(1,"jform_dop_krepezh","jform[dop_krepezh]","","м.","tel");
-let n21 = create_single_input(1,"jform_n21","jform[n21]","","м.","tel");
-let n30 = create_single_input(1,"jform_n30","jform[n30]","","м.","tel");
-let n31 = create_single_input(1,"jform_n31","jform[n31]","","м.","tel");
-let n11 = create_single_input(1,"jform_n11","jform[n11]","","м.","tel");
-let n32 = create_single_input(1,"jform_n32","jform[n32]","","м.","tel");
-let n24 = create_single_input(1,"jform_n24","jform[n24]","","м.","tel");
+let n21 = create_single_input(1,"jform_n21","jform[n21]","","Кол-во,шт.","tel");
+let n30 = create_single_input(1,"jform_n30","jform[n30]","","Кол-во,м.","tel");
+let n31 = create_single_input(1,"jform_n31","jform[n31]","","Кол-во,м.","tel");
+let n11 = create_single_input(1,"jform_n11","jform[n11]","","Кол-во,м.","tel");
+let n32 = create_single_input(1,"jform_n32","jform[n32]","","Кол-во комнат,шт.","tel");
+let n24 = create_single_input(1,"jform_n24","jform[n24]","","Кол-во,м.","tel");
 let height_src = {
     name : 'jform[height]',
     values : [
@@ -437,7 +449,9 @@ jQuery('.add_fields').click(function(){
     if(jQuery("#without").attr("fix") != "true" ){
         jQuery("#with_mount").attr("checked",true);
     }
-    
+    /*jQuery('input[type=tel]').keyPress(function(e){
+        console.log(e.keyCode);
+    });*/
     
 });
 function open_blocks(){
