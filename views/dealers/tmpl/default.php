@@ -162,7 +162,7 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
             jQuery("#modal_window_kp").show("slow");
         });
 
-        jQuery(document).click(function(e){
+        jQuery(document).mousedown(function(e){
             var target = e.target;
             //console.log(e.target.tagName);
             // цикл двигается вверх от target к родителям до table
@@ -365,7 +365,12 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                 if (target.tagName == 'TR')
                 {
                     if(jQuery(target).data('href') != undefined){
-                        document.location.href = jQuery(target).data('href');
+                        if(e.which == 2){
+                            window.open(jQuery(target).data('href'));
+                        }
+                        else{
+                            document.location.href = jQuery(target).data('href');
+                        }
                     }
                     return;
                 }

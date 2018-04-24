@@ -741,9 +741,10 @@ class Gm_ceilingModelApi extends JModelList
 
     public function get_measure_time($date){
         try{
-            $result = [];
+           /* $result = [];*/
             $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
-            $all_gaugers = $gauger_model->getDatas(1);
+            return $gauger_model->getFreeGaugingTimes($date);
+           /* $all_gaugers = $gauger_model->getDatas(1);
             $gaugers_count = count($all_gaugers);
             $times = [
                 "09:00:00" => $gaugers_count,
@@ -774,7 +775,7 @@ class Gm_ceilingModelApi extends JModelList
                 }
                 
             }
-            return $result;
+            return $result;*/
         }
         catch(Exception $e)
         {

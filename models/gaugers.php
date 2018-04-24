@@ -368,5 +368,63 @@ class Gm_ceilingModelGaugers extends JModelItem {
         }
 	}
 
+	public function getFreeGaugers($date_time){
+		
+	}
+
+	public function getFreeGaugingTimes($date){
+		$result = [];
+        $all_gaugers = $this->getDatas(28);
+        $gaugers_count = count($all_gaugers);
+        $times = [
+            "09:00:00" => $gaugers_count,
+            "10:00:00" => $gaugers_count,
+            "11:00:00" => $gaugers_count,
+            "12:00:00" => $gaugers_count,
+            "13:00:00" => $gaugers_count,
+            "14:00:00" => $gaugers_count,
+            "15:00:00" => $gaugers_count,
+            "16:00:00" => $gaugers_count,
+            "17:00:00" => $gaugers_count,
+            "18:00:00" => $gaugers_count,
+            "19:00:00" => $gaugers_count,
+            "20:00:00" => $gaugers_count
+        ];
+        $days_off =[];
+        foreach ($all_gaugers as $gauger) {
+        	array_push($days_off,$this->FindFreeDay($gauger->id,$date));
+		}
+		foreach ($days_off as $value) {
+			foreach ($value as $val) {
+				$time_from = explode(" ",$val->date_from)[1];
+				$time_to = explode(" ",$val->date_to)[1];
+				foreach($times as $time => $value){
+	    			if($time>=$time_from && $time<=$time_to){
+	    				if($times[$time]>0){
+			                $times[$time]--;
+		                }
+	    			}
+	    		}
+    		}
+		}
+        foreach ($all_gaugers as $gauger) {        	
+            $measures_times = $this->GetAllGaugingOfGaugers($gauger->id,$date,$date);
+            foreach($measures_times as $time){
+                $time = explode(" ",$time->project_calculation_date)[1];
+                if($times[$time]>0){
+	                $times[$time]--;
+                }
+            }
+            
+        }
+        foreach ($times as $key => $value) {
+            if($value != 0){
+                array_push($result,$key);
+            }
+            
+        }
+        return $result;
+	}
+
 }
 
