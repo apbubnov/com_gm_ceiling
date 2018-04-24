@@ -309,7 +309,7 @@
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
-                <button type="button" id="btn_add_components" class="btn btn-primary" style="width: 100%; margin-bottom: 25px;">Добавить монтаж и комплектующие</button>
+                <button type="button" id="btn_add_components" class="btn btn-primary" style="width: 100%; margin-bottom: 25px;"><img src="../../../../../images/screwdriver.png" class="img_calcform"> Добавить монтаж и комплектующие</button>
             </div>
             <div class="col-sm-4"></div>
         </div>
