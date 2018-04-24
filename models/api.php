@@ -826,7 +826,8 @@ class Gm_ceilingModelApi extends JModelList
                         "client_id" => $client_id,
                         "project_info" => $address,
                         "project_calculation_date" => $date_time,
-                        "project_status"=>1
+                        "project_status"=>1,
+                        "api_phone_id"=>$data->advt
                     ];
 
             $projectform_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform', 'Gm_ceilingModel');
@@ -854,12 +855,12 @@ class Gm_ceilingModelApi extends JModelList
             if(!empty($data->old_password)){
                 $verifyPass = JUserHelper::verifyPassword($data->old_password, $user->password, $user->id);
                 if($verifyPass){
-                    return $this->change_pass($user->id,$password);;
+                    return $this->change_pass($user->id,$data->password);
                 }
                 else return false;
             }
             else{
-                return $this->change_pass($user->id,$password);
+                return $this->change_pass($user->id,$data->password);
             }
         }
         catch(Exception $e)

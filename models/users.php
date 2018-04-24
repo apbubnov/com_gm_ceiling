@@ -577,10 +577,11 @@ class Gm_ceilingModelUsers extends JModelList
 	function change_user_pass($id,$pass){
 		try
 		{
+			$password = password_hash($pass, PASSWORD_BCRYPT);
 			$db    = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->update("`#__users`");
-			$query->set("`password` = '".password_hash($pass, PASSWORD_DEFAULT)."'");
+			$query->set("`password` = '$password'");
 			$query->where("`id` = $id");
 			$db->setQuery($query);
 			$db->execute();
