@@ -741,41 +741,8 @@ class Gm_ceilingModelApi extends JModelList
 
     public function get_measure_time($date){
         try{
-           /* $result = [];*/
             $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
             return $gauger_model->getFreeGaugingTimes($date);
-           /* $all_gaugers = $gauger_model->getDatas(1);
-            $gaugers_count = count($all_gaugers);
-            $times = [
-                "09:00:00" => $gaugers_count,
-                "10:00:00" => $gaugers_count,
-                "11:00:00" => $gaugers_count,
-                "12:00:00" => $gaugers_count,
-                "13:00:00" => $gaugers_count,
-                "14:00:00" => $gaugers_count,
-                "15:00:00" => $gaugers_count,
-                "16:00:00" => $gaugers_count,
-                "17:00:00" => $gaugers_count,
-                "18:00:00" => $gaugers_count,
-                "19:00:00" => $gaugers_count,
-                "20:00:00" => $gaugers_count
-            ];
-            $measures =[];
-            foreach ($all_gaugers as $gauger) {
-                $measures_times = $gauger_model->GetAllGaugingOfGaugers($gauger->id,$date,$date);
-                foreach($measures_times as $time){
-                    $time = explode(" ",$time->project_calculation_date)[1];
-                    $times[$time]--;
-                }
-                
-            }
-            foreach ($times as $key => $value) {
-                if($value != 0){
-                    array_push($result,$key);
-                }
-                
-            }
-            return $result;*/
         }
         catch(Exception $e)
         {
@@ -822,13 +789,18 @@ class Gm_ceilingModelApi extends JModelList
            
             $address = $data->address;
             $date_time = $data->date_time;
-            
+            $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
+            $gaug_id = $gauger_model->getFreeGaugers($date_time)[0];
+            if(empty($gaug_id)){
+                $gaug_id = null;
+            }
             $project_data = [
                         "client_id" => $client_id,
                         "project_info" => $address,
                         "project_calculation_date" => $date_time,
                         "project_status"=>1,
-                        "api_phone_id"=>$data->advt
+                        "api_phone_id"=>$data->advt,
+                        "project_calculator"=>$gaug_id
                     ];
 
             $projectform_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform', 'Gm_ceilingModel');

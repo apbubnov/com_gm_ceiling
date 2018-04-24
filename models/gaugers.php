@@ -369,12 +369,65 @@ class Gm_ceilingModelGaugers extends JModelItem {
 	}
 
 	public function getFreeGaugers($date_time){
-		
+		$all_gaugers = $this->getDatas(1);
+		$gaugers_id = [];
+		foreach ($all_gaugers as $gauger) {
+			array_push($gaugers_id,$gauger->id);
+		}
+		$measure_date = explode(" ",$date_time)[0];
+		$measure_time = explode(" ",$date_time)[1];
+		$times = [
+			"09:00:00" => $gaugers_id,
+			"10:00:00" => $gaugers_id,
+			"11:00:00" => $gaugers_id,
+			"12:00:00" => $gaugers_id,
+			"13:00:00" => $gaugers_id,
+			"14:00:00" => $gaugers_id,
+			"15:00:00" => $gaugers_id,
+			"16:00:00" => $gaugers_id,
+			"17:00:00" => $gaugers_id,
+			"18:00:00" => $gaugers_id,
+			"19:00:00" => $gaugers_id,
+			"20:00:00" => $gaugers_id
+		];
+		$days_off =[];
+        foreach ($all_gaugers as $gauger) {
+        	array_push($days_off,$this->FindFreeDay($gauger->id,$measure_date));
+		}
+		foreach ($days_off as $value) {
+			foreach ($value as $val) {
+				$time_from = explode(" ",$val->date_from)[1];
+				$time_to = explode(" ",$val->date_to)[1];
+    			if($measure_time>=$time_from && $measure_time<=$time_to){
+    				foreach ($times[$measure_time] as $key => $u_id) {
+    					if($u_id == $val->id_user){
+    						array_splice($times[$measure_time],$key,1);
+    					}
+    				}
+    			}
+	    		
+    		}
+		}
+		foreach ($all_gaugers as $gauger) {        	
+            $measures_times = $this->GetAllGaugingOfGaugers($gauger->id,$measure_date,$measure_date);
+            foreach($measures_times as $time){
+                $time = explode(" ",$time->project_calculation_date)[1];
+               	if($time == $measure_time){
+               		foreach ($times[$measure_time] as $key => $value) {
+               			if($value == $gauger->id){
+    						array_splice($times[$measure_time],$key,1);
+    					}
+               		}
+				}
+            }    
+        }
+        return $times[$measure_time];
+
 	}
 
 	public function getFreeGaugingTimes($date){
 		$result = [];
-        $all_gaugers = $this->getDatas(28);
+        $all_gaugers = $this->getDatas(1);
         $gaugers_count = count($all_gaugers);
         $times = [
             "09:00:00" => $gaugers_count,

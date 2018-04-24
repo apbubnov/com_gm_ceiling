@@ -55,7 +55,6 @@ const help_block_need_mount = '<span class="airhelp">Данная кнопка �
 let discount_el = create_single_input(1,"new_discount","jform[discount]","","%","number","0","100");
 
 let attention_el  = '';
-console.log(dealer_id);
 if(dealer_id != 1){
     attention_el = `<p>
                         ВНИМАНИЕ! <br>
