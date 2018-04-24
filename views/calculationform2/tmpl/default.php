@@ -33,7 +33,7 @@
     $device = $jinput->get('device','',"STRING");
     $lattitude = $jinput->get('latitude','',"STRING");
     $longitude = $jinput->get('longitude','',"STRING");
-    $details = "";
+
     $type_url = '';
     if (!empty($type))
     {
@@ -75,11 +75,8 @@
     {
         $longitude_url = "&longitude=$longitude";
     }
-    if($api){
-        $ll = (!empty($lattitude) && !empty($longitude)) ? "$lattitude;$longitude" :"";
-        $details = "device: $device;$ll";
-    }
-  
+    $ll = (!empty($lattitude) && !empty($longitude)) ? "$lattitude;$longitude" :"";
+    $details = "device: $device;$ll";
 
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
@@ -110,7 +107,7 @@
             throw new Exception("Пустой id проекта");
         }
         
-        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url$precalculation_url&id=$project_id";
+        $save_button_url = "index.php?option=com_gm_ceiling&view=project$type_url$subtype_url&id=$project_id";
     }
     else{
         /* сгенерировать ошибку или создать калькуляцию? */
@@ -312,7 +309,7 @@
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
-                <button type="button" id="btn_add_components" class="btn btn-primary" style="width: 100%; margin-bottom: 25px;">Добавить монтаж и комплектующие</button>
+                <button type="button" id="btn_add_components" class="btn btn-primary" style="width: 100%; margin-bottom: 25px;"><img src="../../../../../images/screwdriver.png" class="img_calcform"> Добавить монтаж и комплектующие</button>
             </div>
             <div class="col-sm-4"></div>
         </div>
@@ -457,7 +454,7 @@
             </div>
     </div>
     <div class="btn_api" style="width:100%; text-align:center;">
-        <button class="btn btn-primary" type="button" id = "clear" style="display: none;">Очистить</button>
+        <button class="btn btn-primary" type="button" id = "clear">Очистить</button>
         <button class="btn btn-primary" type="button" id = "back_to_gm" style="display: none;">Вернуться</button>
     </div>
 </form>
@@ -478,7 +475,6 @@
         process.handler= this;
         return process;
     };
-    let dealer_id = "<?php echo $user->dealer_id;?>";
     let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
     let n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
@@ -501,7 +497,6 @@
             jQuery(".under_calculate").hide();
             jQuery(".btn_tar").hide();
             jQuery("#block_details").hide();
-            jQuery("#clear").show();
             jQuery(".btn_api").show();
         }
         if (device == "web") {
@@ -668,7 +663,7 @@
             jQuery.each(canvases_data_of_selected_texture, function(key,value){
                 if (value.texture_id === select_texture && value.color_id === select_color)
                 {
-                    let proizv = value.name;
+                    let proizv = value.name + " " + value.country;
                     if(!in_array(manufacturers, proizv)){
                         manufacturers.push(proizv);
                         let option = jQuery("<option></option>")
@@ -784,12 +779,14 @@
             var calculate_button = jQuery( this );
             let id = jQuery('#jform_id').val();
             let need_mount = jQuery("input[name = 'need_mount']").val();
+            if(need_mount == undefined && api==1){
+                need_mount = 1;
+            }
             if (!calculate_button.hasClass("loading")) {
                 console.log(calculate_button);
                 calculate_button.addClass("loading");
                 calculate_button.find("span.static").hide();
                 calculate_button.find("span.loading").show();
-
                 jQuery.ajax({
                     type: 'POST',
                     url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&id=${id}&need_mount=${need_mount}`,

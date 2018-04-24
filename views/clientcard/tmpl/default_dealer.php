@@ -322,7 +322,7 @@ foreach ($dealer_history as $key => $item) {
         <form class="send_pay" method="post" action="/index.php?option=com_gm_ceiling&task=clientform.pay">
             <input hidden type="number" name="dealer_id" value="<?=$dealer->id;?>">
             <label for="pay_sum"><i class="fa fa-money"></i></label>
-            <input type="text" id="pay_sum" class="pay_sum" name="pay_sum" placeholder="Сумма" pattern="\d+|\d+\.{1,1}\d+"
+            <input type="text" id="pay_sum" class="pay_sum" name="pay_sum" placeholder="Сумма" pattern="\-\d+|\-\d+\.{1,1}\d+"
                    title="Введи количество денег, которые вносит дилер" required>
             <label for="pay_comment"><i class="fa fa-edit"></i></label>
             <input type="text" id="pay_comment" class="pay_comment" name="pay_comment" placeholder="Комментарий"
