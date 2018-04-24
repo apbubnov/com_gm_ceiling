@@ -52,6 +52,10 @@ const help_block_extra_mounting = '<span class="airhelp">Это поле пре�
 
 const help_block_need_mount = '<span class="airhelp">Данная кнопка может отменить все монтажные работы</span>';
 
+const help_block_attention = null;
+const help_block_light_cptn = null;
+const help_block_oter_mount_cptn = null;
+
 let discount_el = create_single_input(1,"new_discount","jform[discount]","","%","number","0","100");
 
 let attention_el  = '';
@@ -308,7 +312,7 @@ function create_container(cnt_id,col_id){
 
 function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_ajax,img,style_btn){
     console.log(help);
-    if (help == undefined) {
+    if (help == null) {
         return `<button type="button" id="${btn_id}" data-cont_id = "${cont_id}" data-need_ajax = "${need_ajax}"  class="${style_btn}">
                     <table style="width: 100%;">
                         <tr>
@@ -952,7 +956,7 @@ function generate_block(object){
         } else if (object.kind_btn == 0) {
             style_btn = "btn add_fields";
         }
-        let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,eval(`if(window.help_${object.block_id} != undefined){help_${object.block_id}}else{undefined}`),object.block_id,object.need_ajax, object.img, style_btn);
+        let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,eval(`help_${object.block_id}`),object.block_id,object.need_ajax, object.img, style_btn);
         jQuery(`#${object.btn_cont_id}`).append(block);
     }
 }
