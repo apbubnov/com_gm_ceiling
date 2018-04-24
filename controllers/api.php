@@ -465,7 +465,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
             if(!empty($Data)){
                 $Data->address = "$Data->address, квартира: $Data->apartmentNumber";
-                $Answer = $model->rec_to_measure($Data);
+                $Answer = ["status" => "success", "title" => "Замер сформирован", "message" => "В ближайшее время с Вами свяжется менеджер для подтверждения."];
+                $Answer["answer"] = $model->rec_to_measure($Data);
             }
             else {
                  $Answer = ["status" => "error", "title" => "Не успешно", "message" => "Замер не успешно добавлен в базу, попробуйте позже"];
@@ -481,7 +482,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
-
     public function changePswd(){
         try{
             $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
