@@ -55,6 +55,7 @@ const help_block_need_mount = '<span class="airhelp">Данная кнопка �
 let discount_el = create_single_input(1,"new_discount","jform[discount]","","%","number","0","100");
 
 let attention_el  = '';
+console.log(dealer_id);
 if(dealer_id != 1){
     attention_el = `<p>
                         ВНИМАНИЕ! <br>
@@ -64,38 +65,47 @@ if(dealer_id != 1){
 
 }
 let arr_blocks = [
-    {block_id:"block_attention",btn_cont_id:"attention",prev_id:"add_mount_and_components",btn_id:"",btn_text:attention_el},
-    {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"block_attention",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить крепежный профиль" : "Крепежный профиль",need_ajax : 0, img: "profil.png"},
-    {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0, img: "insert.png"},
-    {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_n6",btn_id:"",btn_text:"<h3>Освещение</h3>"},
-    {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Добавить люстры",need_ajax : 0, img: "lamp.png"},
-    {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_n13",btn_text:"Добавить светильники",need_ajax : 1, img: "lamps.png"},
-    {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_n13",btn_id:"btn_n19",btn_text:"Провод",need_ajax : 0, img: "wire.png"},
-    {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_n19",btn_id:"",btn_text:"<h4>Прочие работы</h4>"},
-    {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_oter_mount_cptn",btn_id:"btn_n14",btn_text:"Добавить трубы входящие в потолок",need_ajax : 1, img: "pipes.png"},
-    {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_n16",btn_text:"Добавить шторный карниз",need_ajax : 1, img: "cornice.png"},
-    {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_n16",btn_id:"btn_n17",btn_text:"Закладная брусом",need_ajax : 0, img: "bar.png"},
-    {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_n17",btn_id:"btn_n20",btn_text:"Разделитель",need_ajax : 0, img: "delimiter.png"},
-    {block_id:"block_n7",btn_cont_id:"btn_cont_n7",prev_id:"block_n20",btn_id:"btn_n7",btn_text:"Метраж стен с плиткой",need_ajax : 0, img: "tile.png"},
-    {block_id:"block_n8",btn_cont_id:"btn_cont_n8",prev_id:"block_n7",btn_id:"btn_n8",btn_text:"Метраж стен с керамогранитом",need_ajax : 0, img: "stoneware.png"},
-    {block_id:"block_n18",btn_cont_id:"btn_cont_n18",prev_id:"block_n8",btn_id:"btn_n18",btn_text:"Усиление стен",need_ajax : 0, img: "amplifier.png"},
-    {block_id:"block_dop_krepezh",btn_cont_id:"btn_cont_dop_krepezh",prev_id:"block_n18",btn_id:"btn_dop_krepezh",btn_text:"Дополнительный крепеж",need_ajax : 0, img: "screw.png"},
-    {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_dop_krepezh",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0, img: "firealarm.png"},
-    {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1, img: "hood.png"},
-    {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_n22",btn_id:"btn_n23",btn_text:"Диффузор",need_ajax : 1, img: "diffuser.png"},
-    {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_n23",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0, img: "paryashii.png"},
-    {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n30",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1, img: "perehod.png"},
-    {block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_n31",btn_text:"Внутренний вырез (в цеху)",need_ajax : 0, img: "virez.png"},
-    {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_n31",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0, img: "virez.png"},
-    {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_n11",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0, img: "sliv.png"},
-    {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n32",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0, img: "height.png"},
-    {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_height",btn_id:"btn_n24",btn_text:"Сложность доступа",need_ajax : 0, img: "slozhnost.png"},
-    {block_id:"block_extra_components",btn_cont_id:"btn_cont_extra_components",prev_id:"block_n24",btn_id:"btn_extra_components",btn_text:"Другие комплектующие",need_ajax : 0, img: "drcomplect.png"},
-    {block_id:"block_components_stock",btn_cont_id:"btn_cont_components_stock",prev_id:"block_extra_components",btn_id:"btn_components_stock",btn_text:"Другие комплектующие со склада",need_ajax : 1, img: "drcomplect.png"},
-    {block_id:"block_extra_mounting",btn_cont_id:"btn_cont_extra_mounting",prev_id:"block_components_stock",btn_id:"btn_extra_mounting",btn_text:"Другие работы по монтажу",need_ajax : 0, img: "hammer.png"},
-    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_extra_mounting",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0, img: "nomounting.png"},
-    {block_id:"block_discount",btn_cont_id:"btn_cont_discount",prev_id:"block_need_mount",btn_id:"",btn_text:`<h3>Новый процент скидки</h3>
-     ${discount_el}`}
+    {block_id:"block_attention",btn_cont_id:"attention",prev_id:"add_mount_and_components",btn_id:"",btn_text:attention_el,kind_btn:"2"},
+    {block_id:"block_basic_work",btn_cont_id:"basic_work",prev_id:"block_attention",btn_id:"btn_basic_work",btn_text:"Основные работы",need_ajax : 0,kind_btn:"1",
+        children: [
+            {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"block_basic_work",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить крепежный профиль" : "Крепежный профиль",need_ajax : 0,kind_btn:"0",img: "profil.png"},
+            {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png"}    
+        ]
+    },
+    {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_basic_work",btn_id:"",btn_text:"Освещение",need_ajax : 0,kind_btn:"1",
+        children: [
+            {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Добавить люстры",need_ajax : 0,kind_btn:"0", img: "lamp.png"},
+            {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_n13",btn_text:"Добавить светильники",need_ajax : 1,kind_btn:"0", img: "lamps.png"},
+            {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_n13",btn_id:"btn_n19",btn_text:"Провод",need_ajax : 0,kind_btn:"0", img: "wire.png"},        
+        ]
+    },
+    {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_light_cptn",btn_id:"",btn_text:"Прочие работы",need_ajax : 0,kind_btn:"1",
+        children: [
+            {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_oter_mount_cptn",btn_id:"btn_n14",btn_text:"Добавить трубы входящие в потолок",need_ajax : 1,kind_btn:"0", img: "pipes.png"},
+            {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_n16",btn_text:"Добавить шторный карниз",need_ajax : 1,kind_btn:"0", img: "cornice.png"},
+            {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_n16",btn_id:"btn_n17",btn_text:"Закладная брусом",need_ajax : 0,kind_btn:"0", img: "bar.png"},
+            {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_n17",btn_id:"btn_n20",btn_text:"Разделитель",need_ajax : 0,kind_btn:"0", img: "delimiter.png"},
+            {block_id:"block_n7",btn_cont_id:"btn_cont_n7",prev_id:"block_n20",btn_id:"btn_n7",btn_text:"Метраж стен с плиткой",need_ajax : 0,kind_btn:"0", img: "tile.png"},
+            {block_id:"block_n8",btn_cont_id:"btn_cont_n8",prev_id:"block_n7",btn_id:"btn_n8",btn_text:"Метраж стен с керамогранитом",need_ajax : 0,kind_btn:"0", img: "stoneware.png"},
+            {block_id:"block_n18",btn_cont_id:"btn_cont_n18",prev_id:"block_n8",btn_id:"btn_n18",btn_text:"Усиление стен",need_ajax : 0,kind_btn:"0", img: "amplifier.png"},
+            {block_id:"block_dop_krepezh",btn_cont_id:"btn_cont_dop_krepezh",prev_id:"block_n18",btn_id:"btn_dop_krepezh",btn_text:"Дополнительный крепеж",need_ajax : 0,kind_btn:"0", img: "screw.png"},
+            {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_dop_krepezh",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0,kind_btn:"0", img: "firealarm.png"},
+            {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1,kind_btn:"0", img: "hood.png"},
+            {block_id:"block_n23",btn_cont_id:"btn_cont_n23",prev_id:"block_n22",btn_id:"btn_n23",btn_text:"Диффузор",need_ajax : 1,kind_btn:"0", img: "diffuser.png"},
+            {block_id:"block_n30",btn_cont_id:"btn_cont_n30",prev_id:"block_n23",btn_id:"btn_n30",btn_text:"Парящий потолок",need_ajax : 0,kind_btn:"0", img: "paryashii.png"},
+            {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n30",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png"},
+            {block_id:"block_n31",btn_cont_id:"btn_cont_n31",prev_id:"block_n29",btn_id:"btn_n31",btn_text:"Внутренний вырез (в цеху)",need_ajax : 0,kind_btn:"0", img: "virez.png"},
+            {block_id:"block_n11",btn_cont_id:"btn_cont_n11",prev_id:"block_n31",btn_id:"btn_n11",btn_text:"Внутренний вырез (на месте)",need_ajax : 0,kind_btn:"0", img: "virez.png"},
+            {block_id:"block_n32",btn_cont_id:"btn_cont_n32",prev_id:"block_n11",btn_id:"btn_n32",btn_text:"Слив воды",need_ajax : 0,kind_btn:"0", img: "sliv.png"},
+            {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n32",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0,kind_btn:"0", img: "height.png"},
+            {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_height",btn_id:"btn_n24",btn_text:"Сложность доступа",need_ajax : 0,kind_btn:"0", img: "slozhnost.png"},
+            {block_id:"block_extra_components",btn_cont_id:"btn_cont_extra_components",prev_id:"block_n24",btn_id:"btn_extra_components",btn_text:"Другие комплектующие",need_ajax : 0,kind_btn:"0", img: "drcomplect.png"},
+            {block_id:"block_components_stock",btn_cont_id:"btn_cont_components_stock",prev_id:"block_extra_components",btn_id:"btn_components_stock",btn_text:"Другие комплектующие со склада",need_ajax : 1,kind_btn:"0", img: "drcomplect.png"},
+            {block_id:"block_extra_mounting",btn_cont_id:"btn_cont_extra_mounting",prev_id:"block_components_stock",btn_id:"btn_extra_mounting",btn_text:"Другие работы по монтажу",need_ajax : 0,kind_btn:"0", img: "hammer.png"},        
+        ]
+    },
+    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png"},
+    {block_id:"block_discount",btn_cont_id:"btn_cont_discount",prev_id:"block_need_mount",btn_id:"",btn_text:`<h3>Новый процент скидки</h3> ${discount_el}`,kind_btn:"2"}
 ];
 
 arr_blocks.forEach(function(item){
@@ -296,23 +306,48 @@ function create_container(cnt_id,col_id){
                     </div>`;
 }
 
-function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_ajax,img){
-    return `<table class="${class_name}" style="${style}">
+function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_ajax,img,style_btn){
+    console.log(help);
+    if (help == undefined) {
+        return `<button type="button" id="${btn_id}" data-cont_id = "${cont_id}" data-need_ajax = "${need_ajax}"  class="${style_btn}">
+                    <table style="width: 100%;">
                         <tr>
-                            <td class="td_calcform1">
-                                <button type="button" id="${btn_id}" data-cont_id = "${cont_id}" data-need_ajax = "${need_ajax}"  class="btn add_fields">
-                                <img src="../../../../../images/${img}" class="img_calcform">
+                            <td style="width: calc(100% - 25px);">
                                 <label class="no_margin">${btn_text}</label>
-                                </button>
                             </td>
-                            <td class="td_calcform2">
-                                <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
-                                    <div class="help_question">?</div>
-                                        ${help}
-                                </div>
+                            <td style="width: 25px;">
+                                <i class="fa fa-angle-down" style="color: #414099;"></i>
                             </td>
                         </tr>
-                    </table>`;
+                    </table>  
+                </button>
+        `;
+    } else {
+        return `<table class="${class_name}" style="${style}">
+                    <tr>
+                        <td class="td_calcform1">
+                            <button type="button" id="${btn_id}" data-cont_id = "${cont_id}" data-need_ajax = "${need_ajax}"  class="${style_btn}">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="width: 25px;">
+                                            <img src="../../../../../images/${img}" class="img_calcform">
+                                        </td>
+                                        <td style="width: calc(100% - 25px);">
+                                            <label class="no_margin">${btn_text}</label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </button>
+                        </td>
+                        <td class="td_calcform2">
+                            <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+                                <div class="help_question">?</div>
+                                    ${help}
+                            </div>
+                        </td>
+                    </tr>
+                </table>`;
+    }
 }
 /* ______________ */
 /* radio buttons */
@@ -909,12 +944,16 @@ function toggle_color(element){
 function generate_block(object){
     let cnt = create_container(object.block_id,object.btn_cont_id);
     jQuery(`#${object.prev_id}`).after(cnt);
-    if(object.btn_id){
-        let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,eval(`help_${object.block_id}`),object.block_id,object.need_ajax, object.img);
-        jQuery(`#${object.btn_cont_id}`).append(block);
-    }
-    else{
+    if(object.kind_btn == 2) {
         jQuery(`#${object.btn_cont_id}`).append(object.btn_text);
+    } else {
+        if (object.kind_btn == 1) {
+            style_btn = "btn btn_calc";
+        } else if (object.kind_btn == 0) {
+            style_btn = "btn add_fields";
+        }
+        let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,eval(`if(window.help_${object.block_id} != undefined){help_${object.block_id}}else{undefined}`),object.block_id,object.need_ajax, object.img, style_btn);
+        jQuery(`#${object.btn_cont_id}`).append(block);
     }
 }
 var $ = jQuery;
@@ -1019,3 +1058,14 @@ function ClearSelect(e) {
 
 open_blocks();
 fill_calc_data();
+
+jQuery(".component-content").on("click", ".btn_calc", function () {
+    let id_block = jQuery(this).closest("button").attr("data-cont_id");
+    arr_blocks.forEach(function(item){
+        if (item.block_id == id_block) {
+            item.children.forEach(function(item2){
+                generate_block(item2);
+            });
+        }
+    });
+});

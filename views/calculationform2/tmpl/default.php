@@ -314,6 +314,18 @@
             <div class="col-sm-4"></div>
         </div>
     </div>
+    <div class="container" id = "sum_info" style="display:none">
+        <div class="row sm-margin-bottom" style="margin-top: 25px">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p>
+                    В стоимость входят материалы и работы по установке.
+                </p>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+   
     <!-- Рассчитать -->
     <div class="container">
         <div class="row sm-margin-bottom" style="margin-top: 25px">
@@ -793,6 +805,9 @@
                     url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&id=${id}&need_mount=${need_mount}`,
                     data: data,
                     success: function(data){
+                        if(api == 1){
+                            jQuery("#sum_info").show();
+                        }
                         var html = "",
                         total_sum = parseFloat(data.total_sum),
                         project_discount = parseFloat(data.project_discount),
