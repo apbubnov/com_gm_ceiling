@@ -33,7 +33,7 @@
     $device = $jinput->get('device','',"STRING");
     $lattitude = $jinput->get('latitude','',"STRING");
     $longitude = $jinput->get('longitude','',"STRING");
-
+    $details = "";
     $type_url = '';
     if (!empty($type))
     {
@@ -75,8 +75,11 @@
     {
         $longitude_url = "&longitude=$longitude";
     }
-    $ll = (!empty($lattitude) && !empty($longitude)) ? "$lattitude;$longitude" :"";
-    $details = "device: $device;$ll";
+    if($api){
+        $ll = (!empty($lattitude) && !empty($longitude)) ? "$lattitude;$longitude" :"";
+        $details = "device: $device;$ll";
+    }
+  
 
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
