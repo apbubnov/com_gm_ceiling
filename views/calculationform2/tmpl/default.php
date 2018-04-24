@@ -476,6 +476,7 @@
         return process;
     };
     let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
+    let dealer_id = "<?php echo $user->dealer_id?>";
     let n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
     let  help_buttons = document.getElementsByClassName('help');
