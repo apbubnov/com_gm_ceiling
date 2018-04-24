@@ -55,6 +55,7 @@ const help_block_need_mount = '<span class="airhelp">Данная кнопка �
 const help_block_attention = null;
 const help_block_light_cptn = null;
 const help_block_oter_mount_cptn = null;
+const help_block_basic_work = null;
 
 let discount_el = create_single_input(1,"new_discount","jform[discount]","","%","number","0","100");
 
