@@ -862,7 +862,11 @@
                 include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components_client.js');
             }
             else{
-                include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
+                if (jQuery('[data-parent = "btn_add_components"]').length < 1) {
+                    include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
+                } else {
+                    jQuery('[data-parent = "btn_add_components"]').toggle();
+                }
             }
            
             setTimeout(event_help_proccess, 2000);
