@@ -260,7 +260,7 @@ $AllMounters = $model->FindAllMounters($where);
                     $provod_count1 = 0;
                     $brus = 0;
                     $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
-
+                    $calc_data = [];
                     foreach ($calculations as $calculation) {
                         //$total_comp+=Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id)['self_total'];
                         $total_components_sum += $calculation->components_sum;
@@ -289,9 +289,25 @@ $AllMounters = $model->FindAllMounters($where);
                         $price_provod += $components[4]->price * $provod_count;
                         //$provod_count = 0;
                         //
+                        
                         if(!empty($calculation->n3)){
-                            $canvas = $canvases_model->getFilteredItemsCanvas("id = $calculation->n3")[0];
-                            $calculation->widths = $canvases_model->getFilteredItemsCanvas("texture_id = $canvas->texture_id AND manufacturer_id = $canvas->manufacturer_id and count>0");
+                            $canvas = $canvases_model->getFilteredItemsCanvas("a.id = $calculation->n3")[0];
+                            $canvases = $canvases_model->getFilteredItemsCanvas("texture_id = $canvas->texture_id AND manufacturer_id = $canvas->manufacturer_id and count>0");
+                            $widths = [];
+                            foreach ($canvases as $item) {
+                                $widths[] = (object)array("width" =>$item->width*100,"price" => $item->price);    
+                            }
+                            $calc_data[$calculation->id] = array(
+                                "n4" => $calculation->n4,
+                                "n5" => $calculation->n5,
+                                "n9" => $calculation->n9,
+                                "widths" => $widths,
+                                "texture" => $canvas->texture_id,
+                                "manufacturer" => $canvas->manufacturer_id,
+                                "color" => $canvas->color_id,
+                                "walls" => $calculation->calc_data
+                            );
+                            
                         }
                     }
 
@@ -550,11 +566,12 @@ $AllMounters = $model->FindAllMounters($where);
         });
         jQuery(document).ready(function () {
 
-            let calculations = JSON.parse('<?php echo json_encode($calculations);?>');
-            console.log(calculations)
+            let calc_data = JSON.parse('<?php echo json_encode($calc_data);?>');
+            console.log(calc_data);
             jQuery("[name = 'change_cut']").click(function(){
                 let id = jQuery(this).data('calc_id');
-                console.log(id);
+                let data = calc_data[id];
+                console.log(data);
             });
 
             jQuery('#btn_back').click(function(){
