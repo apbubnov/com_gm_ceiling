@@ -868,6 +868,10 @@
                     include('/components/com_gm_ceiling/views/calculationform2/JS/buttons_components.js');
                 } else {
                     jQuery('[data-parent = "btn_add_components"]').toggle();
+                    jQuery('[data-parent = "basic_work"]').toggle();
+                    jQuery('[data-parent = "light_cptn"]').toggle();
+                    jQuery('[data-parent = "oter_mount_cptn"]').toggle();
+                    jQuery('[data-parent = "need_mount"]').toggle();
                 }
             }
            
