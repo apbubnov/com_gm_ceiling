@@ -559,8 +559,8 @@ function open_general_blocks(){
             }
         }
     }
+    console.log(arr_parent);
     arr_parent.forEach(function(item){
-        console.log(item);
         jQuery(`#${item}`).trigger("click");        
     });
     open_blocks();

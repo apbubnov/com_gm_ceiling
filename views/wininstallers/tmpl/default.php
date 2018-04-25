@@ -13,25 +13,25 @@ $user       = JFactory::getUser();
 $userId     = $user->get('id');
 
 $clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
-$result_clients = $clients_model->getDesignersByClientName('', 7);
+$result_clients = $clients_model->getDesignersByClientName('', 8);
 ?>
     <a class="btn btn-large btn-primary"
        href="/index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage"
        id="back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</a>
-    <h2 class="center">Застройщики</h2>
+    <h2 class="center">Оконщики</h2>
     <div style="display:inline-block; width: 48%; text-align: left;">
-        <button type="button" id="new_builder" class="btn btn-primary">Создать застройщика</button>
+        <button type="button" id="new_wininstaller" class="btn btn-primary">Создать оконщика</button>
     </div>
     <div style="display:inline-block; width: 48%; text-align: left;">
-        <input type="text" id="name_find_builder">
-        <button type="button" id="find_builder" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+        <input type="text" id="name_find_wininstaller">
+        <button type="button" id="find_wininstaller" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
     </div>
     <br>
     <table class="table table-striped one-touch-view" id="callbacksList">
         <thead>
         <tr>
             <th>
-               Название
+               Имя
             </th>
             <th>
                Телефоны
@@ -41,10 +41,10 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
             </th>
         </tr>
         </thead>
-        <tbody id="tbody_builders">
-            <?php
-                foreach ($result_clients as $key => $value)
-                {
+        <tbody id="tbody_wininstallers">
+        	<?php
+        		foreach ($result_clients as $key => $value)
+        		{
                     if ($value->refused_to_cooperate == 0)
                     {
                         $color = '';
@@ -56,16 +56,16 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
                         {
                             $color = 'style="background-color: PaleGreen;"';
                         }
-            ?>
-                    <tr class="row<?php echo $i % 2; ?>" <?= $color ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=builder&id='.(int) $value->id); ?>">
-                        <td>
-                           <?php echo $value->client_name; ?>
-                        </td>
+        	?>
+                    <tr class="row<?php echo $i % 2; ?>" <?= $color ?> data-href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&type=wininstaller&id='.(int) $value->id); ?>">
+    		            <td>
+    		               <?php echo $value->client_name; ?>
+    		            </td>
                         <td>
                            <?php echo $value->client_contacts; ?>
                         </td>
-                        <td>
-                           <?php
+    		            <td>
+    		               <?php
                                 if($value->created == "0000-00-00 00:00:00") {
                                     echo "-";
                                 } else {
@@ -74,30 +74,30 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
                                     echo $created;
                                 }
                            ?>
-                        </td>
-                    </tr>
-            <?php
+    		            </td>
+    		        </tr>
+        	<?php
                     }
-                }
-            ?>
+        		}
+        	?>
         </tbody>
     </table>
     <div id="modal-window-container">
         <button type="button" id="close4-tar"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
         <div id="modal-window-1-tar">
-                <p><strong>Создание нового застройщика</strong></p>
-                <p>Название:</p>
-                <p><input type="text" id="fio_builder"></p>
+                <p><strong>Создание нового оконщика</strong></p>
+                <p>ФИО:</p>
+                <p><input type="text" id="fio_wininstaller"></p>
                 <p>Номер телефона:</p>
-                <p><input type="text" id="builder_contacts"></p>
-                <p><button type="submit" id="save_builder" class="btn btn-primary">ОК</button></p>
+                <p><input type="text" id="wininstaller_contacts"></p>
+                <p><button type="submit" id="save_wininstallerr" class="btn btn-primary">ОК</button></p>
         </div>
     </div>
 
 <script>
     jQuery(document).ready(function()
     {
-        jQuery('#builder_contacts').mask('+7(999) 999-9999');
+        jQuery('#wininstaller_contacts').mask('+7(999) 999-9999');
         jQuery('body').on('click', 'tr', function(e)
         {
             if(jQuery(this).data('href')!=""){
@@ -115,20 +115,20 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
             }
         });
 
-        jQuery("#new_builder").click(function(){
+        jQuery("#new_wininstaller").click(function(){
             jQuery("#close4-tar").show();
             jQuery("#modal-window-container").show();
             jQuery("#modal-window-1-tar").show("slow");
         });
 
-        jQuery("#save_builder").click(function(){
+        jQuery("#save_wininstaller").click(function(){
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=dealer.create_designer",
                 data: {
-                    fio: document.getElementById('fio_builder').value,
-                    phone: document.getElementById('builder_contacts').value,
-                    designer_type: 7
+                    fio: document.getElementById('fio_wininstaller').value,
+                    phone: document.getElementById('wininstaller_contacts').value,
+                    designer_type: 8
                 },
                 success: function(data){
                     if (data == 'client_found')
@@ -163,17 +163,17 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
             });
         });
 
-        jQuery("#find_builder").click(function(){
+        jQuery("#find_wininstaller").click(function(){
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=findOldClients",
                 data: {
-                    fio: document.getElementById('name_find_builder').value,
-                    flag: 'builders'
+                    fio: document.getElementById('name_find_wininstaller').value,
+                    flag: 'wininstallers'
                 },
                 success: function(data){
                     console.log(data);
-                    var tbody = document.getElementById('tbody_builders');
+                    var tbody = document.getElementById('tbody_wininstallers');
                     tbody.innerHTML = '';
                     var html = '';
                     var color;
@@ -192,7 +192,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
                         {
                             color = 'style="background-color: PaleGreen;"';
                         }
-                        html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=builder&id=' + data[i].id + '">';
+                        html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=wininstaller&id=' + data[i].id + '">';
                         html += '<td>' + data[i].client_name + '</td>';
                         html += '<td>' + data[i].client_contacts + '</td>';
                         html += '<td>' + data[i].created + '</td></tr>';
@@ -214,6 +214,27 @@ $result_clients = $clients_model->getDesignersByClientName('', 7);
                     });
                 }                   
             });
+        });
+
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=RepeatSendCommercialOffer",
+            success: function(data){
+                console.log(data);
+            },
+            dataType: "text",
+            async: false,
+            timeout: 10000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка. Сервер не отвечает"
+                });
+            }                   
         });
     });
 </script>

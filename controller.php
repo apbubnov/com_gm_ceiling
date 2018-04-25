@@ -317,6 +317,14 @@ class Gm_ceilingController extends JControllerLegacy
             {
                 $result = $clients_model->getDesignersByClientName($FIO, 5);
             }
+            elseif ($flag == 'builders')
+            {
+                $result = $clients_model->getDesignersByClientName($FIO, 7);
+            }
+            elseif ($flag == 'wininstallers')
+            {
+                $result = $clients_model->getDesignersByClientName($FIO, 8);
+            }
 
             foreach ($result as $key => $dealer) {
                 $user_dealer = JFactory::getUser($dealer->dealer_id);
