@@ -481,7 +481,7 @@ jQuery(".component-content").on("click", ".add_fields", function () {
         btns_add[i].onclick = btn_add_event;
     }
     jQuery("[name = 'jform[n6]'").click(change_radio);
-    if(var_name == 'need_mount'){
+   /*  if(var_name == 'need_mount'){
         jQuery("[name = 'need_mount']").click(function(){
             jQuery("[name = 'need_mount']").removeAttr('fix');
             jQuery(this).attr('fix',true);
@@ -489,7 +489,7 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     }
     if(jQuery("#without").attr("fix") != "true" ){
         jQuery("#with_mount").attr("checked",true);
-    }
+    } */
     let inputs = jQuery('input[type=tel]');
     [].forEach.call(inputs,function(el){
         el.addEventListener("keypress",auto_replace);
@@ -497,19 +497,53 @@ jQuery(".component-content").on("click", ".add_fields", function () {
 }); 
 
 function  auto_replace (e){
-            if(e.keyCode == 44){
-                this.value += '.';
-                e.preventDefault ? e.preventDefault() : e.returnValue = false;
-            }
-        };
+    if(e.keyCode == 44){
+        this.value += '.';
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+    }
+};
+
+function in_array(array,value){
+    let result = false;
+    for(let i = array.length; i--;){
+        if(array[i] === value){
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
+
+let arr_parent = [];
+function open_general_blocks(){
+    for(let i = Object.keys(calculation).length;i--;){
+        if(!empty(calculation[Object.keys(calculation)[i]])) {
+            get_parent(calculation[Object.keys(calculation)[i]]);
+        }
+    }
+    arr_parent.forEach(function(item){
+        jQuery(`#btn_${item}`).trigger("click");        
+    });
+    open_blocks();
+}
+function get_parent(n) {
+    console.log("тут");
+    arr_blocks.forEach(function(item){
+        if (item.children) {
+            item.children.forEach(function(item2){
+                if (in_array(arr_parent,item2.parent)) {
+                    arr_parent.push();
+                }
+            });
+        }
+    });
+}
 function open_blocks(){
     for(let i = Object.keys(calculation).length;i--;){
-
         if(Object.keys(calculation)[i] == 'n16'){
             if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
                 jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
             }
-
         }
         else{
             if(!empty(calculation[Object.keys(calculation)[i]]) ){
@@ -1062,21 +1096,41 @@ function ClearSelect(e) {
     }, 200);
 }
 
-open_blocks();
+open_general_blocks();
 fill_calc_data();
 
 jQuery(".component-content").on("click", ".btn_calc", function () {
     let id_block = jQuery(this).closest("button").attr("data-cont_id");
     let children = id_block.replace("block_", "");
-    if (jQuery(`[data-parent = "${children}"]`).length < 1) {
-        arr_blocks.forEach(function(item) {
-            if (item.block_id == id_block) {
-                item.children.forEach(function(item2){
-                    generate_block(item2);
-                });
-            }
+    if (children == 'need_mount') {
+        let col_id = `jform_${children}_inside`;
+        let cont =  create_container("",col_id, children);
+        let element = eval(children);
+        if(!document.getElementById(col_id)){
+            jQuery(`#${id_block}`).after(cont);
+            jQuery(`#${col_id}`).append(element); 
+        }
+        else{
+            jQuery(`#${col_id}`).toggle();
+        }
+        jQuery("[name = 'need_mount']").click(function(){
+            jQuery("[name = 'need_mount']").removeAttr('fix');
+            jQuery(this).attr('fix',true);
         });
+        if(jQuery("#without").attr("fix") != "true" ){
+            jQuery("#with_mount").attr("checked",true);
+        }    
     } else {
-        jQuery(`[data-parent = "${children}"]`).toggle();
+        if (jQuery(`[data-parent = "${children}"]`).length < 1) {
+            arr_blocks.forEach(function(item) {
+                if (item.block_id == id_block && item.children) {
+                    item.children.forEach(function(item2){
+                        generate_block(item2);
+                    });
+                }
+            });
+        } else {
+            jQuery(`[data-parent = "${children}"]`).toggle();
+        }    
     }
 });
