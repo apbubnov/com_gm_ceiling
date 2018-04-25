@@ -873,6 +873,7 @@ class Gm_ceilingModelCanvases extends JModelList
 
             if (!empty($data))
             {
+                $data = $db->escape($data, true);
                 $query = $db->getQuery(true);
                 $query->insert("`#__gm_ceiling_cuttings`")
                     ->columns("`id`, `data`")
