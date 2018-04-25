@@ -50,8 +50,9 @@ const help_block_components_stock = '<span class="airhelp">В данном по�
 
 const help_block_extra_mounting = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной монтажных работ. Вы можете произвольно написать названия монтажных работ и их себестоимость. Программа сама сделает наценку, как и на все остальные монтажных работ и выдаст введенное Вами название в прайсе для клиента.</span>';
 
-const help_block_need_mount = '<span class="airhelp">Данная кнопка может отменить все монтажные работы</span>';
+//const help_block_need_mount = '<span class="airhelp">Данная кнопка может отменить все монтажные работы</span>';
 
+const help_block_need_mount = null;
 const help_block_attention = null;
 const help_block_light_cptn = null;
 const help_block_oter_mount_cptn = null;
@@ -313,7 +314,7 @@ function create_container(cnt_id,col_id){
 
 function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_ajax,img,style_btn){
     console.log(help);
-    if (help == null) {
+    if (eval(help) == null) {
         return `<button type="button" id="${btn_id}" data-cont_id = "${cont_id}" data-need_ajax = "${need_ajax}"  class="${style_btn}">
                     <table style="width: 100%;">
                         <tr>
@@ -347,7 +348,7 @@ function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_aja
                         <td class="td_calcform2">
                             <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
                                 <div class="help_question">?</div>
-                                    ${help}
+                                    ${eval(help)}
                             </div>
                         </td>
                     </tr>
@@ -957,7 +958,7 @@ function generate_block(object){
         } else if (object.kind_btn == 0) {
             style_btn = "btn add_fields";
         }
-        let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,eval(`help_${object.block_id}`),object.block_id,object.need_ajax, object.img, style_btn);
+        let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,`help_${object.block_id}`,object.block_id,object.need_ajax, object.img, style_btn);
         jQuery(`#${object.btn_cont_id}`).append(block);
     }
 }

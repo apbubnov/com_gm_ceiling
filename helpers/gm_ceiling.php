@@ -154,7 +154,7 @@ class Gm_ceilingHelpersGm_ceiling
 
         $userID = $user->id;
         $user =& JUser::getInstance((int)$userID);
-        if($type == 3){
+        if($type == 3 || $type == 2){
             $post['dealer_id'] = 1;
         }
         else {
@@ -169,7 +169,7 @@ class Gm_ceilingHelpersGm_ceiling
         $mount_model = self::getModel('mount');
 
         $gm_margin = $margin_model->getDataById(1);
-        if ($type == 3)
+        if ($type == 3 || $type == 2)
         {
             $gm_mount = $mount_model->getDataAll(1);
             $margin_model->save($gm_margin->dealer_canvases_margin,$gm_margin->dealer_components_margin,$gm_margin->dealer_mounting_margin,$gm_margin->gm_canvases_margin,$gm_margin->gm_components_margin,$gm_margin->gm_mounting_margin,$userID,$gm_margin->discount);
