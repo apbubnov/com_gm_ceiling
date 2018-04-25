@@ -90,7 +90,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 8);
                 <p><input type="text" id="fio_wininstaller"></p>
                 <p>Номер телефона:</p>
                 <p><input type="text" id="wininstaller_contacts"></p>
-                <p><button type="submit" id="save_wininstallerr" class="btn btn-primary">ОК</button></p>
+                <p><button type="submit" id="save_wininstaller" class="btn btn-primary">ОК</button></p>
         </div>
     </div>
 
@@ -122,6 +122,7 @@ $result_clients = $clients_model->getDesignersByClientName('', 8);
         });
 
         jQuery("#save_wininstaller").click(function(){
+            console.log();
             jQuery.ajax({
                 type: 'POST',
                 url: "index.php?option=com_gm_ceiling&task=dealer.create_designer",
@@ -143,11 +144,11 @@ $result_clients = $clients_model->getDesignersByClientName('', 8);
                         });
                     }
                     else
-                    {
+                    {   
                         location.reload();
                     }
                 },
-                dataType: "text",
+                dataType: "json",
                 async: false,
                 timeout: 10000,
                 error: function(data){

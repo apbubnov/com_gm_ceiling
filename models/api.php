@@ -824,7 +824,8 @@ class Gm_ceilingModelApi extends JModelList
             $callback_model->save(date("Y-m-d H:i:s"), "Клиент заказал замер через гмпотолки. Уточнить данные", $client_id, 1);
             $result = [
                         "user_id" => $dealer_id,
-                        "username" => JFactory::getUser($dealer_id)->username
+                        "username" => JFactory::getUser($dealer_id)->username,
+                        "project_id" => $project
                         ];
             return (object)$result;
         }

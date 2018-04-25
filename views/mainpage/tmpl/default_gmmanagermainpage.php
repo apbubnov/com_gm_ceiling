@@ -53,15 +53,15 @@ $_SESSION['dop_num'] = $dop_num;
 		<p>
 			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=designers', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Отделочники</a>
 		</p>
-		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fa fa-usd" aria-hidden="true"></i> Касса</a>
-		</p>
         <p class="center">
             <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=manufacturers', false); ?>"><i class="fa fa-list-alt" aria-hidden="true"></i> Производители</a>
         </p>
 		<p>
-			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Застройщики</a>
+			<a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=builders', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Застройщики</a>
 		</p>
+        <p>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=wininstallers', false); ?>"><i class="fa fa-user" aria-hidden="true"></i> Оконщики</a>
+        </p>
 	</div>
 	<div class="columns-tar">
 		<div style="margin-left: calc(50% - 100px); padding-bottom: 1em;">
@@ -94,6 +94,9 @@ $_SESSION['dop_num'] = $dop_num;
 					<div class="circl-digits" id="MissedCallsDiv" style="display: none;"></div>
 			</div>
 		</div>
+        <p>
+            <a class="btn btn-large btn-primary" href="<?php echo JRoute::_('/index.php?option=com_gm_ceiling&view=cashbox', false); ?>"><i class="fa fa-usd" aria-hidden="true"></i> Касса</a>
+        </p>
 	</div>
 	<div class="columns-tar">
 		<p>
