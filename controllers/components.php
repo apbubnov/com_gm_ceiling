@@ -143,6 +143,9 @@ class Gm_ceilingControllerComponents extends Gm_ceilingController
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->ComponentsPrice[$v->id];
+                    $OldDealerPrice = (empty($OldDealerPrice))
+                        ?(object)["type"=>0, "price"=>0, "value"=>0]
+                        :$OldDealerPrice;
                     $NewDealerData = $this->parse_price($price, $OldDealerPrice, $v->price);
                     $NewDealerPrice = $NewDealerData->dealerPrice;
 
