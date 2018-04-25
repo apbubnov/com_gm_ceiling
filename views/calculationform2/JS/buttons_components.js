@@ -61,7 +61,6 @@ const help_block_basic_work = null;
 let discount_el = create_single_input(1,"new_discount","jform[discount]","","%","number","0","100");
 
 let attention_el  = '';
-console.log(dealer_id);
 if(dealer_id != 1){
     attention_el = `<p>
                         ВНИМАНИЕ! <br>
@@ -495,7 +494,41 @@ jQuery(".component-content").on("click", ".add_fields", function () {
         el.addEventListener("keypress",auto_replace);
     });
 }); 
-
+jQuery(".component-content").on("click", ".btn_calc", function () {
+    let id_block = jQuery(this).closest("button").attr("data-cont_id");
+    let children = id_block.replace("block_", "");
+    if (children == 'need_mount') {
+        let col_id = `jform_${children}_inside`;
+        let cont =  create_container("",col_id, children);
+        let element = eval(children);
+        if(!document.getElementById(col_id)){
+            jQuery(`#${id_block}`).after(cont);
+            jQuery(`#${col_id}`).append(element); 
+        }
+        else{
+            jQuery(`#${col_id}`).toggle();
+        }
+        jQuery("[name = 'need_mount']").click(function(){
+            jQuery("[name = 'need_mount']").removeAttr('fix');
+            jQuery(this).attr('fix',true);
+        });
+        if(jQuery("#without").attr("fix") != "true" ){
+            jQuery("#with_mount").attr("checked",true);
+        }    
+    } else {
+        if (jQuery(`[data-parent = "${children}"]`).length < 1) {
+            arr_blocks.forEach(function(item) {
+                if (item.block_id == id_block && item.children) {
+                    item.children.forEach(function(item2){
+                        generate_block(item2);
+                    });
+                }
+            });
+        } else {
+            jQuery(`[data-parent = "${children}"]`).toggle();
+        }    
+    }
+});
 function  auto_replace (e){
     if(e.keyCode == 44){
         this.value += '.';
@@ -514,29 +547,37 @@ function in_array(array,value){
     return result;
 }
 
-let arr_parent = [];
+
 function open_general_blocks(){
+    let arr_parent = [];
+    let btn_name;
     for(let i = Object.keys(calculation).length;i--;){
         if(!empty(calculation[Object.keys(calculation)[i]])) {
-            get_parent(calculation[Object.keys(calculation)[i]]);
+            btn_name = get_parent(Object.keys(calculation)[i]);
+            if(btn_name && !in_array(arr_parent,btn_name)){
+               arr_parent.push(btn_name);  
+            }
         }
     }
     arr_parent.forEach(function(item){
-        jQuery(`#btn_${item}`).trigger("click");        
+        console.log(item);
+        jQuery(`#${item}`).trigger("click");        
     });
     open_blocks();
 }
 function get_parent(n) {
-    console.log("тут");
+    let result;
     arr_blocks.forEach(function(item){
         if (item.children) {
-            item.children.forEach(function(item2){
-                if (in_array(arr_parent,item2.parent)) {
-                    arr_parent.push();
+            for(let i = item.children.length;i--;){
+                if (item.children[i].block_id == `block_${n}`) {
+                   result = item.btn_id;
+                   break;
                 }
-            });
+            }
         }
     });
+    return result;
 }
 function open_blocks(){
     for(let i = Object.keys(calculation).length;i--;){
@@ -548,7 +589,6 @@ function open_blocks(){
         else{
             if(!empty(calculation[Object.keys(calculation)[i]]) ){
                 if(!empty(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0])){
-                   console.log(`#btn_${Object.keys(calculation)[i]}`);
                     jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
                 }
             }
@@ -761,7 +801,6 @@ function fill_calc_data(){
 let show_color_switch = function(){    
         data = n6_colors;
         var items = "<div class='center'>";
-        console.log(data);
         jQuery.each( data, function( key, val ) {
             items += "<button class='click_color_1' style='width: 70px; height: 80px; display: inline-block; float: left; margin:3px;' type='button' data-color_id_1='"+ val.id + "' data-color_img_1='" + val.file + "'><img style='width: 70px; height: 70px; display: inline-block; float: left; margin:3px;' src='"+ val.file + "' alt='' /><div class='color_title1'>" + val.title + "</div><div class='color_title2'>" + val.title+ "</div></button>";
         
@@ -1099,38 +1138,3 @@ function ClearSelect(e) {
 open_general_blocks();
 fill_calc_data();
 
-jQuery(".component-content").on("click", ".btn_calc", function () {
-    let id_block = jQuery(this).closest("button").attr("data-cont_id");
-    let children = id_block.replace("block_", "");
-    if (children == 'need_mount') {
-        let col_id = `jform_${children}_inside`;
-        let cont =  create_container("",col_id, children);
-        let element = eval(children);
-        if(!document.getElementById(col_id)){
-            jQuery(`#${id_block}`).after(cont);
-            jQuery(`#${col_id}`).append(element); 
-        }
-        else{
-            jQuery(`#${col_id}`).toggle();
-        }
-        jQuery("[name = 'need_mount']").click(function(){
-            jQuery("[name = 'need_mount']").removeAttr('fix');
-            jQuery(this).attr('fix',true);
-        });
-        if(jQuery("#without").attr("fix") != "true" ){
-            jQuery("#with_mount").attr("checked",true);
-        }    
-    } else {
-        if (jQuery(`[data-parent = "${children}"]`).length < 1) {
-            arr_blocks.forEach(function(item) {
-                if (item.block_id == id_block && item.children) {
-                    item.children.forEach(function(item2){
-                        generate_block(item2);
-                    });
-                }
-            });
-        } else {
-            jQuery(`[data-parent = "${children}"]`).toggle();
-        }    
-    }
-});

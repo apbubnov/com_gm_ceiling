@@ -1435,7 +1435,7 @@ class Gm_ceilingHelpersGm_ceiling
             $canvases[$canvas->id] = $canvas;
         }
         $offcut_square_data = array();
-        if ($data['n3'] && $data['offcut_square'] != 0) {
+        if ($data['n3'] && $data['offcut_square'] > $data['n4']*0.5) {
             $canvas_id = (empty($data["n3_id"])) ? $data["n3"] : $data["n3_id"];
             $offcut_square_data['title'] = "Количество обрезков";                                                                //Название фактуры и полотна
             $offcut_square_data['quantity'] = $data['offcut_square'];                                                            //Кол-во
