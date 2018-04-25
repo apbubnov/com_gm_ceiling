@@ -121,9 +121,9 @@ let n_data = {};
 let n28_src = {
     name : 'jform[n28]',
     values : [
-        {id:'jform_n28_2',value:2,text:"Алюминиевый багет"},
-        {id:'jform_n28_1',value:1,text:"Потолочный багет"},
-        {id:'jform_n28',value:0,text:"Обычный багет"},
+        {id:'jform_n28_2',value:2,text:"Стеновой багет Al"},
+        {id:'jform_n28_1',value:1,text:"Потолочный багет Al"},
+        {id:'jform_n28',value:0,text:"Стеновой багет ПВХ"},
         {id:'jform_n28_3',value:3,text:"Без багета",selected:true}
     ]
 };
@@ -494,6 +494,7 @@ jQuery(".component-content").on("click", ".add_fields", function () {
         el.addEventListener("keypress",auto_replace);
     });
 }); 
+
 jQuery(".component-content").on("click", ".btn_calc", function () {
     let id_block = jQuery(this).closest("button").attr("data-cont_id");
     let children = id_block.replace("block_", "");
@@ -546,7 +547,6 @@ function in_array(array,value){
     }
     return result;
 }
-
 
 function open_general_blocks(){
     let arr_parent = [];
