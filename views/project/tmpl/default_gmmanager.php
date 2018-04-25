@@ -207,7 +207,7 @@ $AllMounters = $model->FindAllMounters($where);
                             </td>
                             <td>
                                 <?php if ($this->item->project_status != 12) { ?>
-                                    <button onclick='send_ajax(<?php echo $calculation->id; ?>)'
+                                    <button  data-calc_id = "<?php echo $calculation->id; ?>" name = "change_cut"
                                             class="btn btn-primary">Изменить раскрой
                                     </button>
                                 <?php } ?>
@@ -245,6 +245,7 @@ $AllMounters = $model->FindAllMounters($where);
                     $total_perimeter = 0;
                     //получаем прайс комплектующих
                     $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+                    $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
                     $components_list = $components_model->getFilteredItems();
                     foreach ($components_list as $i => $component) {
                         $components[$component->id] = $component;
@@ -279,7 +280,6 @@ $AllMounters = $model->FindAllMounters($where);
                         }
                         $brus = $brus_count * 0.5;
                         $brus2 += $components[1]->price * $brus;
-
                         $fix_components = $calcform_model->n13($calculation->id);
                         $hoods_components = $calcform_model->n22($calculation->id);
                         foreach ($fix_components as $comp) $fix_provod += $comp->n13_count;
@@ -288,6 +288,11 @@ $AllMounters = $model->FindAllMounters($where);
 
                         $price_provod += $components[4]->price * $provod_count;
                         //$provod_count = 0;
+                        //
+                        if(!empty($calculation->n3)){
+                            $canvas = $canvases_model->getFilteredItemsCanvas("id = $calculation->n3")[0];
+                            $calculation->widths = $canvases_model->getFilteredItemsCanvas("texture_id = $canvas->texture_id AND manufacturer_id = $canvas->manufacturer_id and count>0");
+                        }
                     }
 
                     foreach ($calculations as $calculation) {
@@ -316,7 +321,6 @@ $AllMounters = $model->FindAllMounters($where);
                     $itog2 += $components[1]->price * $new_brus;
 
                     $price_provod1 = $components[4]->price * ceil($provod_count1);
-
 
                     ?>
                     <tr>
@@ -498,10 +502,22 @@ $AllMounters = $model->FindAllMounters($where);
             </table>
         </form>
     <?php } ?>
-    <form action="/sketch/cut_redactor/index.php" id="data_form" method="POST" style="display : none;">
-        <input type="hidden" name="walls" id="input_walls">
-        <input type="hidden" name="calc_id" id="calc_id">
-        <input type="hidden" name="proj_id" id="proj_id">
+    <form method="POST" action="/sketch/cut_redactor2/index.php" style="display: none" id="form_url">
+        <input name="user_id" id="user_id" value="<?php echo $user->id ;?>" type="hidden">
+        <input name = "width" id = "width" value = "" type = "hidden">
+        <input name = "texture" id = "texture" value = "" type = "hidden">
+        <input name = "color" id = "color" value = "" type = "hidden">
+        <input name = "manufacturer" id = "manufacturer" value = "" type = "hidden">
+        <input name = "auto" id = "auto" value="" type = "hidden">
+        <input name = "walls" id = "walls" value="" type= "hidden">
+        <input name = "calc_id" id = "calc_id" value="<?php echo $calculation_id;?>" type = "hidden">
+        <input name = "n4" id="n4" value="" type ="hidden">
+        <input name = "n5" id="n5" value="" type ="hidden">
+        <input name = "n9" id="n9" value="" type ="hidden">
+        <input name = "triangulator_pro" id = "triangulator_pro" value = "<?php echo $triangulator_pro?>" type = "hidden">
+        <input name="proj_id" id="proj_id" value="<?php echo $project_id; ?>" type="hidden">
+        <input name="type_url" id="type_url" value="<?php echo $type_url; ?>" type="hidden">
+        <input name="subtype_url" id="subtype_url" value="<?php echo $subtype_url; ?>" type="hidden">
     </form>
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -533,6 +549,14 @@ $AllMounters = $model->FindAllMounters($where);
             }
         });
         jQuery(document).ready(function () {
+
+            let calculations = JSON.parse('<?php echo json_encode($calculations);?>');
+            console.log(calculations)
+            jQuery("[name = 'change_cut']").click(function(){
+                let id = jQuery(this).data('calc_id');
+                console.log(id);
+            });
+
             jQuery('#btn_back').click(function(){
                 var l = location.href.replace('project','projects');
                 l = l.replace('run','runprojects');
