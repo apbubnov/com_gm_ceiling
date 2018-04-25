@@ -13,45 +13,40 @@ const help_block_n21 = '<span class="airhelp">В расчет на 1 пожар�
 
 const help_block_n22 = '<span class="airhelp">В расчет на 1 вентиляцию входит:<br><ul style="text-align: left;"><li>2 дюбеля (красн. 6*51)</li><li>1 квадратная или круглая платформа</li><li>4 самореза (ГКД 3,5*51)</li><li>4 самореза (п/сф 3,5*9,5 цинк)</li><li>1 термоквадрат или круглое кольцо</li></ul>В расчет на 1 электровытяжку входит:<br><ul style="text-align: left;"><li>2 дюбеля (красн. 6*51)</li><li>1 клеммная пара</li><li>1 круглая или квадратная платформа</li><li>1 круглое кольцо или термоквадрат</li><li>2 подвеса прямых (П 60 (0,8))</li><li>0,5м провода (ПВС 2*0,75)</li><li>4 самореза (ГКД 3,5*51)</li><li>4 самореза (п/сф 3,5*9,5 цинк)</li></ul>+ монтжаная работа по установке вытяжки</span>';
 
-const help_block_n23 = '<span class="airhelp"><img src="/images/diffuser.jpg" width="280"/><br>В расчет входит 1 диффузор + монтжаная работа по установке диффузора</span>';
-
-const help_block_n30 = '<span class="airhelp">В расчет на 1м парящего потолка входит:<ul style="text-align: left;"><li>1м багета для парящих потолков (а из периметра вычитается 1м стенового багета)</li><li>1м светопропускающей вставки для парящих потолков</li></ul>+ монтажная работа по установке профиля для парящих потолков</span>';
-
 const help_block_n29 = '<span class="airhelp">Для перехода без нишей в расчет входит 343 р. + маржа на комплектующие</br>Для перехода с нишей в расчет входит 532 о. + маржа на комплектующие</br>+ монтажная работа "переход уровня с нишей или без"</span>';
-
-const help_block_n31 = '<span class="airhelp">В расчет на 1м внутреннего выреза в цеху входит:<br><ul style="text-align: left;"><li>1м багета ПВХ (2,5)</li><li>1м белой вставки</li><li>10 дюбелей (красн. 6*51)</li><li>10 саморезов (ГКД 3,5*51)</li><li>4 самореза (п/сф 3,5*9,5 цинк)</li><li>1 внутренний вырез</li></ul></span>';
-
-const help_block_n11 = '<span class="airhelp">В расчет на 1м внутреннего выреза на месте входит:<ul style="text-align: left;"><li>1м багета ПВХ (2,5)</li><li>1м белой вставки</li><li>1м бруса (40*50)</li><li>16 дюбелей(красн. 6*51)</li><li>22 самореза (ГКД 3,5*41)</li><li>3 белых кронштейна (15*12,5)</li><li>1м гарпуна</li></ul>+ монтажная работа "внутренний вырез"</span>';
-
-const help_block_n32 = '<span class="airhelp">В расчет входит монтажная работа по сливу воды</br>Укажите количество комнат</span>';
 
 const help_block_height = '<span class="airhelp">В расчет входит добавочная стоимость на высоту помещения выше 3х метров</span>';
 
-const help_block_n24 = '<span class="airhelp">В расчет входит монтажная работа "сложность доступа". Считается по метрам.</span>';
-
-const help_block_extra_components = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной комплектующих. Вы можете произвольно написать названия комплектующих и их себестоимость. Программа сама сделает наценку, как и на все остальные комплектующие и выдаст введенное Вами название в прайсе для клиента.</span>';
-
-const help_block_components_stock = '<span class="airhelp">В данном поле вы можете выбрать любой расходный материал данного производителя</span>';
-
-const help_block_extra_mounting = '<span class="airhelp">Это поле предназначено для введения непредусмотренных программной монтажных работ. Вы можете произвольно написать названия монтажных работ и их себестоимость. Программа сама сделает наценку, как и на все остальные монтажных работ и выдаст введенное Вами название в прайсе для клиента.</span>';
-
-const help_block_need_mount = '<span class="airhelp">Данная кнопка может отменить все монтажные работы</span>';
+const help_block_need_mount = null;
+const help_block_light_cptn = null;
+const help_block_oter_mount_cptn = null;
+const help_block_basic_work = null;
 
 let discount_el = create_single_input(1,"new_discount","jform[discount]","","","hidden","0","100");
 let n28_el = create_single_input(1,"jform_n28","jform[n28]","","","hidden");
 let arr_blocks = [
-    {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"add_mount_and_components",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0},
-    {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_n6",btn_id:"",btn_text:"<h3>Освещение</h3>"},
-    {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Добавить люстры",need_ajax : 0},
-    {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_n13",btn_text:"Добавить светильники",need_ajax : 1},
-    {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_n13",btn_id:"",btn_text:"<h4>Прочий монтаж</h4>"},
-    {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_oter_mount_cptn",btn_id:"btn_n14",btn_text:"Добавить трубы входящие в потолок",need_ajax : 1},
-    {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_n16",btn_text:"Добавить шторный карниз",need_ajax : 1},
-    {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_n16",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0},
-    {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1},
-    {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n22",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1},
-    {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n29",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0},
-    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_height",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0}
+    {block_id:"block_basic_work",btn_cont_id:"basic_work",prev_id:"add_mount_and_components",btn_id:"btn_basic_work",btn_text:"Основные работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
+        children: [
+            {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_basic_work",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png", parent: "basic_work"},
+            {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_n6",btn_id:"btn_n14",btn_text:"Добавить трубы входящие в потолок",need_ajax : 1,kind_btn:"0", img: "pipes.png", parent: "basic_work"},
+            {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_n16",btn_text:"Добавить шторный карниз",need_ajax : 1,kind_btn:"0", img: "cornice.png", parent: "basic_work"}
+        ]
+    },
+    {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_basic_work",btn_id:"btn_light_cptn",btn_text:"Освещение",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
+        children: [
+            {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Добавить люстры",need_ajax : 0,kind_btn:"0", img: "lamp.png", parent: "light_cptn"},
+            {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_n13",btn_text:"Добавить светильники",need_ajax : 1,kind_btn:"0", img: "lamps.png", parent: "light_cptn"},
+        ]
+    },
+    {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_light_cptn",btn_id:"btn_oter_mount_cptn",btn_text:"Прочие работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
+        children: [
+            {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_oter_mount_cptn",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0,kind_btn:"0", img: "firealarm.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1,kind_btn:"0", img: "hood.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n22",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
+            {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n29",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0,kind_btn:"0", img: "height.png", parent: "oter_mount_cptn"},
+        ]
+    },
+    {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"},
 ];
 
 arr_blocks.forEach(function(item){
@@ -75,13 +70,7 @@ let n6_src = {
 };
 let n6 =  create_radios_group(n6_src);
 let n12 = create_single_input(1,"jform_n12","jform[n12]","Введите кол-во люстр:","Кол-во,шт.","tel");
-let dop_krepezh = create_single_input(1,"jform_dop_krepezh","jform[dop_krepezh]","","Кол-во,м.","tel");
 let n21 = create_single_input(1,"jform_n21","jform[n21]","","Кол-во,шт.","tel");
-let n30 = create_single_input(1,"jform_n30","jform[n30]","","м.","tel");
-let n31 = create_single_input(1,"jform_n31","jform[n31]","","Кол-во,м.","tel");
-let n11 = create_single_input(1,"jform_n11","jform[n11]","","Кол-во,м.","tel");
-let n32 = create_single_input(1,"jform_n32","jform[n32]","","Кол-во комнат,шт.","tel");
-let n24 = create_single_input(1,"jform_n24","jform[n24]","","Кол-во,м.","tel");
 let height_src = {
     name : 'jform[height]',
     values : [
@@ -148,7 +137,6 @@ let n14_src = {
 }
 let n14 = create_block_with_divs(n14_src);
 
-
 let n15_src = {
     id : 'jform_n15',
     name : 'jform[n15]',
@@ -185,11 +173,6 @@ let n29_src = {
 }
 let n29 =  create_block_with_divs(n29_src);
 
-
-//let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
-
-
-
 /* контейнер и колонки */
 function create_container(cnt_id,col_id){
     return `<div class = "container" id = "${cnt_id}">
@@ -201,22 +184,47 @@ function create_container(cnt_id,col_id){
                     </div>`;
 }
 
-function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_ajax){
-    return `<table class="${class_name}" style="${style}">
+function create_block_btn(class_name,style,btn_id,btn_text,help,cont_id,need_ajax,img,style_btn){
+    if (eval(help) == null) {
+        return `<button type="button" id="${btn_id}" data-cont_id = "${cont_id}" data-need_ajax = "${need_ajax}"  class="${style_btn}">
+                    <table style="width: 100%;">
                         <tr>
-                            <td class="td_calcform1">
-                                <button type="button" id="${btn_id}" data-cont_id = "${cont_id}" data-need_ajax = "${need_ajax}"  class="btn add_fields">
+                            <td style="width: calc(100% - 25px);">
                                 <label class="no_margin">${btn_text}</label>
-                                </button>
                             </td>
-                            <td class="td_calcform2">
-                                <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
-                                    <div class="help_question">?</div>
-                                        ${help}
-                                </div>
+                            <td style="width: 25px;">
+                                <i class="fa fa-angle-down" style="color: #414099;"></i>
                             </td>
                         </tr>
-                    </table>`;
+                    </table>  
+                </button>
+        `;
+    } else {
+        return `<table class="${class_name}" style="${style}">
+                    <tr>
+                        <td class="td_calcform1">
+                            <button type="button" id="${btn_id}" data-cont_id = "${cont_id}" data-need_ajax = "${need_ajax}"  class="${style_btn}">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="width: 25px;">
+                                            <img src="../../../../../images/${img}" class="img_calcform">
+                                        </td>
+                                        <td style="width: calc(100% - 25px);">
+                                            <label class="no_margin">${btn_text}</label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </button>
+                        </td>
+                        <td class="td_calcform2">
+                            <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
+                                <div class="help_question">?</div>
+                                    ${eval(help)}
+                            </div>
+                        </td>
+                    </tr>
+                </table>`;
+    }
 }
 /* ______________ */
 /* radio buttons */
@@ -306,20 +314,18 @@ function create_body(columns){
     result+=`</div>`;
     return result;
 }
-jQuery('.add_fields').click(function(){
+jQuery(".component-content").on("click", ".add_fields", function () {
     let cont_id = jQuery(this).data('cont_id');
     let need_ajax = jQuery(this).data('need_ajax');
     let var_name = cont_id.replace('block_','');
     let col_id = `jform_${var_name}_inside`;
-    let cont =  create_container("",col_id);
-
+    let cont =  create_container("",col_id, var_name);
     let element = eval(var_name);
 
     if(!document.getElementById(col_id)){
         jQuery(`#${cont_id}`).after(cont);
-        if(!empty(element)){
-           jQuery(`#${col_id}`).append(element);  
-        }
+        jQuery(`#${col_id}`).append(element); 
+
     }
     else{
         jQuery(`#${col_id}`).toggle();
@@ -345,26 +351,95 @@ jQuery('.add_fields').click(function(){
         btns_add[i].onclick = btn_add_event;
     }
     jQuery("[name = 'jform[n6]'").click(change_radio);
-    if(var_name == 'need_mount'){
+    let inputs = jQuery('input[type=tel]');
+    [].forEach.call(inputs,function(el){
+        el.addEventListener("keypress",auto_replace);
+    });
+}); 
+jQuery(".component-content").on("click", ".btn_calc", function () {
+    let id_block = jQuery(this).closest("button").attr("data-cont_id");
+    let children = id_block.replace("block_", "");
+    if (children == 'need_mount') {
+        let col_id = `jform_${children}_inside`;
+        let cont =  create_container("",col_id, children);
+        let element = eval(children);
+        if(!document.getElementById(col_id)){
+            jQuery(`#${id_block}`).after(cont);
+            jQuery(`#${col_id}`).append(element); 
+        }
+        else{
+            jQuery(`#${col_id}`).toggle();
+        }
         jQuery("[name = 'need_mount']").click(function(){
             jQuery("[name = 'need_mount']").removeAttr('fix');
             jQuery(this).attr('fix',true);
         });
+        if(jQuery("#without").attr("fix") != "true" ){
+            jQuery("#with_mount").attr("checked",true);
+        }    
+    } else {
+        if (jQuery(`[data-parent = "${children}"]`).length < 1) {
+            arr_blocks.forEach(function(item) {
+                if (item.block_id == id_block && item.children) {
+                    item.children.forEach(function(item2){
+                        generate_block(item2);
+                    });
+                }
+            });
+        } else {
+            jQuery(`[data-parent = "${children}"]`).toggle();
+
+        }    
     }
-    if(jQuery("#without").attr("fix") != "true" ){
-        jQuery("#with_mount").attr("checked",true);
-    }
-    
-    
 });
+
+function in_array(array,value){
+    let result = false;
+    for(let i = array.length; i--;){
+        if(array[i] === value){
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
+
+function open_general_blocks(){
+    let arr_parent = [];
+    let btn_name;
+    for(let i = Object.keys(calculation).length;i--;){
+        if(!empty(calculation[Object.keys(calculation)[i]])) {
+            btn_name = get_parent(Object.keys(calculation)[i]);
+            if(btn_name && !in_array(arr_parent,btn_name)){
+               arr_parent.push(btn_name);  
+            }
+        }
+    }
+    arr_parent.forEach(function(item){
+        jQuery(`#${item}`).trigger("click");        
+    });
+    open_blocks();
+}
+function get_parent(n) {
+    let result;
+    arr_blocks.forEach(function(item){
+        if (item.children) {
+            for(let i = item.children.length;i--;){
+                if (item.children[i].block_id == `block_${n}`) {
+                   result = item.btn_id;
+                   break;
+                }
+            }
+        }
+    });
+    return result;
+}
 function open_blocks(){
     for(let i = Object.keys(calculation).length;i--;){
-
         if(Object.keys(calculation)[i] == 'n16'){
             if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
                 jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
             }
-
         }
         else{
             if(!empty(calculation[Object.keys(calculation)[i]]) ){
@@ -591,7 +666,6 @@ function get_n_data(var_name){
     });
 }
 
-
 let btn_add_event = function(){
     
     let id = this.id.replace("add_","");
@@ -647,15 +721,18 @@ function toggle_color(element){
     }
 }
 function generate_block(object){
-    let cnt = create_container(object.block_id,object.btn_cont_id);
+    let cnt = create_container(object.block_id,object.btn_cont_id, object.parent);
     jQuery(`#${object.prev_id}`).after(cnt);
-    if(object.btn_id){
-        let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,eval(`help_${object.block_id}`),object.block_id,object.need_ajax);
-        jQuery(`#${object.btn_cont_id}`).append(block);
-    }
-    else{
-        console.log(object.btn_text)
+    if(object.kind_btn == 2) {
         jQuery(`#${object.btn_cont_id}`).append(object.btn_text);
+    } else {
+        if (object.kind_btn == 1) {
+            style_btn = "btn btn_calc";
+        } else if (object.kind_btn == 0) {
+            style_btn = "btn add_fields";
+        }
+        let block =  create_block_btn('table_calcform',"margin-bottom: 15px;",object.btn_id,object.btn_text,`help_${object.block_id}`,object.block_id,object.need_ajax, object.img, style_btn);
+        jQuery(`#${object.btn_cont_id}`).append(block);
     }
 }
 var $ = jQuery;

@@ -451,7 +451,6 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     let element = eval(var_name);
 
     if(!document.getElementById(col_id)){
-        //console.log(cont_id,col_id);
         jQuery(`#${cont_id}`).after(cont);
         jQuery(`#${col_id}`).append(element); 
 
@@ -480,15 +479,6 @@ jQuery(".component-content").on("click", ".add_fields", function () {
         btns_add[i].onclick = btn_add_event;
     }
     jQuery("[name = 'jform[n6]'").click(change_radio);
-   /*  if(var_name == 'need_mount'){
-        jQuery("[name = 'need_mount']").click(function(){
-            jQuery("[name = 'need_mount']").removeAttr('fix');
-            jQuery(this).attr('fix',true);
-        });
-    }
-    if(jQuery("#without").attr("fix") != "true" ){
-        jQuery("#with_mount").attr("checked",true);
-    } */
     let inputs = jQuery('input[type=tel]');
     [].forEach.call(inputs,function(el){
         el.addEventListener("keypress",auto_replace);
