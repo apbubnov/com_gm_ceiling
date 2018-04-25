@@ -313,19 +313,7 @@
             </div>
             <div class="col-sm-4"></div>
         </div>
-    </div>
-    <div class="container" id = "sum_info" style="display:none">
-        <div class="row sm-margin-bottom" style="margin-top: 25px">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-4">
-                <p>
-                    В стоимость входят материалы и работы по установке.
-                </p>
-            </div>
-            <div class="col-sm-4"></div>
-        </div>
-    </div>
-   
+    </div>  
     <!-- Рассчитать -->
     <div class="container">
         <div class="row sm-margin-bottom" style="margin-top: 25px">
@@ -337,6 +325,17 @@
                     </span>
                     <span class="static">Рассчитать</span>
                 </button>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+    <div class="container" id = "sum_info" style="display:none">
+        <div class="row sm-margin-bottom" style="margin-top: 25px">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p>
+                    В стоимость входят материалы и работы по установке.
+                </p>
             </div>
             <div class="col-sm-4"></div>
         </div>
@@ -810,7 +809,10 @@
                         }
                         var html = "",
                         total_sum = parseFloat(data.total_sum),
-                        project_discount = parseFloat(data.project_discount),
+                        project_discount = parseFloat(data.project_discount);
+                        if(project_discount == 0 && api==1){
+                            project_discount = 50;
+                        }
                         dealer_final = parseFloat(total_sum) * ((100 - parseFloat(project_discount)) / 100);
                         discount_price = parseFloat(total_sum) * (70 / 100);
                         mount_price  = parseFloat(data.mounting_sum);
