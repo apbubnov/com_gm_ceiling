@@ -74,21 +74,21 @@ let arr_blocks = [
     {block_id:"block_basic_work",btn_cont_id:"basic_work",prev_id:"block_attention",btn_id:"btn_basic_work",btn_text:"Основные работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
             {block_id:"block_n28",btn_cont_id:"btn_cont_n28",prev_id:"block_basic_work",btn_id:"btn_n28",btn_text:(calculation.n_28) ? "Изменить крепежный профиль" : "Крепежный профиль",need_ajax : 0,kind_btn:"0",img: "profil.png", parent: "basic_work"},
-            {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png", parent: "basic_work"}    
+            {block_id:"block_n6",btn_cont_id:"btn_cont_n6",prev_id:"block_n28",btn_id:"btn_n6",btn_text:"Декоративная вставка",need_ajax : 0,kind_btn:"0", img: "insert.png", parent: "basic_work"},
+            {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_n6",btn_id:"btn_n14",btn_text:"Добавить трубы входящие в потолок",need_ajax : 1,kind_btn:"0", img: "pipes.png", parent: "basic_work"},
+            {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_n16",btn_text:"Добавить шторный карниз",need_ajax : 1,kind_btn:"0", img: "cornice.png", parent: "basic_work"}
         ]
     },
-    {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_basic_work",btn_id:"",btn_text:"Освещение",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
+    {block_id:"block_light_cptn",btn_cont_id:"head_lighting",prev_id:"block_basic_work",btn_id:"btn_light_cptn",btn_text:"Освещение",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
             {block_id:"block_n12",btn_cont_id:"btn_cont_n12",prev_id:"block_light_cptn",btn_id:"btn_n12",btn_text:"Добавить люстры",need_ajax : 0,kind_btn:"0", img: "lamp.png", parent: "light_cptn"},
             {block_id:"block_n13",btn_cont_id:"btn_cont_n13",prev_id:"block_n12",btn_id:"btn_n13",btn_text:"Добавить светильники",need_ajax : 1,kind_btn:"0", img: "lamps.png", parent: "light_cptn"},
             {block_id:"block_n19",btn_cont_id:"btn_cont_n19",prev_id:"block_n13",btn_id:"btn_n19",btn_text:"Провод",need_ajax : 0,kind_btn:"0", img: "wire.png", parent: "light_cptn"},        
         ]
     },
-    {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_light_cptn",btn_id:"",btn_text:"Прочие работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
+    {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_light_cptn",btn_id:"btn_oter_mount_cptn",btn_text:"Прочие работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
-            {block_id:"block_n14",btn_cont_id:"btn_cont_n14",prev_id:"block_oter_mount_cptn",btn_id:"btn_n14",btn_text:"Добавить трубы входящие в потолок",need_ajax : 1,kind_btn:"0", img: "pipes.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n16",btn_cont_id:"btn_cont_n16",prev_id:"block_n14",btn_id:"btn_n16",btn_text:"Добавить шторный карниз",need_ajax : 1,kind_btn:"0", img: "cornice.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_n16",btn_id:"btn_n17",btn_text:"Закладная брусом",need_ajax : 0,kind_btn:"0", img: "bar.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n17",btn_cont_id:"btn_cont_n17",prev_id:"block_oter_mount_cptn",btn_id:"btn_n17",btn_text:"Закладная брусом",need_ajax : 0,kind_btn:"0", img: "bar.png", parent: "oter_mount_cptn"},
             {block_id:"block_n20",btn_cont_id:"btn_cont_n20",prev_id:"block_n17",btn_id:"btn_n20",btn_text:"Разделитель",need_ajax : 0,kind_btn:"0", img: "delimiter.png", parent: "oter_mount_cptn"},
             {block_id:"block_n7",btn_cont_id:"btn_cont_n7",prev_id:"block_n20",btn_id:"btn_n7",btn_text:"Метраж стен с плиткой",need_ajax : 0,kind_btn:"0", img: "tile.png", parent: "oter_mount_cptn"},
             {block_id:"block_n8",btn_cont_id:"btn_cont_n8",prev_id:"block_n7",btn_id:"btn_n8",btn_text:"Метраж стен с керамогранитом",need_ajax : 0,kind_btn:"0", img: "stoneware.png", parent: "oter_mount_cptn"},
@@ -121,9 +121,9 @@ let n_data = {};
 let n28_src = {
     name : 'jform[n28]',
     values : [
-        {id:'jform_n28_2',value:2,text:"Алюминиевый багет"},
-        {id:'jform_n28_1',value:1,text:"Потолочный багет"},
-        {id:'jform_n28',value:0,text:"Обычный багет"},
+        {id:'jform_n28_2',value:2,text:"Стеновой багет Al"},
+        {id:'jform_n28_1',value:1,text:"Потолочный багет Al"},
+        {id:'jform_n28',value:0,text:"Стеновой багет ПВХ"},
         {id:'jform_n28_3',value:3,text:"Без багета",selected:true}
     ]
 };
@@ -451,7 +451,6 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     let element = eval(var_name);
 
     if(!document.getElementById(col_id)){
-        //console.log(cont_id,col_id);
         jQuery(`#${cont_id}`).after(cont);
         jQuery(`#${col_id}`).append(element); 
 
@@ -480,20 +479,12 @@ jQuery(".component-content").on("click", ".add_fields", function () {
         btns_add[i].onclick = btn_add_event;
     }
     jQuery("[name = 'jform[n6]'").click(change_radio);
-   /*  if(var_name == 'need_mount'){
-        jQuery("[name = 'need_mount']").click(function(){
-            jQuery("[name = 'need_mount']").removeAttr('fix');
-            jQuery(this).attr('fix',true);
-        });
-    }
-    if(jQuery("#without").attr("fix") != "true" ){
-        jQuery("#with_mount").attr("checked",true);
-    } */
     let inputs = jQuery('input[type=tel]');
     [].forEach.call(inputs,function(el){
         el.addEventListener("keypress",auto_replace);
     });
 }); 
+
 jQuery(".component-content").on("click", ".btn_calc", function () {
     let id_block = jQuery(this).closest("button").attr("data-cont_id");
     let children = id_block.replace("block_", "");
@@ -526,6 +517,7 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
             });
         } else {
             jQuery(`[data-parent = "${children}"]`).toggle();
+
         }    
     }
 });
@@ -547,7 +539,6 @@ function in_array(array,value){
     return result;
 }
 
-
 function open_general_blocks(){
     let arr_parent = [];
     let btn_name;
@@ -559,7 +550,6 @@ function open_general_blocks(){
             }
         }
     }
-    console.log(arr_parent);
     arr_parent.forEach(function(item){
         jQuery(`#${item}`).trigger("click");        
     });
@@ -964,7 +954,6 @@ function get_n_data(var_name){
         }
     });
 }
-
 
 let btn_add_event = function(){
     
