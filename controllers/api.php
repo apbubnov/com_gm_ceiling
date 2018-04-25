@@ -491,8 +491,11 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $jsonData = stream_get_contents($f);
             $Data = json_decode($jsonData);
             if(!empty($Data)){
-                 $Answer = ["status" => "success", "title" => "Успешно", "message" => "Пароль успешно изменен!"];
-                $Answer["data"] = $model->change_password($Data);
+                if ($model->change_password($Data) == 1) {
+                    $Answer = ["status" => "success", "title" => "Успешно", "message" => "Пароль успешно изменен!"];
+                } else {
+                    $Answer = ["status" => "error", "title" => "Не успешно", "message" => "Неверный старый пароль!"];
+                }
             }
             else {
                 $Answer = ["status" => "error", "title" => "Не успешно", "message" => "Пароль не изменен, попробуйте позже"];
