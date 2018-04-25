@@ -222,6 +222,9 @@ class Gm_ceilingControllerCanvases extends Gm_ceilingController
                 $flag = 0;
                 foreach ($oldPrice as $k => $v) {
                     $OldDealerPrice = $dealer->CanvasesPrice[$v->id];
+                    $OldDealerPrice = (empty($OldDealerPrice))
+                        ?(object)["type"=>0, "price"=>0, "value"=>0]
+                        :$OldDealerPrice;
                     $NewDealerData = $this->parse_price($price, $OldDealerPrice, $v->price);
                     $NewDealerPrice = $NewDealerData->dealerPrice;
 
