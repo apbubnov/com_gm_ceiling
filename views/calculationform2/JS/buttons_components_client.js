@@ -174,8 +174,8 @@ let n29_src = {
 let n29 =  create_block_with_divs(n29_src);
 
 /* контейнер и колонки */
-function create_container(cnt_id,col_id){
-    return `<div class = "container" id = "${cnt_id}">
+function create_container(cnt_id,col_id, parent){
+    return `<div class = "container" id = "${cnt_id}" data-parent="${parent}">
                         <div class = "row">
                             <div class = "col-sm-4"></div>
                                 <div class = "col-sm-4" id = "${col_id}"></div>
@@ -378,7 +378,9 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
             jQuery("#with_mount").attr("checked",true);
         }    
     } else {
+        console.log(children);
         if (jQuery(`[data-parent = "${children}"]`).length < 1) {
+            console.log("тут");
             arr_blocks.forEach(function(item) {
                 if (item.block_id == id_block && item.children) {
                     item.children.forEach(function(item2){
@@ -387,8 +389,8 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
                 }
             });
         } else {
+            console.log(`[data-parent = "${children}"]`);
             jQuery(`[data-parent = "${children}"]`).toggle();
-
         }    
     }
 });
@@ -404,52 +406,6 @@ function in_array(array,value){
     return result;
 }
 
-function open_general_blocks(){
-    let arr_parent = [];
-    let btn_name;
-    for(let i = Object.keys(calculation).length;i--;){
-        if(!empty(calculation[Object.keys(calculation)[i]])) {
-            btn_name = get_parent(Object.keys(calculation)[i]);
-            if(btn_name && !in_array(arr_parent,btn_name)){
-               arr_parent.push(btn_name);  
-            }
-        }
-    }
-    arr_parent.forEach(function(item){
-        jQuery(`#${item}`).trigger("click");        
-    });
-    open_blocks();
-}
-function get_parent(n) {
-    let result;
-    arr_blocks.forEach(function(item){
-        if (item.children) {
-            for(let i = item.children.length;i--;){
-                if (item.children[i].block_id == `block_${n}`) {
-                   result = item.btn_id;
-                   break;
-                }
-            }
-        }
-    });
-    return result;
-}
-function open_blocks(){
-    for(let i = Object.keys(calculation).length;i--;){
-        if(Object.keys(calculation)[i] == 'n16'){
-            if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
-                jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
-            }
-        }
-        else{
-            if(!empty(calculation[Object.keys(calculation)[i]]) ){
-                if(!empty(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0])){
-                    jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
-                }
-            }
-        }
-    }
-}
 let change_event_radio = function(){
     jQuery(`[name = '${this.name}']`).attr('checked',false);
 
@@ -834,4 +790,3 @@ function ClearSelect(e) {
         e.siblings(".Selects").empty();
     }, 200);
 }
-
