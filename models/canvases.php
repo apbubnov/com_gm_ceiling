@@ -861,7 +861,7 @@ class Gm_ceilingModelCanvases extends JModelList
         }
     }
 
-    public function saveCuts($id,$data) {
+    public function saveCuts($id, $data, $canvas_area) {
         try
         {
             $db = $this->getDbo();
@@ -876,8 +876,8 @@ class Gm_ceilingModelCanvases extends JModelList
                 $data = $db->escape($data, true);
                 $query = $db->getQuery(true);
                 $query->insert("`#__gm_ceiling_cuttings`")
-                    ->columns("`id`, `data`")
-                    ->values("$id,'$data'");
+                    ->columns("`id`, `data`, `canvas_area`")
+                    ->values("$id, '$data', $canvas_area");
                 $db->setQuery($query);
                 $db->execute();
             }
