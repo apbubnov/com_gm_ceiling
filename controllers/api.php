@@ -453,7 +453,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
+            die(json_encode($Answer));
         }
     }
     public function addNewClient() {
@@ -490,7 +491,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $jsonData = stream_get_contents($f);
             $Data = json_decode($jsonData);
             if(!empty($Data)){
-                $Answer = $model->change_password($Data);
+                 $Answer = ["status" => "success", "title" => "Успешно", "message" => "Пароль успешно изменен!"];
+                $Answer["data"] = $model->change_password($Data);
             }
             else {
                 $Answer = ["status" => "error", "title" => "Не успешно", "message" => "Пароль не изменен, попробуйте позже"];
@@ -502,7 +504,54 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             $date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
+            die(json_encode($Answer));
+        }
+    }
+
+    public function iOSauthorisation(){
+        try{
+            $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
+            $f = fopen('php://input', 'r');
+            $jsonData = stream_get_contents($f);
+            $Data = json_decode($jsonData);
+
+            $username = mb_ereg_replace('[^\d]', '', $Data->username);
+            if (mb_substr($username, 0, 1) == '9' && strlen($username) == 10)
+            {
+                $username = '7'.$username;
+            }
+            if (strlen($username) != 11)
+            {
+                throw new Exception('Invalid phone number');
+            }
+            if (mb_substr($username, 0, 1) != '7')
+            {
+                $username = substr_replace($username, '7', 0, 1);
+            }
+
+            $user = JFactory::getUser($model->getUserId($username));
+            $Password = $Data->password;
+            $verifyPass = JUserHelper::verifyPassword($Password, $user->password, $user->id);
+            if ($verifyPass)
+            {
+                $table_data->dealer_id = $user->id;
+                $result = $model->get_data_android($table_data);
+                $Answer = ["status" => "success", "title" => "Успешно", "data"=>$result];
+                die(json_encode($Answer));
+            }
+            else
+            {
+                throw new Exception("Wrong password");
+            }
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
+            die(json_encode($Answer));
         }
     }
 
