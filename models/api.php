@@ -261,8 +261,10 @@ class Gm_ceilingModelApi extends JModelList
                     }
                     
                     $query = $db->getQuery(true);
-                    $query->select("*");
-                    $query->from("`rgzbn_gm_ceiling_projects`");
+                    $query->select("p.*");
+                    $query->select("s.title as status_name");
+                    $query->from("`rgzbn_gm_ceiling_projects` as p");
+                    $query->innerJoin("`rgzbn_gm_ceiling_status` as s on p.project_status = s.id");
                     $query->where($where);
                     $db->setQuery($query);
                     $list_projects = $db->loadObjectList();
@@ -278,8 +280,8 @@ class Gm_ceilingModelApi extends JModelList
                 //проекты
                 $query = $db->getQuery(true);
                 $query->select("*");
-                $query->from("`rgzbn_gm_ceiling_projects`");
-                $query->where("`project_calculator` = $project_calculator");
+                $query->from("`rgzbn_gm_ceiling_projects` as p");
+                $query->where("`p.project_calculator` = $project_calculator");
                 $db->setQuery($query);
                 $list_projects = $db->loadObjectList();
 
@@ -781,6 +783,9 @@ class Gm_ceilingModelApi extends JModelList
                 }
                 else {
                     $name = "Клиент";
+                }
+                foreach ($data as $key => $value) {
+                    $str.="$key;";
                 }
                 $phone = $data->phone;
                 $city  = 'Воронеж';//пока по дефолту

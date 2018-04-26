@@ -540,7 +540,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             {
                 $table_data->dealer_id = $user->id;
                 $result = $model->get_data_android($table_data);
-                $Answer = ["status" => "success", "title" => "Успешно", "data"=>$result];
+                $Answer = ["status" => "success", "title" => "Успешно", "message" => "Вы успешно авторизовались и ваши заказы востановленны", "data"=>$result];
                 die(json_encode($Answer));
             }
             else
