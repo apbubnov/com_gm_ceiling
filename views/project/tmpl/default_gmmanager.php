@@ -8,7 +8,7 @@
  */
 // No direct access
 defined('_JEXEC') or die;
-
+$jinput = JFactory::getApplication()->input;
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
@@ -19,6 +19,20 @@ foreach($calculations as $calc){
     if(!empty($calc->n3)){
         Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);  
     }
+}
+$project_id = $this->item->id;
+$type = $jinput->get('type', '', 'STRING');
+$subtype = $jinput->get('subtype', '', 'STRING');
+$type_url = '';
+if (!empty($type))
+{
+    $type_url = "&type=$type";
+}
+
+$subtype_url = '';
+if (!empty($subtype))
+{
+    $subtype_url = "&subtype=$subtype";
 }
 
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
@@ -87,7 +101,7 @@ $AllMounters = $model->FindAllMounters($where);
 
 <button class="btn btn-primary" id="btn_back"><i class="fa fa-arrow-left" aria-hidden="true"></i>Назад</button>
 
-<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/tmpl/css/style.css" type="text/css" />
+<link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 
 <h2 class="center">Просмотр проекта</h2>
 
@@ -241,55 +255,11 @@ $AllMounters = $model->FindAllMounters($where);
                 <h4>Расходные материалы</h4>
                 <table class="table">
                     <?php $total_components_sum = 0;
-                    $sum = 0;
-                    $total_perimeter = 0;
                     //получаем прайс комплектующих
-                    $components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
                     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-                    $components_list = $components_model->getFilteredItems();
-                    foreach ($components_list as $i => $component) {
-                        $components[$component->id] = $component;
-                    }
-                    foreach ($calculations as $calculation) {
-                        $total_perimeter += $calculation->n5;
-                    }
-
-                    $sum = 0;
-                    $baget = 0;
-                    $provod_count = 1;
-                    $provod_count1 = 0;
-                    $brus = 0;
-                    $calcform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
                     $calc_data = [];
                     foreach ($calculations as $calculation) {
-                        //$total_comp+=Gm_ceilingHelpersGm_ceiling::calculate_components($calculation->id)['self_total'];
                         $total_components_sum += $calculation->components_sum;
-
-                        $baget = $calculation->n5 + $calculation->dop_krepezh / 2.0;
-                        $baget_count = intval($baget / 2.5);
-                        if (floatval($baget / 2.5) > $baget_count) {
-                            $baget_count++;
-                        }
-                        $baget = $baget_count * 2.5;
-                        $baget2 += $components[11]->price * $baget;
-
-                        $brus = $calculation->n11 + $calculation->n27 + $calculation->n17 + $calculation->n18 + $calculation->n20;
-                        $brus_count = intval($brus / 0.5);
-                        if (floatval($brus / 0.5) > $brus_count) {
-                            $brus_count++;
-                        }
-                        $brus = $brus_count * 0.5;
-                        $brus2 += $components[1]->price * $brus;
-                        $fix_components = $calcform_model->n13($calculation->id);
-                        $hoods_components = $calcform_model->n22($calculation->id);
-                        foreach ($fix_components as $comp) $fix_provod += $comp->n13_count;
-                        foreach ($hoods_components as $comp) $hoods_provod += $comp->n22_count;
-                        $provod_count = ceil(($calculation->n12 + $fix_provod + $hoods_provod) * 0.5 + $calculation->n19);
-
-                        $price_provod += $components[4]->price * $provod_count;
-                        //$provod_count = 0;
-                        //
-                        
                         if(!empty($calculation->n3)){
                             $canvas = $canvases_model->getFilteredItemsCanvas("a.id = $calculation->n3")[0];
                             $canvases = $canvases_model->getFilteredItemsCanvas("texture_id = $canvas->texture_id AND manufacturer_id = $canvas->manufacturer_id and count>0");
@@ -305,39 +275,11 @@ $AllMounters = $model->FindAllMounters($where);
                                 "texture" => $canvas->texture_id,
                                 "manufacturer" => $canvas->manufacturer_id,
                                 "color" => $canvas->color_id,
-                                "walls" => $calculation->calc_data
+                                "walls" => $calculation->original_sketch
                             );
                             
                         }
                     }
-
-                    foreach ($calculations as $calculation) {
-                        $new_baget += $calculation->n5 + $calculation->dop_krepezh / 2.0;
-                        $new_brus += $calculation->n11 + $calculation->n27 + $calculation->n17 + $calculation->n18 + $calculation->n20;
-
-                        $fix_components = $calcform_model->n13($calculation->id);
-                        $hoods_components = $calcform_model->n22($calculation->id);
-                        foreach ($fix_components as $comp) $fix_provod1 += $comp->n13_count;
-                        foreach ($hoods_components as $comp) $hoods_provod1 += $comp->n22_count;
-                        $provod_count1 += (($calculation->n12 + $fix_provod1 + $hoods_provod1) * 0.5 + $calculation->n19);
-                    }
-
-                    $baget_count = intval($new_baget / 2.5);
-                    if (floatval($new_baget / 2.5) > $baget_count) {
-                        $baget_count++;
-                    }
-                    $new_baget = $baget_count * 2.5;
-                    $itog = $components[11]->price * $new_baget;
-
-                    $brus_count = intval($new_brus / 0.5);
-                    if (floatval($new_brus / 0.5) > $brus_count) {
-                        $brus_count++;
-                    }
-                    $new_brus = $brus_count * 0.5;
-                    $itog2 += $components[1]->price * $new_brus;
-
-                    $price_provod1 = $components[4]->price * ceil($provod_count1);
-
                     ?>
                     <tr>
                         <th>Общая себестоимость расходников</th>
@@ -518,7 +460,7 @@ $AllMounters = $model->FindAllMounters($where);
             </table>
         </form>
     <?php } ?>
-    <form method="POST" action="/sketch/cut_redactor2/index.php" style="display: none" id="form_url">
+    <form method="POST" action="/sketch/cut_redactor_2/index.php" style="display: none" id="form_url">
         <input name="user_id" id="user_id" value="<?php echo $user->id ;?>" type="hidden">
         <input name = "width" id = "width" value = "" type = "hidden">
         <input name = "texture" id = "texture" value = "" type = "hidden">
@@ -530,10 +472,10 @@ $AllMounters = $model->FindAllMounters($where);
         <input name = "n4" id="n4" value="" type ="hidden">
         <input name = "n5" id="n5" value="" type ="hidden">
         <input name = "n9" id="n9" value="" type ="hidden">
-        <input name = "triangulator_pro" id = "triangulator_pro" value = "<?php echo $triangulator_pro?>" type = "hidden">
-        <input name="proj_id" id="proj_id" value="<?php echo $project_id; ?>" type="hidden">
-        <input name="type_url" id="type_url" value="<?php echo $type_url; ?>" type="hidden">
-        <input name="subtype_url" id="subtype_url" value="<?php echo $subtype_url; ?>" type="hidden">
+        <input name = "proj_id" id="proj_id" value="<?php echo $project_id; ?>" type="hidden">
+        <input name = "type_url" id="type_url" value="<?php echo $type_url; ?>" type="hidden">
+        <input name = "subtype_url" id="subtype_url" value="<?php echo $subtype_url; ?>" type="hidden">
+        <input name = "page" id="page" value="gmmanager" type="hidden">
     </form>
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -567,11 +509,19 @@ $AllMounters = $model->FindAllMounters($where);
         jQuery(document).ready(function () {
 
             let calc_data = JSON.parse('<?php echo json_encode($calc_data);?>');
-            console.log(calc_data);
             jQuery("[name = 'change_cut']").click(function(){
                 let id = jQuery(this).data('calc_id');
                 let data = calc_data[id];
-                console.log(data);
+                jQuery("#calc_id").val(id);
+                jQuery('#texture').val(data.texture);
+                jQuery("#color").val(data.color);
+                jQuery("#manufacturer").val(data.manufacturer);
+                jQuery("#n4").val(data.n4);
+                jQuery("#n5").val(data.n5);
+                jQuery("#n9").val(data.n9);
+                jQuery("#walls").val(data.walls);
+                jQuery("#width").val(JSON.stringify(data.widths));
+                jQuery("#form_url").submit();
             });
 
             jQuery('#btn_back').click(function(){
