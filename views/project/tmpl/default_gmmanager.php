@@ -9,20 +9,27 @@
 // No direct access
 defined('_JEXEC') or die;
 $jinput = JFactory::getApplication()->input;
+$user = JFactory::getUser();
+$userId = $user->get('id');
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
 if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', 'com_gm_ceiling')) {
     $canEdit = JFactory::getUser()->id == $this->item->created_by;
 }
+/*MODELS BLOCK*/
 $model_calculations = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-$calculations = $model_calculations->new_getProjectItems($this->item->id);
-foreach($calculations as $calc){
-    if(!empty($calc->n3)){
-        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);  
-    }
-}
+$model = Gm_ceilingHelpersGm_ceiling::getModel('project');
+$canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+$mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+/*______________*/
+
 $project_id = $this->item->id;
+$calculations = $model_calculations->new_getProjectItems($this->item->id);
 $type = $jinput->get('type', '', 'STRING');
 $subtype = $jinput->get('subtype', '', 'STRING');
+$client = $client_model->getClientById($this->item->id_client);
+$dealer = JFactory::getUser($client->dealer_id);
+$dealer_cl = $client_model->getClientById($dealer->associated_client);
 $type_url = '';
 if (!empty($type))
 {
@@ -34,18 +41,18 @@ if (!empty($subtype))
 {
     $subtype_url = "&subtype=$subtype";
 }
-
+/*ГЕНЕРАЦИЯ ПДФ*/
 Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
 Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
-
-$user = JFactory::getUser();
-$userId = $user->get('id');
-
-$model = Gm_ceilingHelpersGm_ceiling::getModel('project');
-
+foreach($calculations as $calc){
+    if(!empty($calc->n3)){
+        Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);  
+    }
+}
+/*_______________*/
 
 $arr_time = [];
 for($i=9;$i<17;$i++){
@@ -106,20 +113,6 @@ $AllMounters = $model->FindAllMounters($where);
 <h2 class="center">Просмотр проекта</h2>
 
 <?php if ($this->item) : ?>
-
-    <?php
-        $app = JFactory::getApplication();
-        $subtype = $app->input->getString('subtype', NULL);
-        $del_flag = 0;
-        $components_data = array();
-        $project_sum = 0;
-        $counter = 0;
-        $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
-        $client = $client_model->getClientById($this->item->id_client);
-        $dealer = JFactory::getUser($client->dealer_id);
-        $dealer_cl = $client_model->getClientById($dealer->associated_client);
-    ?>
-
     <div class="container">
         <div class="row">
             <div class="item_fields">
@@ -188,7 +181,7 @@ $AllMounters = $model->FindAllMounters($where);
                 <h4>Информация для менеджера</h4>
                 <table class="table">
                     <?php
-                    $mount_model = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+                    
                     $mount = $mount_model->getDataAll();
                     $common_canvases_sum = 0;
                     ?>
@@ -256,13 +249,17 @@ $AllMounters = $model->FindAllMounters($where);
                 <table class="table">
                     <?php $total_components_sum = 0;
                     //получаем прайс комплектующих
-                    $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+                    
                     $calc_data = [];
                     foreach ($calculations as $calculation) {
                         $total_components_sum += $calculation->components_sum;
                         if(!empty($calculation->n3)){
+                            $color_filter = "";
                             $canvas = $canvases_model->getFilteredItemsCanvas("a.id = $calculation->n3")[0];
-                            $canvases = $canvases_model->getFilteredItemsCanvas("texture_id = $canvas->texture_id AND manufacturer_id = $canvas->manufacturer_id and count>0");
+                            if(!empty($canvas->color_id)){
+                                $color_filter = "and color_id = $canvas->color_id";
+                            }
+                            $canvases = $canvases_model->getFilteredItemsCanvas("texture_id = $canvas->texture_id AND manufacturer_id = $canvas->manufacturer_id and count>0 $color_filter");
                             $widths = [];
                             foreach ($canvases as $item) {
                                 $widths[] = (object)array("width" =>$item->width*100,"price" => $item->price);    
