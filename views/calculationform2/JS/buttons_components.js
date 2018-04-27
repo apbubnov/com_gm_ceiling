@@ -520,7 +520,10 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
                 if (item.block_id == id_block && item.parent) {
                     item.children.forEach(function(item2){
                        let id = item2.block_id.replace("block_","");
-                       jQuery(`#jform_${id}_inside`).closest('.col-sm-4').toggle();
+                        if (jQuery(`#jform_${id}_inside`).closest('.col-sm-4').css("display") != "none") {
+                            jQuery(`#jform_${id}_inside`).closest('.col-sm-4').hide();
+                            toggle_color(jQuery(`#btn_${id}`));
+                        }
                     });
                 }
             });
