@@ -300,6 +300,14 @@ function create_captions(columns){
     result+=`</div>`;
     return result;
 }
+
+function  auto_replace (e){
+    if(e.keyCode == 44){
+        this.value += '.';
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+    }
+};
+
 function create_body(columns){
     result = `<div class="form-group" style="margin-bottom: 0em;">`;
     for(let i =0;i<columns.length;i++){

@@ -187,7 +187,7 @@
         <div class="row sm-margin-bottom">
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
-                <h6>Характеристики полотна</h6>
+                <h4>Характеристики полотна</h4>
             </div>
             <div class="col-sm-4"></div>
         </div>
