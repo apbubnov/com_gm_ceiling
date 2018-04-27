@@ -882,6 +882,9 @@
                     success: function(data){
                         if(api == 1){
                             jQuery("#sum_info").show();
+                            jQuery('html, body').animate({
+                                scrollTop: jQuery("#clear").offset().top
+                            }, 2000);
                         }
                         var html = "",
                         total_sum = parseFloat(data.total_sum),
