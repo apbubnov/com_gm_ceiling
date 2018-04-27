@@ -18,7 +18,7 @@ const help_block_n20 = '<span class="airhelp">В расчет на 1м разд�
 
 const help_block_n7 = '<span class="airhelp">В расчет считается добавочная стоимость на сложность крепления в плитку</span>';
 
-const help_block_n8 = '<span class="airhelp">В расчет считается добавочная стоимость на сложность крепления в керамогранит</span>';
+//const help_block_n8 = '<span class="airhelp">В расчет считается добавочная стоимость на сложность крепления в керамогранит</span>';
 
 const help_block_n18 = '<span class="airhelp">В расчет на 1м усиления входит:<br><ul style="text-align: left;"><li>1м бруса (40*50)</li><li>3 дюбеля (красн. 6*51)</li><li>3 белых кронштейна (15*12,5)</li><li>3 самореза (ГКД 4,2*102 окс)</li></ul>+ монтжаная работа по усилению стен</span>';
 
@@ -452,7 +452,6 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     if(!document.getElementById(col_id)){
         jQuery(`#${cont_id}`).after(cont);
         jQuery(`#${col_id}`).append(element); 
-
     }
     else{
         jQuery(`#${col_id}`).toggle();
@@ -517,7 +516,7 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
                 }
             });
         } else {
-               arr_blocks.forEach(function(item) {
+            arr_blocks.forEach(function(item) {
                 if (item.block_id == id_block && item.parent) {
                     item.children.forEach(function(item2){
                        let id = item2.block_id.replace("block_","");
