@@ -537,7 +537,6 @@
         if(document.getElementById('clear')){
           
             document.getElementById('clear').onclick = function(){
-                  console.log(calculation.id);
                 jQuery.ajax({
                     type: 'POST',
                     url: '/index.php?option=com_gm_ceiling&task=calculation.clearCalculation',
@@ -567,13 +566,11 @@
         var precalculation = '<?php echo $precalculation; ?>';
         jQuery("body").addClass("yellow_home");
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
-        console.log(canvases_data);
         let textures = [];
         let canvases_data_of_selected_texture = [];
         
         let canvas = JSON.parse('<?php echo $canvas;?>');
         let need_click = <?php echo $recalc;?>; 
-        console.log(calculation);
         fill_calc_data();
         var event_help_proccess = event_help.process();
         event_help();
@@ -609,7 +606,6 @@
                         proj_id: <?php echo $project_id; ?>
                     },
                     success: function(data){
-                        console.log(data);
                         location.href = '/index.php?option=com_gm_ceiling&task=mainpage';
                     },
                     error: function(data){
@@ -795,7 +791,6 @@
                 need_mount = 1;
             }
             if (!calculate_button.hasClass("loading")) {
-                console.log(calculate_button);
                 calculate_button.addClass("loading");
                 calculate_button.find("span.static").hide();
                 calculate_button.find("span.loading").show();
@@ -817,7 +812,6 @@
                         discount_price = parseFloat(total_sum) * (70 / 100);
                         mount_price  = parseFloat(data.mounting_sum);
                         discount_without  = parseFloat(total_sum - mount_price) * (70 / 100);
-                        console.log(data);
                         jQuery("#result_block").show();
                         jQuery("#total_price").text( total_sum.toFixed(0) );
                         if (api == 1) {
