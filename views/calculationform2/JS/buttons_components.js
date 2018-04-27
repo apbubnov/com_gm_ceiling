@@ -537,17 +537,22 @@ function in_array(array,value){
     return result;
 }
 
-function open_general_blocks(){
+function open_general_blocks() {
     let arr_parent = [];
     let btn_name;
     console.log(calculation);
     for(let i = Object.keys(calculation).length;i--;){
-        if(!empty(calculation[Object.keys(calculation)[i]])) {
-            btn_name = get_parent(Object.keys(calculation)[i]);
-            if(btn_name && !in_array(arr_parent,btn_name)){
+        if (calculation['n28'] == 0 || calculation['n28'] == 1 || calculation['n28'] == 2) {
+            btn_name = get_parent('n28');
+            if (btn_name && !in_array(arr_parent,btn_name)){
                arr_parent.push(btn_name);  
             }
-        }
+        } else if (!empty(calculation[Object.keys(calculation)[i]])) {
+            btn_name = get_parent(Object.keys(calculation)[i]);
+            if (btn_name && !in_array(arr_parent,btn_name)){
+               arr_parent.push(btn_name);  
+            }
+        } 
     }
     arr_parent.forEach(function(item){
         jQuery(`#${item}`).trigger("click");        
@@ -558,7 +563,7 @@ function get_parent(n) {
     let result;
     arr_blocks.forEach(function(item){
         if (item.children) {
-            for(let i = item.children.length;i--;){
+            for (let i = item.children.length;i--;){
                 if (item.children[i].block_id == `block_${n}`) {
                    result = item.btn_id;
                    break;
@@ -579,7 +584,7 @@ function open_blocks(){
                 jQuery(`#btn_need_mount`).trigger("click");
             }
         } else if (Object.keys(calculation)[i] == 'n28') {
-            if (calculation['n15'] == 0 || calculation['n15'] == 1 || calculation['n15'] == 2) {
+            if (calculation['n28'] == 0 || calculation['n28'] == 1 || calculation['n28'] == 2) {
                 jQuery(`#btn_n28`).trigger("click");
             }
         } else {
