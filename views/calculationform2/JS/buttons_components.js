@@ -456,8 +456,10 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     }
     else{
         jQuery(`#${col_id}`).toggle();
+        
     }
     toggle_color(jQuery(this));
+    
     if(!n_data[var_name]){
         if(need_ajax){
             if(var_name == 'n13'){
@@ -515,6 +517,14 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
                 }
             });
         } else {
+               arr_blocks.forEach(function(item) {
+                if (item.block_id == id_block && item.parent) {
+                    item.children.forEach(function(item2){
+                       let id = item2.block_id.replace("block_","");
+                       jQuery(`#jform_${id}_inside`).closest('.col-sm-4').toggle();
+                    });
+                }
+            });
             jQuery(`[data-parent = "${parent}"]`).toggle();
 
         }    
@@ -541,7 +551,6 @@ function in_array(array,value){
 function open_general_blocks() {
     let arr_parent = [];
     let btn_name;
-    console.log(calculation);
     for(let i = Object.keys(calculation).length;i--;){
         if (!empty(calculation[Object.keys(calculation)[i]])) {
             btn_name = get_parent(Object.keys(calculation)[i]);
@@ -785,7 +794,6 @@ function fill_calc_data(){
                     }  
                 break;
                 default:
-                    console.log(jQuery(`#jform_${Object.keys(calculation)[i]}`));
                     jQuery(`#jform_${Object.keys(calculation)[i]}`).val(calculation[Object.keys(calculation)[i]]);
            }
        }
