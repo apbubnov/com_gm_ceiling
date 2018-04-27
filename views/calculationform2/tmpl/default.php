@@ -165,12 +165,33 @@
         <div class="col-sm-4"></div>
         <div class="row sm-margin-bottom">
             <div class="col-sm-4">
-                <h3>Характеристики полотна</h3>		
+                <h3>Рассчетная страница</h3>		
             </div>
         </div>
         <div class="col-sm-4"></div>
     </div>
     <!-- Фактура -->
+    <div class="container for_api">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p>
+                <span class="caption_step">Шаг 1:</span> <strong>Выберите фактуру и производителя</strong> 
+                    </br>(рядом с каждой кнопкой в знаке вопроса подробно описано что входит в этот пункт)
+                </p>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+    <div class="container for_dealer">
+        <div class="row sm-margin-bottom">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <h6>Характеристики полотна</h6>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
     <div class="container">
         <div class="col-sm-4"></div>
         <div class="row sm-margin-bottom">
@@ -178,7 +199,7 @@
                 <table class="table_calcform" style="margin-bottom: 5px;">
                     <tr>
                         <td class="td_calcform1" style="text-align: left;">
-                            <label id="jform_n2-lbl" for="jform_n2">Выберите фактуру полотна</label>
+                            <label id="jform_n2-lbl" for="jform_n2"></label>
                         </td>
                         <td class="td_calcform2">
                             <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
@@ -225,7 +246,7 @@
                     <table class="table_calcform" style="margin-bottom: 5px;">
                         <tr>
                             <td class="td_calcform1" style="text-align: left;">
-                                <label id="jform_proizv-lbl" for="jform_proizv">Выберите производителя</label>
+                                <label id="jform_proizv-lbl" for="jform_proizv"></label>
                             </td>
                             <td class="td_calcform2">
                                 <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
@@ -245,6 +266,24 @@
         <div class="col-sm-4"></div>
     </div>
     <!-- начертить -->
+    <div class="container for_api">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p>
+                    <span class="caption_step">Шаг 2:</span> <strong>Начертите потолок</strong>
+                    </br>Начертите контур помещения, вид сверху.
+                    <span class="help" style="text-decoration: underline; color: #0275d8;">
+                        Пример
+                        <span class="airhelp">
+                            <img src="../../../../../images/ceiling.png" alt="Потолок" style="height: 320px;">
+                        </span>
+                    </span>
+                </p>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
     <div class="container">
         <div class="row sm-margin-bottom">
             <div class="col-sm-4"></div>
@@ -257,7 +296,6 @@
             <div class="col-sm-4"></div>
         </div>
     </div>
-
     <!-- S,P,углы -->
     <div class="container">
         <div id="data-wrapper" style = "display:none;">
@@ -305,6 +343,18 @@
             </div>
         </div>
     </div>
+    <div class="container for_api">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p>
+                    <span class="caption_step">Шаг 3:</span> <strong>Добавьте дополнительные работы</strong>
+                    </br>Добавьте дополнительные работы, которые необходимы в Вашем потолке, например, люстры, трубы и т.д.
+                </p>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
     <div id="add_mount_and_components" class="container">
         <div class="row">
             <div class="col-sm-4"></div>
@@ -315,6 +365,17 @@
         </div>
     </div>  
     <!-- Рассчитать -->
+    <div class="container for_api">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p style="margin-bottom: 0;">
+                    <span class="caption_step">Шаг 4:</span> <strong>Расчитайте стоимость своего потолка</strong>
+                </p>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
     <div class="container">
         <div class="row sm-margin-bottom" style="margin-top: 25px">
             <div class="col-sm-4"></div>
@@ -470,6 +531,7 @@
     </div>
 </form>
 <script>
+
     ///////////////////////
     Function.prototype.process= function(state){
         var process= function(){
@@ -490,7 +552,7 @@
     let dealer_id = "<?php echo $user->dealer_id?>";
     let n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
-    let  help_buttons = document.getElementsByClassName('help');
+     let  help_buttons = document.getElementsByClassName('help');
                 for(let i= help_buttons.length;i--;){
                     help_buttons[i].onmouseenter = function(){
                         jQuery(this.lastElementChild).show();
@@ -500,6 +562,13 @@
                     };
                 }
     };
+    /* jQuery("component-content").on("mouseover", "help", function () {
+        console.log(this);
+        $(this.children[0]).css("display", "block");
+    });
+    jQuery("component-content").on("mouseout", "help", function () {
+        $(this.children[0]).css("display", "none");
+    }); */
     jQuery('document').ready(function()
     {
         let api = "<?php echo $api;?>";
@@ -510,6 +579,18 @@
             jQuery(".btn_tar").hide();
             jQuery("#block_details").hide();
             jQuery(".btn_api").show();
+            jQuery(".for_api").show();
+            jQuery(".for_dealer").hide();
+            jQuery("#jform_n2-lbl").text("Выберите фактуру Вашего будущего потолка");
+            jQuery("#jform_proizv-lbl").html('Выберите производителя материала. Все представленные позиции прошли проверку в "Центре гигиены и эпидемиологии в Воронежской области". <a href="../../../../../files/Conclusion.pdf">Заключения</a>');
+            jQuery("#btn_add_components").html('<img src="../../../../../images/screwdriver.png" class="img_calcform"> Дополнительные работы');
+            
+        } else {
+            jQuery(".for_api").hide();
+            jQuery(".for_dealer").show();
+            jQuery("#jform_n2-lbl").text("Выберите фактуру полотна");
+            jQuery("#jform_proizv-lbl").text("Выберите производителя");
+            jQuery("#btn_add_components").html('<img src="../../../../../images/screwdriver.png" class="img_calcform"> Добавить монтаж и комплектующие');
         }
         if (device == "web") {
             jQuery("#back_to_gm").show();
