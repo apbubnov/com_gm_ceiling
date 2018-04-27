@@ -403,7 +403,7 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
                     });
                 }
             });
-            jQuery(`[data-parent = "${children}"]`).toggle();
+            jQuery(`[data-parent = "${parent}"]`).toggle();
         }    
     }
 });
