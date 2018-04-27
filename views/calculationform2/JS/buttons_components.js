@@ -574,17 +574,19 @@ function open_blocks(){
             if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
                 jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
             }
-        }
-        else{
+        } else if (Object.keys(calculation)[i] == 'mounting_sum') {
+            if(calculation[Object.keys(calculation)[i]]>0){
+                jQuery(`#btn_need_mount`).trigger("click");
+            }
+        } else if (Object.keys(calculation)[i] == 'n28') {
+            if (calculation['n15'] == 0 || calculation['n15'] == 1 || calculation['n15'] == 2) {
+                jQuery(`#btn_n28`).trigger("click");
+            }
+        } else {
             if(!empty(calculation[Object.keys(calculation)[i]]) ){
                 if(!empty(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0])){
                     jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
                 }
-            }
-        }
-        if(Object.keys(calculation)[i] == 'mounting_sum'){
-            if(calculation[Object.keys(calculation)[i]]>0){
-                jQuery(`#btn_need_mount`).trigger("click");
             }
         }
     }
