@@ -89,7 +89,8 @@ let arr_blocks = [
     {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_light_cptn",btn_id:"btn_oter_mount_cptn",btn_text:"Прочие работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
             {block_id:"block_n7",btn_cont_id:"btn_cont_n7",prev_id:"block_oter_mount_cptn",btn_id:"btn_n7",btn_text:"Метраж стен с плиткой",need_ajax : 0,kind_btn:"0", img: "tile.png", parent: "oter_mount_cptn"},
-            {block_id:"block_n8",btn_cont_id:"btn_cont_n7",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},            {block_id:"block_dop_krepezh",btn_cont_id:"btn_cont_dop_krepezh",prev_id:"block_n7",btn_id:"btn_dop_krepezh",btn_text:"Дополнительный крепеж",need_ajax : 0,kind_btn:"0", img: "screw.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n8",btn_cont_id:"btn_cont_n7",prev_id:"",btn_id:"",btn_text:"",need_ajax : 0,kind_btn:"2",parent: "oter_mount_cptn"},
+            {block_id:"block_dop_krepezh",btn_cont_id:"btn_cont_dop_krepezh",prev_id:"block_n7",btn_id:"btn_dop_krepezh",btn_text:"Дополнительный крепеж",need_ajax : 0,kind_btn:"0", img: "screw.png", parent: "oter_mount_cptn"},
             {block_id:"block_n24",btn_cont_id:"btn_cont_n24",prev_id:"block_dop_krepezh",btn_id:"btn_n24",btn_text:"Сложность доступа",need_ajax : 0,kind_btn:"0", img: "slozhnost.png", parent: "oter_mount_cptn"},
             {block_id:"block_extra_mounting",btn_cont_id:"btn_cont_extra_mounting",prev_id:"block_n24",btn_id:"btn_extra_mounting",btn_text:"Другие работы по монтажу",need_ajax : 0,kind_btn:"0", img: "hammer.png", parent: "oter_mount_cptn"},        
             {block_id:"block_extra_components",btn_cont_id:"btn_cont_extra_components",prev_id:"block_extra_mounting",btn_id:"btn_extra_components",btn_text:"Другие комплектующие",need_ajax : 0,kind_btn:"0", img: "drcomplect.png", parent: "oter_mount_cptn"},
@@ -784,6 +785,7 @@ function fill_calc_data(){
                     }  
                 break;
                 default:
+                    console.log(jQuery(`#jform_${Object.keys(calculation)[i]}`));
                     jQuery(`#jform_${Object.keys(calculation)[i]}`).val(calculation[Object.keys(calculation)[i]]);
            }
        }
