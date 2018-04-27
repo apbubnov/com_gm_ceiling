@@ -298,8 +298,6 @@ let extra_mounting =  create_block_with_divs(extra_mounting_src);
 
 //let details = create_single_input(1,'jform_details','jform[details]',"","Примечание","");
 
-
-
 /* контейнер и колонки */
 function create_container(cnt_id,col_id, parent){
     return `<div class = "container" id = "${cnt_id}" data-parent="${parent}">
@@ -542,6 +540,7 @@ function in_array(array,value){
 function open_general_blocks(){
     let arr_parent = [];
     let btn_name;
+    console.log(calculation);
     for(let i = Object.keys(calculation).length;i--;){
         if(!empty(calculation[Object.keys(calculation)[i]])) {
             btn_name = get_parent(Object.keys(calculation)[i]);
