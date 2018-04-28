@@ -221,7 +221,7 @@
     <input name="api" id="api" value="<?php echo $api_url; ?>"  type="hidden">
     <input name="latitude" id="latitude" value="<?php echo $lattitude_url; ?>" type="hidden">
     <input name="longitude" id="longitude" value="<?php echo $longitude_url; ?>" type="hidden">
-    <input name = "advt" id="advt" value="<?php echo $advt;?>" type = "hidden">
+    <input name = "advt" id="advt" value="<?php echo $advt_url;?>" type = "hidden">
     <input name = "user_url" id="user_url" value="<?php echo $user_url;?>" type = "hidden">
 </form>
 <form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
