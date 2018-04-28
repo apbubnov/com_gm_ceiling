@@ -599,8 +599,8 @@
 </form>
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <script>
-    let user_id = "<?php echo $user_id;?>";
-    let advt = "<?php echo $advt;?>"
+    var user_id = "<?php echo $user_id;?>";
+    var advt = "<?php echo $advt;?>"
 
     Function.prototype.process= function(state){
         var process= function(){
