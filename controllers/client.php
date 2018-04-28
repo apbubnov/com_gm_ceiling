@@ -283,4 +283,31 @@ class Gm_ceilingControllerClient extends JControllerLegacy
         }
 
 	}
+
+	public function checkingUser(){
+		try
+		{
+			$jinput = JFactory::getApplication()->input;
+            $phone = $jinput->get('phone', null, 'STRING');
+            $phone = preg_replace('/[\(\)\-\+\s]/', '', $phone);
+            $client_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
+            $client = $client_model->getItemsByPhoneNumber($phone, 1);
+            $user_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
+            $user = $user_model->getUserByAssociatedClient($client->id);
+            if(!empty($user->id)){
+            	$result = $user->id;
+            }
+            else{
+            	$result = 0;
+            }
+            die(json_encode($result));
+		}
+		catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
 }

@@ -668,11 +668,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
             </p>
         </div>
     </div>
-<?php
-    else:
-        echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
-    endif;
-?>
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
 
 <script language="JavaScript">

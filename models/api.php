@@ -29,7 +29,7 @@ class Gm_ceilingModelApi extends JModelList
         {
             $db = $this->getDbo();
             $arr_ids = [];
-
+            throw new Exception("$table");
             foreach ($data as $key => $value)
             {
                 if (empty($data[$key]->android_id))
@@ -49,6 +49,7 @@ class Gm_ceilingModelApi extends JModelList
                 $columns_values = '';
                 if ($count == 0)
                 {
+                    throw new Exception("$table");
                     foreach ($value as $column => $column_value)
                     {
                         if($column != "image" && $column != "cut_image"){
@@ -70,6 +71,7 @@ class Gm_ceilingModelApi extends JModelList
                 }
                 else
                 {
+                    
                     $query = $db->getQuery(true);
                     $query->update("`$table`");
                     foreach ($value as $column => $column_value)
@@ -109,6 +111,9 @@ class Gm_ceilingModelApi extends JModelList
                         $filename = md5("cut_sketch".$id);
                         file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/cut_images/' . $filename . ".svg", $data[$key]->cut_image);
                     }
+                }
+                if($table == 'rgzbn_gm_ceiling_calculations'){
+
                 }
             }
             return $arr_ids;
@@ -825,6 +830,10 @@ class Gm_ceilingModelApi extends JModelList
 
             $projectform_model = Gm_ceilingHelpersGm_ceiling::getModel('projectform', 'Gm_ceilingModel');
             $project = $projectform_model->save($project_data);
+            if(!empty($data->calc_id)){
+                $calculationModel = Gm_ceilingHelpersGm_ceiling::getModel('calculation');
+                $calculationModel->changeProjectId($data->calc_id, $project);
+            }
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
             $callback_model->save(date("Y-m-d H:i:s"), "Клиент заказал замер через гмпотолки. Уточнить данные", $client_id, 1);
             $result = [

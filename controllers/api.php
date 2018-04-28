@@ -391,6 +391,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if(!empty($_POST['rec_data'])){
                 $data = json_decode($_POST['rec_data']);
                 $result = $model->rec_to_measure($data);
+
                 die(json_encode($result));
             }
             else throw new Exception("Empty post data");

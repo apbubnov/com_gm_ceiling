@@ -18,7 +18,7 @@ const help_block_n20 = '<span class="airhelp">В расчет на 1м разд�
 
 const help_block_n7 = '<span class="airhelp">В расчет считается добавочная стоимость на сложность крепления в плитку</span>';
 
-const help_block_n8 = '<span class="airhelp">В расчет считается добавочная стоимость на сложность крепления в керамогранит</span>';
+//const help_block_n8 = '<span class="airhelp">В расчет считается добавочная стоимость на сложность крепления в керамогранит</span>';
 
 const help_block_n18 = '<span class="airhelp">В расчет на 1м усиления входит:<br><ul style="text-align: left;"><li>1м бруса (40*50)</li><li>3 дюбеля (красн. 6*51)</li><li>3 белых кронштейна (15*12,5)</li><li>3 самореза (ГКД 4,2*102 окс)</li></ul>+ монтжаная работа по усилению стен</span>';
 
@@ -123,8 +123,8 @@ let n28_src = {
     values : [
         {id:'jform_n28_2',value:2,text:"Стеновой багет Al"},
         {id:'jform_n28_1',value:1,text:"Потолочный багет Al"},
-        {id:'jform_n28',value:3,text:"Стеновой багет ПВХ"},
-        {id:'jform_n28_3',value:0,text:"Без багета",selected:true}
+        {id:'jform_n28',value:0,text:"Стеновой багет ПВХ"},
+        {id:'jform_n28_3',value:3,text:"Без багета",selected:true}
     ]
 };
 let n28 =  create_radios_group(n28_src);
@@ -452,7 +452,6 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     if(!document.getElementById(col_id)){
         jQuery(`#${cont_id}`).after(cont);
         jQuery(`#${col_id}`).append(element); 
-
     }
     else{
         jQuery(`#${col_id}`).toggle();
@@ -517,11 +516,14 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
                 }
             });
         } else {
-               arr_blocks.forEach(function(item) {
+            arr_blocks.forEach(function(item) {
                 if (item.block_id == id_block && item.parent) {
                     item.children.forEach(function(item2){
                        let id = item2.block_id.replace("block_","");
-                       jQuery(`#jform_${id}_inside`).closest('.col-sm-4').toggle();
+                        if (jQuery(`#jform_${id}_inside`).closest('.col-sm-4').css("display") != "none") {
+                            jQuery(`#jform_${id}_inside`).closest('.col-sm-4').hide();
+                            toggle_color(jQuery(`#btn_${id}`));
+                        }
                     });
                 }
             });
@@ -552,7 +554,7 @@ function open_general_blocks() {
     let arr_parent = [];
     let btn_name;
     for(let i = Object.keys(calculation).length;i--;){
-        if (!empty(calculation[Object.keys(calculation)[i]])) {
+        if (!empty(calculation[Object.keys(calculation)[i]]) || (Object.keys(calculation)[i] == "n28" && calculation[Object.keys(calculation)[i]] == 0)){
             btn_name = get_parent(Object.keys(calculation)[i]);
             if (btn_name && !in_array(arr_parent,btn_name)){
                arr_parent.push(btn_name);  

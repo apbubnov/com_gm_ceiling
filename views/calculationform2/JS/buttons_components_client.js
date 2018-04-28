@@ -1,4 +1,3 @@
-"use strict";
 const help_block_n6 = '<span class="airhelp"><img src="/images/vstavka.jpg" width="280"/><br>Между стеной и натяжным потолком после монтажа остается технологический зазор 5мм, который закрывается декоративной вставкой.<br>В расчет входит вставка по периметру + монтажная работа по установке вставки</span>';
 
 const help_block_n12 = '<span class="airhelp">В расчет входит:<ul style="text-align: left;"><li>3 самореза (ГДК 3,5*51)</li><li>3 дюбеля (красн. 6*51)</li><li>8 саморезов (п/сф 305*9,5 цинк)</li><li>1 шуруп кольцо (6*40)</li><li>2 клеммные пары</li><li>1 круглое кольцо (50)</li><li>1 платформа под люстру (тарелка)</li><li>4 подвеса прямых (П 60 (0,8))</li><li>0,5м провода (ПВС 2*0,75)</li></ul>+ монтажная работа по установке люстр</span>';
@@ -40,10 +39,10 @@ let arr_blocks = [
     },
     {block_id:"block_oter_mount_cptn",btn_cont_id:"head_other_mount",prev_id:"block_light_cptn",btn_id:"btn_oter_mount_cptn",btn_text:"Прочие работы",need_ajax : 0,kind_btn:"1", parent: "btn_add_components",
         children: [
-            {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_oter_mount_cptn",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0,kind_btn:"0", img: "firealarm.png", parent: "oter_mount_cptn"},
+            {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_oter_mount_cptn",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0,kind_btn:"0", img: "height.png", parent: "oter_mount_cptn"},
+            {block_id:"block_n21",btn_cont_id:"btn_cont_n21",prev_id:"block_height",btn_id:"btn_n21",btn_text:"Пожарная сигнализация",need_ajax : 0,kind_btn:"0", img: "firealarm.png", parent: "oter_mount_cptn"},
             {block_id:"block_n22",btn_cont_id:"btn_cont_n22",prev_id:"block_n21",btn_id:"btn_n22",btn_text:"Вентиляция",need_ajax : 1,kind_btn:"0", img: "hood.png", parent: "oter_mount_cptn"},
             {block_id:"block_n29",btn_cont_id:"btn_cont_n29",prev_id:"block_n22",btn_id:"btn_n29",btn_text:"Переход уровня",need_ajax : 1,kind_btn:"0", img: "perehod.png", parent: "oter_mount_cptn"},
-            {block_id:"block_height",btn_cont_id:"btn_cont_height",prev_id:"block_n29",btn_id:"btn_height",btn_text:"Высота помещения",need_ajax : 0,kind_btn:"0", img: "height.png", parent: "oter_mount_cptn"},
         ]
     },
     {block_id:"block_need_mount",btn_cont_id:"btn_cont_need_mount",prev_id:"block_oter_mount_cptn",btn_id:"btn_need_mount",btn_text:"Отменить монтаж",need_ajax : 0,kind_btn:"1", img: "nomounting.png", parent: "btn_add_components"},
@@ -301,6 +300,14 @@ function create_captions(columns){
     result+=`</div>`;
     return result;
 }
+
+function  auto_replace (e){
+    if(e.keyCode == 44){
+        this.value += '.';
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+    }
+};
+
 function create_body(columns){
     result = `<div class="form-group" style="margin-bottom: 0em;">`;
     for(let i =0;i<columns.length;i++){
@@ -325,12 +332,12 @@ jQuery(".component-content").on("click", ".add_fields", function () {
     if(!document.getElementById(col_id)){
         jQuery(`#${cont_id}`).after(cont);
         jQuery(`#${col_id}`).append(element); 
-
     }
     else{
         jQuery(`#${col_id}`).toggle();
     }
     toggle_color(jQuery(this));
+
     if(!n_data[var_name]){
         if(need_ajax){
             if(var_name == 'n13'){
@@ -356,13 +363,14 @@ jQuery(".component-content").on("click", ".add_fields", function () {
         el.addEventListener("keypress",auto_replace);
     });
 }); 
+
 jQuery(".component-content").on("click", ".btn_calc", function () {
     let id_block = jQuery(this).closest("button").attr("data-cont_id");
-    let children = id_block.replace("block_", "");
-    if (children == 'need_mount') {
-        let col_id = `jform_${children}_inside`;
-        let cont =  create_container("",col_id, children);
-        let element = eval(children);
+    let parent = id_block.replace("block_", "");
+    if (parent == 'need_mount') {
+        let col_id = `jform_${parent}_inside`;
+        let cont =  create_container("",col_id, parent);
+        let element = eval(parent);
         if(!document.getElementById(col_id)){
             jQuery(`#${id_block}`).after(cont);
             jQuery(`#${col_id}`).append(element); 
@@ -378,19 +386,27 @@ jQuery(".component-content").on("click", ".btn_calc", function () {
             jQuery("#with_mount").attr("checked",true);
         }    
     } else {
-        console.log(children);
-        if (jQuery(`[data-parent = "${children}"]`).length < 1) {
-            console.log("тут");
+        if (jQuery(`[data-parent = "${parent}"]`).length < 1) {
             arr_blocks.forEach(function(item) {
-                if (item.block_id == id_block && item.children) {
+                if (item.block_id == id_block && item.parent) {
                     item.children.forEach(function(item2){
                         generate_block(item2);
                     });
                 }
             });
         } else {
-            console.log(`[data-parent = "${children}"]`);
-            jQuery(`[data-parent = "${children}"]`).toggle();
+            arr_blocks.forEach(function(item) {
+                if (item.block_id == id_block && item.parent) {
+                    item.children.forEach(function(item2){
+                       let id = item2.block_id.replace("block_","");
+                        if (jQuery(`#jform_${id}_inside`).closest('.col-sm-4').css("display") != "none") {
+                            jQuery(`#jform_${id}_inside`).closest('.col-sm-4').hide();
+                            toggle_color(jQuery(`#btn_${id}`));
+                        }
+                    });
+                }
+            });
+            jQuery(`[data-parent = "${parent}"]`).toggle();
         }    
     }
 });

@@ -398,4 +398,23 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             throw new Exception('Ошибка!', 500);
         }
     }
+
+    function verify(){
+        try{
+            $jinput = JFactory::getApplication()->input;
+            $Password = $jinput->get('pass', null, 'STRING');
+            $user_id = $jinput->get('id', null, 'STRING');
+            $user = JFactory::getUser($user_id);
+            $verifyPass = JUserHelper::verifyPassword($Password, $user->password, $user->id);
+
+            die(json_encode((object)array("verification" => $verifyPass,"user_id" => $user_id)));
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+    }
 }

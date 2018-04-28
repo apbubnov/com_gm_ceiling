@@ -17,7 +17,13 @@
 
     echo parent::getPreloaderNotJS();
 
-    $user = JFactory::getUser();
+    $user_id = $jinput->get('user_id','',"STRING");
+    if(!empty($user_id)){
+        $user = JFactory::getUser($user_id);
+    }
+    else{
+        $user = JFactory::getUser();
+    }
     $user_groups = $user->groups;
     $triangulator_pro = 0;
     if(in_array('16',$user_groups)){
@@ -33,7 +39,7 @@
     $device = $jinput->get('device','',"STRING");
     $lattitude = $jinput->get('latitude','',"STRING");
     $longitude = $jinput->get('longitude','',"STRING");
-
+    $advt = $jinput->get('advt','',"STRING");
     $type_url = '';
     if (!empty($type))
     {
@@ -75,8 +81,22 @@
     {
         $longitude_url = "&longitude=$longitude";
     }
-    $ll = (!empty($lattitude) && !empty($longitude)) ? "$lattitude;$longitude" :"";
-    $details = "device: $device;$ll";
+
+    $advt_url = '';
+    if (!empty($advt))
+    {
+        $advt_url = "&advt=$advt";
+    }
+    $user_url = '';
+    if (!empty($user_id))
+    {
+        $user_url = "&user_id=$user_id";
+    }
+    if($api ==1){
+        $ll = (!empty($lattitude) && !empty($longitude)) ? "$lattitude;$longitude" :"";
+        $details = "device: $device;$ll";
+    }
+  
 
     /*____________________Models_______________________  */
     $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel("canvases");
@@ -135,6 +155,49 @@
         <p><button type="button" id="hide_redactor" class="btn btn-primary">Нет</button>
         <button type="button" id="show_redactor" class="btn btn-primary">Да</button></p>
     </div>
+    <div id="modal_window_rec_to_mesure" class="modal_window" style="float: center">
+                <p><strong>Записаться на замер</strong></p>
+                <p id="fio_cont">
+                    <label>ФИО:</label>
+                    <input type="text" id="fio" class = "input-gm" style = "float:right;">
+                </p>
+                <p id="phone_cont"> 
+                    <label>Телефон:</label>
+                    <input type="text" id="phone" class = "input-gm" style = "float:right;">
+                </p>
+                <p>
+                    <label>Адрес:</label>
+                    <input type="text" id="address" class = "input-gm" style = "float:right;">
+                </p>
+                <p>
+                    <label>Дом:</label>
+                    <input type="text" id="home" class = "input-gm" style = "float:right;">
+                </p>
+                <p>
+                    <label>Квартира:</label>
+                    <input type="text" id="appartment" class = "input-gm" style = "float:right;">
+                </p>
+                <p>
+                    <label>Дата:</label>
+                    <input type="date" id="rec_date" class = "input-gm" style = "float:right;">
+                </p>
+                <div id="rec_time_container" style="display:none;">
+                    <p>
+                        <label>Время:</label>
+                        <select  id="rec_time" class = "input-gm" style = "float:right;"></select>
+                    </p>
+                </div>
+                <p><button type="button" id="rec_to_measure" class="btn btn-primary">Записаться</button></p>
+    </div>
+    <div id="modal_window_authorisation" class="modal_window" >
+                <p><strong>Похоже, у Вас уже есть аккаунт, пожалуйста авторизуйтесь</strong></p>
+                <p>Логин:</p>
+                <p><input type="text" id="login"></p>
+                <p>Пароль:</p>
+                <p><input type="text" id="pass"></p>
+                <p>Введеные ранее данные об адресе и дате замера сохранились</p>
+                <p><button type="button" id="rec_auth" class="btn btn-primary">Записаться на замер</button></p>
+    </div>
 </div>
 <!-- форма для чертилки-->
 <form method="POST" action="/sketch/index.php" style="display: none" id="form_url">
@@ -158,6 +221,8 @@
     <input name="api" id="api" value="<?php echo $api_url; ?>"  type="hidden">
     <input name="latitude" id="latitude" value="<?php echo $lattitude_url; ?>" type="hidden">
     <input name="longitude" id="longitude" value="<?php echo $longitude_url; ?>" type="hidden">
+    <input name = "advt" id="advt" value="<?php echo $advt;?>" type = "hidden">
+    <input name = "user_url" id="user_url" value="<?php echo $user_url;?>" type = "hidden">
 </form>
 <form id="form-calculation" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=calculation.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
     <input id="jform_id" type="hidden" name="jform[id]" value="<?php echo $calculation_id;?>"/> 
@@ -165,12 +230,33 @@
         <div class="col-sm-4"></div>
         <div class="row sm-margin-bottom">
             <div class="col-sm-4">
-                <h3>Характеристики полотна</h3>		
+                <h3>Рассчетная страница</h3>		
             </div>
         </div>
         <div class="col-sm-4"></div>
     </div>
     <!-- Фактура -->
+    <div class="container for_api">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p>
+                <span class="caption_step">Шаг 1:</span> <strong>Выберите фактуру и производителя</strong> 
+                    </br>(рядом с каждой кнопкой в знаке вопроса подробно описано что входит в этот пункт)
+                </p>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+    <div class="container for_dealer">
+        <div class="row sm-margin-bottom">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <h4>Характеристики полотна</h4>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
     <div class="container">
         <div class="col-sm-4"></div>
         <div class="row sm-margin-bottom">
@@ -178,7 +264,7 @@
                 <table class="table_calcform" style="margin-bottom: 5px;">
                     <tr>
                         <td class="td_calcform1" style="text-align: left;">
-                            <label id="jform_n2-lbl" for="jform_n2">Выберите фактуру полотна</label>
+                            <label id="jform_n2-lbl" for="jform_n2"></label>
                         </td>
                         <td class="td_calcform2">
                             <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
@@ -225,7 +311,7 @@
                     <table class="table_calcform" style="margin-bottom: 5px;">
                         <tr>
                             <td class="td_calcform1" style="text-align: left;">
-                                <label id="jform_proizv-lbl" for="jform_proizv">Выберите производителя</label>
+                                <label id="jform_proizv-lbl" for="jform_proizv"></label>
                             </td>
                             <td class="td_calcform2">
                                 <div class="btn-primary help" style="padding: 5px 10px; border-radius: 5px; height: 38px; width: 38px; margin-left: 5px;">
@@ -245,6 +331,24 @@
         <div class="col-sm-4"></div>
     </div>
     <!-- начертить -->
+    <div class="container for_api">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p>
+                    <span class="caption_step">Шаг 2:</span> <strong>Начертите потолок</strong>
+                    </br>Начертите контур помещения, вид сверху.
+                    <span class="help" style="text-decoration: underline; color: #0275d8;">
+                        Пример
+                        <span class="airhelp">
+                            <img src="../../../../../images/ceiling.png" alt="Потолок" style="height: 320px;">
+                        </span>
+                    </span>
+                </p>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
     <div class="container">
         <div class="row sm-margin-bottom">
             <div class="col-sm-4"></div>
@@ -257,7 +361,6 @@
             <div class="col-sm-4"></div>
         </div>
     </div>
-
     <!-- S,P,углы -->
     <div class="container">
         <div id="data-wrapper" style = "display:none;">
@@ -305,6 +408,18 @@
             </div>
         </div>
     </div>
+    <div class="container for_api">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p>
+                    <span class="caption_step">Шаг 3:</span> <strong>Добавьте дополнительные работы</strong>
+                    </br>Добавьте дополнительные работы, которые необходимы в Вашем потолке, например, люстры, трубы и т.д.
+                </p>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
     <div id="add_mount_and_components" class="container">
         <div class="row">
             <div class="col-sm-4"></div>
@@ -315,6 +430,17 @@
         </div>
     </div>  
     <!-- Рассчитать -->
+    <div class="container for_api">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <p style="margin-bottom: 0;">
+                    <span class="caption_step">Шаг 4:</span> <strong>Расчитайте стоимость своего потолка</strong>
+                </p>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
     <div class="container">
         <div class="row sm-margin-bottom" style="margin-top: 25px">
             <div class="col-sm-4"></div>
@@ -467,9 +593,14 @@
     <div class="btn_api" style="width:100%; text-align:center;">
         <button class="btn btn-primary" type="button" id = "clear">Очистить</button>
         <button class="btn btn-primary" type="button" id = "back_to_gm" style="display: none;">Вернуться</button>
+        <button class="btn btn-primary" type="button" id = "show_rec" style="display: none;">Записаться на замер</button>
+        <button class="btn btn-primary" type="button" id = "show_run" style="display: none;">Запустить в производство</button>
     </div>
 </form>
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <script>
+    let user_id = "<?php echo $user_id;?>";
+    let advt = "<?php echo $advt;?>"
     ///////////////////////
     Function.prototype.process= function(state){
         var process= function(){
@@ -488,9 +619,10 @@
     };
     let calculation = JSON.parse('<?php echo json_encode($calculation);?>');
     let dealer_id = "<?php echo $user->dealer_id?>";
+    let data;
     let n6_colors = JSON.parse('<?php echo $color_data;?>');
     var event_help = function(){
-    let  help_buttons = document.getElementsByClassName('help');
+     let  help_buttons = document.getElementsByClassName('help');
                 for(let i= help_buttons.length;i--;){
                     help_buttons[i].onmouseenter = function(){
                         jQuery(this.lastElementChild).show();
@@ -500,8 +632,19 @@
                     };
                 }
     };
+    /* jQuery("component-content").on("mouseover", "help", function () {
+        console.log(this);
+        $(this.children[0]).css("display", "block");
+    });
+    jQuery("component-content").on("mouseout", "help", function () {
+        $(this.children[0]).css("display", "none");
+    }); */
     jQuery('document').ready(function()
     {
+        if(user_id){
+            jQuery("#fio_cont").hide();
+            jQuery("#phone_cont").hide();
+        }
         let api = "<?php echo $api;?>";
         let device = "<?php echo $device ?>";
         if (api == 1) {
@@ -510,6 +653,19 @@
             jQuery(".btn_tar").hide();
             jQuery("#block_details").hide();
             jQuery(".btn_api").show();
+            jQuery(".for_api").show();
+            jQuery("#show_rec").show();
+            jQuery(".for_dealer").hide();
+            jQuery("#jform_n2-lbl").text("Выберите фактуру Вашего будущего потолка");
+            jQuery("#jform_proizv-lbl").html('Выберите производителя материала. Все представленные позиции прошли проверку в "Центре гигиены и эпидемиологии в Воронежской области". <a href="../../../../../files/Conclusion.pdf">Заключения</a>');
+            jQuery("#btn_add_components").html('<img src="../../../../../images/screwdriver.png" class="img_calcform"> Дополнительные работы');
+            
+        } else {
+            jQuery(".for_api").hide();
+            jQuery(".for_dealer").show();
+            jQuery("#jform_n2-lbl").text("Выберите фактуру полотна");
+            jQuery("#jform_proizv-lbl").text("Выберите производителя");
+            jQuery("#btn_add_components").html('<img src="../../../../../images/screwdriver.png" class="img_calcform"> Добавить монтаж и комплектующие');
         }
         if (device == "web") {
             jQuery("#back_to_gm").show();
@@ -562,7 +718,170 @@
                 }); 
             }
         }
+        /*Rec to measure*/
+        jQuery("#show_rec").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_rec_to_mesure").show("slow");
+        });
 
+        jQuery("#rec_date").change(function(){
+            jQuery.ajax({
+                    type: 'POST',
+                    url: '/index.php?option=com_gm_ceiling&task=api.getMeasureTimes',
+                    dataType: "json",
+                    timeout: 20000,
+                    data: {
+                        date: {"date":this.value}
+                    },
+                    success: function(data){
+                        data.forEach(function(item){
+                            let option = jQuery("<option></option>")
+                                    .attr("value", item)
+                                    .text(item);
+                                jQuery("#rec_time").append(option);
+                          });
+                        jQuery("#rec_time_container").show();
+                    },
+                    error: function(data){
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+            });
+        });
+        jQuery("#rec_to_measure").click(function(){
+            let address = `${jQuery("#address").val()} , дом: ${jQuery("#home").val()} , квартира:${jQuery("#appartment").val()}`;
+            let fio = jQuery("#fio").val();
+            let date_time = `${jQuery("#rec_date").val()} ${jQuery("#rec_time").val()}`;
+            let phone = jQuery("#phone").val();
+            data = {"user_id":user_id,"name":fio,"phone":phone,"address":address,"date_time":date_time,"advt":advt,"calc_id":calculation.id};
+            if(user_id){
+                console.log(user_id);
+                record_to_mesure(data);
+            }
+            else{
+                check_user(phone);
+            }
+
+        });
+
+        function record_to_mesure(data){
+            jQuery.ajax({
+                type: 'POST',
+                url: '/index.php?option=com_gm_ceiling&task=api.recToMeasure',
+                dataType: "json",
+                timeout: 20000,
+                data: {
+                    rec_data: JSON.stringify(data)
+                },
+                success: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "success",
+                        text: "Вы успешно записались на замер. В рабочее время с Вами свяжется менеджер для уточнения инормации!"
+                    });
+                },
+                error: function(data){
+                    var n = noty({
+                        theme: 'relax',
+                        timeout: 2000,
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка сервера"
+                    });
+                }
+            });
+        }
+
+        function verify_password(id,pass){
+            jQuery.ajax({
+                    type: 'POST',
+                    url: '/index.php?option=com_gm_ceiling&task=big_smeta.verify',
+                    dataType: "json",
+                    timeout: 20000,
+                    data: {
+                        id: id,
+                        pass:pass
+                    },
+                    success: function(result){
+                       if(result.verification == true){
+                        data["user_id"] = result.user_id;
+                        console.log(data);
+                        record_to_mesure(data);
+                       }
+                       else{
+                            var n = noty({
+                                theme: 'relax',
+                                timeout: 2000,
+                                layout: 'center',
+                                maxVisible: 5,
+                                type: "error",
+                                text: "Неверный пароль!"
+                            });
+                       }
+                    },
+                    error: function(data){
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+            });
+        }
+
+        function check_user(phone){
+            jQuery.ajax({
+                    type: 'POST',
+                    url: '/index.php?option=com_gm_ceiling&task=client.checkingUser',
+                    dataType: "json",
+                    timeout: 20000,
+                    data: {
+                        phone: phone
+                    },
+                    async: false,
+                    success: function(data){
+                        if(!data){
+                            console.log('NF');
+                            record_to_mesure(data);
+                        }
+                        else{
+                            jQuery("#modal_window_rec_to_mesure").hide();
+                            jQuery("#modal_window_authorisation").show(); 
+                            jQuery("#rec_auth").attr("auth_data",data);
+                        }
+                    },
+                    error: function(data){
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка сервера"
+                        });
+                    }
+            });
+        }
+
+        jQuery("#rec_auth").click(function(){
+            console.log(jQuery(this).attr('auth_data'));
+            verify_password(jQuery(this).attr('auth_data'),jQuery("#pass").val());
+        });
+        /*_________________*/
         var precalculation = '<?php echo $precalculation; ?>';
         jQuery("body").addClass("yellow_home");
         let canvases_data = JSON.parse('<?php echo $canvases_data;?>');
@@ -671,7 +990,7 @@
             jQuery.each(canvases_data_of_selected_texture, function(key,value){
                 if (value.texture_id === select_texture && value.color_id === select_color)
                 {
-                    let proizv = value.name + " " + value.country;
+                    let proizv = value.name;
                     if(!in_array(manufacturers, proizv)){
                         manufacturers.push(proizv);
                         let option = jQuery("<option></option>")
@@ -801,6 +1120,9 @@
                     success: function(data){
                         if(api == 1){
                             jQuery("#sum_info").show();
+                            jQuery('html, body').animate({
+                                scrollTop: jQuery("#clear").offset().top
+                            }, 2000);
                         }
                         var html = "",
                         total_sum = parseFloat(data.total_sum),
@@ -1021,4 +1343,28 @@
         }
         setTimeout(click_after_recalc,500);
     });
+
+   // Подсказки по городам
+    ymaps.ready(init);
+    var Data = {};
+    function init() {
+        // Подключаем поисковые подсказки к полю ввода.
+        var suggestView = new ymaps.SuggestView('address');
+        input = jQuery('#address');
+
+        suggestView.events.add('select', function (e) {
+            var s = e.get('item').value.replace('Россия, ','');
+            input.val(s);
+        });
+
+        Data.ProjectInfoYMaps = jQuery("#address").siblings("ymaps");
+        Data.ProjectInfoYMaps.click(hideYMaps);
+    }
+
+    function hideYMaps() {
+        setTimeout(function () {
+            Data.ProjectInfoYMaps.hide();
+            jQuery("#house").focus();
+        }, 75);
+    }
 </script>
