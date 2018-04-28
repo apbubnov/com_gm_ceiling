@@ -601,7 +601,7 @@
 <script>
     let user_id = "<?php echo $user_id;?>";
     let advt = "<?php echo $advt;?>"
-    ///////////////////////
+
     Function.prototype.process= function(state){
         var process= function(){
             var args= arguments;
