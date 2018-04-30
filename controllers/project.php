@@ -1088,8 +1088,8 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					$calculations = $calculationsModel->new_getProjectItems($project_id);
 					$components_data = array();
 					$project_sum = 0;
-					foreach($include_calculation as $calculation){
-						if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation->id);
+					foreach($include_calculation as $calculation){                        
+						if($smeta == 1) $tmp = $calculationsModel->updateComponents_sum($calculation);
 						$calculations = $calculationsModel->new_getProjectItems($calculation);
 						$from_db = 1;
 						$save = 0;
