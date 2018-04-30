@@ -490,21 +490,23 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                 dealer_price_sort: $("#dealer_price").data("sort")
             },
             success: function(data){
-                console.log(data);
+                //console.log(data);
                 var tbody = document.getElementById('tbody_dealers');
                 tbody.innerHTML = '';
                 var html = '';
                 var color;
-                for(var i in data)
+                var d_length = data.length;
+                for(var i = 0, data_i; i < d_length; i++)
                 {
-                    for(var key in data[i])
+                    data_i = data[i];
+                    for(var key in data_i)
                     {
-                        if (data[i][key] == null)
+                        if (data_i[key] == null)
                         {
-                            data[i][key] = '-';
+                            data_i[key] = '-';
                         }
                     }
-                    if(data[i].kp_cnt + data[i].cmnt_cnt + data[i].inst_cnt == 0 )
+                    if(data_i.kp_cnt + data_i.cmnt_cnt + data_i.inst_cnt == 0 )
                     {
                         color = "bgcolor=\"#d3d3f9\"";
                     }
@@ -512,15 +514,15 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                     {
                         color = '';
                     }
-                    html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data[i].id + '">';
-                    html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data[i].id + '" data-dealer_id="' + data[i].dealer_id + '"></td>';
-                    html += '<td>' + data[i].client_name + '</td>';
-                    html += '<td>' + data[i].min_canvas_price + ' руб. / ' + data[i].min_component_price + ' руб.</td>';
-                    html += '<td>' + data[i].client_contacts + '</td>';
-                    html += '<td>' + data[i].city + '</td>';
-                    html += '<td>' + data[i].created + '</td>';
-                    html += '<td>' + data[i].manager_name + '</td>';
-                    if(data[i].dealer_type == 6){
+                    html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
+                    html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';
+                    html += '<td>' + data_i.client_name + '</td>';
+                    html += '<td>' + data_i.min_canvas_price + ' руб. / ' + data_i.min_component_price + ' руб.</td>';
+                    html += '<td>' + data_i.client_contacts + '</td>';
+                    html += '<td>' + data_i.city + '</td>';
+                    html += '<td>' + data_i.created + '</td>';
+                    html += '<td>' + data_i.manager_name + '</td>';
+                    if(data_i.dealer_type == 6){
                         html += '<td><font face="webdings"> @ </font></td>';
                     }
                     else{
@@ -532,35 +534,33 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                 html = '';
                 if (Object.keys(managers).length === 0)
                 {
-                    for(var i in data)
+                    for(var i = 0, data_i; i < d_length; i++)
                     {
-                        if (!(data[i].manager_id in managers) && data[i].manager_id != '-')
+                        data_i = data[i];
+                        if (!(data_i.manager_id in managers) && data_i.manager_id != '-')
                         {
-                            managers[data[i].manager_id] = data[i].manager_name;
+                            managers[data_i.manager_id] = data_i.manager_name;
+                            jQuery('#filter_manager')
+                            .append(jQuery("<option></option>")
+                                .attr("value",data_i.manager_id)
+                                .text(data_i.manager_name));
                         }
                     }
-                    jQuery.each(managers, function(key, value) {
-                        jQuery('#filter_manager')
-                            .append(jQuery("<option></option>")
-                                .attr("value",key)
-                                .text(value));
-                    });
                 }
                 if (Object.keys(cities).length === 0)
                 {
-                    for(var i in data)
+                    for(var i = 0, data_i; i < d_length; i++)
                     {
-                        if (!(data[i].city in cities) && data[i].city != '-')
+                        data_i = data[i];
+                        if (!(data_i.city in cities) && data_i.city != '-')
                         {
-                            cities[data[i].city] = data[i].city;
+                            cities[data_i.city] = data_i.city;
+                            jQuery('#filter_city')
+                            .append(jQuery("<option></option>")
+                                .attr("value",data_i.city)
+                                .text(data_i.city));
                         }
                     }
-                    jQuery.each(cities, function(key, value) {
-                        jQuery('#filter_city')
-                            .append(jQuery("<option></option>")
-                                .attr("value",key)
-                                .text(value));
-                    });
                 }
             },
             dataType: "json",
