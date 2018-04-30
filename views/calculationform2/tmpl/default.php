@@ -1,4 +1,8 @@
 <?php
+    if ($_SERVER['SERVER_NAME'] == 'calc.gm-vrn.ru')
+    {
+        require_once('metrika.php');
+    }
     defined('_JEXEC') or die;
     JHtml::_('behavior.keepalive');
     //JHtml::_('behavior.tooltip');
