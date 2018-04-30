@@ -342,7 +342,7 @@
                 <p>
                     <span class="caption_step">Шаг 2:</span> <strong>Начертите потолок</strong>
                     </br>Начертите контур помещения, вид сверху.
-                    <span class="help" style="text-decoration: underline; color: #0275d8;">
+                    <span class="help" style="text-decoration: underline; color: #0275d8; padding: 0 0 0 5px;">
                         Пример
                         <span class="airhelp">
                             <img src="../../../../../images/ceiling.png" alt="Потолок" style="height: 320px;">
