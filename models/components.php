@@ -510,9 +510,9 @@ class Gm_ceilingModelComponents extends JModelList
                 $component = (object) array();
                 $component->Id = $item->good_id;
                 $component->Name = $item->component_title." ".$item->option_title;
-                $component->Barcode = $item->barcode;
-                $component->Article = $item->article;
-                $component->Count = $item->count;
+                $component->Barcode = $item->good_barcode;
+                $component->Article = $item->good_article;
+                $component->Count = $item->good_count;
                 $component->Unit = $item->unit;
                 $components[] = $component;
             }
