@@ -2613,7 +2613,9 @@ public function register_mnfctr(){
 
                 if ($dealer_type==1) {
                     if ($type == 2) {
-                        $body .= "Важная информация<br><a href=\"$site_errors_mount\">Посмотреть</a><br>";
+                        $body .= "Вас приветствует компания ООО \"Гильдия Мастеров\".<br>
+                        Во вложении важная информация о дефекте \"полосы на полотне\".<br>
+                        <br><a href=\"$site_errors_mount\">Посмотреть</a><br>";
                     }
                     else
                     {
@@ -2759,7 +2761,7 @@ public function register_mnfctr(){
                 }
                 elseif($dealer_type == 1 && $type == 2)
                 {
-                    $mailer->setSubject('Важная информация об ошибках монтажа');
+                    $mailer->setSubject('Полосы на полотне');
                 }
                 else{
                     $mailer->setSubject('Коммерческое предложение');
