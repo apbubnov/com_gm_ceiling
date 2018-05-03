@@ -141,6 +141,11 @@ class Gm_ceilingModelCallback extends JModelList
 			$id_client = $db->escape($id_client, true);
 			$manager_id = $db->escape($manager_id, true);
 
+			if (empty($manager_id))
+			{
+				$manager_id = 1;
+			}
+
 			$query = $db->getQuery(true);
 			$query->insert('`#__gm_ceiling_callback`');
 			$query->columns('`client_id`, `date_time`, `comment`, `manager_id`');
