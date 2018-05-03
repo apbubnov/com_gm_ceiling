@@ -2613,7 +2613,7 @@ public function register_mnfctr(){
 
                 if ($dealer_type==1) {
                     if ($type == 2) {
-                        $body .= "<a href=\"$site_errors_mount\">Посмотреть</a>";
+                        $body .= "Важная информация<br><a href=\"$site_errors_mount\">Посмотреть</a><br>";
                     }
                     else
                     {
