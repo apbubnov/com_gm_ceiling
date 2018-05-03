@@ -56,7 +56,7 @@ class Gm_ceilingModelGuild extends JModelList
         $query = $db->getQuery(true);
         $query->from("`#__gm_ceiling_calculations` as c")
             ->join("Left", "`#__gm_ceiling_projects` as p ON p.id = c.project_id")
-            ->join("Left", "`#__gm_ceiling_canvases` as s ON s.id = c.n3")
+            ->join("Left", "`#__canvases` as s ON s.id = c.n3")
             ->join("Left", "`#__gm_ceiling_textures` as t ON t.id = s.texture_id")
             ->join("Left", "`#__gm_ceiling_colors` as r ON r.id = s.color_id")
             ->join("Left", "`#__gm_ceiling_cuttings` as cut ON cut.id = c.id")
@@ -83,8 +83,8 @@ class Gm_ceilingModelGuild extends JModelList
         $calculationsTemp = [];
         foreach ($calculations as $calc) {
             $calc->canvas_name = $calc->name . " " . $calc->country . " " . $calc->width . " " . $calc->texture . ((empty($calc->color)) ? "" : " " . $calc->color);
-            $calc->cut_pdf = '/costsheets/' . md5($calc->id . 'cutpdf' . -2) . '.pdf';
-            $calc->cut_image = "/cut_images/" . md5("cut_sketch" . $calc->id) . ".png";
+            $calc->cut_pdf = '/costsheets/' . md5($calc->id . 'cutpdf') . '.pdf';
+            $calc->cut_image = "/cut_images/" . md5("cut_sketch" . $calc->id) . ".svg";
             $calc->cut_image_dop = "?date=" . ((string)date("dmYHis"));
             $calc->quad = floatval($calc->quad);
             $calc->perimeter = floatval($calc->perimeter);
@@ -519,7 +519,7 @@ class Gm_ceilingModelGuild extends JModelList
         $query->from("`#__gm_ceiling_guild_salaries` as s")
             ->join("LEFT", "`#__gm_ceiling_guild_works` as w ON w.id = s.work")
             ->join("LEFT", "`#__gm_ceiling_calculations` as c ON c.id = s.calc_id")
-            ->join("LEFT", "`#__gm_ceiling_canvases` as canvas ON canvas.id = c.n3")
+            ->join("LEFT", "`#__canvases` as canvas ON canvas.id = c.n3")
             ->join("LEFT", "`#__gm_ceiling_textures` as t1 ON t1.id = c.n1")
             ->join("LEFT", "`#__gm_ceiling_textures` as t2 ON t2.id = c.n2")
             ->join("LEFT", "`#__gm_ceiling_colors` as color ON color.id = canvas.color_id")
