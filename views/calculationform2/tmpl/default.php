@@ -342,9 +342,10 @@
                 <p>
                     <span class="caption_step">Шаг 2:</span> <strong>Начертите потолок</strong>
                     </br>Начертите контур помещения, вид сверху.
-                    <span class="help" style="text-decoration: underline; color: #0275d8;">
+                    <span class="help" style="text-decoration: underline; color: #0275d8; padding: 0 0 0 5px;">
                         Пример
                         <span class="airhelp">
+                            <button type="button" id="close_example" style="background-color: transparent; border: 0; color: #414099; top: -50px; right: 25px; position: absolute;"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
                             <img src="../../../../../images/ceiling.png" alt="Потолок" style="height: 320px;">
                         </span>
                     </span>
@@ -694,6 +695,11 @@
             jQuery("#mv_container").hide();
             jQuery("#modal_window_kp").hide();
         };
+
+        jQuery("#close_example").click(function () {
+            jQuery(this).closest("span").hide();
+            
+        });
 
         if(document.getElementById('clear')){
           
