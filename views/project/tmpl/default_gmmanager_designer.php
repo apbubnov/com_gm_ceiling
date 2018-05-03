@@ -611,37 +611,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 </tr>
             </table>
         <?php } ?>
-<<<<<<< HEAD
-=======
-
-    </div>
-    <div id="modal-window-container-tar">
-        <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
-        <div id="modal-window-choose-tar">
-            <p id="date-modal"></p>
-            <p><strong>Выберите время замера:</strong></p>
-            <p>
-                <table id="projects_gaugers"></table>
-            </p>
-            <p><button type="button" id="save-choise-tar" class="btn btn-primary">Ок</button></p>
-        </div>
-    </div>
-    <input name="idCalcDelete" id="idCalcDelete" value="<?=$calculation->id;?>" type="hidden">
-    </form>
-    </div>
-    <div id="modal_window_container" class="modal_window_container">
-        <button type="button" id="close" class="close_btn"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i>
-        </button>
-        <div id="modal_window_del" class="modal_window">
-            <h6 style="margin-top:10px">Вы действительно хотите удалить?</h6>
-            <p>
-                <button type="button" id="ok" class="btn btn-primary">Да</button>
-                <button type="button" id="cancel" onclick="click_cancel();" class="btn btn-primary">Отмена</button>
-            </p>
-        </div>
-    </div>
->>>>>>> 58d5bf67d7c89ad37e47bcc816d281c949f57833
-
     </div>
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
