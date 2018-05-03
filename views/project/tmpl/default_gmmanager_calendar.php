@@ -549,6 +549,15 @@
                                             }?>">
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th>Клиенсткий просчет?</th>
+                                    <td>
+                                        <input id='no_client' type='radio' class = "radio" name='slider_which_calc' value='0' checked= "checked">
+                                        <label  for='no_client'>Нет</label>
+                                        <input id='client' type='radio' class = "radio" name='slider_which_calc' value='1'>
+                                        <label for='client'>Да</label>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                         <div class="col-sm-6 col-md-6 col-lg-6">
@@ -2002,7 +2011,7 @@
         var email = jQuery("#all-email1").val();
         var client_id = jQuery("#client_id").val();
         var dop_file = jQuery("#dop_file").serialize();
-        var testfilename = <?php echo $json;?>;
+        var testfilename = '<?php echo $json;?>;';
         var filenames = [];
         for (var i = 0; i < testfilename.length; i++) {
             var id = testfilename[i].id;
@@ -2093,7 +2102,7 @@
 
     jQuery("#send_all_to_email2").click(function () {
         var email = jQuery("#all-email2").val();
-        var testfilename = <?php echo $json1;?>;
+        var testfilename = '<?php echo $json1;?>';
         var filenames = [];
         for (var i = 0; i < testfilename.length; i++) {
             var id = testfilename[i].id;
@@ -2147,7 +2156,7 @@
         var email = jQuery("#all-email3").val();
         var id  = jQuery("#project_id").val();
         var client_id = jQuery("#client_id").val();
-        var testfilename = <?php echo $json2;?>;
+        var testfilename = '<?php echo $json2;?>';
         var filenames = [];
         var formData = new FormData();
         jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {

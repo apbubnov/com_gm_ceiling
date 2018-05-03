@@ -1,4 +1,8 @@
 <?php
+    if ($_SERVER['SERVER_NAME'] == 'calc.gm-vrn.ru')
+    {
+        require_once('metrika.php');
+    }
     defined('_JEXEC') or die;
     JHtml::_('behavior.keepalive');
     //JHtml::_('behavior.tooltip');
@@ -598,6 +602,7 @@
     </div>
 </form>
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 <script>
     var user_id = "<?php echo $user_id;?>";
     var advt = "<?php echo $advt;?>"
