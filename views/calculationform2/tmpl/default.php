@@ -160,7 +160,7 @@
         <button type="button" id="show_redactor" class="btn btn-primary">Да</button></p>
     </div>
     <div id="modal_window_rec_to_mesure" class="modal_window" style="float: center">
-                <p><strong>Записаться на замер</strong></p>
+                <p><strong id="rec_header">Записаться на замер</strong></p>
                 <p id="fio_cont">
                     <label>ФИО:</label>
                     <input type="text" id="fio" class = "input-gm" style = "float:right;">
@@ -194,7 +194,7 @@
                 <p><button type="button" id="rec_to_measure" class="btn btn-primary">Записаться</button></p>
     </div>
     <div id="modal_window_authorisation" class="modal_window" >
-                <p><strong>Похоже, у Вас уже есть аккаунт, пожалуйста авторизуйтесь</strong></p>
+                <p><strong id="auth_head">Похоже, у Вас уже есть аккаунт, пожалуйста авторизуйтесь</strong></p>
                 <p>Логин:</p>
                 <p><input type="text" id="login"></p>
                 <p>Пароль:</p>
@@ -586,7 +586,7 @@
 								</td>
 								<td style="text-align: center;">
 									<!-- отменить -->
-                                    <button type="button" id="cancel_button" class="btn btn-danger">Отменить</button>
+                                    <button type="button" id="cancel_button" class="btn btn-danger">Назад</button>
 								</td>
 							</tr>
 						</table>
@@ -596,7 +596,7 @@
             </div>
     </div>
     <div class="btn_api" style="width:100%; text-align:center;">
-        <button class="btn btn-primary" type="button" id = "clear">Очистить</button>
+        <button class="btn btn-primary" type="button" id = "clear" style="display: none;">Очистить</button>
         <button class="btn btn-primary" type="button" id = "back_to_gm" style="display: none;">Вернуться</button>
         <button class="btn btn-primary" type="button" id = "show_rec" style="display: none;">Записаться на замер</button>
         <button class="btn btn-primary" type="button" id = "show_run" style="display: none;">Запустить в производство</button>
@@ -647,6 +647,7 @@
     }); */
     jQuery('document').ready(function()
     {
+        var time_end,time_start = performance.now();
         if(user_id){
             jQuery("#fio_cont").hide();
             jQuery("#phone_cont").hide();
@@ -660,7 +661,9 @@
             jQuery("#block_details").hide();
             jQuery(".btn_api").show();
             jQuery(".for_api").show();
+            jQuery("#clear").show();
             jQuery("#show_rec").show();
+            jQuery("#show_run").show();
             jQuery(".for_dealer").hide();
             jQuery("#jform_n2-lbl").text("Выберите фактуру Вашего будущего потолка");
             jQuery("#jform_proizv-lbl").html('Выберите производителя материала. Все представленные позиции прошли проверку в "Центре гигиены и эпидемиологии в Воронежской области". <a href="../../../../../files/Conclusion.pdf">Заключения</a>');
@@ -734,6 +737,16 @@
             jQuery("#close").show();
             jQuery("#mv_container").show();
             jQuery("#modal_window_rec_to_mesure").show("slow");
+            jQuery("#rec_to_measure").attr("status",'1');
+        });
+
+        jQuery("#show_run").click(function(){
+            jQuery("#close").show();
+            jQuery("#mv_container").show();
+            jQuery("#modal_window_rec_to_mesure").show("slow");
+            jQuery("#rec_header").text("Заявка на запуск в производство");
+            jQuery("#rec_date").hide();
+            jQuery("#rec_to_measure").attr("status",'5');
         });
 
         jQuery("#rec_date").change(function(){
@@ -771,7 +784,8 @@
             let fio = jQuery("#fio").val();
             let date_time = `${jQuery("#rec_date").val()} ${jQuery("#rec_time").val()}`;
             let phone = jQuery("#phone").val();
-            data = {"user_id":user_id,"name":fio,"phone":phone,"address":address,"date_time":date_time,"advt":advt,"calc_id":calculation.id};
+            let status  = jQuery(this).attr("status");
+            data = {"user_id":user_id,"name":fio,"phone":phone,"address":address,"date_time":date_time,"advt":advt,"calc_id":calculation.id,"status":status};
             if(user_id){
                 console.log(user_id);
                 record_to_mesure(data);
@@ -783,6 +797,10 @@
         });
 
         function record_to_mesure(data){
+            let text = "Вы успешно записались на замер. В рабочее время с Вами свяжется менеджер для уточнения инормации!";
+            if(data['status'] == 5){
+                text = "Вы отправили заявку на запуск в производство. В рабочее время с Вами свяжется менеджер для уточнения инормации!";
+            }
             jQuery.ajax({
                 type: 'POST',
                 url: '/index.php?option=com_gm_ceiling&task=api.recToMeasure',
@@ -798,7 +816,7 @@
                         layout: 'center',
                         maxVisible: 5,
                         type: "success",
-                        text: "Вы успешно записались на замер. В рабочее время с Вами свяжется менеджер для уточнения инормации!"
+                        text: text
                     });
                 },
                 error: function(data){
@@ -1353,6 +1371,8 @@
             }
         }
         setTimeout(click_after_recalc,500);
+        time_end = performance.now()-time_start;
+        console.log(time_end);
     });
 
    // Подсказки по городам

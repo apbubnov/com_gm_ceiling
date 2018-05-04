@@ -29,7 +29,7 @@ class Gm_ceilingModelApi extends JModelList
         {
             $db = $this->getDbo();
             $arr_ids = [];
-            throw new Exception("$table");
+
             foreach ($data as $key => $value)
             {
                 if (empty($data[$key]->android_id))
@@ -49,7 +49,6 @@ class Gm_ceilingModelApi extends JModelList
                 $columns_values = '';
                 if ($count == 0)
                 {
-                    throw new Exception("$table");
                     foreach ($value as $column => $column_value)
                     {
                         if($column != "image" && $column != "cut_image"){
@@ -71,7 +70,6 @@ class Gm_ceilingModelApi extends JModelList
                 }
                 else
                 {
-                    
                     $query = $db->getQuery(true);
                     $query->update("`$table`");
                     foreach ($value as $column => $column_value)
@@ -653,7 +651,7 @@ class Gm_ceilingModelApi extends JModelList
             $dealer_id = $db->escape($data->dealer_id, false);
             //Дилер
             $query = $db->getQuery(true);
-            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`");
+            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`");
             $query->from("`rgzbn_users` as u");
             $query->leftJoin('`rgzbn_user_usergroup_map`AS um ON um.user_id = u.id');
             $query->where("u.change_time >= '$change_time' and  u.id = $dealer_id AND um.group_id = 14");
@@ -661,7 +659,7 @@ class Gm_ceilingModelApi extends JModelList
             $list_dealer = $db->loadObjectList();
             //Бригады
             $query = $db->getQuery(true);
-            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`");
+            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`");
             $query->from("`rgzbn_users` as u");
             $query->leftJoin('`rgzbn_user_usergroup_map`AS um ON um.user_id = u.id');
             $query->where("u.change_time >= '$change_time' and  u.dealer_id = $dealer_id AND um.group_id = 11");
@@ -670,7 +668,7 @@ class Gm_ceilingModelApi extends JModelList
 
             //замерщики
             $query = $db->getQuery(true);
-            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`");
+            $query->select("u.id as id,u.name as `name`,u.username as `username`,u.email as `email`,um.group_id as `group_id`,um.id as `map_id`");
             $query->from("`rgzbn_users` as u");
             $query->leftJoin('`rgzbn_user_usergroup_map`AS um ON um.user_id = u.id');
             $query->where("u.change_time >= '$change_time' and  u.dealer_id = $dealer_id AND (um.group_id = 21 OR um.group_id = 22 )");
@@ -811,7 +809,10 @@ class Gm_ceilingModelApi extends JModelList
                 $dealer_info_model = Gm_ceilingHelpersGm_ceiling::getModel('Dealer_info', 'Gm_ceilingModel');
                 $dealer_info_model->update_city($dealer_id, $city);
             }
-           
+            $status = 1;
+            if(!empty($data->status)){
+                $status = $data->status;
+            }
             $address = $data->address;
             $date_time = $data->date_time;
             $gauger_model = Gm_ceilingHelpersGm_ceiling::getModel('gaugers');
@@ -823,7 +824,7 @@ class Gm_ceilingModelApi extends JModelList
                         "client_id" => $client_id,
                         "project_info" => $address,
                         "project_calculation_date" => $date_time,
-                        "project_status"=>1,
+                        "project_status"=>$status,
                         "api_phone_id"=>$data->advt,
                         "project_calculator"=>$gaug_id
                     ];
@@ -835,7 +836,12 @@ class Gm_ceilingModelApi extends JModelList
                 $calculationModel->changeProjectId($data->calc_id, $project);
             }
             $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-            $callback_model->save(date("Y-m-d H:i:s"), "Клиент заказал замер через гмпотолки. Уточнить данные", $client_id, 1);
+            if($status == 1){
+                $callback_model->save(date("Y-m-d H:i:s"), "Клиент заказал замер через гмпотолки. Уточнить данные", $client_id, 1);    
+            }
+            elseif($status == 5){
+                $callback_model->save(date("Y-m-d H:i:s"), "Клиент запустил договор в производство через гмпотолки. Уточнить данные", $client_id, 1);
+            }
             $result = [
                         "user_id" => $dealer_id,
                         "username" => JFactory::getUser($dealer_id)->username,

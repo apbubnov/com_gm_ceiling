@@ -559,7 +559,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                             <a class="btn  btn-success" id="accept_project" >Договор</a>
                         </td>
                         <td style="padding: 25px 10px">
-                            <a class="btn  btn-danger" id="refuse_project">Отказ</a>
+                            <a class="btn  btn-primary" id="refuse_project">Сохранить</a>
                         </td>
                     </tr>
                 </table>
@@ -576,7 +576,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                             </td>
                         </tr>
                     </table>
-                    <button id="refuse" class="btn btn-success" type="submit" style="display: none; margin-top: 25px;">Переместить в отказы</button>
+                    <button id="refuse" class="btn btn-success" type="submit" style="display: none; margin-top: 25px;">Сохранить</button>
                     <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
                         <table id="container_calendars">
                             <tr>

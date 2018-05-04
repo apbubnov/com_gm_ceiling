@@ -123,8 +123,8 @@ let n28_src = {
     values : [
         {id:'jform_n28_2',value:2,text:"Стеновой багет Al"},
         {id:'jform_n28_1',value:1,text:"Потолочный багет Al"},
-        {id:'jform_n28',value:0,text:"Стеновой багет ПВХ"},
-        {id:'jform_n28_3',value:3,text:"Без багета",selected:true}
+        {id:'jform_n28',value:3,text:"Стеновой багет ПВХ"},
+        {id:'jform_n28_3',value:0,text:"Без багета",selected:true}
     ]
 };
 let n28 =  create_radios_group(n28_src);
@@ -554,7 +554,7 @@ function open_general_blocks() {
     let arr_parent = [];
     let btn_name;
     for(let i = Object.keys(calculation).length;i--;){
-        if (!empty(calculation[Object.keys(calculation)[i]]) || (Object.keys(calculation)[i] == "n28" && calculation[Object.keys(calculation)[i]] == 0)){
+        if (!empty(calculation[Object.keys(calculation)[i]]) ){
             btn_name = get_parent(Object.keys(calculation)[i]);
             if (btn_name && !in_array(arr_parent,btn_name)){
                arr_parent.push(btn_name);  
@@ -582,7 +582,37 @@ function get_parent(n) {
 }
 function open_blocks(){
     for(let i = Object.keys(calculation).length;i--;){
-        if(Object.keys(calculation)[i] == 'n16'){
+
+        switch(Object.keys(calculation)[i]){
+            case 'n16':
+                if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
+                    jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
+                }
+                break;
+            case 'mounting_sum':
+                if(calculation[Object.keys(calculation)[i]]>0){
+                    jQuery(`#btn_need_mount`).trigger("click");
+                }
+                break;
+            case 'n7':
+                if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n7']) || !empty(calculation['n8'])){
+                    jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
+                }
+                break;
+            default:
+                if(!empty(calculation[Object.keys(calculation)[i]]) ){
+                    if(!empty(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0])){
+                        jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
+                    }
+                }
+
+        }
+     /*   if(Object.keys(calculation)[i] == 'n28'){
+            if(calculation[Object.keys(calculation)[i]] == 0 && calculation[Object.keys(calculation)[i]] != 3){
+                jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
+            }
+        }
+        else if(Object.keys(calculation)[i] == 'n16'){
             if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
                 jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
             }
@@ -600,7 +630,7 @@ function open_blocks(){
                     jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
                 }
             }
-        }
+        }*/
     }
 }
 let change_event_radio = function(){
@@ -652,12 +682,14 @@ let change_radio = function(){
         }
 };
 function fill_calc_data(){
+ var time_end,time_start = performance.now();
     let values;
     let value;
     let count;
     let obj;
     for(let i = Object.keys(calculation).length;i--;){
        if(!empty(calculation[Object.keys(calculation)[i]])){
+            console.log(Object.keys(calculation)[i]);
            switch(Object.keys(calculation)[i]){
                 case 'n28':
                 case 'height':
@@ -800,6 +832,8 @@ function fill_calc_data(){
            }
        }
     }
+    time_end = performance.now()-time_start;
+        console.log(time_end);
 }
 let show_color_switch = function(){    
         data = n6_colors;
@@ -870,6 +904,8 @@ function find_radio_element(elements,value){
 }
 
 function check_radio(elements,value){
+    jQuery("#jform_n28_3").attr('checked',false);
+    console.log(find_radio_element(elements,value));
     jQuery(find_radio_element(elements,value)).attr('checked',true);
 }
 function create_n6_button(){

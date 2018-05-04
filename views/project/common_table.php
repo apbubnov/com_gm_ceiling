@@ -13,11 +13,11 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" data-toggle="tab" href="#summary" role="tab">Общее</a>
+                <a class="nav-link active" data-toggle="tab" href="#summary" role="tab">Общее</a>
             </li>
-            <?php $first = true; foreach ($calculations as $k => $calculation) { ?>
+            <?php foreach ($calculations as $k => $calculation) { ?>
                 <li class="nav-item">
-                    <a class="nav-link <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>" role="tab">
+                    <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>" role="tab">
                         <?php echo $calculation->calculation_title; ?>
                     </a>
                 </li>
@@ -33,7 +33,7 @@
         <?php } else { ?>
             <!-- Tab panes -->
             <div class="tab-content">
-                <div class="tab-pane <?php if($user->dealer_type == 0 || count($calculations) == 0) echo "active";?>" id="summary" role="tabpanel">
+                <div class="tab-pane active" id="summary" role="tabpanel">
                     <table id="table1" class="table-striped one-touch-view">
                         <tr>
                             <th colspan="4" class="section_header" id="sh_ceilings">
@@ -384,14 +384,13 @@
                     </table>
                 </div>
                 <?php
-                    $first = true;
                     foreach ($calculations as $k => $calculation) { 
                         $mounters = json_decode($calculation->mounting_sum); 
                         if (!empty($calculation->n3)) {
                             $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg";
                         }
                 ?>
-                        <div class="tab-pane <?=($user->dealer_type == 1 && $first)?"active":""; $first = false;?>" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
+                        <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
                             <div class="other_tabs">
                             <?php if($this->item->project_status < 5 || $this->item->project_status == 22)
                             {

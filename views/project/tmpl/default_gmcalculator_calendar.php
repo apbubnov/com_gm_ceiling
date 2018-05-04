@@ -492,7 +492,7 @@
                             <a class="btn  btn-success" id="accept_project">Договор</a>
                         </td>
                         <td>
-                            <a class="btn  btn-danger" id="refuse_project">Отказ</a>
+                            <a class="btn  btn-primary" id="refuse_project">Сохранить</a>
                         </td>
                     </tr>
                 </table>

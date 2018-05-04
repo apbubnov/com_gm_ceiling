@@ -965,11 +965,11 @@ class Gm_ceilingHelpersGm_ceiling
 
         if (!empty($data['n1']) && $data['n1'] != 29) {
 
-            if ($data['n28'] !=3){
+            if ($data['n28'] !=0){
                 $component_count[$items_9[0]->id] += $data['n5'] * 10;
                 $component_count[$items_5[0]->id] += $data['n5'] * 10;
             }
-            if ($data['n28'] == 0)
+            if ($data['n28'] == 3)
             {
                 $component_count[$items_11[0]->id] += $data['n5'];
             } 
@@ -981,7 +981,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
         }
         if ($data['n1'] == 29) {
-            if ($data['n28'] !=3){
+            if ($data['n28'] !=0){
                 $component_count[$items_9[0]->id] += $data['n5'] * 10;
                 $component_count[$items_5[0]->id] += $data['n5'] * 10;
             }
@@ -1655,7 +1655,7 @@ class Gm_ceilingHelpersGm_ceiling
             //только для ПВХ
             if (!empty($data['n1']) &&  $data['n1'] != 29) {
                 //периметр
-                if ($data['n5'] > 0 && $data['n28'] == 0) {
+                if ($data['n5'] > 0 && $data['n28'] == 3) {
                     $mounting_data[] = array(
                         "title" => "Периметр (ПВХ)",                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
