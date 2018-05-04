@@ -1804,17 +1804,18 @@ class Gm_ceilingModelProject extends JModelItem
 
 	            $from_db = 1; $save = 0; $ajax = 0; $pdf = 0; $print_components = 1;
 	            $componentsTemp = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $calculation->id, $save, $ajax, $pdf, $print_components);
+	            $componentsTemp = (json_decode($componentsTemp))->comp_arr;
 	            foreach ($componentsTemp as $v)
 	            {
-	                if (floatval($v['quantity']) > 0 && $v['id'] > 0)
+	                if ($v->quantity != "0" && $v->id > 0)
 	                {
 	                    $component = (object) array();
-	                    $component->id = $v['id'];
-	                    $component->title = $v['title'];
-	                    $component->count = floatval($v['quantity']);
+	                    $component->id = $v->id;
+	                    $component->title = $v->title;
+	                    $component->count = floatval($v->quantity);
 
-	                    if (empty($components[$v['id']])) $components[$v['id']] = $component;
-	                    else $components[$v['id']]->count += $component->count;
+	                    if (empty($components[$v->id])) $components[$v->id] = $component;
+	                    else $components[$v->id]->count += $component->count;
 	                }
 	            }
 	        }
@@ -1849,7 +1850,7 @@ class Gm_ceilingModelProject extends JModelItem
 	            $query = $db->getQuery(true);
 	            $query->select('c.name as Name, c.country as Country, c.width as Width, c.price as Price')
 	                ->select('t.texture_title as Texture, cc.title as Color')
-	                ->from("`#__gm_ceiling_canvases` as c")
+	                ->from("`#__canvases` as c")
 	                ->join("LEFT", "`#__gm_ceiling_textures` as t on c.texture_id = t.id")
 	                ->join("LEFT", "`#__gm_ceiling_colors` as cc on c.color_id = c.id")
 	                ->where("c.id = " . $db->quote($canvas->id));

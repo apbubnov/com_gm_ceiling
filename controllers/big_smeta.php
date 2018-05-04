@@ -296,11 +296,17 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             }
             else
             {
-                if($dealer_city == "Москва"){
-                    $this->setRedirect(JRoute::_('/files/KP_Moscow.pdf', false));
+                if($type_kp==2){
+                    $this->setRedirect(JRoute::_('/files/Oshibki_montazha.pdf', false));
                 }
-                else{
-                    $this->setRedirect(JRoute::_('/files/KP_DEA.pdf', false));
+                else
+                {
+                    if($dealer_city == "Москва"){
+                        $this->setRedirect(JRoute::_('/files/KP_Moscow.pdf', false));
+                    }
+                    else{
+                        $this->setRedirect(JRoute::_('/files/KP_DEA.pdf', false));
+                    }
                 }
             }
         }

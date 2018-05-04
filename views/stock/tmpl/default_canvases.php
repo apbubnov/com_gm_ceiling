@@ -170,7 +170,7 @@ $app = JFactory::getApplication();
             </thead>
             <tbody>
             <tr>
-                <td hidden><input name="Id" hidden></td>
+                <td hidden><input name="Id" class="IdCanvas" hidden></td>
                 <td class="Name"></td>
                 <td class="Barcode"></td>
                 <td class="Article"></td>
@@ -272,7 +272,7 @@ $app = JFactory::getApplication();
                     DATA.TABLE.TBODY.empty();
                     $.each(data.canvases, function (i, item) {
                         var TR = DATA.TABLE.TR.clone();
-                        TR.find("[name='Id']").val(item.Id);
+                        TR.find(".IdCanvas").val(item.Id);
                         TR.find(".Name").text(item.Name);
                         TR.find(".Barcode").text(item.Barcode);
                         TR.find(".Article").text(item.Article);

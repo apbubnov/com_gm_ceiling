@@ -455,11 +455,11 @@ class Gm_ceilingModelCanvases extends JModelList
             $item = $items[$i];
             $canvas = (object) array();
             $canvas->Id = $item->roller_id;
-            $canvas->Name = $item->country." ".$item->name." ".$item->width." :: Т: ".$item->texture_title." Ц: "
+            $canvas->Name = $item->canvas_country." ".$item->canvas_name." ".$item->canvas_width." :: Т: ".$item->texture_title." Ц: "
                 .((empty($item->color_title))?"Нет":$item->color_title);
-            $canvas->Barcode = $item->barcode;
-            $canvas->Article = $item->article;
-            $canvas->Quad = $item->quad;
+            $canvas->Barcode = $item->roller_barcode;
+            $canvas->Article = $item->roller_article;
+            $canvas->Quad = $item->roller_quad;
             $canvases[] = $canvas;
         }
 

@@ -2536,14 +2536,14 @@ public function register_mnfctr(){
     }
 
 
-   public function sendCommercialOffer($user_id = null, $email = null, $dealer_type = null){
+   public function sendCommercialOffer($user_id = null, $email = null, $dealer_type = null, $type = null){
         try
         {
             $user = JFactory::getUser();
             $groups = $user->get('groups');
             if (in_array("16", $groups))
             {
-                if (is_null($user_id) || is_null($email) || is_null($dealer_type))
+                if (is_null($user_id) || is_null($email) || is_null($dealer_type) || is_null($type))
                 {
                     $jinput = JFactory::getApplication()->input;
                     $user_id = $jinput->get('user_id', null, 'INT');
@@ -2571,6 +2571,7 @@ public function register_mnfctr(){
                 $site5 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=1";
                 $site6 = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=0";
                 $site_dev = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code";
+                $site_errors_mount = "http://$server_name/index.php?option=com_gm_ceiling&task=big_smeta.commercialOffer&code=$code&type=2";
                 // письмо
                 $mailer = JFactory::getMailer();
                 $config = JFactory::getConfig();
@@ -2611,20 +2612,27 @@ public function register_mnfctr(){
                     }
 
                 if ($dealer_type==1) {
-                    $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку:
-                    <ul>
-                        <li> на <a href=\"$site\">коммерческое предложение</a></li>
-                        <br>
-                        <li>краткий обзор программы</li>
-                        <br>
-                        <a href=\"$site2\"><img src=\"http://".$server_name."/images/short_instruction2.png\"></a>
-                        <br>
-                        <br>
-                        <li>инструкцию по быстрому заказу</li>
-                        <br>
-                        <a href=\"$site3\"><img src=\"http://".$server_name."/images/video.jpg\"></a>";
-                
-                    $body .=" </ul>";
+                    if ($type == 2) {
+                        $body .= "Вас приветствует компания ООО \"Гильдия Мастеров\".<br>
+                        Во вложении важная информация о дефекте \"полосы на полотне\".<br>
+                        <br><a href=\"$site_errors_mount\">Посмотреть</a><br>";
+                    }
+                    else
+                    {
+                        $body .= "<div style=\"width: 100%\">В продолжение нашего телефонного разговора отправляю ссылку:
+                        <ul>
+                            <li> на <a href=\"$site\">коммерческое предложение</a></li>
+                            <br>
+                            <li>краткий обзор программы</li>
+                            <br>
+                            <a href=\"$site2\"><img src=\"http://".$server_name."/images/short_instruction2.png\"></a>
+                            <br>
+                            <br>
+                            <li>инструкцию по быстрому заказу</li>
+                            <br>
+                            <a href=\"$site3\"><img src=\"http://".$server_name."/images/video.jpg\"></a>
+                        </ul>";
+                    }
                 }
 
                 if ($dealer_type==6) {
@@ -2750,6 +2758,10 @@ public function register_mnfctr(){
                 elseif($dealer_type == 7)
                 {
                     $mailer->setSubject('Натяжные потолки для застройщиков от 280 руб.');
+                }
+                elseif($dealer_type == 1 && $type == 2)
+                {
+                    $mailer->setSubject('Полосы на полотне');
                 }
                 else{
                     $mailer->setSubject('Коммерческое предложение');
@@ -2884,7 +2896,7 @@ public function register_mnfctr(){
             $query->from('`#__users` AS `u`');
             $query->innerJoin('`#__gm_ceiling_clients` AS `c` ON `u`.`associated_client` = `c`.`id`');
             $query->leftJoin('`#__gm_ceiling_clients_contacts` AS `b` ON `c`.`id` = `b`.`client_id`');
-            $query->where('`dealer_type` = 7');
+            $query->where('`dealer_type` = 1');
             $query->group('`id`');
             $query->order('`id` DESC');
             $db->setQuery($query);
@@ -2901,7 +2913,7 @@ public function register_mnfctr(){
                     $emails = $dop_contacts_model->getEmailByClientID($client_id);
                     foreach ($emails as $j => $email)
                     {
-                        $this->sendCommercialOffer($item->id, $email->contact, 7);
+                        $this->sendCommercialOffer($item->id, $email->contact, 1, 2);
                         echo "$item->name $email->contact $item->dealer_type<br>";
                         $count++;
                     }
