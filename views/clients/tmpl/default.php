@@ -37,11 +37,9 @@ $status = $status_model->getData();
 
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clients&type='.$type); ?>" method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid toolbar">
-		<?php if ($canCreate) : ?>
-			<a href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientform&id=0&type='.$type, false, 2); ?>" class="btn btn-primary">
-				Добавить клиента
-			</a>
-		<?php endif; ?>
+		<a href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientform&id=0&type='.$type, false, 2); ?>" class="btn btn-primary">
+			Добавить клиента
+		</a>
         <select id="select_status">
             <option value='' selected>Выберите статус</option>
             <?php foreach($status as $item): ?>
