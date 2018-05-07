@@ -638,7 +638,7 @@ let change_event_radio = function(){
 
     jQuery(this).attr("checked",true); 
     
-    if(this.name == 'jform[n28]' && this.value !=3){
+    if(this.name == 'jform[n28]' && this.value !=0){
         if(jQuery('[name = "need_mount"]').length){
             jQuery("#jform_need_mount_inside").show();
         }
@@ -653,7 +653,7 @@ let change_event_radio = function(){
 
         
     }
-   if(this.name == 'jform[n28]' && this.value ==3){
+   if(this.name == 'jform[n28]' && this.value ==0){
          if( jQuery('#with_mount').attr("fix") !="true"){
             jQuery(`[name = 'need_mount']`).attr('checked',false);
             jQuery('#without').attr("checked",true); 

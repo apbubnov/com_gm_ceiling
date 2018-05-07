@@ -638,13 +638,6 @@
                     };
                 }
     };
-    /* jQuery("component-content").on("mouseover", "help", function () {
-        console.log(this);
-        $(this.children[0]).css("display", "block");
-    });
-    jQuery("component-content").on("mouseout", "help", function () {
-        $(this.children[0]).css("display", "none");
-    }); */
 
     jQuery(document).mouseup(function (e){ // событие клика по веб-документу
         var div = jQuery("#modal_window_authorisation"); // тут указываем ID элемента
