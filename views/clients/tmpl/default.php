@@ -9,6 +9,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+echo parent::getPreloaderNotJS();
+
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
@@ -17,8 +19,16 @@ JHtml::_('formbehavior.chosen', 'select');
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
 $user_group = $user->groups;
+
 $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
+$clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+
 $dop_num = $dop_num_model->getData($userId)->dop_number;
+$clients = $clients_model->getClientsAndProjects();
+foreach ($clients as $key => $value) {
+    $clients[$key]->created = date("d.m.Y H:i", strtotime($value->created));
+}
+
 $_SESSION['user_group'] = $user_group;
 $_SESSION['dop_num'] = $dop_num;
 $listOrder  = $this->state->get('list.ordering');
@@ -35,58 +45,36 @@ $status_model = Gm_ceilingHelpersGm_ceiling::getModel('statuses');
 $status = $status_model->getData();
 ?>
 
-<?php parent::getButtonBack();?>
-
-<style>
-    .span9 {
-        margin-top: 15px;
-        margin-bottom: 15px;
-    }
-    @media (min-width: 768px) {
-        .span9 {
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
-    }
-</style>
-
 <h2 class = "center">Клиенты</h2>
 
 <form action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clients&type='.$type); ?>" method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid toolbar">
-		<div class="span3">
-			<?php if ($canCreate) : ?>
-				<a href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientform&id=0&type='.$type, false, 2); ?>" class="btn btn-success"><i class="icon-plus"></i>
-					Добавить клиента
-				</a>
-			<?php endif; ?>
-		</div>
-        <div id="search" style="display: none; width: 40px; height: 40px;"><i class="fa fa-search"></i></div>
-		<div class="span9">
-			<?php echo JLayoutHelper::render('default_filter', array('view' => $this), dirname(__FILE__)); ?>
-		</div>
+		<?php if ($canCreate) : ?>
+			<a href="<?php echo JRoute::_('index.php?option=com_gm_ceiling&view=clientform&id=0&type='.$type, false, 2); ?>" class="btn btn-primary">
+				Добавить клиента
+			</a>
+		<?php endif; ?>
         <select id="select_status">
             <option value='' selected>Выберите статус</option>
             <?php foreach($status as $item): ?>
-                <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12 ) { ?>
+                <?php if(($item->id > 0 && $item->id <= 5 ) || $item->id == 10 || $item->id == 12) { ?>
                     <option value="<?php echo $item->id; ?>"><?php echo $item->title; ?></option>
                 <?php } ?>
             <?php endforeach;?>
         </select>
+        <input type="text" id="search_text">
+        <button type="button" class="btn btn-primary" id="search_btn"><b class="fa fa-search"></b></button>
 	</div>
 	<table class="small_table table-striped table_cashbox one-touch-view" id="clientList">
 		<thead>
 			<tr>
-				<th class='' >
-					<?php //echo JHtml::_('grid.sort',  'Создан', 'a.created', $listDirn, $listOrder); ?>
+				<th>
                     Создан
 				</th>
-				<th class=''>
-					<?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_NAME', 'a.client_name', $listDirn, $listOrder); ?>
+				<th>
                     Клиент
 				</th>
-				<th class=''>
-					<?php //echo JHtml::_('grid.sort',  'COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS', 'a.client_contacts', $listDirn, $listOrder); ?>
+				<th>
                     Адрес
 				</th>
                 <th>
@@ -100,32 +88,7 @@ $status = $status_model->getData();
                 <td class="one-touch status"></td>
             </tr>
 		</thead>
-
 		<tbody>
-        <!-- по сути этот кусок кода не нужен, т.к. таблицу формирует jQ...-->
-        <!--		--><?php //foreach ($this->items as $i => $item) : ?>
-        <!--			--><?php //$canEdit = $user->authorise('core.edit', 'com_gm_ceiling'); ?>
-        <!--			--><?php //if (!$canEdit && $user->authorise('core.edit.own', 'com_gm_ceiling')): ?>
-        <!--				--><?php //$canEdit = JFactory::getUser()->id == $item->created_by; ?>
-        <!--			--><?php //endif; ?>
-        <!--			--><?php //if($item->id !== $user->associated_client): ?>
-        <!--			<tr class="row--><?php //echo $i % 2; ?><!-- inform" data-href="--><?php //echo JRoute::_('index.php?option=com_gm_ceiling&view=clientcard&id='.(int) $item->id); ?><!--">-->
-        <!--				<td class="one-touch created">-->
-        <!--					--><?php
-        //						if($item->created == "0000-00-00 00:00:00") {
-        //							echo "-";
-        //						} else {
-        //							$jdate = new JDate($item->created);
-        //							$created = $jdate->format("d.m.Y H:i");
-        //							echo $created;
-        //						}
-        //					?>
-        <!--                    -->
-        <!--				</td>-->
-        <!--				<td class="one-touch name">--><?php //echo $this->escape($item->client_name); ?><!--<br>--><?php //echo $item->client_contacts; ?><!--</td>-->
-        <!--                <td class="one-touch address"> --><?php //print_r($item); ?><!-- </td>-->
-        <!--			</tr>-->
-        <!--			--><?php //endif; endforeach; ?>
 		</tbody>
 	</table>
 	<input type="hidden" name="task" value=""/>
@@ -137,92 +100,73 @@ $status = $status_model->getData();
 
 <script type="text/javascript">
 
-	jQuery(document).ready(function () {
-	   // if(jQuery("#filter_search").val() == '') {
-            jQuery("#select_status").change();
-        //}
-		jQuery('.delete-button').click(deleteItem);
-	});
+jQuery(document).ready(function(){
+    var clients_data = JSON.parse('<?php echo json_encode($clients); ?>');
+    var elem_select_status = document.getElementById('select_status');
+    var elem_search = document.getElementById('search_text');
 
-	function deleteItem() {
-		if (!confirm("<?php echo JText::_('COM_GM_CEILING_DELETE_MESSAGE'); ?>")) {
-			return false;
-		}
-	}
+    //console.log(clients_data);
+    
+    elem_select_status.onchange = show_clients;
+    document.getElementById('search_btn').onclick = show_clients;
 
     var $ = jQuery;
 
     // вызовем событие resize
     $(window).resize();
 
-    jQuery("#select_status").change(function ()
-    {
-        var status = jQuery("#select_status").val();
-        var search = jQuery("#filter_search").val();
-        jQuery.ajax({
-            type: "POST",
-            url: "/index.php?option=com_gm_ceiling&task=filterProjectForStatus",
-            data: {
-                status: status,
-                search: search
-            },
-            dataType: "json",
-            async: true,
-            cache: false,
-            success: function (data) {
-                console.log(data);
-                var list = $("#clientList tbody");
-                list.empty();
-                var text='';
-                for(i=0;i<data.length;i++){
-                    var tr = $("#TrClone").clone();
+    show_clients();
 
-                    tr.show();
-                    tr.find(".created").text(data[i].created);
-                    if (data[i].client_contacts != null)
-                    {
-                        tr.find(".name").text(data[i].client_contacts + ' ' + data[i].client_name);
-                    }
-                    else
-                    {
-                        tr.find(".name").text(data[i].client_name);
-                    }
-                    if (data[i].address != null)
-                    {
-                        tr.find(".address").text(data[i].address);
-                    }
-                    else
-                    {
-                        tr.find(".address").text('-');
-                    }
-                    if (data[i].status != null)
-                    {
-                        tr.find(".status").text(data[i].status);
-                    }
-                    else
-                    {
-                        tr.find(".status").text('-');
-                    }
-                    
-                    tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+data[i].client_id);
-                    list.append(tr);
+    function show_clients()
+    {
+        var status = elem_select_status.value;
+        var search = elem_search.value;
+        var search_reg = new RegExp(search, "ig");
+        var list = $("#clientList tbody");
+        list.empty();
+
+        for(var i = 0, cl_i; i < clients_data.length; i++)
+        {
+            cl_i = clients_data[i];
+            if ((search_reg.test(cl_i.client_name) || search_reg.test(cl_i.address) ||
+                search_reg.test(cl_i.client_contacts) || search_reg.test(cl_i.id)) && 
+                (status === "" || status === cl_i.status_id))
+            {
+                var tr = $("#TrClone").clone();
+
+                tr.show();
+                tr.find(".created").text(cl_i.created);
+                if (cl_i.client_contacts != null)
+                {
+                    tr.find(".name").text(cl_i.client_contacts + ' ' + cl_i.client_name);
                 }
-                OpenPage();
-            },
-            timeout: 50000,
-            error: function (data) {
-                console.log(data);
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка сервера"
-                });
+                else
+                {
+                    tr.find(".name").text(cl_i.client_name);
+                }
+                if (clients_data[i].address != null)
+                {
+                    tr.find(".address").text(cl_i.address);
+                }
+                else
+                {
+                    tr.find(".address").text('-');
+                }
+                if (cl_i.status != null)
+                {
+                    tr.find(".status").text(cl_i.status);
+                }
+                else
+                {
+                    tr.find(".status").text('-');
+                }
+                
+                tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+cl_i.client_id);
+                list.append(tr);
             }
-        });
-    });
+        }
+        OpenPage();
+    }
     
     function OpenPage() {
         var e = jQuery("[data-href]");
@@ -232,10 +176,10 @@ $status = $status_model->getData();
             });
         });
     }
-    var tmp = 1;
-    jQuery("#search").click(function () {
-        if(tmp == 1) { jQuery(".span9").show(); tmp = 0;}
-        else { jQuery(".span9").hide(); tmp = 1;}
-    })
+
+    document.body.onload = function(){
+        jQuery(".PRELOADER_GM").hide();
+    };
+});
 </script>
 

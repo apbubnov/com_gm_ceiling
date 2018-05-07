@@ -159,6 +159,44 @@ if (empty($list['direction']))
         }
 	}
 
+	function getClientsAndProjects($dealer_id = null)
+	{
+		try
+		{
+			$user = JFactory::getUser();
+            if ($dealer_id == null) {
+                $dealer_id = $user->dealer_id;
+            }
+
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->from("`#__gm_ceiling_clients` as `client`")
+                ->join("LEFT", "`#__gm_ceiling_clients_contacts` as `phone` ON `phone`.`client_id` = `client`.`id`")
+                ->join("LEFT", "(SELECT * FROM `#__gm_ceiling_projects` ORDER BY `id` DESC) as `p` ON `p`.`client_id` = `client`.`id`")
+                ->join("LEFT", "`#__users` as `u` ON `client`.`id` = `u`.`associated_client`")
+                ->join("LEFT", "`#__gm_ceiling_status` as `s` ON `p`.`project_status` = `s`.`id`")
+                ->select("`p`.`id`, `p`.`project_info` as `address`, `s`.`title` as `status`, `s`.`id` as `status_id`")
+                ->select("`client`.`client_name` as `client_name`, `client`.`created`, `client`.`id` as `client_id`")
+                ->select("GROUP_CONCAT(distinct `phone`.`phone` SEPARATOR ', ') as `client_contacts`")
+                ->order("`client`.`id` DESC")
+                ->group("`client`.`id`");
+
+            $query->where("`client`.`dealer_id` = $dealer_id AND `u`.`associated_client` IS NULL");
+
+            $db->setQuery($query);
+            
+            $result = $db->loadObjectList();
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            throw new Exception('Ошибка!', 500);
+        }
+	}
+
 	public function getDealersClientsListQuery($dealer_id, $id)
 	{
 		try
