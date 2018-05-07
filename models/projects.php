@@ -205,7 +205,7 @@ class Gm_ceilingModelProjects extends JModelList
                     }
                     break;
                 case "gmcalculator":
-                    $query->where('a.who_calculate = 1');
+                    //$query->where('a.who_calculate = 1');
                     if ($subtype == "calendar") {
                         $query->where('a.project_status = 1');
                         $query->where("a.project_calculator = '$user->id'");

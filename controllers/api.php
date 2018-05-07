@@ -82,6 +82,10 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             if(!empty($_POST['r_data'])){
                 $register_data = json_decode($_POST['r_data']);
                 if(!empty($register_data)){
+                    $callback_msg = "Регистрация в android-приложении";
+                    if(!empty($register_data->type)){
+                        $callback_msg = "Регистрация в web-приложении";
+                    }
                     $model = Gm_ceilingHelpersGm_ceiling::getModel('api');
                     $result = $model->register_from_android($register_data);
                     $dealer_id = $result->new_id;
@@ -123,7 +127,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                         $users_model = Gm_ceilingHelpersGm_ceiling::getModel('users');
                         $users_model->addDealerInstructionCode($dealer_id, $code, 1);    
                         $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-                        $callback_model->save(date('Y-m-d H:i:s'),"Регистрация в android-приложении",$dealer->associated_client,1);
+                        $callback_model->save(date('Y-m-d H:i:s'),$callback_msg,$dealer->associated_client,1);
                     }
                     die(json_encode($result));
                 }
