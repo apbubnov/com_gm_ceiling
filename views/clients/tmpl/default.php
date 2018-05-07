@@ -11,11 +11,6 @@ defined('_JEXEC') or die;
 
 echo parent::getPreloaderNotJS();
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
-
 $user       = JFactory::getUser();
 $userId     = $user->get('id');
 $user_group = $user->groups;
@@ -31,13 +26,6 @@ foreach ($clients as $key => $value) {
 
 $_SESSION['user_group'] = $user_group;
 $_SESSION['dop_num'] = $dop_num;
-$listOrder  = $this->state->get('list.ordering');
-$listDirn   = $this->state->get('list.direction');
-$canCreate  = $user->authorise('core.create', 'com_gm_ceiling') && file_exists(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'clientform.xml');
-$canEdit    = $user->authorise('core.edit', 'com_gm_ceiling') && file_exists(JPATH_COMPONENT . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms' . DIRECTORY_SEPARATOR . 'clientform.xml');
-$canCheckin = $user->authorise('core.manage', 'com_gm_ceiling');
-$canChange  = $user->authorise('core.edit.state', 'com_gm_ceiling');
-$canDelete  = $user->authorise('core.delete', 'com_gm_ceiling');
 
 $jinput = JFactory::getApplication()->input;
 $type = $jinput->getString('type', NULL);
@@ -91,11 +79,6 @@ $status = $status_model->getData();
 		<tbody>
 		</tbody>
 	</table>
-	<input type="hidden" name="task" value=""/>
-	<input type="hidden" name="boxchecked" value="0"/>
-	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-	<?php echo JHtml::_('form.token'); ?>
 </form>
 
 <script type="text/javascript">
@@ -106,6 +89,13 @@ jQuery(document).ready(function(){
     var elem_search = document.getElementById('search_text');
 
     //console.log(clients_data);
+
+    document.onkeydown = function(e){
+        if(e.keyCode === 13){
+            show_clients();
+            return false;
+        }
+    };
     
     elem_select_status.onchange = show_clients;
     document.getElementById('search_btn').onclick = show_clients;
