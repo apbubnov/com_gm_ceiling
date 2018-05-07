@@ -54,7 +54,7 @@ arr_blocks.forEach(function(item){
 jQuery("#add_mount_and_components").append(n28_el);
 jQuery("#add_mount_and_components").append(discount_el);
 
-jQuery("#jform_n28").val(0);
+jQuery("#jform_n28").val(3);
 jQuery("#new_discount").val(50);
 
 let n_data = {};

@@ -638,13 +638,18 @@
                     };
                 }
     };
-    /* jQuery("component-content").on("mouseover", "help", function () {
-        console.log(this);
-        $(this.children[0]).css("display", "block");
+
+    jQuery(document).mouseup(function (e){ // событие клика по веб-документу
+        var div = jQuery("#modal_window_authorisation"); // тут указываем ID элемента
+        var div1 = jQuery("#modal_window_rec_to_mesure");
+        if (!div.is(e.target) && !div1.is(e.target) // если клик был не по нашему блоку
+            && div.has(e.target).length === 0 && div1.has(e.target).length === 0) { // и не по его дочерним элементам
+                jQuery("#mv_container").hide();
+                jQuery("#modal_window_authorisation").hide();
+                jQuery("#modal_window_rec_to_mesure").hide();
+                jQuery("#close").hide();
+        }
     });
-    jQuery("component-content").on("mouseout", "help", function () {
-        $(this.children[0]).css("display", "none");
-    }); */
     jQuery('document').ready(function()
     {
         var time_end,time_start = performance.now();

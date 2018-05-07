@@ -295,8 +295,9 @@ class Gm_ceilingModelColors extends JModelList
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	        $query
-	            ->select('CONCAT( canvases.name , \' \', canvases.country, \' \', canvases.width ) AS full_name,canvases.count' )
+	            ->select('CONCAT( mnfct.name , \' \', mnfct.country, \' \', canvases.width ) AS full_name,canvases.count' )
 	            ->from('`#__gm_ceiling_canvases` AS canvases')
+	            ->join('LEFT', '`#__gm_ceiling_canvases_manufacturers` as mnfct on canvases.manufacturer_id = mnfct.id')
 	            ->select('textures.texture_title AS texture_title')
 	            ->join('LEFT', '`#__gm_ceiling_textures` AS textures ON canvases.texture_id = textures.id')
 	            ->select('colors.title AS colors_title, colors.file AS file, colors.id AS id ')
