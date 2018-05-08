@@ -460,61 +460,56 @@ foreach ($dealers as $key => $dealer) {
             }
         }
 
-        var wheel_count_dealers = 0;
+        var wheel_count_dealers = null, last_tr = null;
+
+        //console.log(dealers_data);
 
         showDealers();
         document.getElementById('find_dealer').onclick = showDealers;
         document.getElementById('filter_manager').onchange = showDealers;
         document.getElementById('filter_city').onchange = showDealers;
-        console.log(dealers_data);
 
         document.onwheel = function(e){
             if (e.wheelDelta < 0)
             {
-                if (wheel_count_dealers === null)
+                if (dealers_data_length > wheel_count_dealers + 1 && inWindow(last_tr).length > 0)
                 {
-                    return;
-                }
-                if (dealers_data_length < wheel_count_dealers + 20)
-                {
-                    print_dealers(wheel_count_dealers, dealers_data_length);
-                    wheel_count_dealers = null;
-                }
-                else
-                {
-                    print_dealers(wheel_count_dealers, wheel_count_dealers + 20);
-                    wheel_count_dealers += 20;
+                    print_dealers(wheel_count_dealers + 1, dealers_data_length);
                 }
             }
         };
         
-        function showDealers()
-        {
-            wheel_count_dealers = 0;
-            tbody_dealers.innerHTML = '';
-            var d_length;
-
-            if (dealers_data_length < 20)
-            {
-                d_length = dealers_data_length;
-            }
-            else
-            {
-                d_length = 20;
-            }
-            print_dealers(0, d_length);
-            wheel_count_dealers = d_length;
+        function inWindow(s){
+            var scrollTop = $(window).scrollTop();
+            var windowHeight = $(window).height();
+            var currentEls = $(s);
+            var result = [];
+            currentEls.each(function(){
+                var el = $(this);
+                var offset = el.offset();
+                if(scrollTop <= offset.top && (el.height() + offset.top) < (scrollTop + windowHeight))
+                  result.push(this);
+            });
+            return $(result);
         }
 
-        function print_dealers(begin, end)
+        function showDealers()
         {
-            console.log(wheel_count_dealers);
+            wheel_count_dealers = null;
+            last_tr = null;
+            tbody_dealers.innerHTML = '';
+            print_dealers(0);
+        }
+
+        function print_dealers(begin)
+        {
+            //console.log(wheel_count_dealers);
             var html = '', color;
             var name_find_dealer = document.getElementById('name_find_dealer').value;
             var reg_name_find_dealer = new RegExp(name_find_dealer, "ig");
             var filter_manager = document.getElementById('filter_manager').value;
             var filter_city = document.getElementById('filter_city').value;
-            for(var i = begin, data_i; i < end; i++)
+            for(var i = begin, data_i, iter = 0; i < dealers_data_length; i++)
             {
                 data_i = dealers_data[i];
                 if ((reg_name_find_dealer.test(data_i.client_name) || reg_name_find_dealer.test(data_i.client_contacts)) &&
@@ -551,9 +546,20 @@ foreach ($dealers as $key => $dealer) {
                         html += '<td></td>';
                     }
                     html += '</tr>';
+                    tbody_dealers.innerHTML += html;
+                    wheel_count_dealers = i;
+                    iter++;
+                    if (iter === 20)
+                    {
+                        break;
+                    }
                 }
-                tbody_dealers.innerHTML += html;
                 html = '';
+            }
+            if (wheel_count_dealers !== null)
+            {
+                var elems_tr = tbody_dealers.getElementsByTagName('tr');
+                last_tr = elems_tr[elems_tr.length - 1];
             }
         }
     });
