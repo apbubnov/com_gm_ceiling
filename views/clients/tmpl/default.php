@@ -86,10 +86,25 @@ jQuery(document).ready(function(){
     var elem_select_status = document.getElementById('select_status');
     var elem_search = document.getElementById('search_text');
 
-    //console.log(clients_data);
+    console.log(clients_data);
+    var wheel_count_clients = null, last_tr = null;
+
+    var $ = jQuery;
+    var list = $("#clientList tbody");
+
+    $(window).resize();
+
+    show_clients();
+
+    elem_search.onfocus = function(){
+        wheel_count_clients= null;
+        last_tr = null;
+        list.empty();
+    };
 
     document.onkeydown = function(e){
         if(e.keyCode === 13){
+            elem_search.blur();
             show_clients();
             return false;
         }
@@ -98,22 +113,44 @@ jQuery(document).ready(function(){
     elem_select_status.onchange = show_clients;
     document.getElementById('search_btn').onclick = show_clients;
 
-    var $ = jQuery;
+    document.onwheel = check_bottom_tr;
+    document.body.onmousemove = check_bottom_tr;
 
-    // вызовем событие resize
-    $(window).resize();
-
-    show_clients();
+    function check_bottom_tr(e){
+        if (clients_data.length > wheel_count_clients + 1 && inWindow(last_tr).length > 0)
+        {
+            print_clients(wheel_count_clients + 1, clients_data.length);
+        }
+    }
+    
+    function inWindow(s){
+        var scrollTop = $(window).scrollTop();
+        var windowHeight = $(window).height();
+        var currentEls = $(s);
+        var result = [];
+        currentEls.each(function(){
+            var el = $(this);
+            var offset = el.offset();
+            if(scrollTop <= offset.top && (el.height() + offset.top) < (scrollTop + windowHeight))
+                result.push(this);
+        });
+        return $(result);
+    }
 
     function show_clients()
+    {
+        wheel_count_clients = null;
+        last_tr = null;
+        list.empty();
+        print_clients(0);
+    }
+
+    function print_clients(begin)
     {
         var status = elem_select_status.value;
         var search = elem_search.value;
         var search_reg = new RegExp(search, "ig");
-        var list = $("#clientList tbody");
-        list.empty();
-
-        for(var i = 0, cl_i; i < clients_data.length; i++)
+        for(var i = begin, cl_i, iter = 0; i < clients_data.length; i++)
         {
             cl_i = clients_data[i];
             if ((search_reg.test(cl_i.client_name) || search_reg.test(cl_i.address) ||
@@ -151,7 +188,18 @@ jQuery(document).ready(function(){
                 
                 tr.attr("data-href", "/index.php?option=com_gm_ceiling&view=clientcard&id="+cl_i.client_id);
                 list.append(tr);
+                wheel_count_clients = i;
+                iter++;
+                if (iter === 20)
+                {
+                    break;
+                }
             }
+        }
+        if (wheel_count_clients !== null)
+        {
+            var elems_tr = list[0].getElementsByTagName('tr');
+            last_tr = elems_tr[elems_tr.length - 1];
         }
         OpenPage();
     }
