@@ -86,7 +86,7 @@ jQuery(document).ready(function(){
     var elem_select_status = document.getElementById('select_status');
     var elem_search = document.getElementById('search_text');
 
-    console.log(clients_data);
+    //console.log(clients_data);
     var wheel_count_clients = null, last_tr = null;
 
     var $ = jQuery;
