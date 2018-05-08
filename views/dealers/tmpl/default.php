@@ -468,16 +468,29 @@ foreach ($dealers as $key => $dealer) {
         document.getElementById('find_dealer').onclick = showDealers;
         document.getElementById('filter_manager').onchange = showDealers;
         document.getElementById('filter_city').onchange = showDealers;
+        document.getElementById('name_find_dealer').onfocus = function(){
+            wheel_count_dealers = null;
+            last_tr = null;
+            tbody_dealers.innerHTML = '';
+        };
 
-        document.onwheel = function(e){
-            if (e.wheelDelta < 0)
+        document.onkeydown = function(e){
+            if (e.keyCode === 13)
             {
-                if (dealers_data_length > wheel_count_dealers + 1 && inWindow(last_tr).length > 0)
-                {
-                    print_dealers(wheel_count_dealers + 1, dealers_data_length);
-                }
+                document.getElementById('name_find_dealer').blur();
+                showDealers();
             }
         };
+
+        document.onwheel = check_bottom_tr;
+        document.body.onmousemove = check_bottom_tr;
+
+        function check_bottom_tr(e){
+            if (dealers_data_length > wheel_count_dealers + 1 && inWindow(last_tr).length > 0)
+            {
+                print_dealers(wheel_count_dealers + 1, dealers_data_length);
+            }
+        }
         
         function inWindow(s){
             var scrollTop = $(window).scrollTop();
@@ -488,7 +501,7 @@ foreach ($dealers as $key => $dealer) {
                 var el = $(this);
                 var offset = el.offset();
                 if(scrollTop <= offset.top && (el.height() + offset.top) < (scrollTop + windowHeight))
-                  result.push(this);
+                    result.push(this);
             });
             return $(result);
         }
