@@ -17,6 +17,14 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 $comm_model = Gm_ceilingHelpersGm_ceiling::getModel('commercial_offer');
 $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
+
+$clients_model = Gm_ceilingHelpersGm_ceiling::getModel('clients');
+$dealers = $clients_model->getDealersByClientName('', null, null);
+foreach ($dealers as $key => $dealer) {
+    $user_dealer = JFactory::getUser($dealer->dealer_id);
+    $dealers[$key]->min_canvas_price = $user_dealer->getFunctionCanvasesPrice("MIN");
+    $dealers[$key]->min_component_price = $user_dealer->getFunctionComponentsPrice("MIN");
+}
 ?>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
 <link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
@@ -110,66 +118,42 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
     var $ = jQuery,
         managers = {},
         cities = {},
-        dealers_data, dealers_data_length,
+        dealers_data = JSON.parse('<?php echo json_encode($dealers); ?>');
+        dealers_data_length = dealers_data.length,
         tbody_dealers = document.getElementById('tbody_dealers'),
         wheel_count_dealers = null, last_tr = null;
 
-    jQuery.ajax({
-        type: 'POST',
-        url: "index.php?option=com_gm_ceiling&task=findOldClients",
-        data: {
-            flag: 'dealers',
-        },
-        success: function(data){
-            dealers_data = data;
-            //console.log(dealers_data);
-            dealers_data_length = dealers_data.length;
-            if (Object.keys(managers).length === 0)
+        if (Object.keys(managers).length === 0)
+        {
+            for(var i = 0, data_i; i < dealers_data_length; i++)
             {
-                for(var i = 0, data_i; i < dealers_data_length; i++)
+                data_i = dealers_data[i];
+                if (!(data_i.manager_id in managers) && data_i.manager_id != null)
                 {
-                    data_i = dealers_data[i];
-                    if (!(data_i.manager_id in managers) && data_i.manager_id != null)
-                    {
-                        managers[data_i.manager_id] = data_i.manager_name;
-                        jQuery('#filter_manager')
-                        .append(jQuery("<option></option>")
-                            .attr("value",data_i.manager_id)
-                            .text(data_i.manager_name));
-                    }
+                    managers[data_i.manager_id] = data_i.manager_name;
+                    jQuery('#filter_manager')
+                    .append(jQuery("<option></option>")
+                        .attr("value",data_i.manager_id)
+                        .text(data_i.manager_name));
                 }
             }
-            if (Object.keys(cities).length === 0)
+        }
+        if (Object.keys(cities).length === 0)
+        {
+            for(var i = 0, data_i; i < dealers_data_length; i++)
             {
-                for(var i = 0, data_i; i < dealers_data_length; i++)
+                data_i = dealers_data[i];
+                if (!(data_i.city in cities) && data_i.city != null && data_i.city != '')
                 {
-                    data_i = dealers_data[i];
-                    if (!(data_i.city in cities) && data_i.city != null && data_i.city != '')
-                    {
-                        cities[data_i.city] = data_i.city;
-                        jQuery('#filter_city')
-                        .append(jQuery("<option></option>")
-                            .attr("value",data_i.city)
-                            .text(data_i.city));
-                    }
+                    cities[data_i.city] = data_i.city;
+                    jQuery('#filter_city')
+                    .append(jQuery("<option></option>")
+                        .attr("value",data_i.city)
+                        .text(data_i.city));
                 }
             }
-            showDealers();
-        },
-        dataType: "json",
-        async: true,
-        timeout: 30000,
-        error: function(data){
-            var n = noty({
-                timeout: 2000,
-                theme: 'relax',
-                layout: 'center',
-                maxVisible: 5,
-                type: "error",
-                text: "Ошибка. Сервер не отвечает"
-            });
-        }                   
-    });
+        }
+        showDealers();
 
     function showDealers()
     {
