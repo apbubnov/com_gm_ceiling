@@ -17,7 +17,6 @@ $recoil_map_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil_map_project');
 
 $comm_model = Gm_ceilingHelpersGm_ceiling::getModel('commercial_offer');
 $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
-
 ?>
 <link href="/components/com_gm_ceiling/views/dealers/css/default.css" rel="stylesheet" type="text/css">
 <link href="/templates/gantry/cleditor1_4_5/jquery.cleditor.css" rel="stylesheet" type="text/css">
@@ -110,10 +109,69 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
 <script>
     var $ = jQuery,
         managers = {},
-        cities = {};
+        cities = {},
+        dealers_data, dealers_data_length,
+        tbody_dealers = document.getElementById('tbody_dealers');
 
     jQuery(document).ready(function()
     {
+        jQuery.ajax({
+            type: 'POST',
+            url: "index.php?option=com_gm_ceiling&task=findOldClients",
+            data: {
+                flag: 'dealers',
+            },
+            success: function(data){
+                dealers_data = data;
+                console.log(dealers_data);
+                dealers_data_length = dealers_data.length;
+                if (Object.keys(managers).length === 0)
+                {
+                    for(var i = 0, data_i; i < dealers_data_length; i++)
+                    {
+                        data_i = dealers_data[i];
+                        if (!(data_i.manager_id in managers) && data_i.manager_id != null)
+                        {
+                            managers[data_i.manager_id] = data_i.manager_name;
+                            jQuery('#filter_manager')
+                            .append(jQuery("<option></option>")
+                                .attr("value",data_i.manager_id)
+                                .text(data_i.manager_name));
+                        }
+                    }
+                }
+                if (Object.keys(cities).length === 0)
+                {
+                    for(var i = 0, data_i; i < dealers_data_length; i++)
+                    {
+                        data_i = dealers_data[i];
+                        if (!(data_i.city in cities) && data_i.city != null && data_i.city != '')
+                        {
+                            cities[data_i.city] = data_i.city;
+                            jQuery('#filter_city')
+                            .append(jQuery("<option></option>")
+                                .attr("value",data_i.city)
+                                .text(data_i.city));
+                        }
+                    }
+                }
+                showDealers();
+            },
+            dataType: "json",
+            async: true,
+            timeout: 30000,
+            error: function(data){
+                var n = noty({
+                    timeout: 2000,
+                    theme: 'relax',
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка. Сервер не отвечает"
+                });
+            }                   
+        });
+
         var HelpMessageSpan = $("<span></span>"),
             HelpMessage = $(".HelpMessage");
 
@@ -165,6 +223,10 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
         jQuery(document).mousedown(function(e){
             var target = e.target;
             //console.log(e.target.tagName);
+            if (target === null)
+            {
+                return;
+            }
             // цикл двигается вверх от target к родителям до table
             while (target.tagName != 'BODY')
             {
@@ -406,13 +468,127 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
                 }
 
                 target = target.parentNode;
+                if (target === null)
+                {
+                    return;
+                }
             }
         });
 
-        showDealers();
+        var dealer_price_sort = $("#dealer_price").data("sort");
+
+        var wheel_count_dealers = null, last_tr = null;
+
         document.getElementById('find_dealer').onclick = showDealers;
         document.getElementById('filter_manager').onchange = showDealers;
         document.getElementById('filter_city').onchange = showDealers;
+        document.getElementById('name_find_dealer').onfocus = function(){
+            wheel_count_dealers = null;
+            last_tr = null;
+            tbody_dealers.innerHTML = '';
+        };
+
+        document.onkeydown = function(e){
+            if (e.keyCode === 13)
+            {
+                document.getElementById('name_find_dealer').blur();
+                showDealers();
+            }
+        };
+
+        document.onwheel = check_bottom_tr;
+        document.body.onmousemove = check_bottom_tr;
+
+        function check_bottom_tr(e){
+            if (dealers_data_length > wheel_count_dealers + 1 && inWindow(last_tr).length > 0)
+            {
+                print_dealers(wheel_count_dealers + 1, dealers_data_length);
+            }
+        }
+        
+        function inWindow(s){
+            var scrollTop = $(window).scrollTop();
+            var windowHeight = $(window).height();
+            var currentEls = $(s);
+            var result = [];
+            currentEls.each(function(){
+                var el = $(this);
+                var offset = el.offset();
+                if(scrollTop <= offset.top && (el.height() + offset.top) < (scrollTop + windowHeight))
+                    result.push(this);
+            });
+            return $(result);
+        }
+
+        function showDealers()
+        {
+            wheel_count_dealers = null;
+            last_tr = null;
+            tbody_dealers.innerHTML = '';
+            print_dealers(0);
+        }
+
+        function print_dealers(begin)
+        {
+            //console.log(wheel_count_dealers);
+            var html = '', color;
+            var name_find_dealer = document.getElementById('name_find_dealer').value;
+            var reg_name_find_dealer = new RegExp(name_find_dealer, "ig");
+            var filter_manager = document.getElementById('filter_manager').value;
+            var filter_city = document.getElementById('filter_city').value;
+            for(var i = begin, data_i, iter = 0; i < dealers_data_length; i++)
+            {
+                data_i = dealers_data[i];
+                if ((reg_name_find_dealer.test(data_i.client_name) || reg_name_find_dealer.test(data_i.client_contacts)) &&
+                    (filter_city === data_i.city || filter_city === "") &&
+                    (filter_manager === data_i.manager_id || filter_manager === ""))
+                {
+                    for(var key in data_i)
+                    {
+                        if (data_i[key] == null)
+                        {
+                            data_i[key] = '-';
+                        }
+                    }
+                    if(data_i.kp_cnt + data_i.cmnt_cnt + data_i.inst_cnt == 0 )
+                    {
+                        color = "bgcolor=\"#d3d3f9\"";
+                    }
+                    else
+                    {
+                        color = '';
+                    }
+                    html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
+                    html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';
+                    html += '<td>' + data_i.client_name + '</td>';
+                    html += '<td>' + data_i.min_canvas_price + ' руб. / ' + data_i.min_component_price + ' руб.</td>';
+                    html += '<td>' + data_i.client_contacts + '</td>';
+                    html += '<td>' + data_i.city + '</td>';
+                    html += '<td>' + data_i.created + '</td>';
+                    html += '<td>' + data_i.manager_name + '</td>';
+                    if(data_i.dealer_type == 6){
+                        html += '<td><font face="webdings"> @ </font></td>';
+                    }
+                    else{
+                        html += '<td></td>';
+                    }
+                    html += '</tr>';
+                    tbody_dealers.innerHTML += html;
+                    wheel_count_dealers = i;
+                    iter++;
+                    if (iter === 20)
+                    {
+                        break;
+                    }
+                }
+                html = '';
+            }
+            if (wheel_count_dealers !== null)
+            {
+                var elems_tr = tbody_dealers.getElementsByTagName('tr');
+                last_tr = elems_tr[elems_tr.length - 1];
+            }
+        }
     });
 
     var Ajax = "/index.php?option=com_gm_ceiling&task=";
@@ -475,107 +651,6 @@ $comm_offers = $comm_model->getData("`manufacturer_id` = $user->dealer_id");
             timeout: time,
             type: status,
             text: message
-        });
-    }
-
-    function showDealers(){
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=findOldClients",
-            data: {
-                fio: document.getElementById('name_find_dealer').value,
-                flag: 'dealers',
-                manager_id: document.getElementById('filter_manager').value,
-                city: document.getElementById('filter_city').value,
-                dealer_price_sort: $("#dealer_price").data("sort")
-            },
-            success: function(data){
-                //console.log(data);
-                var tbody = document.getElementById('tbody_dealers');
-                tbody.innerHTML = '';
-                var html = '';
-                var color;
-                var d_length = data.length;
-                for(var i = 0, data_i; i < d_length; i++)
-                {
-                    data_i = data[i];
-                    for(var key in data_i)
-                    {
-                        if (data_i[key] == null)
-                        {
-                            data_i[key] = '-';
-                        }
-                    }
-                    if(data_i.kp_cnt + data_i.cmnt_cnt + data_i.inst_cnt == 0 )
-                    {
-                        color = "bgcolor=\"#d3d3f9\"";
-                    }
-                    else
-                    {
-                        color = '';
-                    }
-                    html += '<tr ' + color + ' data-href="/index.php?option=com_gm_ceiling&view=clientcard&type=dealer&id=' + data_i.id + '">';
-                    html += '<td class="td_checkbox"><input type="checkbox" name="checkbox_dealer[]" data-id="' + data_i.id + '" data-dealer_id="' + data_i.dealer_id + '"></td>';
-                    html += '<td>' + data_i.client_name + '</td>';
-                    html += '<td>' + data_i.min_canvas_price + ' руб. / ' + data_i.min_component_price + ' руб.</td>';
-                    html += '<td>' + data_i.client_contacts + '</td>';
-                    html += '<td>' + data_i.city + '</td>';
-                    html += '<td>' + data_i.created + '</td>';
-                    html += '<td>' + data_i.manager_name + '</td>';
-                    if(data_i.dealer_type == 6){
-                        html += '<td><font face="webdings"> @ </font></td>';
-                    }
-                    else{
-                        html += '<td></td>';
-                    }
-                    html += '</tr>';
-                }
-                tbody.innerHTML = html;
-                html = '';
-                if (Object.keys(managers).length === 0)
-                {
-                    for(var i = 0, data_i; i < d_length; i++)
-                    {
-                        data_i = data[i];
-                        if (!(data_i.manager_id in managers) && data_i.manager_id != '-')
-                        {
-                            managers[data_i.manager_id] = data_i.manager_name;
-                            jQuery('#filter_manager')
-                            .append(jQuery("<option></option>")
-                                .attr("value",data_i.manager_id)
-                                .text(data_i.manager_name));
-                        }
-                    }
-                }
-                if (Object.keys(cities).length === 0)
-                {
-                    for(var i = 0, data_i; i < d_length; i++)
-                    {
-                        data_i = data[i];
-                        if (!(data_i.city in cities) && data_i.city != '-')
-                        {
-                            cities[data_i.city] = data_i.city;
-                            jQuery('#filter_city')
-                            .append(jQuery("<option></option>")
-                                .attr("value",data_i.city)
-                                .text(data_i.city));
-                        }
-                    }
-                }
-            },
-            dataType: "json",
-            async: false,
-            timeout: 20000,
-            error: function(data){
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка. Сервер не отвечает"
-                });
-            }
         });
     }
 </script>
