@@ -115,8 +115,9 @@ jQuery(document).ready(function(){
 
     document.onwheel = check_bottom_tr;
     document.body.onmousemove = check_bottom_tr;
+    document.body.ontouchmove = check_bottom_tr;
 
-    function check_bottom_tr(e){
+    function check_bottom_tr(){
         if (clients_data.length > wheel_count_clients + 1 && inWindow(last_tr).length > 0)
         {
             print_clients(wheel_count_clients + 1, clients_data.length);
