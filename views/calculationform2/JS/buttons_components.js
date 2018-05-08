@@ -552,19 +552,31 @@ function in_array(array,value){
 
 function open_general_blocks() {
     let arr_parent = [];
+    let obj;
+    let prop_name;
+    let calc_props = [];
     let btn_name;
     for(let i = Object.keys(calculation).length;i--;){
         if (!empty(calculation[Object.keys(calculation)[i]]) ){
-            btn_name = get_parent(Object.keys(calculation)[i]);
+            obj = get_parent(Object.keys(calculation)[i]);
+            if(obj){
+                 btn_name = obj.btn_id;
+            prop_name = obj.key;
+            }
+           
             if (btn_name && !in_array(arr_parent,btn_name)){
                arr_parent.push(btn_name);  
             }
+            if(prop_name && !in_array(calc_props,prop_name)){
+                calc_props.push(prop_name);
+            }
         } 
     }
+    console.log(calc_props);
     arr_parent.forEach(function(item){
         jQuery(`#${item}`).trigger("click");        
     });
-    open_blocks();
+    open_blocks(calc_props);
 }
 function get_parent(n) {
     let result;
@@ -572,65 +584,38 @@ function get_parent(n) {
         if (item.children) {
             for (let i = item.children.length;i--;){
                 if (item.children[i].block_id == `block_${n}`) {
-                   result = item.btn_id;
-                   break;
+                    result = {key : n, btn_id : item.btn_id};
+                    break;
                 }
             }
         }
+
     });
     return result;
 }
-function open_blocks(){
-    for(let i = Object.keys(calculation).length;i--;){
+function open_blocks(props){
+    for(let i = props.length;i--;){
 
-        switch(Object.keys(calculation)[i]){
+        switch(props[i]){
+            case 'n15':
+            case 'n27':
             case 'n16':
-                if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
-                    jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
-                }
+                jQuery('#btn_n16').trigger("click")
                 break;
             case 'mounting_sum':
-                if(calculation[Object.keys(calculation)[i]]>0){
+                if(calculation['mounting_sum']>0){
                     jQuery(`#btn_need_mount`).trigger("click");
                 }
                 break;
+            case 'n8':
             case 'n7':
-                if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n7']) || !empty(calculation['n8'])){
-                    jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
-                }
+                jQuery('#btn_n7').trigger("click")
                 break;
             default:
-                if(!empty(calculation[Object.keys(calculation)[i]]) ){
-                    if(!empty(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0])){
-                        jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
-                    }
+                if(!empty(jQuery(`#btn_${props[i]}`)[0])){
+                    jQuery(`#btn_${props[i]}`).trigger("click");
                 }
-
         }
-     /*   if(Object.keys(calculation)[i] == 'n28'){
-            if(calculation[Object.keys(calculation)[i]] == 0 && calculation[Object.keys(calculation)[i]] != 3){
-                jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
-            }
-        }
-        else if(Object.keys(calculation)[i] == 'n16'){
-            if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n15']) || !empty(calculation['n27'])){
-                jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
-            }
-        } else if (Object.keys(calculation)[i] == 'mounting_sum') {
-            if(calculation[Object.keys(calculation)[i]]>0){
-                jQuery(`#btn_need_mount`).trigger("click");
-            }
-        } else if (Object.keys(calculation)[i] == 'n7') {
-            if(!empty(calculation[Object.keys(calculation)[i]]) || !empty(calculation['n7']) || !empty(calculation['n8'])){
-                jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click")
-            }
-        } else {
-            if(!empty(calculation[Object.keys(calculation)[i]]) ){
-                if(!empty(jQuery(`#btn_${Object.keys(calculation)[i]}`)[0])){
-                    jQuery(`#btn_${Object.keys(calculation)[i]}`).trigger("click");
-                }
-            }
-        }*/
     }
 }
 let change_event_radio = function(){
@@ -689,7 +674,6 @@ function fill_calc_data(){
     let obj;
     for(let i = Object.keys(calculation).length;i--;){
        if(!empty(calculation[Object.keys(calculation)[i]])){
-            console.log(Object.keys(calculation)[i]);
            switch(Object.keys(calculation)[i]){
                 case 'n28':
                 case 'height':
@@ -905,7 +889,6 @@ function find_radio_element(elements,value){
 
 function check_radio(elements,value){
     jQuery("#jform_n28_3").attr('checked',false);
-    console.log(find_radio_element(elements,value));
     jQuery(find_radio_element(elements,value)).attr('checked',true);
 }
 function create_n6_button(){
