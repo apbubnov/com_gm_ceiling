@@ -111,9 +111,9 @@ jQuery(document).ready(function(){
     elem_select_status.onchange = show_clients;
     document.getElementById('search_btn').onclick = show_clients;
 
-    document.onwheel = check_bottom_tr;
-    document.body.onmousemove = check_bottom_tr;
-    document.body.ontouchmove = check_bottom_tr;
+    //document.onwheel = check_bottom_tr;
+    //document.body.onmousemove = check_bottom_tr;
+    //document.body.ontouchmove = check_bottom_tr;
 
     var elem_show = document.getElementById('show_btn');
 
@@ -124,7 +124,7 @@ jQuery(document).ready(function(){
         }
     }
 
-    function check_bottom_tr(){
+    /*function check_bottom_tr(){
         if (clients_data.length > wheel_count_clients + 1 && inWindow(last_tr).length > 0)
         {
             print_clients(wheel_count_clients + 1, clients_data.length);
@@ -143,7 +143,7 @@ jQuery(document).ready(function(){
                 result.push(this);
         });
         return $(result);
-    }
+    }*/
 
     show_clients();
 
