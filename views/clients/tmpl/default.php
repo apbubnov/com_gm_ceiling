@@ -78,7 +78,7 @@ $status = $status_model->getData();
 		</tbody>
 	</table>
 </form>
-
+<center><button type="button" class="btn" id="show_btn">Показать еще</button></center>
 <script type="text/javascript">
 
 jQuery(document).ready(function(){
@@ -93,8 +93,6 @@ jQuery(document).ready(function(){
     var list = $("#clientList tbody");
 
     $(window).resize();
-
-    show_clients();
 
     elem_search.onfocus = function(){
         wheel_count_clients= null;
@@ -117,6 +115,15 @@ jQuery(document).ready(function(){
     document.body.onmousemove = check_bottom_tr;
     document.body.ontouchmove = check_bottom_tr;
 
+    var elem_show = document.getElementById('show_btn');
+
+    elem_show.onclick = function(){
+        if (clients_data.length > wheel_count_clients + 1)
+        {
+            print_clients(wheel_count_clients + 1, clients_data.length);
+        }
+    }
+
     function check_bottom_tr(){
         if (clients_data.length > wheel_count_clients + 1 && inWindow(last_tr).length > 0)
         {
@@ -137,6 +144,8 @@ jQuery(document).ready(function(){
         });
         return $(result);
     }
+
+    show_clients();
 
     function show_clients()
     {
@@ -193,8 +202,13 @@ jQuery(document).ready(function(){
                 iter++;
                 if (iter === 20)
                 {
+                    elem_show.style.display = 'block';
                     break;
                 }
+            }
+            if (i === clients_data.length - 1)
+            {
+                elem_show.style.display = 'none';
             }
         }
         if (wheel_count_clients !== null)
