@@ -382,7 +382,8 @@ if (empty($list['direction']))
 
 			$query = $db->getQuery(true);
 			$query
-				->select("`c`.*, GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`,u.dealer_type, `i`.`city`")
+				->select("`c`.`id`, `c`.`client_name`, `c`.`dealer_id`, `c`.`manager_id`, `c`.`created`")
+				->select("GROUP_CONCAT(`b`.`phone` SEPARATOR ', ') AS `client_contacts`, `u`.`dealer_type`, `i`.`city`")
 				->select("($kp_cnt_query) as kp_cnt")
 				->select("($comments_cnt_query) as cmnt_cnt")
 				->select("($dealer_instr_cnt_query) as inst_cnt")

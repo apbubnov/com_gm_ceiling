@@ -198,7 +198,7 @@
             <tr class = "row_project" data-href="
                 <?php
                     if($user->dealer_type == 1) {
-                        if ($item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) {
+                        if ($item->status == "Просчет" || $item->status == "Отказ от договора" || $item->status == "Ждет замера" || $item->status == "Договор" ) {
                             echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=calendar&id='.(int) $item->id);
                         } else {
                             echo JRoute::_('index.php?option=com_gm_ceiling&view=project&type=calculator&subtype=project&id='.(int) $item->id);

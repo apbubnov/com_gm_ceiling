@@ -78,7 +78,7 @@ $status = $status_model->getData();
 		</tbody>
 	</table>
 </form>
-
+<center><button type="button" class="btn" id="show_btn">Показать еще</button></center>
 <script type="text/javascript">
 
 jQuery(document).ready(function(){
@@ -93,8 +93,6 @@ jQuery(document).ready(function(){
     var list = $("#clientList tbody");
 
     $(window).resize();
-
-    show_clients();
 
     elem_search.onfocus = function(){
         wheel_count_clients= null;
@@ -113,10 +111,20 @@ jQuery(document).ready(function(){
     elem_select_status.onchange = show_clients;
     document.getElementById('search_btn').onclick = show_clients;
 
-    document.onwheel = check_bottom_tr;
-    document.body.onmousemove = check_bottom_tr;
+    //document.onwheel = check_bottom_tr;
+    //document.body.onmousemove = check_bottom_tr;
+    //document.body.ontouchmove = check_bottom_tr;
 
-    function check_bottom_tr(e){
+    var elem_show = document.getElementById('show_btn');
+
+    elem_show.onclick = function(){
+        if (clients_data.length > wheel_count_clients + 1)
+        {
+            print_clients(wheel_count_clients + 1, clients_data.length);
+        }
+    }
+
+    /*function check_bottom_tr(){
         if (clients_data.length > wheel_count_clients + 1 && inWindow(last_tr).length > 0)
         {
             print_clients(wheel_count_clients + 1, clients_data.length);
@@ -135,7 +143,9 @@ jQuery(document).ready(function(){
                 result.push(this);
         });
         return $(result);
-    }
+    }*/
+
+    show_clients();
 
     function show_clients()
     {
@@ -192,8 +202,13 @@ jQuery(document).ready(function(){
                 iter++;
                 if (iter === 20)
                 {
+                    elem_show.style.display = 'block';
                     break;
                 }
+            }
+            if (i === clients_data.length - 1)
+            {
+                elem_show.style.display = 'none';
             }
         }
         if (wheel_count_clients !== null)
