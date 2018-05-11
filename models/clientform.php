@@ -397,7 +397,7 @@ class Gm_ceilingModelClientForm extends JModelForm
 		        }
 	            
 				$project_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
-	            $result = $project_model->getItemsByPhoneNumber($phone, $user->dealer_id);
+	            $result = $project_model->getItemsByPhoneNumber($phone, $data['dealer_id']);
 
 	            if (!empty($result))
 	            {

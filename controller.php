@@ -3356,7 +3356,7 @@ public function register_mnfctr(){
                 $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
                 $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
                 $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
-                $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_phones');
+                $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('client_phones');
 
                 $data['client_name'] = 'Клиент с обзвона';
                 $data['client_contacts'] = explode('+', $_POST['phone'])[1];

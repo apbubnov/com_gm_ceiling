@@ -307,7 +307,7 @@
                                         </tr>
                                         <tr>
                                             <th><?php echo JText::_('COM_GM_CEILING_CLIENTS_CLIENT_CONTACTS'); ?></th>
-                                            <td><?foreach ($phones as $contact):?><a href="tel:+<?=$contact->phone;?>"><?=$contact->phone;?></a><?endforeach;?></td>
+                                            <td><?foreach ($phones as $contact):?><a href="tel:+<?=$contact->phone;?>"><?=$contact->phone;?></a><br><?endforeach;?></td>
                                         </tr>
                                         <tr>
                                             <th>Почта</th>
