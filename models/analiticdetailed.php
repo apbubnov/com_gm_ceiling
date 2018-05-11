@@ -59,7 +59,7 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 		
 	
 	
-	function getData($date1 = null,$date2 = null)
+	function getData($date1 = null,$date2 = null,$dealer_id = null)
 	{
 		try
 		{
@@ -81,6 +81,9 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 			if(empty($date1)&&empty($date2)){
 				$date1 = date("Y-m-d");
 				$date2 = date("Y-m-d");
+			}
+			if(empty($dealer_id)){
+				$dealer_id = 0;
 			}
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
@@ -173,8 +176,8 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 				->select("($mounts) as mounts")
                 ->select("($closed) as closed")
                 ->select("ifnull(($sum_done),0) as sum_done")
-				->from('`#__gm_ceiling_api_phones` AS a');
-			
+				->from('`#__gm_ceiling_api_phones` AS a')
+				->where("a.dealer_id = $dealer_id");
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();

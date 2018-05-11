@@ -94,7 +94,7 @@ class Gm_ceilingModelApi_phones extends JModelList
 			$query = $db->getQuery(true);
 			$query->select('*');
 			$query->from('#__gm_ceiling_api_phones');
-			$query->where("id <> 10");
+			$query->where("id <> 10 and dealer_id = $user->dealer_id");
 			$db->setQuery($query);
 			$item = $db->loadObjectList();
 			return $item;

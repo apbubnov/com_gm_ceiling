@@ -2198,8 +2198,9 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
             $date1 = $jinput->get('date1','','STRING');
             $date2 = $jinput->get('date2','','STRING');
+            $dealer_id = $jinput->get('dealer_id','','STRING');
             $analitic_model = Gm_ceilingHelpersGm_ceiling::getModel('analiticcommon');
-            $data = $analitic_model->getDataByPeriod($date1,$date2);
+            $data = $analitic_model->getDataByPeriod($date1,$date2,$dealer_id);
             die(json_encode($data));
         }
         catch(Exception $e)
@@ -2216,8 +2217,9 @@ public function register_mnfctr(){
             $jinput = JFactory::getApplication()->input;
             $date1 = $jinput->get('date1','','STRING');
             $date2 = $jinput->get('date2','','STRING');
+             $dealer_id = $jinput->get('dealer_id','','STRING');
             $analitic_model = Gm_ceilingHelpersGm_ceiling::getModel('analiticdetailed');
-            $data = $analitic_model->getData($date1,$date2);
+            $data = $analitic_model->getData($date1,$date2,$dealer_id);
             die(json_encode($data));
         }
         catch(Exception $e)
