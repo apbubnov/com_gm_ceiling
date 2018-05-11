@@ -652,6 +652,7 @@
     });
     jQuery('document').ready(function()
     {
+        jQuery("#phone").mask("+7 (999) 999-99-99")
         var time_end,time_start = performance.now();
         if(user_id){
             jQuery("#fio_cont").hide();
