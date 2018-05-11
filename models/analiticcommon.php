@@ -21,7 +21,7 @@
 class Gm_ceilingModelAnaliticcommon extends JModelList
 {
 	
-	function getData()
+	function getData($dealer_id = null)
 	{
 		try
 		{
@@ -38,6 +38,9 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			(SELECT  SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0))) FROM `rgzbn_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 12) AS cost
 			FROM `rgzbn_gm_ceiling_projects` AS p INNER JOIN `rgzbn_gm_ceiling_api_phones` AS a ON p.api_phone_id = a.id
  */
+			if(empty($dealer_id)){
+				$dealer_id  = 0;
+			}
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$common = $db->getQuery(true);
@@ -105,8 +108,10 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 				->select("($sum) as sum")
 				->select("($profit) as profit")
 				->from('`#__gm_ceiling_api_phones` AS a')
-				->leftJoin('`#__gm_ceiling_projects` AS p ON p.api_phone_id = a.id');
-				//throw new Exception($query);
+				->where("a.dealer_id = $dealer_id");
+				/*->from('`#__gm_ceiling_api_phones` AS a')
+				->leftJoin('`#__gm_ceiling_projects` AS p ON p.api_phone_id = a.id and a.dealer_id ='.$dealer_id);*/
+				//throw new Exception($dealer_id);
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();
@@ -121,20 +126,22 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 				$d_sum +=  $designer->sum;
 				$d_profit+= $designer->profit;
 			}
-			$d_object = (object)array(
-				"name" => "Отделочники",
-				"common" => $d_common,
-				"dealers" => 0,
-				"advt" => 0,
-				"refuse" => $d_refuse,
-				"inwork" => $d_inwork,
-				"measure" => $d_measure,
-				"deals" => $d_deals,
-				"done" => $d_done,
-				"sum" => $d_sum,
-				"profit" => $d_profit
-			);
-			array_push($items,$d_object);
+			if($dealer_id == 0 || $dealer_id == 1 || $dealer_id == 2){
+				$d_object = (object)array(
+					"name" => "Отделочники",
+					"common" => $d_common,
+					"dealers" => 0,
+					"advt" => 0,
+					"refuse" => $d_refuse,
+					"inwork" => $d_inwork,
+					"measure" => $d_measure,
+					"deals" => $d_deals,
+					"done" => $d_done,
+					"sum" => $d_sum,
+					"profit" => $d_profit
+				);
+				array_push($items,$d_object);
+			}
 
 			return $items;
 		}
@@ -146,7 +153,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
             throw new Exception('Ошибка!', 500);
         }
 	}
-	function getDataByPeriod($date1,$date2){
+	function getDataByPeriod($date1,$date2,$dealer_id = null){
 		try
 		{
 			/*SELECT  DISTINCT a.name,
@@ -227,8 +234,8 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 				->select("ifnull(($sum),0) as sum")
 				->select("ifnull(($profit),0) as profit")
 				->from('`#__gm_ceiling_api_phones` AS a')
-				->leftJoin('`#__gm_ceiling_projects` AS p ON p.api_phone_id = a.id');
-				//throw new Exception($query);
+				->leftJoin('`#__gm_ceiling_projects` AS p ON p.api_phone_id = a.id')
+				->where("a.dealer_id = $dealer_id");
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();

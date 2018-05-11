@@ -1486,7 +1486,7 @@ class Gm_ceilingHelpersGm_ceiling
             $dealer_mp20 = margin($gm_mp20, $margin['dealer_canvases_margin']);
             $guild_data[] = array(
                 "title" => "Обработка 1 угла",                                                   //Название
-                "quantity" => $data['n9'] - 4,                                                   //Кол-во
+                "quantity" => $data['n9'] - 6,                                                   //Кол-во
                 "gm_salary" => $gm_mp20,                                                         //Себестоимость монтажа ГМ (зарплата монтажников)
                 "gm_salary_total" => ($data['n9'] - 6) * $gm_mp20,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                 "dealer_salary" => $dealer_mp20,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
