@@ -3347,6 +3347,42 @@ public function register_mnfctr(){
         }
     }
         
+    function acceptFromCall() {
+        try
+        {
+            if (!empty($_POST['phone'])) {
+                $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
+                $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+                $callback_model = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+                $clientsphones_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_phones');
+
+                $data['client_name'] = 'Клиент с обзвона';
+                $data['client_contacts'] = explode('+', $_POST['phone'])[1];
+                //die($_POST['phone'].' '.$data['client_contacts']);
+                $result = $clientform_model->save($data);
+                if (mb_ereg('[\d]', $result)) {
+                    $clienthistory_model->save($result, 'Клиент создан автоматически в результате аудиообзвона');
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $result, 1);
+                }
+                else
+                {
+                    $client = $clientsphones_model->getItemsByPhoneNumber($data['client_contacts'], 1);
+                    $callback_model->save(date("Y-m-d H:i:s"), 'Клиент прослушал сообщение аудиообзвона', $client->id, 1);
+                }
+                die(true);
+            }
+            else {
+                die(false);
+            }
+        }
+        catch(Exception $e)
+        {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die((object) ["status" => "error", "message" => $e->getMessage()]);
+        }
+    }
 }
 
 ?>

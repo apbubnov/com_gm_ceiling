@@ -362,22 +362,6 @@ class Gm_ceilingModelClientForm extends JModelForm
 			$id    = (!empty($data['id'])) ? $data['id'] : (int) $this->getState('client.id');
 			$state = (!empty($data['state'])) ? 1 : 0;
 			$user  = JFactory::getUser();
-
-			if ($id)
-			{
-				// Check the user can edit this item
-				$authorised = $user->authorise('core.edit', 'com_gm_ceiling') || $authorised = $user->authorise('core.edit.own', 'com_gm_ceiling');
-			}
-			else
-			{
-				// Check the user can create new items in this section
-				$authorised = $user->authorise('core.create', 'com_gm_ceiling');
-			}
-
-			if ($authorised !== true)
-			{
-				//throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'), 403);
-			}
 			
 			$groups = $user->get('groups');
 
@@ -385,11 +369,10 @@ class Gm_ceilingModelClientForm extends JModelForm
 				if(isset($user->dealer_id)) {
 					$data['dealer_id'] = $user->dealer_id;
 				} else {
-					$data['dealer_id'] = 2;
+					$data['dealer_id'] = 1;
 				}
 			}
 			
-			//Если менеджер дилера, то показывать дилерских клиентов
 			if(in_array("13",$groups)){
 				$data['manager_id'] = $user->id;
 			}
@@ -398,9 +381,7 @@ class Gm_ceilingModelClientForm extends JModelForm
 
 			if(!empty($data['client_contacts']))
 			{
-				$db = JFactory::getDbo();
-				$phone = $db->escape($data['client_contacts'], true);
-
+				$phone = $data['client_contacts'];
 				$phone = mb_ereg_replace('[^\d]', '', $phone);
 		        if (mb_substr($phone, 0, 1) == '9' && strlen($phone) == 10)
 		        {
@@ -431,6 +412,7 @@ class Gm_ceilingModelClientForm extends JModelForm
 				$id_client = $table->id;
 				if(!empty($phone))
 				{
+					$db = JFactory::getDbo();
 					$query = $db->getQuery(true);
 					$query->insert('#__gm_ceiling_clients_contacts');
 					$query->columns('`client_id`, `phone`');
