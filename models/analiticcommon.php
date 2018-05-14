@@ -166,6 +166,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 	(SELECT COUNT(p.id) FROM `rgzbn_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 15) AS refuse
 	 FROM `rgzbn_gm_ceiling_projects` AS p INNER JOIN `rgzbn_gm_ceiling_api_phones` AS a ON p.api_phone_id = a.id 
 	 WHERE p.created BETWEEN '2017-11-06' AND '2017-11-10'*/
+	 		$dealer = JFactory::getUser($dealer_id);
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$common = $db->getQuery(true);
@@ -221,21 +222,22 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 				->select("SUM(COALESCE(p.new_project_sum,0)) - (SUM(COALESCE(p.new_material_sum,0))+ SUM(COALESCE(p.new_mount_sum,0)))")
 				->from("#__gm_ceiling_projects as p")
 				->where("p.api_phone_id = a.id  AND p.project_status = 12 AND p.created BETWEEN '$date1' AND '$date2'");
-			$query
-				->select(' DISTINCT a.name')
-				->select("($common) as common")
-				->select("($dealers) as dealers")
-				->select("($advt) as advt")
-				->select("($refuse) as refuse")
-				->select("($inwork) as inwork")
-				->select("($measure) as measure")
-                ->select("($deals) as deals")
-                ->select("($done) as done")
-				->select("ifnull(($sum),0) as sum")
-				->select("ifnull(($profit),0) as profit")
-				->from('`#__gm_ceiling_api_phones` AS a')
-				->leftJoin('`#__gm_ceiling_projects` AS p ON p.api_phone_id = a.id')
-				->where("a.dealer_id = $dealer_id");
+			$query->select(' DISTINCT a.name');
+			$query->select("($common) as common");
+			if($dealer->dealer_type!=1){
+				$query->select("($dealers) as dealers");
+				$query->select("($advt) as advt");
+				$query->select("($refuse) as refuse");
+			}
+			$query->select("($inwork) as inwork");
+			$query->select("($measure) as measure");
+            $query->select("($deals) as deals");
+            $query->select("($done) as done");
+			$query->select("ifnull(($sum),0) as sum");
+			$query->select("ifnull(($profit),0) as profit");
+			$query->from('`#__gm_ceiling_api_phones` AS a');
+			$query->leftJoin('`#__gm_ceiling_projects` AS p ON p.api_phone_id = a.id');
+			$query->where("a.dealer_id = $dealer_id");
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();

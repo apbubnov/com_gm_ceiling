@@ -111,7 +111,7 @@ if(!$api){
                         echo floor($item->profit); 
                     ?>
                 </td>
-				<td>
+				<td data-th = "">
 					<button type="button" class='clear_form_group btn btn-primary'> <i class="fa fa-eye-slash" aria-hidden="true"></i> </button>
 				</td>
 			</tr>
@@ -264,9 +264,17 @@ if(!$api){
 </form>
 
 <script>
+	var columns_array = [];
 	 jQuery(document).ready(function(){
+	 	columns_array["name"] = "Реклама";
+	 	columns_array["common"] = "Всего";
+ 		columns_array["inwork"] = "В работе";
+ 		columns_array["measure"] = "Замеры";
+ 		columns_array["deals"] = "Договоры";
+ 		columns_array["done"] = "Выполнено";
+ 		columns_array["sum"] = "Сумма";
+ 		columns_array["profit"] = "Прибыль";
 	 	var dealer_id = '<?php echo $user->dealer_id?>';
-	 	console.log(dealer_id);
         hideEmptyTr("#c_analitic-table");
 		c_all_count = []; 
 		c_all_count['name'] = "Итого:"; 
@@ -591,9 +599,9 @@ if(!$api){
 									}
 									all_count[Object.keys(data[i])[j]]+=data[i][Object.keys(data[i])[j]]-0;
 								}
-								jQuery(table_name+' > tbody > tr:last').append('<td>'+data[i][Object.keys(data[i])[j]] +'</td>');
+								jQuery(table_name+' > tbody > tr:last').append('<td data-th="'+columns_array[Object.keys(data[i])[j]]+'">'+data[i][Object.keys(data[i])[j]] +'</td>');
 							}
-							jQuery(table_name+' > tbody > tr:last').append("<td th-data = 'Очистить'><button class='clear_form_group btn btn-primary' type='button'><i class=\"fa fa-eye-slash\" aria-hidden=\"true\"></i></button></td> ");
+							jQuery(table_name+' > tbody > tr:last').append("<td data-th = \"Скрыть\"><button class='clear_form_group btn btn-primary' type='button'><i class=\"fa fa-eye-slash\" aria-hidden=\"true\"></i></button></td> ");
 						}
 						if(table_name == "#c_analitic-table"){
                             c_all_count = all_count;
@@ -603,7 +611,7 @@ if(!$api){
                         }
 						jQuery(table_name).append('<tr></tr>');
 						for(var i in all_count){
-							jQuery(table_name+' > tbody > tr:last').append('<td th-data = "Итого"> <b>'+all_count[i]+'<b></td>');
+							jQuery(table_name+' > tbody > tr:last').append('<td data-th = "Итого"> <b>'+all_count[i]+'<b></td>');
 							jQuery(table_name+' > tbody > tr:last').attr("data-value", "total");
                         }
                         
