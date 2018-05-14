@@ -34,32 +34,32 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane active" id="summary" role="tabpanel">
-                    <table id="table1" class="table-striped one-touch-view">
-                        <tr>
+                    <table id="table1">
+                        <tr style="background-color: rgba(0,0,0,0.15);">
                             <th colspan="4" class="section_header" id="sh_ceilings">
-                                Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                                Потолки <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i>
                             </th>
                         </tr>
                         <?php 
                             foreach ($calculations as $calculation) {
                         ?>
-                            <tr class="section_ceilings">
+                            <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.05);">
                                 <td class="include_calculation" colspan="4">
-                                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $hidden?>>
+                                    <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $hidden; ?> style="cursor: pointer;">
                                     <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
                                     <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
                                     <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
                                     <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>      
-                                    <span><?php echo $calculation->calculation_title; ?></span>
+                                    <span><i><b><?php echo $calculation->calculation_title; ?></b></i></span>
                                 </td>
                             </tr>
-                            <tr class="section_ceilings">
+                            <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.0);">
                                 <td>S/P :</td>
                                 <td colspan="3">
                                     <?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м
                                 </td>
                             </tr>
-                            <tr class="section_ceilings">
+                            <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.0);">
                                 <?php if ($calculation->discount != 0) { ?>
                                     <td>Цена / -<?php echo $calculation->discount ?>% :</td>
                                     <td id="calculation_total"> <?php echo round($calculation->calculation_total, 0); ?> р. /</td>
@@ -77,7 +77,7 @@
                                 }
                             } 
                         ?>
-                        <tr>
+                        <tr style="background-color: rgba(0,0,0,0.05);">
                             <th>Общая S/общий P :</th>
                             <th id="total_square">
                                 <span class = "sum"><?php echo round($total_square,2);?></span> м<sup>2</sup> /
@@ -86,7 +86,7 @@
                                 <span class = "sum"><?php echo  round($total_perimeter,2); ?></span> м
                             </th>
                         </tr>
-                        <tr>
+                        <tr style="background-color: rgba(0,0,0,0.15);">
                             <th colspan="4">Транспортные расходы</th>
                         </tr>
                         <tr>
@@ -148,13 +148,13 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Транспорт</th>
+                            <td>Транспорт</td>
                             <td colspan="3" id="transport_sum">
-                                <span class = "sum" data-selfval = <?php echo $self_sum_transport ?>><?=$client_sum_transport;?></span> р.
+                                <span class="sum" data-selfval = <?php echo $self_sum_transport ?>><?=$client_sum_transport;?></span> р.
                             </td>
                             <!-- <input id="transport_suma" value='<?php //echo $client_sum_transport; ?>' type='hidden'> -->
                         </tr>
-                        <tr>
+                        <tr style="background-color: rgba(0,0,0,0.15);">
                             <?php if ($kol > 0) { ?>
                                 <th>Итого/ - %:</th>
                                 <th id="project_total"><span class="sum">
@@ -199,7 +199,7 @@
                             <?php } ?>
                         </tr>
                         <?php if ($user->dealer_type != 2) { ?>
-                            <tr>
+                            <tr style="background-color: rgba(0,0,0,0.05);">
                                 <td id="calcs_self_canvases_total"><span>П </span> <span class = "sum"><?php echo round($self_canvases_sum, 0) ?></span></td>
                                 <td id="calcs_self_components_total"><span>К </span><span data-oldval = <?php echo round($self_components_sum, 0) ?> class = "sum"><?php echo round($self_components_sum, 0) ?></span></td>
                                 <td id="calcs_self_mount_total"><span>М </span><span class = "sum"><?php echo round($self_mounting_sum+$self_sum_transport, 0); ?></span></td>
@@ -207,16 +207,24 @@
                             </tr>
                         <?php } ?>
                         <tr>
-                            <th colspan="4" class="section_header" id="sh_estimate"> Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                            <th colspan="4" class="section_header" id="sh_estimate">Сметы и наряды на монтаж <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i></th>
+                        </tr>
+                        <tr>
+                            <th colspan="4" class="section_estimate" style="display: none;">Сметы:</th>
                         </tr>
                         <?php foreach ($calculations as $calculation) { ?>
                             <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                                <td><?php echo $calculation->calculation_title; ?></td>
+                                <?php
+                                    $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
+                                    $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
+                                ?>
+                                <td>
+                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                        <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                    <?php } ?>
+                                    <?php echo $calculation->calculation_title; ?>
+                                </td>
                                 <td colspan="3">
-                                    <?php
-                                        $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-                                        $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
-                                    ?>
                                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                                     <?php } else { ?>
@@ -228,54 +236,25 @@
                             }
                             $json = json_encode($pdf_names);
                         ?>
-                        <?php if (count($calculations) > 0) { ?>
-                            <tr class="section_estimate" style="display:none;">
-                                <td colspan="4"><b>Отправить все сметы <b></td>
-                            </tr>
-                            <tr class="section_estimate" style="display:none;">
-                                <td>
-                                    <div class="email-all" style="float: left;">
-                                        <input list="email" name="all-email" id="all-email1" class="form-control" placeholder="Адрес эл.почты" type="text">
-                                        <datalist id="email">
-                                            <?php foreach ($contact_email AS $em) { ?>
-                                                <option value="<?=$em->contact;?>">
-                                            <?php }?>
-                                        </datalist>
-                                    </div>
-                                    <div class="file_data">
-                                        <div class="file_upload">
-                                            <input type="file" class="dopfile" name="dopfile" id="dopfile">
-                                        </div>
-                                        <div class="file_name"></div>
-                                        <script>
-                                            jQuery(function () {
-                                                jQuery("div.file_name").html("Файл не выбран");
-                                                jQuery("div.file_upload input.dopfile").change(function () {
-                                                    var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                    jQuery("div.file_name").html((filename != "") ? filename : "Файл не выбран");
-                                                });
-                                            });
-                                        </script>
-                                    </div>
-                                </td>
-                                <td colspan="3">
-                                    <button class="btn btn-primary" id="send_all_to_email1" type="button">Отправить</button>
-                                </td>
-                            </tr>
-                        <?php } ?>
+
                         <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
                             <tr>
-                                <th id="sh_mount" colspan="4"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
+                                <th class="section_estimate" style="display: none;" colspan="4">Наряды на монтаж:</th>
                             </tr>
                             <?php foreach ($calculations as $calculation) { ?>
-                                <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
-                                    <td><?php echo $calculation->calculation_title; ?></td>
+                                <tr class="section_estimate" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
+                                    <?php 
+                                        $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";
+                                        $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
+                                    ?>
+                                    <td>
+                                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                            <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                        <?php } ?>
+                                        <?php echo $calculation->calculation_title; ?>
+                                    </td>
                                     <td colspan="3">
-                                        <?php 
-                                            $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf";
-                                            $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
-                                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
-                                        ?>
+                                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                             <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                                         <?php } else { ?>
                                             После договора
@@ -286,92 +265,36 @@
                                 }
                                 $json1 = json_encode($pdf_names_mount);
                             ?>
-                            <?php if (count($calculations) > 0) { ?>
-                                <tr class="section_mount" style="display:none;">
-                                    <td colspan="4"><b>Отправить все наряды на монтаж<b></td>
-                                </tr>
-                                <tr class="section_mount" style="display:none;">
-                                    <td>
-                                        <div class="email-all" style="float: left;">
-                                            <input name="all-email" id="all-email2" class="form-control" value="" placeholder="Адрес эл.почты" type="text">
-                                        </div>
-                                        <div class="file_data">
-                                            <div class="file_upload">
-                                                <input type="file" class="dopfile1" name="dopfile1" id="dopfile1">
-                                            </div>
-                                            <div class="file_name1"></div>
-                                            <script>
-                                                jQuery(function () {
-                                                    jQuery("div.file_name1").html("Файл не выбран");
-                                                    jQuery("div.file_upload input.dopfile1").change(function () {
-                                                        var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                        jQuery("div.file_name1").html((filename != "") ? filename : "Файл не выбран");
-                                                    });
-                                                });
-                                            </script>
-                                        </div>
-                                    </td>
-                                    <td colspan="3">
-                                        <button class="btn btn-primary" id="send_all_to_email2" type="button">Отправить</button>
-                                    </td>
-                                </tr>
-                            <?php } ?>
                         <?php } ?>
                         <!--------------- Общая смета для клиента -------------->
-                        <tr>
-                            <td><b>Отправить общую смету <b></td>
+                        <tr class="section_estimate" style="display: none;">
+                            <?php $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; ?>
+                            <td>
+                                <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                    <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                    <b>Общая смета<b>
+                                <?php } ?>
+                            </td>
                             <td colspan="3">
-                                <?php
-                                    $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf";
-                                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
-                                ?>
+                                <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank" id = "show">Посмотреть</a>
                                 <?php } else { ?>
                                     <span data-href="<?=$path;?>">-
                                 <?php } ?>
                             </td>
                         </tr>
-                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                            <tr>
-                                <td>
-                                    <div class="email-all" style="float: left;">
-                                        <input list="email" name="all-email" id="all-email3" class="form-control" placeholder="Адрес эл.почты" type="text">
-                                        <datalist id="email">
-                                            <?php foreach ($contact_email AS $em) { ?>
-                                                <option value="<?=$em->contact;?>">
-                                            <?php } ?>
-                                        </datalist>
-                                    </div>
-                                    <div class="file_data">
-                                        <div class="file_upload">
-                                            <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
-                                        </div>
-                                        <div class="file_name2"></div>
-                                        <script>
-                                            jQuery(function () {
-                                                jQuery("div.file_name2").html("Файл не выбран");
-                                                jQuery("div.file_upload input.dopfile2").change(function () {
-                                                    var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                    jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
-                                                });
-                                            });
-                                        </script>
-                                    </div>
-                                </td>
-                                <td colspan="3">
-                                    <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
-                                </td>
-                            </tr>
-                        <?php } ?>
                         <!-- общий наряд на монтаж--> 
                         <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
-                            <tr>
-                                <td><b>Общий наряд на монтаж <b></td>
+                            <tr class="section_estimate" style="display: none;">
+                                <?php $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; ?>
+                                <td>
+                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                        <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                        <b>Общий наряд на монтаж <b>
+                                    <?php } ?>
+                                </td>
                                 <td colspan="3">
-                                    <?php
-                                        $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; 
-                                        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
-                                    ?>
+                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
                                         <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
                                     <?php } else { ?>
                                         -
@@ -382,6 +305,36 @@
                                 </td>
                             </tr>
                         <?php } ?>
+                        <tr class="section_estimate" style="display: none;">
+                            <td>
+                                <div class="email-all" style="float: left;">
+                                    <input list="email" name="all-email" id="all-email3" class="form-control" placeholder="Адрес эл.почты" type="text">
+                                    <datalist id="email">
+                                        <?php foreach ($contact_email AS $em) { ?>
+                                            <option value="<?=$em->contact;?>">
+                                        <?php } ?>
+                                    </datalist>
+                                </div>
+                                <div class="file_data">
+                                    <div class="file_upload">
+                                        <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
+                                    </div>
+                                    <div class="file_name2"></div>
+                                    <script>
+                                        jQuery(function () {
+                                            jQuery("div.file_name2").html("Файл не выбран");
+                                            jQuery("div.file_upload input.dopfile2").change(function () {
+                                                var filename = jQuery(this).val().replace(/.*\\/, "");
+                                                jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </td>
+                            <td colspan="3">
+                                <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 <?php
@@ -688,3 +641,13 @@
         <?php } ?>
     </div>
 </div>
+<style type="text/css">
+    #table1 tr
+    {
+        border: 1px solid #414099;
+    }
+    #table1 td
+    {
+        cursor: default;
+    }
+</style>

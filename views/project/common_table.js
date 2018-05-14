@@ -273,3 +273,15 @@ function calculate_transport(){
             break;
     }
 }
+
+var flag = 1;
+jQuery("#sh_ceilings").click(function () {
+    if (flag) {
+        jQuery(".section_ceilings").hide();
+        flag = 0;
+    }
+    else {
+        jQuery(".section_ceilings").show();
+        flag = 1;
+    }
+});
