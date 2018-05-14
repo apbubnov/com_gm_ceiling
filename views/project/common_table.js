@@ -1,3 +1,10 @@
+var project_id;
+
+function accept_global_variables(pr_id)
+{
+    project_id = pr_id;
+}
+
 jQuery("[name = click_transport]").click(function () {
     calculate_transport();
 });
@@ -273,3 +280,15 @@ function calculate_transport(){
             break;
     }
 }
+
+var flag = 1;
+jQuery("#sh_ceilings").click(function () {
+    if (flag) {
+        jQuery(".section_ceilings").hide();
+        flag = 0;
+    }
+    else {
+        jQuery(".section_ceilings").show();
+        flag = 1;
+    }
+});
