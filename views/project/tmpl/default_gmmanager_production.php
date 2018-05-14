@@ -16,7 +16,6 @@ $dop_num_model = Gm_ceilingHelpersGm_ceiling::getModel('dop_numbers_of_users');
 $dop_num = $dop_num_model->getData($userId)->dop_number;
 $_SESSION['user_group'] = $user_group;
 $_SESSION['dop_num'] = $dop_num;
-
 $project_id = $this->item->id;
 
 $canEdit = JFactory::getUser()->authorise('core.edit', 'com_gm_ceiling');
@@ -231,9 +230,8 @@ if (!empty($_SESSION["project_card_$project_id"]))
             $email = $dop_contacts->getEmailByClientID($this->item->id_client);
         }
         $client_dealer = JFactory::getUser($model_client->getClientById($this->item->id_client)->dealer_id);
-
-        if($client_dealer->name == $this->item->client_id){
-            $lk = true;
+        if($client_dealer->associated_client == $this->item->client_id){
+            $cl_block_hide = true;
         }
         $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
         $all_recoil = $recoil_model->getData();
@@ -241,6 +239,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
     <h5 class="center">
        Дилер/клиент дилера
     </h5>
+    <?php if(!cl_block_hide){?>
     <div class="container">
         <div class="row">
             <div class="item_fields">
@@ -516,7 +515,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
         </div>
     </div>
     </div>
-    
+    <?php }?>
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 <?php if ($this->item->project_verdict == 0) { ?>
             <table>
@@ -1055,47 +1054,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
             jQuery("#modal-window-call-tar").show("slow");
             jQuery("#close-tar").show();
         })
-        jQuery("#recoil_choose").change(function(){
-            jQuery("#recoil").val(jQuery("#recoil_choose").val());
-        })
-        jQuery("#add_recoil").click(function(){
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=saveRecoil",
-                data: {
-                    fio:jQuery("#new_fio").val(),
-                    phone:jQuery("#new_phone").val()
-                },
-                success: function (data) {
-                    option = "<option value = "+data+" selected >"+jQuery("#new_fio").val()+"</opton>";
-                    jQuery("#recoil_choose").append(option);
-                    jQuery("#close-tar").hide();
-                    jQuery("#modal-window-container").hide();
-                    jQuery("#modal-window-call-tar").hide();
-                    jQuery("#recoil").val(data);
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "success",
-                        text: "Отканик добавлен!"
-                    });
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        timeout: 2000,
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка при сохранении"
-                    });
-                }
-            });
-        })
+       
         jQuery("#client_order").click(function () {
             jQuery("input[name='project_verdict']").val(1);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
