@@ -1598,11 +1598,12 @@ class Gm_ceilingHelpersGm_ceiling
             $n29 = $data['n29'];
         }
 
-        if(!empty($data['n3'])){
-                $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
-                $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3']);
-                $data['n1'] = $canvasData[0]->texture_id;
-            }
+        if(!empty($data['n3_id'])){
+            $canvases_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+            $canvasData = $canvases_model->getFilteredItemsCanvas("`a`.`id` =". $data['n3_id']);
+            $data['n1'] = $canvasData[0]->texture_id;
+        }
+                
         //Сюда мы складываем данные и стоимость монтажа ГМ и дилера
         $mounting_data = array();
         $guild_data = array();
@@ -1732,6 +1733,7 @@ class Gm_ceilingHelpersGm_ceiling
             }
             if (count($n14) > 0) {
                 foreach ($n14 as $truba) {
+
                     switch (gettype($truba)) {
                         case 'object':
                             if ($truba->n14_count > 0) {
