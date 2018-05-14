@@ -326,8 +326,9 @@
                                     if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
                                 ?>
                                     <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank" id = "show">Посмотреть</a>
-                                <?php } ?>
+                                <?php } else { ?>
                                     <span data-href="<?=$path;?>">-
+                                <?php } ?>
                             </td>
                         </tr>
                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
