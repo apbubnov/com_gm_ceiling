@@ -1,3 +1,10 @@
+var project_id;
+
+function accept_global_variables(pr_id)
+{
+    project_id = pr_id;
+}
+
 jQuery("[name = click_transport]").click(function () {
     calculate_transport();
 });

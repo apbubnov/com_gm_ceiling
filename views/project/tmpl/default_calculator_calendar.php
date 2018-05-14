@@ -700,8 +700,10 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         var min_project_sum = <?php echo  $min_project_sum;?>;
         var min_components_sum = <?php echo $min_components_sum;?>;
         var self_data = JSON.parse('<?php echo $self_calc_data;?>');
-        let project_id = "<?php echo $this->item->id ?>;";
+        var project_id = "<?php echo $this->item->id ?>;";
         var precalculation = <?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>;
+
+        accept_global_variables(project_id);
 
         function PressEnter(your_text, your_event) {
             if (your_text != "" && your_event.keyCode == 13)
@@ -1668,13 +1670,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             jQuery("#update_discount").click(function () {
                 jQuery("input[name='isDiscountChange']").val(1);
             });
-
-
-           
-
-            
-            
-        
         });
 
         var flag1 = 0;
@@ -1726,7 +1721,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
             }
 
-
             var formData = new FormData();
             jQuery.each(jQuery('#dopfile')[0].files, function (i, file) {
                 formData.append('dopfile', file)
@@ -1735,7 +1729,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             formData.append('email', email);
             formData.append('type', 0);
             formData.append('client_id', client_id);
-
 
             jQuery.ajax({
                 url: "index.php?option=com_gm_ceiling&task=send_estimate",
@@ -1819,10 +1812,8 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
 
         });
         
-
         jQuery("#jform_project_new_calc_date").attr("onchange", "update_times(\"#jform_project_new_calc_date\",\"#jform_new_project_calculation_daypart\")");
 
-       
         function update_times(fieldName, fieldName2) {
             var date = jQuery(fieldName).val();
             if (isDate(date)) {
@@ -1869,9 +1860,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             }
             return true;
         }
-
-       
-       
 
         /**
         * @return {number}
@@ -2043,78 +2031,6 @@ function get_selected_calcs(){
     });
     return ids;
 }
-function regenerate_common_estimate(){
-    let project_id = project_id.value;
-    let calc_ids = get_selected_calcs();
-     jQuery.ajax({
-        url: "index.php?option=com_gm_ceiling&task=regenerate_common_estimate",
-        data:{
-            proj_id: project_id,
-            calc_ids: calc_ids
-        },
-        type: "POST",
-        dataType: 'json',
-        async: false,
-        success: function (data) {
-        },
-        error: function (data) {
-            var n = noty({
-                theme: 'relax',
-                layout: 'center',
-                maxVisible: 5,
-                type: "error",
-                text: "Ошибка при генерации общей сметы по выбранным потолкам"
-            });
-        }
-    }); 
-}
-jQuery("#send_all_to_email3").click(function () {
-    regenerate_common_estimate();
-    var email = jQuery("#all-email3").val();
-    var id  = jQuery("#project_id").val();
-    var client_id = jQuery("#client_id").val();
-    var filenames = [];
-    var formData = new FormData();
-    jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {
-        formData.append('dopfile2', file)
-    });
-    formData.append('filenames', JSON.stringify(filenames));
-    formData.append('email', email);
-    formData.append('id', id);
-    formData.append('type', 2);
-    formData.append('client_id', client_id);
-    jQuery.ajax({
-        url: "index.php?option=com_gm_ceiling&task=send_estimate",
-        data: formData,
-        type: "POST",
-        dataType: 'json',
-        processData: false,
-        contentType: false,
-        cache: false,
-        async:false,
-        success: function (data) {
-            var n = noty({
-                theme: 'relax',
-                layout: 'center',
-                maxVisible: 5,
-                type: "success",
-                text: "Общая смета отправлена!"
-            });
-
-        },
-        error: function (data) {
-            var n = noty({
-                theme: 'relax',
-                layout: 'center',
-                maxVisible: 5,
-                type: "error",
-                text: "ошибка отправки"
-            });
-        }
-    });
-
-});
-
 
 jQuery("input[name='transport']").click(function () {
     var transport = jQuery("input[name='transport']:checked").val();
@@ -2207,10 +2123,8 @@ function calculate_transport(){
             update_transport(id,transport,distance,distance_col);
             break;
     }
-}
-    
+}  
     </script>
-
 <?php
     else:
         echo JText::_('COM_GM_CEILING_ITEM_NOT_LOADED');
