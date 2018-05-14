@@ -90,9 +90,7 @@
         </div>
     </div>
 </div>
-
 <script type='text/javascript'>
-
     // листание календаря
     month_old = 0;
     year_old = 0;

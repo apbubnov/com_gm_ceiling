@@ -39,7 +39,8 @@ if (!empty($calculation_ids)) {
         <li class="nav-item">
             <a class="nav-link active" data-toggle="tab" href="#summary" role="tab">Общее</a>
         </li>
-        <?php if (!empty($calculation_ids)) { ?>
+        <?php if (!empty($calculation_ids)) { 
+            ?>
             <?php foreach ($calculation_ids as $value) { ?>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#ceiling<?php echo $value->id; ?>" role="tab"><?php echo $value->calculation_title; ?></a>
@@ -60,7 +61,7 @@ if (!empty($calculation_ids)) {
                     <?php if (!empty($calculation_ids)) { ?>
                         <?php $AllCalc = [];?>
                         <?php foreach ($calculation_ids as $value) { ?>
-                            <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null); ?>
+                            <?php $DataOfProject = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $value->id, null);?>
                             <?php foreach ($DataOfProject["mounting_data"] as $val) { ?>
                                 <?php
                                     if (!array_key_exists($val["title"], $AllCalc)) {
@@ -192,9 +193,9 @@ if (!empty($calculation_ids)) {
         <?php } ?>
     </div>
     <div id="buttons-cantainer">
-        <button id="begin" class="btn"><i class="fa fa-play fa-tar" aria-hidden="true"></i> Монтаж начат</button>
-        <button id="complited" class="btn modal"><i class="fa fa-check" aria-hidden="true"></i> Монтаж выполнен</button>
-        <button id="underfulfilled" class="btn modal"><i class="fa fa-pause fa-tar" aria-hidden="true"></i> Монтаж недовыполнен</button>
+        <button id="begin" class="btn" disabled><i class="fa fa-play fa-tar" aria-hidden="true" ></i> Монтаж начат</button>
+        <button id="complited" class="btn modal" disabled><i class="fa fa-check" aria-hidden="true" ></i> Монтаж выполнен</button>
+        <button id="underfulfilled" class="btn modal" disabled><i class="fa fa-pause fa-tar" aria-hidden="true" ></i> Монтаж недовыполнен</button>
     </div>
     <div id="modal-window-container-tar">
         <button id="close-tar" type="button"><i class="fa fa-times fa-times-tar" aria-hidden="true"></i></button>
@@ -259,23 +260,19 @@ if (!empty($calculation_ids)) {
                 start = msg[0].project_mounting_start;
                 end = msg[0].project_mounting_end;
                 status_mount = msg[0].project_status;
+                console.log(status_mount);
                 if (status_mount == 17 ) {
                     jQuery("#begin").attr("disabled", "disabled");
                     jQuery("#complited").attr("disabled", false);
                     jQuery("#underfulfilled").attr("disabled", false);
-                } else if (status_mount == 10) {
+                } else if (status_mount == 10 || status_mount == 19) {
                     jQuery("#begin").attr("disabled", false);
                     jQuery("#complited").attr("disabled", "disabled");
                     jQuery("#underfulfilled").attr("disabled", "disabled");
                 } else if (status_mount == 16) {
-                    jQuery("#begin").attr("disabled", "disabled");
                     jQuery("#complited").attr("disabled", false);
                     jQuery("#underfulfilled").attr("disabled", false);
-                } else {
-                    jQuery("#begin").attr("disabled", "disabled");
-                    jQuery("#complited").attr("disabled", "disabled");
-                    jQuery("#underfulfilled").attr("disabled", "disabled");
-                }
+                } 
             }
         });
 
