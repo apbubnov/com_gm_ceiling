@@ -19,6 +19,7 @@ try {
     $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 	$jinput = JFactory::getApplication()->input;
     $api = $jinput->get('api', 0, 'INT');
+    $user_id = $jinput->get('user_id',null,'INT');
 }
 catch (Exception $e) {
 	$date = date("d.m.Y H:i:s");
