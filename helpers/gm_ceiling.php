@@ -746,7 +746,7 @@ class Gm_ceilingHelpersGm_ceiling
 
            return $html; 
     }
-    public static function create_client_common_estimate($project_id){
+    public static function create_client_common_estimate($project_id,$calc_ids = null){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
@@ -756,6 +756,13 @@ class Gm_ceilingHelpersGm_ceiling
             $brigade = JFactory::getUser($project->project_mounter);
         }
         $calculations = $calculations_model->new_getProjectItems($project_id);
+        if(!empty($calc_ids)){
+            foreach($calculations as $key => $calculation){
+                if(!in_array($calculation->id,$calc_ids)){
+                    unset($calculations[$key]);
+                }
+            }
+        }
         $transport = self::calculate_transport($project_id);
         $client_contacts_model = self::getModel('client_phones');
         $client_contacts = $client_contacts_model->getItemsByClientId($project->id_client);
@@ -2514,13 +2521,20 @@ class Gm_ceilingHelpersGm_ceiling
         }
     }
     /* функция генерации общего наряда на монтаж */
-    public static function create_common_estimate_mounters($project_id){
+    public static function create_common_estimate_mounters($project_id,$calc_ids = null){
         $sheets_dir = $_SERVER['DOCUMENT_ROOT'] . '/costsheets/';
         $project_model = self::getModel('project');
         $project = $project_model->getData($project_id);
         $calculations_model = self::getModel('calculations');
         $names = $calculations_model->FindAllMounters($project->project_mounter);
         $calculations = $calculations_model->new_getProjectItems($project_id);
+        if(!empty($calc_ids)){
+            foreach($calculations as $key => $calculation){
+                if(!in_array($calculation->id,$calc_ids)){
+                    unset($calculations[$key]);
+                }
+            }
+        }
         $transport = self::calculate_transport($project_id);
         $brigade = JFactory::getUser($project->project_mounter);
         $client_contacts_model = self::getModel('client_phones');

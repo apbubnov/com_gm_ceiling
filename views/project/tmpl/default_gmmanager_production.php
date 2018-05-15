@@ -230,17 +230,12 @@ if (!empty($_SESSION["project_card_$project_id"]))
             $email = $dop_contacts->getEmailByClientID($this->item->id_client);
         }
         $client_dealer = JFactory::getUser($model_client->getClientById($this->item->id_client)->dealer_id);
-        if($client_dealer->associated_client == $this->item->client_id){
-            $cl_block_hide = true;
-        }
-        $recoil_model = Gm_ceilingHelpersGm_ceiling::getModel('recoil');
-        $all_recoil = $recoil_model->getData();
     ?>
     <h5 class="center">
        Дилер/клиент дилера
     </h5>
-    <?php if(!cl_block_hide){?>
-    <div class="container">
+    <button id = "show_cl_block" class="btn btn-primary" type = "button">Раскрыть блок информации о клиенте</button>
+    <div class="container" id = "cl_block" style="display:none;">
         <div class="row">
             <div class="item_fields">
                 <h4>Информация по проекту № <?php echo $this->item->id ?></h4>
@@ -515,7 +510,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
         </div>
     </div>
     </div>
-    <?php }?>
     <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 <?php if ($this->item->project_verdict == 0) { ?>
             <table>
@@ -627,6 +621,11 @@ if (!empty($_SESSION["project_card_$project_id"]))
     //------------------------------------------
 
     jQuery(document).ready(function () {
+
+
+        jQuery("#show_cl_block").click(function(){
+            jQuery("#cl_block").toggle();
+        });
 
         var project_card = '<?php echo $project_card; ?>';
         if (project_card != '')
@@ -1443,7 +1442,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
         var email = jQuery("#all-email1").val();
         var client_id = jQuery("#client_id").val();
         var dop_file = jQuery("#dop_file").serialize();
-        var testfilename = <?php echo $json;?>;
         var filenames = [];
         for (var i = 0; i < testfilename.length; i++) {
             var id = testfilename[i].id;
@@ -1499,7 +1497,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
 
     jQuery("#send_all_to_email2").click(function () {
         var email = jQuery("#all-email2").val();
-        var testfilename = <?php echo $json1;?>;
         var filenames = [];
         for (var i = 0; i < testfilename.length; i++) {
             var id = testfilename[i].id;
@@ -1552,7 +1549,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
         var email = jQuery("#all-email3").val();
         var id  = jQuery("#project_id").val();
         var client_id = jQuery("#client_id").val();
-        var testfilename = <?php echo $json2;?>;
         //        for (var i = 0; i < testfilename.length; i++) {
         //            var id = testfilename[i].id;
         //            var el = jQuery("#section_mount_" + id);
