@@ -1848,7 +1848,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 gauger: jQuery("#jform_project_gauger").val(),
                 sex: jQuery('[name = "slider-sex"]:checked').val(),
                 type : jQuery('[name = "slider-radio"]:checked').val(),
-                recool: jQuery("#recoil_choose").val(),
+                recoil: jQuery("#recoil_choose").val(),
                 advt: jQuery("#advt_choose").val()
             };
         let object = {proj_id : jQuery("#project_id").val(), data:JSON.stringify(data)};

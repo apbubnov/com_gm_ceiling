@@ -1841,21 +1841,21 @@ class Gm_ceilingHelpersGm_ceiling
                 }
             }
            
-            
             //только для ПВХ
             if (!empty($data['n1']) &&  $data['n1'] != 29) {
                 if($data['height'] == 1){
-                        $name = "Периметр(ПВХ)(высота >3м)";
-                        $mp1 = $results->mp1 + 10;
-                        $mp31 = $results->mp31 + 10;
-                        $mp32 = $results->mp32 + 10;
-                    }
-                    else{
-                        $name = "Периметр(ПВХ)";
-                        $mp1 = $results->mp1;
-                        $mp31 = $results->mp31;
-                        $mp32 = $results->mp32;
-                    }
+                    $name = "Периметр(ПВХ)(высота >3м)";
+                    $mp1 = $results->mp1 + 10;
+                    $mp31 = $results->mp31 + 10;
+                    $mp32 = $results->mp32 + 10;
+                }
+                else{
+                    $name = "Периметр(ПВХ)";
+                    $mp1 = $results->mp1;
+                    $mp31 = $results->mp31;
+                    $mp32 = $results->mp32;
+                }
+                
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 3) {
                     $mounting_data[] = array(
@@ -1882,7 +1882,7 @@ class Gm_ceilingHelpersGm_ceiling
                 //периметр
                 if ($data['n5'] > 0 && $data['n28'] == 2) {
                     $mounting_data[] = array(
-                        "title" => "Периметр (ПВХ)",                                                                    //Название
+                        "title" => $name,                                                                    //Название
                         "quantity" => $data['n5'],                                                                //Кол-во
                         "gm_salary" => $mp32,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                         "gm_salary_total" => $data['n5'] * $mp32,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)

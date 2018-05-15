@@ -6,6 +6,23 @@
     if($subtype == "project" || $subtype == "refused"){
        $hidden = "hidden";
     }
+    if(empty($user)){
+        $user = JFactory::getUser();
+    }
+    $user_groups = $user->groups;
+    if(in_array('16',$user_groups)){
+        $is_gmmanager = true;
+    }
+    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
+    Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
+    foreach($calculations as $calc){
+        if(!empty($calc->n3)){
+            Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);  
+        }
+    }
 ?>
 <div class="row">
     <div class="col-xs-12 no_padding">
@@ -44,7 +61,7 @@
                             foreach ($calculations as $calculation) {
                         ?>
                             <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.05);">
-                                <td class="include_calculation" colspan="4">
+                                <td class="include_calculation" >
                                     <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked" <?php echo $hidden; ?> style="cursor: pointer;">
                                     <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
                                     <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
@@ -52,6 +69,17 @@
                                     <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>      
                                     <span><i><b><?php echo $calculation->calculation_title; ?></b></i></span>
                                 </td>
+                                <?php if($is_gmmanager){ ?>
+                                    <td colspan="3">
+                                        <?php $path = "/costsheets/".md5($calculation->id."cutpdf").".pdf"; ?>
+                                        <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                            <a href="<?php echo $path; ?>" class="btn btn-secondary"
+                                               target="_blank">Посмотреть раскрой</a>
+                                        <?php } else { ?>
+                                            -
+                                        <?php } ?>
+                                    </td>
+                                <?php }?>
                             </tr>
                             <tr class="section_ceilings" style="background-color: rgba(0,0,0,0.0);">
                                 <td>S/P :</td>
@@ -220,7 +248,7 @@
                                 ?>
                                 <td>
                                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                        <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='Смета <?php echo $calculation->calculation_title; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
                                     <?php } ?>
                                     <?php echo $calculation->calculation_title; ?>
                                 </td>
@@ -249,7 +277,7 @@
                                     ?>
                                     <td>
                                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                            <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                            <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='<?php echo $calculation->calculation_title; ?> Наряд на монтаж' type='checkbox' checked="checked" style="cursor: pointer;">
                                         <?php } ?>
                                         <?php echo $calculation->calculation_title; ?>
                                     </td>
@@ -271,7 +299,7 @@
                             <?php $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; ?>
                             <td>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                    <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                    <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='Общая смета' type='checkbox' checked="checked" style="cursor: pointer;">
                                     <b>Общая смета<b>
                                 <?php } ?>
                             </td>
@@ -289,7 +317,7 @@
                                 <?php $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; ?>
                                 <td>
                                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                        <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='Общий наряд на монтаж' type='checkbox' checked="checked" style="cursor: pointer;">
                                         <b>Общий наряд на монтаж <b>
                                     <?php } ?>
                                 </td>
@@ -335,6 +363,31 @@
                                 <button class="btn btn-primary" id="send_all_to_email" type="button">Отправить</button>
                             </td>
                         </tr>
+                        <?php if($is_gmmanager){?>
+                            <tr>
+                                <th>Обший раскрой<th>
+                                <td colspan="3">
+                                    <?php $path = "/costsheets/".md5($this->item->id."common_cutpdf").".pdf"; ?>
+                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                        <a href="<?php echo $path; ?>" class="btn btn-secondary"
+                                           target="_blank">Посмотреть</a>
+                                    <?php } else { ?>
+                                        -
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Смета по расходным материалам</th>
+                                <td colspan = "3">
+                                    <?php $path = "/costsheets/" . md5($this->item->id . "consumables") . ".pdf"; ?>
+                                    <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
+                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
+                                    <?php } else { ?>
+                                        -
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        <?php }?>
                     </table>
                 </div>
                 <?php

@@ -157,7 +157,7 @@
     <div class="modal_window" id="modal_window_seam">
         <p>Потолок со швом. Изменить раскрой вручную?</p>
         <p><button type="button" id="hide_redactor" class="btn btn-primary">Нет</button>
-        <button type="button" id="show_redactor" class="btn btn-primary">Да</button></p>
+        <button type="button" id="show_redactor" class="btn btn-primary to_redactor">Да</button></p>
     </div>
     <div id="modal_window_rec_to_mesure" class="modal_window" style="float: center">
                 <p><strong id="rec_header">Записаться на замер</strong></p>
@@ -413,6 +413,18 @@
             </div>
         </div>
     </div>
+    <div>
+    <?php if($triangulator_pro) { ?>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <button class = "btn btn-primary to_redactor" type = "button" style="width: 100%; margin-bottom: 25px;"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Изменить раскрой</button>
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+        </div>
+    <?php } ?>
     <div class="container for_api">
         <div class="row">
             <div class="col-sm-4"></div>
@@ -1153,6 +1165,7 @@
                     url: `index.php?option=com_gm_ceiling&task=calculate&save=1&pdf=1&del_flag=1&id=${id}&need_mount=${need_mount}`,
                     data: data,
                     success: function(data){
+                        console.log(data);
                         if(api == 1){
                             jQuery("#sum_info").show();
                             jQuery('html, body').animate({
@@ -1203,7 +1216,7 @@
 
         
 
-        jQuery("#show_redactor").click(function(){
+        jQuery(".to_redactor").click(function(){
             jQuery("#calc_id").val(calculation.id);
             jQuery("#proj_id").val(calculation.project_id);
             jQuery("#form_url").attr('action','sketch/cut_redactor_2/index.php');
