@@ -1,9 +1,3 @@
-var project_id;
-
-function accept_global_variables(pr_id)
-{
-    project_id = pr_id;
-}
 
 jQuery("[name = click_transport]").click(function () {
     calculate_transport();
@@ -116,8 +110,8 @@ function get_selected_calcs(){
     return ids;
 }
 function regenerate_common_estimate(){
-    let project_id = project_id.value;
     let calc_ids = get_selected_calcs();
+    console.log(project_id);
      jQuery.ajax({
         url: "index.php?option=com_gm_ceiling&task=regenerate_common_estimate",
         data:{
@@ -140,51 +134,66 @@ function regenerate_common_estimate(){
         }
     }); 
 }
-jQuery("#send_all_to_email3").click(function () {
+jQuery("#send_all_to_email").click(function () {
     regenerate_common_estimate();
-    var email = jQuery("#all-email3").val();
-    var id  = jQuery("#project_id").val();
-    var client_id = jQuery("#client_id").val();
-    var filenames = [];
-    var formData = new FormData();
-    jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {
-        formData.append('dopfile2', file)
-    });
-    formData.append('filenames', JSON.stringify(filenames));
-    formData.append('email', email);
-    formData.append('id', id);
-    formData.append('type', 2);
-    formData.append('client_id', client_id);
-    jQuery.ajax({
-        url: "index.php?option=com_gm_ceiling&task=send_estimate",
-        data: formData,
-        type: "POST",
-        dataType: 'json',
-        processData: false,
-        contentType: false,
-        cache: false,
-        async:false,
-        success: function (data) {
-            var n = noty({
-                theme: 'relax',
-                layout: 'center',
-                maxVisible: 5,
-                type: "success",
-                text: "Общая смета отправлена!"
-            });
+    var email = jQuery("#all-email").val();
+    if ((/[A-Za-z\d\-\_]@[A-Za-z\d\-\_].[A-Za-z\d]/).test(email))
+    {
+        var id  = jQuery("#project_id").val();
+        var client_id = jQuery("#client_id").val();
+        var filenames = [];
+        var formData = new FormData();
+        jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {
+            formData.append('dopfile2', file)
+        });
+        formData.append('filenames', JSON.stringify(filenames));
+        formData.append('email', email);
+        formData.append('id', id);
+        formData.append('type', 2);
+        formData.append('client_id', client_id);
+        jQuery.ajax({
+            url: "index.php?option=com_gm_ceiling&task=send_estimate",
+            data: formData,
+            type: "POST",
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            cache: false,
+            async:false,
+            success: function (data) {
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "success",
+                    text: "Общая смета отправлена!"
+                });
 
-        },
-        error: function (data) {
-            var n = noty({
-                theme: 'relax',
-                layout: 'center',
-                maxVisible: 5,
-                type: "error",
-                text: "ошибка отправки"
-            });
-        }
-    });
-
+            },
+            error: function (data) {
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Ошибка отправки"
+                });
+            }
+        });
+    }
+    else
+    {
+        var n = noty({
+            theme: 'relax',
+            timeout: 2000,
+            layout: 'center',
+            maxVisible: 5,
+            type: "warning",
+            text: "Проверьте email"
+        });
+    }
 });
 
 
@@ -291,4 +300,20 @@ jQuery("#sh_ceilings").click(function () {
         jQuery(".section_ceilings").show();
         flag = 1;
     }
+});
+
+var flag1 = 0;
+jQuery("#sh_estimate").click(function () {
+    if (flag1) {
+        jQuery(".section_estimate").hide();
+        flag1 = 0;
+    }
+    else {
+        jQuery(".section_estimate").show();
+        flag1 = 1;
+    }
+    jQuery(".section_estimate").each(function () {
+        var el = jQuery(this);
+        if (el.attr("vis") == "hide") el.hide();
+    })
 });

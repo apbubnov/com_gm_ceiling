@@ -206,10 +206,10 @@
                                 <td id="calcs_total"><div id="calcs_total_border"><?php echo round($project_self_total  , 0); ?></div></td>
                             </tr>
                         <?php } ?>
-                        <tr>
+                        <tr style="background-color: rgba(0,0,0,0.15);">
                             <th colspan="4" class="section_header" id="sh_estimate">Сметы и наряды на монтаж <i class="fa fa-sort-desc" aria-hidden="true" style="cursor: pointer;"></i></th>
                         </tr>
-                        <tr>
+                        <tr style="background-color: rgba(0,0,0,0.05);">
                             <th colspan="4" class="section_estimate" style="display: none;">Сметы:</th>
                         </tr>
                         <?php foreach ($calculations as $calculation) { ?>
@@ -238,7 +238,7 @@
                         ?>
 
                         <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
-                            <tr>
+                            <tr style="background-color: rgba(0,0,0,0.05);">
                                 <th class="section_estimate" style="display: none;" colspan="4">Наряды на монтаж:</th>
                             </tr>
                             <?php foreach ($calculations as $calculation) { ?>
@@ -308,7 +308,7 @@
                         <tr class="section_estimate" style="display: none;">
                             <td>
                                 <div class="email-all" style="float: left;">
-                                    <input list="email" name="all-email" id="all-email3" class="form-control" placeholder="Адрес эл.почты" type="text">
+                                    <input list="email" name="all-email" id="all-email" class="form-control" placeholder="Адрес эл.почты" type="text">
                                     <datalist id="email">
                                         <?php foreach ($contact_email AS $em) { ?>
                                             <option value="<?=$em->contact;?>">
@@ -332,7 +332,7 @@
                                 </div>
                             </td>
                             <td colspan="3">
-                                <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
+                                <button class="btn btn-primary" id="send_all_to_email" type="button">Отправить</button>
                             </td>
                         </tr>
                     </table>
