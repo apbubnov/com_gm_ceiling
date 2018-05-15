@@ -1214,7 +1214,51 @@
             }
         });
 
-        
+        //Запрос к серверу на отправку сметы на почту
+        jQuery( "#send_to_email" ).click(function(){
+            console.log(jQuery("#jform_id").val());
+            var reg = /^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/;
+            if(reg.test(jQuery("#send_email").val())){
+                 jQuery.ajax({
+                    type: 'POST',
+                    url: "index.php?option=com_gm_ceiling&task=sendClientEstimate",
+                    data: {
+                        id : jQuery("#jform_id").val(),
+                        email : jQuery("#send_email").val()
+                    },
+                    success: function(data){
+                        jQuery('#send_email_success').slideDown();
+                    },
+                    dataType: "text",
+                    timeout: 10000,
+                    error: function(){
+                        var n = noty({
+                            theme: 'relax',
+                            timeout: 2000,
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка при попытке рассчитать. Сервер не отвечает"
+                        });
+                        calculate_button.removeClass("loading");
+                        calculate_button.find("span.loading").hide();
+                        calculate_button.find("span.static").show();
+                    }                   
+                }); 
+            }
+            else{
+                var n = noty({
+                    theme: 'relax',
+                    timeout: 2000,
+                    layout: 'center',
+                    maxVisible: 5,
+                    type: "error",
+                    text: "Некорректный e-mail"
+                });
+                jQuery("#send_email").focus();
+            }
+        });
+
 
         jQuery(".to_redactor").click(function(){
             jQuery("#calc_id").val(calculation.id);
