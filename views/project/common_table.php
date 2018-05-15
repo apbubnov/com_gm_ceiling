@@ -308,7 +308,7 @@
                         <tr class="section_estimate" style="display: none;">
                             <td>
                                 <div class="email-all" style="float: left;">
-                                    <input list="email" name="all-email" id="all-email3" class="form-control" placeholder="Адрес эл.почты" type="text">
+                                    <input list="email" name="all-email" id="all-email" class="form-control" placeholder="Адрес эл.почты" type="text">
                                     <datalist id="email">
                                         <?php foreach ($contact_email AS $em) { ?>
                                             <option value="<?=$em->contact;?>">
@@ -332,7 +332,7 @@
                                 </div>
                             </td>
                             <td colspan="3">
-                                <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
+                                <button class="btn btn-primary" id="send_all_to_email" type="button">Отправить</button>
                             </td>
                         </tr>
                     </table>
