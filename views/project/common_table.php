@@ -220,7 +220,7 @@
                                 ?>
                                 <td>
                                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                        <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='Смета <?php echo $calculation->calculation_title; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
                                     <?php } ?>
                                     <?php echo $calculation->calculation_title; ?>
                                 </td>
@@ -249,7 +249,7 @@
                                     ?>
                                     <td>
                                         <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                            <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                            <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='<?php echo $calculation->calculation_title; ?> Наряд на монтаж' type='checkbox' checked="checked" style="cursor: pointer;">
                                         <?php } ?>
                                         <?php echo $calculation->calculation_title; ?>
                                     </td>
@@ -271,7 +271,7 @@
                             <?php $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; ?>
                             <td>
                                 <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                    <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                    <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='Общая смета' type='checkbox' checked="checked" style="cursor: pointer;">
                                     <b>Общая смета<b>
                                 <?php } ?>
                             </td>
@@ -289,7 +289,7 @@
                                 <?php $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; ?>
                                 <td>
                                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                                        <input name='include_pdf[]' value='<?php echo $path; ?>' type='checkbox' checked="checked" style="cursor: pointer;">
+                                        <input name='include_pdf[]' value='<?php echo $path; ?>' data-name='Общий наряд на монтаж' type='checkbox' checked="checked" style="cursor: pointer;">
                                         <b>Общий наряд на монтаж <b>
                                     <?php } ?>
                                 </td>
