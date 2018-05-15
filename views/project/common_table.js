@@ -122,6 +122,7 @@ function regenerate_common_estimate(){
         dataType: 'json',
         async: false,
         success: function (data) {
+            console.log(data);
         },
         error: function (data) {
             var n = noty({
@@ -141,7 +142,7 @@ jQuery("#send_all_to_email").click(function () {
     {
         var id  = jQuery("#project_id").val();
         var client_id = jQuery("#client_id").val();
-        var filenames = [];
+        var filenames = jQuery("[name='include_pdf[]']:checked").map(function(){return {name: this.value, title: this.getData('name')};}).get();
         var formData = new FormData();
         jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {
             formData.append('dopfile2', file)
