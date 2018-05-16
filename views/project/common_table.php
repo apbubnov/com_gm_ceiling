@@ -24,6 +24,85 @@
         }
     }
 ?>
+<style>
+    .center-left {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .calculation_sum {
+        width: 100%;
+        margin-bottom: 25px;
+    }
+    .calculation_sum td {
+        padding: 0 5px;
+    }
+    #table1 {
+        width: 100%;
+        max-width: 300px;
+        font-size: 13px;
+    }
+    #table1 button, #table1 a, #table1 input {
+        font-size: 13px;
+        max-width: 150px;
+    }
+    #table1 td, #table1 th {
+        padding: 10px 5px;
+    }
+    .wtf_padding {
+        padding: 0;
+    }
+    .no_yes_padding {
+        padding: 0;
+    }
+    #calendar1, #calendar2 {
+        display: inline-block;
+        width: 100%;
+        padding: 0;
+    }
+    #container_calendars {
+        width: 100%;
+    }
+    #button-prev, #button-next {
+        padding: 0;
+    }
+    #calcs_total_border {
+        display: inline-block;
+        width: auto;
+        padding: 3px 7px;
+        border: 2px solid #414099;
+    }
+    @media screen and (min-width: 768px) {
+        .center-left {
+            text-align: left;
+        }
+        #table1 {
+            width: 100%;
+            max-width: 3000px;
+            font-size: 1em;
+        }
+        #table1 td, #table1 th {
+            padding: 15px;
+        }
+        #table1 button, #table1 a, #table1 input {
+            font-size: 1em;
+            width: auto;
+            max-width: 200px;
+        }
+        .wtf_padding {
+            padding: 15px;
+        }
+        .no_yes_padding {
+            padding: 15px;
+        }
+        #calendar1, #calendar2 {
+            width: calc(50% - 25px);
+        }
+        #calendar2 {
+            margin-left: 30px;
+        }
+    }
+</style>
 <div class="row">
     <div class="col-xs-12 no_padding">
         <h4>Расчеты для проекта</h4>
