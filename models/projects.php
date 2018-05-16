@@ -486,21 +486,48 @@ class Gm_ceilingModelProjects extends JModelList
         }
     }
 
-    public function getDataByStatusAndAdvt($advt,$statuses,$date1 = null,$date2 = null){
-        try{
-            
-            $where = "p.api_phone_id = $advt AND p.project_status in $statuses";
-            if(!empty($date1)&&!empty($date2)){
-                $where = "p.api_phone_id = $advt AND p.project_status in $statuses and p.created between '$date1' and '$date2'";
+    public function getDataByStatusAndAdvt($dealer_id,$advt,$statuses,$date1 = null,$date2 = null){
+        try{            
+            if(!empty($advt) && $advt !='total'){
+                 $where = "p.api_phone_id = $advt";
             }
-        
+            if(!empty($statuses) && $statuses != 'all'){
+                if(!empty($where)){
+                    $where .= "AND p.project_status in $statuses";
+                }
+                else{
+                     $where .= "p.project_status in $statuses";
+                }
+            }
+            if(!empty($date1)&&!empty($date2)){
+                if(!empty($where)){
+                    $where .= "and p.created between '$date1' and '$date2'";
+                }
+                else{
+                     $where .= "p.created between '$date1' and '$date2'";
+                }
+            }
+            if(empty($where)){
+                if(!empty($dealer_id)){
+                    $where = "cl.dealer_id = $dealer_id and p.api_phone_id in ($subquery_advt)";
+                }
+                else{
+                    throw new Exception("Пустой id дилера!");
+                    
+                }
+            }
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $subquery = $db->getQuery(true);
+            $subquery_advt = $db->getQuery(true);
             $subquery
                 ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0))")
                 ->from("`#__gm_ceiling_calculations` as c")
                 ->where("c.project_id = p.id");
+            $subquery_advt
+                ->select("id")
+                ->from("`#__gm_ceiling_api_phones`")
+                ->where("dealer_id = $dealer_id");
             $query
                 ->select('p.id')
                 ->select('s.title as `status`')
@@ -509,13 +536,14 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select('COALESCE(p.new_project_sum,0) as new_project_sum')
                 ->select('COALESCE(p.new_mount_sum,0) as new_mount_sum')
                 ->select('COALESCE(p.new_material_sum,0) as new_material_sum')
-                ->select('client_id')
+                ->select('p.client_id')
                 ->select("ifnull(($subquery),0) as cost")
                 ->from('`#__gm_ceiling_projects` as p')
                 ->innerJoin("`#__gm_ceiling_status` as s on p.project_status = s.id")
+                ->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id ")
                 ->where($where);
-                
             $db->setQuery($query);
+            throw new Exception($query);
             $items = $db->loadObjectList();
             return $items;
         }

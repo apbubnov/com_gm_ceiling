@@ -265,6 +265,7 @@ if(!$api){
 </form>
 
 <script>
+	var dealer_id = '<?php echo $user->dealer_id?>';
 	var columns_array = [];
 	 jQuery(document).ready(function(){
 	 	columns_array["name"] = "Реклама";
@@ -275,7 +276,7 @@ if(!$api){
  		columns_array["done"] = "Выполнено";
  		columns_array["sum"] = "Сумма";
  		columns_array["profit"] = "Прибыль";
-	 	var dealer_id = '<?php echo $user->dealer_id?>';
+	
         hideEmptyTr("#c_analitic-table");
 		c_all_count = []; 
 		c_all_count['name'] = "Итого:"; 
@@ -286,6 +287,7 @@ if(!$api){
         c_all_count['done'] = <?php echo $c_all_done;?>;
         c_all_count['sum'] = <?php echo $c_all_sum;?>;
         c_all_count['profit'] = <?php echo $c_all_profit;?>;
+
         hideEmptyTr("#d_analitic-table");
 		jQuery("#d_date1").val("<?php echo $today?>");
 		jQuery("#d_date2").val("<?php echo $today?>");
@@ -458,7 +460,8 @@ if(!$api){
                         statuses:statuses,
                         date1: date1,
                         date2: date2,
-                        type : type
+                        type : type,
+                        dealer_id : dealer_id
                     },
                     dataType: "json",
                     async: true,
@@ -503,6 +506,7 @@ if(!$api){
                         });
                     },
                     error: function (data) {
+                    	console.log(data.responseText);
                         var n = noty({
                             timeout: 2000,
                             theme: 'relax',
