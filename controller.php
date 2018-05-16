@@ -2220,15 +2220,16 @@ public function register_mnfctr(){
             $statuses = $jinput->get('statuses','','STRING');
             $date1 = $jinput->get('date1','','STRING');
             $date2 = $jinput->get('date2','','STRING');
+            $dealer_id = $jinput->get('dealer_id','','STRING');
             $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
             $advt_id = $phones_model->getIdByName($advt_name);
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             if($type == 0){
                 if(empty($date1)&&empty($date2)){
-                    $projects = $project_model->getDataByStatusAndAdvt($advt_id,$statuses);
+                    $projects = $project_model->getDataByStatusAndAdvt($dealer_id,$advt_id,$statuses);
                 }
                 else{
-                    $projects = $project_model->getDataByStatusAndAdvt($advt_id,$statuses,$date1,$date2);
+                    $projects = $project_model->getDataByStatusAndAdvt($dealer_id,$advt_id,$statuses,$date1,$date2);
                 };
             }
             if($type == 1){

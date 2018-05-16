@@ -111,6 +111,7 @@ function get_selected_calcs(){
 }
 function regenerate_common_estimate(){
     let calc_ids = get_selected_calcs();
+    console.log(project_id, calc_ids);
      jQuery.ajax({
         url: "index.php?option=com_gm_ceiling&task=regenerate_common_estimate",
         data:{
@@ -141,6 +142,7 @@ jQuery("#send_all_to_email").click(function () {
     {
         var client_id = jQuery("#client_id").val();
         var filenames = jQuery("[name='include_pdf[]']:checked").map(function(){return {name: this.value, title: jQuery(this).data('name')};}).get();
+        console.log(filenames);
         var formData = new FormData();
         jQuery.each(jQuery('#dopfile')[0].files, function (i, file) {
             formData.append('dopfile', file)

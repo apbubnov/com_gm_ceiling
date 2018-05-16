@@ -711,9 +711,9 @@
 ?>
 
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-
-<script language="JavaScript">
-
+<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+<script type="text/javascript">
+    var project_id = "<?php echo $this->item->id; ?>";
     var $ = jQuery;
     var min_project_sum = <?php echo  $min_project_sum;?>;
     var min_components_sum = <?php echo $min_components_sum;?>;
@@ -1505,31 +1505,7 @@
             });
             return ids;
         }
-        function regenerate_common_estimate(){
-            let project_id = <?php echo $this->item->id;?>;
-            let calc_ids = get_selected_calcs();
-             jQuery.ajax({
-                url: "index.php?option=com_gm_ceiling&task=regenerate_common_estimate",
-                data:{
-                    proj_id: project_id,
-                    calc_ids: calc_ids
-                },
-                type: "POST",
-                dataType: 'json',
-                async: false,
-                success: function (data) {
-                },
-                error: function (data) {
-                    var n = noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка при генерации общей сметы по выбранным потолкам"
-                    });
-                }
-            }); 
-        }
+       
         jQuery("#client_order").click(function () {
             jQuery("input[name='project_verdict']").val(1);
             jQuery("#project_sum").val(<?php echo $project_total_discount?>);
@@ -1970,98 +1946,8 @@
         }
     });
 
-    var flag1 = 0;
-    jQuery("#sh_estimate").click(function () {
-        if (flag1) {
-            jQuery(".section_estimate").hide();
-            flag1 = 0;
-        }
-        else {
-            jQuery(".section_estimate").show();
-            flag1 = 1;
-        }
-        jQuery(".section_estimate").each(function () {
-            var el = jQuery(this);
-            if (el.attr("vis") == "hide") el.hide();
-        })
-    });
-
-    var flag2 = 0;
-    jQuery("#sh_mount").click(function () {
-        if (flag2) {
-            jQuery(".section_mount").hide();
-            flag2 = 0;
-        }
-        else {
-            jQuery(".section_mount").show();
-            flag2 = 1;
-        }
-        jQuery(".section_mount").each(function () {
-            var el = jQuery(this);
-            if (el.attr("vis") == "hide") el.hide();
-        })
-    });
-
     jQuery("#send_all").click(function () {
         jQuery(".email-all").toggle();
-    });
-
-    jQuery("#send_all_to_email1").click(function () {
-
-        var email = jQuery("#all-email1").val();
-        var client_id = jQuery("#client_id").val();
-        var dop_file = jQuery("#dop_file").serialize();
-        var testfilename = '<?php echo $json;?>;';
-        var filenames = [];
-        for (var i = 0; i < testfilename.length; i++) {
-            var id = testfilename[i].id;
-            var el = jQuery("#section_estimate_" + id);
-            if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-        }
-        var formData = new FormData();
-        jQuery.each(jQuery('#dopfile')[0].files, function (i, file) {
-            formData.append('dopfile', file)
-        });
-        formData.append('filenames', JSON.stringify(filenames));
-        formData.append('email', email);
-        formData.append('type', 0);
-        formData.append('client_id', client_id);
-
-
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=send_estimate",
-            data: formData, /*{
-                filenames: JSON.stringify(filenames),
-                email: email,
-                type: 0,
-                client_id: client_id,
-                dop_file : serialize
-            },*/
-            type: "POST",
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            cache: false,
-            success: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Сметы отправлены!"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "ошибка отправки"
-                });
-            }
-        });
     });
 
     jQuery("#add_new_dvt").click(function () {
@@ -2099,104 +1985,6 @@
             }
         });
     })
-
-    jQuery("#send_all_to_email2").click(function () {
-        var email = jQuery("#all-email2").val();
-        var testfilename = '<?php echo $json1;?>';
-        var filenames = [];
-        for (var i = 0; i < testfilename.length; i++) {
-            var id = testfilename[i].id;
-            var el = jQuery("#section_mount_" + id);
-            if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-        }
-        var formData = new FormData();
-        jQuery.each(jQuery('#dopfile1')[0].files, function (i, file) {
-            formData.append('dopfile1', file)
-        });
-        formData.append('filenames', JSON.stringify(filenames));
-        formData.append('email', email);
-        formData.append('type', 1);
-        //formData.append('client_id', client_id);
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=send_estimate",
-            data: formData,/* {
-                filenames: JSON.stringify(filenames),
-                email: email,
-                type: 1
-            },*/
-            type: "POST",
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            cache: false,
-            success: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Наряды на монтаж отправлены!"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "ошибка отправки"
-                });
-            }
-        });
-
-    });
-
-    jQuery("#send_all_to_email3").click(function () {
-        var email = jQuery("#all-email3").val();
-        var id  = jQuery("#project_id").val();
-        var client_id = jQuery("#client_id").val();
-        var testfilename = '<?php echo $json2;?>';
-        var filenames = [];
-        var formData = new FormData();
-        jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {
-            formData.append('dopfile2', file)
-        });
-        formData.append('filenames', JSON.stringify(filenames));
-        formData.append('email', email);
-        formData.append('id', id);
-        formData.append('type', 2);
-        formData.append('client_id', client_id);
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=send_estimate",
-            data: formData,
-            type: "POST",
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            cache: false,
-            success: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Общая смета отправлена!"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "ошибка отправки"
-                });
-            }
-        });
-
-    });
 
     jQuery("#jform_project_new_calc_date").change(function () {
         jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
