@@ -743,11 +743,19 @@ class Gm_ceilingModelApi extends JModelList
             $db->setQuery($query);
             $list_components_dealer_price = $db->loadObjectList();
 
+            $query = $db->getQuery(true);
+            $query->select("*");
+            $query->from("`rgzbn_gm_ceiling_api_phones`");
+            $query->where("change_time >= '$change_time' and dealer_id = $dealer_id");
+            $db->setQuery($query);
+            $list_api_phones = $db->loadObjectList();
+
             $result = [];
             $result['rgzbn_gm_ceiling_dealer_info'] = $list_info;
             $result['rgzbn_gm_ceiling_mount'] =  $list_mount;
             $result['rgzbn_gm_ceiling_canvases_dealer_price'] =  $list_canvases_dealer_price;
             $result['rgzbn_gm_ceiling_components_dealer_price'] =  $list_components_dealer_price;
+            $result['rgzbn_gm_ceiling_api_phones'] =  $list_api_phones;
             return $result;
         }
         catch(Exception $e)

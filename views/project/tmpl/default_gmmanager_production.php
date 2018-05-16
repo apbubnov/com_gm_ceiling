@@ -1641,7 +1641,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 phones.push(element.value);
             });
         console.log(phones);
-        let data = {
+        var data = {
                 fio: jQuery("#jform_client_name").val(),
                 address: jQuery("#jform_address").val(),
                 house: jQuery("#jform_house").val(),
@@ -1661,7 +1661,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 recoil: jQuery("#recoil_choose").val(),
                 advt: jQuery("#advt_choose").val()
             };
-        let object = {proj_id : jQuery("#project_id").val(), data:JSON.stringify(data)};
+        var object = {proj_id : jQuery("#project_id").val(), data:JSON.stringify(data)};
         jQuery.ajax({
             type: 'POST',
             url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
