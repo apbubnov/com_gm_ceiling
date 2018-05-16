@@ -246,8 +246,9 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
 <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 	
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-
-<script>
+<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+<script type="text/javascript">
+    var project_id = "<?php echo $this->item->id; ?>";
 	jQuery(document).ready(function(){
 		
         document.getElementById('add_calc').onclick = function()
