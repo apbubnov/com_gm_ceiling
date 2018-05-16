@@ -493,7 +493,10 @@ $AllMounters = $model->FindAllMounters($where);
         </div>
     </div>
 
-    <script>
+    <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
+    <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+    <script type="text/javascript">
+        var project_id = "<?php echo $this->item->id; ?>";
         jQuery(document).mouseup(function (e){ // событие клика по веб-документу
             var div = jQuery("#modal_window_date"); // тут указываем ID элемента
             if (!div.is(e.target) // если клик был не по нашему блоку

@@ -176,8 +176,10 @@ Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 		</div>
 	  </div>
 	</div>
-	
-<script>
+<script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
+<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+<script type="text/javascript">
+    var project_id = "<?php echo $this->item->id; ?>";
 	jQuery(document).ready(function(){
 		jQuery("input[name^='include_calculation']").click(function(){
 			if( jQuery( this ).prop("checked") ) {
