@@ -345,15 +345,15 @@
                                 </div>
                                 <div class="file_data">
                                     <div class="file_upload">
-                                        <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
+                                        <input type="file" class="dopfile" name="dopfile" id="dopfile">
                                     </div>
-                                    <div class="file_name2"></div>
+                                    <div class="file_name"></div>
                                     <script>
                                         jQuery(function () {
-                                            jQuery("div.file_name2").html("Файл не выбран");
-                                            jQuery("div.file_upload input.dopfile2").change(function () {
+                                            jQuery("div.file_name").html("Файл не выбран");
+                                            jQuery("div.file_upload input.dopfile").change(function () {
                                                 var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
+                                                jQuery("div.file_name").html((filename != "") ? filename : "Файл не выбран");
                                             });
                                         });
                                     </script>
@@ -365,7 +365,7 @@
                         </tr>
                         <?php if($is_gmmanager){?>
                             <tr>
-                                <th>Обший раскрой<th>
+                                <th>Обший раскрой</th>
                                 <td colspan="3">
                                     <?php $path = "/costsheets/".md5($this->item->id."common_cutpdf").".pdf"; ?>
                                     <?php if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>

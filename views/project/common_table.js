@@ -111,7 +111,6 @@ function get_selected_calcs(){
 }
 function regenerate_common_estimate(){
     let calc_ids = get_selected_calcs();
-    console.log(project_id);
      jQuery.ajax({
         url: "index.php?option=com_gm_ceiling&task=regenerate_common_estimate",
         data:{
@@ -122,7 +121,7 @@ function regenerate_common_estimate(){
         dataType: 'json',
         async: false,
         success: function (data) {
-            console.log(data);
+            //console.log(data);
         },
         error: function (data) {
             var n = noty({
@@ -140,17 +139,14 @@ jQuery("#send_all_to_email").click(function () {
     var email = jQuery("#all-email").val();
     if ((/[A-Za-z\d\-\_]@[A-Za-z\d\-\_].[A-Za-z\d]/).test(email))
     {
-        var id  = jQuery("#project_id").val();
         var client_id = jQuery("#client_id").val();
-        var filenames = jQuery("[name='include_pdf[]']:checked").map(function(){return {name: this.value, title: this.getData('name')};}).get();
+        var filenames = jQuery("[name='include_pdf[]']:checked").map(function(){return {name: this.value, title: jQuery(this).data('name')};}).get();
         var formData = new FormData();
-        jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {
-            formData.append('dopfile2', file)
+        jQuery.each(jQuery('#dopfile')[0].files, function (i, file) {
+            formData.append('dopfile', file)
         });
         formData.append('filenames', JSON.stringify(filenames));
         formData.append('email', email);
-        formData.append('id', id);
-        formData.append('type', 2);
         formData.append('client_id', client_id);
         jQuery.ajax({
             url: "index.php?option=com_gm_ceiling&task=send_estimate",
@@ -160,8 +156,9 @@ jQuery("#send_all_to_email").click(function () {
             processData: false,
             contentType: false,
             cache: false,
-            async:false,
-            success: function (data) {
+            async: false,
+            success: function(data) {
+                //console.log(data);
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
@@ -170,9 +167,8 @@ jQuery("#send_all_to_email").click(function () {
                     type: "success",
                     text: "Общая смета отправлена!"
                 });
-
             },
-            error: function (data) {
+            error: function(data) {
                 var n = noty({
                     theme: 'relax',
                     timeout: 2000,
