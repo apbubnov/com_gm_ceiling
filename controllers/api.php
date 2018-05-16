@@ -323,8 +323,6 @@ class Gm_ceilingControllerApi extends JControllerLegacy
                     $table_data = json_decode($_POST['sync_data']);
                     $result = $model->get_dealerInfo_android($table_data);
                 }
-                
-                
                 die(json_encode($result));
             }
             catch(Exception $e)
