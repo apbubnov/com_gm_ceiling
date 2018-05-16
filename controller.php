@@ -2223,6 +2223,9 @@ public function register_mnfctr(){
             $dealer_id = $jinput->get('dealer_id','','STRING');
             $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
             $advt_id = $phones_model->getIdByName($advt_name);
+            if(empty($advt_id)){
+                $advt_id = $advt_name;
+            }
             $project_model = Gm_ceilingHelpersGm_ceiling::getModel('projects');
             if($type == 0){
                 if(empty($date1)&&empty($date2)){

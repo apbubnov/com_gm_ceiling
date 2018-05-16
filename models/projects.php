@@ -487,8 +487,11 @@ class Gm_ceilingModelProjects extends JModelList
     }
 
     public function getDataByStatusAndAdvt($dealer_id,$advt,$statuses,$date1 = null,$date2 = null){
-        try{            
-            if(!empty($advt) && $advt !='total'){
+        try{
+            
+
+
+        /*    if(!empty($advt) && $advt !='total'){
                  $where = "p.api_phone_id = $advt";
             }
             if(!empty($statuses) && $statuses != 'all'){
@@ -506,16 +509,7 @@ class Gm_ceilingModelProjects extends JModelList
                 else{
                      $where .= "p.created between '$date1' and '$date2'";
                 }
-            }
-            if(empty($where)){
-                if(!empty($dealer_id)){
-                    $where = "cl.dealer_id = $dealer_id and p.api_phone_id in ($subquery_advt)";
-                }
-                else{
-                    throw new Exception("Пустой id дилера!");
-                    
-                }
-            }
+            }*/
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $subquery = $db->getQuery(true);
@@ -528,6 +522,27 @@ class Gm_ceilingModelProjects extends JModelList
                 ->select("id")
                 ->from("`#__gm_ceiling_api_phones`")
                 ->where("dealer_id = $dealer_id");
+            if($advt == 'total'){
+                $where = "cl.dealer_id = $dealer_id and p.api_phone_id in ($subquery_advt)";
+                if($statuses != 'all'){
+                    $where .= " AND p.project_status in $statuses";
+                }
+            }
+            else{
+                $where = "p.api_phone_id = $advt";
+                if($statuses != 'all'){
+                    $where .= " AND p.project_status in $statuses";
+                }
+            }
+            if(!empty($date1)&&!empty($date2)){
+                if(!empty($where)){
+                    $where .= " and p.created between '$date1' and '$date2'";
+                }
+                else{
+                     $where .= "p.created between '$date1' and '$date2'";
+                }
+            }
+
             $query
                 ->select('p.id')
                 ->select('s.title as `status`')
@@ -543,7 +558,6 @@ class Gm_ceilingModelProjects extends JModelList
                 ->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id ")
                 ->where($where);
             $db->setQuery($query);
-            throw new Exception($query);
             $items = $db->loadObjectList();
             return $items;
         }
