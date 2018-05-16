@@ -103,86 +103,6 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
 
 ?>
 
-<style>
-    .center-left {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-    .calculation_sum {
-        width: 100%;
-        margin-bottom: 25px;
-    }
-    .calculation_sum td {
-        padding: 0 5px;
-    }
-    #table1 {
-        width: 100%;
-        max-width: 300px;
-        font-size: 13px;
-    }
-    #table1 button, #table1 a, #table1 input {
-        font-size: 13px;
-        max-width: 150px;
-    }
-    #table1 td, #table1 th {
-        padding: 10px 5px;
-    }
-    .wtf_padding {
-        padding: 0;
-    }
-    .no_yes_padding {
-        padding: 0;
-    }
-    #calendar1, #calendar2 {
-        display: inline-block;
-        width: 100%;
-        padding: 0;
-    }
-    #container_calendars {
-        width: 100%;
-    }
-    #button-prev, #button-next {
-        padding: 0;
-    }
-    #calcs_total_border {
-        display: inline-block;
-        width: auto;
-        padding: 3px 7px;
-        border: 2px solid #414099;
-    }
-    @media screen and (min-width: 768px) {
-        .center-left {
-            text-align: left;
-        }
-        #table1 {
-            width: 100%;
-            max-width: 3000px;
-            font-size: 1em;
-        }
-        #table1 td, #table1 th {
-            padding: 15px;
-        }
-        #table1 button, #table1 a, #table1 input {
-            font-size: 1em;
-            width: auto;
-            max-width: 200px;
-        }
-        .wtf_padding {
-            padding: 15px;
-        }
-        .no_yes_padding {
-            padding: 15px;
-        }
-        #calendar1, #calendar2 {
-            width: calc(50% - 25px);
-        }
-        #calendar2 {
-            margin-left: 30px;
-        }
-    }
-</style>
-
 <?= parent::getButtonBack(); ?>
 <input name="url" value="" type="hidden">
 <h2 class="center" style="margin-top: 15px; margin-bottom: 15px;">Проект № <?php echo $this->item->id ?></h2>
@@ -283,69 +203,9 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                     console.log("error", data);
                 }
             });
-            jQuery("input[name^='include_calculation']").click(function () {
-                if (jQuery(this).prop("checked")) {
-                    jQuery(this).closest("tr").removeClass("not-checked");
-                } else {
-                    jQuery(this).closest("tr").addClass("not-checked");
-                }
-                calculate_total();
-            });
 
-            jQuery("#accept_project").click(function () {
-                jQuery("input[name='project_verdict']").val(1);
-                jQuery(".project_activation").show();
-                jQuery("#mounting_date_control").show();
-            });
-            var flag = 0;
-            jQuery("#sh_ceilings").click(function () {
-                if (flag) {
-                    jQuery(".section_ceilings").hide();
-                    flag = 0;
-                }
-                else {
-                    jQuery(".section_ceilings").show();
-                    flag = 1;
-                }
-            });
-            var flag1 = 0;
-            jQuery("#sh_estimate").click(function () {
-                if (flag1) {
-                    jQuery(".section_estimate").hide();
-                    flag1 = 0;
-                }
-                else {
-                    jQuery(".section_estimate").show();
-                    flag1 = 1;
-                }
-                jQuery(".section_estimate").each(function () {
-                    var el = jQuery(this);
-                    if (el.attr("vis") == "hide") el.hide();
-                })
-            });
 
-            var flag2 = 0;
-            jQuery("#sh_mount").click(function () {
-                if (flag2) {
-                    jQuery(".section_mount").hide();
-                    flag2 = 0;
-                }
-                else {
-                    jQuery(".section_mount").show();
-                    flag2 = 1;
-                }
-                jQuery(".section_mount").each(function () {
-                    var el = jQuery(this);
-                    if (el.attr("vis") == "hide") el.hide();
-                })
-            });
-
-            jQuery("#refuse_project").click(function () {
-                jQuery("input[name='project_verdict']").val(0);
-                jQuery(".project_activation").show();
-                jQuery("#mounting_date_control").hide();
-            });
-            
+                       
             jQuery("#btn_pay").click(function () {
                 var id = "<?php echo $sb_project_id ?>";
                 var number = <?php echo $project_id ?>;
@@ -387,27 +247,6 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
                 });
             });
         });
-
-        function calculate_total() {
-            var components_total = 0;
-            gm_total = 0;
-            dealer_total = 0;
-
-            jQuery("input[name^='include_calculation']:checked").each(function () {
-                var parent = jQuery(this).closest(".include_calculation"),
-                    components_sum = parent.find("input[name^='components_sum']").val(),
-                    gm_mounting_sum = parent.find("input[name^='gm_mounting_sum']").val(),
-                    dealer_mounting_sum = parent.find("input[name^='dealer_mounting_sum']").val();
-
-                components_total += parseFloat(components_sum);
-                gm_total += parseFloat(gm_mounting_sum);
-                dealer_total += parseFloat(dealer_mounting_sum);
-            });
-
-            jQuery("#components_total").text(components_total.toFixed(2));
-            jQuery("#gm_total").text(gm_total.toFixed(2));
-            jQuery("#dealer_total").text(dealer_total.toFixed(2));
-        }
 
         function change_project_status(project_id, project_status) {
             jQuery.ajax({

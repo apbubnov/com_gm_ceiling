@@ -31,11 +31,6 @@ $current_from = $jdate->format('Y-m-d H:i:s');
 
 $jdate = new JDate($this->item->project_mounting_to);
 $current_to = $jdate->format('Y-m-d H:i:s');
-
-$calendar = Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->item->project_mounter, $month1, $year1, $current_from, $current_to);
-$calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->item->project_mounter, $month2, $year2, $current_from, $current_to);
-
-
 ?>
 <?= parent::getButtonBack(); ?>
 <h2 class="center">Просмотр проекта</h2>
@@ -151,8 +146,9 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
     </div>
 
     <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-
-    <script>
+    <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+    <script type="text/javascript">
+        var project_id = "<?php echo $this->item->id; ?>";
         jQuery(document).ready(function () {
 
             document.getElementById('add_calc').onclick = function()
@@ -182,57 +178,18 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                 create_calculation(<?php echo $this->item->id; ?>);
             };
 
-            function calculate_total() {
-                var components_total = 0;
-                gm_total = 0;
-                dealer_total = 0;
-
-                jQuery("input[name^='include_calculation']:checked").each(function () {
-                    var parent = jQuery(this).closest(".include_calculation"),
-                        components_sum = parent.find("input[name^='components_sum']").val(),
-                        gm_mounting_sum = parent.find("input[name^='gm_mounting_sum']").val(),
-                        dealer_mounting_sum = parent.find("input[name^='dealer_mounting_sum']").val();
-
-                    components_total += parseFloat(components_sum);
-                    gm_total += parseFloat(gm_mounting_sum);
-                    dealer_total += parseFloat(dealer_mounting_sum);
-                });
-
-                jQuery("#components_total").text(components_total.toFixed(2));
-                jQuery("#gm_total").text(gm_total.toFixed(2));
-                jQuery("#dealer_total").text(dealer_total.toFixed(2));
-            }
 
 
-            var preloader = '<?=parent::getPreloaderNotJS();?>';
+
             var calendar_toggle = 0,
                 month = <?php echo date("n"); ?>,
                 year = <?php echo date("Y"); ?>;
-            jQuery('body').append(preloader);
             //jQuery("#jform_project_mounting_daypart").val(jQuery('#hours_list').val());
             jQuery("#jform_project_mounting_date").mask("99.99.9999");
 
             jQuery("#jform_project_mounter").change(function () {
-                update_calendar();
+                
             });
-
-
-
-            var hours_list = "<select id='hours_list'>";
-            hours_list += "<option value='09:00:00'>09:00</option>";
-            hours_list += "<option value='10:00:00'>10:00</option>";
-            hours_list += "<option value='11:00:00'>11:00</option>";
-            hours_list += "<option value='12:00:00'>12:00</option>";
-            hours_list += "<option value='13:00:00'>13:00</option>";
-            hours_list += "<option value='14:00:00'>14:00</option>";
-            hours_list += "<option value='15:00:00'>15:00</option>";
-            hours_list += "<option value='16:00:00'>16:00</option>";
-            hours_list += "<option value='17:00:00'>17:00</option>";
-            hours_list += "<option value='18:00:00'>18:00</option>";
-            hours_list += "<option value='19:00:00'>19:00</option>";
-            hours_list += "<option value='20:00:00'>20:00</option>";
-            hours_list += "<option value='21:00:00'>21:00</option>";
-            hours_list += "</select>";
 
             listening();
 
@@ -254,7 +211,7 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                 } else {
                     month = month - 1;
                 }
-                update_calendar();
+               
             });
             jQuery("#calendar_next").click(function () {
                 if (month == 12) {
@@ -263,43 +220,13 @@ $calendar .= Gm_ceilingHelpersGm_ceiling::draw_calendar($this->item->id, $this->
                 } else {
                     month = month + 1;
                 }
-                update_calendar();
+              
             });
-            update_calendar();
+           
 
 
         });
 
-        function update_calendar() {
-            jQuery(".PRELOADER_GM").addClass('PRELOADER_GM_OPACITY');
-            jQuery.ajax({
-                type: 'POST',
-                url: "index.php?option=com_gm_ceiling&task=update_calendar",
-                data: {
-                    project_id: <?php echo $this->item->id; ?>,
-                    project_mounter: jQuery("#jform_project_mounter").val(),
-                    current_from: jQuery("#jform_project_mounting_date").val()
-
-                    //current_to: jQuery("#jform_project_mounting_to").val()
-                },
-                success: function (data) {
-                    jQuery("#calendar").html(data);
-                    jQuery(".PRELOADER_GM").remove();
-                    listening();
-                },
-                dataType: "text",
-                timeout: 10000,
-                error: function () {
-                    var n = noty({
-                        theme: 'relax',
-                        layout: 'center',
-                        maxVisible: 5,
-                        type: "error",
-                        text: "Ошибка при попытке обновить календарь. Сервер не отвечает"
-                    });
-                }
-            });
-        }
 
         var mountArray = {};
 

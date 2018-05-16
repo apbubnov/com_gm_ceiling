@@ -268,7 +268,7 @@ function update_transport(id,transport,distance,distance_col){
 }
 
 function calculate_transport(){
-    var id = project_id.value;
+    var id = project_id;
     var transport = jQuery("input[name='transport']:checked").val();
     var distance = jQuery("#distance").val();
     var distance_col = jQuery("#distance_col").val();
