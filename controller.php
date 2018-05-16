@@ -1742,64 +1742,28 @@ public function register_mnfctr(){
             $email = $jinput->get('email', '', 'STRING');
             $client_id = $jinput->get('client_id', '', 'INT');
             $filenames = $jinput->get('filenames', '', 'STRING');
-
-            $dop_file = $_FILES['dopfile'];//$jinput->get('dop_file', '', 'STRING');
-            //$targetPath = $_SERVER['DOCUMENT_ROOT']  ."files/feedback/".$_FILES['dopfile']['name'];
-            $type = $jinput->get('type', '', 'INT');
-            //throw new Exception($type, 1);
-            $dop_file1 = $_FILES['dopfile1'];
-            $dop_file2 = $_FILES['dopfile2'];
+            $filenames = json_decode($filenames);
+            $dop_file = $_FILES['dopfile'];
             $mailer = JFactory::getMailer();
             $config = JFactory::getConfig();
             $sender = array(
                 $config->get('mailfrom'),
                 $config->get('fromname')
             );
-            $dec = json_decode($filenames);
-            $filenames = $dec;
             $mailer->setSender($sender);
             $mailer->addRecipient($email);
             $model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
-            if ($type == 2) {
-                $body = "Здравствуйте. Вы запросили подробную смету. Смета во вложении";
-                $mailer->setSubject('Подробная смета');
-                $mailer->setBody($body);
-            }
-            elseif ($type == 1) {
-                $body = "Здравствуйте. Вы запросили подробый наряд на монтаж потолка. Наряд на монтаж во вложении";
-                $mailer->setSubject('Подробный наряд на монтаж');
-                $mailer->setBody($body);
-            } else {
-                
-                $model->SetEmail($client_id, $email);
-                $body = "Здравствуйте. Вы запросили подробную смету потолка. Смета во вложении";
-                $mailer->setSubject('Подробные сметы');
-                $mailer->setBody($body);
-            }
-            for ($i = 0; $i < count($filenames); $i++)
-                $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . $filenames[$i]->filename, $filenames[$i]->name . ".pdf");
-            if ($type == 2) {
-                $id = $jinput->get('id', '', 'INT');
-                $model->SetEmail($client_id, $email);
-                //print_r($id); exit;
-                $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'] . "/costsheets/" . md5($id . "mount_common") . ".pdf", "Общая подробная смета". ".pdf");
-                $mailer->addAttachment($dop_file2['tmp_name'], $dop_file2['name']);
-            }
-            elseif ($type == 1) {
-                $mailer->addAttachment($dop_file1['tmp_name'], $dop_file1['name']);
-            } else {
-                $mailer->addAttachment($dop_file['tmp_name'], $dop_file['name']);
-            }
-            $send = $mailer->Send();
-            //$mailer->addRecipient("gm-partner@mail.ru");
-            //$body = "Здравствуйте. Клиент запросил подробную смету на адрес: ".$email;
-            //$mailer->setSubject('Подробная смета');
-            //$mailer->setBody($body);
-            //$mailer->addAttachment($_SERVER['DOCUMENT_ROOT']."/costsheets/".$filename);
-            //$send = $mailer->Send();
+            $model->SetEmail($client_id, $email);
+            $body = "Здравствуйте. К этому письму прикрепленны pdf-файлы с информацией по потолкам.";
+            $mailer->setSubject('Сметы');
+            $mailer->setBody($body);
 
-            $result = json_encode(200);
-            die($result);
+            for ($i = 0; $i < count($filenames); $i++)
+                $mailer->addAttachment($_SERVER['DOCUMENT_ROOT'].$filenames[$i]->name, $filenames[$i]->title.'.pdf');
+            $mailer->addAttachment($dop_file['tmp_name'], $dop_file['name']);
+            $send = $mailer->Send();
+
+            die(json_encode($mailer));
         }
         catch(Exception $e)
         {
