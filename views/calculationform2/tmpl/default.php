@@ -458,6 +458,18 @@
             <div class="col-sm-4"></div>
         </div>
     </div>
+    <?php if ($api != 1) { ?>
+        <div class = "container">
+            <div class="row sm-margin-bottom">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4 pull-center">
+                    <h3>Процент скидки</h3>
+                    <input name= "jform[discount]" id="new_discount" class="form-control" placeholder="Введите %" type="number" max="100" min="0" type="number" value="<?php echo $calculation->discount; ?>" >
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+        </div>
+    <?php } ?>
     <div class="container">
         <div class="row sm-margin-bottom" style="margin-top: 25px">
             <div class="col-sm-4"></div>

@@ -338,30 +338,27 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                             </tr>
                                         </table>
                                     </div>
+                                <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
+                                        <button type="button" class="btn btn-primary" id="change_discount">Изменить величину скидки</button>
+                                <?php } ?>
                                 </div>
                             <?php } ?>
                         <!-- конец -->
-                        <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
-                            <div class="center-left">
-                                <a class="btn btn-primary" id="change_discount">Изменить величину скидки</a>
-                            </div>
-                        <?php } ?>
                         <table class="calculation_sum">
                             <?php $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100; ?>
                             <tbody class="new_discount" style="display: none">
                                 <tr>
                                     <td>
-                                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
+                                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:</label>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <input name="new_discount" id="jform_new_discount" value="" onkeypress="PressEnter(this.value, event)" placeholder="Новый % скидки" max='<?= round($skidka, 0); ?>' type="number" style="width: 100%;">
-                                        <input name="isDiscountChange" value="0" type="hidden">
+                                        <input name="new_discount" id="jform_new_discount" placeholder="%" min="0" max='<?= round($skidka, 0); ?>' type="number" style="width: 100%;">
                                     </td>
                                     <td>
-                                        <button id="update_discount" class="btn btn btn-primary">Ок</button>
+                                        <button type="button" id="update_discount" class="btn btn-primary">Ок</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -622,11 +619,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
         var self_data = JSON.parse('<?php echo $self_calc_data;?>');
         var project_id = "<?php echo $this->item->id; ?>";
         var precalculation = <?php if (!empty($_GET['precalculation'])) { echo $_GET['precalculation']; } else { echo 0; } ?>;
-
-        function PressEnter(your_text, your_event) {
-            if (your_text != "" && your_event.keyCode == 13)
-                jQuery("#update_discount").click();
-        }
 
         function submit_form(e) {
             jQuery("#modal_window_container, #modal_window_container *").show();
@@ -1585,8 +1577,32 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 }
             });
 
-            jQuery("#update_discount").click(function () {
-                jQuery("input[name='isDiscountChange']").val(1);
+            jQuery("#update_discount").click(function() {
+                save_data_to_session(4);
+                jQuery.ajax({
+                    url: "index.php?option=com_gm_ceiling&task=project.changeDiscount",
+                    data: {
+                        project_id: project_id,
+                        new_discount: jQuery("#jform_new_discount").val()
+                    },
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        //console.log(data);
+                        location.reload();
+                    },
+                    error: function (data) {
+                        console.log(data);
+                        var n = noty({
+                            timeout: 2000,
+                            theme: 'relax',
+                            layout: 'center',
+                            maxVisible: 5,
+                            type: "error",
+                            text: "Ошибка изменения скидки"
+                        });
+                    }
+                });
             });
         });
         
