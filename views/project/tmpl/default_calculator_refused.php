@@ -95,86 +95,6 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
-<style>
-    .center-left {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-    .calculation_sum {
-        width: 100%;
-        margin-bottom: 25px;
-    }
-    .calculation_sum td {
-        padding: 0 5px;
-    }
-    #table1 {
-        width: 100%;
-        max-width: 300px;
-        font-size: 13px;
-    }
-    #table1 button, #table1 a, #table1 input {
-        font-size: 13px;
-        max-width: 150px;
-    }
-    #table1 td, #table1 th {
-        padding: 10px 5px;
-    }
-    .wtf_padding {
-        padding: 0;
-    }
-    .no_yes_padding {
-        padding: 0;
-    }
-    #calendar1, #calendar2 {
-        display: inline-block;
-        width: 100%;
-        padding: 0;
-    }
-    #container_calendars {
-        width: 100%;
-    }
-    #button-prev, #button-next {
-        padding: 0;
-    }
-    #calcs_total_border {
-        display: inline-block;
-        width: auto;
-        padding: 3px 7px;
-        border: 2px solid #414099;
-    }
-    @media screen and (min-width: 768px) {
-        .center-left {
-            text-align: left;
-        }
-        #table1 {
-            width: 100%;
-            max-width: 3000px;
-            font-size: 1em;
-        }
-        #table1 td, #table1 th {
-            padding: 15px;
-        }
-        #table1 button, #table1 a, #table1 input {
-            font-size: 1em;
-            width: auto;
-            max-width: 200px;
-        }
-        .wtf_padding {
-            padding: 15px;
-        }
-        .no_yes_padding {
-            padding: 15px;
-        }
-        #calendar1, #calendar2 {
-            width: calc(50% - 25px);
-        }
-        #calendar2 {
-            margin-left: 30px;
-        }
-    }
-</style>
-
 <?=parent::getButtonBack();?>
 <h2 class="center">Просмотр проекта</h2>
 <?php if ($this->item) : ?>
@@ -249,42 +169,6 @@ $project_total_discount = $project_total_discount  + $client_sum_transport;
 <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
 <script type="text/javascript">
     var project_id = "<?php echo $this->item->id; ?>";
-	jQuery(document).ready(function(){
-		
-        document.getElementById('add_calc').onclick = function()
-        {
-            create_calculation(<?php echo $this->item->id; ?>);
-        };
-
-		jQuery("#jform_project_mounting_date").mask("99.99.9999");
-	
-		jQuery("input[name^='include_calculation']").click(function(){
-			if( jQuery( this ).prop("checked") ) {
-				jQuery( this ).closest("tr").removeClass("not-checked");
-			} else {
-				jQuery( this ).closest("tr").addClass("not-checked");
-			}
-			calculate_total();
-		});
-				
-	});
-	
-	function calculate_total(){
-		var project_total = 0,
-			project_total_discount = 0;
-			
-		jQuery("input[name^='include_calculation']:checked").each(function(){
-			var parent = jQuery( this ).closest(".include_calculation"),
-				calculation_total = parent.find("input[name^='calculation_total']").val(),
-				calculation_total_discount = parent.find("input[name^='calculation_total_discount']").val();
-				
-			project_total += parseFloat(calculation_total);
-			project_total_discount += parseFloat(calculation_total_discount);
-		});
-		
-		jQuery("#project_total").text(project_total.toFixed(2));
-		jQuery("#project_total_discount").text(project_total_discount.toFixed(2));
-	}
 </script>
 	
 	<?php

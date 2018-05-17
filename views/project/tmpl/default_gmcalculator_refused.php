@@ -94,69 +94,11 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
 						<button type="submit" id="return_project" class="btn btn btn-success">
 							Вернуть на стадию замера
 						</button>
-						<div class="project_activation" style="display: none;">
-							<input name="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
-							<input name="type" value="gmcalculator" type="hidden">
-							<input name="subtype" value="refused" type="hidden">
-							<input name="project_verdict" value="0" type="hidden">
-							<input name="project_status" value="1" type="hidden">
-						</div>
 					<?php } ?>
-				</table>
-				<table class="table calculation_sum">
-					<tr>
-						<th class="center min-width"></th>
-						<th class="center">Название расчета</th>
-						<th class="center">Без скидки</th>
-						<th class="center">Со скидкой</th>
-					</tr>
-
-					<?php foreach($calculations as $calculation) { ?>
-						<tr>
-							<td class="include_calculation">
-								<input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
-								<input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total; ?>' type='hidden'>
-								<input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->calculation_total_discount; ?>' type='hidden'>
-							</td>
-							<td><?php echo $calculation->calculation_title; ?></td>
-							<td class="center"><?php echo $calculation->calculation_total; ?></td>
-							<td class="center"><?php echo $calculation->calculation_total_discount; ?></td>
-						</tr>
-					<?php }	?>
-					<tr>
-						<th class="right" colspan="2">Итого:</th>
-						<th class="center" id="project_total"><?php echo $project_total; ?></th>
-						<th class="center" id="project_total_discount"><?php echo $project_total_discount; ?></th>
-					</tr>				
 				</table>
 			</form>
 			
 		</div>
-		<div class="col-xl-6"></div>
-		</div>
-		<div class="row">
-		<div class="col-xl-6">
-			<h4>Сметы для клиента</h4>
-			<table class="table">
-				<?php foreach($calculations as $calculation) { ?>
-					<tr>
-						<th><?php echo $calculation->calculation_title; ?></th>
-						<td>
-							<?php echo $calculation->calculation_total_discount; ?> руб.
-						</td>
-						<td>
-							<?php $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf"; ?>
-							<?php if(file_exists($_SERVER['DOCUMENT_ROOT'].$path)) { ?>
-								<a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-							<?php } else { ?>
-								-
-							<?php } ?>
-						</td>
-					</tr>
-				<?php } ?>
-			</table>
-		</div>
-		<div class="col-xl-6"></div>
 	  </div>
 	</div>
 

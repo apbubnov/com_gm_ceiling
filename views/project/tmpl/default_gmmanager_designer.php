@@ -128,85 +128,7 @@ if (!empty($_SESSION["project_card_$project_id"]))
 ?>
 <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/project/css/style.css" type="text/css" />
-<style>
-    .center-left {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-    .calculation_sum {
-        width: 100%;
-        margin-bottom: 25px;
-    }
-    .calculation_sum td {
-        padding: 0 5px;
-    }
-    #table1 {
-        width: 100%;
-        max-width: 300px;
-        font-size: 13px;
-    }
-    #table1 button, #table1 a, #table1 input {
-        font-size: 13px;
-        max-width: 150px;
-    }
-    #table1 td, #table1 th {
-        padding: 10px 5px;
-    }
-    .wtf_padding {
-        padding: 0;
-    }
-    .no_yes_padding {
-        padding: 0;
-    }
-    #calendar1, #calendar2 {
-        display: inline-block;
-        width: 100%;
-        padding: 0;
-    }
-    #container_calendars {
-        width: 100%;
-    }
-    #button-prev, #button-next {
-        padding: 0;
-    }
-    #calcs_total_border {
-        display: inline-block;
-        width: auto;
-        padding: 3px 7px;
-        border: 2px solid #414099;
-    }
-    @media screen and (min-width: 768px) {
-        .center-left {
-            text-align: left;
-        }
-        #table1 {
-            width: 100%;
-            max-width: 3000px;
-            font-size: 1em;
-        }
-        #table1 td, #table1 th {
-            padding: 15px;
-        }
-        #table1 button, #table1 a, #table1 input {
-            font-size: 1em;
-            width: auto;
-            max-width: 200px;
-        }
-        .wtf_padding {
-            padding: 15px;
-        }
-        .no_yes_padding {
-            padding: 15px;
-        }
-        #calendar1, #calendar2 {
-            width: calc(50% - 25px);
-        }
-        #calendar2 {
-            margin-left: 30px;
-        }
-    }
-</style>
+
 <button id = "back_btn" class = "btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад</button>
 
 <h2 class="center">Просмотр проекта</h2>
@@ -557,15 +479,12 @@ if (!empty($_SESSION["project_card_$project_id"]))
                 <tr>
 
                     <td>
-                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
+                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:</label>
                         <input name="new_discount" id="jform_new_discount" value="" placeholder="Новый % скидки"
-                               max='<?= round($skidka, 0); ?>' type="number">
-                        <input name="isDiscountChange" value="0" type="hidden">
+                               min="0" max='<?= round($skidka, 0); ?>' type="number">
                     </td>
                     <td>
-                        <button type="button" id="update_discount" class="btn btn btn-primary">
-                            Ок
-                        </button>
+                        <button type="button" id="update_discount" class="btn btn-primary">Ок</button>
                     </td>
 
                 </tr>
@@ -638,9 +557,9 @@ if (!empty($_SESSION["project_card_$project_id"]))
         </div>
     </div>
 <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
-
-<script language="JavaScript">
-
+<script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
+<script  type="text/javascript">
+    var project_id = "<?php echo $this->item->id; ?>";
     var $ = jQuery;
     var min_project_sum = <?php echo  $min_project_sum;?>;
     var min_components_sum = <?php echo $min_components_sum;?>;
@@ -1093,15 +1012,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
         }
 
         jQuery("#jform_client_contacts").mask("+7 (999) 999-99-99");
-        jQuery("[name = click_transport]").click(function () {
-                calculate_transport();
-        });
-        if (jQuery("input[name='transport']:checked").val() == '2') {
-            jQuery("#transport_dist").show();
-        }
-        if (jQuery("input[name='transport']:checked").val() == '1') {
-                jQuery("#transport_dist_col").show();
-        }
         jQuery("input[name=client_lk]:radio").change(function(){
             if(this.value == 1){
                 var name = jQuery("#jform_client_name").val();
@@ -1389,21 +1299,37 @@ if (!empty($_SESSION["project_card_$project_id"]))
             }
         });
 
-        jQuery("#change_discount").click(function () {
+        jQuery("#change_discount").click(function() {
             jQuery(".new_discount").toggle();
 
         });
 
-        jQuery("#update_discount").click(function () {
-            var phones = [];
-            var s = window.location.href;
-            var classname = jQuery("input[name='new_client_contacts[]']");
-            Array.from(classname).forEach(function (element) {
-                phones.push(element.value);
+        jQuery("#update_discount").click(function() {
+            save_data_to_session(4);
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=project.changeDiscount",
+                data: {
+                    project_id: project_id,
+                    new_discount: jQuery("#jform_new_discount").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    //console.log(data);
+                    location.reload();
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка изменения скидки"
+                    });
+                }
             });
-            jQuery("input[name='isDiscountChange']").val(1);
-            if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
-            save_data_to_session(3);
         });
 
         jQuery("#ok").click(function () {
@@ -1610,99 +1536,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
             });
         });
 
-    jQuery("input[name='transport']").click(function () {
-        var transport = jQuery("input[name='transport']:checked").val();
-        if (transport == '2') {
-            jQuery("#transport_dist").show();
-            jQuery("#transport_dist_col").hide();
-            jQuery("#distance").val('');
-            jQuery("#distance_col_1").val('');
-        }
-        else if(transport == '1') {
-            jQuery("#transport_dist").hide();
-            jQuery("#transport_dist_col").show();
-            jQuery("#distance_col").val('');
-            jQuery("#distance").val('');
-        }
-        else {
-            jQuery("#transport_dist").hide();
-            jQuery("#transport_dist_col").hide();
-            jQuery("#distance").val('');
-            jQuery("#distance_col").val('');
-        }
-        if(transport == 0){
-            calculate_transport();
-        }
-    });
-    function change_transport(sum){
-        let old_transport = jQuery("#transport_sum span.sum").text();
-        let new_transport = sum.client_sum;
-        let new_self_transport = sum.mounter_sum;
-        let old_self_transport = jQuery("#transport_sum span.sum").data('selfval');
-        jQuery("#project_sum_transport").val(new_transport);
-        jQuery("#transport_sum span.sum").text(new_transport);
-        let old_self_mount = jQuery("#calcs_self_mount_total span.sum").text();
-        let old_self_total = jQuery("#calcs_total_border").text();
-        let old_total = jQuery("#project_total span.sum").text();
-        let old_total_discount = jQuery("#project_total_discount span.sum").text();
-        jQuery("#project_total span.sum").text(parseInt(old_total) - old_transport + parseInt(new_transport));
-        jQuery("#project_total_discount span.sum").text(old_total_discount - old_transport + new_transport);
-        jQuery("#calcs_self_mount_total span.sum").text(old_self_mount - old_self_transport + new_self_transport);
-        jQuery("#calcs_total_border").text(old_self_total - old_self_transport + new_self_transport);
-        jQuery("#transport_sum span.sum").data('selfval',new_self_transport);
-        jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
-    }
-   
-    function update_transport(id,transport,distance,distance_col){
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=project.update_transport",
-            data:{
-                id : id,
-                transport : transport,
-                distance : distance,
-                distance_col : distance_col
-            },
-            success: function(data){
-                change_transport(data);
-            },
-            dataType: "json",
-            timeout: 10000,
-            error: function(data){
-                var n = noty({
-                    theme: 'relax',
-                    timeout: 2000,
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка при попытке рассчитать транспорт. Сервер не отвечает"
-                });
-            }
-        }); 
-    }
-
-    function calculate_transport(){
-        var id = <?php echo $this->item->id; ?>;
-        var transport = jQuery("input[name='transport']:checked").val();
-        var distance = jQuery("#distance").val();
-        var distance_col = jQuery("#distance_col").val();
-        var distance_col_1 = jQuery("#distance_col_1").val();
-        console.log(distance,distance_col,distance_col_1);
-        switch(transport){
-            case "0" :
-                update_transport(id,0,0,0);
-                break;
-            case "1":
-               
-                update_transport(id,transport,distance,distance_col_1);
-                break;
-            case "2" :
-                                   
-                update_transport(id,transport,distance,distance_col);
-                break;
-        }
-    }
-
     function submit_form(e) {
         jQuery("#modal_window_container, #modal_window_container *").show();
         jQuery('#modal_window_container').addClass("submit");
@@ -1757,111 +1590,9 @@ if (!empty($_SESSION["project_card_$project_id"]))
         jQuery(this).closest(".dop-phone").remove();
        // num_counts--;
     });
-   
-    var flag = 0;
-    jQuery("#sh_ceilings").click(function () {
-        if (flag) {
-            jQuery(".section_ceilings").hide();
-            flag = 0;
-        }
-        else {
-            jQuery(".section_ceilings").show();
-            flag = 1;
-        }
-    });
-
-    var flag1 = 0;
-    jQuery("#sh_estimate").click(function () {
-        if (flag1) {
-            jQuery(".section_estimate").hide();
-            flag1 = 0;
-        }
-        else {
-            jQuery(".section_estimate").show();
-            flag1 = 1;
-        }
-        jQuery(".section_estimate").each(function () {
-            var el = jQuery(this);
-            if (el.attr("vis") == "hide") el.hide();
-        })
-    });
-
-    var flag2 = 0;
-    jQuery("#sh_mount").click(function () {
-        if (flag2) {
-            jQuery(".section_mount").hide();
-            flag2 = 0;
-        }
-        else {
-            jQuery(".section_mount").show();
-            flag2 = 1;
-        }
-        jQuery(".section_mount").each(function () {
-            var el = jQuery(this);
-            if (el.attr("vis") == "hide") el.hide();
-        })
-    });
 
     jQuery("#send_all").click(function () {
         jQuery(".email-all").toggle();
-    });
-
-    jQuery("#send_all_to_email1").click(function () {
-
-        var email = jQuery("#all-email1").val();
-        var client_id = jQuery("#client_id").val();
-        var dop_file = jQuery("#dop_file").serialize();
-        var testfilename = <?php echo $json;?>;
-        var filenames = [];
-        for (var i = 0; i < testfilename.length; i++) {
-            var id = testfilename[i].id;
-            var el = jQuery("#section_estimate_" + id);
-            if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-        }
-        var formData = new FormData();
-        jQuery.each(jQuery('#dopfile')[0].files, function (i, file) {
-            formData.append('dopfile', file)
-        });
-        formData.append('filenames', JSON.stringify(filenames));
-        formData.append('email', email);
-        formData.append('type', 0);
-        formData.append('client_id', client_id);
-
-
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=send_estimate",
-            data: formData, /*{
-                filenames: JSON.stringify(filenames),
-                email: email,
-                type: 0,
-                client_id: client_id,
-                dop_file : serialize
-            },*/
-            type: "POST",
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            cache: false,
-            success: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Сметы отправлены!"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "ошибка отправки"
-                });
-            }
-        });
     });
 
     jQuery("#add_new_dvt").click(function () {
@@ -1899,108 +1630,6 @@ if (!empty($_SESSION["project_card_$project_id"]))
         });
     })
 
-    jQuery("#send_all_to_email2").click(function () {
-        var email = jQuery("#all-email2").val();
-        var testfilename = <?php echo $json1;?>;
-        var filenames = [];
-        for (var i = 0; i < testfilename.length; i++) {
-            var id = testfilename[i].id;
-            var el = jQuery("#section_mount_" + id);
-            if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-        }
-        var formData = new FormData();
-        jQuery.each(jQuery('#dopfile1')[0].files, function (i, file) {
-            formData.append('dopfile1', file)
-        });
-        formData.append('filenames', JSON.stringify(filenames));
-        formData.append('email', email);
-        formData.append('type', 1);
-        //formData.append('client_id', client_id);
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=send_estimate",
-            data: formData,/* {
-                filenames: JSON.stringify(filenames),
-                email: email,
-                type: 1
-            },*/
-            type: "POST",
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            cache: false,
-            success: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Наряды на монтаж отправлены!"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "ошибка отправки"
-                });
-            }
-        });
-
-    });
-    jQuery("#send_all_to_email3").click(function () {
-        var email = jQuery("#all-email3").val();
-        var id  = jQuery("#project_id").val();
-        var client_id = jQuery("#client_id").val();
-        var testfilename = <?php echo $json2;?>;
-        //        for (var i = 0; i < testfilename.length; i++) {
-        //            var id = testfilename[i].id;
-        //            var el = jQuery("#section_mount_" + id);
-        //            if (el.attr("vis") != "hide") filenames.push(testfilename[i]);
-        //        }
-        var filenames = [];
-        var formData = new FormData();
-        jQuery.each(jQuery('#dopfile2')[0].files, function (i, file) {
-            formData.append('dopfile2', file)
-        });
-        formData.append('filenames', JSON.stringify(filenames));
-        formData.append('email', email);
-        formData.append('id', id);
-        formData.append('type', 2);
-        formData.append('client_id', client_id);
-        jQuery.ajax({
-            url: "index.php?option=com_gm_ceiling&task=send_estimate",
-            data: formData,
-            type: "POST",
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            cache: false,
-            success: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "success",
-                    text: "Общая смета отправлена!"
-                });
-
-            },
-            error: function (data) {
-                var n = noty({
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "ошибка отправки"
-                });
-            }
-        });
-
-    });
-
     jQuery("#jform_project_new_calc_date").change(function () {
         jQuery("#jform_new_project_calculation_daypart").prop("disabled", false);
     });
@@ -2034,163 +1663,15 @@ if (!empty($_SESSION["project_card_$project_id"]))
         return true;
     }
 
-    jQuery("[name = 'include_calculation[]']").change(function(){
-        let canv_data = (self_data[jQuery(this).val()].canv_data).toFixed(0);
-        let comp_data = (self_data[jQuery(this).val()].comp_data).toFixed(0);
-        let mount_data = (self_data[jQuery(this).val()].mount_data).toFixed(0);
-        let calc_sum = (self_data[jQuery(this).val()].sum).toFixed(0);
-        let calc_sum_discount = (self_data[jQuery(this).val()].sum_discount).toFixed(0);
-        let n4 = self_data[jQuery(this).val()].square;
-        let n5 = self_data[jQuery(this).val()].perimeter;
-        let old_canv = jQuery("#calcs_self_canvases_total span.sum").text();
-        let old_comp = jQuery("#calcs_self_components_total span.sum").text();
-        let old_mount = jQuery("#calcs_self_mount_total span.sum" ).text();
-        let old_all = jQuery("#calcs_total_border").text();
-        let old_total = jQuery("#project_total span.sum").text();
-        let old_total_discount = jQuery("#project_total_discount span.sum").text();
-        let old_n4 = jQuery("#total_square span.sum").text();
-        let old_n5 = jQuery("#total_perimeter span.sum").text();
-        if(jQuery(this).prop("checked") == true){
-           jQuery("#calcs_self_canvases_total span.sum").text(parseInt(old_canv) + parseInt(canv_data));
-           if(jQuery("input[name='smeta']").val()!=1){
-               jQuery("#calcs_self_components_total span.sum").text(parseInt(old_comp) + parseInt(comp_data));
-           }
-           jQuery("#calcs_self_mount_total span.sum").text(parseInt(old_mount) + parseInt(mount_data));
-           jQuery("#calcs_total_border").text(parseInt(old_all) + parseInt(canv_data) +  parseInt(comp_data) + parseInt(mount_data));
-           jQuery("#project_total span.sum").text(parseInt(old_total)+ parseInt(calc_sum));
-           jQuery("#project_total_discount span.sum").text(parseInt(old_total_discount)+ parseInt(calc_sum_discount));
-           jQuery("#total_square span.sum").text(parseFloat(old_n4) + parseFloat(n4));
-           jQuery("#total_perimeter span.sum").text(parseFloat(old_n5) + parseFloat(n5));
-          
-        }
-        else{
-            jQuery("#calcs_self_canvases_total span.sum").text(old_canv-canv_data);
-            if(jQuery("input[name='smeta']").val()!=1){
-                jQuery("#calcs_self_components_total span.sum").text(old_comp-comp_data);
-            }
-            jQuery("#calcs_self_mount_total span.sum").text(old_mount-mount_data);
-            jQuery("#calcs_total_border").text(old_all - canv_data - comp_data - mount_data);
-            jQuery("#project_total span.sum").text(old_total - calc_sum);
-            jQuery("#project_total_discount span.sum").text(old_total_discount - calc_sum_discount);
-            jQuery("#total_square span.sum").text((old_n4 - n4).toFixed(2));
-            jQuery("#total_perimeter span.sum").text((old_n5 - n5).toFixed(2));
-            let more_one = check_selected();
-            if(!more_one){
-                jQuery("#project_total_discount span.sum").text(jQuery("#transport_sum span.sum").text());
-            }
-            
-        }
-        
-        jQuery("#calcs_self_components_total span.sum").data('oldval',jQuery("#calcs_self_components_total span.sum").text());
-        check_min_sum(jQuery("#calcs_self_canvases_total span.sum").text());
-    });
   
-    function check_min_sum(canv_sum){
-        let min_sum = 0;
-        if(canv_sum == 0) {
-            if(min_components_sum>0){
-                min_sum = min_components_sum;
-            }
-        }
-        else{
-            if(min_project_sum>0){
-                min_sum = min_project_sum;
-            }
-        }            
-        let project_total = jQuery("#project_total span.sum").text();
-        if(jQuery("#project_total_discount span.dop").length == 0){
-            jQuery("#project_total_discount").append('<span class = \"dop\" style = \"font-size: 9px\";></span>');
-        }
-        if(project_total < min_sum){
-            jQuery("#project_total_discount span.dop").html(` * минимальная сумма заказа ${min_sum} р.`);
-            jQuery("#project_total_discount span.sum").text(min_sum);
-
-        }
-        else{
-            jQuery("#project_total_discount span.dop").html(" ");
-        }
-        jQuery("#project_sum").val(jQuery("#project_total_discount span.sum").text());
-    }
-    function check_selected(){
-        let result = false;
-        jQuery("[name = 'include_calculation[]']").each(function(){
-            if(jQuery(this).prop("checked") == true ){
-                result = true;
-            }
-        });
-        return result;
-    }
-
     // @return {number}
     function Float(x, y = 2) {
         return Math.round(parseFloat(""+x) * Math.pow(10,y)) / Math.pow(10,y);
     }
 
-
     jQuery("#add_calc").click(function () {
         save_data_to_session(1);
     });
-    
-    function save_data_to_session(action_type,id=null){
-        var phones = [];
-            var s = window.location.href;
-            var classname = jQuery("input[name='new_client_contacts[]']");
-            Array.from(classname).forEach(function (element) {
-                phones.push(element.value);
-            });
-        console.log(phones);
-        var data = {
-                fio: jQuery("#jform_client_name").val(),
-                address: jQuery("#jform_address").val(),
-                house: jQuery("#jform_house").val(),
-                bdq: jQuery("#jform_bdq").val(),
-                apartment: jQuery("#jform_apartment").val(),
-                porch: jQuery("#jform_porch").val(),
-                floor: jQuery("#jform_floor").val(),
-                code: jQuery("#jform_code").val(),
-                date: jQuery("#jform_project_new_calc_date").val(),
-                time: jQuery("#jform_new_project_calculation_daypart").val(),
-                manager_comment: jQuery("#gmmanager_note").val(),
-                phones: phones,
-                comments: jQuery("#comments_id").val(),
-                gauger: jQuery("#jform_project_gauger").val(),
-                sex: jQuery('[name = "slider-sex"]:checked').val(),
-                type : jQuery('[name = "slider-radio"]:checked').val(),
-                recool: jQuery("#recoil_choose").val(),
-                advt: jQuery("#advt_choose").val()
-            };
-        var object = {proj_id : jQuery("#project_id").val(), data:JSON.stringify(data)};
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-            data: object,
-            success: function (data) {
-                console.log(data);
-                if(action_type == 1){
-                    create_calculation(<?php echo $this->item->id; ?>);
-                }
-                if(action_type == 2){
-                   window.location = "index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=production&calc_id=" + id;
-                }
-                if(action_type == 3){
-                    jQuery("#form-client").submit();
-                }
-                
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function () {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка cервер не отвечает"
-                });
-            }
-        });
-    }
 
     jQuery("#add_birthday").click(function () {
         var birthday = jQuery("#jform_birthday").val();

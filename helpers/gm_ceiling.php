@@ -1973,20 +1973,20 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => "Установка круглых светильников (ПВХ)",                          //Название
                             "quantity" => $count_round_lamp,                                             //Кол-во
-                            "gm_salary" => $results->mp36,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_round_lamp * $results->mp36,                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp36,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_round_lamp * $results->mp36                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $results->mp4,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_round_lamp * $results->mp4,                      //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp4,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_round_lamp * $results->mp4                   //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                     if ($count_square_lamp > 0) {
                         $mounting_data[] = array(
                             "title" => "Установка квадратных светильников (ПВХ)",                              //Название
                             "quantity" => $count_square_lamp,                                            //Кол-во
-                            "gm_salary" => $results->mp37,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_square_lamp * $results->mp37,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp37,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_square_lamp * $results->mp37                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $results->mp5,                                                //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_square_lamp * $results->mp5,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp5,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_square_lamp * $results->mp5                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                 }
@@ -1995,7 +1995,7 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => "Установка вентиляции (ПВХ)",                                                    //Название
                             "quantity" => $count_ventilation,                                                    //Кол-во
-                            "gm_salary" => $results->mp42,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $count_ventilation * $results->mp42,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp42,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_ventilation * $results->mp42                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
@@ -2005,10 +2005,10 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => "Установка электровытяжки (ПВХ)",                                                    //Название
                             "quantity" => $count_ventilation_1,                                                    //Кол-во
-                            "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_ventilation_1 * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_ventilation_1 * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $results->mp12,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation_1 * $results->mp12,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp12,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation_1 * $results->mp12                       //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
 
@@ -2032,20 +2032,20 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => "Обвод трубы (<100мм) (ПВХ)",                                                    //Название
                             "quantity" => $count_pipe,                                                    //Кол-во
-                            "gm_salary" => $results->mp40,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_pipe * $results->mp40,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp40,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_pipe * $results->mp40                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $results->mp8,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_pipe * $results->mp8,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp8,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_pipe * $results->mp8                     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                     if ($count_big_pipe > 0) {
                         $mounting_data[] = array(
                             "title" => "Обвод трубы (>100мм) (ПВХ)",                                                    //Название
                             "quantity" => $count_big_pipe,                                                    //Кол-во
-                            "gm_salary" => $results->mp44,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_big_pipe * $results->mp44,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp44,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_big_pipe * $results->mp44                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $results->mp7,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_big_pipe * $results->mp7,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp7,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_big_pipe * $results->mp7                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                 }
@@ -2257,20 +2257,20 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => "Установка круглых светильников (Ткань)",                                //Название
                             "quantity" => $count_round_lamp,                                            //Кол-во
-                            "gm_salary" => $results->mp4,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_round_lamp * $results->mp4,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp4,                                           //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_round_lamp * $results->mp4                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $results->mp36,                                               //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_round_lamp * $results->mp36,                     //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp36,                                           //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_round_lamp * $results->mp36                  //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                     if ($count_square_lamp > 0) {
                         $mounting_data[] = array(
                             "title" => "Установка квадратных светильников (Ткань)",                 //Название
                             "quantity" => $count_square_lamp,                               //Кол-во
-                            "gm_salary" => $results->mp5,                                   //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_square_lamp * $results->mp5,        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp5,                               //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_square_lamp * $results->mp5     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $results->mp37,                                   //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_square_lamp * $results->mp37,        //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp37,                               //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_square_lamp * $results->mp37     //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                 }
@@ -2349,10 +2349,10 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => "Обвод трубы (>100мм ткань) (Ткань)",                                                    //Название
                             "quantity" => $count_big_pipe,                                                    //Кол-во
-                            "gm_salary" => $results->mp40,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_big_pipe * $results->mp40,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp40,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_big_pipe * $results->mp40                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $results->mp44,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_big_pipe * $results->mp44,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp44,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_big_pipe * $results->mp44                      //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                 }

@@ -268,7 +268,7 @@ function update_transport(id,transport,distance,distance_col){
 }
 
 function calculate_transport(){
-    var id = project_id.value;
+    var id = project_id;
     var transport = jQuery("input[name='transport']:checked").val();
     var distance = jQuery("#distance").val();
     var distance_col = jQuery("#distance_col").val();
@@ -316,3 +316,63 @@ jQuery("#sh_estimate").click(function () {
         if (el.attr("vis") == "hide") el.hide();
     })
 });
+
+function save_data_to_session(action_type,id=null){
+    var phones = [];
+        var s = window.location.href;
+        var classname = jQuery("input[name='new_client_contacts[]']");
+        Array.from(classname).forEach(function (element) {
+            phones.push(element.value);
+        });
+    //console.log(phones);
+    var data = {
+            fio: jQuery("#jform_client_name").val(),
+            address: jQuery("#jform_address").val(),
+            house: jQuery("#jform_house").val(),
+            bdq: jQuery("#jform_bdq").val(),
+            apartment: jQuery("#jform_apartment").val(),
+            porch: jQuery("#jform_porch").val(),
+            floor: jQuery("#jform_floor").val(),
+            code: jQuery("#jform_code").val(),
+            date: jQuery("#jform_project_new_calc_date").val(),
+            time: jQuery("#jform_new_project_calculation_daypart").val(),
+            manager_comment: jQuery("#gmmanager_note").val(),
+            phones: phones,
+            comments: jQuery("#comments_id").val(),
+            gauger: jQuery("#jform_project_gauger").val(),
+            sex: jQuery('[name = "slider-sex"]:checked').val(),
+            type : jQuery('[name = "slider-radio"]:checked').val(),
+            recool: jQuery("#recoil_choose").val(),
+            advt: jQuery("#advt_choose").val()
+        };
+    var object = {proj_id : jQuery("#project_id").val(), data:JSON.stringify(data)};
+    jQuery.ajax({
+        type: 'POST',
+        url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
+        data: object,
+        success: function (data) {
+            console.log(data);
+            if(action_type == 1){
+                create_calculation(project_id);
+            }
+            if(action_type == 2){
+               window.location = "index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=" + id;
+            }
+            if(action_type == 3){
+                jQuery("#form-client").submit();
+            }
+        },
+        dataType: "text",
+        timeout: 10000,
+        error: function () {
+            var n = noty({
+                timeout: 2000,
+                theme: 'relax',
+                layout: 'center',
+                maxVisible: 5,
+                type: "error",
+                text: "Ошибка cервер не отвечает"
+            });
+        }
+    });
+}
