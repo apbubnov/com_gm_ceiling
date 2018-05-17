@@ -13,7 +13,7 @@
     if(in_array('16',$user_groups)){
         $is_gmmanager = true;
     }
-    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
+/*    Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
     Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($this->item->id);
@@ -21,9 +21,10 @@
     foreach($calculations as $calc){
         if(!empty($calc->n3)){
             Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
-            Gm_ceilingHelpersGm_ceiling::create_client_single_estimate(1,$calc_id,null,null,null,null,null,null);  
+            Gm_ceilingHelpersGm_ceiling::create_client_single_estimate(1,$calc->id);  
         }
-    }
+
+    }*/
 ?>
 <style>
     .center-left {
