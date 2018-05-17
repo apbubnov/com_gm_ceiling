@@ -85,6 +85,7 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 			if(empty($dealer_id)){
 				$dealer_id = 0;
 			}
+			$dealer = JFactory::getUser($dealer_id);
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$common = $db->getQuery(true);
@@ -160,24 +161,26 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
                 ->select("SUM(COALESCE(p.new_project_sum,0))")
 				->from("#__gm_ceiling_projects as p")
                 ->where("p.id IN (".$this->getQuery([12],$date1,$date2).")");
-			$query
-				->select('DISTINCT a.name')
-				->select(' a.id')
-	            ->select("($common) as common")
-	            ->select("($dealers) as dealers")
-	            ->select("($advt) as advt")
-	            ->select("($refused) as refused")
-	            ->select("($ref_measure) as ref_measure")
-                ->select("($measure) as measure")
-                ->select("($current_measure) as current_measure")
-				->select("($ref_deals) as ref_deals")
-                ->select("($deals) as deals")
-                ->select("ifnull(($sum_deals),0) as sum_deals")
-				->select("($mounts) as mounts")
-                ->select("($closed) as closed")
-                ->select("ifnull(($sum_done),0) as sum_done")
-				->from('`#__gm_ceiling_api_phones` AS a')
-				->where("a.dealer_id = $dealer_id");
+
+			$query->select('DISTINCT a.name');
+			$query->select(' a.id');
+            $query->select("($common) as common");
+            if($dealer->dealer_type!=1){
+	            $query->select("($dealers) as dealers");
+	            $query->select("($advt) as advt");
+	            $query->select("($refused) as refused");
+	        }
+            $query->select("($ref_measure) as ref_measure");
+            $query->select("($measure) as measure");
+            $query->select("($current_measure) as current_measure");
+			$query->select("($ref_deals) as ref_deals");
+            $query->select("($deals) as deals");
+            $query->select("ifnull(($sum_deals),0) as sum_deals");
+			$query->select("($mounts) as mounts");
+            $query->select("($closed) as closed");
+            $query->select("ifnull(($sum_done),0) as sum_done");
+			$query->from('`#__gm_ceiling_api_phones` AS a');
+			$query->where("a.dealer_id = $dealer_id");
 			$db->setQuery($query);
 			
 			$items = $db->loadObjectList();

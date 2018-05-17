@@ -20,7 +20,8 @@
     Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($this->item->id);
     foreach($calculations as $calc){
         if(!empty($calc->n3)){
-            Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);  
+            Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
+            Gm_ceilingHelpersGm_ceiling::create_client_single_estimate(1,$calc_id,null,null,null,null,null,null);  
         }
     }
 ?>
