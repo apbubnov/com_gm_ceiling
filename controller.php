@@ -3320,6 +3320,8 @@ public function register_mnfctr(){
     function acceptFromCall() {
         try
         {
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'calls.txt', json_encode($_POST), FILE_APPEND);
             if (!empty($_POST['phone'])) {
                 $clientform_model = Gm_ceilingHelpersGm_ceiling::getModel('clientform');
                 $clienthistory_model = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
