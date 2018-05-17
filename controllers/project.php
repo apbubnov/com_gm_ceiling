@@ -155,6 +155,17 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
     }
 
+    public function changeDiscount()
+    {
+        $jinput = JFactory::getApplication()->input;
+        $model = $this->getModel('Project', 'Gm_ceilingModel');
+        $project_id = $jinput->get('project_id', '0', 'INT');
+        $data = $model->getData($project_id);
+        $new_discount = $jinput->get('new_discount', $data->project_discount, 'INT');
+        $result = $model->change_discount($project_id, $new_discount);
+        die(json_encode($result));
+    }
+
 	//запись на замер при входящем звонке
 	public function recToMeasurement()
 	{
@@ -168,15 +179,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				$usertype = "managermainpage";
 			}
 			$model = $this->getModel('Project', 'Gm_ceilingModel');
-            $jinput = JFactory::getApplication()->input;
+            $jinput = $app->input;
             $project_id = $jinput->get('project_id', '0', 'INT');
             $data = $model->getData($project_id);
             $type = $jinput->get('type', '', 'STRING');
             $subtype = $jinput->get('subtype', '', 'STRING');
-            $new_discount = $jinput->get('new_discount', $data->project_discount, 'RAW');
             $call_id = $jinput->get('call_id', 0, 'INT');
-            $isDiscountChange = $jinput->get('isDiscountChange', '0', 'INT');
-            $isDataChange = $jinput->get('data_change', '0', 'INT');
             $client_id = $jinput->get('client_id', 1, 'INT');
             $api_phone_id = $jinput->get('advt_id', '0', 'INT');
             $selected_advt = $jinput->get('selected_advt', '0', 'INT');
@@ -221,7 +229,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 }
 
                 $comments_string = $jinput->get('comments_id', '', 'STRING');
-                $call_comment = $jinput->get('call_comment', "Отсутствует", 'STRING');
+                $call_comment = $jinput->get('call_comment', '', 'STRING');
                 $call_date = $jinput->get('call_date', "0", 'STRING');
                 $comments_id = [];
                 $client_history_model = $this->getModel('Client_history', 'Gm_ceilingModel');
@@ -249,17 +257,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 if (!empty($comments_string))
                     $comments_id = explode(";", $comments_string);
                 array_pop($comments_id);
-                if ($isDiscountChange) {
-                    if ($model->change_discount($project_id, $new_discount)) {
 
-                        if (!empty($_SESSION['url'])) {
-                            $this->setMessage("Процент скидки успешно изменен!");
-                            //header('Location: '.$_SESSION['url'] ); exit();
-                            $this->setRedirect(JRoute::_($_SESSION['url'], false));
-                            //$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=mainpage&type=gmmanagermainpage', false));
-                        }
-                    }
-                }
                 $name = $jinput->get('new_client_name', '', 'STRING');
                 $phones = $jinput->get('new_client_contacts', array(), 'ARRAY');
                 foreach ($phones as $key => $value) {
@@ -284,7 +282,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                 $gmmanager_comment = $jinput->get('gmmanager_note', null, 'STRING');
                 $manager_comment = $jinput->get('manager_note', null, 'STRING');
 
-                if ($client_id == 1 && $isDiscountChange == 0)
+                if ($client_id == 1)
                 {
                     $client_found_bool = false;
                     foreach($phones as $key => $phone)
@@ -413,7 +411,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                         $this->setMessage("Клиент создан и $result!");
                     }
                 }
-                elseif ($client_id != 1 && $isDiscountChange == 0)
+                elseif ($client_id != 1)
                 {
                     $new_phones = [];
                     $change_phones = [];
@@ -544,15 +542,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
                     $model_projectshistory->save($project_id, $status);
                 }
 
-                if (!$isDiscountChange)
-                {
-					if($usertype=="managermainpage"){
-						$this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&task=mainpage', false));
-					}
-					else{
-						$this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
-					}
-                }
+				if($usertype=="managermainpage"){
+					$this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&task=mainpage', false));
+				}
+				else{
+					$this->setRedirect(JRoute::_('/index.php?option=com_gm_ceiling&view=mainpage&type='.$usertype, false));
+				}
             }
             unset($_SESSION['FIO'],$_SESSION['address'],$_SESSION['house'],$_SESSION['bdq'],$_SESSION['apartment'],$_SESSION['porch'],$_SESSION['floor'],$_SESSION['code'],$_SESSION['date'],$_SESSION['time'],$_SESSION['phones'],$_SESSION['manager_comment'],$_SESSION['comments'],$_SESSION['url'],$_SESSION['gauger']);
         }
@@ -582,9 +577,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$data = $model->getData($project_id);
 			$type = $jinput->get('type', '', 'STRING');
 			$subtype = $jinput->get('subtype', '', 'STRING');
-			$new_discount =  $jinput->get('new_discount',$data->project_discount, 'RAW');
 			$call_id =  $jinput->get('call_id',0, 'INT');
-			$isDiscountChange = $jinput->get('isDiscountChange', '0', 'INT');
 			$isDataChange = $jinput->get('data_change', '0', 'INT');
 			$client_id = $jinput->get('client_id', 1, 'INT');
             $sex = $jinput->get('slider-sex',"NULL",'STRING');
@@ -592,16 +585,6 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			$call_comment = $jinput->get('call_comment', "Отсутствует", 'STRING');
 			$call_date = $jinput->get('call_date', "0", 'STRING');
 			$status = $jinput->get('status','','INT');
-			if($isDiscountChange){
-				if($model->change_discount($project_id,$new_discount))
-				{
-					
-					if(!empty($_SESSION['url'])){
-						$this->setMessage("Процент скидки успешно изменен!");
-						$this->setRedirect(JRoute::_($_SESSION['url'], false));
-					}
-				}
-			}
 			$name = $jinput->get('new_client_name', '', 'STRING');
 			$phones = $jinput->get('new_client_contacts', array(), 'ARRAY');
 			foreach ($phones as $key => $value) {
@@ -772,9 +755,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 			if(!empty($floor)) $address .= ", этаж: ".$floor;
 			if(!empty($code)) $address .= ", код: ".$code;
 			$new_address = $address;
-			$new_discount =  $jinput->get('new_discount',$data->project_discount, 'RAW');
 			$isDataChange = $jinput->get('data_change', '0', 'INT');
-			$isDiscountChange = $jinput->get('isDiscountChange', '0', 'INT');
 			$isDataDelete = $jinput->get('data_delete', '0', 'INT');
 
 			$smeta = $jinput->get('smeta', '0', 'INT');
@@ -810,7 +791,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 				}
 				
 			}
-			elseif ($isDataChange||$isDiscountChange) {
+			elseif ($isDataChange) {
 				if($isDataChange){
 					$newFIO = $jinput->get('new_client_name','', 'STRING');
 					$newDate = $jinput->get('project_new_calc_date','','STRING');
@@ -880,36 +861,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 					}
 					
 				}	
-				if($isDiscountChange&&(!empty($new_discount)||$new_discount==0)){
-					$model->change_discount($project_id,$new_discount);
 
-					$calculationsID = $model->getCalculationIdById($project_id);
-					$modal_calc = Gm_ceilingHelpersGm_ceiling::getModel("calculation");
-                    foreach ($calculationsID as $item) {
-                        $calc_id = $item->id;
-                        $item = (array) $modal_calc->getDataById($item->id);
-                        $item["extra_mounting_array"] = array();
-                        foreach (json_decode($item["extra_mounting"]) as $extra_mounting)
-                            $item["extra_mounting_array"][] = $extra_mounting;
-
-                        $item["need_mount_extra"] = !empty($item["extra_mounting_array"]);
-
-                        if (floatval($item["mounting_sum"]) == 0)
-                            Gm_ceilingHelpersGm_ceiling::calculate(1, $calc_id, 0, 1, 0, 0);
-                        else if (!$item["need_mount_extra"])
-                            Gm_ceilingHelpersGm_ceiling::calculate(1, $calc_id, 0, 1, 0, 1);
-                        else {
-                            $item["need_mount"] = false;
-                            $first = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, null, $item);
-                            $first = round($first["total_gm_mounting"], 0);
-
-                            if ($first == floatval($item["mounting_sum"]))
-                                Gm_ceilingHelpersGm_ceiling::calculate(1, $calc_id, 0, 1, 0, 0);
-                            else
-                                Gm_ceilingHelpersGm_ceiling::calculate(1, $calc_id, 0, 1, 0, 1);
-                        }
-					}
-				}
 				$this->setMessage("Данные успешно изменены");
 				if($type === "gmcalculator" && $subtype === "calendar") {
 					$this->setRedirect(JRoute::_('index.php?option=com_gm_ceiling&view=project&type=gmcalculator&subtype=calendar&id='.$project_id, false));

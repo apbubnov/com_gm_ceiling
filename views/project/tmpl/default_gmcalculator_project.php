@@ -133,7 +133,11 @@ $phones = $client_model->getItemsByClientId($this->item->id_client);
     <script type="text/javascript" src="/components/com_gm_ceiling/create_calculation.js"></script>
     <script type="text/javascript" src="/components/com_gm_ceiling/views/project/common_table.js"></script>
     <script type="text/javascript">
+<<<<<<< HEAD
+        var project_id = "<?php echo $this->item->id; ?>";           
+=======
         var project_id = "<?php echo $this->item->id; ?>";
+>>>>>>> 36c45c446de26c2adf9d29916d89d5d42054b15b
     </script>
 
 <?php

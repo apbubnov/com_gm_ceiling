@@ -544,19 +544,14 @@
                 <?php $skidka = ($calculation_total - $project_total_1) / $calculation_total * 100; ?>
                 <tbody class="new_discount" style="display: none">
                 <tr>
-
                     <td>
-                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:<span class="star">&nbsp;*</span></label>
+                        <label id="jform_discoint-lbl" for="jform_new_discount">Новый процент скидки:</label>
                         <input name="new_discount" id="jform_new_discount" value="" placeholder="Новый % скидки"
-                               max='<?= round($skidka, 0); ?>' type="number">
-                        <input name="isDiscountChange" value="0" type="hidden">
+                               min="0" max="<?= round($skidka, 0); ?>" type="number">
                     </td>
                     <td>
-                        <button type="button" id="update_discount" class="btn btn btn-primary">
-                            Ок
-                        </button>
+                        <button type="button" id="update_discount" class="btn btn-primary">Ок</button>
                     </td>
-
                 </tr>
                 </tbody>
             </table>
@@ -1429,24 +1424,43 @@
             }
         });
 
-        jQuery("#change_discount").click(function () {
+        jQuery("#change_discount").click(function() {
             jQuery(".new_discount").toggle();
 
         });
 
-        jQuery("#update_discount").click(function () {
-            console.log(<?php echo $skidka; ?>);
-            console.log(jQuery("#jform_new_discount").val());
-            jQuery("input[name='isDiscountChange']").val(1);
-            if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
-            save_data_to_session(3);
-
+        jQuery("#update_discount").click(function() {
+            //if (jQuery("#jform_new_discount").is("valid")) jQuery(".new_discount").hide();
+            save_data_to_session(4);
+            jQuery.ajax({
+                url: "index.php?option=com_gm_ceiling&task=project.changeDiscount",
+                data: {
+                    project_id: project_id,
+                    new_discount: jQuery("#jform_new_discount").val()
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    //console.log(data);
+                    location.reload();
+                },
+                error: function (data) {
+                    console.log(data);
+                    var n = noty({
+                        timeout: 2000,
+                        theme: 'relax',
+                        layout: 'center',
+                        maxVisible: 5,
+                        type: "error",
+                        text: "Ошибка изменения скидки"
+                    });
+                }
+            });
         });
 
         jQuery("#ok").click(function () {
             jQuery("input[name='data_delete']").val(1);
             save_data_to_session(3);
-
         });
 
         function add_history(id_client, comment) {
@@ -1819,67 +1833,6 @@
         return Math.round(parseFloat(""+x) * Math.pow(10,y)) / Math.pow(10,y);
     }
 
-    
-    function save_data_to_session(action_type,id=null){
-        var phones = [];
-            var s = window.location.href;
-            var classname = jQuery("input[name='new_client_contacts[]']");
-            Array.from(classname).forEach(function (element) {
-                phones.push(element.value);
-            });
-        console.log(phones);
-        var data = {
-                fio: jQuery("#jform_client_name").val(),
-                address: jQuery("#jform_address").val(),
-                house: jQuery("#jform_house").val(),
-                bdq: jQuery("#jform_bdq").val(),
-                apartment: jQuery("#jform_apartment").val(),
-                porch: jQuery("#jform_porch").val(),
-                floor: jQuery("#jform_floor").val(),
-                code: jQuery("#jform_code").val(),
-                date: jQuery("#jform_project_new_calc_date").val(),
-                time: jQuery("#jform_new_project_calculation_daypart").val(),
-                manager_comment: jQuery("#gmmanager_note").val(),
-                phones: phones,
-                comments: jQuery("#comments_id").val(),
-                gauger: jQuery("#jform_project_gauger").val(),
-                sex: jQuery('[name = "slider-sex"]:checked').val(),
-                type : jQuery('[name = "slider-radio"]:checked').val(),
-                recool: jQuery("#recoil_choose").val(),
-                advt: jQuery("#advt_choose").val()
-            };
-        var object = {proj_id : jQuery("#project_id").val(), data:JSON.stringify(data)};
-        jQuery.ajax({
-            type: 'POST',
-            url: "index.php?option=com_gm_ceiling&task=save_data_to_session",
-            data: object,
-            success: function (data) {
-                console.log(data);
-                if(action_type == 1){
-                    create_calculation(<?php echo $this->item->id; ?>);
-                }
-                if(action_type == 2){
-                   window.location = "index.php?option=com_gm_ceiling&view=calculationform2&type=gmmanager&subtype=calendar&calc_id=" + id;
-                }
-                if(action_type == 3){
-                    jQuery("#form-client").submit();
-                }
-                
-            },
-            dataType: "text",
-            timeout: 10000,
-            error: function () {
-                var n = noty({
-                    timeout: 2000,
-                    theme: 'relax',
-                    layout: 'center',
-                    maxVisible: 5,
-                    type: "error",
-                    text: "Ошибка cервер не отвечает"
-                });
-            }
-        });
-    }
     jQuery("#add_birthday").click(function () {
         var birthday = jQuery("#jform_birthday").val();
         var id_client = <?php echo $this->item->id_client;?>;
