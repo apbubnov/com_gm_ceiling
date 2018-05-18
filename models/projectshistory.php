@@ -70,7 +70,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
             throw new Exception('Ошибка!', 500);
         }
     }
-    function getIdsByStatusAndAdvt($advt,$statuses,$date1,$date2){
+    function getIdsByStatusAndAdvt($dealer_id,$advt,$statuses,$date1,$date2){
 		if(empty($advt)){
             $advt = 'total';
         }

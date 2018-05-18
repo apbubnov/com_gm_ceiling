@@ -2234,7 +2234,7 @@ public function register_mnfctr(){
             }
             if($type == 1){
                 $project_history = Gm_ceilingHelpersGm_ceiling::getModel('Projectshistory');
-                $projects = $project_history->getIdsByStatusAndAdvt($advt_id,$statuses,$date1,$date2);
+                $projects = $project_history->getIdsByStatusAndAdvt($dealer_id,$advt_id,$statuses,$date1,$date2);
                 
             }
             die(json_encode($projects));       

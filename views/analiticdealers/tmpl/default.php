@@ -113,7 +113,7 @@ if(!$api){
                         echo floor($item->profit); 
                     ?>
                 </td>
-				<td data-th = "">
+				<td data-th = "Скрыть">
 					<button type="button" class='clear_form_group btn btn-primary'> <i class="fa fa-eye-slash" aria-hidden="true"></i> </button>
 				</td>
 			</tr>
@@ -121,13 +121,13 @@ if(!$api){
 		<?php  }?>
 		<tr data-value = "total" >
 				<td><b>Итого</b></td>
-				<td><b><?php echo $c_all_common;?></b></td>
-				<td><b><?php echo $c_all_inwork;?></b></td>
-				<td><b><?php echo $c_all_measure;?></b></td>
-				<td><b><?php echo $c_all_deals;?></b></td>
-                <td><b><?php echo $c_all_done;?></b></td>
-                <td><b><?php echo $c_all_sum;?></b></td>
-                <td><b><?php echo floor($c_all_profit); ?></b></td>
+				<td data-th = "Всего"><b><?php echo $c_all_common;?></b></td>
+				<td data-th = "В работе"><b><?php echo $c_all_inwork;?></b></td>
+				<td data-th = "Замеры"><b><?php echo $c_all_measure;?></b></td>
+				<td data-th = "Договоры"><b><?php echo $c_all_deals;?></b></td>
+                <td data-th = "Завершенные"><b><?php echo $c_all_done;?></b></td>
+                <td data-th = "Сумма"><b><?php echo $c_all_sum;?></b></td>
+                <td data-th = "Прибыль"><b><?php echo floor($c_all_profit); ?></b></td>
 			</tr>
 	</table>
 </form>
@@ -168,46 +168,46 @@ if(!$api){
          
 		<?php foreach ($d_items as $item) {?>
 			<tr data-value = "<?php echo $item->name;?>">
-				<td>
+				<td data-th = "Реклама">
 					<?php echo $item->name;?>
 				</td>
-				<td>
+				<td data-th = "Всего">
 					<?php 
 						$d_all_common +=$item->common;
 						echo $item->common;
 					?>
 				</td>
-				<td>
+				<td data-th = "Замеры - Отказ">
 					<?php 
 						$d_all_ref_measure+=$item->ref_measure;
 						echo $item->ref_measure;
 					?>
 				</td>
-				<td>
+				<td data-th = "Замеры - Запись">
 					<?php
 						$d_all_measure+= $item->measure; 
 						echo $item->measure;
 					?>
 				</td>
-                <td>
+                <td data-th = "Замеры - Текущие">
 					<?php
 						$d_all_current_measure+= $item->current_measure; 
 						echo $item->current_measure;
 					?>
 				</td>
-				<td>
+				<td data-th = "Договоры - Отказ">
 					<?php
 						$d_all_ref_deals+= $item->ref_deals;
 					 	echo $item->ref_deals;
 					 ?>
 				</td>
-				<td>
+				<td data-th = "Договоры">
 					<?php
 						$d_all_deals+= $item->deals;
 					 	echo $item->deals;
 					 ?>
 				</td>
-				<td>
+				<td data-th = "Договоры - Сумма">
                     <?php
 						$d_all_sum_deals+=$item->sum_deals;
 						if(!empty($item->sum_deals)){
@@ -216,19 +216,19 @@ if(!$api){
 						else echo 0;
                     ?>
                 </td>
-				<td>
+				<td data-th = "Монтажи">
 					<?php 
 						$d_all_mounts+=$item->mounts;
 						echo $item->mounts;
 					?>
 				</td>
-				<td>
+				<td data-th = "Закрытые">
 					<?php 
 						$d_all_closed+=$item->closed;
 						echo $item->closed;
 					?>
 				</td>
-                <td>
+                <td data-th = "Сумма закрытых">
                     <?php
 						$d_all_sum_done+=$item->sum_done;
 						if(!empty($item->sum_done)){
@@ -237,7 +237,7 @@ if(!$api){
 						else echo 0;
                     ?>
                 </td>
-				<td>
+				<td data-th = "Скрыть">
 					<button type="button" class='clear_form_group btn btn-primary'> <i class="fa fa-eye-slash" aria-hidden="true"></i> </button>
 				</td>
 			</tr>
@@ -245,16 +245,16 @@ if(!$api){
 		<?php  }?>
 		<tr data-value = "total">
 				<td><b>Итого</b></td>
-				<td><b><?php echo $d_all_common;?></b></td>
-				<td><b><?php echo $d_all_ref_measure;?></b></td>
-				<td><b><?php echo $d_all_measure;?></b></td>
-                <td><b><?php echo $d_all_current_measure;?></b></td>
-				<td><b><?php echo $d_all_ref_deals;?></b></td>
-				<td><b><?php echo $d_all_deals;?></b></td>
-				<td><b><?php echo $d_all_sum_deals;?></b></td>
-				<td><b><?php echo $d_all_mounts;?></b></td>
-				<td><b><?php echo $d_all_closed;?></b></td>
-                <td><b><?php echo $d_all_sum_done;?></b></td>
+				<td data-th = "Всего"><b><?php echo $d_all_common;?></b></td>
+				<td data-th = "Замеры - Отказ"><b><?php echo $d_all_ref_measure;?></b></td>
+				<td data-th = "Замеры - Запись"><b><?php echo $d_all_measure;?></b></td>
+                <td data-th = "Замеры - Текущие"><b><?php echo $d_all_current_measure;?></b></td>
+				<td data-th = "Договоры - Отказ"><b><?php echo $d_all_ref_deals;?></b></td>
+				<td data-th = "Договоры"><b><?php echo $d_all_deals;?></b></td>
+				<td data-th = "Договоры - Сумма"><b><?php echo $d_all_sum_deals;?></b></td>
+				<td data-th = "Монтажи"><b><?php echo $d_all_mounts;?></b></td>
+				<td data-th = "Закрытые"><b><?php echo $d_all_closed;?></b></td>
+                <td data-th = "Сумма закрытых"><b><?php echo $d_all_sum_done;?></b></td>
 			</tr>
 	</table>
 	<div id="modal-window-with-table" class="modal_window_analitic">
@@ -274,11 +274,16 @@ if(!$api){
  		columns_array["inwork"] = "В работе";
  		columns_array["measure"] = "Замеры";
  		columns_array["deals"] = "Договоры";
- 		columns_array["done"] = "Выполнено";
+ 		columns_array["done"] = "Завершенные";
  		columns_array["sum"] = "Сумма";
  		columns_array["profit"] = "Прибыль";
-
-	
+		columns_array["ref_measure"] = "Замеры - Отказ";
+		columns_array["current_measure"] = "Замеры - Текущие";
+		columns_array["ref_deals"] = "Договоры - Отказ";
+		columns_array["sum_deals"] = "Договоры - Сумма";
+		columns_array["mounts"] = "Монтажи";
+		columns_array["closed"] = "Закрытые";
+		columns_array["sum_done"] = "Сумма закрытых";
         hideEmptyTr("#c_analitic-table");
 		c_all_count = []; 
 		c_all_count['name'] = "Итого:"; 
@@ -296,15 +301,15 @@ if(!$api){
 		d_all_count = []; 
 		d_all_count['name'] = "Итого:"; 
 		d_all_count['common'] = <?php echo $d_all_common;?>;
-		d_all_count['all_measure'] = <?php echo $d_all_measure;?>;
-		d_all_count['all_ref_measure'] = <?php echo $d_all_ref_measure;?>;
-        d_all_count['all_current_measure'] = <?php echo $d_all_current_measure;?>;
-		d_all_count['all_deals'] = <?php echo $d_all_deals;?>;
-		d_all_count['all_ref_deals'] = <?php echo $d_all_ref_deals;?>;
-		d_all_count['all_closed'] = <?php echo $d_all_closed;?>;
-		d_all_count['all_mounts'] = <?php echo $d_all_mounts;?>;
-		d_all_count['all_sum_deals'] = <?php echo $d_all_sum_deals;?>;
-		d_all_count['all_sum_done'] = <?php echo $d_all_sum_done;?>;
+		d_all_count['measure'] = <?php echo $d_all_measure;?>;
+		d_all_count['ref_measure'] = <?php echo $d_all_ref_measure;?>;
+        d_all_count['current_measure'] = <?php echo $d_all_current_measure;?>;
+		d_all_count['deals'] = <?php echo $d_all_deals;?>;
+		d_all_count['ref_deals'] = <?php echo $d_all_ref_deals;?>;
+		d_all_count['closed'] = <?php echo $d_all_closed;?>;
+		d_all_count['mounts'] = <?php echo $d_all_mounts;?>;
+		d_all_count['sum_deals'] = <?php echo $d_all_sum_deals;?>;
+		d_all_count['sum_done'] = <?php echo $d_all_sum_done;?>;
 		// функция получения сведения о браузере
 		function GetNameBrowser(){
 			var ua = navigator.userAgent;    
@@ -537,16 +542,18 @@ if(!$api){
 		jQuery('#c_analitic-table > tbody > tr:last').remove();
 		jQuery('#c_analitic-table').append('<tr></tr>');
 		for(var i in c_all_count){
-			jQuery('#c_analitic-table > tbody > tr:last').append('<td> <b>'+c_all_count[i]+'<b></td>');
+			jQuery('#c_analitic-table > tbody > tr:last').append('<td data-th = "'+columns_array[i]+'"> <b>'+c_all_count[i]+'<b></td>');
 		}
+		jQuery('#c_analitic-table > tbody > tr:last').attr("data-value","total");
     })
     jQuery("#d_show_all").click(function(){
 		jQuery('#d_analitic-table > tbody > tr').show();
 		jQuery('#d_analitic-table > tbody > tr:last').remove();
 		jQuery('#d_analitic-table').append('<tr></tr>');
 		for(var i in d_all_count){
-			jQuery('#d_analitic-table > tbody > tr:last').append('<td> <b>'+d_all_count[i]+'<b></td>');
+			jQuery('#d_analitic-table > tbody > tr:last').append('<td data-th = "'+columns_array[i]+'"> <b>'+d_all_count[i]+'<b></td>');
 		}
+		jQuery('#d_analitic-table > tbody > tr:last').attr("data-value","total");
 	})
 	jQuery(".clear_form_group").click(function (event) {
     
@@ -617,7 +624,7 @@ if(!$api){
                         }
 						jQuery(table_name).append('<tr></tr>');
 						for(var i in all_count){
-							jQuery(table_name+' > tbody > tr:last').append('<td data-th = "Итого"> <b>'+all_count[i]+'<b></td>');
+							jQuery(table_name+' > tbody > tr:last').append('<td data-th = "'+columns_array[i]+'"> <b>'+all_count[i]+'<b></td>');
 							jQuery(table_name+' > tbody > tr:last').attr("data-value", "total");
                         }
                         

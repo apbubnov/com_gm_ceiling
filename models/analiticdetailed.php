@@ -83,7 +83,7 @@ class Gm_ceilingModelAnaliticDetailed extends JModelList
 				$date2 = date("Y-m-d");
 			}
 			if(empty($dealer_id)){
-				$dealer_id = 0;
+				throw new Exception('Пустой id дилера!');
 			}
 			$dealer = JFactory::getUser($dealer_id);
 			$db = JFactory::getDbo();

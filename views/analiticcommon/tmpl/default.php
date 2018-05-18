@@ -20,9 +20,9 @@ try {
     $det_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('AnaliticDetailed');
     $deal_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('Analitic_dealers');
     $d_items = $det_analitic_model->getData();
+    print_r($d_items);
     $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
 	$dealers = $deal_analitic_model->getData('2018-03-25', '2018-03-30');
-	print_r($dealers);
 }
 catch (Exception $e) {
 	$date = date("d.m.Y H:i:s");
