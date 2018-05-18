@@ -61,7 +61,7 @@ function delete_string_characters($string)
 
 function add_error_in_log($error, $file, $func, $args)
 {
-    $date = date("d.m.Y H:i:s");
+    $date = date("Y-m-d H:i:s");
     $req_str = '';
     foreach (getallheaders() as $name => $value) {
         $req_str .= "$name: $value\n";
