@@ -488,28 +488,7 @@ class Gm_ceilingModelProjects extends JModelList
 
     public function getDataByStatusAndAdvt($dealer_id,$advt,$statuses,$date1 = null,$date2 = null){
         try{
-            
 
-
-        /*    if(!empty($advt) && $advt !='total'){
-                 $where = "p.api_phone_id = $advt";
-            }
-            if(!empty($statuses) && $statuses != 'all'){
-                if(!empty($where)){
-                    $where .= "AND p.project_status in $statuses";
-                }
-                else{
-                     $where .= "p.project_status in $statuses";
-                }
-            }
-            if(!empty($date1)&&!empty($date2)){
-                if(!empty($where)){
-                    $where .= "and p.created between '$date1' and '$date2'";
-                }
-                else{
-                     $where .= "p.created between '$date1' and '$date2'";
-                }
-            }*/
             $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $subquery = $db->getQuery(true);
@@ -524,15 +503,18 @@ class Gm_ceilingModelProjects extends JModelList
                 ->where("dealer_id = $dealer_id");
             if($advt == 'total'){
                 $where = "cl.dealer_id = $dealer_id and p.api_phone_id in ($subquery_advt)";
-                if($statuses != 'all'){
-                    $where .= " AND p.project_status in $statuses";
-                }
             }
             else{
                 $where = "p.api_phone_id = $advt";
-                if($statuses != 'all'){
+            }
+            if($statuses != 'all' && $statuses != 'current' && $statuses != 'mount' ){
                     $where .= " AND p.project_status in $statuses";
                 }
+            if($statuses == "current" ){
+                $where .= "p.project_calculation_date between '$date1 00:00:00' and '$date2 23:59:59'";
+            }
+            if($statuses == "mount"){
+                $where .= "p.project_mounting_date between '$date1 00:00:00' and '$date2 23:59:59'"
             }
             if(!empty($date1)&&!empty($date2)){
                 if(!empty($where)){

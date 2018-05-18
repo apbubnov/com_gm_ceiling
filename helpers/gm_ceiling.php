@@ -59,6 +59,51 @@ function delete_string_characters($string)
     return $string;
 }
 
+function add_error_in_log($error, $file, $func, $args)
+{
+    $date = date("d.m.Y H:i:s");
+    $req_str = '';
+    foreach (getallheaders() as $name => $value) {
+        $req_str .= "$name: $value\n";
+    }
+
+    $args_str = '';
+    foreach ($args as $name => $value) {
+        $args_str .= "$name: $value\n";
+    }
+    
+    $get_str = '';
+    foreach ($_GET as $name => $value) {
+        $get_str .= "$name: $value\n";
+    }
+
+    $post_str = '';
+    foreach ($_POST as $name => $value) {
+        $post_str .= "$name: $value\n";
+    }
+
+    $file = array_pop(explode('com_gm_ceiling', $file));
+
+    $ip = $_SERVER['REMOTE_ADDR'];
+
+    $db = JFactory::getDbo();
+    $req_str = $db->escape($req_str, true);
+
+    $val = "'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str'"
+
+    $query = $db->getQuery(true);
+    $query
+        ->insert('`errors_log`')
+        ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`')
+        ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str'");
+    
+    $db->setQuery($query);
+    $db->execute();
+    $code = $db->insertid();
+
+    throw new Exception('Ошибка!', $code);
+}
+
 class Gm_ceilingHelpersGm_ceiling
 {
     public static function margin($value, $margin) {return margin($value, $margin);}
