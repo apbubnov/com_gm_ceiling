@@ -338,9 +338,11 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                                             </tr>
                                         </table>
                                     </div>
-                                <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
+                                </div>
+                            <?php } ?>
+                            <?php if ($this->item->project_verdict == 0 && $user->dealer_type != 2) { ?>
+                                <div class="col-12 col-md-6">
                                         <button type="button" class="btn btn-primary" id="change_discount">Изменить величину скидки</button>
-                                <?php } ?>
                                 </div>
                             <?php } ?>
                         <!-- конец -->

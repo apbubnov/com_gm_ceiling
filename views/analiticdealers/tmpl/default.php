@@ -9,17 +9,18 @@
 // No direct access
 defined('_JEXEC') or die;
 try {
-    $user       = JFactory::getUser();
-    $userId     = $user->get('id');
+
     $today = date('Y-m-d');
+    $jinput = JFactory::getApplication()->input;
+    $api = $jinput->get('api', 0, 'INT');
+    $user_id = $jinput->get('user_id',null,'INT');
+   	$user = JFactory::getUser($user_id);
     $common_analitic_model = Gm_ceilingHelpersGm_ceiling::getModel('Analiticcommon'); 
     $det_analitic_model  = Gm_ceilingHelpersGm_ceiling::getModel('AnaliticDetailed');
     $c_items = $common_analitic_model->getData($user->dealer_id);
     $d_items = $det_analitic_model->getData(null,null,$user->dealer_id);
     $phones_model = Gm_ceilingHelpersGm_ceiling::getModel('api_phones');
-	$jinput = JFactory::getApplication()->input;
-    $api = $jinput->get('api', 0, 'INT');
-    $user_id = $jinput->get('user_id',null,'INT');
+	
 }
 catch (Exception $e) {
 	$date = date("d.m.Y H:i:s");
@@ -276,6 +277,7 @@ if(!$api){
  		columns_array["done"] = "Выполнено";
  		columns_array["sum"] = "Сумма";
  		columns_array["profit"] = "Прибыль";
+
 	
         hideEmptyTr("#c_analitic-table");
 		c_all_count = []; 
@@ -418,17 +420,16 @@ if(!$api){
 			var diff = 0;
 			console.log(rek_name,index);
 			switch(true){
-				case index>=5 && index<=7:
-				case index>=8 && index<=10:
+				case index>=2 && index<=7:
 					strindex = 1;
-					diff = 5;
+					diff = 2;
 					break;
-				case index == 11:
+				case index == 8:
 					diff = 4;
 					break;
-				case index>=12 && index<=13:
+				case index>=9 && index<=10:
 					strindex = 1;
-					diff = 6;
+					diff = 3;
 					break;
 				default:
 					diff = 0;
@@ -437,7 +438,7 @@ if(!$api){
             var statuses = jQuery(jQuery('#d_analitic-table > thead > tr')[strindex].children[index-diff]).data('value');
             var date1 = jQuery("#d_date1").val();
             var date2 = jQuery("#d_date2").val();
-            
+            console.log(rek_name,statuses,date1,date2,1);
             getProjects(rek_name,statuses,date1,date2,1);
         }               
     });
