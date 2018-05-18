@@ -2103,10 +2103,8 @@ public function register_mnfctr(){
 
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2119,10 +2117,8 @@ public function register_mnfctr(){
             die(json_encode($model->save($id,null,$sum)));
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2170,10 +2166,8 @@ public function register_mnfctr(){
             die(true);
 
         } catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2187,10 +2181,8 @@ public function register_mnfctr(){
             die(json_encode($result));
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
     public function getCashboxByMonth(){
@@ -2205,10 +2197,8 @@ public function register_mnfctr(){
             die(json_encode($result));
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2229,10 +2219,8 @@ public function register_mnfctr(){
             die($result);
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2497,10 +2485,8 @@ public function register_mnfctr(){
             }
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2578,10 +2564,8 @@ public function register_mnfctr(){
             }
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2624,10 +2608,8 @@ public function register_mnfctr(){
             exit();
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }*/
 
@@ -2664,10 +2646,8 @@ public function register_mnfctr(){
             }
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }*/
     }
 
@@ -2740,10 +2720,8 @@ public function register_mnfctr(){
             }
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2763,10 +2741,8 @@ public function register_mnfctr(){
             die(true);
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2815,10 +2791,8 @@ public function register_mnfctr(){
             die(json_encode(true));
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2831,10 +2805,8 @@ public function register_mnfctr(){
             die(json_encode($answer1));
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
     public function printZapushennieOnGmMainPage(){
@@ -2846,10 +2818,8 @@ public function register_mnfctr(){
             die(json_encode($answer2));
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
     public function printZayavkiSSaitaOnGmMainPage(){
@@ -2861,10 +2831,8 @@ public function register_mnfctr(){
             die(json_encode($answer3));
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
     public function printZvonkiOnGmMainPage(){
@@ -2877,10 +2845,8 @@ public function register_mnfctr(){
             die(json_encode($answer4));
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
     public function printMissedCallsOnGmMainPage(){
@@ -2903,10 +2869,8 @@ public function register_mnfctr(){
             die(json_encode(count($answer7)));
         }
         catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -2981,10 +2945,8 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            die((object) ["status" => "error", "message" => $e->getMessage()]);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -3005,10 +2967,8 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            die((object) ["status" => "error", "message" => $e->getMessage()]);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -3024,10 +2984,8 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            die((object) ["status" => "error", "message" => $e->getMessage()]);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -3064,10 +3022,8 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            die((object) ["status" => "error", "message" => $e->getMessage()]);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
         
@@ -3104,10 +3060,8 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            die((object) ["status" => "error", "message" => $e->getMessage()]);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 }

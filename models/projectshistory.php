@@ -123,6 +123,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
                 ->from('#__gm_ceiling_projects as p')
 				->leftJoin('#__gm_ceiling_projects_history as h on h.project_id = p.id')
 				->innerJoin('#__gm_ceiling_status as s on p.project_status = s.id')
+				->innerJoin("`#__gm_ceiling_clients` as cl on p.client_id = cl.id ")
 				->where($where);
 			$db->setQuery($query);
 		
