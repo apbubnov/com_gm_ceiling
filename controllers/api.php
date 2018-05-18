@@ -70,10 +70,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
     public function register_from_android(){
@@ -159,10 +157,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                /*$date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);*/
+                /*add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+*/
                 die($e->getMessage());
             }
         }
@@ -185,10 +181,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
+                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             }
         }
 
@@ -207,10 +201,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
+                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             }
         }
 
@@ -229,10 +221,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
+                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             }
         }
 
@@ -263,10 +253,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
+                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             }
         }
 
@@ -286,10 +274,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
+                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             }
         }
         public function sendMountersToAndroid()
@@ -308,10 +294,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
+                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             }
         }
         public function sendDealerInfoToAndroid()
@@ -328,10 +312,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
+                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             }
         }
         public function check_update(){
@@ -351,10 +333,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                $date = date("d.m.Y H:i:s");
-                $files = "components/com_gm_ceiling/";
-                file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-                throw new Exception('Ошибка!', 500);
+                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             } 
         }
     /*
@@ -381,10 +361,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -401,10 +379,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
     public function changePwd(){
@@ -419,10 +395,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
         }
     }
 
@@ -454,9 +428,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
             die(json_encode($Answer));
         }
@@ -481,9 +454,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
             die(json_encode($Answer));
         }
@@ -508,9 +480,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
             die(json_encode($Answer));
         }
@@ -554,9 +525,8 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+
             $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
             die(json_encode($Answer));
         }
