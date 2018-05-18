@@ -503,15 +503,18 @@ class Gm_ceilingModelProjects extends JModelList
                 ->where("dealer_id = $dealer_id");
             if($advt == 'total'){
                 $where = "cl.dealer_id = $dealer_id and p.api_phone_id in ($subquery_advt)";
-                if($statuses != 'all'){
-                    $where .= " AND p.project_status in $statuses";
-                }
             }
             else{
                 $where = "p.api_phone_id = $advt";
-                if($statuses != 'all'){
+            }
+            if($statuses != 'all' && $statuses != 'current' && $statuses != 'mount' ){
                     $where .= " AND p.project_status in $statuses";
                 }
+            if($statuses == "current" ){
+                $where .= "p.project_calculation_date between '$date1 00:00:00' and '$date2 23:59:59'";
+            }
+            if($statuses == "mount"){
+                $where .= "p.project_mounting_date between '$date1 00:00:00' and '$date2 23:59:59'"
             }
             if(!empty($date1)&&!empty($date2)){
                 if(!empty($where)){
