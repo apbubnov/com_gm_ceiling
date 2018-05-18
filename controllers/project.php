@@ -149,13 +149,20 @@ class Gm_ceilingControllerProject extends JControllerLegacy
 
     public function changeDiscount()
     {
-        $jinput = JFactory::getApplication()->input;
-        $model = $this->getModel('Project', 'Gm_ceilingModel');
-        $project_id = $jinput->get('project_id', '0', 'INT');
-        $data = $model->getData($project_id);
-        $new_discount = $jinput->get('new_discount', $data->project_discount, 'INT');
-        $result = $model->change_discount($project_id, $new_discount);
-        die(json_encode($result));
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $model = $this->getModel('Project', 'Gm_ceilingModel');
+            $project_id = $jinput->get('project_id', '0', 'INT');
+            $data = $model->getData($project_id);
+            $new_discount = $jinput->get('new_discount', $data->project_discount, 'INT');
+            $result = $model->change_discount($project_id, $new_discount);
+            die(json_encode($result));
+        }
+        catch(Exception $e)
+        {
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 
 	//запись на замер при входящем звонке
@@ -1118,7 +1125,7 @@ class Gm_ceilingControllerProject extends JControllerLegacy
         }
 	}
 	public function activate_by_email(){
-		/* try{ */
+		try{
 			$app = JFactory::getApplication();
 			$jinput = JFactory::getApplication()->input;
 			$project_id = $jinput->get('id', null, 'INT');
@@ -1152,12 +1159,12 @@ class Gm_ceilingControllerProject extends JControllerLegacy
             $send = $mailer->Send();
             unlink($_SERVER['DOCUMENT_ROOT'] . "/tmp/" . $filename);
             die($send);
-		/* }
+		}
 		catch(Exception $e)
         {
             add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
-        } */
+        }
 	}
 	public function approve()
 	{

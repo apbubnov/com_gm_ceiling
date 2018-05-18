@@ -100,102 +100,123 @@ class Gm_ceilingControllerGuild extends JControllerLegacy
 
     public function getCalendar()
     {
-        $app = JFactory::getApplication();
-        $month = $app->input->get('month', 0, 'int');
-        $year = $app->input->get('year', 0, 'int');
-        die(json_encode((object) ["status" => "success", "calendar" => Gm_ceilingHelpersGm_ceiling::LiteCalendar($month, $year)]));
+        try
+        {
+            $app = JFactory::getApplication();
+            $month = $app->input->get('month', 0, 'int');
+            $year = $app->input->get('year', 0, 'int');
+            die(json_encode((object) ["status" => "success", "calendar" => Gm_ceilingHelpersGm_ceiling::LiteCalendar($month, $year)]));
+        }
+        catch(Exception $e)
+        {
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 
     public function getData()
     {
-        $app = JFactory::getApplication();
-
-        $Type = $app->input->get('Type', null, 'string');
-
-        if (gettype($Type) != "array")
-            $Type = [$Type];
-
-
-        $DateStart = $app->input->get('DateStart', null, 'string');
-        $DateEnd = $app->input->get('DateEnd', null, 'string');
-        $Date = $app->input->get('Date', null, 'string');
-
-        $Day = $app->input->get('Day', null, 'int');
-        $Month = $app->input->get('Month', null, 'int');
-        $Year = $app->input->get('Year', null, 'int');
-
-        $User = $app->input->get('User', null, 'int');
-
-        $data = (object) [];
-
-        if (!empty($DateStart))
-            $data->DateStart = $DateStart;
-
-        if (!empty($DateEnd))
-            $data->DateEnd = $DateEnd;
-
-        if (!empty($Date))
+        try
         {
-            $Date = DateTime::createFromFormat("Y-m-d H:i:s", $Date);
+            $app = JFactory::getApplication();
 
-            $day = $Date->format("d");
-            $month = $Date->format("m");
-            $year = $Date->format("Y");
+            $Type = $app->input->get('Type', null, 'string');
 
-            $day = intval($day);
-            $month = intval($month);
-            $year = intval($year);
+            if (gettype($Type) != "array")
+                $Type = [$Type];
 
-            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
-            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
+
+            $DateStart = $app->input->get('DateStart', null, 'string');
+            $DateEnd = $app->input->get('DateEnd', null, 'string');
+            $Date = $app->input->get('Date', null, 'string');
+
+            $Day = $app->input->get('Day', null, 'int');
+            $Month = $app->input->get('Month', null, 'int');
+            $Year = $app->input->get('Year', null, 'int');
+
+            $User = $app->input->get('User', null, 'int');
+
+            $data = (object) [];
+
+            if (!empty($DateStart))
+                $data->DateStart = $DateStart;
+
+            if (!empty($DateEnd))
+                $data->DateEnd = $DateEnd;
+
+            if (!empty($Date))
+            {
+                $Date = DateTime::createFromFormat("Y-m-d H:i:s", $Date);
+
+                $day = $Date->format("d");
+                $month = $Date->format("m");
+                $year = $Date->format("Y");
+
+                $day = intval($day);
+                $month = intval($month);
+                $year = intval($year);
+
+                $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $month, $day, $year));
+                $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $month, $day + 1, $year));
+            }
+            if (!empty($Day) || !empty($Month) || !empty($Year))
+            {
+                $Day = intval($Day);
+                $Month = intval($Month);
+                $Year = intval($Year);
+
+                $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $Month, $Day, $Year));
+                $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $Month, $Day + 1, $Year));
+            }
+            if (!empty($User))
+                $data->user_id = $User;
+
+            $model = $this->getModel();
+
+            $answer = [];
+
+            if (in_array("Working", $Type)) $answer["Working"] = $model->getWorking($data);
+            if (in_array("Employee", $Type)) $answer["Employee"] = $model->getBigDataEmployees($data);
+            if (in_array("EmployeeWorking", $Type)) $answer["EmployeeWorking"] = $model->getWorkingEmployees($data);
+
+            if (count($answer) == 1)
+                foreach ($answer as $a) $answer = $a;
+            else
+            {
+                $answer = json_decode(json_encode($answer));
+                $answer->status = "success";
+                $answer->message = "Данные успешно получены";
+            }
+
+            die(json_encode($answer));
         }
-        if (!empty($Day) || !empty($Month) || !empty($Year))
+        catch(Exception $e)
         {
-            $Day = intval($Day);
-            $Month = intval($Month);
-            $Year = intval($Year);
-
-            $data->DateStart = date("Y-m-d H:i:s",  mktime(0, 0, 0, $Month, $Day, $Year));
-            $data->DateEnd = date("Y-m-d H:i:s",  mktime(0, 0, -1, $Month, $Day + 1, $Year));
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-        if (!empty($User))
-            $data->user_id = $User;
-
-        $model = $this->getModel();
-
-        $answer = [];
-
-        if (in_array("Working", $Type)) $answer["Working"] = $model->getWorking($data);
-        if (in_array("Employee", $Type)) $answer["Employee"] = $model->getBigDataEmployees($data);
-        if (in_array("EmployeeWorking", $Type)) $answer["EmployeeWorking"] = $model->getWorkingEmployees($data);
-
-        if (count($answer) == 1)
-            foreach ($answer as $a) $answer = $a;
-        else
-        {
-            $answer = json_decode(json_encode($answer));
-            $answer->status = "success";
-            $answer->message = "Данные успешно получены";
-        }
-
-        die(json_encode($answer));
     }
 
     public function setWorking()
     {
-        $app = JFactory::getApplication();
+        try
+        {
+            $app = JFactory::getApplication();
 
-        $user_id = $app->input->get('user_id', null, 'string');
-        $date = $app->input->get('date', null, 'string');
-        $action = $app->input->get('action', 0, 'int');
+            $user_id = $app->input->get('user_id', null, 'string');
+            $date = $app->input->get('date', null, 'string');
+            $action = $app->input->get('action', 0, 'int');
 
-        $model = $this->getModel();
+            $model = $this->getModel();
 
-        try {
-            $model->setWorking((object)["user_id" => $user_id, "date" => $date, "action" => $action]);
+            try {
+                $model->setWorking((object)["user_id" => $user_id, "date" => $date, "action" => $action]);
+            }
+            catch (Exception $ex) { die(json_encode((object)["status"=>"error", "message"=>$ex->getMessage()])); }
+
+            die(json_encode((object)["status"=>"success", "message"=>"Успешно выполнено!"]));
         }
-        catch (Exception $ex) { die(json_encode((object)["status"=>"error", "message"=>$ex->getMessage()])); }
-
-        die(json_encode((object)["status"=>"success", "message"=>"Успешно выполнено!"]));
+        catch(Exception $e)
+        {
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 }

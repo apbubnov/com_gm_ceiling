@@ -495,7 +495,7 @@ class Gm_ceilingModelCalculations extends JModelList {
     public function new_getProjectItems($project_id)
     {
         try{
-             $db = JFactory::getDbo();
+            $db = JFactory::getDbo();
             $query = $db->getQuery(true);
             $query
                 ->select('*')
