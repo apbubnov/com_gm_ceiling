@@ -65,45 +65,50 @@ class Gm_ceilingModelProjectshistory extends JModelList
         }
     }
     function getIdsByStatusAndAdvt($dealer_id,$advt,$statuses,$date1,$date2){
-		if(empty($advt)){
-            $advt = 'total';
-        }
-		switch(true){
-            case $statuses == 'all' && $advt == 'total':
-                $where  = "p.created between '$date1' and '$date2' and p.api_phone_id is NOT NULL";
-                break;
-             case $statuses == 'all' && $advt != 'total':
-                $where  = "p.api_phone_id = $advt and p.created between '$date1' and '$date2'";
-                break;
-            case $statuses == 'current' && $advt == 'total':
-                $where  = "p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'";
-                break;
-            case $statuses == 'mounts' && $advt == 'total':
-                $where  = "p.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'";
-                break;
-			case $statuses=='current'&&$advt!='total':
-				$where  = "p.api_phone_id = $advt AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'";
-				break;
-			case $statuses=='mounts'&&$advt!='total':
-				$where = "p.api_phone_id = $advt AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'";
-                break;
-            case $advt == 'total' && ($statuses!='mounts' || $statuses!= 'current' || $statuses!='all'):
-                $where = "h.new_status in $statuses and h.date_of_change between '$date1' and '$date2'";
-                break; 
-            default:
-        
-				$where = "p.api_phone_id = $advt and h.new_status in $statuses and h.date_of_change between '$date1' and '$date2'";
-				break;
-
-		}
+		
         try{
             $db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$subquery = $db->getQuery(true);
+			$subquery_advt = $db->getQuery(true);
             $subquery
                 ->select("SUM(COALESCE(c.components_sum,0)+COALESCE(c.canvases_sum,0)+COALESCE(c.mounting_sum,0))")
                 ->from("`#__gm_ceiling_calculations` as c")
                 ->where("c.project_id = p.id");
+
+            $subquery_advt
+                ->select("id")
+                ->from("`#__gm_ceiling_api_phones`")
+                ->where("dealer_id = $dealer_id");
+
+			switch(true){
+            case $statuses == 'all' && $advt == 'total':
+	                $where  = "p.created between '$date1' and '$date2' and p.api_phone_id in ($subquery_advt)";
+	                break;
+	             case $statuses == 'all' && $advt != 'total':
+	                $where  = "p.api_phone_id = $advt and p.created between '$date1' and '$date2'";
+	                break;
+	            case $statuses == 'current' && $advt == 'total':
+	                $where  = "p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and cl.dealer_id = $dealer_id";
+	                break;
+	            case $statuses == 'mounts' && $advt == 'total':
+	                $where  = "p.project_mounting_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00' and cl.dealer_id = $dealer_id";
+	                break;
+				case $statuses=='current'&&$advt!='total':
+					$where  = "p.api_phone_id = $advt AND p.project_calculation_date BETWEEN '$date1 00:00:00' AND '$date2 23:59:00'";
+					break;
+				case $statuses=='mounts'&&$advt!='total':
+					$where = "p.api_phone_id = $advt AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'";
+	                break;
+	            case $advt == 'total' && ($statuses!='mounts' || $statuses!= 'current' || $statuses!='all'):
+	                $where = "h.new_status in $statuses and h.date_of_change between '$date1' and '$date2'";
+	                break; 
+	            default:
+	        
+					$where = "p.api_phone_id = $advt and h.new_status in $statuses and h.date_of_change between '$date1' and '$date2' and cl.dealer_id = $dealer_id";
+					break;
+
+			}
 			$query
 				->select('distinct p.id')
 				->select('s.title as `status`')
