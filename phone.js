@@ -15,7 +15,10 @@ function phone(login, pass)
 
         var regexp_u1 = /subtype=calendar/;
         var regexp_u2 = /view=calculationform/;
-        if (regexp_u1.test(window.location.href) || regexp_u2.test(window.location.href))
+        var regexp_u3 = /subtype=designer/;
+        var regexp_u4 = /subtype=production/;
+        if (regexp_u1.test(window.location.href) || regexp_u2.test(window.location.href)
+            || regexp_u3.test(window.location.href) || regexp_u4.test(window.location.href))
         {
             var reg_phone_from = new RegExp('\&phonefrom=' + pf,'i');
 
@@ -51,7 +54,7 @@ function phone(login, pass)
                         {
                             flag_hangUp = true;
                             MightyCallWebPhone.Phone.HangUp();
-                        }   
+                        }
                     }
                     else
                     {
