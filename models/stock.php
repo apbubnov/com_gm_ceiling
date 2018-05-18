@@ -34,10 +34,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -54,10 +51,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -89,10 +83,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -137,10 +128,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -181,10 +169,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -206,10 +191,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -244,10 +226,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -264,10 +243,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -326,10 +302,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -388,10 +361,7 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -495,48 +465,52 @@ class Gm_ceilingModelStock extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
     public function setQuery($queryArray) {
-        $queryText = "";
-        foreach ($queryArray as $query)
+        try
         {
-            $queryLine = (string) $query;
-            $queryLine = str_replace(array("\r","\n"),"", $queryLine);
-            $alphabet = array("SELECT","FROM","WHERE","GROUP BY","ORDER BY","UNION","UPDATE","SET","DELETE","ASK","DESC","NULL","IS","INSERT","VALUES","(",")");
-            foreach ($alphabet as $a) $queryLine = str_replace($a, " ".$a." ", $queryLine);
-            while(strpos($queryLine, "  ")) $queryLine = str_replace("  ", " ", $queryLine);
-            $queryLine = substr($queryLine, 1);
-            $queryText .= $queryLine.";\n";
-        }
+            $queryText = "";
+            foreach ($queryArray as $query)
+            {
+                $queryLine = (string) $query;
+                $queryLine = str_replace(array("\r","\n"),"", $queryLine);
+                $alphabet = array("SELECT","FROM","WHERE","GROUP BY","ORDER BY","UNION","UPDATE","SET","DELETE","ASK","DESC","NULL","IS","INSERT","VALUES","(",")");
+                foreach ($alphabet as $a) $queryLine = str_replace($a, " ".$a." ", $queryLine);
+                while(strpos($queryLine, "  ")) $queryLine = str_replace("  ", " ", $queryLine);
+                $queryLine = substr($queryLine, 1);
+                $queryText .= $queryLine.";\n";
+            }
 
-        $fileOld = file("components/com_gm_ceiling/views/stock/log/sql_log.txt");
-        $fileNew = [];
-        if (sizeof($fileOld) > 1000)
+            $fileOld = file("components/com_gm_ceiling/views/stock/log/sql_log.txt");
+            $fileNew = [];
+            if (sizeof($fileOld) > 1000)
+            {
+                $fp=fopen("components/com_gm_ceiling/views/stock/log/sql_log.txt","w");
+                for ($i = 500; $i < count($fileOld); $i++) $fileNew[] = $fileOld[$i];
+                fputs($fp,implode("",$fileNew));
+                fclose($fp);
+            }
+
+            $Text = "------------------------------------------------------------------------------------------------------\n";
+            $date = date("d.m.Y H:i:s");
+            $Text .= "Транзакция: ".$date."\n";
+            $Text .= $queryText."\n";
+            $db = $this->getDbo();
+            $db->setQuery($queryText);
+            $result = $db->execute();
+            $Text .= (empty($result))?"Ответ: Неудачно!\n":"Ответ: Удачно!\n";
+            $files = "components/com_gm_ceiling/views/stock/log/";
+            file_put_contents($files.'sql_log.txt', $Text, FILE_APPEND);
+
+            return (!empty($result));
+        }
+        catch(Exception $e)
         {
-            $fp=fopen("components/com_gm_ceiling/views/stock/log/sql_log.txt","w");
-            for ($i = 500; $i < count($fileOld); $i++) $fileNew[] = $fileOld[$i];
-            fputs($fp,implode("",$fileNew));
-            fclose($fp);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
-
-        $Text = "------------------------------------------------------------------------------------------------------\n";
-        $date = date("d.m.Y H:i:s");
-        $Text .= "Транзакция: ".$date."\n";
-        $Text .= $queryText."\n";
-        $db = $this->getDbo();
-        $db->setQuery($queryText);
-        $result = $db->execute();
-        $Text .= (empty($result))?"Ответ: Неудачно!\n":"Ответ: Удачно!\n";
-        $files = "components/com_gm_ceiling/views/stock/log/";
-        file_put_contents($files.'sql_log.txt', $Text, FILE_APPEND);
-
-        return (!empty($result));
     }
 
     public function updateCountGoods()
@@ -552,42 +526,58 @@ class Gm_ceilingModelStock extends JModelList
 
             $db->setQuery($query);
             $result = $db->execute();
-        } catch (Exception $ex) {
-            /*Ничего страшного!)*/
+        }
+        catch(Exception $e)
+        {
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
     public function getCounterparty($id)
     {
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
-        $query->from("`#__gm_ceiling_counterparty` AS CP")
-            ->select("*")
-            ->where("CP.id = ".$db->quote($id))
-            ->where("CP.close_contract > ".$db->quote(date("Y.m.d")));
-        $db->setQuery($query);
-        return $db->loadObject();
+        try
+        {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->from("`#__gm_ceiling_counterparty` AS CP")
+                ->select("*")
+                ->where("CP.id = ".$db->quote($id))
+                ->where("CP.close_contract > ".$db->quote(date("Y.m.d")));
+            $db->setQuery($query);
+            return $db->loadObject();
+        }
+        catch(Exception $e)
+        {
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 
     public function NextStatusProject($id)
     {
-        $db = $this->getDbo();
-        $query = $db->getQuery(true);
-        $query->from("`#__gm_ceiling_projects` AS P")
-            ->select("P.project_status AS status")
-            ->where("P.id = ".$db->quote($id));
-        $db->setQuery($query);
-        $status = floatval($db->loadObject()->status);
+        try
+        {
+            $db = $this->getDbo();
+            $query = $db->getQuery(true);
+            $query->from("`#__gm_ceiling_projects` AS P")
+                ->select("P.project_status AS status")
+                ->where("P.id = ".$db->quote($id));
+            $db->setQuery($query);
+            $status = floatval($db->loadObject()->status);
 
-        if ($status == 5) $status = 7;
-        else if ($status == 6) $status = 19;
-        else if ($status == 19) $status = 8;
+            if ($status == 5) $status = 7;
+            else if ($status == 6) $status = 19;
+            else if ($status == 19) $status = 8;
 
-        $query = $db->getQuery(true);
-        $query->update("`#__gm_ceiling_projects`")
-            ->set("project_status = '$status'")
-            ->where("id = ".$db->quote($id));
-        $db->setQuery($query);
-        $db->execute();
+            $query = $db->getQuery(true);
+            $query->update("`#__gm_ceiling_projects`")
+                ->set("project_status = '$status'")
+                ->where("id = ".$db->quote($id));
+            $db->setQuery($query);
+            $db->execute();
+        }
+        catch(Exception $e)
+        {
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 }

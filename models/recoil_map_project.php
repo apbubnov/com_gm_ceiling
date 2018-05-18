@@ -41,10 +41,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 		}
 		catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     
@@ -76,37 +73,41 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 		}
 		catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
 	function getDataForProject($project_id = null) {
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        try
+        {
+            $db = JFactory::getDbo();
+            $query = $db->getQuery(true);
 
-        $query
-            ->select('recoil_id')
-            ->select('date_time')
-            ->select('sum')
-            ->from('#__gm_ceiling_recoil_map_project');
+            $query
+                ->select('recoil_id')
+                ->select('date_time')
+                ->select('sum')
+                ->from('#__gm_ceiling_recoil_map_project');
 
-        if (empty($project_id))
-            $query->where("project_id IS NOT NULL");
-        else
-            $query->where("project_id = '$project_id'");
+            if (empty($project_id))
+                $query->where("project_id IS NOT NULL");
+            else
+                $query->where("project_id = '$project_id'");
 
-        $db->setQuery($query);
+            $db->setQuery($query);
 
-        $items = null;
-        if (empty($project_id))
-            $items = $db->loadObjectList();
-        else
-            $items = $db->loadObject();
+            $items = null;
+            if (empty($project_id))
+                $items = $db->loadObjectList();
+            else
+                $items = $db->loadObject();
 
-        return $items;
+            return $items;
+        }
+        catch(Exception $e)
+        {
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 	
 
@@ -134,11 +135,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 		}
 		catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -165,10 +162,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -192,10 +186,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 		}
 		catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     function exist($project_id)
@@ -221,10 +212,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 		}
 		catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     function updateSum($project_id,$sum)
@@ -244,10 +232,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 	    }
 	    catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -264,10 +249,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
 		}
 		catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -287,10 +269,7 @@ class Gm_ceilingModelrecoil_map_project extends JModelList
         }
         catch(Exception $e)
         {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }
