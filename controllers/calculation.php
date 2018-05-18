@@ -19,18 +19,25 @@ class Gm_ceilingControllerCalculation extends JControllerLegacy
 {
     public function getImagePNG()
     {
-        $app = JFactory::getApplication();
-        $id = $app->input->getInt('id', 0);
-        $svg = file_get_contents("http://" . $_SERVER["SERVER_NAME"] . "/calculation_images/man.svg");
-        $image = new Imagick();
-        $image->setResolution(800, 800);
-        $image->readImageBlob($svg);
-        $image->setImageFormat("png32");
-        $image->scaleImage(400, 400);
-        $image = $image->flattenImages();
-        header("Content-type: image/png");
-        echo($image);
-        exit();
+    	try
+    	{
+	        $app = JFactory::getApplication();
+	        $id = $app->input->getInt('id', 0);
+	        $svg = file_get_contents("http://" . $_SERVER["SERVER_NAME"] . "/calculation_images/man.svg");
+	        $image = new Imagick();
+	        $image->setResolution(800, 800);
+	        $image->readImageBlob($svg);
+	        $image->setImageFormat("png32");
+	        $image->scaleImage(400, 400);
+	        $image = $image->flattenImages();
+	        header("Content-type: image/png");
+	        echo($image);
+	        exit();
+	    }
+        catch(Exception $e)
+        {
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 
 	/**
