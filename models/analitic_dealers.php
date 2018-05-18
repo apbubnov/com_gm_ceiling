@@ -31,10 +31,7 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
             );
             return $result;
         } catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function getCommonDealersCount()
@@ -51,10 +48,7 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
             $count = $db->loadResult();
             return $count;
         } catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function getOrderingDealers($date1, $date2)
@@ -88,10 +82,7 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
             $items = $db->loadObjectList();
             return $items;
         } catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function getNewOrderingDealers($date1, $date2)
@@ -110,10 +101,7 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
             $need_dealers = array_udiff($dealers, $prev_dealers,'compare_objects');
             return $need_dealers;
         } catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     function compare_objects($obj_a, $obj_b) {
@@ -135,10 +123,7 @@ class Gm_ceilingModelAnalitic_dealers extends JModelList
             $need_dealers = array_udiff($prev_dealers, $dealers,'compare_objects');
             return $need_dealers;
         } catch (Exception $e) {
-            $date = date("d.m.Y H:i:s");
-            $files = "components/com_gm_ceiling/";
-            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-            throw new Exception('Ошибка!', 500);
+            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }
