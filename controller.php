@@ -2857,7 +2857,7 @@ public function register_mnfctr(){
 
     //вызов из урл
     //не удалять
-    public function Send_all_from_url(){
+    /*public function Send_all_from_url(){
         try
         {
             $db = JFactory::getDbo();
@@ -2898,7 +2898,7 @@ public function register_mnfctr(){
             file_put_contents($files . 'error_log.txt', (string)$date . ' | ' . __FILE__ . ' | ' . __FUNCTION__ . ' | ' . $e->getMessage() . "\n----------\n", FILE_APPEND);
             throw new Exception('Ошибка!', 500);
         }
-    }
+    }*/
 
 
     public function RepeatSendCommercialOffer(){
