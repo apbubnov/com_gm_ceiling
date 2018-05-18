@@ -3043,6 +3043,7 @@ public function register_mnfctr(){
         try{
             $jinput = JFactory::getApplication()->input;
             $project_id = $jinput->get('id','','INT');
+           /*throw new Exception($project_id);*/
             $calculations_model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
             $calculations = $calculations_model->new_getProjectItems($project_id);
             foreach($calculations as $calc){
@@ -3059,7 +3060,7 @@ public function register_mnfctr(){
                     $need_mount = 1;
                 else {
                     $need_mount = 0;
-                    $first = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $calc->id,null);
+                    $first = Gm_ceilingHelpersGm_ceiling::calculate_mount(0, $calc->id);
                     $first = round($first["total_gm_mounting"], 0);
 
                     if ($first == floatval($calc->mounting_sum))
@@ -3069,17 +3070,14 @@ public function register_mnfctr(){
                 }
                 if(!empty($calc->n3)){
                     Gm_ceilingHelpersGm_ceiling::create_cut_pdf($calc->id);
-                    Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($need_mount,$calc->id);  
+                    Gm_ceilingHelpersGm_ceiling::create_client_single_estimate($need_mount,$calc->id);
+                    Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1,$calc->id);
+                    Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($calc->id);  
                 }
-                Gm_ceilingHelpersGm_ceiling::create_manager_estimate(1,$calc->id);
-                Gm_ceilingHelpersGm_ceiling::create_single_mount_estimate($calc->id);
             }
-            Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id);
             Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id);
-
             Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($project_id);
-            Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($project_id);
-            Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($tproject_id);
+            Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($project_id);
             Gm_ceilingHelpersGm_ceiling::create_common_manager_estimate($project_id);
             Gm_ceilingHelpersGm_ceiling::create_common_cut_pdf($project_id);
 
