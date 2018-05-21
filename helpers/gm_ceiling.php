@@ -115,11 +115,21 @@ function add_error_in_log($error, $file, $func, $args)
 
         $ip = $_SERVER['REMOTE_ADDR'];
 
-        $db = JFactory::getDbo();
-        $req_str = $db->escape($req_str, true);
-
         $user = JFactory::getUser();
         $user_str = $user->id.' '.$user->name;
+
+        $db = JFactory::getDbo();
+
+        $date = $db->escape($date);
+        $error = $db->escape($error);
+        $file = $db->escape($file);
+        $func = $db->escape($func);
+        $args_str = $db->escape($args_str);
+        $req_str = $db->escape($req_str);
+        $ip = $db->escape($ip);
+        $get_str = $db->escape($get_str);
+        $post_str = $db->escape($post_str);
+        $user_str = $db->escape($user_str);
 
         $query = $db->getQuery(true);
         $query
@@ -128,18 +138,24 @@ function add_error_in_log($error, $file, $func, $args)
             ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str', '$user_str'");
         
         $db->setQuery($query);
-        $db->execute();
-        $code = $db->insertid();
-
-        throw new Exception('Ошибка!', $code);
     }
-    catch(Exception $e)
-    {
+    catch(Exception $e) {
         $date = date("d.m.Y H:i:s");
         $files = "components/com_gm_ceiling/";
         file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
         die("Что-то пошло не так...");
     }
+    try {
+        $db->execute();
+    }
+    catch(Exception $e) {
+        $date = date("d.m.Y H:i:s");
+        $files = "components/com_gm_ceiling/";
+        file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$query."\n----------\n", FILE_APPEND);
+        die("Что-то пошло не так...");
+    }
+    $code = $db->insertid();
+    throw new Exception('Ошибка!', $code);
 }
 
 class Gm_ceilingHelpersGm_ceiling
