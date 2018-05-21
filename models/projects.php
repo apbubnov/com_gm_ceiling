@@ -413,25 +413,25 @@ class Gm_ceilingModelProjects extends JModelList
             } else
             // менеджер (в производстве) 
             if ($status == "InProduction") {
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
                     ->where("project_status in ('4', '5')");
             } else 
             //менеджер (заявки с сайта) 
             if ($status == "ZayavkiSSaita") {
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_requests_from_promo');
+                $query->select('count(r.id) as count')
+                    ->from('#__gm_ceiling_requests_from_promo as r');
             } else 
             // менеджер (звонки) 
             if ($status == "Zvonki") {
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_callback')
+                $query->select('count(c.id) as count')
+                    ->from('#__gm_ceiling_callback as c')
                     ->where("date_time <= '$data 23:59:59' and manager_id IN ('$userId', '1')");
             } else 
             // менеджер (запущенные) 
             if ($status == "Zapushennie") {
-                $query->select('count(id) as count')
-                    ->from('#__gm_ceiling_projects')
+                $query->select('count(projects.id) as count')
+                    ->from('#__gm_ceiling_projects as projects')
                     ->where("project_status in ('10', '11', '16', '17')");
             } else 
             // дилер (менеджер)
@@ -441,7 +441,7 @@ class Gm_ceilingModelProjects extends JModelList
                 } else {
                     $group = 13;
                 }
-                $query->select('id')
+                $query->select('users.id')
                     ->from('#__users as users')
                     ->innerJoin("#__user_usergroup_map as map ON map.user_id = users.id")
                     ->where("group_id = '$group'");
@@ -455,7 +455,7 @@ class Gm_ceilingModelProjects extends JModelList
                         $data = $data."1";
                     }
                 }
-                $query->select('count(id) as count')
+                $query->select('count(projects.id) as count')
                     ->from('#__gm_ceiling_projects as projects')
                     ->where("project_status in ('4', '5', '10', '11', '16', '17') and read_by_manager in ($data)");
             } else 
