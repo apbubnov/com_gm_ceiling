@@ -2036,9 +2036,9 @@ class Gm_ceilingHelpersGm_ceiling
                             "title" => "Установка вентиляции (ПВХ)",                                                    //Название
                             "quantity" => $count_ventilation,                                                    //Кол-во
                             "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_ventilation * $results->mp42,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp42,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_ventilation * $results->mp42                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                     if ($count_ventilation_1 > 0) {
@@ -2329,10 +2329,10 @@ class Gm_ceilingHelpersGm_ceiling
                         $mounting_data[] = array(
                             "title" => "Установка электровытяжки (Ткань)",                                                    //Название
                             "quantity" => $count_ventilation_1,                                                    //Кол-во
-                            "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_ventilation_1 * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_ventilation_1 * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary" => $results->mp42,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation_1 * $results->mp42,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp42,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation_1 * $results->mp42                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
 
@@ -2443,7 +2443,7 @@ class Gm_ceilingHelpersGm_ceiling
                 "dealer_salary_total" => $data['n24'] * $results->mp17                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
-        //сложность доступа к месту установки
+        //Доп монтаж
         if ($data['dop_krepezh'] > 0) {
             $mounting_data[] = array(
                 "title" => "Дополнительный крепеж",                                                //Название
