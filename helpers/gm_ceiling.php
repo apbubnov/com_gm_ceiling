@@ -89,11 +89,14 @@ function add_error_in_log($error, $file, $func, $args)
     $db = JFactory::getDbo();
     $req_str = $db->escape($req_str, true);
 
+    $user = JFactory::getUser();
+    $user_str = $user->id.' '.$user->name;
+
     $query = $db->getQuery(true);
     $query
         ->insert('`errors_log`')
-        ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`')
-        ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str'");
+        ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`, `user`')
+        ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str', '$user_str'");
     
     $db->setQuery($query);
     $db->execute();
@@ -2036,9 +2039,9 @@ class Gm_ceilingHelpersGm_ceiling
                             "title" => "Установка вентиляции (ПВХ)",                                                    //Название
                             "quantity" => $count_ventilation,                                                    //Кол-во
                             "gm_salary" => $results->mp16,                                                    //Себестоимость монтажа ГМ (зарплата монтажников)
-                            "gm_salary_total" => $count_ventilation * $results->mp42,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
-                            "dealer_salary" => $results->mp42,                                            //Себестоимость монтажа дилера (зарплата монтажников)
-                            "dealer_salary_total" => $count_ventilation * $results->mp42                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                            "gm_salary_total" => $count_ventilation * $results->mp16,                                //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                            "dealer_salary" => $results->mp16,                                            //Себестоимость монтажа дилера (зарплата монтажников)
+                            "dealer_salary_total" => $count_ventilation * $results->mp16                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
                         );
                     }
                     if ($count_ventilation_1 > 0) {
@@ -2443,7 +2446,7 @@ class Gm_ceilingHelpersGm_ceiling
                 "dealer_salary_total" => $data['n24'] * $results->mp17                            //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
             );
         }
-        //сложность доступа к месту установки
+        //Доп монтаж
         if ($data['dop_krepezh'] > 0) {
             $mounting_data[] = array(
                 "title" => "Дополнительный крепеж",                                                //Название
