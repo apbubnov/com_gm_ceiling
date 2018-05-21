@@ -1376,12 +1376,8 @@
         jQuery("#jform_project_new_calc_date").on("keyup", function () {
             jQuery("#jform_new_project_calculation_daypart").prop("disabled",false);
         });
-
-<<<<<<< HEAD
+        
         /*jQuery("input[name^='smeta']").click(function () {
-=======
-        jQuery("input[name^='smeta']").click(function () {
->>>>>>> 78aec12b210a1400cf450a4885571483b29031c8
             let old_self_comp = jQuery("#calcs_self_components_total span.sum").data('oldval');
                 let self_component = jQuery("#calcs_self_components_total span.sum").text();
                 let calcs_total = jQuery("#calcs_total_border").text();

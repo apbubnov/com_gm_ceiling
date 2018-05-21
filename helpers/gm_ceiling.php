@@ -89,11 +89,14 @@ function add_error_in_log($error, $file, $func, $args)
     $db = JFactory::getDbo();
     $req_str = $db->escape($req_str, true);
 
+    $user = JFactory::getUser();
+    $user_str = $user->id.' '.$user->name;
+
     $query = $db->getQuery(true);
     $query
         ->insert('`errors_log`')
-        ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`')
-        ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str'");
+        ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`, `user`')
+        ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str', '$user_str'");
     
     $db->setQuery($query);
     $db->execute();
