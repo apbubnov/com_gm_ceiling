@@ -170,7 +170,7 @@ let cornice_src = {
         {id:'jform_n16_1',value:1,text:"Скрытый карниз"}
     ]
 }
-let n16 = create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel")
+let n16 = create_single_input(1,"jform_n27","jform[n27]","Введите длину шторного карниза в МЕТРАХ","м.","tel");
 n16 += create_radios_group(cornice_src);
 
 let need_mount_src = {
@@ -561,7 +561,7 @@ function open_general_blocks() {
             obj = get_parent(Object.keys(calculation)[i]);
             if(obj){
                  btn_name = obj.btn_id;
-            prop_name = obj.key;
+                prop_name = obj.key;
             }
            
             if (btn_name && !in_array(arr_parent,btn_name)){
@@ -572,7 +572,9 @@ function open_general_blocks() {
             }
         } 
     }
-    console.log(calc_props);
+    if(calculation['mounting_sum'] > 0){
+        arr_parent.push("btn_need_mount");
+    }
     arr_parent.forEach(function(item){
         jQuery(`#${item}`).trigger("click");        
     });
@@ -580,6 +582,16 @@ function open_general_blocks() {
 }
 function get_parent(n) {
     let result;
+    switch(n){
+        case 'n15':
+        case 'n27':
+            n = 'n16';
+            break;
+        case 'n26':
+            n = 'n13';
+            break;
+    }
+
     arr_blocks.forEach(function(item){
         if (item.children) {
             for (let i = item.children.length;i--;){
@@ -597,8 +609,6 @@ function open_blocks(props){
     for(let i = props.length;i--;){
 
         switch(props[i]){
-            case 'n15':
-            case 'n27':
             case 'n16':
                 jQuery('#btn_n16').trigger("click")
                 break;
@@ -729,8 +739,10 @@ function fill_calc_data(){
                         check_select_option('n14_type[]',j,n14_objs[j]['n14_size']);
                     }
                     break;
+                case 'n15':
+                case 'n27': 
                 case 'n16':
-                    jQuery('#jform_n27').val(calculation['n27']);//я считаю не совсем корректно
+                    jQuery('#jform_n27').val(calculation['n27']);
                     values = jQuery(`[name = "jform[${Object.keys(calculation)[i]}]"]`);
                     value = calculation[Object.keys(calculation)[i]];
                     check_radio(values,value);
