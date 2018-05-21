@@ -570,7 +570,7 @@ class Gm_ceilingModelComponents extends JModelList
                 ->join('LEFT', '`#__gm_ceiling_components` AS components  ON components.id = options.component_id ')
                 ->select('color.title, color.file')
                 ->join('LEFT', '`#__gm_ceiling_colors` AS color  ON color.title = options.title ')
-                ->where('components.title LIKE \'%Вставка%\' AND (color.file LIKE \'%mat%\' OR color.file LIKE \'%sat%\')')
+                ->where('components.title LIKE \'%Вставка%\' and color.file is not null')
                 ->group('options.title');
 
             $db->setQuery($query);

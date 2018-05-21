@@ -39,7 +39,7 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 			FROM `rgzbn_gm_ceiling_projects` AS p INNER JOIN `rgzbn_gm_ceiling_api_phones` AS a ON p.api_phone_id = a.id
  */
 			if(empty($dealer_id)){
-				$dealer_id  = 0;
+				$dealer_id  = 1;
 			}
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
@@ -163,6 +163,9 @@ class Gm_ceilingModelAnaliticcommon extends JModelList
 	(SELECT COUNT(p.id) FROM `rgzbn_gm_ceiling_projects` AS p WHERE p.api_phone_id = a.id AND p.project_status = 15) AS refuse
 	 FROM `rgzbn_gm_ceiling_projects` AS p INNER JOIN `rgzbn_gm_ceiling_api_phones` AS a ON p.api_phone_id = a.id 
 	 WHERE p.created BETWEEN '2017-11-06' AND '2017-11-10'*/
+	 		if(empty($dealer_id)){
+	 			$dealer_id = 1;
+	 		}
 	 		$dealer = JFactory::getUser($dealer_id);
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
