@@ -761,6 +761,11 @@
 
     jQuery(document).ready(function() {
 
+        document.getElementById('add_calc').onclick = function()
+        {
+            create_calculation(<?php echo $this->item->id; ?>);
+        };
+
         var project_card = '<?php echo $project_card; ?>';
         if (project_card != '')
         {
