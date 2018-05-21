@@ -95,7 +95,6 @@ function add_error_in_log($error, $file, $func, $args)
         foreach (getallheaders() as $name => $value) {
             $req_str .= "$name: $value\n";
         }
-
         $args_str = '';
         foreach ($args as $name => $value) {
             $args_str .= "$name: $value\n";
@@ -105,22 +104,25 @@ function add_error_in_log($error, $file, $func, $args)
         foreach ($_GET as $name => $value) {
             $get_str .= "$name: $value\n";
         }
-
         $post_str = '';
         foreach ($_POST as $name => $value) {
             $post_str .= "$name: $value\n";
         }
-
         $file = array_pop(explode('com_gm_ceiling', $file));
-
         $ip = $_SERVER['REMOTE_ADDR'];
-
-        $db = JFactory::getDbo();
-        $req_str = $db->escape($req_str, true);
-
         $user = JFactory::getUser();
         $user_str = $user->id.' '.$user->name;
-
+        $db = JFactory::getDbo();
+        $date = $db->escape($date);
+        $error = $db->escape($error);
+        $file = $db->escape($file);
+        $func = $db->escape($func);
+        $args_str = $db->escape($args_str);
+        $req_str = $db->escape($req_str);
+        $ip = $db->escape($ip);
+        $get_str = $db->escape($get_str);
+        $post_str = $db->escape($post_str);
+        $user_str = $db->escape($user_str);
         $query = $db->getQuery(true);
         $query
             ->insert('`errors_log`')
@@ -128,18 +130,24 @@ function add_error_in_log($error, $file, $func, $args)
             ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str', '$user_str'");
         
         $db->setQuery($query);
-        $db->execute();
-        $code = $db->insertid();
-
-        throw new Exception('Ошибка!', $code);
     }
-    catch(Exception $e)
-    {
+    catch(Exception $e) {
         $date = date("d.m.Y H:i:s");
         $files = "components/com_gm_ceiling/";
         file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
         die("Что-то пошло не так...");
     }
+    try {
+        $db->execute();
+    }
+    catch(Exception $e) {
+        $date = date("d.m.Y H:i:s");
+        $files = "components/com_gm_ceiling/";
+        file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$query."\n----------\n", FILE_APPEND);
+        die("Что-то пошло не так...");
+    }
+    $code = $db->insertid();
+    throw new Exception('Ошибка!', $code);
 }
 
 class Gm_ceilingHelpersGm_ceiling
@@ -1199,12 +1207,21 @@ class Gm_ceilingHelpersGm_ceiling
                                 $component_count[$comp['id']] += ($comp['count'] * $lamp[0]);
                             }
                             
+<<<<<<< HEAD
                         }
                        
                         if ($lamp[1] == 2 && $lamp[2] == 66) {
                             $component_count[66] -= $k;
                             if ($component_count[66] < 0) $component_count[66] = 0;
                         }
+=======
+                        }
+                       
+                        if ($lamp[1] == 2 && $lamp[2] == 66) {
+                            $component_count[66] -= $k;
+                            if ($component_count[66] < 0) $component_count[66] = 0;
+                        }
+>>>>>>> a2c6e9aaf0f0fff2fa764aa3b7233dec1d405f90
 
                     }
                     $component_count[$items_2[0]->id]++;
@@ -1658,6 +1675,7 @@ class Gm_ceilingHelpersGm_ceiling
             $results = $mount_model->getDataAll($dealer_id);
 
             $margin = self::get_margin($data['project_id']);
+<<<<<<< HEAD
 
             $guild_data = array();
             if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
@@ -1687,6 +1705,37 @@ class Gm_ceilingHelpersGm_ceiling
                 );
             }
 
+=======
+
+            $guild_data = array();
+            if (!empty($data['n1']) &&  $data['n1'] != 29 && $data['n9'] > 6) {
+                //Обработка 1 угла
+                $gm_mp20 = margin($results->mp20, $margin['gm_canvases_margin']);
+                $dealer_mp20 = margin($gm_mp20, $margin['dealer_canvases_margin']);
+                $guild_data[] = array(
+                    "title" => "Обработка 1 угла",                                                   //Название
+                    "quantity" => $data['n9'] - 6,                                                   //Кол-во
+                    "gm_salary" => $gm_mp20,                                                         //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => ($data['n9'] - 6) * $gm_mp20,                               //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $dealer_mp20,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => ($data['n9'] - 6) * $dealer_mp20                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+            if ( $data['n31'] > 0) {  
+                //внутренний вырез ТОЛЬКО ДЛЯ ПВХ
+                $gm_mp22 = margin($results->mp22, $margin['gm_canvases_margin']);
+                $dealer_mp22 = margin($gm_mp22, $margin['dealer_canvases_margin']);
+                $guild_data[] = array(
+                    "title" => "Внутренний вырез(в цеху)",                                           //Название
+                    "quantity" => $data['n31'],                                                      //Кол-во
+                    "gm_salary" => $gm_mp22,                                                         //Себестоимость монтажа ГМ (зарплата монтажников)
+                    "gm_salary_total" => $data['n31'] * $gm_mp22,                                    //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
+                    "dealer_salary" => $dealer_mp22,                                                 //Себестоимость монтажа дилера (зарплата монтажников)
+                    "dealer_salary_total" => $data['n31'] * $dealer_mp22                             //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+                );
+            }
+
+>>>>>>> a2c6e9aaf0f0fff2fa764aa3b7233dec1d405f90
             $result = [];
             $result['guild_data'] = $guild_data;
             foreach ($guild_data as $guild) {
@@ -1717,11 +1766,19 @@ class Gm_ceilingHelpersGm_ceiling
             $components_list = $components_model->getFilteredItems();
             foreach ($components_list as $i => $component) {
                 $components[$component->id] = $component;
+<<<<<<< HEAD
             }
             $calculation_data = null;
             if(empty($calc_id)){
                 $project_id = $data['project_id'];
             }
+=======
+            }
+            $calculation_data = null;
+            if(empty($calc_id)){
+                $project_id = $data['project_id'];
+            }
+>>>>>>> a2c6e9aaf0f0fff2fa764aa3b7233dec1d405f90
             else {
                 $calculation_data = (array) $calculation_model->getData($calc_id);
                 $calculation_data2 = (array) $calculation_model->getDataById($calc_id);
@@ -2343,12 +2400,16 @@ class Gm_ceilingHelpersGm_ceiling
                         //внутренний вырез
                         $mounting_data[] = array(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a2c6e9aaf0f0fff2fa764aa3b7233dec1d405f90
                             "title" => "Внутренний вырез (Ткань)",                                                                    //Название
                             "quantity" => $data['n11'],                                                                //Кол-во
                             "gm_salary" => $results->mp33,                                                                //Себестоимость монтажа ГМ (зарплата монтажников)
                             "gm_salary_total" => $data['n11'] * $results->mp33,                                            //Кол-во * себестоимость монтажа ГМ (зарплата монтажников)
                             "dealer_salary" => $results->mp33,                                                        //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $data['n11'] * $results->mp33                                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
+<<<<<<< HEAD
 =======
                             "title" => "Установка электровытяжки (Ткань)",                                                    //Название
                             "quantity" => $count_ventilation_1,                                                    //Кол-во
@@ -2357,6 +2418,8 @@ class Gm_ceilingHelpersGm_ceiling
                             "dealer_salary" => $results->mp42,                                            //Себестоимость монтажа дилера (зарплата монтажников)
                             "dealer_salary_total" => $count_ventilation_1 * $results->mp42                        //Кол-во * себестоимость монтажа дилера (зарплата монтажников)
 >>>>>>> 6129b2a50af4546ec9a0f09adef3ca0921f2eb67
+=======
+>>>>>>> a2c6e9aaf0f0fff2fa764aa3b7233dec1d405f90
                         );
                     }
                     if ($data['n9']) {

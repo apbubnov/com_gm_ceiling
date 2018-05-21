@@ -6,136 +6,179 @@
      * @copyright  2016 SpectralEye
      * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
-    // No direct access
-    defined('_JEXEC') or die;
+// No direct access
+defined('_JEXEC') or die;
 
-    JHtml::_('behavior.keepalive');
-    //JHtml::_('behavior.tooltip');
-    JHtml::_('behavior.formvalidation');
+JHtml::_('behavior.keepalive');
+//JHtml::_('behavior.tooltip');
+JHtml::_('behavior.formvalidation');
 
-    // Load admin language file
-    $lang = JFactory::getLanguage();
-    $lang->load('com_gm_ceiling', JPATH_SITE);
-    $doc = JFactory::getDocument();
-    $doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
+// Load admin language file
+$lang = JFactory::getLanguage();
+$lang->load('com_gm_ceiling', JPATH_SITE);
+$doc = JFactory::getDocument();
+$doc->addScript(JUri::base() . '/media/com_gm_ceiling/js/form.js');
 
-    $project_total = 0;
-    $project_total_discount = 0;
+Gm_ceilingHelpersGm_ceiling::create_client_common_estimate($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_common_estimate_mounters($this->item->id);
+Gm_ceilingHelpersGm_ceiling::create_estimate_of_consumables($this->item->id);
 
-    $user = JFactory::getUser();
-    $userId = $user->get('id');
+/*_____________блок для всех моделей/models block________________*/ 
+$calculationsModel = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
+$mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
+$calculationform_model = Gm_ceilingHelpersGm_ceiling::getModel('calculationform');
+$reserve_model = Gm_ceilingHelpersGm_ceiling::getModel('reservecalculation');
+$client_model = Gm_ceilingHelpersGm_ceiling::getModel('client');
+$clients_dop_contacts_model = Gm_ceilingHelpersGm_ceiling::getModel('clients_dop_contacts');
+$components_model = Gm_ceilingHelpersGm_ceiling::getModel('components');
+$canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
 
-    $canvas_model = Gm_ceilingHelpersGm_ceiling::getModel('canvases');
+/*________________________________________________________________*/
+$transport = Gm_ceilingHelpersGm_ceiling::calculate_transport($this->item->id);
+$client_sum_transport = $transport['client_sum'];
+$self_sum_transport = $transport['mounter_sum'];//идет в монтаж
+$self_calc_data = [];
+$self_canvases_sum = 0;
+$self_components_sum = 0;
+$self_mounting_sum = 0;
+$project_self_total = 0;
+$project_total = 0;
+$project_total_discount = 0;
+$total_square = 0;
+$total_perimeter = 0;
+$calculation_total_discount = 0;
+$calculations = $calculationsModel->new_getProjectItems($this->item->id);
+foreach ($calculations as $calculation) {
+    $calculation->dealer_canvases_sum = double_margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/, $this->item->dealer_canvases_margin);
+    $calculation->dealer_components_sum = double_margin($calculation->components_sum, 0 /*$this->item->gm_components_margin*/, $this->item->dealer_components_margin);
+    $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0 /*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
+    $calculation->dealer_self_canvases_sum = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
+    $self_canvases_sum +=$calculation->dealer_self_canvases_sum;
+    $calculation->dealer_self_components_sum = margin($calculation->components_sum, 0/* $this->item->gm_components_margin*/);
+    $self_components_sum += $calculation->dealer_self_components_sum;
+    $calculation->dealer_self_gm_mounting_sum = margin($calculation->mounting_sum, 0/* $this->item->gm_mounting_margin*/);
+    $self_mounting_sum += $calculation->dealer_self_gm_mounting_sum;
+    $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
+    $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
+    $calculation->n13 = $calculationform_model->n13_load($calculation->id);
+    $calculation->n14 = $calculationform_model->n14_load($calculation->id);
+    $calculation->n15 = $calculationform_model->n15_load($calculation->id);
+    $calculation->n22 = $calculationform_model->n22_load($calculation->id);
+    $calculation->n23 = $calculationform_model->n23_load($calculation->id);
+    $calculation->n26 = $calculationform_model->n26_load($calculation->id);
+    $calculation->n29 = $calculationform_model->n29_load($calculation->id);
+    $total_square +=  $calculation->n4;
+    $total_perimeter += $calculation->n5;
+    $project_total += $calculation->calculation_total;
+    $project_total_discount += $calculation->calculation_total_discount;
+    $self_calc_data[$calculation->id] = array(
+        "canv_data" => $calculation->dealer_self_canvases_sum,
+        "comp_data" => $calculation->dealer_self_components_sum,
+        "mount_data" => $calculation->dealer_self_gm_mounting_sum,
+        "square" => $calculation->n4,
+        "perimeter" => $calculation->n5,
+        "sum" => $calculation->calculation_total,
+        "sum_discount" => $calculation->calculation_total_discount
+    );
+    $calculation_total = $calculation->calculation_total;
+    $calculation_total_discount =  $calculation->calculation_total_discount;
+}
+$self_calc_data = json_encode($self_calc_data);//массив с себестоимотью по каждой калькуляции
+$project_self_total = $self_sum_transport + $self_components_sum + $self_canvases_sum + $self_mounting_sum; //общая себестоимость проекта
 
-    $model = Gm_ceilingHelpersGm_ceiling::getModel('calculations');
-    $calculations = $model->new_getProjectItems($this->item->id);
+$mount_transport = $mountModel->getDataAll($this->item->dealer_id);
+$min_project_sum = (empty($mount_transport->min_sum)) ? 0 : $mount_transport->min_sum;
+$min_components_sum = (empty($mount_transport->min_components_sum)) ? 0 : $mount_transport->min_components_sum;
 
-    foreach ($calculations as $calculation) {
-        $calculation->dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-        $calculation->calculation_total = $calculation->dealer_canvases_sum + $calculation->dealer_components_sum + $calculation->dealer_gm_mounting_sum;
-        $calculation->calculation_total_discount = $calculation->calculation_total * ((100 - $calculation->discount) / 100);
-        $project_total += $calculation->calculation_total;
-        $project_total_discount += $calculation->calculation_total_discount;
+$project_total_discount_transport = $project_total_discount + $client_sum_transportt;
+
+$del_flag = 0;
+$project_total = $project_total + $client_sum_transport;
+$project_total_discount = $project_total_discount  + $client_sum_transport;
+
+//address
+$street = preg_split("/,.дом([\S\s]*)/", $this->item->project_info)[0];
+preg_match("/,.дом:.([\d\w\/\s]{1,4})/", $this->item->project_info,$house);
+$house = $house[1];
+preg_match("/.корпус:.([\d\W\s]{1,4}),|.корпус:.([\d\W\s]{1,4}),{0}/", $this->item->project_info,$bdq);
+$bdq = $bdq[1];
+preg_match("/,.квартира:.([\d\s]{1,4}),/", $this->item->project_info,$apartment);
+$apartment = $apartment[1];
+preg_match("/,.подъезд:.([\d\s]{1,4}),/", $this->item->project_info,$porch);
+$porch = $porch[1];
+preg_match("/,.этаж:.([\d\s]{1,4})/", $this->item->project_info,$floor);
+$floor = $floor[1];
+preg_match("/,.код:.([\d\S\s]{1,10})/", $this->item->project_info,$code);
+$code = $code[1];
+
+$extra_spend_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_spend);
+$penalty_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->penalty);
+$bonus_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->bonus);
+
+// календарь
+$month1 = date("n");
+$year1 = date("Y");
+if ($month1 == 12) {
+    $month2 = 1;
+    $year2 = $year1;
+    $year2++;
+} else {
+    $month2 = $month1;
+    $month2++;
+    $year2 = $year1;
+}
+if ($user->dealer_id == 1) {
+    $dealer_for_calendar = $userId;
+} else {
+    $dealer_for_calendar = $user->dealer_id;
+}
+if ($this->item->project_status == 1) {
+    $whatCalendar = 0;
+    $FlagCalendar = [3, $dealer_for_calendar];
+} elseif ($this->item->project_status != 11 && $this->item->project_status != 12) {
+    $whatCalendar = 1;
+    if ($user->dealer_type == 1 && $user->dealer_mounters == 1) {
+        $dealer_for_calendar = 1;
     }
+    $FlagCalendar = [2, $dealer_for_calendar];
+}
+$calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
+$calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
+//----------------------------------------------------------------------------------
 
-    $sum_transport = 0;  $sum_transport_discount = 0;
-    $mountModel = Gm_ceilingHelpersGm_ceiling::getModel('mount');
-    $mount_transport = $mountModel->getDataAll();
-
-    if ($this->item->transport == 0 ) {
-        $sum_transport = 0;
+// все бригады
+$Allbrigades = $model->FindAllbrigades($dealer_for_calendar);
+$AllMounters = [];
+if (count($Allbrigades) == 0) {
+    array_push($Allbrigades, ["id"=>$userId, "name"=>$user->get('name')]);
+    array_push($AllMounters, ["id"=>$userId, "name"=>$user->get('name')]);
+} else {
+    // все монтажники
+    $masid = [];
+    foreach ($Allbrigades as $value) {
+        array_push($masid, $value->id);
     }
-    if ($this->item->transport == 1 ) {
-        $sum_transport = double_margin($mount_transport->transport * $this->item->distance_col, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-    }
-    if ($this->item->transport == 2 ) {
-        $sum_transport = ($mount_transport->distance * $this->item->distance + $mount_transport->transport)  * $this->item->distance_col;
-    }
-    $min = 100;
-    foreach ($calculations as $d) {
-        if ($d->discount < $min) {
-            $min = $d->discount;
+    foreach ($masid as $value) {
+        if (strlen($where) == 0) {
+            $where = "'".$value."'";
+        } else {
+            $where .= ", '".$value."'";                
         }
     }
-    if ($min != 100) {
-        $sum_transport = $sum_transport * ((100 - $min)/100);
-    }
-    if ($sum_transport < double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin) && $sum_transport != 0) {
-        $sum_transport = double_margin($mount_transport->transport, $this->item->gm_mounting_margin, $this->item->dealer_mounting_margin);
-    }
-    $project_total_discount_transport = $project_total_discount + $sum_transport;
+    $AllMounters = $model->FindAllMounters($where);
+}
+//----------------------------------------------------------------------------------
 
-    $project_total = round($project_total, 2);
-    $project_total_discount = round($project_total_discount, 2);
+// все замерщики
+$AllGauger = $model->FindAllGauger($dealer_for_calendar, 21);
+if (count($AllGauger) == 0) {
+    $AllGauger = ["id" => $userId, "name" => $user->name];
+}
+//----------------------------------------------------------------------------------
 
-    $extra_spend_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->extra_spend);
-    $penalty_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->penalty);
-    $bonus_array = Gm_ceilingHelpersGm_ceiling::decode_extra($this->item->bonus);
+$mount_sum = 0;
 
-    // календарь
-    $month1 = date("n");
-    $year1 = date("Y");
-    if ($month1 == 12) {
-        $month2 = 1;
-        $year2 = $year1;
-        $year2++;
-    } else {
-        $month2 = $month1;
-        $month2++;
-        $year2 = $year1;
-    }
-    if ($user->dealer_id == 1) {
-        $dealer_for_calendar = $userId;
-    } else {
-        $dealer_for_calendar = $user->dealer_id;
-    }
-    if ($this->item->project_status == 1) {
-        $whatCalendar = 0;
-        $FlagCalendar = [3, $dealer_for_calendar];
-    } elseif ($this->item->project_status != 11 && $this->item->project_status != 12) {
-        $whatCalendar = 1;
-        if ($user->dealer_type == 1 && $user->dealer_mounters == 1) {
-            $dealer_for_calendar = 1;
-        }
-        $FlagCalendar = [2, $dealer_for_calendar];
-    }
-    $calendar1 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month1, $year1, $FlagCalendar);
-    $calendar2 = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month2, $year2, $FlagCalendar);
-    //----------------------------------------------------------------------------------
-
-    // все бригады
-    $Allbrigades = $model->FindAllbrigades($dealer_for_calendar);
-    $AllMounters = [];
-    if (count($Allbrigades) == 0) {
-        array_push($Allbrigades, ["id"=>$userId, "name"=>$user->get('name')]);
-        array_push($AllMounters, ["id"=>$userId, "name"=>$user->get('name')]);
-    } else {
-        // все монтажники
-        $masid = [];
-        foreach ($Allbrigades as $value) {
-            array_push($masid, $value->id);
-        }
-        foreach ($masid as $value) {
-            if (strlen($where) == 0) {
-                $where = "'".$value."'";
-            } else {
-                $where .= ", '".$value."'";                
-            }
-        }
-        $AllMounters = $model->FindAllMounters($where);
-    }
-    //----------------------------------------------------------------------------------
-
-    // все замерщики
-    $AllGauger = $model->FindAllGauger($dealer_for_calendar, 21);
-    if (count($AllGauger) == 0) {
-        $AllGauger = ["id" => $userId, "name" => $user->name];
-    }
-    //----------------------------------------------------------------------------------
-
-    $mount_sum = 0;
-
-    echo parent::getPreloader();
+echo parent::getPreloader();
 
 ?>
 
@@ -147,63 +190,6 @@
 <?php } ?>
 
 <link rel="stylesheet" href="/components/com_gm_ceiling/views/projectform/tmpl/css/style.css" type="text/css" />
-
-<style>
-    #jform_project_mounter-lbl {
-        display: none;
-    }
-    #table1 {
-        width: 100%;
-        max-width: 300px;
-        font-size: 13px;
-    }
-    #table1 button, #table1 a, #table1 input {
-        font-size: 13px;
-        max-width: 150px;
-    }
-    #table1 td, #table1 th {
-        padding: 10px 5px;
-    }
-    .no_yes_padding {
-        padding: 0;
-    }
-    #calendar1, #calendar2 {
-        display: inline-block;
-        width: 100%;
-        padding: 0;
-    }
-    #container_calendars {
-        width: 100%;
-        margin: 3em 0 2em 0;
-    }
-    #button-prev, #button-next {
-        padding: 0;
-    }
-    @media screen and (min-width: 768px) {
-        #table1 {
-            width: 100%;
-            max-width: 3000px;
-            font-size: 1em;
-        }
-        #table1 td, #table1 th {
-            padding: 15px;
-        }
-        #table1 button, #table1 a, #table1 input {
-            font-size: 1em;
-            width: auto;
-            max-width: 200px;
-        }
-        .no_yes_padding {
-            padding: 15px;
-        }
-        #calendar1, #calendar2 {
-            width: calc(50% - 25px);
-        }
-        #calendar2 {
-            margin-left: 30px;
-        }
-    }
-</style>
 
 <h2 class="center" style="margin-bottom: 1em;">Просмотр проекта № <?php echo $this->item->id; ?></h2>
 <form id="form-project" action="<?php echo JRoute::_('index.php?option=com_gm_ceiling&task=project.approve'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
@@ -407,729 +393,9 @@
             <?php } ?>
             <!-- конец -->
         </div>
-        <input name="project_id" id="project_id" value="<?php echo $this->item->id; ?>" type="hidden">
-        <?php if (sizeof($calculations) > 0) { ?>
-            <h3>Расчеты для проекта</h3>
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#calculationAll" role="tab">Общее</a>
-                </li>
-                <?php foreach ($calculations as $k => $calculation) { ?>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#calculation<?php echo $calculation->id; ?>" role="tab"><?php echo $calculation->calculation_title; ?></a>
-                    </li>
-                <?php  $mount_sum += $calculation->mounting_sum; } ?>
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div class="tab-pane active" id="calculationAll" role="tabpanel">
-                    <table id="table1" class="table-striped one-touch-view">
-                        <tr>
-                            <th colspan="4" class="section_header" id="sh_ceilings" colspan="3">Потолки <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
-                        </tr>
-                        <?php
-                            $project_total = 0;
-                            $project_total_discount = 0;
-                            $dealer_gm_mounting_sum_1 = 0;
-                            $calculation_total_1 = 0;
-                            $project_total_1 = 0;
-                            $dealer_gm_mounting_sum_11 = 0;
-                            $calculation_total_11 = 0;
-                            $project_total_11 = 0;
-                            $kol = 0;
-                            $tmp = 0;
-                            $sum_transport_discount_total = 0;
-                            $sum_transport_total = 0;
-                            $JS_Calcs_Sum = array();
 
-                            foreach ($calculations as $calculation) {
-                                $dealer_canvases_sum = $calculation->dealer_canvases_sum;
-                                $dealer_components_sum = $calculation->dealer_components_sum;
-                                $dealer_gm_mounting_sum = double_margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/, $this->item->dealer_mounting_margin);
+        <?php include_once('components/com_gm_ceiling/views/project/common_table.php'); ?>
 
-                                if ($user->dealer_type != 2) {
-                                    $dealer_canvases_sum_1 = margin($calculation->canvases_sum, 0/*$this->item->gm_canvases_margin*/);
-                                    $dealer_components_sum_1 = margin($calculation->components_sum, 0/*$this->item->gm_components_margin*/);
-                                    $dealer_gm_mounting_sum_1 = margin($calculation->mounting_sum, 0/*$this->item->gm_mounting_margin*/);
-                                    $dealer_gm_mounting_sum_11 += $dealer_gm_mounting_sum_1;
-                                    $calculation_total_1 = $dealer_canvases_sum_1 + $dealer_components_sum_1;
-                                    $calculation_total_11 += $calculation_total_1;
-                                    $project_total_1 = $calculation_total_1 + $dealer_gm_mounting_sum_1;
-                                    $project_total_11 += $project_total_1;
-                                }
-                                $calculation->calculation_title;
-                                $total_square += $calculation->n4;
-                                $total_perimeter += $calculation->n5;
-
-                                $calculation_total = $dealer_canvases_sum + $dealer_components_sum + $dealer_gm_mounting_sum ;
-                                $calculation_total_discount = $calculation_total * ((100 - $calculation->discount) / 100);
-                                $project_total += $calculation_total;
-                                $project_total_discount += $calculation_total_discount;
-                                $JS_Calcs_Sum[] = round($calculation_total, 0);
-                        ?>
-                        <tr class="section_ceilings">
-                            <td class="include_calculation" colspan="4">
-                                <input name='include_calculation[]' value='<?php echo $calculation->id; ?>' type='checkbox' checked="checked">
-                                <input name='calculation_total[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total; ?>' type='hidden'>
-                                <input name='calculation_total_discount[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_discount; ?>' type='hidden'>
-                                <input name='total_square[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n4; ?>' type='hidden'>
-                                <input name='total_perimeter[<?php echo $calculation->id; ?>]' value='<?php echo $calculation->n5; ?>' type='hidden'>
-                                <input name='calculation_total1[<?php echo $calculation->id; ?>]' value='<?php echo $calculation_total_1; ?>' type='hidden'>
-                                <input name='calculation_total2[<?php echo $calculation->id; ?>]' value='<?php echo $dealer_gm_mounting_sum_1; ?>' type='hidden'>
-                                <input name='calculation_total3[<?php echo $calculation->id; ?>]' value='<?php echo $project_total_1; ?>' type='hidden'>
-                                <?php echo $calculation->calculation_title; ?>
-                            </td>
-                        </tr>
-                        <tr class="section_ceilings" id="">
-                            <td>S/P :</td>
-                            <td colspan="3"><?php echo $calculation->n4; ?> м<sup>2</sup> / <?php echo $calculation->n5; ?> м</td>
-                        </tr>
-                        <tr class="section_ceilings">
-                            <?php if ($calculation->discount != 0) { ?>
-                                <td>Цена / -<?php echo $calculation->discount ?>% :</td>
-                                <td id="calculation_total"> <?php echo round($calculation_total, 0); ?> р. /</td>
-                                <td colspan="2" id="calculation_total_discount">
-                                    <?php echo round($calculation_total_discount, 0); ?> р.
-                                </td>
-                            <?php } else { ?>
-                                <td>Итого</td>
-                                <td id="calculation_total" colspan="3"> <?php echo round($calculation_total, 0); ?> р.</td>
-                            <?php } ?>
-                        </tr>
-                        <?php if($calculation->discount > 0) $kol++; } ?>
-                        <tr>
-                            <th>Общая S/общий P:</th>
-                            <th id="total_square">
-                                <?php echo $total_square; ?>м<sup>2</sup> /
-                            </th>
-                            <th colspan="2" id="total_perimeter">
-                                <?php echo $total_perimeter; ?> м
-                            </th>
-                        </tr>
-                        <tr>
-                            <th colspan="4">Транспортные расходы</th>
-                        </tr>
-                        <tr>
-                            <td style="width: 45%;" colspan="4">
-                                <p>
-                                    <input name="transport"  class="radio" id ="transport" value="1"  type="radio"  <?php if($this->item->transport == 1 ) echo "checked"?>>
-                                    <label for = "transport">Транспорт по городу</label>
-                                </p>
-                                <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist_col" >
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <div class="advanced_col1" style="width: 35%;">
-                                                <label>Кол-во выездов</label>
-                                            </div>
-                                            <div class="advanced_col2" style="width: 20%;"></div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="advanced_col1" style="width: 35%;">
-                                                <input name="jform[distance_col_1]" id="distance_col_1" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
-                                            </div>
-                                            <div class="advanced_col2" style="width: 20%;">
-                                                <button type="button" id="click_transport_1" class="btn btn-primary">Ок</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p>
-                                    <input name="transport" class="radio" id = "distanceId" value="2" type="radio" <?php if( $this->item->transport == 2) echo "checked"?>>
-                                    <label for = "distanceId">Выезд за город</label>
-                                </p>
-                                <div class="row sm-margin-bottom" style="width: 45%; display:none;" id="transport_dist" >
-                                    <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <div class="advanced_col1" style="width: 35%;">
-                                                <label>Кол-во,км</label>
-                                            </div>
-                                            <div class="advanced_col2" style="width: 35%;">
-                                                <label>Кол-во выездов</label>
-                                            </div>
-                                            <div class="advanced_col3" style="width: 20%;"></div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="advanced_col1" style="width: 35%;">
-                                                <input name="jform[distance]" id="distance" style="width: 100%;" value="<?php echo $this->item->distance; ?>" class="form-control" placeholder="км." type="tel">
-                                            </div>
-                                            <div class="advanced_col2" style="width: 35%;">
-                                                <input name="jform[distance_col]" id="distance_col" style="width: 100%;" value="<?php echo $this->item->distance_col; ?>" class="form-control" placeholder="раз" type="tel">
-                                            </div>
-                                            <div class="advanced_col3" style="width: 20%;">
-                                                <button type="button" id="click_transport" class="btn btn-primary">Ок</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p>
-                                    <input name="transport" class="radio" id ="no_transport" value="0" type="radio" <?php if($this->item->transport == 0 ) echo "checked"?>>
-                                    <label for="no_transport">Без транспорта</label>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <?php
-                                //-------------------------Себестоимость транспорта-------------------------------------
-                                if($this->item->transport == 0 ) $sum_transport_1 = 0;
-                                if($this->item->transport == 1 ) $sum_transport_1 = $mount_transport->transport * $this->item->distance_col;
-                                if($this->item->transport == 2 ) $sum_transport_1 = $mount_transport->distance * $this->item->distance * $this->item->distance_col;
-                                $project_total_11 = $project_total_11 + $sum_transport_1;
-                                $project_total = $project_total + $sum_transport;
-                                $project_total_discount = $project_total_discount + $sum_transport;
-                            ?>
-                            <th>Транспорт</th>
-                            <td colspan="3" id="transport_sum"> <?=$sum_transport;?> р.</td>
-                            <input id="transport_suma" value='<?php echo $sum_transport; ?>' type='hidden'>
-                        </tr>
-                        <tr>
-                            <?php if ($kol > 0) { ?>
-                                <th>Итого/ - %:</th>
-                                <th id="project_total">
-                                    <span class="sum"><?php echo round($project_total, 0); ?></span> р. /
-                                </th>
-                                <th colspan="2" id="project_total_discount">
-                                    <span class="sum">
-                                        <?php 
-                                            //---------------  Если сумма проекта меньше 3500, то делаем сумму проекта 3500  -----------------------
-                                            if ($dealer_gm_mounting_sum_11 == 0 ) { echo round($project_total_discount, 0); 
-                                        ?>
-                                        р.
-                                        <?php }
-                                            elseif($project_total_discount < 3500 && $project_total_discount > 0) { $project_total_discount = 3500; echo round($project_total_discount, 0); 
-                                        ?>
-                                        р.
-                                    </span>
-                                    <span class="dop" style="font-size: 9px;" > * минимальная сумма заказа 3500р.</span>
-                                    <span>
-                                        <?php } else echo round($project_total_discount, 0);  ?> р.
-                                    </span>
-                                    <span class="dop" style="font-size: 9px;" ></span>
-                                </th>
-                            <?php } else { ?>
-                                <th>Итого</th>
-                                <th id="project_total" colspan="3">
-                                    <span class="sum">
-                                        <?php
-                                            if ($this->item->new_project_sum == 0) {
-                                                if($project_total < 3500 && $project_total > 0 && $dealer_gm_mounting_sum_11 != 0)  { $project_total = 3500; }
-                                                echo round($project_total, 2);
-                                            } else {
-                                                echo round($this->item->new_project_sum, 2);
-                                            }
-                                        ?>
-                                    </span>
-                                    <span class="dop" style="font-size: 9px;">
-                                        <?php if ($project_total <= 3500 && $project_total_discount > 0 && $dealer_gm_mounting_sum_11 != 0) { ?>
-                                            * минимальная сумма заказа 3500р.
-                                        <?php }?>
-                                    </span>
-                                </th>
-                            <?php } ?>
-                        </tr>
-                        <?php if ($user->dealer_type != 2) { ?>
-                            <tr>
-                                <td id="calculation_total1"><?php echo round($calculation_total_11, 0) ?></td>
-                                <td id="calculation_total2"><?php echo round($dealer_gm_mounting_sum_11, 0) ?></td>
-                                <td id="calculation_total3"><?php echo round($project_total_11, 0); ?></td>
-                                <td><!-- ДЛЯ САНИ --></td>
-                            </tr>
-                        <?php } ?>
-                        <tr>
-                            <th colspan="4" class="section_header" id="sh_estimate">
-                                Сметы <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                            </th>
-                        </tr>
-                        <?php foreach ($calculations as $calculation) { ?>
-                            <tr class="section_estimate" id="section_estimate_<?= $calculation->id; ?>" style="display:none;">
-                                <td><?php echo $calculation->calculation_title; ?></td>
-                                <td colspan="3">
-                                    <?php
-                                        $path = "/costsheets/" . md5($calculation->id . "client_single") . ".pdf";
-                                        $pdf_names[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "client_single") . ".pdf", "id" => $calculation->id);
-                                        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
-                                    ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                    <?php } else { ?>
-                                        -
-                                    <?php } ?>
-                                </td>
-                                <?php }
-                                $json = json_encode($pdf_names); ?>
-                            </tr>
-                        <?php if (count($calculations) > 0) { ?>
-                            <tr class="section_estimate" style="display:none;">
-                                <td colspan="4"><b>Отправить все сметы <b></td>
-                            </tr>
-                            <tr class="section_estimate" style="display:none;">
-                                <td colspan="3">
-                                    <div class="email-all" style="float: left;">
-                                        <input list="email" name="all-email" id="all-email1" class="form-control" placeholder="Адрес эл.почты" type="text">
-                                        <datalist id="email">
-                                            <?php foreach ($contact_email AS $em) {?>
-                                                <option value="<?=$em->contact;?>">
-                                            <?php }?>
-                                        </datalist>
-                                    </div>
-                                    <div class="file_data">
-                                        <div class="file_upload">
-                                            <input type="file" class="dopfile" name="dopfile" id="dopfile">
-                                        </div>
-                                        <div class="file_name"></div>
-                                        <script>
-                                            jQuery(function () {
-                                                jQuery("div.file_name").html("Файл не выбран");
-                                                jQuery("div.file_upload input.dopfile").change(function () {
-                                                    var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                    jQuery("div.file_name").html((filename != "") ? filename : "Файл не выбран");
-                                                });
-                                            });
-                                        </script>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary" id="send_all_to_email1" type="button">Отправить</button>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                        <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
-                            <tr>
-                                <th id="sh_mount" colspan="4"> Наряд на монтаж <i class="fa fa-sort-desc" aria-hidden="true"></i></th>
-                            </tr>
-                            <?php foreach ($calculations as $calculation) { ?>
-                                <tr class="section_mount" id="section_mount_<?= $calculation->id; ?>" style="display:none;">
-                                    <td><?php echo $calculation->calculation_title; ?></td>
-                                    <td colspan="3">
-                                        <?php
-                                            $path = "/costsheets/" . md5($calculation->id . "mount_single") . ".pdf"; 
-                                            $pdf_names_mount[] = array("name" => $calculation->calculation_title, "filename" => md5($calculation->id . "mount_single") . ".pdf", "id" => $calculation->id);
-                                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
-                                        ?>
-                                            <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                        <?php } else { ?>
-                                            После договора
-                                        <?php } ?>
-                                    </td>
-                                </tr>
-                            <?php
-                                }
-                                $json1 = json_encode($pdf_names_mount);
-                            ?>
-                            <?php if (count($calculations) > 0) { ?>
-                                <tr class="section_mount" style="display:none;">
-                                    <td colspan="4"><b>Отправить все наряды на монтаж<b></td>
-                                </tr>
-                                <tr class="section_mount" style="display:none;">
-                                    <td colspan="3">
-                                        <div class="email-all" style="float: left;">
-                                            <input name="all-email" id="all-email2" class="form-control" value="" placeholder="Адрес эл.почты" type="text">
-                                        </div>
-                                        <div class="file_data">
-                                            <div class="file_upload">
-                                                <input type="file" class="dopfile1" name="dopfile1" id="dopfile1">
-                                            </div>
-                                            <div class="file_name1"></div>
-                                            <script>
-                                                jQuery(function () {
-                                                    jQuery("div.file_name1").html("Файл не выбран");
-                                                    jQuery("div.file_upload input.dopfile1").change(function () {
-                                                        var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                        jQuery("div.file_name1").html((filename != "") ? filename : "Файл не выбран");
-                                                    });
-                                                });
-                                            </script>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary" id="send_all_to_email2" type="button">Отправить</button>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        <?php } ?>
-                            <!-------------------------------- Общая смета для клиента ------------------------------------------>
-                        <tr>
-                            <td><b>Отправить общую смету<b></td>
-                            <td colspan="3">
-                                <?php
-                                    $path = "/costsheets/" . md5($this->item->id . "client_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
-                                ?>
-                                    <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                <?php } else { ?>
-                                    -
-                                <?php }
-                                    $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "client_common") . ".pdf", "id" => $this->item->id);
-                                    $json2 = json_encode($pdf_names);
-                                ?>
-                            </td>
-                        </tr>
-                        <?php  if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) { ?>
-                            <tr>
-                                <td colspan="3">
-                                    <div class="email-all" style="float: left;">
-                                        <input list="email" name="all-email" id="all-email3" class="form-control" placeholder="Адрес эл.почты" type="text">
-                                        <datalist id="email">
-                                            <?php foreach ($contact_email AS $em) {?>
-                                                <option value="<?=$em->contact;?>">
-                                            <?php }?>
-                                        </datalist>
-                                    </div>
-                                    <div class="file_data">
-                                        <div class="file_upload">
-                                            <input type="file" class="dopfile2" name="dopfile2" id="dopfile2">
-                                        </div>
-                                        <div class="file_name2"></div>
-                                        <script>
-                                            jQuery(function () {
-                                                jQuery("div.file_name2").html("Файл не выбран");
-                                                jQuery("div.file_upload input.dopfile2").change(function () {
-                                                    var filename = jQuery(this).val().replace(/.*\\/, "");
-                                                    jQuery("div.file_name2").html((filename != "") ? filename : "Файл не выбран");
-                                                });
-                                            });
-                                        </script>
-                                    </div>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary" id="send_all_to_email3" type="button">Отправить</button>
-                                </td>
-                            </tr>
-                            <?php if (($user->dealer_type == 1 && $user->dealer_mounters == 0) || $user->dealer_type != 1) { ?>
-                            <!-- общий наряд на монтаж--> 
-                            <tr>
-                                <td><b>Общий наряд на монтаж <b></td>
-                                <td colspan="3">
-                                    <?php
-                                        $path = "/costsheets/" . md5($this->item->id . "mount_common") . ".pdf"; if (file_exists($_SERVER['DOCUMENT_ROOT'] . $path)) {
-                                    ?>
-                                        <a href="<?php echo $path; ?>" class="btn btn-secondary" target="_blank">Посмотреть</a>
-                                    <?php } else { ?>
-                                        -
-                                    <?php }
-                                        $pdf_names[] = array("name" => "Подробная смета", "filename" => md5($this->item->id . "mount_common") . ".pdf", "id" => $this->item->id);
-                                        $json2 = json_encode($pdf_names);
-                                    ?>
-                                </td>
-                            </tr>
-                        <?php } } ?>
-                    </table>
-                    <!-- для клиента нафиг надо??? -->
-                        <?php if ($user->dealer_type == 2) { ?>
-                            <button class="btn btn-primary" type="submit" form="form-client" id="client_order">Закончить формирование заказа</button>
-                            <?php if ($this->item->project_status == 7) {
-                                // регистрационная информация (логин, пароль #1)
-                                // registration info (login, password #1)
-                                $mrh_login = "demo";
-                                $mrh_pass1 = "password_1";
-                                // номер заказа
-                                // number of order
-                                $inv_id = 0;
-                                // описание заказа
-                                // order description
-                                $inv_desc = "Оплата заказа в Тестовом магазине ROBOKASSA";
-                                // сумма заказа
-                                // sum of order
-                                $out_summ = $project_total_discount;;
-                                // тип товара
-                                // code of goods
-                                $shp_item = 1;
-                                // язык
-                                // language
-                                $culture = "ru";
-
-                                // кодировка
-                                // encoding
-                                $encoding = "utf-8";
-
-                                // формирование подписи
-                                // generate signature
-                                $crc = md5("$mrh_login:$out_summ:$inv_id:$mrh_pass1:shp_Item=$shp_item");
-
-                                // HTML-страница с кассой
-                                // ROBOKASSA HTML-page
-                                print "<html><script language=JavaScript " .
-                                    "src='https://auth.robokassa.ru/Merchant/PaymentForm/FormMS.js?" .
-                                    "MerchantLogin=$mrh_login&OutSum=$out_summ&InvoiceID=$inv_id" .
-                                    "&Description=$inv_desc&SignatureValue=$crc&shp_Item=$shp_item" .
-                                    "&Culture=$culture&Encoding=$encoding'></script></html>";
-                            }
-                        } ?>
-                    <!-- конец -->
-                </div>
-                <?php foreach ($calculations as $k => $calculation) { ?>
-                    <div class="tab-pane" id="calculation<?php echo $calculation->id; ?>" role="tabpanel">
-                        <div class="other_tabs">
-                            <?php 
-                                $mounters = json_decode($calculation->mounting_sum); 
-                                $filename = "/calculation_images/" . md5("calculation_sketch" . $calculation->id) . ".svg";
-                            ?>
-                            <?php if (!empty($filename)):?>
-                                <div class="sketch_image_block">
-                                    <h4> Чертеж <i class="fa fa-sort-desc" aria-hidden="true"></i></h4>
-                                    <div class="section_content">
-                                        <img class="sketch_image" src="<?php echo $filename.'?t='.time(); ?>"/>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                            <div class="row">
-                                <div class="col-xs-12 no_yes_padding">
-                                    <?php 
-                                        if (!empty($calculation->n3)){
-                                        $canvas = $canvas_model->getFilteredItemsCanvas("`a`.`id` = $calculation->n3");
-                                    ?>
-                                        <h4>Материал</h4>
-                                        <table class="table_info2">
-                                            <tr>
-                                                <td>Тип фактуры:</td>
-                                                <td><?php echo $canvas[0]->texture_title; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Производитель, ширина:</td>
-                                                <td><?php echo $canvas[0]->name.' '.$canvas[0]->width; ?></td>
-                                            </tr>
-                                            <?php
-                                                if (!empty($canvas[0]->color_id)) {
-                                            ?>
-                                                <tr>
-                                                    <td>Цвет:</td>
-                                                    <td>
-                                                        <?php echo $canvas[0]->color_title; ?>
-                                                        <img src="/<?php echo $canvas[0]->color_file; ?>" alt=""/>
-                                                    </td>
-                                                </tr>
-                                            <?php } ?>
-                                        </table>
-                                        <h4 style="margin: 10px 0;">Размеры помещения</h4>
-                                        <table class="table_info2">
-                                            <tr>
-                                                <td>Площадь, м<sup>2</sup>:</td>
-                                                <td><?php echo $calculation->n4; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Периметр, м:</td>
-                                                <td><?php echo $calculation->n5; ?></td>
-                                            </tr>
-                                        </table>
-                                        <?php if ($calculation->n6 > 0) {?>
-                                            <h4 style="margin: 10px 0;">Вставка</h4>
-                                            <table class="table_info2">
-                                                <tr>
-                                                    <?php if ($calculation->n6 == 314) {?>
-                                                        <td>Белая</td>
-                                                        <td></td>
-                                                    <?php
-                                                        } else  {
-                                                            $color_model_1 = Gm_ceilingHelpersGm_ceiling::getModel('components');
-                                                            $color_1 = $color_model_1->getColorId($calculation->n6);
-                                                    ?>
-                                                        <td>Цветная:</td>
-                                                        <td>
-                                                            <?php echo $color_1[0]->title; ?> <img style='width: 50px; height: 30px;' src="/<?php echo $color_1[0]->file; ?>" alt=""/>
-                                                        </td>
-                                                    <?php } ?>
-                                                </tr>
-                                            </table>
-                                        <?php }
-                                    } ?>
-                                    <?php if ($calculation->n16) { ?>
-                                        <table class="table_info2">
-                                            <tr>
-                                                <td>Скрытый карниз:</td>
-                                                <td><?php echo $calculation->n16; ?></td>
-                                            </tr>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n12) { ?>
-                                        <h4 style="margin: 10px 0;">Установка люстры</h4>
-                                        <table class="table_info2">
-                                            <tr>
-                                                <td><?php echo $calculation->n12; ?> шт.</td>
-                                                <td></td>
-                                            </tr>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n13) { ?>
-                                        <h4 style="margin: 10px 0;">Установка светильников</h4>
-                                        <table class="table_info2">
-                                            <?php 
-                                                foreach ($calculation->n13 as $key => $n13_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n13_item->n13_count . " шт - <b>Тип:</b>  " . $n13_item->type_title . " - <b>Размер:</b> " . $n13_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n14) { ?>
-                                        <h4 style="margin: 10px 0;">Обвод трубы</h4>
-                                        <table class="table_info2">
-                                            <?php 
-                                                foreach ($calculation->n14 as $key => $n14_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n14_item->n14_count . " шт  -  <b>Диаметр:</b>  " . $n14_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n15) { ?>
-                                        <h4 style="margin: 10px 0;">Шторный карниз Гильдии мастеров</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n15 as $key => $n15_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n15_item->n15_count . " шт - <b>Тип:</b>   " . $n15_item->type_title . " <b>Длина:</b> " . $n15_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table> 
-                                    <?php } ?>
-                                    <?php if ($calculation->n27> 0) { ?>
-                                        <h4 style="margin: 10px 0;">Шторный карниз</h4>
-                                        <table class="table_info2">
-                                            <tr>
-                                                <td>
-                                                    <?php if ($calculation->n16) echo "Скрытый карниз"; ?>
-                                                    <?php if (!$calculation->n16) echo "Обычный карниз"; ?>
-                                                </td>
-                                                <td>
-                                                    <?php echo $calculation->n27; ?> м.
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n26) { ?>
-                                        <h4 style="margin: 10px 0;">Светильники Эcola</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n26 as $key => $n26_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n26_item->n26_count . " шт - <b>Тип:</b>  " . $n26_item->component_title_illuminator . " -  <b>Лампа:</b> " . $n26_item->component_title_lamp . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table> 
-                                    <?php } ?>
-                                    <?php if ($calculation->n22) { ?>
-                                        <h4 style="margin: 10px 0;">Вентиляция</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n22 as $key => $n22_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n22_item->n22_count . " шт - <b>Тип:</b>   " . $n22_item->type_title . " - <b>Размер:</b> " . $n22_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n23) { ?>
-                                        <h4 style="margin: 10px 0;">Диффузор</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n23 as $key => $n23_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n23_item->n23_count . " шт - <b>Размер:</b>  " . $n23_item->component_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <?php if ($calculation->n29) { ?>
-                                        <h4 style="margin: 10px 0;">Переход уровня</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach ($calculation->n29 as $key => $n29_item) {
-                                                    echo "<tr><td><b>Количество:</b> " . $n29_item->n29_count . " м - <b>Тип:</b>  " . $n29_item->type_title . "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                    <h4 style="margin: 10px 0;">Прочее</h4>
-                                    <table class="table_info2">
-                                        <?php if ($calculation->n9> 0) { ?>
-                                            <tr>
-                                                <td>Углы, шт.:</td>
-                                                <td><?php echo $calculation->n9; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n10> 0) { ?>
-                                            <tr>
-                                                <td> Криволинейный вырез, м:</td>
-                                                <td><?php echo $calculation->n10; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n11> 0) { ?>
-                                            <tr>
-                                                <td>Внутренний вырез, м:</td>
-                                                <td><?php echo $calculation->n11; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n7> 0) { ?>
-                                            <tr>
-                                                <td>Крепление в плитку, м:</td>
-                                                <td><?php echo $calculation->n7; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n8> 0) { ?>
-                                            <tr>
-                                                <td>Крепление в керамогранит, м:</td>
-                                                <td><?php echo $calculation->n8; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n17> 0) { ?>
-                                            <tr>
-                                                <td>Закладная брусом, м:</td>
-                                                <td><?php echo $calculation->n17; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n19> 0) { ?>
-                                            <tr>
-                                                <td> Провод, м:</td>
-                                                <td><?php echo $calculation->n19; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n20> 0) { ?>
-                                            <tr>
-                                                <td>Разделитель, м:</td>
-                                                <td><?php echo $calculation->n20; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n21> 0) { ?>
-                                            <tr>
-                                                <td>Пожарная сигнализация, м:</td>
-                                                <td><?php echo $calculation->n21; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->dop_krepezh> 0) { ?>
-                                            <tr>
-                                                <td>Дополнительный крепеж:</td>
-                                                <td><?php echo $calculation->dop_krepezh; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n24> 0) { ?>
-                                            <tr>
-                                                <td>Сложность доступа к месту монтажа, м:</td>
-                                                <td><?php echo $calculation->n24; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n30> 0) { ?>
-                                            <tr>
-                                                <td>Парящий потолок, м:</td>
-                                                <td><?php echo $calculation->n30; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($calculation->n32> 0) { ?>
-                                            <tr>
-                                                <td>Слив воды, кол-во комнат:</td>
-                                                <td><?php echo $calculation->n32; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                    </table>
-                                    <?php $extra_mounting = (array) json_decode($calculation->extra_mounting);?>
-                                    <?php if (!empty($extra_mounting) ) { ?>
-                                        <h4 style="margin: 10px 0;">Дополнительные работы</h4>
-                                        <table class="table_info2">
-                                            <?php
-                                                foreach($extra_mounting as $dop) {
-                                                    echo "<tr><td><b>Название:</b></td><td>" . $dop->title .  "</td></tr>";
-                                                }
-                                            ?>
-                                        </table>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php } ?>
-            </div>
-        <?php } ?>
         <div class="row">
             <div class="col-xs-12 no_padding">
                 <table id="container_calendars">
@@ -1199,6 +465,7 @@
 <script>
 
     var preloader = '<?=parent::getPreloaderNotJS();?>';
+    
 
     whatCalendar = <?php echo $whatCalendar; ?>
     // листание календаря
