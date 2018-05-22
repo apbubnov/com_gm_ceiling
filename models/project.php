@@ -63,7 +63,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -181,7 +181,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -201,7 +201,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -224,7 +224,7 @@ class Gm_ceilingModelProject extends JModelItem
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -245,7 +245,7 @@ class Gm_ceilingModelProject extends JModelItem
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function getMount($project_id)
@@ -267,7 +267,7 @@ class Gm_ceilingModelProject extends JModelItem
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -289,7 +289,7 @@ class Gm_ceilingModelProject extends JModelItem
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -313,7 +313,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -335,7 +335,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -358,7 +358,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -381,7 +381,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -420,7 +420,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -462,7 +462,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -489,7 +489,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -543,7 +543,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -561,7 +561,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -602,7 +602,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -623,7 +623,7 @@ class Gm_ceilingModelProject extends JModelItem
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 	public function change_status($id, $project_status)
@@ -643,7 +643,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -662,7 +662,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -680,7 +680,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	public function update_spend($id, $extra_spend)
@@ -698,7 +698,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -717,7 +717,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -736,7 +736,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	public function update_client($id,$client_id)
@@ -762,7 +762,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	public function update_address($id, $address)
@@ -780,7 +780,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	public function update_date_time($id, $date_time)
@@ -798,7 +798,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -817,7 +817,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -837,7 +837,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -884,7 +884,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	public function update_sb_order_id($id, $orderId)
@@ -902,7 +902,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	public function approve($data)
@@ -933,7 +933,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
     public function approvemanager($id,$ready_date = null,$quickly=null)
@@ -981,7 +981,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
 		{
-			add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 		}
     }
 
@@ -1011,7 +1011,7 @@ class Gm_ceilingModelProject extends JModelItem
 			}
 			catch(Exception $e)
 			{
-				add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+				Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 			}
     }
 	
@@ -1109,7 +1109,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
 		{
-			add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 		}
 	}
 
@@ -1169,7 +1169,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
 		{
-			add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+			Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 		}
 	}
 
@@ -1187,7 +1187,7 @@ class Gm_ceilingModelProject extends JModelItem
             $items = $db->loadObjectList();
             return $items;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -1205,7 +1205,7 @@ class Gm_ceilingModelProject extends JModelItem
             $items = $db->loadObjectList();
             return $items;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -1231,7 +1231,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -1260,7 +1260,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -1277,7 +1277,7 @@ class Gm_ceilingModelProject extends JModelItem
             $items = $db->loadObjectList();
             return $items;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -1307,7 +1307,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -1336,7 +1336,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -1355,7 +1355,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 	/**
@@ -1382,7 +1382,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -1406,7 +1406,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -1427,7 +1427,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -1445,7 +1445,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -1463,7 +1463,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -1481,7 +1481,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -1499,7 +1499,7 @@ class Gm_ceilingModelProject extends JModelItem
 	   }
 	   catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -1519,7 +1519,7 @@ class Gm_ceilingModelProject extends JModelItem
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1538,7 +1538,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	public function transport($data)
@@ -1576,7 +1576,7 @@ class Gm_ceilingModelProject extends JModelItem
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1712,7 +1712,7 @@ class Gm_ceilingModelProject extends JModelItem
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1827,7 +1827,7 @@ class Gm_ceilingModelProject extends JModelItem
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1854,7 +1854,7 @@ class Gm_ceilingModelProject extends JModelItem
 	  }
 	  catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -1874,7 +1874,7 @@ class Gm_ceilingModelProject extends JModelItem
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1901,7 +1901,7 @@ class Gm_ceilingModelProject extends JModelItem
 	    }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

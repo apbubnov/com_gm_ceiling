@@ -40,7 +40,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	
@@ -58,7 +58,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -77,7 +77,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -95,7 +95,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -113,7 +113,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -144,7 +144,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	function updateClientId($client_id,$ids)
@@ -163,7 +163,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -186,7 +186,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -204,7 +204,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 
@@ -240,7 +240,7 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	function deleteCall($id)
@@ -257,7 +257,26 @@ class Gm_ceilingModelCallback extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+	}
+
+	function addCallHistory($manager_id, $client_id, $status)
+	{
+		try
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->insert('`#__gm_ceiling_calls_status_history`');
+			$query->columns('`manager_id`, `client_id`, `status`');
+			$query->values("$manager_id, $client_id, $status");
+			$db->setQuery($query);
+			$db->execute();
+			return $db->insertId();
+		}
+		catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 }

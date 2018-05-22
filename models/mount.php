@@ -46,7 +46,7 @@ class Gm_ceilingModelMount extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	function getData()
@@ -67,7 +67,7 @@ class Gm_ceilingModelMount extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
     function getDataAll($dealerId=null)
@@ -90,7 +90,7 @@ class Gm_ceilingModelMount extends JModelList
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -128,7 +128,7 @@ class Gm_ceilingModelMount extends JModelList
 	    }
 	    catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 	/**
@@ -145,7 +145,7 @@ class Gm_ceilingModelMount extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 

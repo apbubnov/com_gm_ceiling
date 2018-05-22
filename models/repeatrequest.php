@@ -34,7 +34,7 @@ class Gm_ceilingModelRepeatRequest extends JModelList
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -58,7 +58,7 @@ class Gm_ceilingModelRepeatRequest extends JModelList
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     function update($proj_id,$advt_id)
@@ -76,7 +76,7 @@ class Gm_ceilingModelRepeatRequest extends JModelList
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     function getDataByProjectId($id){
@@ -94,7 +94,7 @@ class Gm_ceilingModelRepeatRequest extends JModelList
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

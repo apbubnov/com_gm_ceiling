@@ -42,7 +42,7 @@ class Gm_ceilingModelClientcard extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	function &getData($id=null)
@@ -71,7 +71,7 @@ class Gm_ceilingModelClientcard extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	function getCalls($id){
@@ -90,7 +90,7 @@ class Gm_ceilingModelClientcard extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}	
 	function getComments($id){
@@ -109,7 +109,7 @@ class Gm_ceilingModelClientcard extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 	function getProjects($id){
@@ -129,7 +129,7 @@ class Gm_ceilingModelClientcard extends JModelList
 		}
 		catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 	}
 }

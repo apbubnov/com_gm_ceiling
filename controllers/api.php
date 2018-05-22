@@ -70,7 +70,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function register_from_android(){
@@ -156,7 +156,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                /*add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                /*Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 */
                 die($e->getMessage());
             }
@@ -180,7 +180,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             }
         }
@@ -200,7 +200,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             }
         }
@@ -220,7 +220,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             }
         }
@@ -252,7 +252,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             }
         }
@@ -273,7 +273,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             }
         }
@@ -293,7 +293,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             }
         }
@@ -311,7 +311,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             }
         }
@@ -332,7 +332,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             } 
         }
@@ -360,7 +360,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -378,7 +378,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -394,7 +394,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -427,7 +427,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
             die(json_encode($Answer));
@@ -453,7 +453,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
             die(json_encode($Answer));
@@ -479,7 +479,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
             die(json_encode($Answer));
@@ -524,7 +524,7 @@ class Gm_ceilingControllerApi extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             $Answer = ["status" => "error", "title" => "Не успешно", "message" => $e->getMessage()];
             die(json_encode($Answer));

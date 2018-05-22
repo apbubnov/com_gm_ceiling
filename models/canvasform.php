@@ -58,7 +58,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             $this->setState('params', $params);
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -97,7 +97,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return $this->item;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -117,7 +117,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return JTable::getInstance($type, $prefix, $config);
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -142,7 +142,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return $table->id;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -175,7 +175,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return true;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -211,7 +211,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return true;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -243,7 +243,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return $form;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -265,7 +265,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return $data;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -306,7 +306,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
                 return false;
             }
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -364,7 +364,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return $messageError;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -464,7 +464,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return $errorMessage;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -480,7 +480,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return $table !== false;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -600,7 +600,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
             };
             return $errorMessage;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -657,7 +657,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return (object)array("error" => $errorMessage);
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -800,7 +800,7 @@ class Gm_ceilingModelCanvasForm extends JModelForm
 
             return $query;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

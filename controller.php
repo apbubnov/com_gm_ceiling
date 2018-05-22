@@ -105,7 +105,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -131,7 +131,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -156,7 +156,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -172,7 +172,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -193,7 +193,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -226,7 +226,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -259,7 +259,7 @@ class Gm_ceilingController extends JControllerLegacy
             }
             catch(Exception $e)
             {
-                add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+                Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
             }           
         }
@@ -359,7 +359,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -375,7 +375,7 @@ class Gm_ceilingController extends JControllerLegacy
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -406,7 +406,7 @@ public function register_mnfctr(){
        }
       catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /* public function update_old_mnfct(){
@@ -460,7 +460,7 @@ public function register_mnfctr(){
        }
       catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     
@@ -543,7 +543,7 @@ public function register_mnfctr(){
        }
       catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -575,7 +575,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function updateClientFIO(){
@@ -594,7 +594,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function getClientDealerId()
@@ -609,7 +609,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function updateDealerId($model_name = null,$client_id = null,$dealer_id=null,$project_id=null){
@@ -629,7 +629,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
    
@@ -662,7 +662,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -695,7 +695,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -765,7 +765,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -804,7 +804,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -892,7 +892,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -914,7 +914,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -931,7 +931,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -947,7 +947,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
         die(true);
     }
@@ -968,7 +968,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -987,7 +987,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1005,7 +1005,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1023,7 +1023,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1043,7 +1043,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1164,7 +1164,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1186,14 +1186,10 @@ public function register_mnfctr(){
            
             $result = Gm_ceilingHelpersGm_ceiling::calculate($from_db, $id, $save, $pdf, $del_flag, $need_mount);
             die($result);
-         }
-        catch(Exception $e)
-         {
-             $date = date("d.m.Y H:i:s");
-             $files = "components/com_gm_ceiling/";
-             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-             throw new Exception('Ошибка!', 500);
-         }
+        }
+        catch(Exception $e) {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
     }
 
     public function payComponents() {
@@ -1266,7 +1262,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1300,7 +1296,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1324,7 +1320,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1365,7 +1361,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1383,7 +1379,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1421,7 +1417,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1448,7 +1444,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1478,7 +1474,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1497,7 +1493,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1518,7 +1514,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1555,7 +1551,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1620,7 +1616,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1665,7 +1661,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1727,7 +1723,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1743,7 +1739,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1774,7 +1770,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1813,7 +1809,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1838,7 +1834,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1867,7 +1863,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 
     }
@@ -1891,7 +1887,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1907,7 +1903,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -1924,7 +1920,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function getDetailedAnaliticByPeriod()
@@ -1940,7 +1936,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function addemailtoclient()
@@ -1955,7 +1951,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function getAnaliticProjects(){
@@ -1992,7 +1988,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function saveRecoil(){
@@ -2006,7 +2002,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function update_descriptions_api_phones(){
@@ -2026,7 +2022,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -2051,7 +2047,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 
     }
@@ -2089,7 +2085,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -2103,7 +2099,7 @@ public function register_mnfctr(){
 
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2117,7 +2113,7 @@ public function register_mnfctr(){
             die(json_encode($model->save($id,null,$sum)));
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2166,7 +2162,7 @@ public function register_mnfctr(){
             die(true);
 
         } catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2181,7 +2177,7 @@ public function register_mnfctr(){
             die(json_encode($result));
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2197,7 +2193,7 @@ public function register_mnfctr(){
             die(json_encode($result));
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2219,7 +2215,7 @@ public function register_mnfctr(){
             die($result);
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2459,7 +2455,7 @@ public function register_mnfctr(){
                         $mailer->setSubject('Для отдела снабжения');
                     }
                     else {
-                        $mailer->setSubject('Натяжные потолки для застройщиков от 280 руб.');
+                        $mailer->setSubject('Для отдела снабжения');
                     }
                 }
                 elseif($dealer_type == 1 && $type == 2)
@@ -2499,7 +2495,7 @@ public function register_mnfctr(){
             }
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -2577,7 +2573,7 @@ public function register_mnfctr(){
             }
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2621,7 +2617,7 @@ public function register_mnfctr(){
             exit();
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }*/
@@ -2659,7 +2655,7 @@ public function register_mnfctr(){
             }
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }*/
     }
@@ -2733,7 +2729,7 @@ public function register_mnfctr(){
             }
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2754,7 +2750,7 @@ public function register_mnfctr(){
             die(true);
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2804,7 +2800,7 @@ public function register_mnfctr(){
             die(json_encode(true));
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2818,7 +2814,7 @@ public function register_mnfctr(){
             die(json_encode($answer1));
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2831,7 +2827,7 @@ public function register_mnfctr(){
             die(json_encode($answer2));
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2844,7 +2840,7 @@ public function register_mnfctr(){
             die(json_encode($answer3));
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2858,7 +2854,7 @@ public function register_mnfctr(){
             die(json_encode($answer4));
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2882,7 +2878,7 @@ public function register_mnfctr(){
             die(json_encode(count($answer7)));
         }
         catch (Exception $e) {
-           add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+           Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2905,7 +2901,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public function sendClientEstimate(){
@@ -2935,7 +2931,7 @@ public function register_mnfctr(){
         }
        catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 
 
@@ -2958,7 +2954,7 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2980,7 +2976,7 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -2997,7 +2993,7 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -3035,7 +3031,7 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -3073,8 +3069,39 @@ public function register_mnfctr(){
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
+    function addCallHistory() {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $client_id = $jinput->get('client_id', null,'INT');
+            $status = $jinput->get('status', null, 'INT');
+            $manager_id = JFactory::getUser()->id;
+            if (empty($manager_id)) {
+                throw new Exception('empty manager id!');
+            }
+            $model_call = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $model_client_history = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+
+            $model_call->addCallHistory($manager_id, $client_id, $status);
+            if ($status == 1) {
+                $model_client_history->save($client_id, 'Исходящий недозвон');
+                $model_call->save(date("Y-m-d H:i", strtotime(date("Y-m-d H:i")."+ 1 day")), 'Исходящий недозвон', $client_id, $manager_id);
+            }
+            elseif ($status == 2) {
+                $model_client_history->save($client_id, 'Исходящий дозвон');
+            }
+            elseif ($status == 3) {
+                $model_client_history->save($client_id, 'Входящий звонок');
+            }
+            die(true);
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

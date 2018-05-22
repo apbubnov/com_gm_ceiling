@@ -570,7 +570,7 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                         <div class="col-xs-12 col-md-3" style="padding-top: 25px;">
                             <button class="validate btn btn-primary" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
                         </div>
-                        <div class="col-xs-12 col-md-13" style="padding-top: 25px;">
+                        <div class="col-xs-12 col-md-3" style="padding-top: 25px;">
                             <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
                         </div>
                     </div>

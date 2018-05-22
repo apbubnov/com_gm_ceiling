@@ -103,6 +103,7 @@
             </tr>
         </table>  
     </div>
+<?php include_once('components/com_gm_ceiling/views/clientcard/buttons_calls_hisory.php'); ?>
 <!-- конец -->
 <!-- контакты -->
 <div class="row">
