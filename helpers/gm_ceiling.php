@@ -91,19 +91,11 @@ class Gm_ceilingHelpersGm_ceiling
             foreach (getallheaders() as $name => $value) {
                 $req_str .= "$name: $value\n";
             }
-            $args_str = '';
-            foreach ($args as $name => $value) {
-                $args_str .= "$name: $value\n";
-            }
-            
-            $get_str = '';
-            foreach ($_GET as $name => $value) {
-                $get_str .= "$name: $value\n";
-            }
-            $post_str = '';
-            foreach ($_POST as $name => $value) {
-                $post_str .= "$name: $value\n";
-            }
+            $args_str = print_r($args, true);
+            $get_str = print_r($_GET, true);
+            $post_str = print_r($_POST, true);
+            $f = fopen('php://input', 'r');
+            $input = stream_get_contents($f);
             $file = array_pop(explode('com_gm_ceiling', $file));
             $ip = $_SERVER['REMOTE_ADDR'];
             $user = JFactory::getUser();
@@ -118,13 +110,13 @@ class Gm_ceilingHelpersGm_ceiling
             $ip = $db->escape($ip);
             $get_str = $db->escape($get_str);
             $post_str = $db->escape($post_str);
+            $input = $db->escape($input);
             $user_str = $db->escape($user_str);
             $query = $db->getQuery(true);
             $query
                 ->insert('`errors_log`')
-                ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`, `user`')
-                ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str', '$user_str'");
-            
+                ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`, `php_input`, `user`')
+                ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str', '$input', '$user_str'");
             $db->setQuery($query);
         }
         catch(Exception $e) {
