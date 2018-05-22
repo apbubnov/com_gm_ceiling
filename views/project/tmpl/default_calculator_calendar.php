@@ -485,16 +485,6 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             <?php } ?>
             <div class="project_activation" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "" /* "style=\"display: block;\"" */; else echo "style=\"display: none;\""?> id="project_activation">
                 <?php if ($user->dealer_type != 2) { ?>
-                    <table style="margin-top: 25px;">
-                        <tr>
-                            <td Style="padding-right: 15px;">
-                                <label id="jform_gm_calculator_note-lbl" for="jform_gm_calculator_note" class="">Примечание к договору</label>
-                            </td>
-                            <td>
-                                <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"><?=($this->item->dealer_calculator_note)?$this->item->dealer_calculator_note:""?></textarea>
-                            </td>
-                        </tr>
-                    </table>
                     <button id="refuse" class="btn btn-success" type="submit" style="display: none; margin-top: 25px;">Сохранить</button>
                     <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
                         <table id="container_calendars">
@@ -523,27 +513,43 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                             </tr>
                         </table>
                     </div>
-                    <table class="contract" style="margin-top: 25px;">
-                        <tr>
-                            <td Style="padding-right: 15px;">
-                                <label id="jform_chief_note-lbl" for="jform_chief_note" class="">Примечание к монтажу</label>
-                            </td>
-                            <td>
-                                <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"><?php echo $this->item->dealer_chief_note; ?></textarea>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class = "container">
+                        <div class="row">
+                            <div class="col-md-1">
+                                <button class="btn btn-primary" id = "show_comments_btn" type = "button">Открыть примечания</button>
+                            </div>
+                        </div>
+                        <div id ="comments_divs" style="display:none;">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for = "jform_gm_calculator_note">Примечание к договору</label>
+                                 </div>
+                                <div class="col-md-2">
+                                    <textarea name="gm_calculator_note" id="jform_gm_calculator_note" placeholder="Примечание к договору" aria-invalid="false"></textarea>
+                                </div>
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for = "jform_chief_note">Примечание к монтажу</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <textarea name="chief_note" id="jform_chief_note" placeholder="Примечание к монтажу" aria-invalid="false"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
                         <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                     </p>
-                    <div class="contract" class="row">
-                        <div class="col-xs-12 col-md-4" style="padding-top: 25px;">
-                            <button class="validate btn btn-primary" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство</button>
+                    <div class="contract row center-block">
+                        <div class="col-xs-3 col-md-3" style="padding-top: 25px;">
+                            <button class="validate btn btn-primary" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
                         </div>
-                        <div class="col-xs-12 col-md-4" style="padding-top: 25px;">
+                        <div class="col-xs-3 col-md-3" style="padding-top: 25px;">
                             <button class="validate btn btn-primary" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
                         </div>
-                        <div class="col-xs-12 col-md-4" style="padding-top: 25px;">
+                        <div class="col-xs-3 col-md-3" style="padding-top: 25px;">
                             <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
                         </div>
                     </div>
@@ -930,6 +936,12 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     }
                 });
             }
+
+            jQuery("#show_comments_btn").click(function(){
+                jQuery("#comments_divs").toggle();
+
+            });
+
             jQuery("#add_comment").click(function () {
                 var comment = jQuery("#new_comment").val();
                 var reg_comment = /[\\\<\>\/\'\"\#]/;
