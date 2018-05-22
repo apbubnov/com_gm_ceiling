@@ -184,7 +184,7 @@ class Gm_ceilingModelUsers extends JModelList
 					$client_id,$manager_id);
 				}
 				elseif ($user->dealer_type == 7) {
-					if ($type_kp == 2) {
+					if ($type_kp == 3) {
 						$callback_model->save(date('Y-m-d H:i:s'),'Московский застройщик просмотрел коммерческое предложение',
 						$client_id,$manager_id);
 					}

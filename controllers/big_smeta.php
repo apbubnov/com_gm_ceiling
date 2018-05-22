@@ -287,7 +287,7 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             }
             else if ($type == 7)
             {
-                if($type_kp == 2) {
+                if($type_kp == 3) {
                     $this->setRedirect(JRoute::_('/files/zastroishiki_moscow.pdf', false));
                 }
                 else {
