@@ -3089,7 +3089,7 @@ public function register_mnfctr(){
             $model_call->addCallHistory($manager_id, $client_id, $status);
             if ($status == 1) {
                 $model_client_history->save($client_id, 'Исходящий недозвон');
-                $model_call->save(date("Y-m-d H:i + 1 day"), 'Исходящий недозвон', $client_id, $manager_id);
+                $model_call->save(date("Y-m-d H:i", strtotime(date("Y-m-d H:i")."+ 1 day")), 'Исходящий недозвон', $client_id, $manager_id);
             }
             elseif ($status == 2) {
                 $model_client_history->save($client_id, 'Исходящий дозвон');
