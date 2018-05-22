@@ -1,8 +1,10 @@
 <?php if(array_search('16', $user_group)) { ?>
 <div>
+	<center>
     <button class="btn btn-primary" id="btn_outcoming_bad" type="button">Исходящий недозвон</button>
     <button class="btn btn-primary" id="btn_outcoming_good" type="button">Исходящий дозвон</button>
     <button class="btn btn-primary" id="btn_incoming" type="button">Входящий звонок</button>
+    </center>
 </div>
 <?php } ?>
 <script type="text/javascript">
