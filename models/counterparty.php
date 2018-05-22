@@ -27,7 +27,7 @@ class Gm_ceilingModelCounterparty extends JModelList
 
             parent::__construct($config);
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -42,7 +42,7 @@ class Gm_ceilingModelCounterparty extends JModelList
 
             return $query;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -96,7 +96,7 @@ class Gm_ceilingModelCounterparty extends JModelList
 
             return $result;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -159,7 +159,7 @@ class Gm_ceilingModelCounterparty extends JModelList
 
             return (object)array("stock_id" => $stock->id, "counterparty_id" => $counterparty->id);
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

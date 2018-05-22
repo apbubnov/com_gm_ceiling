@@ -487,13 +487,9 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                 <?php if ($user->dealer_type != 2) { ?>
                     <button id="refuse" class="btn btn-success" type="submit" style="display: none; margin-top: 25px;">Сохранить</button>
                     <div id="mounter_wraper" <?php if($user->dealer_type == 1 && $this->item->project_status == 4) echo "style=\"display: block; margin-top: 25px;\""; else echo "style=\"display: none;\""?>>
-                        <table id="container_calendars">
-                            <tr>
-                                <td colspan="3">
-                                    <h4 class="center" id="title" style="display: none; margin-bottom: 25px;">Назначить дату монтажа (дату готовности потолка)</h4>
-                                </td>
-                            </tr>
-                            <tr>
+                            <button class="btn btn-primary" id="btn_show_mount_calendar" type = "button" style="margin-bottom: 25px;">Назначить дату монтажа</button>
+                            <table id="container_calendars">
+                            <tr >
                                 <td class="no_yes_padding">
                                     <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
                                 </td>
@@ -513,7 +509,32 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                             </tr>
                         </table>
                     </div>
-                    <div class = "container">
+                 <!--    <div class="row" id = "ready_wrapper">
+                        <div class="col-md-4">
+                            <button class="btn btn-primary" id="btn_show_mount_ready_date" type = "button" style="margin-bottom: 25px;">Назначить дату готовности полотен</button>
+                            <table id="container_calendars" style = "display: none;*/">
+                                <tr >
+                                    <td class="no_yes_padding">
+                                        <button id="button-prev" type="button" class="btn btn-primary"><i class="fa fa-arrow-left" aria-hidden="true"></i></button>
+                                    </td>
+                                    <td>
+                                        <div style="display: inline-block; width: 100%;">
+                                            <div id="calendar1">
+                                                <?php //echo $calendar1; ?>
+                                            </div>
+                                            <div id="calendar2">
+                                                <?php //echo $calendar2; ?>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="no_yes_padding">
+                                        <button id="button-next" type="button" class="btn btn-primary"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> -->
+                    <div class = "container" style="padding-left: 0px;">
                         <div class="row">
                             <div class="col-md-1">
                                 <button class="btn btn-primary" id = "show_comments_btn" type = "button">Открыть примечания</button>
@@ -542,14 +563,14 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
                     <p class="contract" style="margin-top: 25px; margin-bottom: 0;">
                         <input name='smeta' value='0' type='checkbox'> Отменить смету по расходным материалам
                     </p>
-                    <div class="contract row center-block">
-                        <div class="col-xs-3 col-md-3" style="padding-top: 25px;">
+                    <div class="row ">
+                        <div class="col-xs-12 col-md-3" style="padding-top: 25px;">
                             <button class="validate btn btn-primary" id="save" type="submit" from="form-client">Сохранить и запустить <br> в производство ГМ</button>
                         </div>
-                        <div class="col-xs-3 col-md-3" style="padding-top: 25px;">
+                        <div class="col-xs-12 col-md-3" style="padding-top: 25px;">
                             <button class="validate btn btn-primary" id="save_email" type="button" from="form-client">Сохранить и запустить <br> в производство по email</button>
                         </div>
-                        <div class="col-xs-3 col-md-3" style="padding-top: 25px;">
+                        <div class="col-xs-12 col-md-3" style="padding-top: 25px;">
                             <button class="validate btn btn-primary" id="save_exit" type="submit" from="form-client">Сохранить и выйти</button>
                         </div>
                     </div>
@@ -940,6 +961,14 @@ $g_calendar = Gm_ceilingHelpersGm_ceiling::DrawCalendarTar($userId, $month, $yea
             jQuery("#show_comments_btn").click(function(){
                 jQuery("#comments_divs").toggle();
 
+            });
+
+            jQuery("#btn_show_mount_calendar").click(function(){
+                jQuery("#container_calendars").toggle();
+            });
+
+            jQuery("#btn_show_mount_ready_date").click(function(){
+                //jQuery("#container_calendars").toggle();
             });
 
             jQuery("#add_comment").click(function () {

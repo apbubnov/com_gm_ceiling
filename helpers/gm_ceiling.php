@@ -22,7 +22,7 @@ function margin($value, $margin) {
     }
     catch(Exception $e)
     {
-        add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
 }
 /* функция для применения сразу двойной маржи */
@@ -32,7 +32,7 @@ function double_margin($value, $margin1, $margin2) {
     }
     catch(Exception $e)
     {
-        add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
 }
 /**
@@ -61,7 +61,7 @@ function dealer_margin($price, $margin, $objectDealerPrice) {
     }
     catch(Exception $e)
     {
-        add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
  }
 function delete_string_characters($string)
@@ -75,75 +75,75 @@ function delete_string_characters($string)
     }
     catch(Exception $e)
     {
-        add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
     }
-}
-
-function add_error_in_log($error, $file, $func, $args)
-{
-    try {
-        $date = date("Y-m-d H:i:s");
-        $req_str = '';
-        foreach (getallheaders() as $name => $value) {
-            $req_str .= "$name: $value\n";
-        }
-        $args_str = '';
-        foreach ($args as $name => $value) {
-            $args_str .= "$name: $value\n";
-        }
-        
-        $get_str = '';
-        foreach ($_GET as $name => $value) {
-            $get_str .= "$name: $value\n";
-        }
-        $post_str = '';
-        foreach ($_POST as $name => $value) {
-            $post_str .= "$name: $value\n";
-        }
-        $file = array_pop(explode('com_gm_ceiling', $file));
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $user = JFactory::getUser();
-        $user_str = $user->id.' '.$user->name;
-        $db = JFactory::getDbo();
-        $date = $db->escape($date);
-        $error = $db->escape($error);
-        $file = $db->escape($file);
-        $func = $db->escape($func);
-        $args_str = $db->escape($args_str);
-        $req_str = $db->escape($req_str);
-        $ip = $db->escape($ip);
-        $get_str = $db->escape($get_str);
-        $post_str = $db->escape($post_str);
-        $user_str = $db->escape($user_str);
-        $query = $db->getQuery(true);
-        $query
-            ->insert('`errors_log`')
-            ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`, `user`')
-            ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str', '$user_str'");
-        
-        $db->setQuery($query);
-    }
-    catch(Exception $e) {
-        $date = date("d.m.Y H:i:s");
-        $files = "components/com_gm_ceiling/";
-        file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
-        die("Что-то пошло не так...");
-    }
-    try {
-        $db->execute();
-    }
-    catch(Exception $e) {
-        $date = date("d.m.Y H:i:s");
-        $files = "components/com_gm_ceiling/";
-        file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$query."\n----------\n", FILE_APPEND);
-        die("Что-то пошло не так...");
-    }
-    $code = $db->insertid();
-    throw new Exception('Ошибка!', $code);
 }
 
 class Gm_ceilingHelpersGm_ceiling
 {
+    public static function add_error_in_log($error, $file, $func, $args)
+    {
+        try {
+            $date = date("Y-m-d H:i:s");
+            $req_str = '';
+            foreach (getallheaders() as $name => $value) {
+                $req_str .= "$name: $value\n";
+            }
+            $args_str = '';
+            foreach ($args as $name => $value) {
+                $args_str .= "$name: $value\n";
+            }
+            
+            $get_str = '';
+            foreach ($_GET as $name => $value) {
+                $get_str .= "$name: $value\n";
+            }
+            $post_str = '';
+            foreach ($_POST as $name => $value) {
+                $post_str .= "$name: $value\n";
+            }
+            $file = array_pop(explode('com_gm_ceiling', $file));
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $user = JFactory::getUser();
+            $user_str = $user->id.' '.$user->name;
+            $db = JFactory::getDbo();
+            $date = $db->escape($date);
+            $error = $db->escape($error);
+            $file = $db->escape($file);
+            $func = $db->escape($func);
+            $args_str = $db->escape($args_str);
+            $req_str = $db->escape($req_str);
+            $ip = $db->escape($ip);
+            $get_str = $db->escape($get_str);
+            $post_str = $db->escape($post_str);
+            $user_str = $db->escape($user_str);
+            $query = $db->getQuery(true);
+            $query
+                ->insert('`errors_log`')
+                ->columns('`date_time`, `error`, `file`, `function`, `args`, `request_headers`, `ip`, `get`, `post`, `user`')
+                ->values("'$date', '$error', '$file', '$func', '$args_str', '$req_str', '$ip', '$get_str', '$post_str', '$user_str'");
+            
+            $db->setQuery($query);
+        }
+        catch(Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
+            die("Что-то пошло не так...");
+        }
+        try {
+            $db->execute();
+        }
+        catch(Exception $e) {
+            $date = date("d.m.Y H:i:s");
+            $files = "components/com_gm_ceiling/";
+            file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$query."\n----------\n", FILE_APPEND);
+            die("Что-то пошло не так...");
+        }
+        $code = $db->insertid();
+        throw new Exception('Ошибка!', $code);
+    }
+
     public static function margin($value, $margin) {
         return margin($value, $margin);
     }
@@ -173,7 +173,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /**
@@ -201,7 +201,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function registerUser($FIO, $phone, $email, $client_id,$type = null)
@@ -276,7 +276,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /*  основная функция для расчета стоимости потолка
@@ -672,7 +672,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function create_client_single_estimate($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
@@ -688,7 +688,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function create_client_single_estimate_html($need_mount,$calc_id=null,$data=null,$components_data = null,$canvases_data = null,$offcut_square_data = null,$guild_data = null,
@@ -821,7 +821,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function create_client_common_estimate($project_id,$calc_ids = null){
@@ -922,7 +922,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function calculate_components($calc_id=null,$data=null,$del_flag=0){
@@ -1369,7 +1369,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function get_margin($project_id=null){
@@ -1407,7 +1407,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function calculate_canvases($calc_id=null,$data=null){
@@ -1473,7 +1473,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function calculate_offcut($calc_id=null,$data = null){
@@ -1526,7 +1526,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function calculate_guild_jobs($calc_id=null,$data=null){
@@ -1591,7 +1591,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /*  основная функция для расчета стоимости монтажа
@@ -2502,7 +2502,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /* функция для расчета стоимости траноспорта 
@@ -2583,7 +2583,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /* функция генерации общего наряда на монтаж */
@@ -2679,7 +2679,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function create_single_mounter_estimate_html($calc_id,$data,$phones,$brigade,$brigade_names,$data_mount = null){
@@ -2826,7 +2826,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function create_single_mount_estimate($calc_id = null,$data = null,$data_mount = null){
@@ -2866,7 +2866,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /* функция для создания PDF документа с расходкой по проекту */
@@ -2965,7 +2965,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /* функция генерации pdf раскроя */
@@ -3118,7 +3118,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /*функция генерации pdf для менеджера*/
@@ -3254,7 +3254,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function create_common_manager_estimate($project_id) {
@@ -3272,7 +3272,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function create_common_cut_pdf($project_id) {
@@ -3290,7 +3290,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     //Эта функция предназначена для подготовки данных для печати PDF в момент отправки договора в монтаж
@@ -3413,7 +3413,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function rounding($id, $value)
@@ -3428,7 +3428,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     //Печатаем подготовленные данные в PDF
@@ -3475,7 +3475,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-             add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function getClassPDF($mode, $format, $default_font_size, $default_font, $margin_left, $margin_right, $margin_top, $margin_bottom, $margin_header, $margin_footer, $orientation)
@@ -3485,7 +3485,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     //Уведомление разных структур
@@ -3853,7 +3853,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     
@@ -3881,7 +3881,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     
@@ -3915,7 +3915,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /*  функция декодирования дополнительных комплектующих, монтажных работ и пр. */
@@ -3937,7 +3937,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function decode_stock($components){
@@ -3961,7 +3961,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     // рисует календарь
@@ -4332,7 +4332,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     /*
@@ -4393,7 +4393,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function parse_price($price, $dealerPrice, $PriceDB = null)
@@ -4522,7 +4522,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
     public static function update_price($objectDealerPrice, $Price)
@@ -4538,7 +4538,7 @@ class Gm_ceilingHelpersGm_ceiling
         }
         catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }

@@ -28,7 +28,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             return $model;
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -44,7 +44,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             die(json_encode(true));
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -206,7 +206,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             $this->setRedirect(JRoute::_($url, false));
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -256,7 +256,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             } else die("{'error': 'Не правильная отправка данных!'}");
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -273,7 +273,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             exit;
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -303,7 +303,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             die(json_encode($data));
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -326,7 +326,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             die(json_encode($data));
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -343,7 +343,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             exit;
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -489,7 +489,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             }
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
             /*$date = date("d.m.Y H:i:s");
             $files = "components/com_gm_ceiling/";
             file_put_contents($files.'error_log.txt', (string)$date.' | '.__FILE__.' | '.__FUNCTION__.' | '.$e->getMessage()."\n----------\n", FILE_APPEND);
@@ -525,7 +525,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             $this->setRedirect(JRoute::_($url, false));
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }
@@ -557,7 +557,7 @@ class Gm_ceilingControllerStock extends JControllerLegacy
             exit;
         } catch(Exception $e)
         {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
 
         }
     }

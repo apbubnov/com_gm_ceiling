@@ -31,7 +31,7 @@ class Gm_ceilingModelBig_smeta extends JModelList
             $query = $db->getQuery(true);
             return $query;
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 
@@ -48,7 +48,7 @@ class Gm_ceilingModelBig_smeta extends JModelList
                 return $db->loadObjectList();
             } else return array();
         } catch (Exception $e) {
-            add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
 
     }
