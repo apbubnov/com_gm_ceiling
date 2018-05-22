@@ -2455,7 +2455,7 @@ public function register_mnfctr(){
                         $mailer->setSubject('Для отдела снабжения');
                     }
                     else {
-                        $mailer->setSubject('Натяжные потолки для застройщиков от 280 руб.');
+                        $mailer->setSubject('Для отдела снабжения');
                     }
                 }
                 elseif($dealer_type == 1 && $type == 2)
@@ -3070,7 +3070,38 @@ public function register_mnfctr(){
         catch(Exception $e)
         {
             Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
+        }
+    }
 
+    function addCallHistory() {
+        try
+        {
+            $jinput = JFactory::getApplication()->input;
+            $client_id = $jinput->get('client_id', null,'INT');
+            $status = $jinput->get('status', null, 'INT');
+            $manager_id = JFactory::getUser()->id;
+            if (empty($manager_id)) {
+                throw new Exception('empty manager id!');
+            }
+            $model_call = Gm_ceilingHelpersGm_ceiling::getModel('callback');
+            $model_client_history = Gm_ceilingHelpersGm_ceiling::getModel('client_history');
+
+            $model_call->addCallHistory($manager_id, $client_id, $status);
+            if ($status == 1) {
+                $model_client_history->save($client_id, 'Исходящий недозвон');
+                $model_call->save(date("Y-m-d H:i + 1 day"), 'Исходящий недозвон', $client_id, $manager_id);
+            }
+            elseif ($status == 2) {
+                $model_client_history->save($client_id, 'Исходящий дозвон');
+            }
+            elseif ($status == 3) {
+                $model_client_history->save($client_id, 'Входящий звонок');
+            }
+            die(true);
+        }
+        catch(Exception $e)
+        {
+            Gm_ceilingHelpersGm_ceiling::add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
         }
     }
 }
