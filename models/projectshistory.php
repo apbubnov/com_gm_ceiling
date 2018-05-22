@@ -101,7 +101,7 @@ class Gm_ceilingModelProjectshistory extends JModelList
 					$where = "p.api_phone_id = $advt AND p.project_mounting_date BETWEEN  '$date1 00:00:00' and  '$date2 23:59:59'";
 	                break;
 	            case $advt == 'total' && ($statuses!='mounts' || $statuses!= 'current' || $statuses!='all'):
-	                $where = "h.new_status in $statuses and h.date_of_change between '$date1' and '$date2'";
+	                $where = "h.new_status in $statuses and h.date_of_change between '$date1' and '$date2' and cl.dealer_id = $dealer_id and p.api_phone_id in ($subquery_advt)";
 	                break; 
 	            default:
 	        
