@@ -239,7 +239,6 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
         catch(Exception $e)
         {
             add_error_in_log($e->getMessage(), __FILE__, __FUNCTION__, func_get_args());
-
         }
     }
     function margin1($value, $margin)
@@ -288,7 +287,12 @@ class Gm_ceilingControllerBig_smeta extends JControllerLegacy
             }
             else if ($type == 7)
             {
-                $this->setRedirect(JRoute::_('/files/KP_DEV.pdf', false));
+                if($type_kp == 2) {
+                    $this->setRedirect(JRoute::_('/files/zastroishiki_moscow.pdf', false));
+                }
+                else {
+                    $this->setRedirect(JRoute::_('/files/KP_DEV.pdf', false));
+                }
             }
             else
             {
