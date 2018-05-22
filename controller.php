@@ -21,7 +21,6 @@ jimport('joomla.application.component.controller');
  *
  * @since  1.6
  */
-include_once('components/com_gm_ceiling/helpers/gm_ceiling.php');
 class Gm_ceilingController extends JControllerLegacy
 {
     /**
